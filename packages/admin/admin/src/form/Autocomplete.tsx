@@ -1,9 +1,9 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
-import { FieldRenderProps } from "react-final-form";
+import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
+import { type FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -16,6 +16,11 @@ export type FinalFormAutocompleteProps<
         clearable?: boolean;
     };
 
+/**
+ * Final Form-compatible Autocomplete component.
+ *
+ * @see {@link AutocompleteField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export const FinalFormAutocomplete = <
     T extends Record<string, any>,
     Multiple extends boolean | undefined,
@@ -66,5 +71,3 @@ export const FinalFormAutocomplete = <
         />
     );
 };
-
-export default FinalFormAutocomplete;

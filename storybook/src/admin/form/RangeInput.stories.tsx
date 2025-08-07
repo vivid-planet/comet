@@ -1,7 +1,6 @@
-import { Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
-import { Box, Button, Card, CardContent, SliderThumb, Typography } from "@mui/material";
+import { Button, Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
+import { Box, Card, CardContent, SliderThumb, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 const Thumb = styled(SliderThumb)`
@@ -68,8 +67,6 @@ export const RangeInput = () => {
                                             sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
-                                            variant="contained"
-                                            color="primary"
                                             onClick={() => {
                                                 form.reset();
                                             }}
@@ -105,8 +102,6 @@ export const RangeInput = () => {
                                             sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
-                                            variant="contained"
-                                            color="primary"
                                             onClick={() => {
                                                 form.reset();
                                             }}
@@ -142,8 +137,43 @@ export const RangeInput = () => {
                                             sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
-                                            variant="contained"
-                                            color="primary"
+                                            onClick={() => {
+                                                form.reset();
+                                            }}
+                                        >
+                                            Reset
+                                        </Button>
+                                        <pre>{JSON.stringify(values, undefined, 2)}</pre>
+                                    </>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography variant="h3" gutterBottom>
+                                disabled
+                            </Typography>
+                            <Form
+                                onSubmit={(values) => {
+                                    // values
+                                }}
+                                initialValues={{ price: { min: 50, max: 80 } }}
+                                render={({ values, form, initialValues }) => (
+                                    <>
+                                        <Field
+                                            component={FinalFormRangeInput}
+                                            name="price"
+                                            min={0}
+                                            max={100}
+                                            endAdornment={<span>€</span>}
+                                            sliderProps={{ components: { Thumb } }}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <Button
                                             onClick={() => {
                                                 form.reset();
                                             }}

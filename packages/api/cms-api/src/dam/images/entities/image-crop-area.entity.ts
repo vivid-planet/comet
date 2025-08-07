@@ -1,7 +1,7 @@
-import { Embeddable, Enum, Property } from "@mikro-orm/core";
+import { Embeddable, Enum, Property } from "@mikro-orm/postgresql";
 import { Field, Float, ObjectType } from "@nestjs/graphql";
 
-import { FocalPoint } from "../../common/enums/focal-point.enum";
+import { FocalPoint } from "../../../file-utils/focal-point.enum";
 
 @Embeddable()
 @ObjectType()

@@ -32,7 +32,7 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
                     let scopes: ContentScope[] | null;
                     try {
                         scopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
-                    } catch (error) {
+                    } catch {
                         // We might land here when an @AffectedEntity does not have a @ScopedEntity decorator
                         // (this was formerly ignored but now throws an error because it's essential for the scope check)
                         scopes = null;

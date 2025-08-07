@@ -1,7 +1,6 @@
 import { Selection, SelectionRoute, useSelection, useSelectionRoute } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { List, ListItem, ListItemIcon, ListItemText, Paper } from "@mui/material";
-import * as React from "react";
+import { List, ListItemButton, ListItemIcon, ListItemText, Paper } from "@mui/material";
 import { Redirect, Route, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../story-router.decorator";
@@ -24,17 +23,17 @@ export const UseSelectionHook = {
                     <List>
                         {["1", "2", "3"].map((id) => {
                             return (
-                                <ListItem key={id} button onClick={() => selectionApi.handleSelectId(id)}>
+                                <ListItemButton key={id} onClick={() => selectionApi.handleSelectId(id)}>
                                     <ListItemText primary={`Item ${id}`} />
-                                </ListItem>
+                                </ListItemButton>
                             );
                         })}
-                        <ListItem button onClick={() => selectionApi.handleAdd()}>
+                        <ListItemButton onClick={() => selectionApi.handleAdd()}>
                             <ListItemIcon>
                                 <Add />
                             </ListItemIcon>
                             <ListItemText primary="Add Item" />
-                        </ListItem>
+                        </ListItemButton>
                     </List>
                 </div>
             </Paper>
@@ -56,17 +55,17 @@ export const SelectionComponent = {
                             <List>
                                 {["1", "2", "3"].map((id) => {
                                     return (
-                                        <ListItem key={id} button onClick={() => selectionApi.handleSelectId(id)}>
+                                        <ListItemButton key={id} onClick={() => selectionApi.handleSelectId(id)}>
                                             <ListItemText primary={`Item ${id}`} />
-                                        </ListItem>
+                                        </ListItemButton>
                                     );
                                 })}
-                                <ListItem button onClick={() => selectionApi.handleAdd()}>
+                                <ListItemButton onClick={() => selectionApi.handleAdd()}>
                                     <ListItemIcon>
                                         <Add />
                                     </ListItemIcon>
                                     <ListItemText primary="Add Item" />
-                                </ListItem>
+                                </ListItemButton>
                             </List>
                         </div>
                     )}
@@ -89,17 +88,17 @@ export const UseSelectionRouteHook = {
                         <List>
                             {["1", "2", "3"].map((id) => {
                                 return (
-                                    <ListItem key={id} button onClick={() => selectionApi.handleSelectId(id)}>
+                                    <ListItemButton key={id} onClick={() => selectionApi.handleSelectId(id)}>
                                         <ListItemText primary={`Item ${id}`} />
-                                    </ListItem>
+                                    </ListItemButton>
                                 );
                             })}
-                            <ListItem button onClick={() => selectionApi.handleAdd()}>
+                            <ListItemButton onClick={() => selectionApi.handleAdd()}>
                                 <ListItemIcon>
                                     <Add />
                                 </ListItemIcon>
                                 <ListItemText primary="Add Item" />
-                            </ListItem>
+                            </ListItemButton>
                         </List>
                     </div>
                 </SelectionRoute>
@@ -139,17 +138,17 @@ export const SelectionRouteComponent = {
                                 <List>
                                     {["1", "2", "3"].map((id) => {
                                         return (
-                                            <ListItem key={id} button onClick={() => selectionApi.handleSelectId(id)}>
+                                            <ListItemButton key={id} onClick={() => selectionApi.handleSelectId(id)}>
                                                 <ListItemText primary={`Item ${id}`} />
-                                            </ListItem>
+                                            </ListItemButton>
                                         );
                                     })}
-                                    <ListItem button onClick={() => selectionApi.handleAdd()}>
+                                    <ListItemButton onClick={() => selectionApi.handleAdd()}>
                                         <ListItemIcon>
                                             <Add />
                                         </ListItemIcon>
                                         <ListItemText primary="Add Item" />
-                                    </ListItem>
+                                    </ListItemButton>
                                 </List>
                             </div>
                         );

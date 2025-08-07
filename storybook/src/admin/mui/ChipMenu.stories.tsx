@@ -1,7 +1,6 @@
 import { ChevronDown, Cookie, Domain, Favorite } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, ListItemIcon, ListItemText, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import * as React from "react";
-import { useState } from "react";
+import { type MouseEvent, useState } from "react";
 
 export default {
     title: "@comet/admin/mui",
@@ -11,7 +10,7 @@ export const ChipMenu = {
     render: () => {
         const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-        const handleChipClick = (event: React.MouseEvent) => {
+        const handleChipClick = (event: MouseEvent) => {
             setAnchorEl(event.currentTarget);
         };
 

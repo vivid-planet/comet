@@ -1,18 +1,19 @@
 import { ChevronDown } from "@comet/admin-icons";
 import {
+    // eslint-disable-next-line no-restricted-imports
     Button,
     ButtonGroup as MuiButtonGroup,
-    ButtonGroupProps,
+    type ButtonGroupProps,
     MenuItem as MuiMenuItem,
     MenuList as MuiMenuList,
     Popover as MuiPopover,
-    PopoverProps,
+    type PopoverProps,
 } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { Children, isValidElement, MouseEvent, PropsWithChildren, ReactElement, ReactNode, useRef, useState } from "react";
+import { Children, isValidElement, type MouseEvent, type PropsWithChildren, type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 

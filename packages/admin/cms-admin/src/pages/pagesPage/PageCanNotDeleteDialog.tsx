@@ -1,8 +1,14 @@
-import { messages } from "@comet/admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, messages } from "@comet/admin";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-export interface PageCanNotDeleteDialogProps {
+interface PageCanNotDeleteDialogProps {
     dialogOpen: boolean;
     onClosePressed: () => void;
 }
@@ -22,7 +28,7 @@ export const PageCanNotDeleteDialog = (props: PageCanNotDeleteDialogProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClosePressed} color="primary">
+                <Button onClick={onClosePressed} variant="textDark">
                     <FormattedMessage {...messages.close} />
                 </Button>
             </DialogActions>

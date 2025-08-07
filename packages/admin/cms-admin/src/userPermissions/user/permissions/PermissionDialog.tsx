@@ -1,20 +1,26 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLAvailablePermissionsQuery,
-    GQLAvailablePermissionsQueryVariables,
-    GQLCreateUserPermissionMutation,
-    GQLCreateUserPermissionMutationVariables,
-    GQLPermissionQuery,
-    GQLPermissionQueryVariables,
-    GQLUpdateUserPermissionMutation,
-    GQLUpdateUserPermissionMutationVariables,
-    GQLUserPermissionDialogFragment,
+    type GQLAvailablePermissionsQuery,
+    type GQLAvailablePermissionsQueryVariables,
+    type GQLCreateUserPermissionMutation,
+    type GQLCreateUserPermissionMutationVariables,
+    type GQLPermissionQuery,
+    type GQLPermissionQueryVariables,
+    type GQLUpdateUserPermissionMutation,
+    type GQLUpdateUserPermissionMutationVariables,
+    type GQLUserPermissionDialogFragment,
     namedOperations,
 } from "./PermissionDialog.generated";
 
@@ -81,13 +87,11 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
     const { data: availablePermissionsData, error: availablePermissionsError } = useQuery<
         GQLAvailablePermissionsQuery,
         GQLAvailablePermissionsQueryVariables
-    >(
-        gql`
-            query AvailablePermissions {
-                availablePermissions: userPermissionsAvailablePermissions
-            }
-        `,
-    );
+    >(gql`
+        query AvailablePermissions {
+            availablePermissions: userPermissionsAvailablePermissions
+        }
+    `);
 
     if (error) {
         throw new Error(error.message);

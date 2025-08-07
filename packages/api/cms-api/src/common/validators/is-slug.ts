@@ -15,8 +15,8 @@ export const IsSlug = (validationOptions?: ValidationOptions) => {
 @ValidatorConstraint({ name: "IsSlug", async: true })
 export class IsSlugConstraint implements ValidatorConstraintInterface {
     async validate(value: string): Promise<boolean> {
-        // Regex matches unreserved characters and percent encoding (see https://tools.ietf.org/html/rfc3986#section-2.1)
-        return /^([a-zA-Z0-9-._~]|%[0-9a-fA-F]{2})+$/.test(value);
+        // Regex matches unreserved characters
+        return /^[a-zA-Z0-9][a-zA-Z0-9-_]*$/.test(value);
     }
 
     defaultMessage(): string {

@@ -1,30 +1,27 @@
 import * as AWS from "@aws-sdk/client-s3";
-import { SdkError } from "@aws-sdk/types";
+import { Upload } from "@aws-sdk/lib-storage";
+import { type SdkError } from "@aws-sdk/types";
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageS3Config } from "./blob-storage-s3.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageS3Config } from "./blob-storage-s3.config";
 
 export class BlobStorageS3Storage implements BlobStorageBackendInterface {
     private readonly client: AWS.S3Client;
     private readonly config: BlobStorageS3Config["s3"];
 
     constructor(config: BlobStorageS3Config["s3"]) {
+        const { bucket, requestHandler, ...clientConfig } = config;
         this.client = new AWS.S3({
-            requestHandler: config.requestHandler ?? {
+            requestHandler: requestHandler ?? {
                 // https://github.com/aws/aws-sdk-js-v3/blob/main/supplemental-docs/CLIENTS.md#request-handler-requesthandler
                 // Workaround to prevent socket exhaustion caused by dangling streams (e.g., when the user leaves the site).
                 // Close the connection when no request/response was sent for 60 seconds, indicating that the file stream was terminated.
                 requestTimeout: 60000,
-                connectionTimeout: 6000, // fail faster if there are no available connections
+                connectionTimeout: 6000,
             },
-            credentials: {
-                accessKeyId: config.accessKeyId,
-                secretAccessKey: config.secretAccessKey,
-            },
-            endpoint: config.endpoint,
-            region: config.region,
+            ...clientConfig,
         });
         this.config = config;
     }
@@ -79,27 +76,40 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         folderName: string,
         fileName: string,
         data: NodeJS.ReadableStream | Buffer | string,
-        { headers, size }: CreateFileOptions,
+        { contentType, size }: CreateFileOptions,
     ): Promise<void> {
-        const metadata = {
-            headers: JSON.stringify(headers),
-        };
-
         const input: AWS.PutObjectCommandInput = {
             ...this.getCommandInput(folderName, fileName),
-            ContentType: headers["content-type"],
+            ContentType: contentType,
             ContentLength: size,
-            Metadata: metadata,
         };
 
+        let body: NodeJS.ReadableStream | Buffer;
         if (typeof data === "string") {
-            input.Body = createReadStream(data);
+            body = createReadStream(data);
         } else if (Buffer.isBuffer(data)) {
-            input.Body = data;
+            body = data;
         } else {
-            input.Body = Readable.from(data);
+            body = data;
         }
-        await this.client.send(new AWS.PutObjectCommand(input));
+
+        if ("pipe" in body) {
+            const upload = new Upload({
+                client: this.client,
+                params: {
+                    ...input,
+                    Body: Readable.from(body),
+                },
+            });
+            await upload.done();
+        } else {
+            await this.client.send(
+                new AWS.PutObjectCommand({
+                    ...input,
+                    Body: body,
+                }),
+            );
+        }
     }
 
     async getFile(folderName: string, fileName: string): Promise<Readable> {
@@ -133,7 +143,8 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
             size: response.ContentLength!,
             etag: response.ETag,
             lastModified: response.LastModified,
-            headers: response.Metadata?.headers ? JSON.parse(response.Metadata.headers) : {},
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            contentType: response.ContentType!,
         };
     }
 

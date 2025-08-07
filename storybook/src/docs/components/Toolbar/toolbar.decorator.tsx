@@ -1,6 +1,5 @@
 import { Stack, StackPage, StackPageTitle, StackSwitch } from "@comet/admin";
-import { Decorator } from "@storybook/react";
-import * as React from "react";
+import { type Decorator } from "@storybook/react-webpack5";
 
 export function toolbarDecorator(): Decorator {
     return (Story) => {

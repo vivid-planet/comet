@@ -1,7 +1,7 @@
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IMakeRteApiProps, type IRteApiProps, type IRteOptions, type IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { convertFromRaw, convertToRaw } from "draft-js";
-import * as React from "react";
+import { type ReactNode, useRef } from "react";
 
 import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
 
@@ -25,12 +25,12 @@ export const apiOptions: IRteApiProps<ContentFormat> = {
     debounceDelay: 400, // delay when onDebouncedContentChange after editor content changed
 };
 
-const RedCustomHeader: React.FC = ({ children }) => (
+const RedCustomHeader = ({ children }: { children?: ReactNode }) => (
     <Typography variant="h1" style={{ color: "red" }}>
         {children}
     </Typography>
 );
-const GreenCustomHeader: React.FC = ({ children }) => <h2 style={{ color: "green" }}>{children}</h2>;
+const GreenCustomHeader = ({ children }: { children?: ReactNode }) => <h2 style={{ color: "green" }}>{children}</h2>;
 
 export const rteOptions: IRteOptions = {
     supports: [
@@ -112,7 +112,7 @@ export const RteAllOptions = {
         const { editorState, setEditorState } = useRteApi(apiOptions);
 
         // focus the editor to see the cursor immediately
-        const editorRef = React.useRef<IRteRef>();
+        const editorRef = useRef<IRteRef>();
         useAutoFocus(editorRef);
 
         return (

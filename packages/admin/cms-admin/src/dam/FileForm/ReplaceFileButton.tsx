@@ -1,16 +1,17 @@
 import { useApolloClient } from "@apollo/client";
-import { useErrorDialog } from "@comet/admin";
+import { Button, useErrorDialog } from "@comet/admin";
 import { ThreeDotSaving, Upload } from "@comet/admin-icons";
-import { Button } from "@mui/material";
-import axios, { CancelTokenSource } from "axios";
+import axios, { type CancelTokenSource } from "axios";
 import { useRef, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
+import { createHttpClient } from "../../http/createHttpClient";
+import { useDamBasePath, useDamConfig } from "../config/damConfig";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
-import { DamFileDetails } from "./EditFile";
+import { type DamFileDetails } from "./EditFile";
 
 interface ReplaceFileButtonProps {
     file: DamFileDetails;
@@ -18,10 +19,12 @@ interface ReplaceFileButtonProps {
 
 export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
-    const cmsBlockContext = useCmsBlockContext();
+    const { apiUrl } = useCometConfig();
+    const damConfig = useDamConfig();
+    const damBasePath = useDamBasePath();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const maxFileSizeInMegabytes = cmsBlockContext.damConfig.maxFileSize;
+    const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
     const cancelUpload = useRef<CancelTokenSource>(axios.CancelToken.source());
     const errorDialog = useErrorDialog();
@@ -47,9 +50,10 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
             try {
                 setReplaceLoading(true);
                 const response = await replaceById({
-                    apiClient: cmsBlockContext.damConfig.apiClient,
+                    apiClient: createHttpClient(apiUrl),
                     data: { file: acceptedFiles[0], fileId: file.id },
                     cancelToken: cancelUpload.current.token,
+                    damBasePath,
                 });
 
                 if (response.status === 201 && response.data) {
@@ -78,7 +82,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     return (
         <>
             <Button
-                sx={{ color: "white" }}
+                variant="textLight"
                 startIcon={replaceLoading ? <ThreeDotSaving /> : <Upload />}
                 onClick={() => {
                     // Trigger file input with button click

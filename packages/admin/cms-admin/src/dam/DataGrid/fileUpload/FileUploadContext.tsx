@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
 
-import { FileWithFolderPath } from "./useDamFileUpload";
+import { type FileWithFolderPath } from "./useDamFileUpload";
 
 export interface NewlyUploadedItem {
     id: string;

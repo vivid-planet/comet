@@ -1,8 +1,8 @@
 import { ClearInputAdornment } from "@comet/admin";
 import * as icons from "@comet/admin-icons";
-import { Grid, InputAdornment, InputBase, SvgIconProps, Typography } from "@mui/material";
+import { Grid, InputAdornment, InputBase, type SvgIconProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { type ComponentType, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 const matchesSearchQuery = (str: string, query: string): boolean => {
@@ -40,15 +40,23 @@ const IconWrapper = styled("div")`
 
 const SearchIcon = icons.Search;
 
-const IconsGrid = ({ searchQuery }: { searchQuery: string }): React.ReactElement => {
+const IconsGrid = ({ searchQuery }: { searchQuery: string }) => {
     return (
         <Grid container spacing={4}>
             {Object.keys(icons).map((key) => {
                 if (key !== "__esModule" && key != null && matchesSearchQuery(key, searchQuery)) {
-                    const Icon = (icons as Record<string, React.ComponentType<SvgIconProps>>)[key];
+                    const Icon = (icons as Record<string, ComponentType<SvgIconProps>>)[key];
 
                     return (
-                        <Grid item key={key} xs={12} sm={6} md={4} lg={3}>
+                        <Grid
+                            key={key}
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                                md: 4,
+                                lg: 3,
+                            }}
+                        >
                             <IconContainer>
                                 <IconWrapper>
                                     <Icon fontSize="large" />
@@ -68,7 +76,7 @@ export default {
 };
 
 export const AllIcons = () => {
-    const [searchQuery, setSearchQuery] = React.useState<string>("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [debouncedSearchQuery] = useDebounce(searchQuery.trim().toLowerCase(), 500);
 
     return (

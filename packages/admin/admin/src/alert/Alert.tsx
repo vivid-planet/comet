@@ -1,11 +1,11 @@
 import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton, Typography } from "@mui/material";
+import { Alert as MuiAlert, alertClasses, AlertTitle, IconButton, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { forwardRef, ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface AlertProps
     extends ThemedComponentBaseProps<{
@@ -86,11 +86,7 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
         css`
             position: relative;
             align-items: flex-start;
-            padding: ${theme.spacing(4, 6, "8px", 3)};
-
-            & .${buttonClasses.text} {
-                margin-left: -15px;
-            }
+            padding: ${theme.spacing(4, 6, 4, 4)};
 
             & .${alertClasses.message} {
                 flex-direction: column;
@@ -102,7 +98,7 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
         css`
             display: flex;
             align-items: center;
-            padding: ${theme.spacing(2, "12px", 2, 4)};
+            padding: ${theme.spacing(2, 4, 2, 4)};
         `}
     `,
 );
@@ -110,7 +106,9 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
 const Title = createComponentSlot(AlertTitle)<AlertClassKey>({
     componentName: "Alert",
     slotName: "title",
-})();
+})(css`
+    margin-top: 0px;
+`);
 
 const Text = createComponentSlot(Typography)<AlertClassKey>({
     componentName: "Alert",
@@ -141,6 +139,11 @@ const CloseIcon = createComponentSlot(IconButton)<AlertClassKey, OwnerState>({
             position: absolute;
             right: 2px;
             top: 2px;
+        `}
+
+        ${ownerState.renderAsSingleRow &&
+        css`
+            padding: 10px;
         `}
     `,
 );

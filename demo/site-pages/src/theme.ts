@@ -1,102 +1,84 @@
-export interface Breakpoint {
-    mediaQuery: string;
-    value: number;
-}
-
-const createBreakpoint = (value: number): Breakpoint => {
+const createBreakpoint = (value: number) => {
     return {
         mediaQuery: `@media (min-width: ${value}px)`,
         value: value,
     };
 };
 
-export type ThemeBreakpoints = {
-    b560: Breakpoint;
-    b960: Breakpoint;
-    b1280: Breakpoint;
-    b1600: Breakpoint;
-    b1920: Breakpoint;
+export const theme = {
+    palette: {
+        primary: {
+            light: "#73E8FF",
+            main: "#29B6F6",
+            dark: "#0086C3",
+            contrastText: "#000000",
+        },
+        text: {
+            primary: "#242424",
+            secondary: "#828282",
+            inverted: "#ffffff",
+        },
+        gray: {
+            50: "#F2F2F2",
+            100: "#D9D9D9",
+            200: "#B3B3B3",
+            300: "#828282",
+            400: "#676767",
+            500: "#4C4C4C",
+            600: "#454545",
+            700: "#3C3C3C",
+            800: "#333333",
+            900: "#242424",
+        },
+        error: {
+            main: "#BC3520",
+            light: "#C6523F",
+            dark: "#832617",
+            contrastText: "#B3B3B3",
+        },
+        warning: {
+            main: "#F3B346",
+            light: "#F5C15F",
+            dark: "#A87D32",
+            contrastText: "#090909",
+        },
+        info: {
+            main: "#F3B346",
+            light: "#F5C15F",
+            dark: "#A87D32",
+            contrastText: "#090909",
+        },
+        success: {
+            main: "#66C54F",
+            light: "#77D06A",
+            dark: "#488938",
+            contrastText: "#090909",
+        },
+    },
+    fontFamily: "Arial, sans-serif",
+    breakpoints: {
+        sm: createBreakpoint(600),
+        md: createBreakpoint(900),
+        lg: createBreakpoint(1200),
+        xl: createBreakpoint(1600),
+    },
+    spacing: {
+        D100: "var(--spacing-d100)",
+        D200: "var(--spacing-d200)",
+        D300: "var(--spacing-d300)",
+        D400: "var(--spacing-d400)",
+        S100: "var(--spacing-s100)",
+        S200: "var(--spacing-s200)",
+        S300: "var(--spacing-s300)",
+        S400: "var(--spacing-s400)",
+        S500: "var(--spacing-s500)",
+        S600: "var(--spacing-s600)",
+    },
 };
 
-export interface Theme {
-    colors: {
-        primary: string;
-        textPrimary: string;
-        lightGray: string;
-        white: string;
-        black: string;
-        lightBackground: string;
-        linkBlue: string;
-        darkBlue: string;
-        darkBlueSec: string;
-        purple: string;
-        n050: string;
-        n100: string;
-        n200: string;
-        n300: string;
-        n400: string;
-        n500: string;
-        n600: string;
-        n700: string;
-        n800: string;
-        n900: string;
-    };
-    fonts: {
-        primary: string;
-    };
-    breakpoints: ThemeBreakpoints;
-    easings: {
-        easeOutCubic: string;
-        easeInOutSine: string;
-        easeInOutQuad: string;
-        easeInCubic: string;
-    };
-}
+type Theme = typeof theme;
 
 declare module "styled-components" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     export interface DefaultTheme extends Theme {}
 }
-
-const theme: Theme = {
-    colors: {
-        primary: "#c00d0d",
-        textPrimary: "#000000",
-        lightGray: "#d9d9d9",
-        white: "#ffffff",
-        black: "#000000",
-        lightBackground: "#f2f2f2",
-        linkBlue: "#29B6F6",
-        darkBlue: "#0A1327",
-        darkBlueSec: "#151d34",
-        purple: "#3C1659",
-        n050: "#f6f6f6",
-        n100: "#F2F2F2",
-        n200: "#CCCCCC",
-        n300: "#999999",
-        n400: "#676767",
-        n500: "#4C4C4C",
-        n600: "#404040",
-        n700: "#333333",
-        n800: "#242424",
-        n900: "#141414",
-    },
-    fonts: {
-        primary: "Arial, sans-serif",
-    },
-    breakpoints: {
-        b560: createBreakpoint(560),
-        b960: createBreakpoint(960),
-        b1280: createBreakpoint(1280),
-        b1600: createBreakpoint(1600),
-        b1920: createBreakpoint(1920),
-    },
-    easings: {
-        easeOutCubic: "cubic-bezier(0.33, 1, 0.68, 1)",
-        easeInOutSine: "cubic-bezier(0.37, 0, 0.63, 1)",
-        easeInOutQuad: "cubic-bezier(0.45, 0, 0.55, 1)",
-        easeInCubic: "cubic-bezier(0.32, 0, 0.67, 0)",
-    },
-};
-
-export default theme;

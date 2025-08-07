@@ -1,6 +1,8 @@
-import { BlockData, BlockField, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
 import { plainToInstance, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
+
+import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
+import { BlockField } from "./decorators/field";
 
 enum ColumnSize {
     extraSmall = "extraSmall",
@@ -35,7 +37,7 @@ class TableBlockColumnInput extends BlockInput {
     highlighted: boolean;
 
     transformToBlockData(): TableBlockColumnData {
-        return inputToData(TableBlockColumnData, this);
+        return blockInputToData(TableBlockColumnData, this);
     }
 }
 
@@ -57,7 +59,7 @@ class TableBlockRowColumnValueInput extends BlockInput {
     value: string;
 
     transformToBlockData(): TableBlockRowColumnValueData {
-        return inputToData(TableBlockRowColumnValueData, this);
+        return blockInputToData(TableBlockRowColumnValueData, this);
     }
 }
 
@@ -87,11 +89,11 @@ class TableBlockRowInput extends BlockInput {
     cellValues: TableBlockRowColumnValueInput[] = [];
 
     transformToBlockData(): TableBlockRowData {
-        return inputToData(TableBlockRowData, this);
+        return blockInputToData(TableBlockRowData, this);
     }
 }
 
-export class TableBlockData extends BlockData {
+class TableBlockData extends BlockData {
     @BlockField(TableBlockColumnData)
     @Type(() => TableBlockColumnData)
     columns: TableBlockColumnData[] = [];
@@ -101,7 +103,7 @@ export class TableBlockData extends BlockData {
     rows: TableBlockRowData[] = [];
 }
 
-export class TableBlockInput extends BlockInput {
+class TableBlockInput extends BlockInput {
     @BlockField(TableBlockColumnInput)
     @IsArray()
     @Type(() => TableBlockColumnInput)

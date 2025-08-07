@@ -1,12 +1,12 @@
 import { Alert, readClipboardText, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@comet/admin-icons";
-import { DispatchSetStateAction } from "@comet/blocks-admin";
 import { Divider, Snackbar } from "@mui/material";
+import { type Dispatch, type SetStateAction } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
-import { TableBlockData } from "../../blocks.generated";
+import { type TableBlockData } from "../../blocks.generated";
 import { getNewColumn, getNewRow } from "./utils";
 
 const clipboardRowSchema = z.object({
@@ -18,7 +18,7 @@ type ClipboardRow = z.infer<typeof clipboardRowSchema>;
 
 type Props = {
     row: Record<string, unknown> & { id: string };
-    updateState: DispatchSetStateAction<TableBlockData>;
+    updateState: Dispatch<SetStateAction<TableBlockData>>;
     state: TableBlockData;
 };
 

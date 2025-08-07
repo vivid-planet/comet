@@ -9,7 +9,7 @@ import { RedirectGenerationType } from "../redirects.enum";
 import { RedirectScopeInterface } from "../types";
 import { EmptyRedirectScope } from "./empty-redirect-scope";
 
-export interface RedirectsArgsInterface {
+interface RedirectsArgsInterface {
     scope: RedirectScopeInterface;
     query?: string;
     type?: RedirectGenerationType;

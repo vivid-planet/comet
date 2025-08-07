@@ -3,6 +3,7 @@ import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
     Field,
+    FillSpace,
     FinalFormInput,
     MainContent,
     Table,
@@ -10,7 +11,6 @@ import {
     TableQuery,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
     useExportTableQuery,
@@ -20,7 +20,6 @@ import {
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
@@ -106,7 +105,7 @@ export const ExportWithLimitFilter = () => {
                             <Field name="query" type="text" component={FinalFormInput} fullWidth />
                         </TableFilterFinalForm>
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
                         <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>

@@ -1,9 +1,9 @@
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
-import rimraf from "rimraf";
+import { rimraf } from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
-import { FileUploadInput } from "../dam/files/dto/file-upload.input";
+import { FileUploadInput } from "../file-utils/file-upload.input";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
@@ -25,17 +25,17 @@ export function createFileUploadsUploadController(options: { public: boolean }):
         ) {}
 
         @Post("upload")
-        @UseInterceptors(FileUploadsFileInterceptor("file"))
+        @UseInterceptors(FileUploadsFileInterceptor())
         async upload(@UploadedFile() file: FileUploadInput): Promise<FileUploadsUploadResponse> {
             const fileUpload = await this.fileUploadsService.upload(file);
 
             await this.entityManager.flush();
 
-            rimraf(file.path, (error) => {
-                if (error) {
-                    console.error("An error occurred when removing the file: ", error);
-                }
-            });
+            try {
+                await rimraf(file.path);
+            } catch (error) {
+                console.error("An error occurred when removing the file: ", error);
+            }
 
             let downloadUrl: string | undefined;
 

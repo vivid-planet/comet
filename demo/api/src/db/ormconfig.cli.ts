@@ -1,4 +1,4 @@
-import { Options } from "@mikro-orm/core";
+import { type Options } from "@mikro-orm/postgresql";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 
 import { ormConfig } from "./ormconfig";

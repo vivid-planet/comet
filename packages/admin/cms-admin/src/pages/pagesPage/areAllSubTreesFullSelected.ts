@@ -1,4 +1,4 @@
-import { subTreeFromId, traverse, TreeMap, TreeMapNode } from "../pageTree/treemap/TreeMapUtils";
+import { subTreeFromId, traverse, type TreeMap, type TreeMapNode } from "../pageTree/treemap/TreeMapUtils";
 
 export const areAllSubTreesFullSelected = (selectedNodeIds: string[], tree: TreeMap<TreeMapNode>): boolean => {
     let fullSelected = true;

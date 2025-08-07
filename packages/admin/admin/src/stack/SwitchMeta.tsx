@@ -1,18 +1,20 @@
-import { Component, createContext } from "react";
+import { Component, type ContextType, createContext, type PropsWithChildren } from "react";
 
 import { StackApiContext } from "./Api";
 
-interface IProps {
+type IProps = PropsWithChildren<{
     id: string;
     activePage: string;
     isInitialPageActive: boolean;
-}
+}>;
 
 const SwitchMetaContext = createContext<string>("");
 
 export class StackSwitchMeta extends Component<IProps> {
     public static contextType = StackApiContext;
-    private parentId?: string;
+    declare context: ContextType<typeof StackApiContext>;
+
+    private parentId: string;
 
     public render() {
         return (

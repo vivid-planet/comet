@@ -1,12 +1,12 @@
-import { IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
+import { type IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import * as React from "react";
+import { type ReactNode } from "react";
 
 import { exampleContent, PrintEditorState } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
-const GreenCustomHeader: React.FC = ({ children }) => <span style={{ color: "green" }}>{children}</span>;
+const GreenCustomHeader = ({ children }: { children?: ReactNode }) => <span style={{ color: "green" }}>{children}</span>;
 
 const rteOptions: IRteReadOnlyOptions = {
     blocktypeMap: {

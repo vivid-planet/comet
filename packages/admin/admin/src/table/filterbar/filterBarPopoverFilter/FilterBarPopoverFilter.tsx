@@ -1,16 +1,17 @@
 import { Check, Reset } from "@comet/admin-icons";
-import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
+// eslint-disable-next-line no-restricted-imports
+import { Button, type ButtonProps, type ComponentsOverrides, Popover as MuiPopover, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { ComponentType, MouseEvent, PropsWithChildren, useState } from "react";
+import { type ComponentType, type MouseEvent, type PropsWithChildren, useState } from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
-import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
-import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
+import { type FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import { FilterBarButton, type FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

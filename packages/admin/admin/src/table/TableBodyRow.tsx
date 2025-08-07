@@ -1,9 +1,9 @@
-import { ComponentsOverrides, TableRow } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { TableRowProps } from "@mui/material/TableRow";
+import { type ComponentsOverrides, TableRow } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type TableRowProps } from "@mui/material/TableRow";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

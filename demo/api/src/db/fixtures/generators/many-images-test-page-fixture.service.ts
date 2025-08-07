@@ -1,15 +1,16 @@
-import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { PageTreeNodeBaseCreateInput, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
+import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { StageBlock } from "@src/documents/pages/blocks/stage.block";
+import { PageInput } from "@src/documents/pages/dto/page.input";
+import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { PageContentBlock } from "@src/pages/blocks/page-content.block";
-import { PageInput } from "@src/pages/dto/page.input";
-import { Page } from "@src/pages/entities/page.entity";
 import { UserGroup } from "@src/user-groups/user-group";
-import faker from "faker";
 
 import { generateImageBlock } from "./blocks/image.generator";
 import { generateSeoBlock } from "./blocks/seo.generator";
@@ -46,10 +47,9 @@ export class ManyImagesTestPageFixtureService {
                     id: uuidDocument,
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
+                userGroup: UserGroup.all,
+            } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+            PageTreeNodeCategory.mainNavigation,
             scope,
         );
 
@@ -67,13 +67,14 @@ export class ManyImagesTestPageFixtureService {
         pageInput.seo = generateSeoBlock();
         pageInput.content = PageContentBlock.blockInputFactory({
             blocks: imageBlocks.map((c) => ({
-                key: faker.datatype.uuid(),
+                key: faker.string.uuid(),
                 visible: true,
                 type: "image",
                 props: c,
-                userGroup: UserGroup.All,
+                userGroup: UserGroup.all,
             })),
         });
+        pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
 
         await this.entityManager.persistAndFlush(
             this.pagesRespository.create({
@@ -82,6 +83,7 @@ export class ManyImagesTestPageFixtureService {
                 seo: pageInput.seo.transformToBlockData(),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                stage: pageInput.stage.transformToBlockData(),
             }),
         );
     }

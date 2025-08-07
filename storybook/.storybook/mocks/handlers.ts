@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
-import { GraphQLFieldResolver } from "graphql";
+import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
-import { ResponseResolver, rest } from "msw";
-import { RestContext } from "msw/lib/types/handlers/RestHandler";
+import { type ResponseResolver, rest } from "msw";
+import { type RestContext } from "msw/lib/types/handlers/RestHandler";
 
 type StringFilter = {
     contains: string;
@@ -21,7 +21,7 @@ type LaunchesPastFilter = {
     or: LaunchesPastFilter[];
 };
 
-export type Launch = {
+type Launch = {
     id: string;
     mission_name: string;
     launch_date_local: Date;
@@ -46,9 +46,9 @@ const allLaunches: Launch[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allLaunches.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         mission_name: faker.word.adjective(),
-        launch_date_local: faker.datatype.datetime(),
+        launch_date_local: faker.date.past(),
     });
 }
 
@@ -220,7 +220,7 @@ const allManufacturers: Manufacturer[] = [];
 
 for (let i = 0; i < 10; i += 1) {
     allManufacturers.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.company.name(),
     });
 }
@@ -242,7 +242,7 @@ const allProducts: Product[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allProducts.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.commerce.product(),
         manufacturer: faker.helpers.arrayElement(allManufacturers),
     });

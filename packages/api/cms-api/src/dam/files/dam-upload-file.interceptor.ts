@@ -8,11 +8,12 @@ import { Observable, throwError } from "rxjs";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { FileValidationService } from "../../file-utils/file-validation.service";
+import { FILE_UPLOAD_FIELD } from "../../file-utils/files.constants";
+import { removeMulterTempFile } from "../../file-utils/files.utils";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
-import { FileValidationService } from "./file-validation.service";
-import { removeMulterTempFile } from "./files.utils";
 
-export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
+export function DamUploadFileInterceptor(fieldName: string = FILE_UPLOAD_FIELD): Type<NestInterceptor> {
     @Injectable()
     class Interceptor implements NestInterceptor {
         fileInterceptor: NestInterceptor;
@@ -35,20 +36,20 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
                     filename: function (req, file, cb) {
                         // otherwise special characters aren't decoded properly (https://github.com/expressjs/multer/issues/836#issuecomment-1264338996)
                         file.originalname = Buffer.from(file.originalname, "latin1").toString("utf8");
-                        cb(null, `${uuid()}-${file.originalname}`);
+                        cb(null, uuid());
                     },
                 }),
                 limits: {
                     fileSize: this.fileValidationService.config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
-                    this.fileValidationService.validateFileMetadata(file).then((result) => {
-                        if (result === undefined) {
-                            return cb(null, true);
-                        } else {
-                            return cb(new CometValidationException(result), false);
-                        }
-                    });
+                    const errorMessage = this.fileValidationService.validateFileMetadata(file);
+
+                    if (errorMessage === undefined) {
+                        cb(null, true);
+                    } else {
+                        cb(new CometValidationException(errorMessage), false);
+                    }
                 },
             };
 

@@ -20,6 +20,7 @@ jobs:
 
             - uses: actions/checkout@v4
               with:
+                  ref: ${{ github.event.pull_request.head.ref || github.ref }}
                   token: ${{ secrets.GITHUB_TOKEN }}
             - run: |
                   git config user.name github-actions
@@ -76,7 +77,6 @@ jobs:
                   # check for duplicate ids of formatted messages
                   pnpm run intl:extract
                   # check if schema files are up to date
-                  pnpm --filter '@comet/blocks-api' run generate-block-meta
                   pnpm --filter '@comet/cms-api' run generate-block-meta
                   pnpm --filter '@comet/cms-api' run generate-schema
                   git diff --exit-code HEAD --

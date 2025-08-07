@@ -13,7 +13,7 @@ export class ImageFileFixtureService {
         const images = [];
         for (let index = 0; index < IMAGE_FILE_PATHS.length; index++) {
             console.log(`Downloading ${IMAGE_FILE_PATHS[index]}.`);
-            const image_path = path.resolve(`./src/db/fixtures/generators/images/${IMAGE_FILE_PATHS[index]}.png`);
+            const image_path = path.resolve(`./src/db/fixtures/assets/images/${IMAGE_FILE_PATHS[index]}.png`);
 
             const downloadedImage = await createFileUploadInputFromUrl(image_path);
             console.log(`Downloading ${IMAGE_FILE_PATHS[index]} done.`);

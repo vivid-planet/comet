@@ -1,0 +1,28 @@
+.barSkeleton {
+    min-height: 20px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    background-color: var(--background-color);
+    color: var(--color);
+}
+
+.rowsContainer {
+    width: 100%;
+    min-width: 300px;
+}
+
+.rowSkeleton {
+    margin-bottom: 10px;
+    min-height: 20px;
+    width: var(--width);
+    background-color: var(--background-color);
+    color: var(--color);
+}
+
+.imageContainer {
+    width: 100%;
+    aspect-ratio: var(--aspect-ratio);
+    height: var(--height);
+    background-color: var(--background-color);
+    color: var(--color);
+}

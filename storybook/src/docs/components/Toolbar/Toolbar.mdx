@@ -1,4 +1,4 @@
-import { Canvas, Meta } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as ToolbarStories from "./Toolbar.stories";
 
@@ -14,13 +14,13 @@ The Toolbar system currently consists of some basic components. Everything is de
 
 Currently supported and built-in components:
 
--   `Toolbar`
--   `ToolbarBackButton`
--   `ToolbarBreadcrumbs`
--   `ToolbarAutomaticTitleItem`
--   `ToolbarFillSpace`
--   `ToolbarItem`
--   `ToolbarActions`
+- `Toolbar`
+- `ToolbarBackButton`
+- `ToolbarBreadcrumbs`
+- `ToolbarAutomaticTitleItem`
+- `ToolbarItem`
+- `ToolbarActions`
+- `FillSpace`
 
 ### Toolbar
 
@@ -60,9 +60,9 @@ The back button will only be shown, if there is a `StackApiContext` and the user
 
 <Canvas of={ToolbarStories.BackButton} />
 
-### ToolbarFillSpace
+### FillSpace
 
-The `ToolbarFillSpace` Component is a layout component that can fill space between components, so one can simple move e.g. the buttons to the right side or center them.
+The `FillSpace` Component is a layout component that can fill space between components, so one can simple move e.g. the buttons to the right side or center them.
 
 Here are some examples how one can use this component.
 

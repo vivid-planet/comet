@@ -1,4 +1,4 @@
-import { SxProps, Theme } from "@mui/material";
+import { type SxProps, type Theme } from "@mui/material";
 
 export const dataGridStyles: SxProps<Theme> = (theme) => ({
     minHeight: "min(740px, calc(100vh - 40px))",

@@ -1,13 +1,13 @@
-import { Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
-import { Button, Card, CardContent } from "@mui/material";
-import * as React from "react";
+import { Button, Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
+import { Card, CardContent } from "@mui/material";
+import { useState } from "react";
 
 export default {
     title: "@comet/admin/form",
 };
 
 export const _Tabs = () => {
-    const [showExample3, setShowExample3] = React.useState(false);
+    const [showExample3, setShowExample3] = useState(false);
 
     return (
         <>

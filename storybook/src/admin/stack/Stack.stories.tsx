@@ -1,6 +1,5 @@
 import { Stack, StackBreadcrumbs } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import { TableBlockData } from "../../blocks.generated";
+import { type TableBlockData } from "../../blocks.generated";
 
 export const getNewColumn = (): TableBlockData["columns"][number] => {
     return { id: uuid(), highlighted: false, size: "standard" };

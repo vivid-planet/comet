@@ -1,8 +1,9 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { NewsListBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type NewsListBlockData } from "@src/blocks.generated";
+import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 
-import { LoadedData } from "./NewsListBlock.loader";
+import { type LoadedData } from "./NewsListBlock.loader";
 
 export const NewsListBlock = withPreview(
     ({ data: { loaded: newsList } }: PropsWithData<NewsListBlockData & { loaded: LoadedData }>) => {
@@ -14,7 +15,14 @@ export const NewsListBlock = withPreview(
             <ol>
                 {newsList.map((news) => (
                     <li key={news.id}>
-                        <Link href={`/${news.scope.language}/news/${news.slug}`}>{news.title}</Link>
+                        <Link
+                            href={createSitePath({
+                                scope: news.scope,
+                                path: `/news/${news.slug}`,
+                            })}
+                        >
+                            {news.title}
+                        </Link>
                     </li>
                 ))}
             </ol>

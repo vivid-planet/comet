@@ -1,18 +1,18 @@
-import { GridSortModel, useGridApiRef } from "@mui/x-data-grid";
+import { type GridSortModel } from "@mui/x-data-grid";
 
-import { GridColDef } from "./GridColDef";
+import { type GridColDef } from "./GridColDef";
 
 type SortEntry = {
     field: any; // any to be compatible with enum
     direction: "ASC" | "DESC";
 };
 
-export function muiGridSortToGql(sortModel?: GridSortModel, apiRef?: ReturnType<typeof useGridApiRef>) {
+export function muiGridSortToGql(sortModel?: GridSortModel, columns?: GridColDef[]) {
     if (!sortModel) return undefined;
 
     const sortFieldMapping: Record<string, string[]> = {};
 
-    apiRef?.current.getAllColumns?.().forEach((column: GridColDef) => {
+    columns?.forEach((column: GridColDef) => {
         if (column.sortBy) {
             sortFieldMapping[column.field] = typeof column.sortBy === "string" ? [column.sortBy] : column.sortBy;
         }

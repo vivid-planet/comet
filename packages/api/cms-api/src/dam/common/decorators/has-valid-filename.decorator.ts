@@ -4,13 +4,13 @@ import { Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 import { basename, extname } from "path";
 
+import { slugifyFilename } from "../../../file-utils/files.utils";
 import { UpdateFileInput } from "../../files/dto/file.input";
 import { UpdateDamFileArgs } from "../../files/dto/update-dam-file.args";
 import { FILE_ENTITY, FileInterface } from "../../files/entities/file.entity";
-import { slugifyFilename } from "../../files/files.utils";
 
 export const HasValidFilename = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return (object: Object, propertyName: string): void => {
         registerDecorator({
             target: object.constructor,
@@ -20,7 +20,7 @@ export const HasValidFilename = () => {
     };
 };
 
-export interface HasValidFilenameValidationArguments extends ValidationArguments {
+interface HasValidFilenameValidationArguments extends ValidationArguments {
     object: UpdateDamFileArgs;
 }
 

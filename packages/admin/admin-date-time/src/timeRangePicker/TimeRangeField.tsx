@@ -1,7 +1,7 @@
-import { Field, FieldProps } from "@comet/admin";
+import { Field, type FieldProps } from "@comet/admin";
 
 import { FinalFormTimeRangePicker } from "./FinalFormTimeRangePicker";
-import { TimeRange } from "./TimeRangePicker";
+import { type TimeRange } from "./TimeRangePicker";
 
 export type TimeRangeFieldProps = FieldProps<TimeRange, HTMLInputElement>;
 

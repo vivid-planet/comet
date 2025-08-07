@@ -1,8 +1,8 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { MockedProvider, MockedResponse } from "@apollo/client/testing";
+import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
 import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin/lib/FinalForm";
-import * as React from "react";
+import { type VoidFunctionComponent } from "react";
 
 export default {
     title: "Docs/Form/Components/FinalForm",
@@ -99,7 +99,7 @@ export const SubmitMutationBestPractices = () => {
     interface InnerFormProps {
         id: number;
     }
-    const InnerForm: React.VoidFunctionComponent<InnerFormProps> = ({ id }) => {
+    const InnerForm: VoidFunctionComponent<InnerFormProps> = ({ id }) => {
         const client = useApolloClient();
 
         return (

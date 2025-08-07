@@ -1,7 +1,6 @@
 import { Field } from "@comet/admin";
-import { DateRange, FinalFormDateRangePicker } from "@comet/admin-date-time";
+import { type DateRange, FinalFormDateRangePicker } from "@comet/admin-date-time";
 import { Card, CardContent } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {
