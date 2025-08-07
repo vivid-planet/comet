@@ -1,5 +1,22 @@
 # @comet/cli
 
+## 8.0.0
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 23335c6: Remove workarounds in `inject-site-configs` command.
+
+    Please use the command like the current implementation in the starter.
+
+### Minor Changes
+
+- 5164ad3: comet generate-block-types generates now `AllBlockNames` type, which contains a string union for all blocks
+
 ## 8.0.0-beta.6
 
 ### Minor Changes
