@@ -8,6 +8,7 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled, { css } from "styled-components";
 
@@ -20,6 +21,7 @@ const supportedBlocks: SupportedBlocks = {
     callToActionList: (props) => <StandaloneCallToActionListBlock data={props} />,
     media: (props) => <StandaloneMediaBlock data={props} />,
     mediaGallery: (props) => <MediaGalleryBlock data={props} />,
+    textImage: (props) => <TextImageBlock data={props} />,
 };
 
 const ColumnsContentBlock = withPreview(
