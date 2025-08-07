@@ -17,14 +17,24 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(appModule);
     useContainer(app, { fallbackOnErrors: true });
 
-    await CommandFactory.run(appModule, {
-        logger: ["error", "warn", "log"],
-        serviceErrorHandler: async (error) => {
-            console.error(error);
-            process.exit(1);
-        },
-    });
-    await app.close();
+    try {
+        await CommandFactory.run(appModule, {
+            logger: ["error", "warn", "log"],
+            serviceErrorHandler: async (error) => {
+                // Log the error and rethrow to be caught below
+                console.error(error);
+                throw error;
+            },
+        });
+    } finally {
+        await app.close();
+    }
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+    // Log the error if not already logged, then exit with failure
+    if (err) {
+        console.error(err);
+    }
+    process.exit(1);
+});
