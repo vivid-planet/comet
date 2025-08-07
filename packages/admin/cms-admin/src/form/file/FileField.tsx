@@ -44,7 +44,7 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
     const damFile = input.value;
 
     if (damFile) {
-        const showMenu = Boolean(dependencyMap["DamFile"]);
+        const showMenu = Boolean(dependencyMap["DamFile"]) || (menuActions !== undefined && menuActions.length > 0);
         return (
             <>
                 <AdminComponentPaper disablePadding>
@@ -80,21 +80,23 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
                 </AdminComponentPaper>
                 {showMenu && (
                     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                        <MenuItem
-                            onClick={async () => {
-                                const path = await dependencyMap["DamFile"].resolvePath({
-                                    apolloClient,
-                                    id: damFile.id,
-                                });
-                                const url = contentScope.match.url + path;
-                                window.open(url, "_blank");
-                            }}
-                        >
-                            <ListItemIcon>
-                                <OpenNewTab />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
-                        </MenuItem>
+                        {dependencyMap["DamFile"] && (
+                            <MenuItem
+                                onClick={async () => {
+                                    const path = await dependencyMap["DamFile"].resolvePath({
+                                        apolloClient,
+                                        id: damFile.id,
+                                    });
+                                    const url = contentScope.match.url + path;
+                                    window.open(url, "_blank");
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <OpenNewTab />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
+                            </MenuItem>
+                        )}
                         {menuActions &&
                             menuActions.map((item, index) => {
                                 if (!item) return null;
