@@ -62,5 +62,3 @@ pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 
 # create site-config-envs
 pnpm run create-site-configs-env
-
-brew install mitmproxy

@@ -162,12 +162,6 @@ module.exports = {
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
-        {
-            name: "demo-api-proxy",
-            script: "mitmweb --mode reverse:http://localhost:4000/ --listen-port 4001",
-            group: ["demo-api", "demo"],
-        },
-
         //group demo site
         {
             name: "demo-site",
