@@ -4,7 +4,7 @@ import { type ReactNode } from "react";
 import { FinalFormCheckbox, type FinalFormCheckboxProps } from "../Checkbox";
 import { Field, type FieldProps } from "../Field";
 
-export interface CheckboxFieldProps extends FieldProps<string, HTMLInputElement> {
+export interface CheckboxFieldProps<FormValues> extends FieldProps<FormValues, string, HTMLInputElement> {
     fieldLabel?: ReactNode;
     componentsProps?: {
         formControlLabel?: FormControlLabelProps;
@@ -12,7 +12,7 @@ export interface CheckboxFieldProps extends FieldProps<string, HTMLInputElement>
     };
 }
 
-export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: CheckboxFieldProps) => {
+export function CheckboxField<FormValues>({ fieldLabel, label, componentsProps = {}, ...restProps }: CheckboxFieldProps<FormValues>) {
     const { formControlLabel: formControlLabelProps, finalFormCheckbox: finalFormCheckboxProps } = componentsProps;
     return (
         <Field type="checkbox" label={fieldLabel} {...restProps}>
@@ -21,4 +21,4 @@ export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...rest
             )}
         </Field>
     );
-};
+}

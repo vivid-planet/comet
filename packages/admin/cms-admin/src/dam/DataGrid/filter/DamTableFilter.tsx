@@ -42,7 +42,8 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                         />
                     </FilterBarPopoverFilter>
                 )}
-                <Field<ISortInformation> name="sort">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                <Field<any, ISortInformation> name="sort">
                     {({ input }) => {
                         return <DamSortPopover onChoose={input.onChange} currentSort={input.value} />;
                     }}

@@ -4,20 +4,20 @@ import { type ReactNode } from "react";
 import { Field, type FieldProps } from "../Field";
 import { FinalFormSwitch, type FinalFormSwitchProps } from "../Switch";
 
-export interface SwitchFieldProps extends Omit<FieldProps<string, HTMLInputElement>, "label"> {
-    name: string;
+export type SwitchFieldProps<FormValues> = Omit<FieldProps<FormValues, string, HTMLInputElement>, "label" | "name"> & {
+    name: FieldProps<FormValues, string, HTMLInputElement>["name"];
     fieldLabel?: ReactNode;
     label?: ReactNode | ((checked?: boolean) => ReactNode);
     componentsProps?: {
         formControlLabel?: FormControlLabelProps;
         finalFormSwitch?: FinalFormSwitchProps;
     };
-}
+};
 
-export const SwitchField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: SwitchFieldProps) => {
+export function SwitchField<FormValues>({ fieldLabel, label, componentsProps = {}, ...restProps }: SwitchFieldProps<FormValues>) {
     const { formControlLabel: formControlLabelProps, finalFormSwitch: finalFormSwitchProps } = componentsProps;
     return (
-        <Field type="checkbox" label={fieldLabel} {...restProps}>
+        <Field<FormValues> type="checkbox" label={fieldLabel} {...restProps}>
             {(props) => (
                 <FormControlLabel
                     label={typeof label === "function" ? label(props.input.checked) : label}
@@ -27,4 +27,4 @@ export const SwitchField = ({ fieldLabel, label, componentsProps = {}, ...restPr
             )}
         </Field>
     );
-};
+}

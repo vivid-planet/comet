@@ -10,22 +10,30 @@ export type SelectFieldOption<Value extends string | number = string | number> =
     disabled?: boolean;
 };
 
-type SelectFieldPropsToExtendFrom<Value extends string | number> = FieldProps<Value, HTMLSelectElement>;
+type SelectFieldPropsToExtendFrom<FormValues, Value extends string | number> = FieldProps<FormValues, Value, HTMLSelectElement>;
 
 // Remove `children` from the interface. Omit cannot be used here because `FieldProps` contains an index signature.
-type SelectFieldPropsToExtendFromWithoutChildren<Value extends string | number> = {
-    [K in keyof SelectFieldPropsToExtendFrom<Value> as K extends "children" ? never : K]: SelectFieldPropsToExtendFrom<Value>[K];
+type SelectFieldPropsToExtendFromWithoutChildren<FormValues, Value extends string | number> = {
+    [K in keyof SelectFieldPropsToExtendFrom<FormValues, Value> as K extends "children" ? never : K]: SelectFieldPropsToExtendFrom<
+        FormValues,
+        Value
+    >[K];
 };
 
-export interface SelectFieldProps<Value extends string | number> extends SelectFieldPropsToExtendFromWithoutChildren<Value> {
-    children?: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
+export interface SelectFieldProps<FormValues, Value extends string | number> extends SelectFieldPropsToExtendFromWithoutChildren<FormValues, Value> {
+    children?: ReturnType<Required<SelectFieldPropsToExtendFrom<FormValues, Value>>["children"]>;
     options?: SelectFieldOption<Value>[];
     componentsProps?: {
         finalFormSelect?: Partial<ComponentProps<typeof FinalFormSelect<Value>>>;
     };
 }
 
-export function SelectField<Value extends string | number>({ componentsProps = {}, children, options, ...restProps }: SelectFieldProps<Value>) {
+export function SelectField<FormValues, Value extends string | number>({
+    componentsProps = {},
+    children,
+    options,
+    ...restProps
+}: SelectFieldProps<FormValues, Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
     return (
         <Field {...restProps}>

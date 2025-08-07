@@ -9,14 +9,19 @@ type CheckboxListFieldOption<Value extends string> = {
     disabled?: boolean;
 };
 
-export type CheckboxListFieldProps<Value extends string> = FieldProps<[Value], HTMLInputElement> & {
+export type CheckboxListFieldProps<FormValues, Value extends string> = FieldProps<FormValues, [Value], HTMLInputElement> & {
     options: CheckboxListFieldOption<Value>[];
     layout?: "row" | "column";
 };
 
-export const CheckboxListField = <Value extends string>({ options, layout = "row", required, ...restProps }: CheckboxListFieldProps<Value>) => {
+export function CheckboxListField<FormValues, Value extends string>({
+    options,
+    layout = "row",
+    required,
+    ...restProps
+}: CheckboxListFieldProps<FormValues, Value>) {
     return (
-        <Field<[Value]> required={required} {...restProps}>
+        <Field<FormValues, [Value]> required={required} {...restProps}>
             {({ input: { value, onBlur, onFocus, onChange, name, ...restInput } }) => (
                 <FormGroup row={layout === "row"} {...restInput}>
                     {options.map((option) => (
@@ -43,4 +48,4 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
             )}
         </Field>
     );
-};
+}
