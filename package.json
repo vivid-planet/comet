@@ -42,7 +42,7 @@
         "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
-        "browser:demo:mitmproxy": "dotenv -- sh -c 'open-cli http://127.0.0.1:8081/#/flows'"
+        "browser:demo:mitmproxy": "dotenv -- sh -c 'open-cli http://127.0.0.1:8081?token=$MITMPROXY_WEB_PASSWORD'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
