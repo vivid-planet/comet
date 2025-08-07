@@ -406,7 +406,6 @@ function createUndefinedReplacementsForDependencies(dependencies: BlockDependenc
 function fileDependenciesFromDocument(documentType: DocumentInterface, document: GQLDocument) {
     return documentType
         .dependencies(document)
-
         .filter(isDamFileDependency)
         .map((dependency) => {
             return dependency.data.damFile;
