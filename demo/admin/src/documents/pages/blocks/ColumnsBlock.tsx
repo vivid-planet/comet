@@ -13,6 +13,7 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { FormattedMessage } from "react-intl";
 
 const oneColumnLayouts = [
@@ -122,6 +123,7 @@ const ColumnsContentBlock = createBlocksBlock({
         callToActionList: StandaloneCallToActionListBlock,
         media: StandaloneMediaBlock,
         mediaGallery: MediaGalleryBlock,
+        textImage: TextImageBlock,
     },
 });
 
