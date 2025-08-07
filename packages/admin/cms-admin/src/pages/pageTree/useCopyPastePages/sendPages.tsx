@@ -113,13 +113,10 @@ export async function sendPages(
                 for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
-                        console.log("already handled");
                         //file already handled (same file used multiple times on page)
                     } else if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
-                        console.log("no scope or same scope");
                         //same scope, same server, no need to copy
                     } else {
-                        console.log("checking");
                         // TODO eventually handle multiple files in one request for better performance
                         const { data } = await client.query<GQLFindCopiesOfFileInScopeQuery, GQLFindCopiesOfFileInScopeQueryVariables>({
                             query: gql`
@@ -136,7 +133,6 @@ export async function sendPages(
                             },
                         });
                         if (data.findCopiesOfFileInScope.length > 0) {
-                            console.log("existing file found");
                             // use already existing file
                             dependencyReplacements.push({
                                 type: "DamFile",
@@ -144,7 +140,6 @@ export async function sendPages(
                                 replaceWithId: data.findCopiesOfFileInScope[0].id,
                             });
                         } else {
-                            console.log("no existing file found -> copying required");
                             // copying is required
                             if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
                                 sourceScopes.push(damFile.scope);
