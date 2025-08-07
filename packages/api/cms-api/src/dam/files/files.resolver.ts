@@ -148,7 +148,10 @@ export function createFilesResolver({
             })
             inboxFolderId: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
+            const copyFilesResponse = await this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
+
+            await this.entityManager.flush();
+            return copyFilesResponse;
         }
 
         @Mutation(() => File)
