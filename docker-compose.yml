@@ -61,7 +61,8 @@ services:
             - 8025:8025
 
     mitmproxy:
-        image: mitmproxy/mitmproxy
+        image: mitmproxy/mitmproxy:12
+        pull_policy: weekly
         command: mitmweb --mode reverse:http://host.docker.internal:4000/ --listen-port 4001 --web-host 0.0.0.0 --web-port 8081 --no-web-open-browser --set web_password='${MITMPROXY_WEB_PASSWORD}'
         ports:
             - "4001:4001"  # Proxy port
