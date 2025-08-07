@@ -1,5 +1,14 @@
 # @comet/eslint-plugin
 
+## 8.0.0
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
 ## 8.0.0-beta.6
 
 ## 8.0.0-beta.5

@@ -1,13 +1,12 @@
-import type {} from "@mui/x-date-pickers/themeAugmentation";
+import { type Components, type Theme } from "@mui/material/styles";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDateCalendar: GetMuiComponentTheme<"MuiDateCalendar"> = (component, { shadows }) => ({
+export const getMuiDateCalendar = (component: Components["MuiDateCalendar"], theme: Theme): Components["MuiDateCalendar"] => ({
     ...component,
-    styleOverrides: mergeOverrideStyles<"MuiDateCalendar">(component?.styleOverrides, {
+    styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
         root: {
-            boxShadow: shadows[1],
+            boxShadow: theme.shadows[1],
         },
     }),
 });

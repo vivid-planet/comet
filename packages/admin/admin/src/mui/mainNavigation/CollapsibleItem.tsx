@@ -65,6 +65,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
     const { drawerVariant } = useMainNavigation();
     const itemLevel: MainNavigationItemLevel = level ?? 1;
     const hasSelectedChild = useRef(false);
+
     const location = useLocation();
 
     const [isSubmenuOpen, setIsSubmenuOpen] = useState<boolean>(openByDefault || hasSelectedChild.current);
@@ -105,10 +106,9 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
             return cloneElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>(child, {
                 level: newItemLevel === 1 || newItemLevel === 2 || newItemLevel === 3 ? newItemLevel : undefined,
                 isMenuOpen,
-                isCollapsibleOpen: isSubmenuOpen,
             });
         });
-    }, [children, isMenuOpen, isSubmenuOpen, itemLevel, location.pathname]);
+    }, [children, isMenuOpen, itemLevel, location.pathname]);
 
     const closeMenu = () => {
         setAnchorEl(null);
