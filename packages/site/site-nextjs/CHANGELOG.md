@@ -1,5 +1,11 @@
 # @comet/site-nextjs
 
+## 7.25.6
+
+### Patch Changes
+
+-   @comet/site-react@7.25.6
+
 ## 7.25.5
 
 ### Patch Changes

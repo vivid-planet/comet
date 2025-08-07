@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 7.25.6
+
+### Patch Changes
+
+-   ddeba0239: Fix missing "Crop image" button in `PixelImageBlock`
+    -   @comet/admin@7.25.6
+    -   @comet/admin-date-time@7.25.6
+    -   @comet/admin-icons@7.25.6
+    -   @comet/admin-rte@7.25.6
+    -   @comet/admin-theme@7.25.6
+    -   @comet/blocks-admin@7.25.6
+
 ## 7.25.5
 
 ### Patch Changes
