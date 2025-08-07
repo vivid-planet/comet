@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 import { Field, type FieldProps } from "../Field";
 import { FinalFormAsyncSelect } from "../FinalFormAsyncSelect";
 
-export interface AsyncSelectFieldProps<Option> extends FieldProps<Option, HTMLSelectElement> {
+export interface AsyncSelectFieldProps<FormValues, Option> extends FieldProps<FormValues, Option, HTMLSelectElement> {
     loadOptions: () => Promise<Option[]>;
     noOptionsLabel?: ReactNode;
     errorLabel?: ReactNode;
@@ -12,6 +12,6 @@ export interface AsyncSelectFieldProps<Option> extends FieldProps<Option, HTMLSe
     clearable?: boolean;
 }
 
-export function AsyncSelectField<Option>(props: AsyncSelectFieldProps<Option>) {
+export function AsyncSelectField<FormValues, Option>(props: AsyncSelectFieldProps<FormValues, Option>) {
     return <Field component={FinalFormAsyncSelect} {...props} />;
 }

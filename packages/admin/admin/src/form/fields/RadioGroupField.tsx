@@ -10,14 +10,18 @@ type RadioGroupFieldOption<Value extends string> = {
     disabled?: boolean;
 };
 
-export type RadioGroupFieldProps<Value extends string> = FieldProps<Value, HTMLInputElement> & {
+export type RadioGroupFieldProps<FormValues, Value extends string> = FieldProps<FormValues, Value, HTMLInputElement> & {
     options: RadioGroupFieldOption<Value>[];
     layout?: "row" | "column";
 };
 
-export const RadioGroupField = <Value extends string>({ options, layout = "row", ...restProps }: RadioGroupFieldProps<Value>) => {
+export const RadioGroupField = <FormValues, Value extends string>({
+    options,
+    layout = "row",
+    ...restProps
+}: RadioGroupFieldProps<FormValues, Value>) => {
     return (
-        <Field<Value> {...restProps}>
+        <Field<FormValues, Value> {...restProps}>
             {({ input: { checked, value, onBlur, onFocus, ...restInput } }) => (
                 <RadioGroup {...restInput} row={layout === "row"} value={value}>
                     {options.map(({ value, label, disabled }) => (

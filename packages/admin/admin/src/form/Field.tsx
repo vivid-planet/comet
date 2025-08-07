@@ -18,8 +18,23 @@ const composeValidators =
     (value: any, allValues: object) =>
         validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
-export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
-    name: string;
+/**
+ * Type that extracts all possible paths from a type, handling nested objects with dot notation
+ */
+export type FilePath<T> = T extends object
+    ? {
+          [K in keyof T]: K extends string
+              ? T[K] extends Array<any>
+                  ? K | `${K}[${number}]` | `${K}[${number}].${FilePath<T[K][number]>}`
+                  : T[K] extends object
+                    ? K | `${K}.${FilePath<T[K]>}`
+                    : K
+              : never;
+      }[keyof T]
+    : never;
+
+export interface FieldProps<FormValues = any, FieldValue = any, T extends HTMLElement = HTMLElement> {
+    name: FilePath<FormValues>;
     label?: ReactNode;
     helperText?: ReactNode;
     component?: ComponentType<any> | string;
@@ -35,7 +50,7 @@ export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElemen
     [otherProp: string]: any;
 }
 
-export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
+export function Field<FormValues = any, FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
     children,
     component,
     name,
@@ -48,7 +63,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     shouldShowWarning: passedShouldShowWarning,
     shouldScrollTo: passedShouldScrollTo,
     ...otherProps
-}: FieldProps<FieldValue, FieldElement>) {
+}: FieldProps<FormValues, FieldValue, FieldElement>) {
     const { disabled, variant, fullWidth } = otherProps;
 
     const { mutators } = useForm();
