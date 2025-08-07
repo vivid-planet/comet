@@ -367,14 +367,13 @@ function unhandledDependenciesFromDocument(
     }: { existingReplacements: ReplaceDependencyObject[]; hasDamScope?: boolean; targetDamScope: Record<string, unknown> },
 ) {
     const unhandledDependencies = documentType.dependencies(document).filter((dependency) => {
-        if (dependency.targetGraphqlObjectType === "DamFile") {
+        if (isDamFileDependency(dependency)) {
             if (!hasDamScope) {
                 // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
                 return false;
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            if (isEqual(((dependency.data as any).damFile as GQLDamFile & { scope?: Record<string, unknown> }).scope, targetDamScope)) {
+            if (isEqual(dependency.data.damFile.scope, targetDamScope)) {
                 // Source and target DAM scope are the same, so no need to handle this dependency
                 return false;
             }
@@ -405,14 +404,18 @@ function createUndefinedReplacementsForDependencies(dependencies: BlockDependenc
 }
 
 function fileDependenciesFromDocument(documentType: DocumentInterface, document: GQLDocument) {
-    return (
-        documentType
-            .dependencies(document)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile)
-            .map((dependency) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                return (dependency.data as any).damFile as GQLDamFile & { scope?: Record<string, unknown> };
-            })
-    );
+    return documentType
+        .dependencies(document)
+
+        .filter(isDamFileDependency)
+        .map((dependency) => {
+            return dependency.data.damFile;
+        });
+}
+
+function isDamFileDependency(
+    dependency: BlockDependency,
+): dependency is BlockDependency & { data: { damFile: GQLDamFile & { scope?: Record<string, unknown> } } } {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile;
 }
