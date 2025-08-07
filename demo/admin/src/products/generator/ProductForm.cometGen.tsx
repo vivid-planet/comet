@@ -4,6 +4,7 @@ import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
+import { productTypeValues } from "./productTypeValues";
 
 export default defineConfig<GQLProduct>({
     type: "form",
@@ -36,7 +37,7 @@ export default defineConfig<GQLProduct>({
                     label: "Type",
                     required: true,
                     inputType: "radio",
-                    values: [{ value: "cap", label: "great Cap" }, "shirt", "tie"],
+                    values: productTypeValues,
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {
@@ -67,8 +68,9 @@ export default defineConfig<GQLProduct>({
                     type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
-                    filterField: {
-                        name: "type",
+                    filter: {
+                        type: "formProp",
+                        propName: "manufacturerCountry",
                         gqlName: "addressAsEmbeddable_country",
                     },
                     startAdornment: { icon: "Location" },

@@ -1,4 +1,4 @@
-import { Close } from "@comet/admin-icons";
+import { Close, CometDigitalExperienceLogo } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -16,7 +16,6 @@ import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
 import { useBuildInformation } from "./build-information/useBuildInformation";
-import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 
 interface AboutModalProps {
     onClose?: () => void;
@@ -24,7 +23,7 @@ interface AboutModalProps {
     logo?: ReactElement;
 }
 
-export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps) {
+export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo sx={{ width: "300px", height: "84px" }} /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
 
     return (

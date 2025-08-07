@@ -12,14 +12,14 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
+export { createFetchWithDefaultNextRevalidate, createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
 export { Image } from "./image/Image";
-export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
+export { sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
+export { legacyPagesRouterPreviewParams, previewParams, type SitePreviewParams } from "./sitePreview/previewUtils";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
-export { type SitePreviewParams } from "./sitePreview/SitePreviewUtils";
 export {
     AdminMessageType,
     type BlockLoader,

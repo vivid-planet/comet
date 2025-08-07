@@ -3,12 +3,12 @@ title: Typescript
 sidebar_position: -5
 ---
 
-Everything from [Clean Code concepts adapted for JavaScript](https://github.com/ryanmcdermott/clean-code-javascript)
+Everything from [Clean Code concepts adapted for TypeScript](https://github.com/labs42io/clean-code-typescript)
 
 ## General
 
 Prefer using an options object instead of multiple parameters
-(Explanation: [Clean Code concepts adapted for JavaScript](https://github.com/ryanmcdermott/clean-code-javascript#function-arguments-2-or-fewer-ideally))
+(Explanation: [Clean Code concepts adapted for TypeScript](https://github.com/labs42io/clean-code-typescript#function-arguments-2-or-fewer-ideally))
 
 :::warning Bad
 
@@ -79,7 +79,7 @@ See [Libraries and Techniques](./libraries-and-techniques)
 ## Further Reading / Sources
 
 - [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)
-- [Clean Code concepts adapted for JavaScript – GitHub by ryanmcdermott](https://github.com/ryanmcdermott/clean-code-javascript)
+- [Clean Code concepts adapted for TypeScript – GitHub by labs42io](https://github.com/labs42io/clean-code-typescript#function-arguments-2-or-fewer-ideally)
 - [oida.dev | TypeScript, JavaScript, Rust](https://fettblog.eu/)
 
 ## Naming Conventions

@@ -4,7 +4,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "../../generateCrud/generate-crud";
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 
 @Entity()
 class TestEntityWithIntegerTypes extends BaseEntity {
@@ -63,7 +63,10 @@ describe("GenerateCrudInputInteger", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithIntegerTypes"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithIntegerTypes"),
+        );
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity-with-integer-types.input.ts");
         if (!file) throw new Error("File not found");

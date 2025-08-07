@@ -20,5 +20,12 @@ export async function GET(request: NextRequest, { params: { domain, language } }
         scope: { domain, language },
         ...result.data,
     });
-    return NextResponse.json(data);
+
+    // 7.5 min (CDN) + 7.5 min (Data Cache) = 15 min effective cache duration
+    return NextResponse.json(data, {
+        headers: {
+            "Cache-Control": "public, max-age=450, stale-while-revalidate=450",
+        },
+        status: 200,
+    });
 }

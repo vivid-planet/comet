@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.0.0-beta.6",
+    "version": "8.0.0",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -31,7 +31,8 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.844.0",
+        "@aws-sdk/client-s3": "^3.850.0",
+        "@aws-sdk/lib-storage": "^3.850.0",
         "@azure-rest/ai-translation-text": "^1.0.1",
         "@azure/storage-blob": "^12.27.0",
         "@fast-csv/parse": "^4.3.6",
@@ -60,6 +61,7 @@
         "mime": "^3.0.0",
         "mime-db": "^1.54.0",
         "multer": "^2.0.1",
+        "nodemailer": "^7.0.0",
         "openai": "^4.104.0",
         "probe-image-size": "^7.2.3",
         "request-ip": "^3.3.0",
@@ -95,6 +97,7 @@
         "@types/mime-db": "^1.43.6",
         "@types/multer": "^2.0.0",
         "@types/node": "^22.16.3",
+        "@types/nodemailer": "^6.4.17",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
         "chokidar-cli": "^3.0.0",
