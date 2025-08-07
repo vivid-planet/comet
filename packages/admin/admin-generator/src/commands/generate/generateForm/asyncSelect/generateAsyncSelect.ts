@@ -4,7 +4,7 @@ import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../
 import { findQueryTypeOrThrow } from "../../utils/findQueryType";
 import { type Imports } from "../../utils/generateImportsCode";
 import { isFieldOptional } from "../../utils/isFieldOptional";
-import { formFieldOptions } from "../formField/options";
+import { generateFormFieldOptions } from "../formField/options";
 import { findFieldByName, type GenerateFieldsReturn } from "../generateFields";
 import { type Prop } from "../generateForm";
 
@@ -22,7 +22,7 @@ function gqlScalarToTypescriptType(scalarName: string): string {
     }
 }
 
-function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
+function buildTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
     let typeKind = undefined;
     let typeClass = "unknown";
     let required = false;
@@ -81,7 +81,7 @@ export function generateAsyncSelect({
         startAdornment,
         //endAdornment,
         imports: optionsImports,
-    } = formFieldOptions({ config, formConfig, gqlIntrospection, gqlType });
+    } = generateFormFieldOptions({ config, formConfig, gqlIntrospection, gqlType });
     imports.push(...optionsImports);
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
@@ -171,7 +171,7 @@ export function generateAsyncSelect({
 
               // try to find arg used to filter by checking names of root-arg and filter-arg-fields
               const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
-              let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+              let filterType = rootArgForName ? buildTypeInfo(rootArgForName, gqlIntrospection) : undefined;
               let filterVarName = undefined;
               let filterVarValue = undefined;
 
@@ -193,7 +193,7 @@ export function generateAsyncSelect({
               } else {
                   // no root-arg with same name, check filter-arg-fields
                   const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
-                  filterType = rootArgFilter ? getTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
+                  filterType = rootArgFilter ? buildTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
                   if (filterType) {
                       filterVarName = "filter";
                       filterVarValue = `{ ${gqlName}: { equal: ${filterVar} } }`;
@@ -205,7 +205,7 @@ export function generateAsyncSelect({
                       if (!nestedFilterInput) {
                           throw new Error(`Field ${String(config.name)}: Field filter.${gqlName} does not exist`);
                       }
-                      const gqlFilterInputType = getTypeInfo(nestedFilterInput, gqlIntrospection);
+                      const gqlFilterInputType = buildTypeInfo(nestedFilterInput, gqlIntrospection);
                       if (!gqlFilterInputType?.inputType || gqlFilterInputType.inputType.kind !== "INPUT_OBJECT") {
                           throw new Error(
                               `Field ${String(config.name)}: Type of filter.${gqlName} is no object-type, but needs to be e.g. StringFilter-type.`,
@@ -215,7 +215,7 @@ export function generateAsyncSelect({
                       if (!gqlFilterEqualInputType) {
                           throw new Error(`Field ${String(config.name)}: Field filter.${gqlName}.equal does not exist`);
                       }
-                      const equalFieldType = getTypeInfo(gqlFilterEqualInputType, gqlIntrospection);
+                      const equalFieldType = buildTypeInfo(gqlFilterEqualInputType, gqlIntrospection);
                       if (!equalFieldType) {
                           throw new Error(
                               `Field ${String(config.name)}: Field filter.${gqlName}.equal does not exist but is required for filtering.`,
