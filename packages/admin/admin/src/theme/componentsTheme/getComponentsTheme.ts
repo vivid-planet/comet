@@ -1,5 +1,8 @@
 import { type ComponentNameToClassKey, type ThemeOptions } from "@mui/material";
 import { type Components, type Theme } from "@mui/material/styles";
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import type {} from "@mui/x-date-pickers/themeAugmentation";
+import type {} from "@mui/x-date-pickers-pro/themeAugmentation";
 
 import { getMuiAccordion } from "./MuiAccordion";
 import { getMuiAlert } from "./MuiAlert";
@@ -15,7 +18,6 @@ import { getMuiCardHeader } from "./MuiCardHeader";
 import { getMuiCheckbox } from "./MuiCheckbox";
 import { getMuiChip } from "./MuiChip";
 import { getMuiDataGrid } from "./MuiDataGrid";
-import { getMuiDateCalendar } from "./MuiDateCalendar";
 import { getMuiDialog } from "./MuiDialog";
 import { getMuiDialogActions } from "./MuiDialogActions";
 import { getMuiDialogContent } from "./MuiDialogContent";
@@ -42,6 +44,7 @@ import { getMuiMenuItem } from "./MuiMenuItem";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
 import { getMuiPaper } from "./MuiPaper";
 import { getMuiPickersInputBase } from "./MuiPickersInputBase";
+import { getMuiPickersPopper } from "./MuiPickersPopper";
 import { getMuiPickersTextField } from "./MuiPickersTextField";
 import { getMuiPopover } from "./MuiPopover";
 import { getMuiRadio } from "./MuiRadio";
@@ -121,6 +124,6 @@ export const getComponentsTheme = (components: Components, theme: Theme): ThemeO
     MuiTooltip: getMuiTooltip(components.MuiTooltip, theme),
     MuiTypography: getMuiTypography(components.MuiTypography, theme),
     MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, theme),
-    MuiDateCalendar: getMuiDateCalendar(components.MuiDateCalendar, theme),
+    MuiPickersPopper: getMuiPickersPopper(components.MuiPickersPopper, theme),
     MuiTableFooter: getMuiTableFooter(components.MuiTableFooter, theme),
 });

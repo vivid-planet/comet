@@ -93,6 +93,8 @@ export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { Future_DatePicker, Future_DatePickerClassKey, Future_DatePickerProps } from "./dateTime/DatePicker";
 export { Future_DatePickerField, Future_DatePickerFieldProps } from "./dateTime/DatePickerField";
+export { type DateRange, Future_DateRangePicker, Future_DateRangePickerClassKey, Future_DateRangePickerProps } from "./dateTime/DateRangePicker";
+export { Future_DateRangePickerField, Future_DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
