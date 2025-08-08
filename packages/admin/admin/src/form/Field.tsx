@@ -21,20 +21,20 @@ const composeValidators =
 /**
  * Type that extracts all possible paths from a type, handling nested objects with dot notation
  */
-export type FilePath<T> = T extends object
+export type FieldPath<T> = T extends object
     ? {
           [K in keyof T]: K extends string
               ? T[K] extends Array<any>
-                  ? K | `${K}[${number}]` | `${K}[${number}].${FilePath<T[K][number]>}`
+                  ? K | `${K}[${number}]` | `${K}[${number}].${FieldPath<T[K][number]>}`
                   : T[K] extends object
-                    ? K | `${K}.${FilePath<T[K]>}`
+                    ? K | `${K}.${FieldPath<T[K]>}`
                     : K
               : never;
       }[keyof T]
     : never;
 
 export interface FieldProps<FormValues = any, FieldValue = any, T extends HTMLElement = HTMLElement> {
-    name: FilePath<FormValues>;
+    name: FieldPath<FormValues>;
     label?: ReactNode;
     helperText?: ReactNode;
     component?: ComponentType<any> | string;
