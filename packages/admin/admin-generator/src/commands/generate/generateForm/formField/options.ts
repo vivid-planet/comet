@@ -49,7 +49,7 @@ const buildAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ad
 /**
  * Helper function that builds various options needed for generating form fields.
  */
-export function generateFormFieldOptions({
+export function buildFormFieldOptions({
     config,
     formConfig,
     gqlIntrospection,

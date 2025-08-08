@@ -4,7 +4,7 @@ import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../
 import { findQueryTypeOrThrow } from "../../utils/findQueryType";
 import { type Imports } from "../../utils/generateImportsCode";
 import { isFieldOptional } from "../../utils/isFieldOptional";
-import { generateFormFieldOptions } from "../formField/options";
+import { buildFormFieldOptions } from "../formField/options";
 import { findFieldByName, type GenerateFieldsReturn } from "../generateFields";
 import { type Prop } from "../generateForm";
 
@@ -81,7 +81,7 @@ export function generateAsyncSelect({
         startAdornment,
         //endAdornment,
         imports: optionsImports,
-    } = generateFormFieldOptions({ config, formConfig, gqlIntrospection, gqlType });
+    } = buildFormFieldOptions({ config, formConfig, gqlIntrospection, gqlType });
     imports.push(...optionsImports);
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
