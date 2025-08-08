@@ -11,7 +11,7 @@ import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof ColorField>;
 
-const meta: Meta<typeof ColorField> = {
+const meta: Meta<typeof ColorField<any>> = {
     component: ColorField,
     title: "Component Docs/ColorField",
     tags: ["adminComponentDocs"],

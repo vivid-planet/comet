@@ -7,8 +7,8 @@ const FinalFormDatePicker = ({ meta, input, ...restProps }: DatePickerProps & Fi
     return <DatePicker {...input} {...restProps} />;
 };
 
-export type Future_DatePickerFieldProps = FieldProps<string, HTMLInputElement>;
+export type Future_DatePickerFieldProps<FormValues> = FieldProps<FormValues, string, HTMLInputElement>;
 
-export const Future_DatePickerField = (props: Future_DatePickerFieldProps) => {
+export function Future_DatePickerField<FormValues>(props: Future_DatePickerFieldProps<FormValues>) {
     return <Field component={FinalFormDatePicker} {...props} />;
-};
+}
