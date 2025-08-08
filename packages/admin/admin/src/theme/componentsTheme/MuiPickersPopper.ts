@@ -2,10 +2,10 @@ import { type Components, type Theme } from "@mui/material/styles";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 
-export const getMuiDateCalendar = (component: Components["MuiDateCalendar"], theme: Theme): Components["MuiDateCalendar"] => ({
+export const getMuiPickersPopper = (component: Components["MuiPickersPopper"], theme: Theme): Components["MuiPickersPopper"] => ({
     ...component,
     styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
-        root: {
+        paper: {
             boxShadow: theme.shadows[1],
         },
     }),
