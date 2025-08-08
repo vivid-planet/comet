@@ -7,7 +7,7 @@ import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof NumberField>;
 
-const meta: Meta<typeof NumberField> = {
+const meta: Meta<typeof NumberField<any>> = {
     component: NumberField,
     title: "Component Docs/NumberField",
     tags: ["adminComponentDocs"],

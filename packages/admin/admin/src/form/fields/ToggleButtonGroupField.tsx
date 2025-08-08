@@ -1,7 +1,7 @@
 import { Field, type FieldProps } from "../Field";
 import { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from "../FinalFormToggleButtonGroup";
 
-export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTMLSelectElement> &
+export type ToggleButtonGroupFieldProps<FormValues, FieldValue> = FieldProps<FormValues, FieldValue, HTMLSelectElement> &
     Omit<FinalFormToggleButtonGroupProps<FieldValue>, "input" | "meta">;
 
 /**
@@ -10,7 +10,11 @@ export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTM
  * This is especially useful when the user needs to choose between different types
  * of input for the same conceptual field — for example, selecting between an address or coordinate.
  */
-export function ToggleButtonGroupField<FieldValue = unknown>({ options, optionsPerRow, ...restProps }: ToggleButtonGroupFieldProps<FieldValue>) {
+export function ToggleButtonGroupField<FormValues, FieldValue = unknown>({
+    options,
+    optionsPerRow,
+    ...restProps
+}: ToggleButtonGroupFieldProps<FormValues, FieldValue>) {
     return (
         <Field {...restProps}>
             {(fieldProps) => {

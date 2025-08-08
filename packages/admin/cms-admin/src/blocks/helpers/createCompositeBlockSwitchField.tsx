@@ -4,7 +4,7 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
-interface Options extends Partial<SwitchFieldProps> {
+interface Options extends Partial<SwitchFieldProps<unknown>> {
     defaultValue?: boolean;
     extractTextContents?: BlockMethods["extractTextContents"];
 }

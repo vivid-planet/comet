@@ -49,7 +49,7 @@ export const ToggleButtonFieldStory: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <ToggleButtonGroupField<SampleType>
+                            <ToggleButtonGroupField<FormValues, SampleType>
                                 label="Sample Type"
                                 name="type"
                                 options={[
@@ -111,7 +111,7 @@ export const MultipleRowsExample: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <ToggleButtonGroupField<SampleType>
+                            <ToggleButtonGroupField<FormValues, SampleType>
                                 label="Sample Type"
                                 name="type"
                                 optionsPerRow={3}
@@ -202,7 +202,7 @@ export const ToggleButtonFieldAddressSample: Story = {
                 {({ values }) => {
                     return (
                         <Box display="flex" gap={2} flexDirection="column">
-                            <ToggleButtonGroupField<AddressType>
+                            <ToggleButtonGroupField<FormValues, AddressType>
                                 label="AddressType"
                                 name="type"
                                 options={[
@@ -264,7 +264,7 @@ export const MediaType: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <ToggleButtonGroupField<SampleType>
+                            <ToggleButtonGroupField<FormValues, SampleType>
                                 label="Media Type"
                                 name="type"
                                 options={[
@@ -322,7 +322,7 @@ export const MediaTypeWithText: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <ToggleButtonGroupField<SampleType>
+                            <ToggleButtonGroupField<FormValues, SampleType>
                                 label="Media Type"
                                 name="type"
                                 options={[

@@ -4,12 +4,12 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
-interface Options extends Partial<TextFieldProps> {
+interface Options extends Partial<TextFieldProps<unknown>> {
     defaultValue?: string;
     /**
      * @deprecated Set the props directly instead of nesting inside fieldProps
      */
-    fieldProps?: Partial<TextFieldProps>;
+    fieldProps?: Partial<TextFieldProps<unknown>>;
     extractTextContents?: BlockMethods["extractTextContents"];
 }
 
