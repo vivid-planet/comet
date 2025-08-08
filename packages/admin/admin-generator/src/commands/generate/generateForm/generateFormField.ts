@@ -7,7 +7,7 @@ import { type Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
-import { generateFormFieldOptions } from "./formField/options";
+import { buildFormFieldOptions } from "./formField/options";
 import { type GenerateFieldsReturn } from "./generateFields";
 import { type Prop } from "./generateForm";
 
@@ -43,7 +43,7 @@ export function generateFormField({
         startAdornment,
         endAdornment,
         imports: optionsImports,
-    } = generateFormFieldOptions({ config, formConfig, gqlType, gqlIntrospection });
+    } = buildFormFieldOptions({ config, formConfig, gqlType, gqlIntrospection });
     imports.push(...optionsImports);
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
