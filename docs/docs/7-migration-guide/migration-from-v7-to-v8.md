@@ -292,7 +292,7 @@ You must now manually go through all the eslint configs and migrate your custom 
 
 :::
 
-1. Check `api/eslint.config.mjs`, `api/eslint.config.mjs` and `api/eslint.config.mjs`
+1. Check `api/eslint.config.mjs`, `admin/eslint.config.mjs` and `site/eslint.config.mjs`
 2. Migrate custom rules
 3. Remove the comment from the file
 4. Create a commit with `--no-verify`
