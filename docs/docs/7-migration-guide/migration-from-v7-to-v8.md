@@ -2560,12 +2560,14 @@ type Variant =
 You must choose visually, which variant is correct for you.
 Probably the two most common cases are:
 
-```tsx
--(<Button color="primary" variant="contained" />) + <Button variant="primary" />;
+```diff
+- <Button color="primary" variant="contained" />
++ <Button variant="primary" />;
 ```
 
-```tsx
--(<Button variant="text" />) + <Button variant="textDark" />;
+```diff
+- <Button variant="text" />
++ <Button variant="textDark" />;
 ```
 
 ### `FinalFormToggleButtonGroup` deprecated
