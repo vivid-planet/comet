@@ -2562,12 +2562,12 @@ Probably the two most common cases are:
 
 ```diff
 - <Button color="primary" variant="contained" />
-+ <Button variant="primary" />;
++ <Button />
 ```
 
 ```diff
 - <Button variant="text" />
-+ <Button variant="textDark" />;
++ <Button variant="textDark" />
 ```
 
 ### `FinalFormToggleButtonGroup` deprecated
