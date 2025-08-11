@@ -66,7 +66,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
     });
     const filter: GqlFilter = {};
     const op: "and" | "or" = filterModel.logicOperator ?? "and";
-    filter[op] = filterItems.filter((item) => item !== undefined);
+    filter[op] = filterItems.filter((item) => item != null);
 
     let search: undefined | string = undefined;
 
