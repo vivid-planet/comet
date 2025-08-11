@@ -11,11 +11,12 @@ export type FinalFormAutocompleteProps<
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
-> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> &
-    Partial<AsyncAutocompleteOptionsProps<T>> &
+> = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
         clearable?: boolean;
     };
+
+type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
 
 /**
  * Final Form-compatible Autocomplete component.
@@ -35,7 +36,7 @@ export const FinalFormAutocomplete = <
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
     ...rest
-}: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
+}: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     return (
         <Autocomplete
             popupIcon={popupIcon}
