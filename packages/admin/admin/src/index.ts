@@ -1,3 +1,4 @@
+export { DiffHeader, DiffHeaderClassKey, DiffHeaderProps } from "./actionLog/diffHeader/DiffHeader";
 export { DiffViewer, DiffViewerClassKey, DiffViewerProps } from "./actionLog/diffViewer/DiffViewer";
 export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { filterByFragment } from "./apollo/filterByFragment";
