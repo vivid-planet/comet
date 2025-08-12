@@ -122,7 +122,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
             {({ handleSubmit, values }) => (
                 <Dialog open onClose={onClose} maxWidth={false}>
                     <DialogFormWrapper onSubmit={handleSubmit}>
-                        <DialogTitle>
+                        <StyledDialogTitle>
                             <Grid container justifyContent="space-between">
                                 <Grid>
                                     <Typography>
@@ -154,16 +154,20 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                 }}
                                             />
                                         )}
-                                        {image.path && (
-                                            <Typography>
-                                                <FormattedMessage id="comet.blocks.image.path" defaultMessage="Path: " />
-                                                {image.path}
-                                            </Typography>
-                                        )}
                                     </Typography>
                                 </Grid>
                             </Grid>
-                        </DialogTitle>
+                            {image.path && (
+                                <Grid container>
+                                    <Grid>
+                                        <Typography>
+                                            <FormattedMessage id="comet.blocks.image.path" defaultMessage="Path: " />
+                                            {image.path}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            )}
+                        </StyledDialogTitle>
                         <DialogContent>
                             <ImageCrop src={image.url} style={imageStyle} disabled={values.useInheritedDamSettings} />
                             <div>
@@ -251,4 +255,10 @@ const DialogFormWrapper = styled("form")`
     grid-row-gap: 0px;
     max-height: 100%;
     overflow: hidden;
+`;
+
+const StyledDialogTitle = styled(DialogTitle)`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 `;
