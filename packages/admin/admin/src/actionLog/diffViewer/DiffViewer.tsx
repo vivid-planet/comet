@@ -21,7 +21,7 @@ export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
             return (
                 <FormattedMessage
                     defaultMessage="{foldedLines} {foldedLines, plural, =0 {Zeilen} one {Zeile} other {Zeilen}} aufklappen"
-                    id="comet.table.localChangesToolbar.unsavedItems"
+                    id="comet.diffViewer.codeFoldMessage"
                     values={{ foldedLines: totalFoldedLines }}
                 />
             );
