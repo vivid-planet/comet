@@ -118,6 +118,13 @@ const config = [
         },
     },
     {
+        files: ["**/*.ts", "**/*.tsx"],
+        ignores: ["**/*.test.ts", "**/*.test.tsx"],
+        rules: {
+            "react/jsx-no-literals": "error",
+        },
+    },
+    {
         plugins: {
             "@comet": cometPlugin,
         },
