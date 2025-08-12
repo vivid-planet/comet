@@ -162,7 +162,6 @@ module.exports = {
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
-
         //group demo site
         {
             name: "demo-site",
