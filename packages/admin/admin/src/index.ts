@@ -1,3 +1,4 @@
+export { ActionLogHeader, ActionLogHeaderClassKey, ActionLogHeaderProps } from "./actionLog/header/ActionLogHeader";
 export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { filterByFragment } from "./apollo/filterByFragment";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
