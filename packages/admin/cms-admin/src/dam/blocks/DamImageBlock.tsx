@@ -1,5 +1,5 @@
 import { Field } from "@comet/admin";
-import { FormattedMessage } from "react-intl";
+import { defineMessage, FormattedMessage } from "react-intl";
 
 import { type PixelImageBlockData, type SvgImageBlockData } from "../../blocks.generated";
 import { createOneOfBlock } from "../../blocks/factories/createOneOfBlock";
@@ -22,6 +22,7 @@ const DamImageBlock = createOneOfBlock({
     category: BlockCategory.Media,
     supportedBlocks,
     allowEmpty: false,
+    tags: [defineMessage({ id: "damImageBlock.tag.image", defaultMessage: "Image" })],
 });
 
 // Custom Admin component to improve the image selection UX.

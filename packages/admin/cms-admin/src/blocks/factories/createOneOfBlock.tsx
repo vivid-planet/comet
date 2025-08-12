@@ -3,7 +3,7 @@ import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as Mui
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useMemo } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
@@ -67,6 +67,7 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
     allowEmpty?: T;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export const createOneOfBlock = <T extends boolean = boolean>(
@@ -77,6 +78,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         category = BlockCategory.Other,
         variant = "select",
         allowEmpty: passedAllowEmpty,
+        tags,
     }: CreateOneOfBlockOptions<T>,
     override?: (
         block: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
@@ -116,12 +118,21 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         };
     }
 
+    const childTags = Object.values(supportedBlocks).reduce<Array<MessageDescriptor | string>>((acc, block) => {
+        if (block.tags) {
+            return [...acc, ...block.tags];
+        }
+        return acc;
+    }, []);
+
     const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
 
         name,
 
         displayName,
+
+        tags: tags ? tags : childTags,
 
         category,
 

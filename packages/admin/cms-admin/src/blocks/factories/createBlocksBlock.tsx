@@ -23,7 +23,7 @@ import {
     useMemo,
     useState,
 } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
@@ -117,6 +117,7 @@ interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, u
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
@@ -128,6 +129,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         additionalItemFields,
         AdditionalItemContextMenuItems,
         AdditionalItemContent,
+        tags,
     }: CreateBlocksBlockOptions<AdditionalItemFields>,
     override?: (
         block: BlockInterface<
@@ -153,6 +155,13 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         return Object.entries(supportedBlocks).find(([, block]) => block.name === targetBlock.name)?.[0] ?? null;
     }
 
+    const childTags = Object.values(supportedBlocks).reduce<Array<MessageDescriptor | string>>((acc, block) => {
+        if (block.tags) {
+            return [...acc, ...block.tags];
+        }
+        return acc;
+    }, []);
+
     const BlocksBlock: BlockInterface<
         BlocksBlockFragment<AdditionalItemFields>,
         BlocksBlockState<AdditionalItemFields>,
@@ -163,6 +172,8 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         name,
 
         displayName,
+
+        tags: tags ? tags : childTags,
 
         defaultValues: () => ({ blocks: [] }),
 
