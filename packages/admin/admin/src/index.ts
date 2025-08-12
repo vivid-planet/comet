@@ -1,5 +1,6 @@
 export { DiffHeader, DiffHeaderClassKey, DiffHeaderProps } from "./actionLog/diffHeader/DiffHeader";
 export { DiffViewer, DiffViewerClassKey, DiffViewerProps } from "./actionLog/diffViewer/DiffViewer";
+export { ActionLogHeader, ActionLogHeaderClassKey, ActionLogHeaderProps } from "./actionLog/header/ActionLogHeader";
 export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { filterByFragment } from "./apollo/filterByFragment";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
