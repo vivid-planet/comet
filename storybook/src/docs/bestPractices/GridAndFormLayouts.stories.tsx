@@ -170,6 +170,7 @@ export const LargeFormOnAPage = {
                         <TextField name="email" fullWidth variant="horizontal" label="Email" />
                         <TextField name="phone" fullWidth variant="horizontal" label="Phone" />
                     </FieldSet>
+                    <input type="submit" hidden />
                 </FinalForm>
             );
         };
@@ -273,6 +274,7 @@ export const LargeFormInADialog = {
                         <TextField name="email" fullWidth variant="horizontal" label="Email" />
                         <TextField name="phone" fullWidth variant="horizontal" label="Phone" />
                     </FormSection>
+                    <input type="submit" hidden />
                 </FinalForm>
             );
         };
