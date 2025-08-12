@@ -1,27 +1,37 @@
+import { css } from "@emotion/react";
 import { Box, type Theme } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued/lib/cjs/src/styles";
 
-export const Root = styled(Box)`
-    div[role="banner"] {
-        display: none;
-    }
-    table {
-        tr:first-of-type {
-            td {
-                padding: 0px;
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+
+export type DiffViewerClassKey = "root";
+
+export const Root = createComponentSlot(Box)<DiffViewerClassKey>({
+    componentName: "DiffViewer",
+    slotName: "root",
+})(
+    (props: { theme: Theme }) => css`
+        div[role="banner"] {
+            display: none;
+        }
+
+        table {
+            tr:first-of-type {
+                td {
+                    padding: 0;
+                }
+            }
+
+            td:nth-of-type(2) {
+                border-right: 1px solid ${props.theme.palette.grey["200"]};
+            }
+
+            th:first-of-type {
+                border-right: 1px solid ${props.theme.palette.grey["200"]};
             }
         }
-
-        td:nth-of-type(2) {
-            border-right: 1px solid ${({ theme }) => theme.palette.grey["200"]};
-        }
-
-        th:first-of-type {
-            border-right: 1px solid ${({ theme }) => theme.palette.grey["200"]};
-        }
-    }
-`;
+    `,
+);
 
 export const createStyles = (theme: Theme): ReactDiffViewerStylesOverride => {
     return {

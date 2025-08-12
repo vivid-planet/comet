@@ -1,29 +1,48 @@
-import { useTheme } from "@mui/material";
+import { type ComponentsOverrides, type Theme, useTheme } from "@mui/material";
+import { useThemeProps } from "@mui/material/styles";
 import { type FunctionComponent } from "react";
 import ReactDiffViewer, { DiffMethod, type ReactDiffViewerProps } from "react-diff-viewer-continued";
 import { FormattedMessage } from "react-intl";
 
-import { createStyles, Root } from "./DiffViewer.styles";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { createStyles, type DiffViewerClassKey, Root } from "./DiffViewer.sc";
 
-type DiffViewerProps = ReactDiffViewerProps;
+export type DiffViewerProps = ThemedComponentBaseProps<{
+    root: "div";
+}> &
+    ReactDiffViewerProps;
 
-export const DiffViewer: FunctionComponent<DiffViewerProps> = ({ ...restProps }) => {
+export { DiffViewerClassKey };
+
+export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
+    const {
+        slotProps,
+        codeFoldMessageRenderer = (totalFoldedLines: number) => {
+            return (
+                <FormattedMessage
+                    defaultMessage="{foldedLines} {foldedLines, plural, =0 {Zeilen} one {Zeile} other {Zeilen}} aufklappen"
+                    id="comet.table.localChangesToolbar.unsavedItems"
+                    values={{ foldedLines: totalFoldedLines }}
+                />
+            );
+        },
+        compareMethod = DiffMethod.WORDS_WITH_SPACE,
+        extraLinesSurroundingDiff = 0,
+        sx,
+        className,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminDiffViewer",
+    });
     const theme = useTheme();
 
     return (
-        <Root>
+        <Root {...slotProps?.root} sx={sx} className={className}>
             <ReactDiffViewer
-                codeFoldMessageRenderer={(totalFoldedLines) => {
-                    return (
-                        <FormattedMessage
-                            defaultMessage="{foldedLines} {foldedLines, plural, =0 {Zeilen} one {Zeile} other {Zeilen}} aufklappen"
-                            id="comet.table.localChangesToolbar.unsavedItems"
-                            values={{ foldedLines: totalFoldedLines }}
-                        />
-                    );
-                }}
-                compareMethod={DiffMethod.WORDS_WITH_SPACE}
-                extraLinesSurroundingDiff={0}
+                codeFoldMessageRenderer={codeFoldMessageRenderer}
+                compareMethod={compareMethod}
+                extraLinesSurroundingDiff={extraLinesSurroundingDiff}
                 hideLineNumbers
                 key={`diff-viewer${restProps.showDiffOnly}`}
                 {...restProps}
@@ -32,3 +51,20 @@ export const DiffViewer: FunctionComponent<DiffViewerProps> = ({ ...restProps })
         </Root>
     );
 };
+
+declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminDiffViewer: DiffViewerProps;
+    }
+
+    interface ComponentNameToClassKey {
+        CometAdminDiffViewer: DiffViewerClassKey;
+    }
+
+    interface Components {
+        CometAdminDiffViewer?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDiffViewer"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDiffViewer"];
+        };
+    }
+}

@@ -1,4 +1,4 @@
-export { DiffViewer } from "./actionLog/diffViewer/DiffViewer";
+export { DiffViewer, DiffViewerClassKey, DiffViewerProps } from "./actionLog/diffViewer/DiffViewer";
 export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { filterByFragment } from "./apollo/filterByFragment";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
