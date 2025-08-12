@@ -29,7 +29,7 @@ import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtime
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
-import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./getPropsForFilterProp";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
@@ -913,7 +913,7 @@ export function generateGrid<T extends { __typename?: string }>(
             !allowRowReordering ? `data?.${gridQuery}.nodes` : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
-        ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery)}
+        ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery, gqlArgs)}
 
         return (
             <DataGridPro
@@ -990,7 +990,7 @@ const getDataGridSlotProps = (componentName: string, forwardToolbarAction: boole
     }}`;
 };
 
-const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: string, gridQuery: string) => {
+const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: string, gridQuery: string, gqlArgs: GqlArg[]) => {
     if (!excelExport) {
         return "";
     }
@@ -998,7 +998,10 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
     return `const exportApi = useDataGridExcelExport<GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0], GQL${gqlTypePlural}GridQuery, Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ${[
+                ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQuery).map((arg) => arg.name),
+                `...muiGridFilterToGql(columns, dataGridProps.filterModel)`,
+            ].join(", ")}
         },
         query: ${gridQuery}Query,
         resolveQueryNodes: (data) => data.${gridQuery}.nodes,
