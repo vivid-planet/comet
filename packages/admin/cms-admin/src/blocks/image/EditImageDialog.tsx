@@ -52,6 +52,7 @@ interface Props {
         width: number;
         height: number;
         size?: number;
+        path?: string;
     };
     damFileId: string;
     onClose: () => void;
@@ -153,6 +154,12 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                 }}
                                             />
                                         )}
+                                        {image.path && (
+                                            <Typography>
+                                                <FormattedMessage id="comet.blocks.image.path" defaultMessage="Path: " />
+                                                {image.path}
+                                            </Typography>
+                                        )}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -192,7 +199,9 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                             apolloClient,
                                                             id: damFileId,
                                                         });
+
                                                         const url = contentScope.match.url + path;
+
                                                         window.open(url, "_blank");
                                                     }}
                                                     startIcon={<OpenNewTab />}
