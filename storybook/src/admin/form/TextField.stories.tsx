@@ -24,7 +24,7 @@ export const Default: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <TextField name="value" label="Textfield" fullWidth variant="horizontal" />
+                            <TextField<FormValues> name="value" label="Textfield" fullWidth variant="horizontal" />
 
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
