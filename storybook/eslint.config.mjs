@@ -17,6 +17,7 @@ const config = [
             "no-console": "off",
             "@comet/no-other-module-relative-import": "off",
             "react/react-in-jsx-scope": "off",
+            "react/jsx-no-literals": "off",
         },
     },
 ];
