@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/commo
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
+import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
@@ -35,7 +36,7 @@ export class UserPermissionsGuard implements CanActivate {
             request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
         }
 
-        if (this.getDecorator(context, "disableCometGuards")) return true;
+        if (this.getDecorator(context, DISABLE_COMET_GUARDS_METADATA_KEY)) return true;
 
         const user = this.getUser(context);
         if (!user) return false;
