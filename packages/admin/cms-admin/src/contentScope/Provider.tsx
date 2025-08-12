@@ -1,4 +1,5 @@
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
 import { useCurrentUser } from "../userPermissions/hooks/currentUser";
@@ -143,7 +144,8 @@ export function ContentScopeProvider({ children, defaultValue, values, location 
     if (values.length === 0) {
         return (
             <>
-                Error: user does not have access to any scopes.
+                <FormattedMessage id="comet.contentScopeProvider.error.noAccess" defaultMessage="Error: user does not have access to any scopes." />
+
                 {user.impersonated && <StopImpersonationButton />}
             </>
         );
