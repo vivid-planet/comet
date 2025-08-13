@@ -1214,8 +1214,8 @@ importers:
         specifier: ^7.8.14
         version: 7.8.14(graphql@16.11.0)
       change-case:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^5.0.0
+        version: 5.4.4
       commander:
         specifier: ^9.5.0
         version: 9.5.0
@@ -1336,8 +1336,8 @@ importers:
         specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.23)
       change-case:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^5.0.0
+        version: 5.4.4
       cli-progress:
         specifier: ^3.12.0
         version: 3.12.0
@@ -1481,8 +1481,8 @@ importers:
         specifier: ^0.30.0
         version: 0.30.0
       change-case:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^5.0.0
+        version: 5.4.4
       class-validator:
         specifier: ^0.14.2
         version: 0.14.2
