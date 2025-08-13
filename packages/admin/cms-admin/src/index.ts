@@ -1,3 +1,6 @@
+export { ActionGridToolbar } from "./actionLog/actionLogGrid/actionGridToolbar/ActionGridToolbar";
+export { ActionLogGrid } from "./actionLog/actionLogGrid/ActionLogGrid";
+export { UserCell } from "./actionLog/actionLogGrid/userCell/UserCell";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
