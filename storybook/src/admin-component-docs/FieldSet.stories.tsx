@@ -1,6 +1,6 @@
 import { FieldSet } from "@comet/admin";
 import { Chip } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";

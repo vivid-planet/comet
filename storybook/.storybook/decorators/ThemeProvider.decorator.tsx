@@ -1,6 +1,6 @@
 import { createCometTheme, MuiThemeProvider } from "@comet/admin";
 import { createTheme as createMuiTheme, CssBaseline } from "@mui/material";
-import { type Decorator } from "@storybook/react-webpack5";
+import { type Decorator } from "@storybook/react-vite";
 
 export enum ThemeOption {
     Comet = "comet",

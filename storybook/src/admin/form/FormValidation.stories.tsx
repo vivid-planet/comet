@@ -1,5 +1,5 @@
 import { Alert, FinalForm, SaveBoundary, SaveBoundarySaveButton, TextField } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj;
 const config: Meta = {
