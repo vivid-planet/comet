@@ -1,5 +1,5 @@
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { type Decorator } from "@storybook/react-webpack5";
+import { type Decorator } from "@storybook/react-vite";
 import { RestLink } from "apollo-link-rest";
 
 export function apolloRestStoryDecorator(options?: { uri?: string; responseTransformer?: RestLink.ResponseTransformer }): Decorator {

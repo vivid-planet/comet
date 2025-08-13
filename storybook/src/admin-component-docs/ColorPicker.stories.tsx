@@ -2,7 +2,7 @@ import { FieldContainer } from "@comet/admin";
 import { ColorPicker } from "@comet/admin-color-picker";
 import { ArrowRight } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";

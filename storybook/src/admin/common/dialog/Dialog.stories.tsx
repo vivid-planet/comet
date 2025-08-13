@@ -1,6 +1,6 @@
 import { Button, Dialog } from "@comet/admin";
 import { Box } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
 type Story = StoryObj<typeof Dialog>;
