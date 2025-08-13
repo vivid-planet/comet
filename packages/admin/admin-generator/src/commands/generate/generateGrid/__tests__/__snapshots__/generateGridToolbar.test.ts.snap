@@ -75,7 +75,6 @@ exports[`generateGridToolbar generates toolbar with minimal features 1`] = `
 
 exports[`generateGridToolbar generates valid Toolbar props for only excelExport enabled 1`] = `
 "interface BooksGridToolbarToolbarProps extends GridToolbarProps {
-         false
          exportApi: ExportApi;
 }
     function BooksGridToolbar({
