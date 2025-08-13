@@ -1,3 +1,4 @@
+export { UserCell } from "./actionLog/actionLogGrid/userCell/UserCell";
 export { DiffHeader, DiffHeaderProps } from "./actionLog/components/DiffHeader";
 export { DiffViewer, DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
 export { ActionLogHeader, ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
