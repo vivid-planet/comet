@@ -1889,7 +1889,7 @@ importers:
         version: 1.54.0
       multer:
         specifier: ^2.0.1
-        version: 2.0.1
+        version: 2.0.2
       nodemailer:
         specifier: ^7.0.0
         version: 7.0.5
@@ -14120,6 +14120,10 @@ packages:
 
   multer@2.0.1:
     resolution: {integrity: sha512-Ug8bXeTIUlxurg8xLTEskKShvcKDZALo1THEX5E41pYCD2sCVub5/kIRIGqWNoqV6szyLyQKV6mD4QUrWE5GCQ==}
+    engines: {node: '>= 10.16.0'}
+
+  multer@2.0.2:
+    resolution: {integrity: sha512-u7f2xaZ/UG8oLXHvtF/oWTRvT44p9ecwBBqTwgJVq0+4BW1g8OW01TyMEGWBHbyMOYVHXslaut7qEQ1meATXgw==}
     engines: {node: '>= 10.16.0'}
 
   multicast-dns@7.2.5:
@@ -28281,7 +28285,7 @@ snapshots:
     dependencies:
       buffer-from: 1.1.2
       inherits: 2.0.4
-      readable-stream: 3.6.0
+      readable-stream: 3.6.2
       typedarray: 0.0.6
 
   confbox@0.1.8: {}
@@ -33423,6 +33427,16 @@ snapshots:
   muggle-string@0.4.1: {}
 
   multer@2.0.1:
+    dependencies:
+      append-field: 1.0.0
+      busboy: 1.6.0
+      concat-stream: 2.0.0
+      mkdirp: 0.5.6
+      object-assign: 4.1.1
+      type-is: 1.6.18
+      xtend: 4.0.2
+
+  multer@2.0.2:
     dependencies:
       append-field: 1.0.0
       busboy: 1.6.0
