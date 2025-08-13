@@ -1689,6 +1689,9 @@ importers:
       '@types/draft-js':
         specifier: ^0.11.20
         version: 0.11.20
+      '@types/file-saver':
+        specifier: ^2.0.7
+        version: 2.0.7
       '@types/final-form-set-field-touched':
         specifier: ^1.0.3
         version: 1.0.3
@@ -9105,6 +9108,9 @@ packages:
 
   '@types/express@5.0.6':
     resolution: {integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==}
+
+  '@types/file-saver@2.0.7':
+    resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
 
   '@types/final-form-set-field-data@1.0.3':
     resolution: {integrity: sha512-N8G5aowjhOhbrigJp3UXIlx4nxfNH7STs12ikQRY8qPM2kJh9UIY/jjYrGnF1mZlCzobRrMiCsaQScdr+YUG+A==}
@@ -27038,6 +27044,8 @@ snapshots:
       '@types/body-parser': 1.19.2
       '@types/express-serve-static-core': 5.0.6
       '@types/serve-static': 2.2.0
+
+  '@types/file-saver@2.0.7': {}
 
   '@types/final-form-set-field-data@1.0.3':
     dependencies:
