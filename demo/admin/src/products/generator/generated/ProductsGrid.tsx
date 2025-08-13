@@ -247,7 +247,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const exportApi = useDataGridExcelExport<GQLProductsGridQuery["products"]["nodes"][0], GQLProductsGridQuery, Omit<GQLProductsGridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel)
         },
         query: productsQuery,
         resolveQueryNodes: (data) => data.products.nodes,

@@ -72,3 +72,33 @@ exports[`generateGridToolbar generates toolbar with minimal features 1`] = `
         );
     }"
 `;
+
+exports[`generateGridToolbar generates valid Toolbar props for only excelExport enabled 1`] = `
+"interface BooksGridToolbarToolbarProps extends GridToolbarProps {
+         exportApi: ExportApi;
+}
+    function BooksGridToolbar({
+        exportApi
+    }: BooksGridToolbarToolbarProps) {
+        return (
+            <DataGridToolbar>
+                <FillSpace />
+        <CrudMoreActionsMenu
+        slotProps={{
+            button: {
+                responsive: true
+            }
+        }}
+        overallActions={[
+            {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <ExcelIcon />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    }
+        ]}
+    />
+            </DataGridToolbar>
+        );
+    }"
+`;
