@@ -1,10 +1,16 @@
-import { CancelButton } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { ComponentType } from "react";
+import { CancelButton, OkayButton } from "@comet/admin";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from "@mui/material";
+import { type ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PageAction } from "./PagesPageActionToolbar";
+import { type PageAction } from "./PagesPageActionToolbar";
 
 interface ContentProps {
     selectedPagesCount: number;
@@ -69,17 +75,14 @@ export const ConfirmPageActionDialog = ({ open, onCloseDialog, action, selectedP
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={() => onCloseDialog(false)} />
-                <Button
-                    variant="contained"
-                    color="primary"
+                <OkayButton
                     onClick={() => {
                         onCloseDialog(true);
                     }}
                     autoFocus={true}
-                    startIcon={<Delete />}
                 >
                     <FormattedMessage id="comet.pages.confirmDialog.confirm" defaultMessage="Confirm" />
-                </Button>
+                </OkayButton>
             </DialogActions>
         </Dialog>
     );

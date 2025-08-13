@@ -3,15 +3,14 @@ import {
     FilterBar,
     FilterBarPopoverFilter,
     FinalFormSearchTextField,
-    FinalFormSwitch,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
+    SwitchField,
     TableFilterFinalForm,
 } from "@comet/admin";
-import { FormControlLabel } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DamFilter } from "../../DamTable";
+import { type DamFilter } from "../../DamTable";
 import { DamSortPopover } from "./DamSortPopover";
 
 interface DamTableFilterProps {
@@ -35,16 +34,12 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                 {!hideArchiveFilter && (
                     <FilterBarPopoverFilter
                         label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}
-                        sx={{ marginRight: 2, marginLeft: 2 }}
+                        sx={{ marginRight: 2, marginLeft: 2, marginBottom: 0 }}
                     >
-                        <Field name="archived" type="checkbox">
-                            {(props) => (
-                                <FormControlLabel
-                                    control={<FinalFormSwitch {...props} />}
-                                    label={<FormattedMessage id="comet.pages.dam.showArchivedAssets" defaultMessage="Show archived assets" />}
-                                />
-                            )}
-                        </Field>
+                        <SwitchField
+                            name="archived"
+                            label={<FormattedMessage id="comet.pages.dam.showArchivedAssets" defaultMessage="Show archived assets" />}
+                        />
                     </FilterBarPopoverFilter>
                 )}
                 <Field<ISortInformation> name="sort">

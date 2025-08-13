@@ -1,38 +1,25 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    IPreviewContext,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
-import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
-import { useContentScope } from "../contentScope/Provider";
+import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
+import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
-import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
-import { useCmsBlockContext } from "./useCmsBlockContext";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { type GQLSvgImageBlockDamFileQuery, type GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
-export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
+type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
-export function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
+function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl, damBasePath }: { apiUrl: string; damBasePath: string }): string {
     if (!damFile) return "";
     return new URL(
-        `${apiUrl}/dam/files/preview/$fileId/$fileName`
+        `${apiUrl}/${damBasePath}/files/preview/$fileId/$fileName`
             .replace("$fileId", damFile.id)
             .replace("$fileName", damFile.name.substr(0, damFile.name.lastIndexOf("."))),
     ).toString();
@@ -49,10 +36,10 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: IPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
-        adminMeta: { route: previewCtx.parentUrl },
+        urlTemplate: createPreviewUrl(state, { apiUrl: previewContext.apiUrl, damBasePath: previewContext.damBasePath }),
+        adminMeta: { route: previewContext.parentUrl },
     }),
 
     state2Output: (v) => {
@@ -64,7 +51,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<SvgImageBlockState> => {
+    output2State: async (output, { apolloClient }): Promise<SvgImageBlockState> => {
         if (!output.damFileId) {
             return {};
         }
@@ -125,100 +112,50 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-        const context = useCmsBlockContext();
+        const { apiUrl } = useCometConfig();
+        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-        const contentScope = useContentScope();
-        const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl);
-        const showMenu = Boolean(dependencyMap["DamFile"]);
-
-        const handleMenuClose = () => {
-            setAnchorEl(null);
-        };
+        const previewUrl = createPreviewUrl(state, { apiUrl, damBasePath });
 
         return (
             <SelectPreviewComponent>
-                {state.damFile ? (
-                    <AdminComponentPaper disablePadding>
-                        <Box padding={3}>
-                            <Grid container alignItems="center" spacing={3}>
-                                <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
-                                <Grid item xs>
-                                    <Typography variant="subtitle1">{state.damFile.name}</Typography>
-                                    <Typography variant="body1" color="textSecondary">
-                                        <DamPathLazy fileId={state.damFile.id} />
-                                    </Typography>
-                                </Grid>
-                                {showMenu && (
-                                    <Grid item>
-                                        <IconButton
-                                            onMouseDown={(event) => event.stopPropagation()}
-                                            onClick={(event) => {
-                                                event.stopPropagation();
-                                                setAnchorEl(event.currentTarget);
-                                            }}
-                                            size="large"
-                                        >
-                                            <MoreVertical />
-                                        </IconButton>
-                                    </Grid>
-                                )}
-                            </Grid>
-                        </Box>
-                        <Divider />
-                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
-                            <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                        </AdminComponentButton>
-                        {showMenu && (
-                            <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                {dependencyMap["DamFile"] && state.damFile?.id && (
-                                    <MenuItem
-                                        onClick={async () => {
-                                            // id is checked three lines above
-                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                            const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
-                                            const url = contentScope.match.url + path;
-                                            window.open(url, "_blank");
-                                        }}
-                                    >
-                                        <ListItemIcon>
-                                            <OpenNewTab />
-                                        </ListItemIcon>
-                                        <FormattedMessage id="comet.blocks.image.openInDam" defaultMessage="Open in DAM" />
-                                    </MenuItem>
-                                )}
-                            </Menu>
-                        )}
-                    </AdminComponentPaper>
-                ) : (
-                    <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
-                        onSubmit={(newValues) => {
-                            updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined }));
-                        }}
-                        initialValues={{ damFile: state.damFile }}
-                    >
-                        <Field
-                            name="damFile"
-                            component={FileField}
-                            fullWidth
-                            buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
-                            allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
-                        />
-                    </BlocksFinalForm>
-                )}
+                <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
+                    onSubmit={(newValues) => {
+                        updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined }));
+                    }}
+                    initialValues={{ damFile: state.damFile }}
+                >
+                    <Field
+                        name="damFile"
+                        component={FileField}
+                        fullWidth
+                        buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
+                        allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
+                        preview={<img src={previewUrl} width="70" height="70" />}
+                    />
+                </BlocksFinalForm>
             </SelectPreviewComponent>
         );
     },
-    previewContent: (state, ctx) => {
-        if (!state.damFile || !state.damFile?.fileUrl || !ctx?.damConfig?.apiUrl) {
+    previewContent: (state, context) => {
+        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl) {
             return [];
         }
         return [
-            { type: "image", content: { src: createPreviewUrl(state, ctx.damConfig.apiUrl), width: 320, height: 320 } },
+            {
+                type: "image",
+                content: { src: createPreviewUrl(state, { apiUrl: context.apiUrl, damBasePath: context.damBasePath }), width: 320, height: 320 },
+            },
             { type: "text", content: state.damFile.name },
         ];
+    },
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.damFile?.altText) contents.push(state.damFile.altText);
+        if (state.damFile?.title) contents.push(state.damFile.title);
+
+        return contents;
     },
 };

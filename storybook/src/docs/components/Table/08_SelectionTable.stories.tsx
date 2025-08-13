@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
@@ -74,7 +73,7 @@ export const SelectionTable = () => {
             {/* step 2 */}
             <TableQuery api={api} loading={loading} error={error}>
                 <Grid container spacing={4}>
-                    <Grid item>
+                    <Grid>
                         <Table
                             {...tableData}
                             // step 3
@@ -89,7 +88,7 @@ export const SelectionTable = () => {
                             ]}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid size={4}>
                         {/* step 4 */}
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
                             {(user, { selectionMode: selectedSelectionMode }) => {

@@ -1,10 +1,10 @@
-import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { Children, ComponentType, isValidElement, ReactElement, ReactNode, SyntheticEvent } from "react";
+import { type ComponentsOverrides, Tab as MuiTab, type TabProps as MuiTabProps, Tabs, type TabsProps } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, type SyntheticEvent } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 import { TabScrollButton } from "./TabScrollButton";
@@ -54,7 +54,7 @@ export const RouterTab = (props: TabProps) => null;
 type RouterTabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
 
-export interface Props
+interface Props
     extends ThemedComponentBaseProps<{
         root: "div";
         tabs: typeof Tabs;

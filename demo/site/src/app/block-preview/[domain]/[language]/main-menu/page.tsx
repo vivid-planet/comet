@@ -1,6 +1,6 @@
 "use client";
-import { useIFrameBridge } from "@comet/cms-site";
-import RichTextBlock from "@src/blocks/RichTextBlock";
+import { useIFrameBridge } from "@comet/site-nextjs";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { withBlockPreview } from "@src/util/blockPreview";
 
 export default withBlockPreview(() => {

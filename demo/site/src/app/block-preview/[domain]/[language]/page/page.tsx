@@ -1,10 +1,10 @@
 "use client";
 
-import { useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
-import { PageContentBlockData } from "@src/blocks.generated";
-import { PageContentBlock } from "@src/blocks/PageContentBlock";
-import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
+import { useBlockPreviewFetch, useIFrameBridge } from "@comet/site-nextjs";
+import { type PageContentBlockData } from "@src/blocks.generated";
+import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { withBlockPreview } from "@src/util/blockPreview";
+import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { useEffect, useState } from "react";
 
 export default withBlockPreview(() => {

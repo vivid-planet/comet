@@ -1,16 +1,27 @@
+import { Button } from "@comet/admin";
 import { Check, Close, Delete, RteLink } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormLabel,
+    Grid,
+    InputBase,
+} from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
-import { MouseEvent, useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
-import { IControlProps } from "../../types";
+import { type IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
 import selectionIsInOneBlock from "../../utils/selectionIsInOneBlock";
 import { ENTITY_TYPE } from "./Decorator";
-import { ILinkProps } from "./EditorComponent";
+import { type ILinkProps } from "./EditorComponent";
 
 export default function ToolbarButton(props: IControlProps) {
     const [open, setOpen] = useState(false);
@@ -112,22 +123,22 @@ function LinkDialog(props: {
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} startIcon={<Close />}>
+                <Button onClick={handleClose} variant="outlined" startIcon={<Close />}>
                     {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                     <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                 </Button>
                 <div>
                     <Grid container spacing={4}>
                         {linkData && (
-                            <Grid item>
-                                <Button variant="contained" startIcon={<Delete />} onClick={handleRemove}>
+                            <Grid>
+                                <Button startIcon={<Delete />} onClick={handleRemove}>
                                     {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                                     <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />
                                 </Button>
                             </Grid>
                         )}
-                        <Grid item>
-                            <Button variant="contained" color="primary" startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
+                        <Grid>
+                            <Button startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
                                 {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                                 <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                             </Button>

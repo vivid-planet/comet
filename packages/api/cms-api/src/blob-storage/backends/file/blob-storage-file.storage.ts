@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Readable, Stream } from "stream";
+import { type Readable, Stream } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageFileConfig } from "./blob-storage-file.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageFileConfig } from "./blob-storage-file.config";
 
 export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     private readonly headersFile = "headers.json";
@@ -16,7 +16,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     async folderExists(folderName: string): Promise<boolean> {
         try {
             await fs.promises.access(`${this.path}/${folderName}`);
-        } catch (e) {
+        } catch {
             return false;
         }
 
@@ -38,7 +38,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
 
         try {
             await fs.promises.access(`${this.path}/${folderName}/${fileName}`);
-        } catch (e) {
+        } catch {
             return false;
         }
 
@@ -49,14 +49,14 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         folderName: string,
         fileName: string,
         data: NodeJS.ReadableStream | Buffer | string,
-        { headers }: CreateFileOptions,
+        { contentType }: CreateFileOptions,
     ): Promise<void> {
         if (!(await this.folderExists(`${folderName}/${path.dirname(fileName)}`))) {
             await this.createFolder(`${folderName}/${path.dirname(fileName)}`);
         }
 
         await Promise.all([
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
                 const stream = fs.createWriteStream(`${this.path}/${folderName}/${fileName}`);
                 stream.on("error", reject);
                 stream.on("finish", resolve);
@@ -70,9 +70,13 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
                     stream.end();
                 }
             }),
-            await fs.promises.writeFile(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, JSON.stringify(headers), {
-                encoding: "utf-8",
-            }),
+            await fs.promises.writeFile(
+                `${this.path}/${folderName}/${fileName}-${this.headersFile}`,
+                JSON.stringify({ "content-type": contentType }),
+                {
+                    encoding: "utf-8",
+                },
+            ),
         ]);
     }
 
@@ -104,7 +108,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         return {
             size: stat.size,
             lastModified: stat.mtime,
-            headers,
+            contentType: headers["content-type"],
         };
     }
 

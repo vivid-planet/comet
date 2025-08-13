@@ -1,4 +1,6 @@
 import {
+    Button,
+    FillSpace,
     FullHeightContent,
     MainContent,
     RouterTab,
@@ -7,12 +9,9 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { Button } from "@mui/material";
-import React from "react";
 
 import { ExampleDataGrid } from "../helpers/ExampleDataGrid";
 import { masterLayoutDecorator, stackRouteDecorator } from "../helpers/storyDecorators";
@@ -32,9 +31,9 @@ export const WithToolbarMainContentAndTabs = {
             <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
-                    <Button variant="contained" color="primary" startIcon={<Add />}>
+                    <Button variant="primary" startIcon={<Add />}>
                         Add something
                     </Button>
                 </ToolbarActions>

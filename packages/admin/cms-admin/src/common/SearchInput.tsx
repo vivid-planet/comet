@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
 import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -93,16 +93,16 @@ export const SearchInput = ({
             endAdornment={
                 internalQuery ? (
                     <InputAdornment position="end">
-                        <Typography>
+                        <Typography variant="body2" sx={{ marginRight: 2 }}>
                             {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
                         </Typography>
-                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="large">
+                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="medium" color="secondary">
                             <ChevronUp />
                         </IconButton>
-                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="large">
+                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="medium" color="secondary">
                             <ChevronDown />
                         </IconButton>
-                        <IconButton onClick={handleClearClick} size="large">
+                        <IconButton onClick={handleClearClick} size="medium">
                             <Clear />
                         </IconButton>
                     </InputAdornment>

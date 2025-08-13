@@ -1,12 +1,12 @@
 import { Alert, readClipboardText, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@comet/admin-icons";
-import { DispatchSetStateAction } from "@comet/blocks-admin";
 import { Divider, Snackbar } from "@mui/material";
+import { type Dispatch, type SetStateAction } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
-import { TableBlockData } from "../../blocks.generated";
+import { type TableBlockData } from "../../blocks.generated";
 import { getNewColumn, getNewRow } from "./utils";
 
 const clipboardRowSchema = z.object({
@@ -18,12 +18,13 @@ type ClipboardRow = z.infer<typeof clipboardRowSchema>;
 
 type Props = {
     row: Record<string, unknown> & { id: string };
-    updateState: DispatchSetStateAction<TableBlockData>;
+    updateState: Dispatch<SetStateAction<TableBlockData>>;
     state: TableBlockData;
 };
 
 export const ActionsCell = ({ row, updateState, state }: Props) => {
     const snackbarApi = useSnackbarApi();
+    const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
 
     const insertRow = (where: "above" | "below") => {
         updateState((state) => {
@@ -179,12 +180,12 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
         <RowActionsMenu>
             <RowActionsMenu>
                 <RowActionsItem
-                    icon={row.highlighted ? <Remove /> : <Add />}
+                    icon={stateRow?.highlighted ? <Remove /> : <Add />}
                     onClick={() => {
                         toggleRowHighlight();
                     }}
                 >
-                    {row.highlighted ? (
+                    {stateRow?.highlighted ? (
                         <FormattedMessage id="comet.tableBlock.removeHighlighting" defaultMessage="Remove highlighting" />
                     ) : (
                         <FormattedMessage id="comet.tableBlock.highlightRow" defaultMessage="Highlight row" />

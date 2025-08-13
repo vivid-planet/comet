@@ -1,5 +1,4 @@
-import { IPagingInfo, Table, useTableQueryPaging } from "@comet/admin";
-import * as React from "react";
+import { type IPagingInfo, Table, useTableQueryPaging } from "@comet/admin";
 
 interface IExampleRow {
     id: number;

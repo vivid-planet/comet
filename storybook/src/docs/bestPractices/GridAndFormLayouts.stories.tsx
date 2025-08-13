@@ -1,14 +1,15 @@
 import {
-    CancelButton,
+    Button,
     CrudMoreActionsMenu,
     DataGridToolbar,
     FieldSet,
+    FillSpace,
     FinalForm,
     FormSection,
-    GridColDef,
+    FullHeightContent,
+    type GridColDef,
     GridFilterButton,
     Loading,
-    OkayButton,
     RouterTab,
     RouterTabs,
     SaveBoundary,
@@ -24,13 +25,12 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
-    ToolbarItem,
+    useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
-import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { DialogContent, IconButton, Typography } from "@mui/material";
+import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -124,7 +124,7 @@ export const SimpleFormOnAPage = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
@@ -181,7 +181,7 @@ export const LargeFormOnAPage = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
@@ -196,20 +196,19 @@ export const LargeFormOnAPage = {
 
 export const SimpleFormInADialog = {
     render: () => {
-        const Form = ({ id }: { id?: string }) => {
+        const Form = ({ id, mode = "add" }: { id?: string; mode?: "edit" | "add" }) => {
             const { rows, loading } = useData();
-            const editingExistingItem = Boolean(id);
 
-            if (editingExistingItem && loading) {
+            if (mode === "edit" && loading) {
                 return <Loading />;
             }
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
-                    mode={editingExistingItem ? "edit" : "add"}
+                    mode={mode}
                     initialValues={rows.find((row) => row.id === id)}
                 >
                     <TextField name="title" required fullWidth variant="horizontal" label="Title" />
@@ -218,35 +217,27 @@ export const SimpleFormInADialog = {
             );
         };
 
-        const [showDialog, setShowDialog] = useState(true); // In a real application, this would generally be `false` by default
-        const editingId: string | undefined = undefined; // In a real application, this would be set when editing an existing item
+        const [EditDialog, { id: selectedId, mode }, editDialogApi] = useEditDialog();
 
         return (
-            <SaveBoundary onAfterSave={() => setShowDialog(false)}>
+            <>
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" onClick={() => setShowDialog(true)}>
-                            Open dialog
-                        </Button>
+                        <Button onClick={() => editDialogApi.openAddDialog(selectedId)}>Open dialog</Button>
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
                     <Typography variant="h3">Open the dialog to see the form.</Typography>
-                    <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
-                        <DialogTitle>Dialog title</DialogTitle>
-                        <DialogContent>
-                            <Form id={editingId} />
-                        </DialogContent>
-                        <DialogActions>
-                            <CancelButton onClick={() => setShowDialog(false)} />
-                            <SaveBoundarySaveButton />
-                        </DialogActions>
-                    </Dialog>
                 </StackMainContent>
-            </SaveBoundary>
+                <EditDialog title="Dialog title">
+                    <DialogContent>
+                        <Form id={selectedId} mode={mode} />
+                    </DialogContent>
+                </EditDialog>
+            </>
         );
     },
 };
@@ -263,8 +254,8 @@ export const LargeFormInADialog = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -286,35 +277,27 @@ export const LargeFormInADialog = {
             );
         };
 
-        const [showDialog, setShowDialog] = useState(true); // In a real application, this would generally be `false` by default
-        const editingId: string | undefined = undefined; // In a real application, this would be set when editing an existing item
+        const [EditDialog, { id: selectedId }, editDialogApi] = useEditDialog();
 
         return (
-            <SaveBoundary onAfterSave={() => setShowDialog(false)}>
+            <>
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" onClick={() => setShowDialog(true)}>
-                            Open dialog
-                        </Button>
+                        <Button onClick={() => editDialogApi.openAddDialog(selectedId)}>Open dialog</Button>
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
                     <Typography variant="h3">Open the dialog to see the form.</Typography>
-                    <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
-                        <DialogTitle>Dialog title</DialogTitle>
+                    <EditDialog title="Dialog title">
                         <DialogContent>
-                            <Form id={editingId} />
+                            <Form id={selectedId} />
                         </DialogContent>
-                        <DialogActions>
-                            <CancelButton onClick={() => setShowDialog(false)} />
-                            <SaveBoundarySaveButton />
-                        </DialogActions>
-                    </Dialog>
+                    </EditDialog>
                 </StackMainContent>
-            </SaveBoundary>
+            </>
         );
     },
 };
@@ -323,15 +306,13 @@ export const SingleGridFullHeight = {
     render: () => {
         const { rows, loading } = useData();
 
+        console.log("render");
         const GridToolbar = () => {
+            console.log("GridToolbar render");
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                 </DataGridToolbar>
             );
         };
@@ -348,7 +329,7 @@ export const SingleGridFullHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid disableSelectionOnClick columns={columns} rows={rows} loading={loading} components={{ Toolbar: GridToolbar }} />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
             </>
         );
@@ -362,12 +343,8 @@ export const SingleGridAutoHeight = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                 </DataGridToolbar>
             );
         };
@@ -384,14 +361,7 @@ export const SingleGridAutoHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent>
-                    <DataGrid
-                        disableSelectionOnClick
-                        columns={columns}
-                        rows={rows}
-                        loading={loading}
-                        components={{ Toolbar: GridToolbar }}
-                        autoHeight
-                    />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight />
                 </StackMainContent>
             </>
         );
@@ -410,8 +380,8 @@ export const GridWithFormInADialog = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -422,24 +392,18 @@ export const GridWithFormInADialog = {
             );
         };
 
-        const [editingId, setEditingId] = useState<string | undefined>();
+        const [EditDialog, { id: selectedId, mode }, editDialogApi] = useEditDialog();
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setEditingId("add")}>
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                    <FillSpace />
+                    <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -449,10 +413,11 @@ export const GridWithFormInADialog = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: ({ row }) => (
-                    <IconButton color="primary" onClick={() => setEditingId(row.id)}>
+                    <IconButton color="primary" onClick={() => editDialogApi.openEditDialog(row.id)}>
                         <Edit />
                     </IconButton>
                 ),
@@ -466,20 +431,13 @@ export const GridWithFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
+                    <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
-                <Dialog open={!!editingId} onClose={() => setEditingId(undefined)}>
-                    <SaveBoundary onAfterSave={() => setEditingId(undefined)}>
-                        <DialogTitle>{editingId === "add" ? "Add new item" : `${rows.find((row) => row.id === editingId)?.title}`}</DialogTitle>
-                        <DialogContent>
-                            <Form id={editingId === "add" ? undefined : editingId} />
-                        </DialogContent>
-                        <DialogActions>
-                            <CancelButton onClick={() => setEditingId(undefined)} />
-                            <SaveBoundarySaveButton />
-                        </DialogActions>
-                    </SaveBoundary>
-                </Dialog>
+                <EditDialog title={mode === "add" ? "Add new item" : `${rows.find((row) => row.id === selectedId)?.title}`}>
+                    <DialogContent>
+                        <Form id={selectedId} />
+                    </DialogContent>
+                </EditDialog>
             </>
         );
     },
@@ -497,8 +455,8 @@ export const GridWithFormOnAPage = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -514,18 +472,12 @@ export const GridWithFormOnAPage = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} component={StackLink} pageName="add" payload="add">
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                    <FillSpace />
+                    <Button responsive startIcon={<Add />} component={StackLink} pageName="add" payload="add">
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -535,6 +487,7 @@ export const GridWithFormOnAPage = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -549,7 +502,7 @@ export const GridWithFormOnAPage = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -564,7 +517,7 @@ export const GridWithFormOnAPage = {
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
                     <StackMainContent fullHeight>
-                        <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
+                        <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add">
@@ -608,8 +561,8 @@ export const NestedGridsAndFormsWithTabs = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -620,24 +573,18 @@ export const NestedGridsAndFormsWithTabs = {
             );
         };
 
-        const [showAddDialog, setShowAddDialog] = useState(false);
+        const [EditDialog, , editDialogApi] = useEditDialog();
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                    <FillSpace />
+                    <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -647,6 +594,7 @@ export const NestedGridsAndFormsWithTabs = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -666,7 +614,7 @@ export const NestedGridsAndFormsWithTabs = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -682,7 +630,7 @@ export const NestedGridsAndFormsWithTabs = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -698,9 +646,9 @@ export const NestedGridsAndFormsWithTabs = {
                                                 </FieldSet>
                                             </RouterTab>
                                             <RouterTab path="/child-items" label="Child items in Grid">
-                                                <FullHeightGridContainer>
-                                                    <DataGrid disableSelectionOnClick rows={rows} columns={childGridColumns} loading={loading} />
-                                                </FullHeightGridContainer>
+                                                <FullHeightContent>
+                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
+                                                </FullHeightContent>
                                             </RouterTab>
                                         </RouterTabs>
                                     </StackMainContent>
@@ -709,18 +657,11 @@ export const NestedGridsAndFormsWithTabs = {
                         }}
                     </StackPage>
                 </StackSwitch>
-                <Dialog open={showAddDialog} onClose={() => setShowAddDialog(false)}>
-                    <SaveBoundary onAfterSave={() => setShowAddDialog(false)}>
-                        <DialogTitle>Add new item</DialogTitle>
-                        <DialogContent>
-                            <Form />
-                        </DialogContent>
-                        <DialogActions>
-                            <CancelButton onClick={() => setShowAddDialog(false)} />
-                            <SaveBoundarySaveButton />
-                        </DialogActions>
-                    </SaveBoundary>
-                </Dialog>
+                <EditDialog title="Add new item">
+                    <DialogContent>
+                        <Form />
+                    </DialogContent>
+                </EditDialog>
             </>
         );
     },
@@ -738,8 +679,8 @@ export const NestedFormInGridInTabsInGrid = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -750,24 +691,18 @@ export const NestedFormInGridInTabsInGrid = {
             );
         };
 
-        const [showAddDialog, setShowAddDialog] = useState(false);
+        const [EditDialog, , editDialogApi] = useEditDialog();
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                    <FillSpace />
+                    <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -777,6 +712,7 @@ export const NestedFormInGridInTabsInGrid = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -791,7 +727,7 @@ export const NestedFormInGridInTabsInGrid = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -807,7 +743,7 @@ export const NestedFormInGridInTabsInGrid = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -825,9 +761,9 @@ export const NestedFormInGridInTabsInGrid = {
                                             <RouterTab path="/child-items" label="Child items in Grid">
                                                 <StackSwitch>
                                                     <StackPage name="grid">
-                                                        <FullHeightGridContainer>
-                                                            <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} />
-                                                        </FullHeightGridContainer>
+                                                        <FullHeightContent>
+                                                            <DataGrid rows={rows} columns={columns} loading={loading} />
+                                                        </FullHeightContent>
                                                     </StackPage>
                                                     <StackPage name="edit">
                                                         {(id) => {
@@ -854,18 +790,11 @@ export const NestedFormInGridInTabsInGrid = {
                         }}
                     </StackPage>
                 </StackSwitch>
-                <Dialog open={showAddDialog} onClose={() => setShowAddDialog(false)}>
-                    <SaveBoundary onAfterSave={() => setShowAddDialog(false)}>
-                        <DialogTitle>Add new item</DialogTitle>
-                        <DialogContent>
-                            <Form />
-                        </DialogContent>
-                        <DialogActions>
-                            <CancelButton onClick={() => setShowAddDialog(false)} />
-                            <SaveBoundarySaveButton />
-                        </DialogActions>
-                    </SaveBoundary>
-                </Dialog>
+                <EditDialog title="Add new item">
+                    <DialogContent>
+                        <Form />
+                    </DialogContent>
+                </EditDialog>
             </>
         );
     },
@@ -873,45 +802,40 @@ export const NestedFormInGridInTabsInGrid = {
 
 export const GridWithSelectionAndMoreActionsMenu = {
     render: () => {
-        const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <CrudMoreActionsMenu
-                            selectionSize={selectionModel.length}
-                            overallActions={[
-                                {
-                                    label: "Log all items to the console",
-                                    icon: <Html />,
-                                    onClick: () => {
-                                        console.log(
-                                            "IDs of all items",
-                                            rows.map((row) => row.id),
-                                        );
-                                    },
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                    <FillSpace />
+                    <CrudMoreActionsMenu
+                        slotProps={{ button: { responsive: true } }}
+                        selectionSize={selectionModel.length}
+                        overallActions={[
+                            {
+                                label: "Log all items to the console",
+                                icon: <Html />,
+                                onClick: () => {
+                                    console.log(
+                                        "IDs of all items",
+                                        rows.map((row) => row.id),
+                                    );
                                 },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Log selected items to the console",
-                                    icon: <Html />,
-                                    onClick: () => {
-                                        console.log("IDs of selected items", selectionModel);
-                                    },
+                            },
+                        ]}
+                        selectiveActions={[
+                            {
+                                label: "Log selected items to the console",
+                                icon: <Html />,
+                                onClick: () => {
+                                    console.log("IDs of selected items", selectionModel);
                                 },
-                            ]}
-                        />
-                    </ToolbarActions>
+                            },
+                        ]}
+                    />
                 </DataGridToolbar>
             );
         };
@@ -929,14 +853,13 @@ export const GridWithSelectionAndMoreActionsMenu = {
                 </StackToolbar>
                 <StackMainContent fullHeight>
                     <DataGrid
-                        disableSelectionOnClick
                         rows={rows}
                         columns={columns}
                         loading={loading}
-                        components={{ Toolbar: GridToolbar }}
+                        slots={{ toolbar: GridToolbar }}
                         checkboxSelection
-                        selectionModel={selectionModel}
-                        onSelectionModelChange={setSelectionModel}
+                        rowSelectionModel={selectionModel}
+                        onRowSelectionModelChange={setSelectionModel}
                     />
                 </StackMainContent>
             </>
@@ -946,19 +869,16 @@ export const GridWithSelectionAndMoreActionsMenu = {
 
 export const GridWithSelectionInDialog = {
     render: () => {
-        const [showDialog, setShowDialog] = useState(true); // In a real application, this would generally be `false` by default
-        const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]); // TODO: Check why this is reset every time the dialog is opened. Is this only in storybook?
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
         const { rows, loading } = useData();
+
+        const [EditDialog, , editDialogApi] = useEditDialog();
 
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                 </DataGridToolbar>
             );
         };
@@ -973,9 +893,9 @@ export const GridWithSelectionInDialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<SelectIcon />} onClick={() => setShowDialog(true)}>
+                        <Button startIcon={<SelectIcon />} onClick={() => editDialogApi.openAddDialog()}>
                             Select items
                         </Button>
                     </ToolbarActions>
@@ -1003,42 +923,19 @@ export const GridWithSelectionInDialog = {
                         <Typography variant="h4">No items selected :(</Typography>
                     )}
                 </StackMainContent>
-                <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
-                    <DialogTitle>Selected items</DialogTitle>
+                <EditDialog onAfterSave={() => editDialogApi.closeDialog()} title="Selected items">
                     <DataGrid
-                        disableSelectionOnClick
                         rows={rows}
                         columns={columns}
                         loading={loading}
-                        components={{ Toolbar: GridToolbar }}
+                        slots={{ toolbar: GridToolbar }}
                         checkboxSelection
                         autoHeight
-                        selectionModel={selectionModel}
-                        onSelectionModelChange={setSelectionModel}
+                        rowSelectionModel={selectionModel}
+                        onRowSelectionModelChange={setSelectionModel}
                     />
-                    <DialogActions>
-                        <OkayButton onClick={() => setShowDialog(false)} />
-                    </DialogActions>
-                </Dialog>
+                </EditDialog>
             </>
         );
     },
-};
-
-// TODO: Use new/updated component: https://vivid-planet.atlassian.net/browse/COM-1231
-const FullHeightGridContainer = ({ children }: { children: ReactNode }) => {
-    const elementRef = useRef<HTMLDivElement>(null);
-    const [topOffset, setTopOffset] = useState(0);
-
-    useEffect(() => {
-        if (elementRef.current) {
-            setTopOffset(elementRef.current.getBoundingClientRect().top);
-        }
-    }, []);
-
-    return (
-        <Box ref={elementRef} height={`calc(100vh - ${topOffset + 20}px)`}>
-            {children}
-        </Box>
-    );
 };

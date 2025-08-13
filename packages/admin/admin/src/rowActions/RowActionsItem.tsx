@@ -1,7 +1,7 @@
-import { ElementType, MouseEventHandler, ReactElement, ReactNode, useContext } from "react";
+import { type ElementType, type MouseEventHandler, type ReactElement, type ReactNode, useContext } from "react";
 
-import { RowActionsIconItem, RowActionsIconItemComponentsProps, RowActionsIconItemProps } from "./RowActionsIconItem";
-import { RowActionsListItem, RowActionsListItemComponentsProps, RowActionsListItemProps } from "./RowActionsListItem";
+import { RowActionsIconItem, type RowActionsIconItemComponentsProps, type RowActionsIconItemProps } from "./RowActionsIconItem";
+import { RowActionsListItem, type RowActionsListItemComponentsProps, type RowActionsListItemProps } from "./RowActionsListItem";
 import { RowActionsMenuContext } from "./RowActionsMenu";
 
 export interface CommonRowActionItemProps {
@@ -10,8 +10,7 @@ export interface CommonRowActionItemProps {
     onClick?: MouseEventHandler<HTMLElement>;
 }
 
-export type RowActionsItemPropsComponentsProps<T extends ElementType = "li"> = RowActionsIconItemComponentsProps &
-    RowActionsListItemComponentsProps<T>;
+type RowActionsItemPropsComponentsProps<T extends ElementType = "li"> = RowActionsIconItemComponentsProps & RowActionsListItemComponentsProps<T>;
 
 export interface RowActionsItemProps<T extends ElementType = "li">
     extends Omit<RowActionsIconItemProps, "componentsProps">,

@@ -1,10 +1,13 @@
-import { OkayButton, useStackApi } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
-import { Dialog, DialogActions, DialogTitle } from "@mui/material";
+import { Dialog, OkayButton, useStackApi } from "@comet/admin";
+import { DialogActions } from "@mui/material";
 import { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
-import { TableBlockData, TableBlockInput } from "../../blocks.generated";
+import { type TableBlockData, type TableBlockInput } from "../../blocks.generated";
+import { BlocksFinalForm } from "../form/BlocksFinalForm";
+import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
+import { BlockCategory, type BlockInterface } from "../types";
 import { TableBlockGrid } from "./TableBlockGrid";
 import { getInitialTableData } from "./utils";
 
@@ -16,6 +19,7 @@ export const TableBlock: BlockInterface<TableBlockData, TableBlockData, TableBlo
     category: BlockCategory.TextAndContent,
     AdminComponent: ({ state, updateState }) => {
         const stackApi = useStackApi();
+        const intl = useIntl();
         const [showDialog, setShowDialog] = useState(true);
 
         const closeTableBlock = () => {
@@ -26,10 +30,13 @@ export const TableBlock: BlockInterface<TableBlockData, TableBlockData, TableBlo
         return (
             <SelectPreviewComponent>
                 <BlocksFinalForm<TableBlockData> onSubmit={updateState} initialValues={state}>
-                    <Dialog open={showDialog} maxWidth="xl" onClose={closeTableBlock}>
-                        <DialogTitle>
-                            <FormattedMessage id="comet.blocks.table.displayName" defaultMessage="Table" />
-                        </DialogTitle>
+                    <Dialog
+                        open={showDialog}
+                        maxWidth="xl"
+                        onClose={closeTableBlock}
+                        title={intl.formatMessage({ id: "comet.blocks.table.displayName", defaultMessage: "Table" })}
+                        PaperProps={{ sx: { height: "100%", maxHeight: 880 } }}
+                    >
                         <TableBlockGrid state={state} updateState={updateState} />
                         <DialogActions>
                             <OkayButton onClick={closeTableBlock} />

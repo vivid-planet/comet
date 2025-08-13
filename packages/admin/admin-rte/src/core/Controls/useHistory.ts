@@ -1,10 +1,10 @@
 import { RteRedo, RteUndo } from "@comet/admin-icons";
 import { EditorState } from "draft-js";
-import { MouseEvent, useCallback, useMemo } from "react";
+import { type MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";
 
-import { SupportedThings } from "../Rte";
-import { IFeatureConfig } from "../types";
+import { type SupportedThings } from "../Rte";
+import { type IFeatureConfig } from "../types";
 
 interface IProps {
     editorState: EditorState;

@@ -1,6 +1,5 @@
-import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
-import { Button, List, ListItem, Snackbar } from "@mui/material";
-import * as React from "react";
+import { Button, SnackbarProvider, useSnackbarApi } from "@comet/admin";
+import { List, ListItem, Snackbar } from "@mui/material";
 
 let counter = 0;
 
@@ -23,7 +22,7 @@ const CustomSnackbar = () => {
                 autoHideDuration={5000}
                 message="This is a completely customizable snackbar"
                 action={
-                    <Button color="secondary" size="small" onClick={handleActionButtonClick}>
+                    <Button variant="textLight" onClick={handleActionButtonClick}>
                         Custom Button
                     </Button>
                 }
@@ -34,12 +33,10 @@ const CustomSnackbar = () => {
     return (
         <List>
             <ListItem>
-                <Button color="primary" onClick={showCustomSnackbar}>
-                    Show Snackbar
-                </Button>
+                <Button onClick={showCustomSnackbar}>Show Snackbar</Button>
             </ListItem>
             <ListItem>
-                <Button color="secondary" onClick={snackbarApi.hideSnackbar}>
+                <Button variant="secondary" onClick={snackbarApi.hideSnackbar}>
                     Hide Snackbar
                 </Button>
             </ListItem>

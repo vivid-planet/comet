@@ -5,7 +5,7 @@ services:
         volumes:
             - postgres:/bitnami/postgresql
         ports:
-            - "${POSTGRESQL_PORT}:5432"
+            - "127.0.0.1:${POSTGRESQL_PORT}:5432"
         environment:
             POSTGRESQL_USER: postgres
             POSTGRESQL_PASSWORD: ${POSTGRESQL_PWD_DECODED}
@@ -18,7 +18,7 @@ services:
         volumes:
             - ./demo/uploads:/uploads:ro
         ports:
-            - ${IMGPROXY_PORT}:8080
+            - "127.0.0.1:${IMGPROXY_PORT}:8080"
         environment:
             IMGPROXY_KEY: ${IMGPROXY_KEY}
             IMGPROXY_SALT: ${IMGPROXY_SALT}
@@ -36,8 +36,8 @@ services:
     jaeger:
         image: jaegertracing/all-in-one:1
         ports:
-            - ${JAEGER_UI_PORT}:16686
-            - ${JAEGER_OLTP_PORT}:4318 #OLTP over HTTP
+            - "127.0.0.1:${JAEGER_UI_PORT}:16686"
+            - "127.0.0.1:${JAEGER_OLTP_PORT}:4318" #OLTP over HTTP
         environment:
             COLLECTOR_OTLP_ENABLED: "true"
             COLLECTOR_OTLP_HTTP_HOST_PORT: 0.0.0.0:4318
@@ -46,7 +46,7 @@ services:
         image: redis:7
         command: redis-server --maxmemory 256M --maxmemory-policy allkeys-lru --loglevel warning --requirepass ${REDIS_PASSWORD}
         ports:
-            - ${REDIS_PORT}:6379
+            - "127.0.0.1:${REDIS_PORT}:6379"
         networks:
             - redis
 

@@ -15,6 +15,9 @@ import { CometValidationException } from "./validation.exception";
 
 // Inspired by https://docs.nestjs.com/interceptors#more-operators
 @Injectable()
+/**
+ * @deprecated Use `ExceptionFilter` instead
+ */
 export class ExceptionInterceptor implements NestInterceptor {
     constructor(private readonly debug: boolean) {}
 

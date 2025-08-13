@@ -1,7 +1,15 @@
-import { messages, SelectField } from "@comet/admin";
+import { CancelButton, OkayButton, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
-import { GQLUserGroup } from "@src/graphql.generated";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    ListItemIcon,
+    MenuItem,
+} from "@mui/material";
+import { type GQLUserGroup } from "@src/graphql.generated";
 import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -71,18 +79,13 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                                 </SelectField>
                             </DialogContent>
                             <DialogActions>
-                                <Button
-                                    type="button"
+                                <CancelButton
                                     onClick={() => {
                                         setDialogOpen(false);
                                         onMenuClose();
                                     }}
-                                >
-                                    <FormattedMessage {...messages.cancel} />
-                                </Button>
-                                <Button type="submit" variant="contained">
-                                    <FormattedMessage {...messages.ok} />
-                                </Button>
+                                />
+                                <OkayButton type="submit" />
                             </DialogActions>
                         </form>
                     )}

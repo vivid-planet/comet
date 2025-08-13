@@ -1,12 +1,12 @@
 import { ChevronRight, MoreVertical } from "@comet/admin-icons";
-import { Menu, MenuProps } from "@mui/material";
-import { ReactNode, useContext, useRef } from "react";
+import { Menu, type MenuProps } from "@mui/material";
+import { type ReactNode, useContext, useRef } from "react";
 
-import { RowActionsIconItem, RowActionsIconItemProps } from "./RowActionsIconItem";
-import { RowActionsListItem, RowActionsListItemProps } from "./RowActionsListItem";
+import { RowActionsIconItem, type RowActionsIconItemProps } from "./RowActionsIconItem";
+import { RowActionsListItem, type RowActionsListItemProps } from "./RowActionsListItem";
 import { RowActionsMenuContext } from "./RowActionsMenu";
 
-export interface RowActionsSubMenuComponentsProps {
+interface RowActionsSubMenuComponentsProps {
     rowActionsIconItem?: Partial<RowActionsIconItemProps>;
     rowActionsListItem?: Partial<RowActionsListItemProps>;
 }

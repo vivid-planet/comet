@@ -1,10 +1,9 @@
-import { CancelButton, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
+import { Button, CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControlLabel, MenuItem } from "@mui/material";
-import * as React from "react";
+import { DialogActions, DialogContent, DialogContentText, type DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
 
-type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth";
+type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";
 
 type DialogSizeOptions = {
     [label: string]: DialogSize;
@@ -17,6 +16,7 @@ const dialogSizeOptions: DialogSizeOptions = {
     "LG (1280px)": "lg",
     "XL (1920px)": "xl",
     FullWidth: "fullWidth",
+    FullScreen: "fullScreen",
 };
 
 const selectOptions = [
@@ -29,23 +29,44 @@ export default {
     title: "@comet/admin/mui",
     args: {
         selectedDialogSize: "sm",
+        selectedDialogTitle: "Dialog Title Example",
+        selectedDialogOnClose: null,
     },
     argTypes: {
         selectedDialogSize: {
             name: "Dialog Size",
             control: "select",
-            options: Object.keys(dialogSizeOptions),
-            mapping: dialogSizeOptions,
+            options: dialogSizeOptions,
+        },
+        selectedDialogTitle: {
+            name: "Dialog Title",
+            control: "select",
+            options: {
+                "Dialog Title Example": "Dialog Title Example",
+                "Really long dialog title":
+                    "Really long dialog title that is really long and takes up a lot of space because of all the words that are used in this title of the dialog you are seeing here in the storybook example inside comet that is used to test the dialog title",
+                None: "",
+            },
+        },
+        selectedDialogOnClose: {
+            name: "Dialog onClose",
+            control: "select",
+            options: {
+                "No callback": null,
+                "Provided callback": "callback",
+            },
         },
     },
 };
 
 type Args = {
     selectedDialogSize: DialogSize;
+    selectedDialogTitle: string;
+    selectedDialogOnClose: string;
 };
 
 export const _Dialog = {
-    render: ({ selectedDialogSize }: Args) => {
+    render: ({ selectedDialogSize, selectedDialogTitle, selectedDialogOnClose }: Args) => {
         return (
             <div>
                 <Form
@@ -56,10 +77,12 @@ export const _Dialog = {
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
                             <Dialog
-                                scroll="body"
+                                title={selectedDialogTitle}
+                                onClose={selectedDialogOnClose === "callback" ? () => console.log("Dialog closed") : undefined}
                                 open={true}
                                 fullWidth={selectedDialogSize === "fullWidth"}
-                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
+                                fullScreen={selectedDialogSize === "fullScreen"}
+                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize !== "fullScreen" && selectedDialogSize}
                             >
                                 <>{selectedDialogSize === "xs" ? <ConfirmationDialogContent /> : <DefaultDialogContent />}</>
                             </Dialog>
@@ -71,48 +94,30 @@ export const _Dialog = {
     },
 };
 
-function ConfirmationDialogContent(): React.ReactElement {
+function ConfirmationDialogContent() {
     return (
-        <>
-            <DialogTitle>This is a small confirmation dialog.</DialogTitle>
-            <DialogActions>
-                <CancelButton />
-                <OkayButton />
-            </DialogActions>
-        </>
+        <DialogActions>
+            <CancelButton />
+            <OkayButton />
+        </DialogActions>
     );
 }
 
-function DefaultDialogContent(): React.ReactElement {
+function DefaultDialogContent() {
     return (
         <>
-            <DialogTitle>Form in Dialog</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Lorem ipsum nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Vivamus
                     sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Curabitur blandit tempus porttitor.
                 </DialogContentText>
-                <Field name="text" label="Textfield" component={FinalFormInput} fullWidth />
-                <Field name="select" label="Select" fullWidth>
-                    {(props) => (
-                        <FinalFormSelect {...props} fullWidth>
-                            {selectOptions.map((option) => (
-                                <MenuItem value={option.value} key={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </FinalFormSelect>
-                    )}
-                </Field>
-                <Field name="checked" type="checkbox" fullWidth>
-                    {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                </Field>
+                <TextField name="text" label="Textfield" fullWidth />
+                <SelectField name="select" label="Select" fullWidth options={selectOptions} />
+                <CheckboxField name="checked" label="Checkbox" fullWidth />
             </DialogContent>
             <DialogActions>
                 <CancelButton />
-                <Button startIcon={<Save />} variant="contained" color="primary">
-                    Save
-                </Button>
+                <Button startIcon={<Save />}>Save</Button>
             </DialogActions>
         </>
     );

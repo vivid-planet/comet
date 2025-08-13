@@ -3,14 +3,11 @@ const packageFolderMapping = {
     "@comet/admin-color-picker": "packages/admin/admin-color-picker",
     "@comet/admin-date-time": "packages/admin/admin-date-time",
     "@comet/admin-icons": "packages/admin/admin-icons",
-    "@comet/admin-react-select": "packages/admin/admin-react-select",
     "@comet/admin-rte": "packages/admin/admin-rte",
-    "@comet/admin-theme": "packages/admin/admin-theme",
-    "@comet/blocks-admin": "packages/admin/blocks-admin",
     "@comet/cms-admin": "packages/admin/cms-admin",
-    "@comet/blocks-api": "packages/api/blocks-api",
     "@comet/cms-api": "packages/api/cms-api",
-    "@comet/cms-site": "packages/site/cms-site",
+    "@comet/site-nextjs": "packages/site/site-nextjs",
+    "@comet/site-react": "packages/site/site-react",
 };
 
 const waitOnPackages = (...packages) => {
@@ -44,122 +41,87 @@ module.exports = {
             group: ["comet-admin"],
         },
         {
-            name: "comet-admin-react-select",
-            script: "pnpm --filter @comet/admin-react-select run start",
-            group: ["comet-admin"],
-            waitOn: waitOnPackages("@comet/admin"),
-        },
-        {
             name: "comet-admin-rte",
             script: "pnpm --filter @comet/admin-rte run start",
             group: ["comet-admin"],
         },
+
+        // admin-generator
         {
-            name: "comet-admin-theme",
-            script: "pnpm --filter @comet/admin-theme run start",
-            group: ["comet-admin"],
-            waitOn: waitOnPackages(
-                "@comet/admin-icons",
-                "@comet/admin-rte",
-                "@comet/admin",
-                "@comet/admin-color-picker",
-                "@comet/admin-react-select",
-            ),
+            name: "admin-generator",
+            script: "pnpm --filter @comet/admin-generator run dev",
+            group: ["cms-admin"],
+            waitOn: waitOnPackages("@comet/cms-admin"),
         },
 
         // group cms-admin
         {
-            name: "blocks-admin",
-            script: "pnpm --filter @comet/blocks-admin run start",
-            group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons"),
-        },
-        {
-            name: "blocks-admin-codegen-block-types",
-            script: "pnpm --filter @comet/blocks-admin run generate-block-types:watch",
-            group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons"),
-        },
-        {
             name: "cms-admin",
             script: "pnpm --filter @comet/cms-admin run start",
             group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages(
-                "@comet/admin",
-                "@comet/admin-icons",
-                "@comet/admin-react-select",
-                "@comet/admin-rte",
-                "@comet/admin-theme",
-                "@comet/blocks-admin",
-            ),
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte"),
         },
         {
             name: "cms-admin-codegen-graphql-types",
-            script: "pnpm --filter @comet/cms-admin run generate-graphql-types:watch",
+            script: "pnpm --filter @comet/cms-admin run gql:watch",
             group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages(
-                "@comet/admin",
-                "@comet/admin-icons",
-                "@comet/admin-react-select",
-                "@comet/admin-rte",
-                "@comet/admin-theme",
-                "@comet/blocks-admin",
-            ),
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte"),
         },
         {
             name: "cms-admin-codegen-block-types",
             script: "pnpm --filter @comet/cms-admin run generate-block-types:watch",
             group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages(
-                "@comet/admin",
-                "@comet/admin-icons",
-                "@comet/admin-react-select",
-                "@comet/admin-rte",
-                "@comet/admin-theme",
-                "@comet/blocks-admin",
-            ),
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte"),
         },
 
         //group cms-api
         {
-            name: "blocks-api",
-            script: "pnpm --filter @comet/blocks-api run dev",
-            group: ["cms-api", "cms"],
-        },
-        {
-            name: "blocks-api-codegen-block-meta",
-            script: "pnpm --filter @comet/blocks-api run generate-block-meta:watch",
-            group: ["cms-api", "cms"],
-        },
-        {
             name: "cms-api",
             script: "pnpm --filter @comet/cms-api run dev",
             group: ["cms-api", "cms"],
-            waitOn: waitOnPackages("@comet/blocks-api"),
         },
         {
             name: "cms-api-codegen-schema",
             script: "pnpm --filter @comet/cms-api run generate-schema:watch",
             group: ["cms-api", "cms"],
-            waitOn: waitOnPackages("@comet/blocks-api"),
         },
         {
             name: "cms-api-codegen-block-meta",
             script: "pnpm --filter @comet/cms-api run generate-block-meta:watch",
             group: ["cms-api", "cms"],
-            waitOn: waitOnPackages("@comet/blocks-api"),
+        },
+        // api-generator
+        {
+            name: "api-generator",
+            script: "pnpm --filter @comet/api-generator run dev",
+            group: ["cms-api", "cms"],
+            waitOn: waitOnPackages("@comet/cms-api"),
         },
 
-        //group cms-site
+        //group site-nextjs
         {
-            name: "cms-site",
-            script: "pnpm --filter @comet/cms-site run dev",
-            group: ["cms-site", "cms"],
+            name: "site-nextjs",
+            script: "pnpm --filter @comet/site-nextjs run dev",
+            group: ["site-nextjs", "cms"],
+            waitOn: [...waitOnPackages("@comet/site-react")],
         },
         {
-            name: "cms-site-codegen-block-types",
-            script: "pnpm --filter @comet/cms-site run generate-block-types:watch",
-            group: ["cms-site", "cms"],
+            name: "site-nextjs-codegen-block-types",
+            script: "pnpm --filter @comet/site-nextjs run generate-block-types:watch",
+            group: ["site-nextjs", "cms"],
+            waitOn: [...waitOnPackages("@comet/site-react")],
+        },
+
+        //group site-react
+        {
+            name: "site-react",
+            script: "pnpm --filter @comet/site-react run dev",
+            group: ["site-react", "site-nextjs", "cms"],
+        },
+        {
+            name: "site-react-codegen-block-types",
+            script: "pnpm --filter @comet/site-react run generate-block-types:watch",
+            group: ["site-react", "site-nextjs", "cms"],
         },
 
         //group demo admin
@@ -167,18 +129,7 @@ module.exports = {
             name: "demo-admin",
             script: "pnpm --filter comet-demo-admin run start",
             group: ["demo-admin", "demo"],
-            waitOn: [
-                ...waitOnPackages(
-                    "@comet/admin",
-                    "@comet/admin-icons",
-                    "@comet/admin-react-select",
-                    "@comet/admin-rte",
-                    "@comet/admin-theme",
-                    "@comet/blocks-admin",
-                    "@comet/cms-admin",
-                ),
-                "tcp:$API_PORT",
-            ],
+            waitOn: [...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin"), "tcp:$API_PORT"],
         },
         {
             name: "demo-admin-codegen",
@@ -200,10 +151,16 @@ module.exports = {
             group: ["demo-api", "demo"],
         },
         {
+            name: "demo-api-generator",
+            script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
+            group: ["demo-api", "demo"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "packages/api/api-generator/lib/apiGenerator.js"],
+        },
+        {
             name: "demo-api",
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
-            waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
 
         //group demo site
@@ -211,7 +168,7 @@ module.exports = {
             name: "demo-site",
             script: "pnpm --filter comet-demo-site run dev",
             group: ["demo-site", "demo"],
-            waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
+            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-codegen",
@@ -231,7 +188,7 @@ module.exports = {
             name: "demo-site-pages",
             script: "pnpm --filter comet-demo-site-pages run dev",
             group: ["demo-site-pages", "demo"],
-            waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
+            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-pages-codegen",

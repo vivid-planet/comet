@@ -8,7 +8,7 @@ import { PageTreeNodeCategory, ScopeInterface } from "../types";
 import { EmptyPageTreeNodeScope } from "./empty-page-tree-node-scope";
 import { PageTreeNodeSort } from "./page-tree-node.sort";
 
-export interface PaginatedPageTreeNodesArgsInterface {
+interface PaginatedPageTreeNodesArgsInterface {
     scope: ScopeInterface;
     category?: string;
     sort?: PageTreeNodeSort[];

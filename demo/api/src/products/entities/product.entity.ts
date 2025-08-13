@@ -1,5 +1,4 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
+import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -14,11 +13,11 @@ import {
     Property,
     Ref,
     types,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
-import { GraphQLDate } from "graphql-scalars";
+import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
@@ -80,7 +79,7 @@ export class ProductPriceRange {
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -105,9 +104,9 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field()
     slug: string;
 
-    @Property()
-    @Field()
-    description: string;
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    description?: string;
 
     @Enum({ items: () => ProductType })
     @Field(() => ProductType)
@@ -125,7 +124,6 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field(() => ProductPriceRange, { nullable: true })
     priceRange?: ProductPriceRange = undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     @Property({ type: types.boolean })
     @Field()
     inStock: boolean = true;
@@ -138,14 +136,14 @@ export class Product extends BaseEntity<Product, "id"> {
     soldCount?: number;
 
     @Property({ type: types.date, nullable: true })
-    @Field(() => GraphQLDate, { nullable: true })
-    availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
+    @Field(() => GraphQLLocalDate, { nullable: true })
+    availableSince?: string = undefined;
 
     @Property({ nullable: true })
     @Field({ nullable: true })
     lastCheckedAt?: Date = undefined;
 
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 

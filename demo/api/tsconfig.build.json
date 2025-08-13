@@ -1,7 +1,7 @@
 {
-    "extends": "./tsconfig.json",
     "compilerOptions": {
         "inlineSources": true,
         "sourceRoot": "/dist"
-    }
+    },
+    "extends": "./tsconfig.json"
 }

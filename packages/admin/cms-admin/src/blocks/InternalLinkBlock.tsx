@@ -1,24 +1,18 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    LinkBlockInterface,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
+import { type InternalLinkBlockData, type InternalLinkBlockInput } from "../blocks.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { type GQLLinkBlockTargetPageQuery, type GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface, type LinkBlockInterface } from "./types";
 
 type State = InternalLinkBlockData;
 
@@ -44,7 +38,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext) => {
+    output2State: async (output, { apolloClient }) => {
         if (output.targetPageId === undefined) {
             return {};
         }
@@ -104,7 +98,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
 
         return (
             <SelectPreviewComponent>
-                <AdminComponentPaper disablePadding>
+                <BlockAdminComponentPaper disablePadding>
                     <BlocksFinalForm
                         onSubmit={(newState) => {
                             updateState((previousState) => {
@@ -131,7 +125,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                         }}
                         initialValues={{
                             targetPage: state.targetPage,
-                            targetPageAnchor: anchorsLoading ? "" : state.targetPageAnchor ?? "none",
+                            targetPageAnchor: anchorsLoading ? "" : (state.targetPageAnchor ?? "none"),
                         }}
                     >
                         <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth fieldContainerProps={{ fieldMargin: "never" }} />
@@ -158,7 +152,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                             </Field>
                         </Box>
                     </BlocksFinalForm>
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             </SelectPreviewComponent>
         );
     },
@@ -174,5 +168,9 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                 content: state.targetPageAnchor === undefined ? state.targetPage.name : `${state.targetPage.name}#${state.targetPageAnchor}`,
             },
         ];
+    },
+
+    extractTextContents: (state) => {
+        return state.targetPage?.name ? [state.targetPage.name] : [];
     },
 };

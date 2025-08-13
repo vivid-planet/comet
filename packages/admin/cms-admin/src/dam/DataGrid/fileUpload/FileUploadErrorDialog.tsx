@@ -1,6 +1,6 @@
-import { messages } from "@comet/admin";
+import { Button, messages } from "@comet/admin";
 import {
-    Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
@@ -17,7 +17,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { FileUploadValidationError } from "./useDamFileUpload";
+import { type FileUploadValidationError } from "./useDamFileUpload";
 
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};
@@ -96,7 +96,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
                 </Table>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="primary" onClick={onClose}>
+                <Button onClick={onClose}>
                     <FormattedMessage {...messages.ok} />
                 </Button>
             </DialogActions>

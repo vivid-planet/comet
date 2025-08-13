@@ -1,11 +1,11 @@
 import { useThemeProps } from "@mui/material/styles";
 import { useCallback, useState } from "react";
-import { DropzoneOptions } from "react-dropzone";
-import { FieldRenderProps } from "react-final-form";
+import { type DropzoneOptions } from "react-dropzone";
+import { type FieldRenderProps } from "react-final-form";
 
 import { commonErrorMessages } from "./file/commonErrorMessages";
-import { FileSelect, FileSelectProps } from "./file/FileSelect";
-import { ErrorFileSelectItem, ValidFileSelectItem } from "./file/fileSelectItemTypes";
+import { FileSelect, type FileSelectProps } from "./file/FileSelect";
+import { type ErrorFileSelectItem, type ValidFileSelectItem } from "./file/fileSelectItemTypes";
 
 export interface FinalFormFileSelectProps
     extends FieldRenderProps<File | File[], HTMLInputElement>,

@@ -1,4 +1,5 @@
 import {
+    AutocompleteField,
     Field,
     FilterBar,
     FilterBarMoreFilters,
@@ -18,23 +19,21 @@ import {
     usePersistedStateId,
     useTableQueryFilter,
 } from "@comet/admin";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Link, Typography } from "@mui/material";
-import faker from "faker";
-import * as React from "react";
+import { faker } from "@faker-js/faker";
+import { Typography } from "@mui/material";
 
 interface ColorFilterFieldProps {
     colors: string[];
 }
 
-const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
+const ColorFilterField = ({ colors }: ColorFilterFieldProps) => {
     const options = colors
         .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index) //filter colorsArray to only have unique values as select options
         .map((color) => {
             return { value: color, label: color };
         });
 
-    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
+    return <AutocompleteField name="color" options={options} fullWidth />;
 };
 
 interface FilterValues {
@@ -65,8 +64,8 @@ const tableData = Array.from(Array(10).keys()).map((i): Car => {
     return {
         id: i,
         model: faker.vehicle.model(),
-        color: faker.commerce.color(),
-        price: faker.commerce.price(100, 1000, 2),
+        color: faker.color.human(),
+        price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
         owner: {
             firstname: faker.name.firstName(),
             lastname: faker.name.lastName(),
@@ -217,9 +216,9 @@ export const TableWithFilterbarAndPersistedState = {
                                 name: "detail",
                                 render: ({ id }) => {
                                     return (
-                                        <Link component={StackLink} pageName="detail" payload={String(id)}>
+                                        <StackLink pageName="detail" payload={String(id)}>
                                             Show Details
-                                        </Link>
+                                        </StackLink>
                                     );
                                 },
                             },

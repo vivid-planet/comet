@@ -1,6 +1,6 @@
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Button, List, ListItem, Snackbar, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import * as React from "react";
+import { Button, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { List, ListItem, Snackbar, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { type MouseEvent, useState } from "react";
 
 import { snackbarDecorator } from "./snackbar.decorator";
 
@@ -24,7 +24,7 @@ export const UseSnackbarApi = {
                         autoHideDuration={5000}
                         message="This is a completely customizable snackbar"
                         action={
-                            <Button color="secondary" size="small" onClick={handleActionButtonClick}>
+                            <Button variant="textLight" onClick={handleActionButtonClick}>
                                 Custom Button
                             </Button>
                         }
@@ -34,12 +34,10 @@ export const UseSnackbarApi = {
             return (
                 <List>
                     <ListItem>
-                        <Button color="primary" onClick={showCustomSnackbar}>
-                            Show Snackbar
-                        </Button>
+                        <Button onClick={showCustomSnackbar}>Show Snackbar</Button>
                     </ListItem>
                     <ListItem>
-                        <Button color="secondary" onClick={snackbarApi.hideSnackbar}>
+                        <Button variant="secondary" onClick={snackbarApi.hideSnackbar}>
                             Hide Snackbar
                         </Button>
                     </ListItem>
@@ -76,13 +74,11 @@ export const HideSnackbar = {
         return (
             <List>
                 <ListItem>
-                    <Button color="primary" onClick={showCustomSnackbar}>
-                        Show Snackbar
-                    </Button>
+                    <Button onClick={showCustomSnackbar}>Show Snackbar</Button>
                 </ListItem>
                 <ListItem>
-                    <Button color="secondary" onClick={snackbarApi.hideSnackbar}>
-                        Hide Snackbar
+                    <Button variant="secondary" onClick={snackbarApi.hideSnackbar}>
+                        Hide Snackbar Hide Snackbar
                     </Button>
                 </ListItem>
             </List>
@@ -92,13 +88,13 @@ export const HideSnackbar = {
 
 export const Undo = {
     render: () => {
-        const [chosenOption, setChosenOption] = React.useState<string | undefined>("one");
+        const [chosenOption, setChosenOption] = useState<string | undefined>("one");
         const snackbarApi = useSnackbarApi();
 
         const handleUndo = (prevOption?: string) => {
             setChosenOption(prevOption);
         };
-        const handleChange = (event: React.MouseEvent<HTMLElement>, newOption: any) => {
+        const handleChange = (event: MouseEvent<HTMLElement>, newOption: any) => {
             const prevOption = chosenOption;
             setChosenOption(newOption);
             snackbarApi.showSnackbar(

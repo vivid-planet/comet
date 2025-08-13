@@ -1,14 +1,14 @@
-import { Field, FieldContainer, FormSection } from "@comet/admin";
+import { Button, Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
-import { AdminComponentSection } from "@comet/blocks-admin";
-import { Button, FormControlLabel, Switch } from "@mui/material";
+import { FormControlLabel, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { BlockAdminComponentSection } from "../../blocks/common/BlockAdminComponentSection";
 import { ChooseFocalPoint } from "../../common/image/ChooseFocalPoint";
-import { EditImageFormValues } from "./EditFile";
+import { type EditImageFormValues } from "./EditFile";
 
 interface Props {
     disabled?: boolean;
@@ -53,7 +53,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         </>
                     }
                 >
-                    <AdminComponentSection
+                    <BlockAdminComponentSection
                         title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
                     >
                         <FormControlLabel
@@ -66,7 +66,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                 )
                             }
                         />
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
                     <Field
@@ -96,7 +96,6 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                         y: 0,
                                     });
                                 }}
-                                color="info"
                                 variant="outlined"
                             >
                                 <FormattedMessage id="comet.dam.file.resetCropArea" defaultMessage="Reset crop area" />

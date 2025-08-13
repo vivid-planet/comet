@@ -1,8 +1,9 @@
-import { InputBase, InputBaseProps, Paper, Popper, styled } from "@mui/material";
-import { GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid-pro";
+import { InputBase, type InputBaseProps, Paper, Popper } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { type GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid-pro";
 import { useCallback, useState } from "react";
 
-export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams<string>) => {
+export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams) => {
     const [valueState, setValueState] = useState(value);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
     const apiRef = useGridApiContext();
@@ -33,7 +34,6 @@ export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams<
     return (
         <>
             <EditCellHandle ref={handleRef} />
-            {/* @ts-expect-error Fixed with MUI v6 (`onResize` and `onResizeCapture` props required according to TS but not actually needed) */}
             <EditPopper open={!!anchorEl} anchorEl={anchorEl} placement="bottom-start">
                 <EditPaper elevation={1}>
                     <EditInput

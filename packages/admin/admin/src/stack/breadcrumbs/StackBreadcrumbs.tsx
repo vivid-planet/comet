@@ -1,11 +1,11 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { Link } from "@mui/material";
-import { ComponentsOverrides, css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type ComponentsOverrides, css, type Theme, useTheme, useThemeProps } from "@mui/material/styles";
+import type Typography from "@mui/material/Typography";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type Link } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender } from "./utils";

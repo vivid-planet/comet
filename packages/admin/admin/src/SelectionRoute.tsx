@@ -1,7 +1,8 @@
-import { ComponentType, PropsWithChildren, ReactNode, useCallback, useMemo } from "react";
+import { type ComponentType, type PropsWithChildren, type ReactNode, useCallback, useMemo } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router";
 
-import { ISelectionApi } from "./SelectionApi";
+import { useSubRoutePrefix } from "./router/SubRoute";
+import { type ISelectionApi } from "./SelectionApi";
 
 interface IRouteParams {
     id?: string;
@@ -9,10 +10,10 @@ interface IRouteParams {
 
 export function useSelectionRoute(): [ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, ISelectionApi] {
     const history = useHistory();
-    const parentMatch = useRouteMatch();
-    const match = useRouteMatch<IRouteParams>(`${parentMatch.path}/:id`);
+    const subRoutePrefix = useSubRoutePrefix();
+    const match = useRouteMatch<IRouteParams>(`${subRoutePrefix}/:id`);
 
-    const parentUrl = parentMatch.url;
+    const parentUrl = subRoutePrefix;
 
     const handleSelectId = useCallback(
         async (id: string) => {
@@ -68,7 +69,7 @@ export interface ISelectionRouterRenderPropArgs {
     selectionApi: ISelectionApi;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface IProps {}
 export const SelectionRouteInner = ({ children }: PropsWithChildren<IProps>) => {
     const { path } = useRouteMatch();
