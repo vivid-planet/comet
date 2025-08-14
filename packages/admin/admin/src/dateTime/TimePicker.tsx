@@ -2,7 +2,7 @@ import { Lock, Time } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, IconButton, InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -22,8 +22,8 @@ export type Future_TimePickerProps = ThemedComponentBaseProps<{
     value?: string;
     onChange?: (time: string | undefined) => void;
     iconMapping?: {
-        openPicker?: React.ReactNode;
-        readOnly?: React.ReactNode;
+        openPicker?: ReactNode;
+        readOnly?: ReactNode;
     };
 } & Omit<MuiTimePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
 
@@ -98,7 +98,7 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
             open={open}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            disableOpenPicker={true}
+            disableOpenPicker
             value={dateValue}
             onChange={(date) => {
                 if (!date) {

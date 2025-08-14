@@ -2,7 +2,7 @@ import { Calendar, Lock } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, IconButton, InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps, pickersInputBaseClasses } from "@mui/x-date-pickers";
 import { format } from "date-fns";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -26,8 +26,8 @@ export type Future_DatePickerProps = ThemedComponentBaseProps<{
     value?: string;
     onChange?: (date: string | undefined) => void;
     iconMapping?: {
-        openPicker?: React.ReactNode;
-        readOnly?: React.ReactNode;
+        openPicker?: ReactNode;
+        readOnly?: ReactNode;
     };
 } & Omit<MuiDatePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
 
