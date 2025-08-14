@@ -1,5 +1,5 @@
 import { Calendar } from "@comet/admin-icons";
-import { type ComponentsOverrides, css, type InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps, pickersInputBaseClasses } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
 
@@ -15,7 +15,7 @@ export type Future_DatePickerClassKey = "root" | "clearInputAdornment" | "readOn
 export type Future_DatePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDatePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
-    readOnlyAdornment: typeof InputAdornment;
+    readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
     fullWidth?: boolean;
