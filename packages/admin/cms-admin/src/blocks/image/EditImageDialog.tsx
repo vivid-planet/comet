@@ -52,6 +52,7 @@ interface Props {
         width: number;
         height: number;
         size?: number;
+        path?: string;
     };
     damFileId: string;
     onClose: () => void;
@@ -184,6 +185,12 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
 
                                         {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
+                                                {image.path && (
+                                                    <StyledTypography>
+                                                        <FormattedMessage id="comet.blocks.image.assetManager" defaultMessage="Asset Manager: " />
+                                                        {image.path}
+                                                    </StyledTypography>
+                                                )}
                                                 <Button
                                                     variant="outlined"
                                                     color="inherit"
@@ -192,7 +199,9 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                             apolloClient,
                                                             id: damFileId,
                                                         });
+
                                                         const url = contentScope.match.url + path;
+
                                                         window.open(url, "_blank");
                                                     }}
                                                     startIcon={<OpenNewTab />}
@@ -242,4 +251,8 @@ const DialogFormWrapper = styled("form")`
     grid-row-gap: 0px;
     max-height: 100%;
     overflow: hidden;
+`;
+
+const StyledTypography = styled(Typography)`
+    margin-bottom: 10px;
 `;

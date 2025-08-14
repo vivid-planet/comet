@@ -23,6 +23,7 @@ import { PixelImageBlockTransformerService } from "./pixel-image-block-transform
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
     damFileId?: string;
+    path?: string;
 
     @Type(() => ImageCropArea)
     cropArea?: ImageCropArea;
@@ -162,6 +163,11 @@ class Meta extends AnnotationBlockMeta {
                         },
                         {
                             name: "fileUrl",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                        {
+                            name: "path",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },

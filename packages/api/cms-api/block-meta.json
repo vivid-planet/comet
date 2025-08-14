@@ -641,6 +641,11 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "path",
+                            "kind": "String",
+                            "nullable": false
                         }
                     ]
                 },
