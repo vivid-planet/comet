@@ -15,7 +15,6 @@ import { getMuiCardHeader } from "./MuiCardHeader";
 import { getMuiCheckbox } from "./MuiCheckbox";
 import { getMuiChip } from "./MuiChip";
 import { getMuiDataGrid } from "./MuiDataGrid";
-import { getMuiDateCalendar } from "./MuiDateCalendar";
 import { getMuiDialog } from "./MuiDialog";
 import { getMuiDialogActions } from "./MuiDialogActions";
 import { getMuiDialogContent } from "./MuiDialogContent";
@@ -41,6 +40,9 @@ import { getMuiMenu } from "./MuiMenu";
 import { getMuiMenuItem } from "./MuiMenuItem";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
 import { getMuiPaper } from "./MuiPaper";
+import { getMuiPickersInputBase } from "./MuiPickersInputBase";
+import { getMuiPickersPopper } from "./MuiPickersPopper";
+import { getMuiPickersTextField } from "./MuiPickersTextField";
 import { getMuiPopover } from "./MuiPopover";
 import { getMuiRadio } from "./MuiRadio";
 import { getMuiSelect } from "./MuiSelect";
@@ -103,6 +105,8 @@ export const getComponentsTheme = (components: Components, theme: Theme): ThemeO
     MuiMenuItem: getMuiMenuItem(components.MuiMenuItem, theme),
     MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, theme),
     MuiPaper: getMuiPaper(components.MuiPaper, theme),
+    MuiPickersTextField: getMuiPickersTextField(components.MuiPickersTextField),
+    MuiPickersInputBase: getMuiPickersInputBase(components.MuiPickersInputBase, theme),
     MuiPopover: getMuiPopover(components.MuiPopover, theme),
     MuiRadio: getMuiRadio(components.MuiRadio, theme),
     MuiSelect: getMuiSelect(components.MuiSelect, theme),
@@ -117,6 +121,6 @@ export const getComponentsTheme = (components: Components, theme: Theme): ThemeO
     MuiTooltip: getMuiTooltip(components.MuiTooltip, theme),
     MuiTypography: getMuiTypography(components.MuiTypography, theme),
     MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, theme),
-    MuiDateCalendar: getMuiDateCalendar(components.MuiDateCalendar, theme),
+    MuiPickersPopper: getMuiPickersPopper(components.MuiPickersPopper, theme),
     MuiTableFooter: getMuiTableFooter(components.MuiTableFooter, theme),
 });

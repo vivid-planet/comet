@@ -930,7 +930,6 @@ export const GridWithSelectionInDialog = {
                         loading={loading}
                         slots={{ toolbar: GridToolbar }}
                         checkboxSelection
-                        autoHeight
                         rowSelectionModel={selectionModel}
                         onRowSelectionModelChange={setSelectionModel}
                     />

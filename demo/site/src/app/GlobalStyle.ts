@@ -81,6 +81,19 @@ export const GlobalStyle = createGlobalStyle`
         max-width: 100%;
     }
 
+    /* Fieldset CSS Reset */
+    fieldset {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        min-width: 0;
+    }
+    
+    legend {
+        padding: 0;
+        margin-bottom: 0;
+    }
+
     /* Create a root stacking context: https://www.joshwcomeau.com/css/custom-css-reset/#eight-root-stacking-context-9 */
     /* stylelint-disable selector-id-pattern */
     #root,

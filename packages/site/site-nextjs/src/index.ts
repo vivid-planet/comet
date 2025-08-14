@@ -12,7 +12,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
+export { createFetchWithDefaultNextRevalidate, createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
 export { Image } from "./image/Image";
 export { sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";

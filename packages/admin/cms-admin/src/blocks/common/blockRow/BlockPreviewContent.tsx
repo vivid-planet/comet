@@ -11,6 +11,7 @@ interface BlockPreviewContentProps {
     block: BlockInterface;
     state?: unknown;
     input?: unknown;
+    showIcon?: boolean;
 }
 
 const TEXTS_LIMIT = 2;
@@ -32,9 +33,11 @@ export function BlockPreviewContent(props: BlockPreviewContentProps): JSX.Elemen
         })
         .slice(0, TEXTS_LIMIT);
     const images = content.filter(isPreviewContentImageRule);
+    const icon = props.block.icon?.(state);
 
     return (
         <sc.Root>
+            {icon && props.showIcon && <sc.IconContainer>{icon} </sc.IconContainer>}
             {images.length > 0 && (
                 <sc.ImageContainer>
                     <StackedImages images={images} />

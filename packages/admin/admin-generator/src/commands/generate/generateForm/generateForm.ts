@@ -91,7 +91,7 @@ export function generateForm(
         { name: "FormApi", importPath: "final-form" },
         { name: "useMemo", importPath: "react" },
     ];
-    const props: Prop[] = [];
+    const formProps: Prop[] = [];
 
     const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
@@ -126,19 +126,17 @@ export function generateForm(
             gqlIntrospection,
         });
         imports.push(...forwardedGqlArgsImports);
-        props.push(...forwardedGqlArgsProps);
+        formProps.push(...forwardedGqlArgsProps);
         gqlArgs.push(...forwardedGqlArgs);
     }
 
     if (editMode) {
         if (mode === "all") {
-            props.push({ name: "id", optional: true, type: "string" });
+            formProps.push({ name: "id", optional: true, type: "string" });
         } else if (mode === "edit") {
-            props.push({ name: "id", optional: false, type: "string" });
+            formProps.push({ name: "id", optional: false, type: "string" });
         }
     }
-
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     const rootBlockFields = formFields
         .filter((field) => field.type == "block")
@@ -186,10 +184,13 @@ export function generateForm(
         };
     }
     imports.push(...generatedFields.imports);
+    formProps.push(...generatedFields.formProps);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = {
         document: `
