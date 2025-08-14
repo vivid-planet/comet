@@ -1,3 +1,5 @@
+import type { FieldRenderProps } from "react-final-form";
+
 import { useAsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { FinalFormAutocomplete, type FinalFormAutocompleteProps } from "./Autocomplete";
 
@@ -10,6 +12,8 @@ export interface FinalFormAsyncAutocompleteProps<
     loadOptions: () => Promise<T[]>;
 }
 
+type FinalFormAsyncAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
+
 /**
  * Final Form-compatible AsyncAutocomplete component.
  *
@@ -20,6 +24,6 @@ export function FinalFormAsyncAutocomplete<
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
->({ loadOptions, ...rest }: FinalFormAsyncAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) {
+>({ loadOptions, ...rest }: FinalFormAsyncAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAsyncAutocompleteInternalProps<T>) {
     return <FinalFormAutocomplete<T, Multiple, DisableClearable, FreeSolo> {...useAsyncOptionsProps(loadOptions)} {...rest} />;
 }
