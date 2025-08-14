@@ -1,14 +1,16 @@
-import { Calendar, Lock } from "@comet/admin-icons";
-import { type ComponentsOverrides, css, IconButton, InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { Calendar } from "@comet/admin-icons";
+import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import {
     DateRangePicker as MuiDateRangePicker,
     type DateRangePickerProps as MuiDateRangePickerProps,
     pickersInputBaseClasses,
     SingleInputDateRangeField,
 } from "@mui/x-date-pickers-pro";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
+import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
+import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { getDateValue, getIsoDateString } from "./utils";
@@ -18,24 +20,22 @@ export type DateRange = {
     end: string | null;
 };
 
-export type Future_DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment" | "openPickerButton";
+export type Future_DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDateRangePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
-    readOnlyAdornment: typeof InputAdornment;
-    openPickerAdornment: typeof InputAdornment;
-    openPickerButton: typeof IconButton;
+    readOnlyAdornment: typeof ReadOnlyAdornment;
+    openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
     fullWidth?: boolean;
     required?: boolean;
     value?: DateRange;
     onChange?: (date: DateRange | undefined) => void;
     iconMapping?: {
-        openPicker?: React.ReactNode;
-        readOnly?: React.ReactNode;
+        openPicker?: ReactNode;
     };
-} & Omit<MuiDateRangePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
+} & Omit<MuiDateRangePickerProps<Date, true>, "value" | "onChange">;
 
 const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | null] => {
     return [getDateValue(value?.start), getDateValue(value?.end)];
@@ -58,32 +58,9 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
     });
     const [open, setOpen] = useState(false);
     const dateRangeValue = getDateRangeValue(stringDateRangeValue);
+    const hasDateRangeValue = dateRangeValue.some((date) => date !== null);
 
-    const { openPicker: openPickerIcon = <Calendar color="inherit" />, readOnly: readOnlyIcon = <Lock fontSize="inherit" /> } = iconMapping;
-
-    const clearButtonEndAdornment =
-        !required && !disabled && !readOnly ? (
-            <ClearInputAdornment
-                position="end"
-                hasClearableContent={Boolean(dateRangeValue)}
-                onClick={() => onChange?.(undefined)}
-                {...slotProps?.clearInputAdornment}
-            />
-        ) : null;
-
-    const readOnlyAdornment = readOnly ? (
-        <ReadOnlyAdornment position="end" {...slotProps?.readOnlyAdornment}>
-            {readOnlyIcon}
-        </ReadOnlyAdornment>
-    ) : null;
-
-    const openPickerAdornment = (
-        <OpenPickerAdornment position="start" {...slotProps?.openPickerAdornment}>
-            <OpenPickerButton onClick={() => setOpen(true)} disabled={disabled || readOnly} {...slotProps?.openPickerButton}>
-                {openPickerIcon}
-            </OpenPickerButton>
-        </OpenPickerAdornment>
-    );
+    const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
 
     return (
         <Root
@@ -124,15 +101,27 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
                             ...textFieldProps?.InputProps,
                             startAdornment: (
                                 <>
-                                    {openPickerAdornment}
+                                    <OpenPickerAdornment
+                                        inputIsDisabled={disabled}
+                                        inputIsReadOnly={readOnly}
+                                        onClick={() => setOpen(true)}
+                                        {...slotProps?.openPickerAdornment}
+                                    >
+                                        {openPickerIcon}
+                                    </OpenPickerAdornment>
                                     {textFieldProps?.InputProps?.startAdornment}
                                 </>
                             ),
                             endAdornment: (
                                 <>
                                     {textFieldProps?.InputProps?.endAdornment}
-                                    {readOnlyAdornment}
-                                    {clearButtonEndAdornment}
+                                    <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
+                                    <ClearInputAdornment
+                                        position="end"
+                                        hasClearableContent={hasDateRangeValue && !required && !disabled && !readOnly}
+                                        onClick={() => onChange?.(undefined)}
+                                        {...slotProps?.clearInputAdornment}
+                                    />
                                 </>
                             ),
                         },
@@ -158,32 +147,11 @@ const Root = createComponentSlot(MuiDateRangePicker<Date, true>)<Future_DateRang
             margin-top: 0;
         }
     }
-
-    .MuiPickersInputBase-root.Mui-readOnly .CometAdminFutureDatePicker-openPickerButton:disabled {
-        color: inherit;
-    }
 `);
 
 const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DateRangePickerClassKey>({
     componentName: "Future_DateRangePicker",
     slotName: "clearInputAdornment",
-})();
-
-const ReadOnlyAdornment = createComponentSlot(InputAdornment)<Future_DateRangePickerClassKey>({
-    componentName: "Future_DateRangePicker",
-    slotName: "readOnlyAdornment",
-})(css`
-    font-size: 12px;
-`);
-
-const OpenPickerAdornment = createComponentSlot(InputAdornment)<Future_DateRangePickerClassKey>({
-    componentName: "Future_DateRangePicker",
-    slotName: "openPickerAdornment",
-})();
-
-const OpenPickerButton = createComponentSlot(IconButton)<Future_DateRangePickerClassKey>({
-    componentName: "Future_DateRangePicker",
-    slotName: "openPickerButton",
 })();
 
 declare module "@mui/material/styles" {
