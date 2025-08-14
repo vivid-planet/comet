@@ -4,12 +4,14 @@ on:
     pull_request:
         paths:
             - docs/**
+            - storybook/**
         branches:
             - main
             - next
     push:
         paths:
             - docs/**
+            - storybook/**
         branches:
             - main
             - next
@@ -37,4 +39,4 @@ jobs:
             - run: pnpm install --frozen-lockfile
 
             - name: Build docs
-              run: pnpm run build:docs
+              run: pnpm build:docs

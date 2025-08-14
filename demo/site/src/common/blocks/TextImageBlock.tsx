@@ -8,7 +8,7 @@ import styled, { css } from "styled-components";
 import { DamImageBlock } from "./DamImageBlock";
 import { RichTextBlock } from "./RichTextBlock";
 
-const TextImageBlock = withPreview(
+export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
             <Root $imagePosition={imagePosition}>

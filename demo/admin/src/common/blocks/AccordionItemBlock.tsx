@@ -14,6 +14,8 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCa
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { FormattedMessage } from "react-intl";
 
+import { TextImageBlock } from "./TextImageBlock";
+
 const AccordionContentBlock = createBlocksBlock({
     name: "AccordionContent",
     supportedBlocks: {
@@ -21,6 +23,7 @@ const AccordionContentBlock = createBlocksBlock({
         space: SpaceBlock,
         heading: StandaloneHeadingBlock,
         callToActionList: StandaloneCallToActionListBlock,
+        textImage: TextImageBlock,
     },
 });
 
