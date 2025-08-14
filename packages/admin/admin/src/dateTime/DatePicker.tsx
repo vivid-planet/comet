@@ -118,10 +118,6 @@ const Root = createComponentSlot(MuiDatePicker<Date, true>)<Future_DatePickerCla
             margin-top: 0;
         }
     }
-
-    .MuiPickersInputBase-root.Mui-readOnly .CometAdminFutureDatePicker-openPickerButton:disabled {
-        color: inherit;
-    }
 `);
 
 const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DatePickerClassKey>({
