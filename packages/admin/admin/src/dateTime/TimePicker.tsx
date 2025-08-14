@@ -1,7 +1,7 @@
-import { Calendar } from "@comet/admin-icons";
+import { Time } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, type InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
-import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps, pickersInputBaseClasses } from "@mui/x-date-pickers";
-import { format } from "date-fns";
+import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
+import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
@@ -10,14 +10,10 @@ import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-const getIsoDateString = (date: Date) => {
-    return format(date, "yyyy-MM-dd");
-};
+export type Future_TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
-export type Future_DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
-
-export type Future_DatePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiDatePicker<Date, true>;
+export type Future_TimePickerProps = ThemedComponentBaseProps<{
+    root: typeof MuiTimePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof InputAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -25,27 +21,32 @@ export type Future_DatePickerProps = ThemedComponentBaseProps<{
     fullWidth?: boolean;
     required?: boolean;
     value?: string;
-    onChange?: (date: string | undefined) => void;
+    onChange?: (time: string | undefined) => void;
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDatePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
+} & Omit<MuiTimePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
 
-const getDateValue = (value: string | undefined): Date | null => {
+const getTimeString = (date: Date) => {
+    return format(date, "HH:mm");
+};
+
+const getDateFromTimeString = (value: string | undefined): Date | null => {
     if (!value) {
         return null;
     }
 
-    const date = new Date(value);
+    const parsedDate = parse(value, "HH:mm", new Date());
+    const isValid = !isNaN(parsedDate.getTime());
 
-    if (isNaN(date.getTime())) {
-        throw new Error(`Invalid date value: ${value}`);
+    if (!isValid) {
+        throw new Error(`Invalid time value: "${value}", must be a 24h time in format HH:mm`);
     }
 
-    return date;
+    return parsedDate;
 };
 
-export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
+export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,
@@ -58,12 +59,12 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFutureDatePicker",
+        name: "CometAdminFutureTimePicker",
     });
     const [open, setOpen] = useState(false);
-    const dateValue = getDateValue(stringValue);
+    const dateValue = getDateFromTimeString(stringValue);
 
-    const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
+    const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
 
     return (
         <Root
@@ -75,7 +76,14 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
             onClose={() => setOpen(false)}
             disableOpenPicker
             value={dateValue}
-            onChange={(date) => onChange?.(date ? getIsoDateString(date) : undefined)}
+            onChange={(date) => {
+                if (!date) {
+                    onChange?.(undefined);
+                    return;
+                }
+
+                onChange?.(getTimeString(date));
+            }}
             {...slotProps?.root}
             {...restProps}
             slotProps={{
@@ -125,8 +133,8 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiDatePicker<Date, true>)<Future_DatePickerClassKey>({
-    componentName: "Future_DatePicker",
+const Root = createComponentSlot(MuiTimePicker<Date, true>)<Future_TimePickerClassKey>({
+    componentName: "Future_TimePicker",
     slotName: "root",
 })(css`
     .${inputLabelClasses.root} {
@@ -136,30 +144,26 @@ const Root = createComponentSlot(MuiDatePicker<Date, true>)<Future_DatePickerCla
             margin-top: 0;
         }
     }
-
-    .MuiPickersInputBase-root.Mui-readOnly .CometAdminFutureDatePicker-openPickerButton:disabled {
-        color: inherit;
-    }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DatePickerClassKey>({
-    componentName: "Future_DatePicker",
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_TimePickerClassKey>({
+    componentName: "Future_TimePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFutureDatePicker: Future_DatePickerProps;
+        CometAdminFutureTimePicker: Future_TimePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFutureDatePicker: Future_DatePickerClassKey;
+        CometAdminFutureTimePicker: Future_TimePickerClassKey;
     }
 
     interface Components {
-        CometAdminFutureDatePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureDatePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureDatePicker"];
+        CometAdminFutureTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureTimePicker"];
         };
     }
 }
