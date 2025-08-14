@@ -1,7 +1,6 @@
 import { iconButtonClasses, inputAdornmentClasses } from "@mui/material";
 import { type Components, type Theme } from "@mui/material/styles";
 import { pickersInputBaseClasses, pickersInputClasses, pickersSectionListClasses } from "@mui/x-date-pickers";
-import type {} from "@mui/x-date-pickers/themeAugmentation";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 
