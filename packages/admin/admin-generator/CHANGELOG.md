@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.1.0
+
+### Patch Changes
+
+- 2fa023d: Fix disabling row selection on click
+
 ## 8.0.0
 
 ### Major Changes
