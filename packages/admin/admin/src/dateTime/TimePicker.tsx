@@ -1,21 +1,22 @@
-import { Lock, Time } from "@comet/admin-icons";
-import { type ComponentsOverrides, css, IconButton, InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { Time } from "@comet/admin-icons";
+import { type ComponentsOverrides, css, type InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
+import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
+import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type Future_TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment" | "openPickerButton";
+export type Future_TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type Future_TimePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiTimePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof InputAdornment;
-    openPickerAdornment: typeof InputAdornment;
-    openPickerButton: typeof IconButton;
+    openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
     fullWidth?: boolean;
     required?: boolean;
@@ -23,7 +24,6 @@ export type Future_TimePickerProps = ThemedComponentBaseProps<{
     onChange?: (time: string | undefined) => void;
     iconMapping?: {
         openPicker?: ReactNode;
-        readOnly?: ReactNode;
     };
 } & Omit<MuiTimePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
 
@@ -64,31 +64,7 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
     const [open, setOpen] = useState(false);
     const dateValue = getDateFromTimeString(stringValue);
 
-    const { openPicker: openPickerIcon = <Time color="inherit" />, readOnly: readOnlyIcon = <Lock fontSize="inherit" /> } = iconMapping;
-
-    const clearButtonEndAdornment =
-        !required && !disabled && !readOnly ? (
-            <ClearInputAdornment
-                position="end"
-                hasClearableContent={Boolean(dateValue)}
-                onClick={() => onChange?.(undefined)}
-                {...slotProps?.clearInputAdornment}
-            />
-        ) : null;
-
-    const readOnlyAdornment = readOnly ? (
-        <ReadOnlyAdornment position="end" {...slotProps?.readOnlyAdornment}>
-            {readOnlyIcon}
-        </ReadOnlyAdornment>
-    ) : null;
-
-    const openPickerAdornment = (
-        <OpenPickerAdornment position="start" {...slotProps?.openPickerAdornment}>
-            <OpenPickerButton onClick={() => setOpen(true)} disabled={disabled || readOnly} {...slotProps?.openPickerButton}>
-                {openPickerIcon}
-            </OpenPickerButton>
-        </OpenPickerAdornment>
-    );
+    const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
 
     return (
         <Root
@@ -126,15 +102,27 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
                             ...textFieldProps?.InputProps,
                             startAdornment: (
                                 <>
-                                    {openPickerAdornment}
+                                    <OpenPickerAdornment
+                                        inputIsDisabled={disabled}
+                                        inputIsReadOnly={readOnly}
+                                        onClick={() => setOpen(true)}
+                                        {...slotProps?.openPickerAdornment}
+                                    >
+                                        {openPickerIcon}
+                                    </OpenPickerAdornment>
                                     {textFieldProps?.InputProps?.startAdornment}
                                 </>
                             ),
                             endAdornment: (
                                 <>
                                     {textFieldProps?.InputProps?.endAdornment}
-                                    {readOnlyAdornment}
-                                    {clearButtonEndAdornment}
+                                    <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
+                                    <ClearInputAdornment
+                                        position="end"
+                                        hasClearableContent={dateValue !== null && !required && !disabled && !readOnly}
+                                        onClick={() => onChange?.(undefined)}
+                                        {...slotProps?.clearInputAdornment}
+                                    />
                                 </>
                             ),
                         },
@@ -156,32 +144,11 @@ const Root = createComponentSlot(MuiTimePicker<Date, true>)<Future_TimePickerCla
             margin-top: 0;
         }
     }
-
-    .MuiPickersInputBase-root.Mui-readOnly .CometAdminFutureTimePicker-openPickerButton:disabled {
-        color: inherit;
-    }
 `);
 
 const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_TimePickerClassKey>({
     componentName: "Future_TimePicker",
     slotName: "clearInputAdornment",
-})();
-
-const ReadOnlyAdornment = createComponentSlot(InputAdornment)<Future_TimePickerClassKey>({
-    componentName: "Future_TimePicker",
-    slotName: "readOnlyAdornment",
-})(css`
-    font-size: 12px;
-`);
-
-const OpenPickerAdornment = createComponentSlot(InputAdornment)<Future_TimePickerClassKey>({
-    componentName: "Future_TimePicker",
-    slotName: "openPickerAdornment",
-})();
-
-const OpenPickerButton = createComponentSlot(IconButton)<Future_TimePickerClassKey>({
-    componentName: "Future_TimePicker",
-    slotName: "openPickerButton",
 })();
 
 declare module "@mui/material/styles" {
