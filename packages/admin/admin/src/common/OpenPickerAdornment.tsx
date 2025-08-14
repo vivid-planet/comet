@@ -3,9 +3,9 @@ import { type ComponentsOverrides, css, IconButton, InputAdornment, type InputAd
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type OpenPickerAdornmentClassKey = "root" | "openPickerButton" | "inputIsDisabled";
+type OpenPickerAdornmentClassKey = "root" | "openPickerButton" | "inputIsDisabled";
 
-export type OpenPickerAdornmentProps = ThemedComponentBaseProps<{
+type OpenPickerAdornmentProps = ThemedComponentBaseProps<{
     root: typeof InputAdornment;
     openPickerButton: typeof IconButton;
 }> & {

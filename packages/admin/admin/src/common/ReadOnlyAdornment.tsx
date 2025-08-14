@@ -4,9 +4,9 @@ import { type ComponentsOverrides, css, InputAdornment, type InputAdornmentProps
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type ReadOnlyAdornmentClassKey = "root";
+type ReadOnlyAdornmentClassKey = "root";
 
-export type ReadOnlyAdornmentProps = ThemedComponentBaseProps<{
+type ReadOnlyAdornmentProps = ThemedComponentBaseProps<{
     root: typeof InputAdornment;
 }> & {
     position?: InputAdornmentProps["position"];
