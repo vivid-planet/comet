@@ -122,7 +122,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
             {({ handleSubmit, values }) => (
                 <Dialog open onClose={onClose} maxWidth={false}>
                     <DialogFormWrapper onSubmit={handleSubmit}>
-                        <StyledDialogTitle>
+                        <DialogTitle>
                             <Grid container justifyContent="space-between">
                                 <Grid>
                                     <Typography>
@@ -157,17 +157,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            {image.path && (
-                                <Grid container>
-                                    <Grid>
-                                        <Typography>
-                                            <FormattedMessage id="comet.blocks.image.path" defaultMessage="Path: " />
-                                            {image.path}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            )}
-                        </StyledDialogTitle>
+                        </DialogTitle>
                         <DialogContent>
                             <ImageCrop src={image.url} style={imageStyle} disabled={values.useInheritedDamSettings} />
                             <div>
@@ -195,6 +185,12 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
 
                                         {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
+                                                {image.path && (
+                                                    <StyledTypography>
+                                                        <FormattedMessage id="comet.blocks.image.assetManager" defaultMessage="Asset Manager: " />
+                                                        {image.path}
+                                                    </StyledTypography>
+                                                )}
                                                 <Button
                                                     variant="outlined"
                                                     color="inherit"
@@ -257,8 +253,6 @@ const DialogFormWrapper = styled("form")`
     overflow: hidden;
 `;
 
-const StyledDialogTitle = styled(DialogTitle)`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+const StyledTypography = styled(Typography)`
+    margin-bottom: 10px;
 `;
