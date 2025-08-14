@@ -6,6 +6,7 @@ import { StringFilter } from "../../common/filter/string.filter";
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { CombinedPermission, Permission } from "../user-permissions.types";
+import { ContentScopeFilter } from "./content-scope-filter.input";
 
 @InputType()
 export class PermissionFilter {
@@ -46,6 +47,11 @@ class UserPermissionsUserFilter {
     @ValidateNested()
     @Type(() => PermissionFilter)
     permission?: PermissionFilter;
+
+    @Field(() => ContentScopeFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => ContentScopeFilter)
+    scope?: ContentScopeFilter;
 
     @Field(() => [UserPermissionsUserFilter], { nullable: true })
     @Type(() => UserPermissionsUserFilter)

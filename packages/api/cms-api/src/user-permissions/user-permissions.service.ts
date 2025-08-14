@@ -40,6 +40,7 @@ export class UserPermissionsService {
 
     private manualPermissions: { userId: string; permission: Permission }[] | undefined;
     private availablePermissions: Permission[] | undefined;
+    private manualContentScopes: { userId: string; contentScopes: ContentScope[] }[] | undefined;
 
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         let contentScopes: AvailableContentScope[] = [];
@@ -122,14 +123,14 @@ export class UserPermissionsService {
         });
     }
 
-    async warmupHasPermissionCache() {
+    async warmupCache() {
         this.manualPermissions = (await this.permissionRepository.find({ permission: { $in: await this.getAvailablePermissions() } }))
             .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
             .map((p) => ({ userId: p.userId, permission: p.permission }));
+        this.manualContentScopes = await this.contentScopeRepository.findAll();
     }
 
-    async hasPermission(user: User, permission: Permission | Permission[]): Promise<boolean> {
-        const permissions = Array.isArray(permission) ? permission : [permission];
+    async hasPermission(user: User, permissions: string[]): Promise<boolean> {
         if (this.accessControlService.getPermissionsForUser) {
             const availablePermissions = await this.getAvailablePermissions();
             const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
@@ -140,11 +141,37 @@ export class UserPermissionsService {
             }
         }
         if (this.manualPermissions === undefined) {
-            throw new Error('You need to call "warmupHasPermissionCache" before using "hasPermission" for the first time.');
+            throw new Error('You need to call "warmupCache" before using "hasPermission" for the first time.');
         }
         if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) return true;
 
         return false;
+    }
+
+    async hasContentScope(user: User, contentScopes: ContentScope[]): Promise<boolean> {
+        if (this.accessControlService.getContentScopesForUser) {
+            const scopesByRule = await this.accessControlService.getContentScopesForUser(user);
+            if (scopesByRule === UserPermissions.allContentScopes) {
+                return true;
+            } else {
+                if (this.containsContentScope(scopesByRule, contentScopes)) return true;
+            }
+        }
+        if (this.manualContentScopes === undefined) {
+            throw new Error('You need to call "warmupCache" before using "hasContentScope" for the first time.');
+        }
+        if (
+            this.manualContentScopes
+                .filter((manualContentScope) => manualContentScope.userId === user.id)
+                .some((manualContentScope) => this.containsContentScope(manualContentScope.contentScopes, contentScopes))
+        )
+            return true;
+
+        return false;
+    }
+
+    private containsContentScope(contentScopes: ContentScope[], needle: ContentScope[]): boolean {
+        return contentScopes.some((scope) => needle.some((cs) => isEqual(scope, cs)));
     }
 
     async getPermissions(user: User): Promise<UserPermission[]> {
