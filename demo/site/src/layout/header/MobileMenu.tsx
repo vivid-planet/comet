@@ -64,9 +64,7 @@ export const MobileMenu = ({ header }: Props) => {
                             <FocusLock>
                                 <TopLevelNavigation>
                                     <li>
-                                        <BackButton
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
+                                        <BackButton onClick={() => setIsMenuOpen(false)}>
                                             <IconWrapper>
                                                 <Icon href="/assets/icons/arrow-left.svg#root" />
                                             </IconWrapper>
@@ -96,9 +94,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                         </IconWrapper>
                                                     </ButtonLink>
                                                 ) : (
-                                                    <Link page={node.node}>
-                                                        {node.node.name}
-                                                    </Link>
+                                                    <Link page={node.node}>{node.node.name}</Link>
                                                 )}
                                                 {node.node.childNodes.length > 0 && (
                                                     <FocusLock disabled={expandedSubLevelNavigation !== node.id}>
@@ -106,9 +102,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                             <PageLayout grid>
                                                                 <PageLayoutContent>
                                                                     <li>
-                                                                        <BackButton
-                                                                            onClick={() => setExpandedSubLevelNavigation(null)}
-                                                                        >
+                                                                        <BackButton onClick={() => setExpandedSubLevelNavigation(null)}>
                                                                             <IconWrapper>
                                                                                 <Icon href="/assets/icons/arrow-left.svg#root" />
                                                                             </IconWrapper>
@@ -130,9 +124,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                                     </li>
                                                                     {node.node.childNodes.map((node) => (
                                                                         <li key={node.id}>
-                                                                            <Link page={node}>
-                                                                                {node.name}
-                                                                            </Link>
+                                                                            <Link page={node}>{node.name}</Link>
                                                                         </li>
                                                                     ))}
                                                                 </PageLayoutContent>
