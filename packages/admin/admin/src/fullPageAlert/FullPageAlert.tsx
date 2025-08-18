@@ -1,15 +1,16 @@
-import { Error } from "@comet/admin-icons";
+import { CometDigitalExperienceLogo, Error, Info, Warning } from "@comet/admin-icons";
 import { type ComponentsOverrides, type Divider, type Theme, type Typography, useThemeProps } from "@mui/material";
 import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
-import { CometLogo } from "../common/CometLogo";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { InlineAlert } from "../inlineAlert/InlineAlert";
+import { InlineAlert, type InlineAlertSeverity } from "../inlineAlert/InlineAlert";
 import { ActionContainer, ContentContainer, DetailDescription, DividerStyled, LogoContainer, Root, Title } from "./FullPageAlert.styles";
 
 export type FullPageAlertClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer" | "actionContainer";
+
+type FullPageAlertSeverity = InlineAlertSeverity;
 
 export type FullPageAlertProps = ThemedComponentBaseProps<{
     root: "div";
@@ -23,33 +24,76 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
 }> & {
     logo?: ReactNode;
     icon?: ReactNode;
+    iconMapping?: Partial<Record<FullPageAlertSeverity, ReactNode>>;
     title?: ReactNode;
+    titleMapping?: Partial<Record<FullPageAlertSeverity, ReactNode>>;
     description?: ReactNode;
+    descriptionMapping?: Partial<Record<FullPageAlertSeverity, ReactNode>>;
     detailDescription?: ReactNode;
+    detailDescriptionMapping?: Partial<Record<FullPageAlertSeverity, ReactNode>>;
     actions?: ReactNode;
+    severity?: FullPageAlertSeverity;
+};
+
+const defaultIconMapping: Record<FullPageAlertSeverity, ReactNode> = {
+    error: <Error sx={{ fontSize: "48px" }} color="error" />,
+    warning: <Warning sx={{ fontSize: "48px" }} color="warning" />,
+    info: <Info sx={{ fontSize: "48px" }} color="info" />,
+};
+
+const defaultTitleMapping: Record<FullPageAlertSeverity, ReactNode> = {
+    error: <FormattedMessage id="comet.fullPageAlert.error.title" defaultMessage="Something went wrong" />,
+    warning: <FormattedMessage id="comet.fullPageAlert.warning.title" defaultMessage="Warning" />,
+    info: <FormattedMessage id="comet.fullPageAlert.info.title" defaultMessage="Info" />,
+};
+
+const defaultDescriptionMapping: Record<FullPageAlertSeverity, ReactNode> = {
+    error: <FormattedMessage id="comet.fullPageAlert.error.description" defaultMessage="An unexpected error occurred." />,
+    warning: null,
+    info: null,
+};
+
+const defaultDetailDescriptionMapping: Record<FullPageAlertSeverity, ReactNode> = {
+    error: (
+        <FormattedMessage
+            id="comet.fullPageAlert.error.detailDescription"
+            defaultMessage="Please check the URL for typos, or use the button below to return to the homepage. If the issue persists, contact our support team."
+        />
+    ),
+    warning: null,
+    info: null,
 };
 
 export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) => {
     const {
-        title = <FormattedMessage id="comet.errorPage.title" defaultMessage="Something went wrong" />,
-        description = <FormattedMessage id="comet.errorPage.description" defaultMessage="An unexpected error occurred." />,
-        icon = <Error sx={{ fontSize: "48px" }} color="error" />,
-        logo = <CometLogo />,
-        detailDescription = (
-            <FormattedMessage
-                id="comet.errorPage.info"
-                defaultMessage="Please check the URL for typos, or use the button below to return to the homepage. If the issue persists, contact our support team."
-            />
-        ),
+        severity = "error",
+        title: _title,
+        titleMapping: passedTitleMapping = {},
+        description,
+        descriptionMapping: passedDescriptionMapping = {},
+        icon,
+        iconMapping: passedIconMapping = {},
+        detailDescription: _detailDescription,
+        detailDescriptionMapping: passedDetailDescriptionMapping = {},
+        logo = <CometDigitalExperienceLogo sx={{ width: "100%", height: "30px" }} />,
         actions = (
             <Button href="/" fullWidth>
-                <FormattedMessage id="comet.notFound.button.returnToHomePage" defaultMessage="Return to home page" />
+                <FormattedMessage id="comet.fullPageAlert.action.returnToHomePage" defaultMessage="Return to home page" />
             </Button>
         ),
         sx,
         className,
         slotProps = {},
     } = useThemeProps({ props: inProps, name: "CometAdminFullPageAlert" });
+
+    const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
+    const titleMapping = { ...defaultTitleMapping, ...passedTitleMapping };
+    const descriptionMapping = { ...defaultDescriptionMapping, ...passedDescriptionMapping };
+    const detailDescriptionMapping = { ...defaultDetailDescriptionMapping, ...passedDetailDescriptionMapping };
+
+    const title = _title ?? titleMapping[severity];
+    const detailDescription = _detailDescription ?? detailDescriptionMapping[severity];
+
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             <ContentContainer {...slotProps.contentContainer}>
@@ -59,17 +103,25 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
                             {title}
                         </Title>
                     }
+                    titleMapping={titleMapping}
                     description={description}
+                    descriptionMapping={descriptionMapping}
+                    iconMapping={iconMapping}
                     icon={icon}
+                    severity={severity}
                 />
-                <DividerStyled {...slotProps.divider} />
-                <DetailDescription variant="body2" {...slotProps.detailDescription}>
-                    {detailDescription}
-                </DetailDescription>
-                <DividerStyled {...slotProps.divider} />
-                <LogoContainer {...slotProps.logoContainer}>{logo}</LogoContainer>
 
-                <ActionContainer {...slotProps.actionContainer}>{actions}</ActionContainer>
+                {detailDescription && (
+                    <>
+                        <DividerStyled {...slotProps.divider} />
+                        <DetailDescription variant="body2" {...slotProps.detailDescription}>
+                            {detailDescription}
+                        </DetailDescription>
+                    </>
+                )}
+                {(logo || actions) && <DividerStyled {...slotProps.divider} />}
+                {logo && <LogoContainer {...slotProps.logoContainer}>{logo}</LogoContainer>}
+                {actions && <ActionContainer {...slotProps.actionContainer}>{actions}</ActionContainer>}
             </ContentContainer>
         </Root>
     );

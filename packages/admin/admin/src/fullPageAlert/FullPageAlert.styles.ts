@@ -56,6 +56,7 @@ export const LogoContainer = createComponentSlot("div")<FullPageAlertClassKey>({
     slotName: "logoContainer",
 })(
     ({ theme }) => css`
+        width: 100%;
         margin-bottom: ${theme.spacing(6)};
     `,
 );
