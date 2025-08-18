@@ -58,7 +58,7 @@ function Header({ header }: Props): JSX.Element {
                                             }}
                                         >
                                             <LinkContainer>
-                                                <MenuPageLink page={node.node} activeClassName="active" aria-label={node.node.name}>
+                                                <MenuPageLink page={node.node} activeClassName="active">
                                                     {node.node.name}
                                                 </MenuPageLink>
                                                 {node.node.childNodes.length > 0 && (
