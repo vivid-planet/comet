@@ -127,7 +127,8 @@ export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
 ): GridColDef[] {
     const uniquePropertyNames = Array.from(new Set(availableContentScopes.flatMap((item) => Object.keys(item.scope))));
-    return uniquePropertyNames.map((propertyName) => {
+
+    return uniquePropertyNames.map((propertyName, index) => {
         return {
             field: propertyName,
             flex: 1,
@@ -138,7 +139,7 @@ export function generateGridColumnsFromContentScopeProperties(
             renderCell: ({ row }: { row: ContentScope }) => {
                 const contentScopeWithLabel = availableContentScopes.find((availableContentScope) => isEqual(availableContentScope.scope, row));
                 if (contentScopeWithLabel) {
-                    return <Typography variant="subtitle2">{contentScopeWithLabel.label[propertyName]}</Typography>;
+                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{contentScopeWithLabel.label[propertyName]}</Typography>;
                 } else {
                     return "-";
                 }
