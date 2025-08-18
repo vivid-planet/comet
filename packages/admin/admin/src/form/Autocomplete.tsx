@@ -33,18 +33,18 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     clearable,
     popupIcon = <ChevronDown />,
-    noOptionsText = (
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-            <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />
-        </Typography>
-    ),
+    noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
     return (
         <Autocomplete
             popupIcon={popupIcon}
             disableClearable
-            noOptionsText={noOptionsText}
+            noOptionsText={
+                <Typography variant="body2" component="span">
+                    {noOptionsText}
+                </Typography>
+            }
             isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
                 return option === value;
