@@ -1,5 +1,5 @@
-import { useAsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { FinalFormAutocomplete, type FinalFormAutocompleteProps } from "./Autocomplete";
+import { useAsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
 export interface FinalFormAsyncAutocompleteProps<
     T extends Record<string, any>,
@@ -21,5 +21,13 @@ export function FinalFormAsyncAutocomplete<
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
 >({ loadOptions, ...rest }: FinalFormAsyncAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) {
-    return <FinalFormAutocomplete<T, Multiple, DisableClearable, FreeSolo> {...useAsyncOptionsProps(loadOptions)} {...rest} />;
+    return (
+        <FinalFormAutocomplete<T, Multiple, DisableClearable, FreeSolo>
+            {...useAsyncAutocompleteOptionsProps(loadOptions)}
+            // disable the built-in filtering of the Autocomplete component by overriding the filterOptions prop when search as you type
+            // see: https://mui.com/material-ui/react-autocomplete/#search-as-you-type
+            filterOptions={(x) => x}
+            {...rest}
+        />
+    );
 }
