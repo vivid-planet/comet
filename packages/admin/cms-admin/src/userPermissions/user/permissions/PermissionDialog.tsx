@@ -8,6 +8,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     Typography,
 } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -131,6 +132,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                         </DialogTitle>
                         <DialogContent>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />}>
+                                <Divider sx={{ marginBottom: 5 }} />
                                 <Field
                                     required
                                     fullWidth
@@ -170,6 +172,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     </>
                                 }
                             >
+                                <Divider sx={{ marginBottom: 5 }} />
                                 <Field
                                     name="validFrom"
                                     label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
@@ -192,6 +195,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 />
                             </FormSection>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
+                                <Divider sx={{ marginBottom: 5 }} />
                                 <Field
                                     fullWidth
                                     name="reason"
