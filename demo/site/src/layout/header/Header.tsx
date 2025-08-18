@@ -103,7 +103,7 @@ function Header({ header }: Props): JSX.Element {
 
                                                         {node.node.childNodes.map((node) => (
                                                             <li key={node.id}>
-                                                                <MenuPageLink page={node} activeClassName="active" aria-label={node.name}>
+                                                                <MenuPageLink page={node} activeClassName="active">
                                                                     {node.name}
                                                                 </MenuPageLink>
                                                             </li>
