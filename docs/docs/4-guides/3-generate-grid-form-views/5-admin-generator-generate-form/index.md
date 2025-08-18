@@ -41,13 +41,12 @@ export const CustomerForm: FormConfig<GQLCustomer> = {
 };
 ```
 
-
 ## Run Admin Generator
 
 Same as with the DataGrid generation, to generate the Form, you have to run the Admin Generator manually. This will delete all already generated files and generate them again.
 
 ```bash
-cd admin 
+cd admin
 npm run admin-generator
 ```
 

@@ -11,4 +11,3 @@ We will use the [API Generator](/docs/getting-started/crud-generator/api-generat
 Finally, we will integrate the generated DataGrid and Form into a new page and make it available from the Main Menu.
 
 ![DataGridFormIntegration](./6-integrate-admin-generator-datagrid-into-comet-application/images/DataGridFormIntegration.gif)
-
