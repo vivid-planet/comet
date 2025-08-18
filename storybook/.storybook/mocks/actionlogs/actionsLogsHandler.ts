@@ -19,7 +19,7 @@ const actionLogs: ActionLog[] = [
         id: "log1",
         userId: "system-user",
         version: 1,
-        snapshot: { key: "value" },
+        snapshot: { key: "value", createdAt: "2023-10-01T12:00:00Z" },
     },
     {
         createdAt: "2023-10-02T12:00:00Z",
@@ -28,7 +28,7 @@ const actionLogs: ActionLog[] = [
         id: "log2",
         userId: "user2",
         version: 2,
-        snapshot: { key: "value2" },
+        snapshot: { key: "value2", createdAt: "2023-10-01T12:00:00Z" },
     },
     {
         createdAt: "2023-10-03T12:00:00Z",
@@ -37,7 +37,7 @@ const actionLogs: ActionLog[] = [
         id: "log3",
         userId: "Max Mustermann",
         version: 3,
-        snapshot: { key: "value3" },
+        snapshot: { key: "value3", createdAt: "2023-10-01T12:00:00Z" },
     },
 ];
 
