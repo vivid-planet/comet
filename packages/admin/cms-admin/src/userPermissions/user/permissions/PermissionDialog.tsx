@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
@@ -30,7 +30,9 @@ interface FormProps {
     handleDialogClose: () => void;
 }
 export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: FormProps) => {
+    const intl = useIntl();
     const client = useApolloClient();
+
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data
 
@@ -170,6 +172,10 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
                                     disableContentTranslation
                                     variant="horizontal"
+                                    placeholder={intl.formatMessage({
+                                        id: "comet.userPermissions.reason.placeholder",
+                                        defaultMessage: "Reason why this role is needed",
+                                    })}
                                 />
                                 <Field
                                     fullWidth
@@ -179,6 +185,10 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
                                     disableContentTranslation
                                     variant="horizontal"
+                                    placeholder={intl.formatMessage({
+                                        id: "comet.userPermissions.requestedBy.placeholder",
+                                        defaultMessage: "Who has requested this?",
+                                    })}
                                 />
                                 <Field
                                     fullWidth
@@ -188,6 +198,10 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
                                     disableContentTranslation
                                     variant="horizontal"
+                                    placeholder={intl.formatMessage({
+                                        id: "comet.userPermissions.approvedBy.placeholder",
+                                        defaultMessage: "Who approved this request?",
+                                    })}
                                 />
                             </FormSection>
                         </DialogContent>
