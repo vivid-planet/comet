@@ -7,7 +7,6 @@ import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";
-import { Navigation } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 
 import { BasicSwiper } from "../components/BasicSwiper";
@@ -20,7 +19,6 @@ export const MediaGalleryBlock = withPreview(
 
         return (
             <SwiperWrapper
-                modules={[Navigation]}
                 slidesPerView={1}
                 slidesPerGroup={1}
                 pagination={{
