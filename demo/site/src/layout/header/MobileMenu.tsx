@@ -128,7 +128,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                                         </BackButton>
                                                                     </li>
                                                                     <li>
-                                                                        <OverviewButton page={node.node} aria-label={node.node.name}>
+                                                                        <OverviewButton page={node.node}>
                                                                             <SvgUse
                                                                                 href="/assets/icons/overview.svg#root"
                                                                                 width={16}
@@ -137,7 +137,8 @@ export const MobileMenu = ({ header }: Props) => {
                                                                             />
                                                                             <Typography>
                                                                                 <FormattedMessage id="header.overview" defaultMessage="Overview" />
-                                                                                {` | ${node.node.name}`}
+                                                                                <span aria-hidden="true"> | </span>
+                                                                                {node.node.name}
                                                                             </Typography>
                                                                         </OverviewButton>
                                                                     </li>
