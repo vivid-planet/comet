@@ -126,34 +126,38 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             <FormattedMessage id="comet.userPermissions.showPermission" defaultMessage="Show permission" />
                         </DialogTitle>
                         <DialogContent>
-                            <Field
-                                required
-                                fullWidth
-                                name="permission"
-                                component={FinalFormSelect}
-                                options={availablePermissionsData.availablePermissions}
-                                getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
-                                disabled={disabled}
-                                label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
-                            />
-                            <Field
-                                name="validFrom"
-                                label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
-                                fullWidth
-                                component={FinalFormDatePicker}
-                                disabled={disabled}
-                                clearable={true}
-                                formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
-                            />
-                            <Field
-                                name="validTo"
-                                label={<FormattedMessage id="comet.userPermissions.validTo" defaultMessage="Valid to" />}
-                                fullWidth
-                                component={FinalFormDatePicker}
-                                disabled={disabled}
-                                clearable={true}
-                                formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
-                            />
+                            <FormSection title={<FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />}>
+                                <Field
+                                    required
+                                    fullWidth
+                                    name="permission"
+                                    component={FinalFormSelect}
+                                    options={availablePermissionsData.availablePermissions}
+                                    getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
+                                    disabled={disabled}
+                                    label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
+                                />
+                            </FormSection>
+                            <FormSection title={<FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />}>
+                                <Field
+                                    name="validFrom"
+                                    label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
+                                    fullWidth
+                                    component={FinalFormDatePicker}
+                                    disabled={disabled}
+                                    clearable={true}
+                                    formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                                />
+                                <Field
+                                    name="validTo"
+                                    label={<FormattedMessage id="comet.userPermissions.validTo" defaultMessage="Valid to" />}
+                                    fullWidth
+                                    component={FinalFormDatePicker}
+                                    disabled={disabled}
+                                    clearable={true}
+                                    formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                                />
+                            </FormSection>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
                                 <Field
                                     fullWidth
