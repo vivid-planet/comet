@@ -7,7 +7,7 @@ import { Button } from "../common/buttons/Button";
 import { CometLogo } from "../common/CometLogo";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { InlineAlert } from "../inlineAlert/InlineAlert";
-import { ActionContainer, ContentContainer, DividerStyled, Info, LogoContainer, Root, Title } from "./FullPageAlert.styles";
+import { ActionContainer, ContentContainer, DetailDescription, DividerStyled, LogoContainer, Root, Title } from "./FullPageAlert.styles";
 
 export type FullPageAlertClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer" | "actionContainer";
 
@@ -17,7 +17,7 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
     iconContainer: "div";
     divider: typeof Divider;
     title: typeof Typography;
-    info: typeof Typography;
+    detailDescription: typeof Typography;
     logoContainer: "div";
     actionContainer: "div";
 }> & {
@@ -25,7 +25,7 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
     icon?: ReactNode;
     title?: ReactNode;
     description?: ReactNode;
-    help?: ReactNode;
+    detailDescription?: ReactNode;
     actions?: ReactNode;
 };
 
@@ -35,7 +35,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
         description = <FormattedMessage id="comet.errorPage.description" defaultMessage="An unexpected error occurred." />,
         icon = <Error sx={{ fontSize: "48px" }} color="error" />,
         logo = <CometLogo />,
-        help = (
+        detailDescription = (
             <FormattedMessage
                 id="comet.errorPage.info"
                 defaultMessage="Please check the URL for typos, or use the button below to return to the homepage. If the issue persists, contact our support team."
@@ -63,9 +63,9 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
                     icon={icon}
                 />
                 <DividerStyled {...slotProps.divider} />
-                <Info variant="body2" {...slotProps.info}>
-                    {help}
-                </Info>
+                <DetailDescription variant="body2" {...slotProps.detailDescription}>
+                    {detailDescription}
+                </DetailDescription>
                 <DividerStyled {...slotProps.divider} />
                 <LogoContainer {...slotProps.logoContainer}>{logo}</LogoContainer>
 

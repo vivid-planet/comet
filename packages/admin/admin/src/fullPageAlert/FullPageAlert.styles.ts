@@ -35,7 +35,7 @@ export const Title = createComponentSlot(Typography)<FullPageAlertClassKey>({
     slotName: "title",
 })(css``);
 
-export const Info = createComponentSlot(Typography)<FullPageAlertClassKey>({
+export const DetailDescription = createComponentSlot(Typography)<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
     slotName: "info",
 })(css``);
