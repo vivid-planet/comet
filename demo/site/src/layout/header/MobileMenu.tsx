@@ -96,7 +96,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                         </IconWrapper>
                                                     </ButtonLink>
                                                 ) : (
-                                                    <Link page={node.node} aria-label={node.node.name}>
+                                                    <Link page={node.node}>
                                                         {node.node.name}
                                                     </Link>
                                                 )}
