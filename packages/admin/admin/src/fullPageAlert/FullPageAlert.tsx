@@ -53,7 +53,15 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             <ContentContainer {...slotProps.contentContainer}>
-                <InlineAlert title={<Title variant="h3">{title}</Title>} description={description} icon={icon} />
+                <InlineAlert
+                    title={
+                        <Title variant="h3" {...slotProps.title}>
+                            {title}
+                        </Title>
+                    }
+                    description={description}
+                    icon={icon}
+                />
                 <DividerStyled {...slotProps.divider} />
                 <Info variant="body2" {...slotProps.info}>
                     {help}
