@@ -19,7 +19,7 @@ const actionLogs: ActionLog[] = [
         id: "log1",
         userId: "system-user",
         version: 1,
-        snapshot: { key: "value" },
+        snapshot: { key: "value", createdAt: "2023-10-01T12:00:00Z" },
     },
     {
         createdAt: "2023-10-02T12:00:00Z",
@@ -28,7 +28,7 @@ const actionLogs: ActionLog[] = [
         id: "log2",
         userId: "user2",
         version: 2,
-        snapshot: { key: "value2" },
+        snapshot: { key: "value2", createdAt: "2023-10-01T12:00:00Z" },
     },
     {
         createdAt: "2023-10-03T12:00:00Z",
@@ -37,7 +37,7 @@ const actionLogs: ActionLog[] = [
         id: "log3",
         userId: "Max Mustermann",
         version: 3,
-        snapshot: { key: "value3" },
+        snapshot: { key: "value3", createdAt: "2023-10-01T12:00:00Z" },
     },
 ];
 
@@ -52,4 +52,15 @@ export const actionsLogsHandler: GraphQLFieldResolver<unknown, unknown> = async 
         nodes: actionLogs.reverse(),
         totalCount: actionLogs.length,
     } as PaginatedActionLogs;
+};
+
+export const actionLogHandler: GraphQLFieldResolver<unknown, { id: string }> = async (source, { id }) => {
+    await sleep(500);
+
+    const filteredActionLogs = id ? actionLogs.filter((log) => log.id === id) : [];
+    if (filteredActionLogs.length > 0) {
+        return filteredActionLogs[0];
+    } else {
+        throw new Error(`Action log with id: ${id} not found`);
+    }
 };

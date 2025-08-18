@@ -5,7 +5,7 @@ import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { http, HttpResponse } from "msw";
 
-import { actionsLogsHandler } from "./actionlogs/actionsLogsHandler";
+import { actionLogHandler, actionsLogsHandler } from "./actionlogs/actionsLogsHandler";
 import { fileUploadsHandler } from "./handler/fileUploads";
 
 type StringFilter = {
@@ -163,6 +163,7 @@ input ActionLogSort {
 
 type Query {
     actionLogs(offset: Int! = 0, limit: Int! = 25, scope: JSONObject, entityName: String!, filter: ActionLogFilter, sort: [ActionLogSort!]): PaginatedActionLogs!
+    actionLog(id: ID!): ActionLog!
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
     manufacturers(search: String): [Manufacturer!]!
@@ -320,6 +321,7 @@ const graphqlHandler = new GraphQLHandler({
             manufacturers,
             products,
             actionLogs: actionsLogsHandler,
+            actionLog: actionLogHandler,
         },
     },
 
