@@ -51,7 +51,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
         slotProps = {},
     } = useThemeProps({ props: inProps, name: "CometAdminFullPageAlert" });
     return (
-        <Root sx={sx} className={className}>
+        <Root sx={sx} className={className} {...slotProps.root}>
             <ContentContainer {...slotProps.contentContainer}>
                 <InlineAlert title={<Title variant="h3">{title}</Title>} description={description} icon={icon} />
                 <DividerStyled {...slotProps.divider} />
