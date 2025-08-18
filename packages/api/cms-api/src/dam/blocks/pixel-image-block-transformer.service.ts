@@ -75,7 +75,6 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
                       }
                     : undefined,
                 fileUrl,
-                path: await this.filesService.getDamPath(file),
             },
             cropArea: block.cropArea ? { ...block.cropArea } : undefined,
             urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea: block.cropArea }, { previewDamUrls }),

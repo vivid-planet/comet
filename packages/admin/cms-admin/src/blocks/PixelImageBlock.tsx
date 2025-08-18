@@ -193,7 +193,6 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                     <EditImageDialog
                         image={{
                             name: state.damFile.name,
-                            path: state.damFile.path,
                             url: state.damFile.fileUrl,
                             width: state.damFile.image.width,
                             height: state.damFile.image.height,

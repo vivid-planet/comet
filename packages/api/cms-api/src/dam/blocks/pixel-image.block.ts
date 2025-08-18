@@ -166,11 +166,6 @@ class Meta extends AnnotationBlockMeta {
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },
-                        {
-                            name: "path",
-                            kind: BlockMetaFieldKind.String,
-                            nullable: false,
-                        },
                     ],
                 },
             },
