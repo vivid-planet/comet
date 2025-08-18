@@ -23,7 +23,6 @@ import { PixelImageBlockTransformerService } from "./pixel-image-block-transform
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
     damFileId?: string;
-    path?: string;
 
     @Type(() => ImageCropArea)
     cropArea?: ImageCropArea;

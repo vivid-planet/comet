@@ -202,9 +202,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                             apolloClient,
                                                             id: damFileId,
                                                         });
-
                                                         const url = contentScope.match.url + path;
-
                                                         window.open(url, "_blank");
                                                     }}
                                                     startIcon={<OpenNewTab />}

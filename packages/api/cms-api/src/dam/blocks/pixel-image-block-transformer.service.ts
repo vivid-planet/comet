@@ -27,7 +27,6 @@ type TransformResponse = {
             dominantColor?: string;
         };
         fileUrl?: string;
-        path?: string;
     };
     cropArea?: ImageCropArea;
     urlTemplate?: string;
