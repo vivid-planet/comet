@@ -65,10 +65,6 @@ export const MobileMenu = ({ header }: Props) => {
                                 <TopLevelNavigation>
                                     <li>
                                         <BackButton
-                                            aria-label={intl.formatMessage({
-                                                id: "header.closeButton.arialLabel",
-                                                defaultMessage: "Close Menu",
-                                            })}
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             <IconWrapper>
