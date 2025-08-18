@@ -79,12 +79,10 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     return (
         <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })}>
             <DataGrid
-                autoHeight={true}
                 rows={data.userContentScopes}
                 columns={columns}
                 rowCount={data?.userContentScopes.length ?? 0}
                 loading={false}
-                getRowHeight={() => "auto"}
                 getRowId={(row) => JSON.stringify(row)}
                 slots={{
                     toolbar: ContentScopeGridToolbar,
