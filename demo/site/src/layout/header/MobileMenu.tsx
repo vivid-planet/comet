@@ -107,10 +107,6 @@ export const MobileMenu = ({ header }: Props) => {
                                                                 <PageLayoutContent>
                                                                     <li>
                                                                         <BackButton
-                                                                            aria-label={intl.formatMessage({
-                                                                                id: "header.backButton.arialLabel",
-                                                                                defaultMessage: "Go back",
-                                                                            })}
                                                                             onClick={() => setExpandedSubLevelNavigation(null)}
                                                                         >
                                                                             <IconWrapper>
