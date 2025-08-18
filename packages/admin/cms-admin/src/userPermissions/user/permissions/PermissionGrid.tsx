@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, CrudMoreActionsMenu, DataGridToolbar, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
+import { Button, CrudMoreActionsMenu, DataGridToolbar, FieldSet, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
-import { Card, Chip, IconButton, Typography } from "@mui/material";
+import { Chip, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
 import { type ReactNode, useState } from "react";
@@ -172,7 +172,10 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
     if (error) throw new Error(error.message);
 
     return (
-        <Card>
+        <FieldSet
+            title={intl.formatMessage({ id: "comet.userPermissions.assignedPermissions", defaultMessage: "Assigned Permissions" })}
+            disablePadding
+        >
             <DataGrid<GQLPermissionForGridFragment>
                 autoHeight={true}
                 rows={data?.permissions ?? []}
@@ -206,6 +209,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 />
             )}
             {permissionId && <PermissionDialog userId={userId} permissionId={permissionId} handleDialogClose={() => setPermissionId(null)} />}
-        </Card>
+        </FieldSet>
     );
 };
