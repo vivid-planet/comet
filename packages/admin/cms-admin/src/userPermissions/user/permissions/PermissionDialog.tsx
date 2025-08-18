@@ -1,12 +1,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton, Tooltip } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { Info } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
+    Typography,
 } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -141,7 +143,33 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     variant="horizontal"
                                 />
                             </FormSection>
-                            <FormSection title={<FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />}>
+                            <FormSection
+                                title={
+                                    <>
+                                        <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
+                                        <Tooltip
+                                            children={<Info />}
+                                            title={
+                                                <>
+                                                    <Typography variant="subtitle1">
+                                                        <FormattedMessage
+                                                            id="comet.userPermission.validityDuration.tooltip.title"
+                                                            defaultMessage="Validity duration"
+                                                        />
+                                                    </Typography>
+                                                    <Typography>
+                                                        <FormattedMessage
+                                                            id="comet.userPermission.validityDuration.tooltip.content"
+                                                            defaultMessage="Leave empty for unlimited validity"
+                                                        />
+                                                    </Typography>
+                                                </>
+                                            }
+                                            sx={{ marginLeft: "5px" }}
+                                        />
+                                    </>
+                                }
+                            >
                                 <Field
                                     name="validFrom"
                                     label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
