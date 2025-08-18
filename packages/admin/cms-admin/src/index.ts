@@ -1,4 +1,5 @@
 export { ActionLogCompare } from "./actionLog/actionLogCompare/ActionLogCompare";
+export { ActionLogDialog } from "./actionLog/actionLogDialog/ActionLogDialog";
 export { ActionGridToolbar } from "./actionLog/actionLogGrid/actionGridToolbar/ActionGridToolbar";
 export { ActionLogGrid } from "./actionLog/actionLogGrid/ActionLogGrid";
 export { UserCell } from "./actionLog/actionLogGrid/userCell/UserCell";
