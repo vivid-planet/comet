@@ -1,11 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, FillSpace, type GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { Button, CrudMoreActionsMenu, DataGridToolbar, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
 import { Card, Chip, IconButton, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
@@ -18,10 +17,24 @@ import {
     namedOperations,
 } from "./PermissionGrid.generated";
 
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
 export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [permissionId, setPermissionId] = useState<string | "add" | null>(null);
     const [overrideContentScopesId, setOverrideContentScopesId] = useState<string | null>(null);
+
+    function PermissionGridToolbar({ toolbarAction }: ToolbarProps) {
+        return (
+            <DataGridToolbar>
+                <FillSpace />
+                <CrudMoreActionsMenu />
+                {toolbarAction}
+            </DataGridToolbar>
+        );
+    }
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -168,24 +181,21 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 loading={loading}
                 getRowHeight={() => "auto"}
                 slots={{
-                    toolbar: () => (
-                        <GridToolbar>
-                            <ToolbarTitleItem>
-                                <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />
-                            </ToolbarTitleItem>
-                            <FillSpace />
-                            <ToolbarActions>
-                                <Button
-                                    startIcon={<Add />}
-                                    onClick={() => {
-                                        setPermissionId("add");
-                                    }}
-                                >
-                                    <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
-                                </Button>
-                            </ToolbarActions>
-                        </GridToolbar>
-                    ),
+                    toolbar: PermissionGridToolbar,
+                }}
+                slotProps={{
+                    toolbar: {
+                        toolbarAction: (
+                            <Button
+                                startIcon={<Add />}
+                                onClick={() => {
+                                    setPermissionId("add");
+                                }}
+                            >
+                                <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
+                            </Button>
+                        ),
+                    } as ToolbarProps,
                 }}
             />
             {overrideContentScopesId && (
@@ -199,8 +209,3 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         </Card>
     );
 };
-
-const GridToolbar = styled(GridToolbarContainer)`
-    padding: 10px;
-    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
-`;
