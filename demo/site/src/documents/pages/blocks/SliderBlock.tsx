@@ -20,9 +20,6 @@ export const SliderBlock = withPreview(
                             slidesPerView={3}
                             spaceBetween={20}
                             longSwipesRatio={0.1}
-                            navigation={{
-                                enabled: true,
-                            }}
                             modules={[Pagination]}
                             pagination={{
                                 clickable: true,
