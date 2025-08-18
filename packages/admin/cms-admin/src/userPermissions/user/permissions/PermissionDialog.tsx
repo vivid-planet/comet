@@ -136,6 +136,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
+                                    variant="horizontal"
                                 />
                             </FormSection>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />}>
@@ -147,6 +148,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     clearable={true}
                                     formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                                    variant="horizontal"
                                 />
                                 <Field
                                     name="validTo"
@@ -156,6 +158,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     clearable={true}
                                     formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                                    variant="horizontal"
                                 />
                             </FormSection>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
@@ -166,6 +169,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
                                     disableContentTranslation
+                                    variant="horizontal"
                                 />
                                 <Field
                                     fullWidth
@@ -174,6 +178,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
                                     disableContentTranslation
+                                    variant="horizontal"
                                 />
                                 <Field
                                     fullWidth
@@ -182,6 +187,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
                                     disableContentTranslation
+                                    variant="horizontal"
                                 />
                             </FormSection>
                         </DialogContent>
