@@ -75,7 +75,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     <FillSpace />
                     <ToolbarActions>
                         <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="contained" color="primary">
-                            <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Select scopes" />
+                            <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
                         </Button>
                     </ToolbarActions>
                 </CardToolbar>
