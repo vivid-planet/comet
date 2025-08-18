@@ -77,7 +77,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     }
 
     return (
-        <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })}>
+        <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })} disablePadding>
             <DataGrid
                 rows={data.userContentScopes}
                 columns={columns}
