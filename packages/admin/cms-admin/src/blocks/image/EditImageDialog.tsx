@@ -186,10 +186,10 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                         {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
                                                 {image.path && (
-                                                    <StyledTypography>
+                                                    <Typography mb={2}>
                                                         <FormattedMessage id="comet.blocks.image.assetManager" defaultMessage="Asset Manager: " />
                                                         {image.path}
-                                                    </StyledTypography>
+                                                    </Typography>
                                                 )}
                                                 <Button
                                                     variant="outlined"
@@ -251,8 +251,4 @@ const DialogFormWrapper = styled("form")`
     grid-row-gap: 0px;
     max-height: 100%;
     overflow: hidden;
-`;
-
-const StyledTypography = styled(Typography)`
-    margin-bottom: 10px;
 `;
