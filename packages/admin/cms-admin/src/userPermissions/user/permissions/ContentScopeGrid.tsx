@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CancelButton,
+    FieldSet,
     FillSpace,
     type GridColDef,
     Loading,
@@ -27,7 +28,7 @@ import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { type GQLContentScopesQuery, type GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
@@ -39,6 +40,7 @@ type ContentScope = {
 };
 
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
+    const intl = useIntl();
     const [open, setOpen] = useState(false);
 
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
@@ -66,7 +68,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
 
     return (
-        <>
+        <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })}>
             <Card>
                 <CardToolbar>
                     <ToolbarTitleItem>
@@ -113,7 +115,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </DialogActions>
                 </Dialog>
             </SaveBoundary>
-        </>
+        </FieldSet>
     );
 };
 
