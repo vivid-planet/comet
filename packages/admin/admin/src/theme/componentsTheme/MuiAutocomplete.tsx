@@ -12,7 +12,7 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
     },
     styleOverrides: mergeOverrideStyles<"MuiAutocomplete">(component?.styleOverrides, {
         loading: {
-            color: "unset",
+            color: "inherit",
         },
         endAdornment: {
             top: 0,
