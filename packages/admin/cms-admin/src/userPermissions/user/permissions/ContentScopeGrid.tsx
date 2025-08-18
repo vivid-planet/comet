@@ -14,7 +14,6 @@ import {
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
 import {
-    CardContent,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -79,29 +78,27 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
 
     return (
         <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })}>
-            <CardContent>
-                <DataGrid
-                    autoHeight={true}
-                    rows={data.userContentScopes}
-                    columns={columns}
-                    rowCount={data?.userContentScopes.length ?? 0}
-                    loading={false}
-                    getRowHeight={() => "auto"}
-                    getRowId={(row) => JSON.stringify(row)}
-                    slots={{
-                        toolbar: ContentScopeGridToolbar,
-                    }}
-                    slotProps={{
-                        toolbar: {
-                            toolbarAction: (
-                                <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
-                                    <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
-                                </Button>
-                            ),
-                        } as ToolbarProps,
-                    }}
-                />
-            </CardContent>
+            <DataGrid
+                autoHeight={true}
+                rows={data.userContentScopes}
+                columns={columns}
+                rowCount={data?.userContentScopes.length ?? 0}
+                loading={false}
+                getRowHeight={() => "auto"}
+                getRowId={(row) => JSON.stringify(row)}
+                slots={{
+                    toolbar: ContentScopeGridToolbar,
+                }}
+                slotProps={{
+                    toolbar: {
+                        toolbarAction: (
+                            <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
+                                <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
+                            </Button>
+                        ),
+                    } as ToolbarProps,
+                }}
+            />
             <SaveBoundary
                 onAfterSave={() => {
                     setOpen(false);
