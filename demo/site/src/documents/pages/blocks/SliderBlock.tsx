@@ -5,6 +5,7 @@ import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { BasicSwiper } from "@src/common/components/BasicSwiper";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";
+import { Pagination } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 
 type SliderBlockProps = PropsWithData<SliderBlockData>;
@@ -22,6 +23,7 @@ export const SliderBlock = withPreview(
                             navigation={{
                                 enabled: true,
                             }}
+                            modules={[Pagination]}
                             pagination={{
                                 clickable: true,
                             }}
