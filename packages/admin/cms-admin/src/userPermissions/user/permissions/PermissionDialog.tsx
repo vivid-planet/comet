@@ -128,7 +128,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                 render={({ values }) => (
                     <>
                         <DialogTitle>
-                            <FormattedMessage id="comet.userPermissions.showPermission" defaultMessage="Show permission" />
+                            <FormattedMessage id="comet.userPermissions.addScopesToPermission" defaultMessage="Add scopes to permission" />
                         </DialogTitle>
                         <DialogContent>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />}>
