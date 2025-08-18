@@ -1,19 +1,18 @@
-import { Button, Stack, StackMainContent, StackToolbar, useEditDialog } from "@comet/admin";
+import { Button, MainContent, Toolbar, useEditDialog } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { ProductForm } from "../generator/generated/ProductForm";
 import { ProductsGrid } from "../generator/generated/ProductsGrid";
 
 export function EditDialogBugPage() {
-    const intl = useIntl();
     const [EditDialog, , editDialogApi] = useEditDialog();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "devStories.editDailogBug", defaultMessage: "Edit-Dialog Bug" })}>
-            <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-            <StackMainContent fullHeight>
+        <>
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
+            <MainContent fullHeight>
                 <ProductsGrid
                     toolbarAction={
                         <Button responsive startIcon={<AddIcon />} onClick={() => editDialogApi?.openAddDialog()}>
@@ -22,9 +21,9 @@ export function EditDialogBugPage() {
                     }
                 />
                 <EditDialog>
-                    <ProductForm />
+                    <ProductForm manufacturerCountry="at" />
                 </EditDialog>
-            </StackMainContent>
-        </Stack>
+            </MainContent>
+        </>
     );
 }
