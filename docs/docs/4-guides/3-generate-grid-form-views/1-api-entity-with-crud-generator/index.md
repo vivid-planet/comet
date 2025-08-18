@@ -2,9 +2,9 @@
 title: API Entity with CRUD Generator
 ---
 
-## Generating an entity with the api-generator
+## Generating an entity with the API-Generator
 
-Since we are building the API first, we will start by generating a new entity. Go into the `api` folder and create a new directory, e.g., `api/src/customer`. Inside this directory, create a new file `customer.entity.ts` with the following content:
+Since we are building the API first, we will start by generating a new entity. Navigate to the `api` folder and create a new directory, for example, `api/src/customer`. Inside this directory, create a new file `customer.entity.ts` with the following content:
 
 ```typescript
 import { CrudField, CrudGenerator } from "@comet/cms-api";
@@ -38,14 +38,14 @@ export class Customer extends BaseEntity<Customer, "id"> {
 }
 ```
 
-Currently, there is no `api-generator` watch mode - so every time you change the entity following command must be run. Information how to setup API Generator can be found [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) Section.
+Currently, there is no `api-generator` watch mode - so every time you change the entity, the following command must be run. Information on how to set up the API Generator can be found in the [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) Section.
 
 ```bash
 cd api
 npm run api-generator
 ```
 
-The **API Generator** will generate multiple files inside the specified `../generated` output directory. It will contain a `customer.resolver.ts` and some dto related files (`customer.filter.ts`, `customer.input.ts`, `customer.sort.ts`, `customer.args.ts`, `paginated-customer.ts`).
+The **API Generator** will generate multiple files inside the specified `../generated` output directory. It will contain a `customer.resolver.ts` and some DTO-related files (`customer.filter.ts`, `customer.input.ts`, `customer.sort.ts`, `customer.args.ts`, `paginated-customer.ts`).
 
 ![CustomerGeneratedDirectoryStructure](./images/customerDirectoryStructure.png)
 
@@ -89,7 +89,7 @@ export class AppModule {
 //...
 ```
 
-As soon the new `CustomerModule` is registered in the app module, the schema will update, and provide the new generated Queries/Mutations, including the Object types and necessary inputs
+As soon as the new `CustomerModule` is registered in the app module, the schema will update and provide the new generated Queries/Mutations, including the Object types and necessary inputs.
 
 ```graphql
 type Customer {
@@ -149,8 +149,8 @@ type Mutation {
 }
 ```
 
-Schema should already be available when you start the GraphQL Playground locally `http:4000/api/graphql`, and you should be able to play around with the queries.
+The schema should already be available when you start the GraphQL Playground locally `http:4000/api/graphql`, and you should be able to play around with the queries.
 
 ![CustomersQueryInPlaygroundWithError](./images/customersQueryInPlaygroundWithError.png)
 
-As soon as you start to execute the first Query, one will see that @mikro-orm will through an error, that the Customer Table does not exists in the Database.
+As soon as you start to execute the first Query, you will see that @mikro-orm will throw an error, stating that the Customer Table does not exist in the Database.

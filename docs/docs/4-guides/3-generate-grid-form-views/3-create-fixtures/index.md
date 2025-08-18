@@ -48,11 +48,11 @@ export const generateCustomers = async ({
 };
 ```
 
-The `generateCustomers` functions is a convenience function, that receives some options, like the repository, a progress bar and the total number of customers to generate. The function then generates the customers and increments the progress bar.
+The `generateCustomers` function is a convenience function that receives some options, like the repository, a progress bar, and the total number of customers to generate. The function then generates the customers and increments the progress bar.
 
 ## Add Fixtures to the FixturesConsole
 
-Additionally, the created fixtures (`generateCustomer`) must be called and executed. Open `db/fixtures/generators/fixtures.console.ts` an add the fixtures functions calls so the function gets execute when fixtures get created:
+Additionally, the created fixtures (`generateCustomer`) must be called and executed. Open `db/fixtures/generators/fixtures.console.ts` and add the fixtures function calls so the function gets executed when fixtures get created:
 
 ```typescript
 export class FixturesConsole {
@@ -90,6 +90,6 @@ npm run fixtures
 
 ## Verify Fixtures
 
-Now we are ready to execute the Query again in the GraphQL Playground, and one should see that the Query is executed successfully and will return the generated Data
+Now we are ready to execute the Query again in the GraphQL Playground, and one should see that the Query is executed successfully and will return the generated Data.
 
 ![Fixtures](./images/customerQueryInPlaygroundWithFixtureData.png)

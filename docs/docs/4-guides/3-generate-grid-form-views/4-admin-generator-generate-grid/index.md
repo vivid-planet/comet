@@ -24,11 +24,11 @@ export const CustomerGrid: GridConfig<GQLCustomer> = {
 ```
 
 The `@comet/cms-admin` has types available for all the different components that can be generated. The `GridConfig` type is used to define the configuration of the DataGrid. The `GQLCustomer` got created in the section before, with the crud generator. The `GQLCustomer`
-type is the GraphQL type that will be used to guarantee type safety. The `columns` array defines the columns of the DataGrid. Each column has a `type`, `name` and other properties.
+type is the GraphQL type that will be used to guarantee type safety. The `columns` array defines the columns of the DataGrid. Each column has a `type`, `name`, and other properties.
 
 ## Run Admin Generator
 
-Unfortunately there is no watch mode available for the Admin Generator. To generate the DataGrid, you have to run the Admin Generator manually. This will delete all already generated files and generate them again.
+Unfortunately, there is no watch mode available for the Admin Generator. To generate the DataGrid, you have to run the Admin Generator manually. This will delete all already generated files and generate them again.
 
 Run the following command:
 
@@ -45,7 +45,7 @@ Two files will be generated in the `admin/src/customers/generated` directory. Th
 
 ![CustomerGridDirectoryStructure](./images/customerGridIDE.png)
 
-The component is ready to be used in the application. Simple use the generated component somewhere in your React Application:
+The component is ready to be used in the application. Simply use the generated component somewhere in your React Application:
 
 `src/customers/CustomerPage.tsx`
 

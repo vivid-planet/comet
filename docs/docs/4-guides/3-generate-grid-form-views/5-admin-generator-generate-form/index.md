@@ -52,7 +52,7 @@ npm run admin-generator
 
 ![AdminGeneratorCLI](./images/adminGeneratorCli.png)
 
-The component is ready to be used in the application. Simple use the generated component `<CustomerForm />` somewhere in your React Application. An optional prop `id` also gets generated.
+The component is ready to be used in the application. Simply use the generated component `<CustomerForm />` somewhere in your React Application. An optional prop `id` also gets generated.
 
 Sample Form will look like:
 

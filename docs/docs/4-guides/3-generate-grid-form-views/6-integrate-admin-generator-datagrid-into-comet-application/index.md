@@ -2,9 +2,9 @@
 title: Integrate Admin Generator DataGrid into Comet Application
 ---
 
-At the end of this guide, we want to combine the generated `CustomerGrid` with the `CustomerForm` into a new page `CustomerPage`.
+At the end of this guide, we want to combine the generated `CustomerGrid` with the `CustomerForm` into a new page, `CustomerPage`.
 
-The `CustomerPage` will be a simple page that contains the `CustomerGrid` and the `CustomerForm` and the related components from `@comet/admin` to seamlessly integrate into a Comet Application.
+The `CustomerPage` will be a simple page that contains the `CustomerGrid`, the `CustomerForm`, and the related components from `@comet/admin` to seamlessly integrate into a Comet Application.
 
 ## Create CustomerPage
 
@@ -99,7 +99,7 @@ export const CustomerPage: FunctionComponent = () => {
 
 ### Integrate into Main Menu
 
-Following object needs to be added to the `masterMenuData` array in `src/common/MasterMenu.tsx`
+The following object needs to be added to the `masterMenuData` array in `src/common/MasterMenu.tsx`
 
 ```typescript
 import { CustomerPage } from "@src/customers/CustomerPage";
