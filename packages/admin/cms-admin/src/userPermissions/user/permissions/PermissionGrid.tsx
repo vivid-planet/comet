@@ -177,12 +177,10 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
             disablePadding
         >
             <DataGrid<GQLPermissionForGridFragment>
-                autoHeight={true}
                 rows={data?.permissions ?? []}
                 columns={columns}
                 rowCount={data?.permissions.length ?? 0}
                 loading={loading}
-                getRowHeight={() => "auto"}
                 slots={{
                     toolbar: PermissionGridToolbar,
                 }}
