@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import {
     Button,
     CancelButton,
-    CrudMoreActionsMenu,
     DataGridToolbar,
     FieldSet,
     FillSpace,
@@ -70,7 +69,6 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         return (
             <DataGridToolbar>
                 <FillSpace />
-                <CrudMoreActionsMenu />
                 {toolbarAction}
             </DataGridToolbar>
         );
