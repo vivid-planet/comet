@@ -186,10 +186,12 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                         {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
                                                 {image.path && (
-                                                    <Typography mb={2}>
-                                                        <FormattedMessage id="comet.blocks.image.assetManager" defaultMessage="Asset Manager: " />
-                                                        {image.path}
-                                                    </Typography>
+                                                    <>
+                                                        <Typography variant="subtitle1">
+                                                            <FormattedMessage id="comet.blocks.image.damPath" defaultMessage="DAM Path: " />
+                                                        </Typography>
+                                                        <Typography mb={2}>{image.path}</Typography>
+                                                    </>
                                                 )}
                                                 <Button
                                                     variant="outlined"
