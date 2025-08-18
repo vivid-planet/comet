@@ -1,10 +1,10 @@
 import { Card, css, Divider, Typography } from "@mui/material";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ErrorPageClassKey } from "./ErrorPage";
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { type FullPageAlertClassKey } from "./FullPageAlert";
 
-export const Root = createComponentSlot("div")<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const Root = createComponentSlot("div")<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "root",
 })(
     ({ theme }) => css`
@@ -16,8 +16,8 @@ export const Root = createComponentSlot("div")<ErrorPageClassKey>({
     `,
 );
 
-export const ContentContainer = createComponentSlot(Card)<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const ContentContainer = createComponentSlot(Card)<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "contentContainer",
 })(({ theme }) => {
     return css`
@@ -30,18 +30,18 @@ export const ContentContainer = createComponentSlot(Card)<ErrorPageClassKey>({
     `;
 });
 
-export const Title = createComponentSlot(Typography)<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const Title = createComponentSlot(Typography)<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "title",
 })(css``);
 
-export const Info = createComponentSlot(Typography)<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const Info = createComponentSlot(Typography)<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "info",
 })(css``);
 
-export const DividerStyled = createComponentSlot(Divider)<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const DividerStyled = createComponentSlot(Divider)<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "divider",
 })(
     ({ theme }) => css`
@@ -51,8 +51,8 @@ export const DividerStyled = createComponentSlot(Divider)<ErrorPageClassKey>({
     `,
 );
 
-export const LogoContainer = createComponentSlot("div")<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const LogoContainer = createComponentSlot("div")<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "logoContainer",
 })(
     ({ theme }) => css`
@@ -60,8 +60,8 @@ export const LogoContainer = createComponentSlot("div")<ErrorPageClassKey>({
     `,
 );
 
-export const ActionContainer = createComponentSlot("div")<ErrorPageClassKey>({
-    componentName: "ErrorPage",
+export const ActionContainer = createComponentSlot("div")<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
     slotName: "actionContainer",
 })(css`
     width: 100%;

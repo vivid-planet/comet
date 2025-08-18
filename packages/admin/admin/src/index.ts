@@ -105,7 +105,6 @@ export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/error
 export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
-export { ErrorPage, ErrorPageClassKey, ErrorPageProps } from "./error/errorPage/ErrorPage";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
@@ -153,6 +152,7 @@ export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
+export { FullPageAlert, FullPageAlertClassKey, FullPageAlertProps } from "./fullPageAlert/FullPageAlert";
 export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";

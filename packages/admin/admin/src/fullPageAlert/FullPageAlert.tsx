@@ -3,15 +3,15 @@ import { type ComponentsOverrides, type Divider, type Theme, type Typography, us
 import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Button } from "../../common/buttons/Button";
-import { CometLogo } from "../../common/CometLogo";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { InlineAlert } from "../../inlineAlert/InlineAlert";
-import { ActionContainer, ContentContainer, DividerStyled, Info, LogoContainer, Root, Title } from "./ErrorPage.styles";
+import { Button } from "../common/buttons/Button";
+import { CometLogo } from "../common/CometLogo";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { InlineAlert } from "../inlineAlert/InlineAlert";
+import { ActionContainer, ContentContainer, DividerStyled, Info, LogoContainer, Root, Title } from "./FullPageAlert.styles";
 
-export type ErrorPageClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer" | "actionContainer";
+export type FullPageAlertClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer" | "actionContainer";
 
-export type ErrorPageProps = ThemedComponentBaseProps<{
+export type FullPageAlertProps = ThemedComponentBaseProps<{
     root: "div";
     contentContainer: "div";
     iconContainer: "div";
@@ -29,7 +29,7 @@ export type ErrorPageProps = ThemedComponentBaseProps<{
     actions?: ReactNode;
 };
 
-export const ErrorPage: FunctionComponent<ErrorPageProps> = (inProps) => {
+export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) => {
     const {
         title = <FormattedMessage id="comet.errorPage.title" defaultMessage="Something went wrong" />,
         description = <FormattedMessage id="comet.errorPage.description" defaultMessage="An unexpected error occurred." />,
@@ -49,7 +49,7 @@ export const ErrorPage: FunctionComponent<ErrorPageProps> = (inProps) => {
         sx,
         className,
         slotProps = {},
-    } = useThemeProps({ props: inProps, name: "CometAdminErrorPage" });
+    } = useThemeProps({ props: inProps, name: "CometAdminFullPageAlert" });
     return (
         <Root sx={sx} className={className}>
             <ContentContainer {...slotProps.contentContainer}>
@@ -69,17 +69,17 @@ export const ErrorPage: FunctionComponent<ErrorPageProps> = (inProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminErrorPage: ErrorPageProps;
+        CometAdminFullPageAlert: FullPageAlertProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminErrorPage: ErrorPageClassKey;
+        CometAdminFullPageAlert: FullPageAlertClassKey;
     }
 
     interface Components {
-        CometAdminErrorPage?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminErrorPage"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminErrorPage"];
+        CometAdminFullPageAlert?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFullPageAlert"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFullPageAlert"];
         };
     }
 }
