@@ -130,7 +130,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                                     </li>
                                                                     {node.node.childNodes.map((node) => (
                                                                         <li key={node.id}>
-                                                                            <Link page={node} aria-label={node.name}>
+                                                                            <Link page={node}>
                                                                                 {node.name}
                                                                             </Link>
                                                                         </li>
