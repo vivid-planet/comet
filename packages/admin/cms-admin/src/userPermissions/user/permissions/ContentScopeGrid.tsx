@@ -1,6 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    Button,
     CancelButton,
+    CrudMoreActionsMenu,
+    DataGridToolbar,
     FieldSet,
     FillSpace,
     type GridColDef,
@@ -8,26 +11,19 @@ import {
     messages,
     SaveBoundary,
     SaveBoundarySaveButton,
-    ToolbarActions,
-    ToolbarTitleItem,
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
 import {
-    // eslint-disable-next-line no-restricted-imports
-    Button,
-    Card,
     CardContent,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogTitle,
-    Toolbar,
     Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
@@ -38,6 +34,10 @@ import { type GQLAvailableContentScopesQuery } from "./selectScopesDialogContent
 type ContentScope = {
     [key: string]: string;
 };
+
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
 
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
@@ -67,32 +67,41 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
 
     const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
 
+    function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
+        return (
+            <DataGridToolbar>
+                <FillSpace />
+                <CrudMoreActionsMenu />
+                {toolbarAction}
+            </DataGridToolbar>
+        );
+    }
+
     return (
         <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })}>
-            <Card>
-                <CardToolbar>
-                    <ToolbarTitleItem>
-                        <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
-                    </ToolbarTitleItem>
-                    <FillSpace />
-                    <ToolbarActions>
-                        <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="contained" color="primary">
-                            <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
-                        </Button>
-                    </ToolbarActions>
-                </CardToolbar>
-                <CardContent>
-                    <DataGrid
-                        autoHeight={true}
-                        rows={data.userContentScopes}
-                        columns={columns}
-                        rowCount={data?.userContentScopes.length ?? 0}
-                        loading={false}
-                        getRowHeight={() => "auto"}
-                        getRowId={(row) => JSON.stringify(row)}
-                    />
-                </CardContent>
-            </Card>
+            <CardContent>
+                <DataGrid
+                    autoHeight={true}
+                    rows={data.userContentScopes}
+                    columns={columns}
+                    rowCount={data?.userContentScopes.length ?? 0}
+                    loading={false}
+                    getRowHeight={() => "auto"}
+                    getRowId={(row) => JSON.stringify(row)}
+                    slots={{
+                        toolbar: ContentScopeGridToolbar,
+                    }}
+                    slotProps={{
+                        toolbar: {
+                            toolbarAction: (
+                                <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
+                                    <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
+                                </Button>
+                            ),
+                        } as ToolbarProps,
+                    }}
+                />
+            </CardContent>
             <SaveBoundary
                 onAfterSave={() => {
                     setOpen(false);
@@ -118,11 +127,6 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         </FieldSet>
     );
 };
-
-const CardToolbar = styled(Toolbar)`
-    top: 0px;
-    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
-`;
 
 export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
