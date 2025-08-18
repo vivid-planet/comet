@@ -77,9 +77,7 @@ export const MobileMenu = ({ header }: Props) => {
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             <SvgUse href="/assets/icons/arrow-left.svg#root" width={16} height={16} color="inherit" />
-                                            <Typography>
-                                                <FormattedMessage id="header.closeMenu" defaultMessage="Close Menu" />
-                                            </Typography>
+                                            <FormattedMessage id="header.closeMenu" defaultMessage="Close Menu" />
                                         </BackButton>
                                     </li>
                                     {header.items.map((node) => {
@@ -122,9 +120,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                                                 height={16}
                                                                                 color="inherit"
                                                                             />
-                                                                            <Typography>
-                                                                                <FormattedMessage id="header.back" defaultMessage="Back" />
-                                                                            </Typography>
+                                                                            <FormattedMessage id="header.back" defaultMessage="Back" />
                                                                         </BackButton>
                                                                     </li>
                                                                     <li>
@@ -135,11 +131,9 @@ export const MobileMenu = ({ header }: Props) => {
                                                                                 height={16}
                                                                                 color="inherit"
                                                                             />
-                                                                            <Typography>
-                                                                                <FormattedMessage id="header.overview" defaultMessage="Overview" />
-                                                                                <span aria-hidden="true"> | </span>
-                                                                                {node.node.name}
-                                                                            </Typography>
+                                                                            <FormattedMessage id="header.overview" defaultMessage="Overview" />
+                                                                            <span aria-hidden="true"> | </span>
+                                                                            {node.node.name}
                                                                         </OverviewButton>
                                                                     </li>
                                                                     {node.node.childNodes.map((node) => (
