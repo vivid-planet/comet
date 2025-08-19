@@ -53,7 +53,6 @@ interface Props {
         width: number;
         height: number;
         size?: number;
-        path?: string;
     };
     damFileId: string;
     onClose: () => void;
