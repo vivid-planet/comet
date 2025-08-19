@@ -131,7 +131,14 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             <FormattedMessage id="comet.userPermissions.addScopesToPermission" defaultMessage="Add scopes to permission" />
                         </DialogTitle>
                         <DialogContent>
-                            <FormSection title={<FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />}>
+                            <FormSection
+                                title={
+                                    <Typography variant="h4">
+                                        <FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />
+                                    </Typography>
+                                }
+                                disableTypography
+                            >
                                 <Divider sx={{ marginBottom: 5 }} />
                                 <Field
                                     required
@@ -147,7 +154,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             </FormSection>
                             <FormSection
                                 title={
-                                    <>
+                                    <Typography variant="h4">
                                         <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
                                         <Tooltip
                                             children={<Info />}
@@ -169,8 +176,9 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                             }
                                             sx={{ marginLeft: "5px" }}
                                         />
-                                    </>
+                                    </Typography>
                                 }
+                                disableTypography
                             >
                                 <Divider sx={{ marginBottom: 5 }} />
                                 <Field
@@ -194,7 +202,14 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     variant="horizontal"
                                 />
                             </FormSection>
-                            <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
+                            <FormSection
+                                title={
+                                    <Typography variant="h4">
+                                        <FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />
+                                    </Typography>
+                                }
+                                disableTypography
+                            >
                                 <Divider sx={{ marginBottom: 5 }} />
                                 <Field
                                     fullWidth
