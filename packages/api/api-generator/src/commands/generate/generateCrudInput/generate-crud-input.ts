@@ -368,7 +368,9 @@ export async function generateCrudInput(
                     if (elementTypeNode.isKind(SyntaxKind.TypeReference)) {
                         // if the element type is a type reference, we need to find the import path
                         const { importPath } = findImportPath(elementTypeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
-                        imports.push({ name: elementTypeNode.getText(), importPath });
+                        if (importPath) {
+                            imports.push({ name: elementTypeNode.getText(), importPath });
+                        }
                     }
                     decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
@@ -384,7 +386,9 @@ export async function generateCrudInput(
                 if (typeNode.isKind(SyntaxKind.TypeReference)) {
                     // if the element type is a type reference, we need to find the import path
                     const { importPath } = findImportPath(typeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
-                    imports.push({ name: typeNode.getText(), importPath });
+                    if (importPath) {
+                        imports.push({ name: typeNode.getText(), importPath });
+                    }
                 }
                 decorators.push(
                     `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
