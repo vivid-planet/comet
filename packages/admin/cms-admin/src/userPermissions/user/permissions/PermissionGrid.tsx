@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, DataGridToolbar, FieldSet, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
-import { Add, Delete, EditRecord, Info, Reject } from "@comet/admin-icons";
-import { Chip, IconButton, Typography } from "@mui/material";
+import { Button, DataGridToolbar, FieldSet, FillSpace, GridCellContent, type GridColDef, TableDeleteButton } from "@comet/admin";
+import { Add, Delete, EditRecord, StateFilled } from "@comet/admin-icons";
+import { IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
 import { type ReactNode, useState } from "react";
@@ -71,29 +71,32 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         },
         {
             field: "status",
-            flex: 1,
+            width: 200,
             filterable: false,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.status", defaultMessage: "Status" }),
             renderCell: ({ row }) => (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                <>
                     {row.validTo && differenceInDays(parseISO(row.validTo), new Date()) < 0 && (
-                        <Chip
-                            icon={<Reject />}
-                            color="error"
-                            label={<FormattedMessage id="comet.userPermissions.expired" defaultMessage="Expired" />}
+                        <GridCellContent
+                            icon={<StateFilled color="error" />}
+                            primaryText={<FormattedMessage id="comet.userPermissions.expired" defaultMessage="Expired" />}
                         />
                     )}
                     {row.validTo &&
-                        differenceInDays(parseISO(row.validTo), new Date()) >= 0 &&
-                        differenceInDays(parseISO(row.validTo), new Date()) < 30 && (
-                            <Chip
-                                icon={<Info />}
-                                color="warning"
-                                label={<FormattedMessage id="comet.userPermissions.expiringSoon" defaultMessage="Expiring soon" />}
-                            />
-                        )}
-                </div>
+                    differenceInDays(parseISO(row.validTo), new Date()) >= 0 &&
+                    differenceInDays(parseISO(row.validTo), new Date()) < 30 ? (
+                        <GridCellContent
+                            icon={<StateFilled color="warning" />}
+                            primaryText={<FormattedMessage id="comet.userPermissions.expiringSoon" defaultMessage="Expiring soon" />}
+                        />
+                    ) : (
+                        <GridCellContent
+                            icon={<StateFilled color="success" />}
+                            primaryText={<FormattedMessage id="comet.userPermissions.active" defaultMessage="Active" />}
+                        />
+                    )}
+                </>
             ),
         },
         {
