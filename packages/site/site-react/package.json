@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-react",
-    "version": "8.0.0-beta.6",
+    "version": "8.0.0",
     "description": "Comet Site React package",
     "repository": {
         "type": "git",

@@ -3,7 +3,7 @@ import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParam
 import { type FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { type AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -11,7 +11,7 @@ export type FinalFormAutocompleteProps<
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
 > = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> &
-    Partial<AsyncOptionsProps<T>> &
+    Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
         clearable?: boolean;
     };

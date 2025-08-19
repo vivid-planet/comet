@@ -505,6 +505,25 @@ const FolderDataGrid = ({
             hideSortIcons: true,
             disableColumnMenu: true,
         },
+        {
+            field: "totalCount",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.usages",
+                defaultMessage: "Usages",
+            }),
+            headerAlign: "right",
+            align: "right",
+            minWidth: 100,
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.dependents?.totalCount !== undefined) {
+                    return row.dependents.totalCount;
+                }
+                return "";
+            },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
         ...(enableLicenseFeature
             ? ([
                   {
@@ -548,6 +567,7 @@ const FolderDataGrid = ({
                   },
               ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
+
         {
             field: "createdAt",
             headerName: intl.formatMessage({

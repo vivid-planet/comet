@@ -1,4 +1,5 @@
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import { Document, LinkExternal } from "@comet/admin-icons";
 import { type ComponentType } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -14,13 +15,15 @@ import { RedirectsGrid } from "./RedirectsGrid";
 
 const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
     ...InternalLinkBlock,
-    previewContent: (state) => (state.targetPage ? [{ type: "text", content: state.targetPage.path }] : []),
+    previewContent: (state) => [...(state.targetPage?.path ? [{ type: "text" as const, content: state.targetPage.path }] : [])],
+    icon: (state) => state.targetPage && <Document color="primary" />,
     dynamicDisplayName: (state) => state.targetPage?.name ?? InternalLinkBlock.displayName,
 };
 
 const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     ...ExternalLinkBlock,
-    previewContent: (state) => (state.targetUrl ? [{ type: "text", content: ExternalLinkBlock.displayName }] : []),
+    previewContent: (state) => [...(state.targetUrl ? [{ type: "text" as const, content: ExternalLinkBlock.displayName }] : [])],
+    icon: (state) => state.targetUrl && <LinkExternal color="primary" />,
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 

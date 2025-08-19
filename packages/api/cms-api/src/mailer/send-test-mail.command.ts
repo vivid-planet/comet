@@ -37,7 +37,7 @@ export class SendTestMailCommand extends CommandRunner {
         }
 
         const result = await this.mailerService.sendMail({
-            type: "mail-server-communication-test",
+            mailTypeForLogging: "mail-server-communication-test",
             to: receiver || defaultReceiver,
             subject: "Mail-Server communication works",
             text: "Lorem ipsum dolor sit amet",
