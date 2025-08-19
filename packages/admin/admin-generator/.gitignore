@@ -1,2 +1,7 @@
 # Build output
 lib/
+
+*storybook.log
+schema.json
+*.generated.ts
+fragmentTypes.json
