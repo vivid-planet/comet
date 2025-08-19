@@ -1,0 +1,61 @@
+
+enum SortDirection {
+    ASC
+    DESC
+}
+
+input StringFilter {
+    contains: String
+    startsWith: String
+    endsWith: String
+    equal: String
+    notEqual: String
+}
+
+
+type Sample {
+    id: ID!
+    sample: String!
+}
+
+type PaginatedSamples {
+    nodes: [Sample!]!
+    totalCount: Int!
+}
+
+
+input SampleFilter {
+    sample: StringFilter
+    and: [SampleFilter!]
+    or: [SampleFilter!]
+}
+
+
+enum InquirySortField {
+    sample
+}
+
+
+input SampleSort {
+    field: InquirySortField!
+    direction: SortDirection! = ASC
+}
+
+type Query {
+    sample: Sample!
+    samples(offset: Int! = 0, limit: Int! = 25, search: String, filter: SampleFilter, sort: [SampleSort!]): PaginatedSamples!
+}
+
+type Mutation {
+    createSample(input: SampleInput!): Sample!
+    updateSample(id: ID!, input: SampleUpdateInput!): Sample!
+    deleteSample(id: ID!): Boolean!
+}
+
+input SampleInput {
+    sample: String!
+}
+
+input SampleUpdateInput {
+    sample: String!
+}
