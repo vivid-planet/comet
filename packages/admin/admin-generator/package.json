@@ -22,7 +22,7 @@
         "admin-generator": "./bin/admin-generator.js generate",
         "build": "$npm_execpath run clean && run-s generate-block-types gql:types && tsc -p tsconfig.build.json",
         "build-storybook": "storybook build",
-        "clean": "rimraf lib",
+        "clean": "rimraf lib && rimraf --glob 'src/**/generated'",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-types": "comet generate-block-types --inputs",
         "gql:types": "graphql-codegen",
@@ -30,7 +30,7 @@
         "lint:eslint": "eslint --max-warnings 0 src/ package.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
-        "storybook": "storybook dev -p 6006",
+        "storybook": "run-s generate-block-types gql:types admin-generator && storybook dev -p 26640",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests",
         "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules jest --updateSnapshot",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
