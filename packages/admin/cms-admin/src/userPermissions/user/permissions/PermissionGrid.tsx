@@ -170,6 +170,19 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
 
     if (error) throw new Error(error.message);
 
+    const toolbarSlotProps: ToolbarProps = {
+        toolbarAction: (
+            <Button
+                startIcon={<Add />}
+                onClick={() => {
+                    setPermissionId("add");
+                }}
+            >
+                <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
+            </Button>
+        ),
+    };
+
     return (
         <FieldSet
             title={intl.formatMessage({ id: "comet.userPermissions.assignedPermissions", defaultMessage: "Assigned Permissions" })}
@@ -184,18 +197,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                     toolbar: PermissionGridToolbar,
                 }}
                 slotProps={{
-                    toolbar: {
-                        toolbarAction: (
-                            <Button
-                                startIcon={<Add />}
-                                onClick={() => {
-                                    setPermissionId("add");
-                                }}
-                            >
-                                <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
-                            </Button>
-                        ),
-                    } as ToolbarProps,
+                    toolbar: toolbarSlotProps,
                 }}
             />
             {overrideContentScopesId && (
