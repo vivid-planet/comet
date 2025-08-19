@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, CrudMoreActionsMenu, DataGridToolbar, FieldSet, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
+import { Button, DataGridToolbar, FieldSet, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
@@ -30,7 +30,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         return (
             <DataGridToolbar>
                 <FillSpace />
-                <CrudMoreActionsMenu />
                 {toolbarAction}
             </DataGridToolbar>
         );
