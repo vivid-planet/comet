@@ -70,22 +70,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
             renderCell: ({ row }) => <Typography variant="subtitle2">{camelCaseToHumanReadable(row.permission)}</Typography>,
         },
         {
-            field: "source",
-            width: 100,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Source" }),
-        },
-        {
-            field: "validityPeriod",
-            width: 200,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.validityPeriod", defaultMessage: "Validity period" }),
-            renderCell: ({ row }) =>
-                `${row.validFrom ? new Date(row.validFrom).toLocaleDateString() : "∞"} - ${
-                    row.validTo ? new Date(row.validTo).toLocaleDateString() : "∞"
-                }`,
-        },
-        {
             field: "status",
             flex: 1,
             filterable: false,
@@ -112,6 +96,23 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 </div>
             ),
         },
+        {
+            field: "source",
+            width: 100,
+            pinnable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Assignment type" }),
+        },
+        {
+            field: "validityPeriod",
+            width: 200,
+            pinnable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.validityPeriod", defaultMessage: "Validity period" }),
+            renderCell: ({ row }) =>
+                `${row.validFrom ? new Date(row.validFrom).toLocaleDateString() : "∞"} - ${
+                    row.validTo ? new Date(row.validTo).toLocaleDateString() : "∞"
+                }`,
+        },
+
         {
             field: "overrideContentScopes",
             headerName: "",
