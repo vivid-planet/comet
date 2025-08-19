@@ -101,7 +101,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         },
         {
             field: "source",
-            width: 100,
+            width: 200,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Assignment type" }),
         },
@@ -115,7 +115,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                     row.validTo ? new Date(row.validTo).toLocaleDateString() : "∞"
                 }`,
         },
-
         {
             field: "overrideContentScopes",
             headerName: "",
