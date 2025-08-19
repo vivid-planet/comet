@@ -1,7 +1,7 @@
 import { BlobStorageConfig, IsUndefinable } from "@comet/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsEmail, IsInt, IsNumber, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -122,7 +122,8 @@ export class EnvironmentVariables {
     @IsString()
     MAILER_HOST: string;
 
-    @IsNumber()
+    @Type(() => Number)
+    @IsInt()
     MAILER_PORT: number;
 
     @IsUndefinable()
