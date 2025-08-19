@@ -74,6 +74,14 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         );
     }
 
+    const toolbarSlotProps: ToolbarProps = {
+        toolbarAction: (
+            <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
+                <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
+            </Button>
+        ),
+    };
+
     return (
         <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })} disablePadding>
             <DataGrid
@@ -86,13 +94,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     toolbar: ContentScopeGridToolbar,
                 }}
                 slotProps={{
-                    toolbar: {
-                        toolbarAction: (
-                            <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
-                                <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
-                            </Button>
-                        ),
-                    } as ToolbarProps,
+                    toolbar: toolbarSlotProps,
                 }}
             />
             <SaveBoundary
