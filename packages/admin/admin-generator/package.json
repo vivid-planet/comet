@@ -19,17 +19,18 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
+        "admin-generator": "./bin/admin-generator.js generate",
+        "build": "$npm_execpath run clean && run-s generate-block-types gql:types && tsc -p tsconfig.build.json",
         "build-storybook": "storybook build",
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
+        "generate-block-types": "comet generate-block-types --inputs",
         "gql:types": "graphql-codegen",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint": "run-s generate-block-types gql:types admin-generator && run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "storybook": "storybook dev -p 6006",
-        "storybook:admin-generator": "./bin/admin-generator.js generate",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests",
         "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules jest --updateSnapshot",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
@@ -40,7 +41,7 @@
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
         "glob": "^10.4.5",
-        "graphql": "^16.11.0",
+        "graphql": "^15.10.1",
         "object-path": "^0.11.8",
         "pluralize": "^8.0.0",
         "ts-node": "^10.9.2"

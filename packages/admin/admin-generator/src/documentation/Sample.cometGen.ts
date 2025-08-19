@@ -1,8 +1,8 @@
-import { type GridConfig } from "../commands/generate/generate-command";
+import { defineConfig } from "../commands/generate/generate-command";
 import { type GQLSample } from "../graphql.generated";
 
-export const SampleGrid: GridConfig<GQLSample> = {
+export default defineConfig<GQLSample>({
     type: "grid",
     gqlType: "Sample",
     columns: [{ type: "text", name: "sample" }],
-};
+});

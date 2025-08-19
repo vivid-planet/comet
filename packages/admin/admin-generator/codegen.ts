@@ -9,6 +9,7 @@ const rootBlocks = Object.keys(schema.getTypeMap()).filter((type) => type.endsWi
 
 const config: CodegenConfig = {
     schema: "schema.gql",
+    ignoreNoDocuments: true,
     generates: {
         "./schema.json": {
             plugins: ["introspection"],
