@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Button, DataGridToolbar, FieldSet, FillSpace, type GridColDef, TableDeleteButton } from "@comet/admin";
-import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
+import { Add, Delete, EditRecord, Info, Reject } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
@@ -140,7 +140,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                     }}
                     color="primary"
                 >
-                    <Edit />
+                    <EditRecord />
                 </IconButton>
             ),
         },
