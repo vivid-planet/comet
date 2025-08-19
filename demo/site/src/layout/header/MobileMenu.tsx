@@ -1,6 +1,5 @@
 "use client";
 import { useEscapeKeyPressed } from "@comet/site-nextjs";
-import { Typography } from "@src/common/components/Typography";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { PageLink } from "@src/layout/header/PageLink";
 import { PageLayout } from "@src/layout/PageLayout";
@@ -95,7 +94,7 @@ export const MobileMenu = ({ header }: Props) => {
                                                         aria-expanded={expandedSubLevelNavigation === node.id}
                                                         onClick={() => handleSubLevelNavigationButtonClick(node.id)}
                                                     >
-                                                        <Typography>{node.node.name}</Typography>
+                                                        {node.node.name}
                                                         <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} color="inherit" />
                                                     </ButtonLink>
                                                 ) : (
