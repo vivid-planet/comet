@@ -1,9 +1,5 @@
-import "@storybook/react";
+import "@storybook/react-vite";
 
-import { type MswParameters } from "msw-storybook-addon";
-
-import { type AdminGeneratorConfigParameters } from "../.storybook/addons/adminGeneratorConfigPanel/types";
-
-declare module "@storybook/react" {
+declare module "@storybook/react-vite" {
     interface Parameters extends MswParameters, AdminGeneratorConfigParameters {}
 }
