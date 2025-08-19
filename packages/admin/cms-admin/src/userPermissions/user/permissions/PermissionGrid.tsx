@@ -21,19 +21,19 @@ interface ToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
 }
 
+function PermissionGridToolbar({ toolbarAction }: ToolbarProps) {
+    return (
+        <DataGridToolbar>
+            <FillSpace />
+            {toolbarAction}
+        </DataGridToolbar>
+    );
+}
+
 export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [permissionId, setPermissionId] = useState<string | "add" | null>(null);
     const [overrideContentScopesId, setOverrideContentScopesId] = useState<string | null>(null);
-
-    function PermissionGridToolbar({ toolbarAction }: ToolbarProps) {
-        return (
-            <DataGridToolbar>
-                <FillSpace />
-                {toolbarAction}
-            </DataGridToolbar>
-        );
-    }
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
