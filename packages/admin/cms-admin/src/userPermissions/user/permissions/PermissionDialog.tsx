@@ -139,7 +139,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 }
                                 disableTypography
                             >
-                                <Divider sx={{ marginBottom: 5 }} />
+                                <Divider sx={{ marginBottom: 4 }} />
                                 <Field
                                     required
                                     fullWidth
@@ -180,7 +180,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 }
                                 disableTypography
                             >
-                                <Divider sx={{ marginBottom: 5 }} />
+                                <Divider sx={{ marginBottom: 4 }} />
                                 <Field
                                     name="validFrom"
                                     label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
@@ -210,7 +210,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 }
                                 disableTypography
                             >
-                                <Divider sx={{ marginBottom: 5 }} />
+                                <Divider sx={{ marginBottom: 4 }} />
                                 <Field
                                     fullWidth
                                     name="reason"
