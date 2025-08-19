@@ -31,7 +31,7 @@ export function morphTsProperty(name: string, metadata: EntityMetadata<any>) {
     throw new Error(`Property ${name} not found in ${metadata.className}`);
 }
 
-function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
+export function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     for (const tsImport of tsSource.getImportDeclarations()) {
         for (const namedImport of tsImport.getNamedImports()) {
