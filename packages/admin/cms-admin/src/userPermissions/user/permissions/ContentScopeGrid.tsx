@@ -125,7 +125,6 @@ export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
 ): GridColDef[] {
     const uniquePropertyNames = Array.from(new Set(availableContentScopes.flatMap((item) => Object.keys(item.scope))));
-
     return uniquePropertyNames.map((propertyName, index) => {
         return {
             field: propertyName,
