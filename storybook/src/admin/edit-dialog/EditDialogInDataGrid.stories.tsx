@@ -47,8 +47,8 @@ export const EditDialogInDataGrid = {
                         { field: "id", headerName: "ID", width: 90 },
                         { field: "name", headerName: "Name", flex: 1 },
                     ]}
-                    rows={[]}
-                    rowCount={0}
+                    rows={Array.from({ length: 200 }, (row, index) => ({ id: String(index + 1), name: `Product ${index + 1}` }))}
+                    rowCount={200}
                     sortingMode="server"
                     sortModel={dataGridProps.sortModel}
                     onSortModelChange={dataGridProps.onSortModelChange}
