@@ -1,6 +1,7 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
+import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, CircularProgress, InputBase, Typography } from "@mui/material";
 import { type FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
@@ -32,12 +33,18 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     clearable,
     popupIcon = <ChevronDown />,
+    noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
     return (
         <Autocomplete
             popupIcon={popupIcon}
             disableClearable
+            noOptionsText={
+                <Typography variant="body2" component="span">
+                    {noOptionsText}
+                </Typography>
+            }
             isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
                 return option === value;
