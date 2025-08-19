@@ -5,6 +5,8 @@ import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { http, HttpResponse } from "msw";
 
+import { fileUploadsHandler } from "./handler/fileUploads";
+
 type StringFilter = {
     contains: string;
     equal: string;
@@ -274,4 +276,4 @@ const graphqlHandler = new GraphQLHandler({
     },
 });
 
-export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), launchesPastRest];
+export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), fileUploadsHandler, launchesPastRest];
