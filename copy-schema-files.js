@@ -6,6 +6,7 @@ const fs = require("fs");
         fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/admin/cms-admin/block-meta.json"),
         fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/site/site-nextjs/block-meta.json"),
         fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/site/site-react/block-meta.json"),
+        fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/admin/admin-generator/block-meta.json"),
 
         fs.promises.copyFile("demo/api/block-meta.json", "demo/admin/block-meta.json"),
         fs.promises.copyFile("demo/api/block-meta.json", "demo/site/block-meta.json"),
