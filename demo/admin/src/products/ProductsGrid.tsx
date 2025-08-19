@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
@@ -34,7 +34,6 @@ import {
     type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
-import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
