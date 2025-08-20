@@ -1,5 +1,14 @@
-import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, InputBase, Typography } from "@mui/material";
+import { ChevronDown, Error } from "@comet/admin-icons";
+import {
+    Autocomplete,
+    type AutocompleteProps,
+    type AutocompleteRenderInputParams,
+    CircularProgress,
+    InputAdornment,
+    InputBase,
+    Typography,
+} from "@mui/material";
+import type { ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -14,6 +23,7 @@ export type FinalFormAutocompleteProps<
 > = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
         clearable?: boolean;
+        errorText?: ReactNode;
     };
 
 type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
@@ -31,11 +41,13 @@ export const FinalFormAutocomplete = <
 >({
     input: { onChange, value, multiple, ...restInput },
     loading = false,
+    loadingError,
     isAsync = false,
     clearable,
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
+    errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     return (
@@ -43,9 +55,15 @@ export const FinalFormAutocomplete = <
             popupIcon={popupIcon}
             disableClearable
             noOptionsText={
-                <Typography variant="body2" component="span">
-                    {noOptionsText}
-                </Typography>
+                loadingError ? (
+                    <Typography variant="body2" component="span">
+                        {errorText}
+                    </Typography>
+                ) : (
+                    <Typography variant="body2" component="span">
+                        {noOptionsText}
+                    </Typography>
+                )
             }
             loading={loading}
             loadingText={
@@ -69,10 +87,12 @@ export const FinalFormAutocomplete = <
                     {...params}
                     {...params.InputProps}
                     endAdornment={
-                        <>
+                        <InputAdornment position="end">
+                            {loading && <CircularProgress color="inherit" size={16} />}
                             {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {loadingError && <Error color="error" />}
                             {params.InputProps.endAdornment}
-                        </>
+                        </InputAdornment>
                     }
                 />
             )}
