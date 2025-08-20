@@ -44,7 +44,6 @@ export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
                 compareMethod={compareMethod}
                 extraLinesSurroundingDiff={extraLinesSurroundingDiff}
                 hideLineNumbers
-                key={`diff-viewer${restProps.showDiffOnly}`}
                 {...restProps}
                 styles={createStyles(theme)}
             />
