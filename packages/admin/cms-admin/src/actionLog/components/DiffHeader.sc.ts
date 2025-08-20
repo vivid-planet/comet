@@ -19,18 +19,18 @@ export const Root = createComponentSlot(Box)<DiffHeaderClassKey>({
 export const Version = createComponentSlot(Typography)<DiffHeaderClassKey>({
     componentName: "DiffHeader",
     slotName: "version",
-})(() => css``);
+})();
 export const UserName = createComponentSlot(Typography)<DiffHeaderClassKey>({
     componentName: "DiffHeader",
     slotName: "userName",
-})(() => css``);
+})();
 
 export const Date = createComponentSlot(Typography)<DiffHeaderClassKey>({
     componentName: "DiffHeader",
     slotName: "date",
-})(() => css``);
+})();
 
 export const Info = createComponentSlot(Typography)<DiffHeaderClassKey>({
     componentName: "DiffHeader",
     slotName: "info",
-})(() => css``);
+})();
