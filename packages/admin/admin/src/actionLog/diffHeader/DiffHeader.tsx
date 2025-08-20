@@ -34,7 +34,7 @@ export const DiffHeader = (inProps: DiffHeaderProps) => {
 
             <InfoTypography {...slotProps?.infoTypography} color="textSecondary" variant="caption">
                 <FormattedMessage
-                    defaultMessage="{user} am {date}"
+                    defaultMessage="{user} on {date}"
                     id="actionLog.actionLogCompare.diffHeader.userNameAndTime"
                     values={{
                         date: (
