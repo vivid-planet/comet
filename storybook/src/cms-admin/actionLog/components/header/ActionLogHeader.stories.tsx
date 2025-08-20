@@ -1,4 +1,4 @@
-import { ActionLogHeader } from "@comet/admin";
+import { ActionLogHeader } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { FormattedMessage } from "react-intl";

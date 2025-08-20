@@ -1,7 +1,6 @@
-import { css } from "@emotion/react";
-import { Box, Typography } from "@mui/material";
+import { createComponentSlot } from "@comet/admin";
+import { Box, css, Typography } from "@mui/material";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ActionLogHeaderClassKey } from "./ActionLogHeader";
 
 export const Root = createComponentSlot(Box)<ActionLogHeaderClassKey>({
