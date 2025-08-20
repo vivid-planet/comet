@@ -51,7 +51,7 @@ describe("generateGrid", () => {
             }
 
             type Mutation {
-                createBook(input: BookInput!): Book!
+                createBook(author: ID!, input: BookInput!): Book!
                 updateBook(id: ID!, input: BookInput!): Book!
                 deleteBook(id: ID!): Boolean!
             }
