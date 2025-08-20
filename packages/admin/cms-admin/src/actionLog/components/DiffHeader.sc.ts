@@ -1,7 +1,6 @@
-import { css } from "@emotion/react";
-import { Box, Typography } from "@mui/material";
+import { createComponentSlot } from "@comet/admin";
+import { Box, css, Typography } from "@mui/material";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type DiffHeaderClassKey } from "./DiffHeader";
 
 export const Root = createComponentSlot(Box)<DiffHeaderClassKey>({

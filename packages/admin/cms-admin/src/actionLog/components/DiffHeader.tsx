@@ -1,8 +1,8 @@
+import { type ThemedComponentBaseProps } from "@comet/admin";
 import { type Box, type ComponentsOverrides, type Theme, type Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Date, Info, Root, UserName, Version } from "./DiffHeader.sc";
 
 export type DiffHeaderClassKey = "root" | "version" | "userName" | "date" | "info";
