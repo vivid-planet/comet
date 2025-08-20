@@ -3,7 +3,7 @@ import { type IntrospectionField, type IntrospectionInputValue } from "graphql";
 import { type Imports } from "../utils/generateImportsCode";
 import { type Prop } from "./generateGrid";
 
-type GqlArg = { type: string; name: string; queryOrMutationName: string };
+export type GqlArg = { type: string; name: string; queryOrMutationName: string };
 
 export function getForwardedGqlArgs(gqlFields: IntrospectionField[]): {
     imports: Imports;

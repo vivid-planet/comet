@@ -20,6 +20,13 @@ describe("generateGrid", () => {
                     sort: [BookSort!]
                     filter: BookFilter
                 ): PaginatedBooks!
+                booksByAuthor(
+                    authorId: ID!
+                    offset: Int!
+                    limit: Int!
+                    sort: [BookSort!]
+                    filter: BookFilter
+                ): PaginatedBooks!
             } 
 
             type PaginatedBooks {
@@ -74,6 +81,33 @@ describe("generateGrid", () => {
         const config: GridConfig<Book> = {
             type: "grid",
             gqlType: "Book",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
+
+    it("should generate required root gql args in export-query variables", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "booksByAuthor",
+            excelExport: true,
             columns: [
                 {
                     type: "text",
