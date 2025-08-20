@@ -255,7 +255,6 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
-    const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
@@ -292,11 +291,7 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    const {
-        imports: forwardedGqlArgsImports,
-        props: forwardedGqlArgsProps,
-        gqlArgs,
-    } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
+    const { imports: forwardedGqlArgsImports, props: forwardedGqlArgsProps, gqlArgs } = getForwardedGqlArgs([gridQueryType]);
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
