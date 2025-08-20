@@ -55,7 +55,6 @@ const deleteProductVariantMutation = gql`
                 }
             `;
 interface ProductVariantsGridToolbarToolbarProps extends GridToolbarProps {
-    false;
     exportApi: ExportApi;
 }
 function ProductVariantsGridToolbar({ exportApi }: ProductVariantsGridToolbarToolbarProps) {
