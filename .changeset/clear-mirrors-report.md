@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add `FullPageAlert` Component
+Add `FullPageAlert` component
