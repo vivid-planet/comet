@@ -41,8 +41,10 @@ export const HeadingBlock = withPreview(
         return (
             <>
                 {hasRichTextBlockContent(eyebrow) && (
-                    <Typography variant="h400" as="h5" bottomSpacing>
-                        <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
+                    <Typography variant="h400" as="p" bottomSpacing>
+                        <strong>
+                            <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
+                        </strong>
                     </Typography>
                 )}
                 <PreviewSkeleton
