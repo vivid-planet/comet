@@ -4,7 +4,7 @@ import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued/
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 
-export type DiffViewerClassKey = "root";
+export type DiffViewerClassKey = "root" | "codeFoldMessageContainer";
 
 export const Root = createComponentSlot(Box)<DiffViewerClassKey>({
     componentName: "DiffViewer",
@@ -33,16 +33,30 @@ export const Root = createComponentSlot(Box)<DiffViewerClassKey>({
     `,
 );
 
+export const CodeFoldMessageContainer = createComponentSlot(Box)<DiffViewerClassKey>({
+    componentName: "DiffViewer",
+    slotName: "codeFoldMessageContainer",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+    `,
+);
+
 export const createStyles = (theme: Theme): ReactDiffViewerStylesOverride => {
     return {
         codeFoldExpandButton: {
             fontSize: "14px",
             fontWeight: 600,
             textDecoration: "underline",
+            color: theme.palette.grey["900"],
+            marginTop: theme.spacing(1),
+            marginBottom: theme.spacing(1),
         },
         diffAdded: {
             "& pre": {
-                backgroundColor: "#bdf1d7",
+                backgroundColor: `${theme.palette.success.main}80`, // 50% opacity
                 borderRadius: "4px",
                 color: "white",
                 fontSize: "12px",
@@ -55,7 +69,7 @@ export const createStyles = (theme: Theme): ReactDiffViewerStylesOverride => {
         },
         diffContainer: {
             "& *": {
-                fontFamily: "Roboto Flex Variable,Helvetica,Arial,sans-serif",
+                fontFamily: theme.typography.fontFamily,
             },
             "& td": {
                 paddingBottom: "10px",
@@ -87,20 +101,17 @@ export const createStyles = (theme: Theme): ReactDiffViewerStylesOverride => {
         },
         variables: {
             light: {
-                addedBackground: "#e7faf1",
-                addedGutterBackground: "#e7faf1",
+                addedBackground: `${theme.palette.success.main}1A`, // 10% opacity
                 codeFoldBackground: theme.palette.grey["50"],
-                codeFoldContentColor: "black",
                 diffViewerTitleBackground: theme.palette.grey.A200,
-                emptyLineBackground: "white",
-                removedBackground: "#fce5e5",
-                removedGutterBackground: "#fce5e5",
-                wordAddedBackground: "#bdf1d7",
-                wordRemovedBackground: "#f8b7b7",
+                removedBackground: `${theme.palette.error.main}1A`, // 10% opacity
+                wordAddedBackground: `${theme.palette.success.main}33`, // 20% opacity
+                wordRemovedBackground: `${theme.palette.error.main}33`, // 20% opacity
             },
         },
         wordDiff: {
             fontWeight: 600,
+            color: theme.palette.grey["900"],
         },
         wordRemoved: {
             textDecoration: "line-through",

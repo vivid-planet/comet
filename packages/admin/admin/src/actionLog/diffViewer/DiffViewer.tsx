@@ -1,3 +1,4 @@
+import { ChevronDown } from "@comet/admin-icons";
 import { type ComponentsOverrides, type Theme, useTheme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { type FunctionComponent } from "react";
@@ -5,10 +6,11 @@ import ReactDiffViewer, { DiffMethod, type ReactDiffViewerProps } from "react-di
 import { FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { createStyles, type DiffViewerClassKey, Root } from "./DiffViewer.sc";
+import { CodeFoldMessageContainer, createStyles, type DiffViewerClassKey, Root } from "./DiffViewer.sc";
 
 export type DiffViewerProps = ThemedComponentBaseProps<{
     root: "div";
+    codeFoldMessageContainer: "div";
 }> &
     ReactDiffViewerProps;
 
@@ -17,15 +19,7 @@ export { DiffViewerClassKey };
 export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
     const {
         slotProps,
-        codeFoldMessageRenderer = (totalFoldedLines: number) => {
-            return (
-                <FormattedMessage
-                    defaultMessage="Expand {foldedLines} {foldedLines, plural, =0 {lines} one {line} other {lines}}"
-                    id="comet.diffViewer.codeFoldMessage"
-                    values={{ foldedLines: totalFoldedLines }}
-                />
-            );
-        },
+        codeFoldMessageRenderer,
         compareMethod = DiffMethod.WORDS_WITH_SPACE,
         extraLinesSurroundingDiff = 0,
         sx,
@@ -38,9 +32,24 @@ export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
     const theme = useTheme();
 
     return (
-        <Root {...slotProps?.root} sx={sx} className={className}>
+        <Root sx={sx} className={className} {...slotProps?.root}>
             <ReactDiffViewer
-                codeFoldMessageRenderer={codeFoldMessageRenderer}
+                codeFoldMessageRenderer={
+                    codeFoldMessageRenderer
+                        ? codeFoldMessageRenderer
+                        : (totalFoldedLines) => {
+                              return (
+                                  <CodeFoldMessageContainer {...slotProps?.codeFoldMessageContainer}>
+                                      <ChevronDown />
+                                      <FormattedMessage
+                                          defaultMessage="Expand {foldedLines} {foldedLines, plural, =0 {lines} one {line} other {lines}}"
+                                          id="comet.diffViewer.codeFoldMessage"
+                                          values={{ foldedLines: totalFoldedLines }}
+                                      />
+                                  </CodeFoldMessageContainer>
+                              );
+                          }
+                }
                 compareMethod={compareMethod}
                 extraLinesSurroundingDiff={extraLinesSurroundingDiff}
                 hideLineNumbers
