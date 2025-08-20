@@ -2,8 +2,7 @@ import { Box, css, type Theme } from "@mui/material";
 import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued/lib/cjs/src/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-
-export type DiffViewerClassKey = "root" | "codeFoldMessageContainer";
+import { type DiffViewerClassKey } from "./DiffViewer";
 
 export const Root = createComponentSlot(Box)<DiffViewerClassKey>({
     componentName: "DiffViewer",

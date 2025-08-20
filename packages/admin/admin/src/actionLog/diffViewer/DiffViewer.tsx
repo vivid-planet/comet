@@ -6,7 +6,7 @@ import ReactDiffViewer, { DiffMethod, type ReactDiffViewerProps } from "react-di
 import { FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { CodeFoldMessageContainer, createStyles, type DiffViewerClassKey, Root } from "./DiffViewer.sc";
+import { CodeFoldMessageContainer, createStyles, Root } from "./DiffViewer.sc";
 
 export type DiffViewerProps = ThemedComponentBaseProps<{
     root: "div";
@@ -14,7 +14,7 @@ export type DiffViewerProps = ThemedComponentBaseProps<{
 }> &
     ReactDiffViewerProps;
 
-export { DiffViewerClassKey };
+export type DiffViewerClassKey = "root" | "codeFoldMessageContainer";
 
 export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
     const {
