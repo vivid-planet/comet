@@ -1,15 +1,26 @@
 import { type ThemedComponentBaseProps } from "@comet/admin";
-import { Box, type ComponentsOverrides, type Theme, type Typography, useThemeProps } from "@mui/material";
+import { type Box, type ComponentsOverrides, type Theme, type Typography, useThemeProps } from "@mui/material";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { DbTypeLabel, DbTypeValue, InfoContainer, Root, TitleContainer, TitleTypography, UuidLabel, UuidValue } from "./ActionLogHeader.sc";
+import {
+    DbTypeLabel,
+    DbTypeValue,
+    InfoContainer,
+    InfoContent,
+    Root,
+    TitleContainer,
+    TitleTypography,
+    UuidLabel,
+    UuidValue,
+} from "./ActionLogHeader.sc";
 
 export type ActionLogHeaderClassKey =
     | "root"
     | "titleContainer"
     | "infoContainer"
     | "title"
+    | "infoContent"
     | "uuidLabel"
     | "uuidValue"
     | "dbTypeLabel"
@@ -21,6 +32,7 @@ export interface ActionLogHeaderProps
         titleContainer: typeof Box;
         infoContainer: typeof Box;
         title: typeof Typography;
+        infoContent: typeof Box;
         uuidLabel: typeof Typography;
         uuidValue: typeof Typography;
         dbTypeLabel: typeof Typography;
@@ -54,7 +66,7 @@ export const ActionLogHeader = (inProps: ActionLogHeaderProps) => {
             </TitleContainer>
 
             <InfoContainer {...slotProps?.infoContainer}>
-                <Box display="flex" gap={2}>
+                <InfoContent {...slotProps?.infoContent}>
                     <UuidLabel variant="overline" {...slotProps?.uuidLabel}>
                         <FormattedMessage
                             defaultMessage="UUID: {uuid}"
@@ -84,7 +96,7 @@ export const ActionLogHeader = (inProps: ActionLogHeaderProps) => {
                             />
                         </DbTypeLabel>
                     )}
-                </Box>
+                </InfoContent>
 
                 {action}
             </InfoContainer>

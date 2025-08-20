@@ -34,6 +34,16 @@ export const TitleTypography = createComponentSlot(Typography)<ActionLogHeaderCl
     slotName: "title",
 })(() => css``) as typeof Typography;
 
+export const InfoContent = createComponentSlot(Box)<ActionLogHeaderClassKey>({
+    componentName: "ActionLogHeader",
+    slotName: "infoContent",
+})(
+    ({ theme }) => css`
+        gap: ${theme.spacing(2)};
+        display: flex;
+    `,
+);
+
 export const UuidLabel = createComponentSlot(Typography)<ActionLogHeaderClassKey>({
     componentName: "ActionLogHeader",
     slotName: "uuidLabel",
