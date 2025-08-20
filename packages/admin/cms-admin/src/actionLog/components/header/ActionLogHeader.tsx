@@ -1,8 +1,8 @@
+import { type ThemedComponentBaseProps } from "@comet/admin";
 import { Box, type ComponentsOverrides, type Theme, type Typography, useThemeProps } from "@mui/material";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { DbTypeLabel, DbTypeValue, InfoContainer, Root, TitleContainer, TitleTypography, UuidLabel, UuidValue } from "./ActionLogHeader.sc";
 
 export type ActionLogHeaderClassKey =
