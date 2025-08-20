@@ -20,7 +20,7 @@ export const DiffViewer: FunctionComponent<DiffViewerProps> = (inProps) => {
         codeFoldMessageRenderer = (totalFoldedLines: number) => {
             return (
                 <FormattedMessage
-                    defaultMessage="{foldedLines} {foldedLines, plural, =0 {Zeilen} one {Zeile} other {Zeilen}} aufklappen"
+                    defaultMessage="Expand {foldedLines} {foldedLines, plural, =0 {lines} one {line} other {lines}}"
                     id="comet.diffViewer.codeFoldMessage"
                     values={{ foldedLines: totalFoldedLines }}
                 />
