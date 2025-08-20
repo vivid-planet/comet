@@ -46,22 +46,22 @@ export const ActionLogHeader = (inProps: ActionLogHeaderProps) => {
     });
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
+        <Root {...restProps} {...slotProps?.root}>
             <TitleContainer {...slotProps?.titleContainer}>
-                <TitleTypography {...slotProps?.title} variant="h3">
+                <TitleTypography variant="h3" {...slotProps?.title}>
                     {title}
                 </TitleTypography>
             </TitleContainer>
 
             <InfoContainer {...slotProps?.infoContainer}>
                 <Box display="flex" gap={2}>
-                    <UuidLabel {...slotProps?.uuidLabel} variant="overline">
+                    <UuidLabel variant="overline" {...slotProps?.uuidLabel}>
                         <FormattedMessage
                             defaultMessage="UUID: {uuid}"
                             id="actionLog.actionLogGrid.uuid"
                             values={{
                                 uuid: (
-                                    <UuidValue {...slotProps?.uuidValue} component="span" variant="caption">
+                                    <UuidValue component="span" variant="caption" {...slotProps?.uuidValue}>
                                         {id}
                                     </UuidValue>
                                 ),
@@ -70,13 +70,13 @@ export const ActionLogHeader = (inProps: ActionLogHeaderProps) => {
                     </UuidLabel>
 
                     {dbTypes.length > 0 && (
-                        <DbTypeLabel {...slotProps?.dbTypeLabel} variant="overline">
+                        <DbTypeLabel variant="overline" {...slotProps?.dbTypeLabel}>
                             <FormattedMessage
                                 defaultMessage="DB-Type: {uuid}"
                                 id="actionLog.actionLogGrid.entity"
                                 values={{
                                     uuid: (
-                                        <DbTypeValue {...slotProps?.dbTypeValue} component="span" variant="caption">
+                                        <DbTypeValue component="span" variant="caption" {...slotProps?.dbTypeValue}>
                                             {dbTypes.join(", ")}
                                         </DbTypeValue>
                                     ),
