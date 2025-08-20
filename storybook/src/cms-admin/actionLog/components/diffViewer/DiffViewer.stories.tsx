@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 type Story = StoryObj<typeof DiffViewer>;
 const meta: Meta<typeof DiffViewer> = {
     component: DiffViewer,
-    title: "@comet/admin/Action log/Components/Diff viewer/Diff viewer",
+    title: "@comet/cms-admin/Action log/Components/Diff viewer/Diff viewer",
 };
 export default meta;
 
