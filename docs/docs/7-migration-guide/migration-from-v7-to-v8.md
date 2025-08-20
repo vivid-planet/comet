@@ -1324,6 +1324,13 @@ If you're unsure about how to structure the AuthModule, look at the [COMET Start
 
 ### Use strings for date-only columns
 
+:::warning
+This change only applies to **date-only** columns, meaning columns where we only want to save the date **without a time**.
+
+It does not apply to timestamps, where we save the date and time (e.g., `createdAt` or `updatedAt`).
+For these cases, you don't have to change anything.
+:::
+
 Starting with v6 MikroORM maps date-only columns to `string` instead of `Date`.
 Perform the following changes:
 
