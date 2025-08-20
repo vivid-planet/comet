@@ -3,17 +3,17 @@ import { useThemeProps } from "@mui/material/styles";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { DateTypography, InfoTypography, Root, UserNameTypography, VersionTypography } from "./DiffHeader.sc";
+import { Date, Info, Root, UserName, Version } from "./DiffHeader.sc";
 
-export type DiffHeaderClassKey = "root" | "versionTypography" | "userNameTypography" | "dateTypography" | "infoTypography";
+export type DiffHeaderClassKey = "root" | "version" | "userName" | "date" | "info";
 
 export interface DiffHeaderProps
     extends ThemedComponentBaseProps<{
         root: typeof Box;
-        versionTypography: typeof Typography;
-        userNameTypography: typeof Typography;
-        dateTypography: typeof Typography;
-        infoTypography: typeof Typography;
+        version: typeof Typography;
+        userName: typeof Typography;
+        date: typeof Typography;
+        info: typeof Typography;
     }> {
     createdAt?: string;
     userId?: string;
@@ -28,28 +28,28 @@ export const DiffHeader = (inProps: DiffHeaderProps) => {
 
     return (
         <Root {...restProps} {...slotProps?.root}>
-            <VersionTypography color="white" variant="subtitle1" {...slotProps?.versionTypography}>
+            <Version color="white" variant="subtitle1" {...slotProps?.version}>
                 <FormattedMessage defaultMessage="Version {version}" id="actionLog.actionLogCompare.diffHeader.version" values={{ version }} />
-            </VersionTypography>
+            </Version>
 
-            <InfoTypography color="textSecondary" variant="caption" {...slotProps?.infoTypography}>
+            <Info color="textSecondary" variant="caption" {...slotProps?.info}>
                 <FormattedMessage
                     defaultMessage="{user} on {date}"
                     id="actionLog.actionLogCompare.diffHeader.userNameAndTime"
                     values={{
                         date: (
-                            <DateTypography color="textSecondary" variant="overline" {...slotProps?.dateTypography}>
+                            <Date color="textSecondary" variant="overline" {...slotProps?.date}>
                                 <FormattedDate dateStyle="short" timeStyle="short" value={createdAt} />
-                            </DateTypography>
+                            </Date>
                         ),
                         user: (
-                            <UserNameTypography color="textSecondary" variant="overline" {...slotProps?.userNameTypography}>
+                            <UserName color="textSecondary" variant="overline" {...slotProps?.userName}>
                                 {userId}
-                            </UserNameTypography>
+                            </UserName>
                         ),
                     }}
                 />
-            </InfoTypography>
+            </Info>
         </Root>
     );
 };
