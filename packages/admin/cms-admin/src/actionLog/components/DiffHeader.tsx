@@ -3,15 +3,15 @@ import { type Box, type ComponentsOverrides, type Theme, type Typography } from 
 import { useThemeProps } from "@mui/material/styles";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
-import { Date, Info, Root, UserName, Version } from "./DiffHeader.sc";
+import { Date, Info, Root, UserId, Version } from "./DiffHeader.sc";
 
-export type DiffHeaderClassKey = "root" | "version" | "userName" | "date" | "info";
+export type DiffHeaderClassKey = "root" | "version" | "userId" | "date" | "info";
 
 export interface DiffHeaderProps
     extends ThemedComponentBaseProps<{
         root: typeof Box;
         version: typeof Typography;
-        userName: typeof Typography;
+        userId: typeof Typography;
         date: typeof Typography;
         info: typeof Typography;
     }> {
@@ -34,18 +34,18 @@ export const DiffHeader = (inProps: DiffHeaderProps) => {
 
             <Info color="textSecondary" variant="caption" {...slotProps?.info}>
                 <FormattedMessage
-                    defaultMessage="{user} on {date}"
-                    id="actionLog.actionLogCompare.diffHeader.userNameAndTime"
+                    defaultMessage="{userId} on {date}"
+                    id="actionLog.actionLogCompare.diffHeader.userIdAndTime"
                     values={{
                         date: (
                             <Date color="textSecondary" variant="overline" {...slotProps?.date}>
                                 <FormattedDate dateStyle="short" timeStyle="short" value={createdAt} />
                             </Date>
                         ),
-                        user: (
-                            <UserName color="textSecondary" variant="overline" {...slotProps?.userName}>
+                        userId: (
+                            <UserId color="textSecondary" variant="overline" {...slotProps?.userId}>
                                 {userId}
-                            </UserName>
+                            </UserId>
                         ),
                     }}
                 />

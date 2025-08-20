@@ -20,9 +20,9 @@ export const Version = createComponentSlot(Typography)<DiffHeaderClassKey>({
     componentName: "DiffHeader",
     slotName: "version",
 })();
-export const UserName = createComponentSlot(Typography)<DiffHeaderClassKey>({
+export const UserId = createComponentSlot(Typography)<DiffHeaderClassKey>({
     componentName: "DiffHeader",
-    slotName: "userName",
+    slotName: "userId",
 })();
 
 export const Date = createComponentSlot(Typography)<DiffHeaderClassKey>({
