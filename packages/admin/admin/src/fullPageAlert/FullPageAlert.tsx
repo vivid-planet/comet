@@ -5,10 +5,27 @@ import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { InlineAlert, type InlineAlertSeverity } from "../inlineAlert/InlineAlert";
-import { ActionContainer, ContentContainer, DetailDescription, DividerStyled, LogoContainer, Root, Title } from "./FullPageAlert.styles";
+import { type InlineAlert, type InlineAlertSeverity } from "../inlineAlert/InlineAlert";
+import {
+    ActionContainer,
+    ContentContainer,
+    DetailDescription,
+    DividerStyled,
+    InlineAlertStyled,
+    LogoContainer,
+    Root,
+    Title,
+} from "./FullPageAlert.styles";
 
-export type FullPageAlertClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer" | "actionContainer";
+export type FullPageAlertClassKey =
+    | "root"
+    | "title"
+    | "detailDescription"
+    | "contentContainer"
+    | "divider"
+    | "logoContainer"
+    | "actionContainer"
+    | "inlineAlert";
 
 type FullPageAlertSeverity = InlineAlertSeverity;
 
@@ -18,6 +35,7 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
     iconContainer: "div";
     divider: typeof Divider;
     title: typeof Typography;
+    inlineAlert: typeof InlineAlert;
     detailDescription: typeof Typography;
     logoContainer: "div";
     actionContainer: "div";
@@ -97,7 +115,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             <ContentContainer {...slotProps.contentContainer}>
-                <InlineAlert
+                <InlineAlertStyled
                     title={
                         <Title variant="h3" {...slotProps.title}>
                             {title}
@@ -109,6 +127,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
                     iconMapping={iconMapping}
                     icon={icon}
                     severity={severity}
+                    {...slotProps.inlineAlert}
                 />
 
                 {detailDescription && (

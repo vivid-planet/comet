@@ -1,6 +1,7 @@
 import { Card, css, Divider, Typography } from "@mui/material";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
+import { InlineAlert } from "../inlineAlert/InlineAlert";
 import { type FullPageAlertClassKey } from "./FullPageAlert";
 
 export const Root = createComponentSlot("div")<FullPageAlertClassKey>({
@@ -37,7 +38,7 @@ export const Title = createComponentSlot(Typography)<FullPageAlertClassKey>({
 
 export const DetailDescription = createComponentSlot(Typography)<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
-    slotName: "info",
+    slotName: "detailDescription",
 })(css``);
 
 export const DividerStyled = createComponentSlot(Divider)<FullPageAlertClassKey>({
@@ -68,3 +69,8 @@ export const ActionContainer = createComponentSlot("div")<FullPageAlertClassKey>
     width: 100%;
     display: flex;
 `);
+
+export const InlineAlertStyled = createComponentSlot(InlineAlert)<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
+    slotName: "inlineAlert",
+})(css``);
