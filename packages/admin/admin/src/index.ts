@@ -105,6 +105,7 @@ export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/error
 export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
+export { ErrorPage, ErrorPageClassKey, ErrorPageProps } from "./error/errorPage/ErrorPage";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
