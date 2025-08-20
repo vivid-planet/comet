@@ -32,7 +32,7 @@ export const InfoContainer = createComponentSlot(Box)<ActionLogHeaderClassKey>({
 
 export const TitleTypography = createComponentSlot(Typography)<ActionLogHeaderClassKey>({
     componentName: "ActionLogHeader",
-    slotName: "titleTypography",
+    slotName: "title",
 })(() => css``) as typeof Typography;
 
 export const UuidLabel = createComponentSlot(Typography)<ActionLogHeaderClassKey>({
