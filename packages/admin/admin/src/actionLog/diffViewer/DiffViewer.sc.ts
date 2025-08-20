@@ -1,5 +1,4 @@
-import { css } from "@emotion/react";
-import { Box, type Theme } from "@mui/material";
+import { Box, css, type Theme } from "@mui/material";
 import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued/lib/cjs/src/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
