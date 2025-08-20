@@ -1,7 +1,7 @@
+import { createComponentSlot } from "@comet/admin";
 import { Box, css, type Theme } from "@mui/material";
-import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued/lib/cjs/src/styles";
+import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type DiffViewerClassKey } from "./DiffViewer";
 
 export const Root = createComponentSlot(Box)<DiffViewerClassKey>({

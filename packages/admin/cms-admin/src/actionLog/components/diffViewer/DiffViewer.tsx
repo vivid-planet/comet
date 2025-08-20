@@ -1,3 +1,4 @@
+import { type ThemedComponentBaseProps } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import { type ComponentsOverrides, type Theme, useTheme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
@@ -5,7 +6,6 @@ import { type FunctionComponent } from "react";
 import ReactDiffViewer, { DiffMethod, type ReactDiffViewerProps } from "react-diff-viewer-continued";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { CodeFoldMessageContainer, createStyles, Root } from "./DiffViewer.sc";
 
 export type DiffViewerProps = ThemedComponentBaseProps<{

@@ -883,9 +883,6 @@ importers:
       query-string:
         specifier: ^7.1.3
         version: 7.1.3
-      react-diff-viewer-continued:
-        specifier: ^4.0.6
-        version: 4.0.6(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dropzone:
         specifier: ^14.3.8
         version: 14.3.8(react@18.3.1)
@@ -1525,6 +1522,9 @@ importers:
       react-cool-dimensions:
         specifier: ^2.0.7
         version: 2.0.7(react@18.3.1)
+      react-diff-viewer-continued:
+        specifier: ^4.0.6
+        version: 4.0.6(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dropzone:
         specifier: ^14.3.8
         version: 14.3.8(react@18.3.1)

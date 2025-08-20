@@ -1,4 +1,4 @@
-import { DiffViewer } from "@comet/admin";
+import { DiffViewer } from "@comet/cms-admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 type Story = StoryObj<typeof DiffViewer>;
