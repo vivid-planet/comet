@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 type Story = StoryObj<typeof ActionLogHeader>;
 const meta: Meta<typeof ActionLogHeader> = {
     component: ActionLogHeader,
-    title: "@comet/admin/Action log/Components/Header/Action log header",
+    title: "@comet/cms-admin/Action log/Components/Header/Action log header",
 };
 export default meta;
 
