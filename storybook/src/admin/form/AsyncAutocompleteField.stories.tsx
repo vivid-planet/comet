@@ -342,7 +342,7 @@ export const ErrorLoadingOptions: Story = {
     },
 };
 
-export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
+export const ErrorLoadingOptionsWithCustomErrorText: Story = {
     render: () => {
         interface FormValues {
             department: {
@@ -380,7 +380,7 @@ export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
                                     }
                                     return option.label;
                                 }}
-                                errorLabel={
+                                errorText={
                                     <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "black" }}>
                                         <WarningSolid color="error" />
                                         Error loading options

@@ -23,7 +23,7 @@ export type FinalFormAutocompleteProps<
 > = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
         clearable?: boolean;
-        errorLabel?: ReactNode;
+        errorText?: ReactNode;
     };
 
 type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
@@ -47,7 +47,7 @@ export const FinalFormAutocomplete = <
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
-    errorLabel = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
+    errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     return (
@@ -57,7 +57,7 @@ export const FinalFormAutocomplete = <
             noOptionsText={
                 loadingError ? (
                     <Typography variant="body2" component="span">
-                        {errorLabel}
+                        {errorText}
                     </Typography>
                 ) : (
                     <Typography variant="body2" component="span">
