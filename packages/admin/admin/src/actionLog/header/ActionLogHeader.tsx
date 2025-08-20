@@ -9,7 +9,7 @@ export type ActionLogHeaderClassKey =
     | "root"
     | "titleContainer"
     | "infoContainer"
-    | "titleTypography"
+    | "title"
     | "uuidLabel"
     | "uuidValue"
     | "dbTypeLabel"
@@ -20,7 +20,7 @@ export interface ActionLogHeaderProps
         root: typeof Box;
         titleContainer: typeof Box;
         infoContainer: typeof Box;
-        titleTypography: typeof Typography;
+        title: typeof Typography;
         uuidLabel: typeof Typography;
         uuidValue: typeof Typography;
         dbTypeLabel: typeof Typography;
@@ -48,7 +48,7 @@ export const ActionLogHeader = (inProps: ActionLogHeaderProps) => {
     return (
         <Root {...slotProps?.root} {...restProps}>
             <TitleContainer {...slotProps?.titleContainer}>
-                <TitleTypography {...slotProps?.titleTypography} variant="h3">
+                <TitleTypography {...slotProps?.title} variant="h3">
                     {title}
                 </TitleTypography>
             </TitleContainer>
