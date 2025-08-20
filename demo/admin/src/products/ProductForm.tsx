@@ -60,6 +60,7 @@ import {
 interface FormProps {
     id?: string;
     width?: number;
+    onSaveSuccess?: (id: string) => void;
 }
 
 const rootBlocks = {
@@ -83,7 +84,7 @@ type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
 };
 
-export function ProductForm({ id, width }: FormProps) {
+export function ProductForm({ id, width, onSaveSuccess }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -159,6 +160,10 @@ export function ProductForm({ id, width }: FormProps) {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
+            if (mutationResponse?.createProduct.id) {
+                onSaveSuccess?.(mutationResponse?.createProduct.id);
+            }
+            /*
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
@@ -167,6 +172,7 @@ export function ProductForm({ id, width }: FormProps) {
                     });
                 }
             }
+            */
         }
     };
 
