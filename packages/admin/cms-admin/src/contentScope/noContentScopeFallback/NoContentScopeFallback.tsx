@@ -3,7 +3,7 @@ import { type FunctionComponent } from "react";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { StopImpersonationButton } from "../../userPermissions/user/ImpersonationButtons";
 
-export const NoContentScopeError: FunctionComponent = () => {
+export const NoContentScopeFallback: FunctionComponent = () => {
     const user = useCurrentUser();
 
     return (

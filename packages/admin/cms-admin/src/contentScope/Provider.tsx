@@ -3,7 +3,7 @@ import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "
 
 import { useCurrentUser } from "../userPermissions/hooks/currentUser";
 import { contentScopeLocalStorageKey } from "./ContentScopeSelect";
-import { NoContentScopeError } from "./noContentScopeError/NoContentScopeError";
+import { NoContentScopeFallback } from "./noContentScopeFallback/NoContentScopeFallback";
 import { defaultCreatePath } from "./utils/defaultCreatePath";
 
 export interface ContentScope {
@@ -125,7 +125,13 @@ export interface ContentScopeProviderProps {
     values?: ContentScopeValues;
     children: (p: { match: match<NonNullRecord<ContentScope>> }) => ReactNode;
     location?: ContentScopeLocation;
-    noContentScopeError?: ReactNode;
+
+    /**
+     * Fallback UI for users who have no content scopes.
+     *
+     * @default <NoContentScopeFallback />
+     */
+    noContentScopeFallback?: ReactNode;
 }
 
 export function ContentScopeProvider({
@@ -133,7 +139,7 @@ export function ContentScopeProvider({
     defaultValue,
     values,
     location = defaultContentScopeLocation,
-    noContentScopeError = <NoContentScopeError />,
+    noContentScopeFallback = <NoContentScopeFallback />,
 }: ContentScopeProviderProps) {
     const user = useCurrentUser();
     if (values === undefined) {
@@ -148,7 +154,7 @@ export function ContentScopeProvider({
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     if (values.length === 0) {
-        return noContentScopeError;
+        return noContentScopeFallback;
     }
 
     const storedScope = localStorage.getItem(contentScopeLocalStorageKey);
