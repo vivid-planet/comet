@@ -27,23 +27,23 @@ export const DiffHeader = (inProps: DiffHeaderProps) => {
     });
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
-            <VersionTypography {...slotProps?.versionTypography} color="white" variant="subtitle1">
+        <Root {...restProps} {...slotProps?.root}>
+            <VersionTypography color="white" variant="subtitle1" {...slotProps?.versionTypography}>
                 <FormattedMessage defaultMessage="Version {version}" id="actionLog.actionLogCompare.diffHeader.version" values={{ version }} />
             </VersionTypography>
 
-            <InfoTypography {...slotProps?.infoTypography} color="textSecondary" variant="caption">
+            <InfoTypography color="textSecondary" variant="caption" {...slotProps?.infoTypography}>
                 <FormattedMessage
                     defaultMessage="{user} on {date}"
                     id="actionLog.actionLogCompare.diffHeader.userNameAndTime"
                     values={{
                         date: (
-                            <DateTypography {...slotProps?.dateTypography} color="textSecondary" variant="overline">
+                            <DateTypography color="textSecondary" variant="overline" {...slotProps?.dateTypography}>
                                 <FormattedDate dateStyle="short" timeStyle="short" value={createdAt} />
                             </DateTypography>
                         ),
                         user: (
-                            <UserNameTypography {...slotProps?.userNameTypography} color="textSecondary" variant="overline">
+                            <UserNameTypography color="textSecondary" variant="overline" {...slotProps?.userNameTypography}>
                                 {userId}
                             </UserNameTypography>
                         ),
