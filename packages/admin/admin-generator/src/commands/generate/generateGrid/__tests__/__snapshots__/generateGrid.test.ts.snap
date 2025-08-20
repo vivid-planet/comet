@@ -110,11 +110,9 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         );
     }
 
-    type Props = {
-            author: string;
-        };
+    
 
-    export function BooksGrid({author }: Props) {
+    export function BooksGrid() {
         const client = useApolloClient();
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("BooksGrid") };
