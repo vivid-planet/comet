@@ -130,44 +130,42 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 ),
         },
         {
-            field: "edit",
-            width: 60,
+            field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             pinnable: false,
             filterable: false,
-            renderCell: ({ row }) => (
-                <IconButton
-                    onClick={() => {
-                        setPermissionId(row.id);
-                    }}
-                    color="primary"
-                >
-                    <EditRecord />
-                </IconButton>
-            ),
-        },
-        {
-            field: "delete",
-            width: 60,
-            headerName: "",
-            sortable: false,
-            pinnable: false,
-            filterable: false,
-            renderCell: ({ row }) =>
-                row.source !== "BY_RULE" && (
-                    <TableDeleteButton
-                        icon={<Delete />}
-                        mutation={gql`
-                            mutation DeletePermission($id: ID!) {
-                                userPermissionsDeletePermission(id: $id)
-                            }
-                        `}
-                        selectedId={`${row.id}`}
-                        text=""
-                        refetchQueries={[namedOperations.Query.Permissions]}
-                    />
-                ),
+            width: 116,
+            pinned: "right",
+            renderCell: ({ row }) => {
+                return (
+                    <>
+                        <IconButton
+                            onClick={() => {
+                                setPermissionId(row.id);
+                            }}
+                            color="primary"
+                        >
+                            <EditRecord />
+                        </IconButton>
+
+                        {row.source !== "BY_RULE" && (
+                            <TableDeleteButton
+                                icon={<Delete />}
+                                mutation={gql`
+                                    mutation DeletePermission($id: ID!) {
+                                        userPermissionsDeletePermission(id: $id)
+                                    }
+                                `}
+                                selectedId={`${row.id}`}
+                                text=""
+                                refetchQueries={[namedOperations.Query.Permissions]}
+                            />
+                        )}
+                    </>
+                );
+            },
         },
     ];
 
