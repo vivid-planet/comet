@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { type TextImageBlockData, type TextImageBlockInput } from "../blocks.generated";
 import { useDamConfig } from "../dam/config/damConfig";
@@ -24,10 +24,11 @@ interface State {
 export interface TextImageBlockFactoryOptions {
     text: RichTextBlock;
     image?: BlockInterface;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 const createTextImageBlock = (
-    { text, image = PixelImageBlock }: TextImageBlockFactoryOptions,
+    { text, image = PixelImageBlock, tags }: TextImageBlockFactoryOptions,
     override?: (
         block: BlockInterface<TextImageBlockData, State, TextImageBlockInput>,
     ) => BlockInterface<TextImageBlockData, State, TextImageBlockInput>,
@@ -50,6 +51,8 @@ const createTextImageBlock = (
         displayName: <FormattedMessage id="comet.blocks.textImage" defaultMessage="Text/Image" />,
 
         category: BlockCategory.TextAndContent,
+
+        tags: tags ? tags : [...(text.tags || []), ...(image.tags || [])],
 
         AdminComponent: ({ state, updateState }) => {
             const { text, image } = composedApi.adminComponents({
