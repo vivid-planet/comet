@@ -5,6 +5,7 @@ exports[`AsyncSelect rendered props generates readonly async select 1`] = `
                 
                 variant="horizontal"
                 fullWidth
+                readOnly disabled
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
