@@ -11,7 +11,7 @@
         "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
         "build:storybook": "pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@comet/*' run build",
-        "build:docs": "pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter '!@comet/admin-generator' --filter 'comet-docs' run build",
+        "build:docs": "pnpm run copy-schema-files && pnpm build:storybook && pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter '!@comet/admin-generator' --filter 'comet-docs' run build",
         "clean": "pnpm --recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
         "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
@@ -25,7 +25,7 @@
         "dev:demo:admin": "dev-pm start @demo-admin",
         "dev:demo:api": "dev-pm start @demo-api",
         "dev:demo:site": "dev-pm start @demo-site",
-        "dev:docs": "dev-pm start docs",
+        "dev:docs": "dev-pm start @docs",
         "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
         "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
@@ -58,8 +58,7 @@
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
-        "typescript": "^5.7.3",
-        "wait-on": "^5.3.0"
+        "typescript": "^5.7.3"
     },
     "packageManager": "pnpm@10.14.0",
     "engines": {

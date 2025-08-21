@@ -86,7 +86,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -123,7 +124,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -534,7 +536,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -575,7 +578,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }

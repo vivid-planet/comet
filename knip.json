@@ -2,9 +2,9 @@
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
         ".": {
-            "entry": ["dev-pm.config.js", "waitForPackages.js", "site-configs.ts"],
+            "entry": ["dev-pm.config.js", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell", "open-cli"]
+            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"]
         },
         "packages/cli": {
             "entry": ["./src/index.ts"],

@@ -6,6 +6,7 @@ import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
+import { TextImageBlock } from "@src/common/blocks/text-image.block";
 
 export const ColumnsContentBlock = createBlocksBlock(
     {
@@ -18,6 +19,7 @@ export const ColumnsContentBlock = createBlocksBlock(
             callToActionList: StandaloneCallToActionListBlock,
             media: StandaloneMediaBlock,
             mediaGallery: MediaGalleryBlock,
+            textImage: TextImageBlock,
         },
     },
     { name: "ColumnsContent" },
