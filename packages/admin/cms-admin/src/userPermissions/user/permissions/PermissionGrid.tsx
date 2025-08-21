@@ -118,7 +118,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         {
             field: "overrideContentScopes",
             headerName: "",
-            width: 175,
+            flex: 1,
             sortable: false,
             pinnable: false,
             filterable: false,
