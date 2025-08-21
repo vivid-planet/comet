@@ -385,7 +385,7 @@ renderCell: (params) => {
         variables: {
             authorId, ...muiGridFilterToGql(columns, dataGridProps.filterModel)
         },
-        query: booksByAuthorQuery,
+        query: booksQuery,
         resolveQueryNodes: (data) => data.booksByAuthor.nodes,
         totalCount: data?.booksByAuthor.totalCount ?? 0,
         exportOptions: {

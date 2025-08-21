@@ -908,7 +908,7 @@ export function generateGrid<T extends { __typename?: string }>(
             !allowRowReordering ? `data?.${gridQuery}.nodes` : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
-        ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery, gqlArgs)}
+        ${generateGridExportApi(config.excelExport, gqlTypePlural, instanceGqlTypePlural, gridQuery, gqlArgs)}
 
         return (
             <DataGridPro
@@ -985,7 +985,13 @@ const getDataGridSlotProps = (componentName: string, forwardToolbarAction: boole
     }}`;
 };
 
-const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: string, gridQuery: string, gqlArgs: GqlArg[]) => {
+const generateGridExportApi = (
+    excelExport: boolean | undefined,
+    gqlTypePlural: string,
+    instanceGqlTypePlural: string,
+    gridQuery: string,
+    gqlArgs: GqlArg[],
+) => {
     if (!excelExport) {
         return "";
     }
@@ -998,7 +1004,7 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
                 `...muiGridFilterToGql(columns, dataGridProps.filterModel)`,
             ].join(", ")}
         },
-        query: ${gridQuery}Query,
+        query: ${instanceGqlTypePlural}Query,
         resolveQueryNodes: (data) => data.${gridQuery}.nodes,
         totalCount: data?.${gridQuery}.totalCount ?? 0,
         exportOptions: {
