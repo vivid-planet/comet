@@ -1456,7 +1456,7 @@ You can remove previously generated files and generate them on demand:
     }
     ```
 
-2. `lint:generated-files-not-modified` script can be removed:
+2. Remove `lint:generated-files-not-modified` and execute `npm run api-generator` before lint:
 
     ```diff title="api/package.json"
     scripts: {
