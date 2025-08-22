@@ -1,15 +1,23 @@
 import { DataGrid as MuiDataGrid, type DataGridProps } from "@mui/x-data-grid";
-import { DataGridPro, type DataGridProProps } from "@mui/x-data-grid-pro";
-import { LicenseInfo } from "@mui/x-license";
+import { type DataGridProProps } from "@mui/x-data-grid-pro";
+import { lazy, Suspense } from "react";
+
+const DataGridProComponent = lazy(async () => {
+    try {
+        const module = await import("@mui/x-data-grid-pro");
+        return { default: module.DataGridPro };
+    } catch (error) {
+        console.error("Failed to load DataGridPro:", error);
+        throw error;
+    }
+});
 
 type Props<T extends boolean> = T extends true ? DataGridProProps : DataGridProps;
 
 export function DataGrid<T extends boolean = boolean>(props: Props<T>) {
-    const muiLicenseKey = LicenseInfo.getLicenseKey();
-
-    if (muiLicenseKey) {
-        return <DataGridPro {...(props as DataGridProProps)} />;
-    }
-
-    return <MuiDataGrid {...(props as DataGridProps)} />;
+    return (
+        <Suspense fallback={<MuiDataGrid {...(props as DataGridProps)} />}>
+            <DataGridProComponent {...(props as DataGridProProps)} />
+        </Suspense>
+    );
 }
