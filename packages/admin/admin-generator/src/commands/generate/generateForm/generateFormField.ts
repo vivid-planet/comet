@@ -646,6 +646,7 @@ export function generateFormField({
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
+                ${config.readOnly ? readOnlyProps : ""}
                 name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
