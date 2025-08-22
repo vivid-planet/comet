@@ -50,7 +50,7 @@ module.exports = {
         {
             name: "admin-generator",
             script: "pnpm --filter @comet/admin-generator run dev",
-            group: ["cms-admin"],
+            group: ["cms-admin", "cms"],
             waitOn: waitOnPackages("@comet/cms-admin"),
         },
 

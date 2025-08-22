@@ -49,21 +49,29 @@ type FailedApiResponse = {
     error?: string;
 };
 
-type FinalFormFileUploadSingleFileProps = FieldRenderProps<
-    GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment,
-    HTMLInputElement
-> & {
+type FinalFormFileUploadSingleFileProps = {
     multiple?: false;
     maxFiles?: 1;
 };
 
-type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<
-    Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>,
+type FinalFormFileUploadSingleFilesInternalProps = FieldRenderProps<
+    GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment,
     HTMLInputElement
-> & {
+>;
+
+type FinalFormFileUploadMultipleFilesProps = {
     multiple: true;
     maxFiles?: number;
 };
+
+type FinalFormFileUploadMultipleFilesInternalProps = FieldRenderProps<
+    Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>,
+    HTMLInputElement
+>;
+
+type FinalFormFileUploadInternalProps<Multiple extends boolean | undefined> = Multiple extends true
+    ? FinalFormFileUploadMultipleFilesInternalProps
+    : FinalFormFileUploadSingleFilesInternalProps;
 
 export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
     ? FinalFormFileUploadMultipleFilesProps
@@ -77,7 +85,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     maxFiles,
     uploadEndpoint,
     ...restProps
-}: FinalFormFileUploadProps<Multiple>) => {
+}: FinalFormFileUploadProps<Multiple> & FinalFormFileUploadInternalProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
