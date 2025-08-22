@@ -1,5 +1,5 @@
-import { isWithPreviewPropsData, PropsWithData, usePreview, withPreview } from "@comet/cms-site";
-import { AccordionBlockData } from "@src/blocks.generated";
+import { isWithPreviewPropsData, type PropsWithData, usePreview, withPreview } from "@comet/site-nextjs";
+import { type AccordionBlockData } from "@src/blocks.generated";
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";
 import { useEffect, useMemo, useState } from "react";
@@ -51,7 +51,11 @@ export const AccordionBlock = withPreview(
         const handleChange = (itemKey: string) => {
             const newExpandedItems = new Set(expandedItems);
 
-            newExpandedItems.has(itemKey) ? newExpandedItems.delete(itemKey) : newExpandedItems.add(itemKey);
+            if (newExpandedItems.has(itemKey)) {
+                newExpandedItems.delete(itemKey);
+            } else {
+                newExpandedItems.add(itemKey);
+            }
 
             setExpandedItems(newExpandedItems);
         };

@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
-import { GraphQLFieldResolver } from "graphql";
+import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
-import { ResponseResolver, rest } from "msw";
-import { RestContext } from "msw/lib/types/handlers/RestHandler";
+import { http, HttpResponse } from "msw";
+
+import { fileUploadsHandler } from "./handler/fileUploads";
 
 type StringFilter = {
     contains: string;
@@ -21,7 +22,7 @@ type LaunchesPastFilter = {
     or: LaunchesPastFilter[];
 };
 
-export type Launch = {
+type Launch = {
     id: string;
     mission_name: string;
     launch_date_local: Date;
@@ -46,9 +47,9 @@ const allLaunches: Launch[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allLaunches.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         mission_name: faker.word.adjective(),
-        launch_date_local: faker.datatype.datetime(),
+        launch_date_local: faker.date.past(),
     });
 }
 
@@ -113,7 +114,7 @@ type Product {
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
-    manufacturers: [Manufacturer!]!
+    manufacturers(search: String): [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
 }
 `;
@@ -207,9 +208,9 @@ const launchesPastPagePaging: GraphQLFieldResolver<unknown, unknown, { page?: nu
     };
 };
 
-const launchesPastRest: ResponseResolver = (req, res, ctx: RestContext) => {
-    return res(ctx.status(200), ctx.json(allLaunches));
-};
+const launchesPastRest = http.get("/launches", (info) => {
+    return HttpResponse.json(allLaunches);
+});
 
 export type Manufacturer = {
     id: string;
@@ -220,16 +221,18 @@ const allManufacturers: Manufacturer[] = [];
 
 for (let i = 0; i < 10; i += 1) {
     allManufacturers.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.company.name(),
     });
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const manufacturers: GraphQLFieldResolver<unknown, unknown> = async () => {
+const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, args, context, info) => {
     await sleep(500);
-    return allManufacturers;
+    return allManufacturers.filter((manufacturer) => {
+        return !args.search || manufacturer.name.toLowerCase().includes(args.search.toLowerCase());
+    });
 };
 
 export type Product = {
@@ -242,7 +245,7 @@ const allProducts: Product[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allProducts.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.commerce.product(),
         manufacturer: faker.helpers.arrayElement(allManufacturers),
     });
@@ -273,4 +276,4 @@ const graphqlHandler = new GraphQLHandler({
     },
 });
 
-export const handlers = [rest.post("/graphql", mswResolver(graphqlHandler)), rest.get("/launches", launchesPastRest)];
+export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), fileUploadsHandler, launchesPastRest];

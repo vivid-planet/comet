@@ -1,8 +1,8 @@
-import { PropsWithData } from "@comet/cms-site";
-import { NewsLinkBlockData } from "@src/blocks.generated";
+import { type PropsWithData } from "@comet/site-nextjs";
+import { type NewsLinkBlockData } from "@src/blocks.generated";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 type Props = PropsWithData<NewsLinkBlockData> & { title?: string; className?: string };
 

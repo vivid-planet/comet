@@ -1,5 +1,5 @@
 import { ErrorDialogHandler } from "@comet/admin";
-import { Decorator } from "@storybook/react";
+import { type Decorator } from "@storybook/react-webpack5";
 
 export function errorDialogStoryProviderDecorator(): Decorator {
     return (Story) => {

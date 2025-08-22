@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, ISelectionApi, Selected, SelectionRoute, Table, TableQuery, useTableQuery } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, type ISelectionApi, Selected, SelectionRoute, Table, TableQuery, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -87,10 +87,10 @@ function Story() {
             {({ selectedId, selectionMode, selectionApi }) => (
                 <TableQuery api={api} loading={loading} error={error}>
                     <Grid container spacing={4}>
-                        <Grid item xs={2}>
+                        <Grid size={2}>
                             <ExampleTable tableData={tableData} selectedId={selectedId} selectionApi={selectionApi} />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid size={2}>
                             <Selected selectionMode={selectionMode} selectedId={selectedId} rows={tableData.data}>
                                 {(user, { selectionMode: selectedSelectionMode }) => {
                                     if (user === undefined) {

@@ -1,4 +1,5 @@
 import { Accept, Copy } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Dialog, Divider, List, ListItem, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { writeClipboardText } from "../../clipboard/writeClipboardText";
@@ -33,10 +34,6 @@ export interface ErrorDialogOptions {
         timestamp: string;
     };
 }
-
-export type ErrorMethods = {
-    setError: (options: ErrorDialogOptions) => void;
-};
 
 export interface ErrorDialogProps {
     show?: boolean;

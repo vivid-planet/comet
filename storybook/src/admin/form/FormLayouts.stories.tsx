@@ -37,16 +37,40 @@ function FieldsInGrid() {
             <CardContent>
                 <FormSection title="Fields in Grid" disableMarginBottom>
                     <Grid container spacing={4}>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                                md: 3,
+                            }}
+                        >
                             <Field label="Foo" placeholder="Foo" name="foo3" fullWidth component={FinalFormInput} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                                md: 3,
+                            }}
+                        >
                             <Field label="Bar" placeholder="Bar" name="bar3" fullWidth component={FinalFormInput} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                                md: 3,
+                            }}
+                        >
                             <Field label="Disabled" placeholder="Disabled" name="disabled3" disabled fullWidth component={FinalFormInput} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                                md: 3,
+                            }}
+                        >
                             <Field label="Required" placeholder="Required" name="required3" required fullWidth component={FinalFormInput} />
                         </Grid>
                     </Grid>
@@ -64,13 +88,13 @@ export const FormLayouts = () => {
     return (
         <FinalForm mode="edit" onSubmit={() => {}}>
             <Grid container spacing={8} style={{ maxWidth: 1024 }}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <VerticalFields />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <HorizontalFields />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <FieldsInGrid />
                 </Grid>
             </Grid>

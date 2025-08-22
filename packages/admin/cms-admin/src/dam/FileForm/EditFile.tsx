@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    FieldSet,
     FillSpace,
     FinalForm,
     FinalFormSaveButton,
@@ -14,28 +15,30 @@ import {
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Card, CardContent, Link, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
-import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
+import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
+import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
-import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
+import { type GQLDamFileDetailFragment, type GQLDamFileDetailQuery, type GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
-import { LicenseType } from "./licenseType";
+import { type LicenseType } from "./licenseType";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -51,10 +54,9 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    license?:
-        | Omit<GQLLicenseInput, "type"> & {
-              type: LicenseType;
-          };
+    license?: Omit<GQLLicenseInput, "type"> & {
+        type: LicenseType;
+    };
 }
 
 interface EditFormProps {
@@ -87,11 +89,7 @@ const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
                             id="comet.dam.file.failedToLoad"
                             defaultMessage="Failed to load file. <link>Go to Assets</link>"
                             values={{
-                                link: (chunks: string) => (
-                                    <Link to={`${scopeMatch.url}/assets`} component={RouterLink}>
-                                        {chunks}
-                                    </Link>
-                                ),
+                                link: (chunks) => <RouterLink to={`${scopeMatch.url}/assets`}>{chunks}</RouterLink>,
                             }}
                         />
                     </Typography>
@@ -112,7 +110,8 @@ interface EditFileInnerProps {
 }
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
+    const acceptedMimeTypes = useDamAcceptedMimeTypes();
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
@@ -146,8 +145,8 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     id,
                     input: {
                         name: values.name,
-                        title: values.title,
-                        altText: values.altText,
+                        altText: values.altText ?? null,
+                        title: values.title ?? null,
                         image: {
                             cropArea,
                         },
@@ -239,6 +238,38 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         />
                                     </RouterTab>
                                 )}
+                                {showMediaAlternativesTab(file, acceptedMimeTypes) && (
+                                    <RouterTab
+                                        key="media-alternatives"
+                                        label={intl.formatMessage({
+                                            id: "comet.dam.file.mediaAlternatives.tabTitle",
+                                            defaultMessage: "Media alternatives",
+                                        })}
+                                        path="/media-alternatives"
+                                    >
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />}
+                                                disablePadding
+                                            >
+                                                <MediaAlternativesGrid file={file} type="captions" direction="for" />
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={
+                                                    <FormattedMessage
+                                                        id="comet.dam.file.videosUsingCaptions"
+                                                        defaultMessage="Videos using these captions"
+                                                    />
+                                                }
+                                                disablePadding
+                                            >
+                                                <MediaAlternativesGrid file={file} type="captions" direction="alternative" />
+                                            </FieldSet>
+                                        )}
+                                    </RouterTab>
+                                )}
                                 <RouterTab
                                     key="duplicates"
                                     label={intl.formatMessage({ id: "comet.dam.file.duplicates.tabTitle", defaultMessage: "Duplicates" })}
@@ -246,7 +277,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {isAllowed("dependencies") && Object.keys(dependencyMap).length > 0 && (
+                                {isAllowed("dependencies") && Object.keys(entityDependencyMap).length > 0 && (
                                     <RouterTab
                                         key="dependents"
                                         label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
@@ -287,5 +318,12 @@ const StickyScrollWrapper = ({ children }: { children: ReactNode }) => {
         </div>
     );
 };
+
+function showMediaAlternativesTab(file: DamFileDetails, acceptedMimeTypes: ReturnType<typeof useDamAcceptedMimeTypes>) {
+    return (
+        acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) ||
+        acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype)
+    );
+}
 
 export default EditFile;

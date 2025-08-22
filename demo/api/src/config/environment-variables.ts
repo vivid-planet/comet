@@ -1,7 +1,7 @@
-import { BlobStorageConfig } from "@comet/cms-api";
+import { BlobStorageConfig, IsUndefinable } from "@comet/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -77,9 +77,6 @@ export class EnvironmentVariables {
     @IsString()
     IMGPROXY_KEY: string;
 
-    @IsInt()
-    IMGPROXY_QUALITY = 80;
-
     @IsString()
     @MinLength(16)
     DAM_SECRET: string;
@@ -123,6 +120,25 @@ export class EnvironmentVariables {
     S3_BUCKET: string;
 
     @IsString()
+    MAILER_HOST: string;
+
+    @Type(() => Number)
+    @IsInt()
+    MAILER_PORT: number;
+
+    @IsUndefinable()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsEmail({}, { each: true })
+    MAILER_SEND_ALL_MAILS_TO?: string[];
+
+    @IsUndefinable()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsEmail({}, { each: true })
+    MAILER_SEND_ALL_MAILS_BCC?: string[];
+
+    @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")
     CDN_ORIGIN_CHECK_SECRET: string;
 
@@ -164,7 +180,6 @@ export class EnvironmentVariables {
 
     @IsString()
     @MinLength(16)
-    @ValidateIf(() => process.env.NODE_ENV === "production")
     SITE_PREVIEW_SECRET: string;
 
     @IsArray()

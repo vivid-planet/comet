@@ -1,6 +1,6 @@
 import { CharacterMetadata, EditorState } from "draft-js";
 
-import { FilterEditorStateFn, InlineStyleType } from "../../types";
+import { type FilterEditorStateFn, type InlineStyleType } from "../../types";
 
 type StyleBlacklist = InlineStyleType[];
 

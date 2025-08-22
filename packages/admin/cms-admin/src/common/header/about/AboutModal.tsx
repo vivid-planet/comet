@@ -1,13 +1,21 @@
-import { Close } from "@comet/admin-icons";
-import { Dialog, DialogContent as MuiDialogContent, DialogTitle, IconButton, Link, Modal as MuiModal, Typography } from "@mui/material";
+import { Close, CometDigitalExperienceLogo } from "@comet/admin-icons";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent as MuiDialogContent,
+    DialogTitle,
+    IconButton,
+    Link,
+    Modal as MuiModal,
+    Typography,
+} from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import { styled } from "@mui/material/styles";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
 import { useBuildInformation } from "./build-information/useBuildInformation";
-import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 
 interface AboutModalProps {
     onClose?: () => void;
@@ -15,7 +23,7 @@ interface AboutModalProps {
     logo?: ReactElement;
 }
 
-export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps) {
+export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo sx={{ width: "300px", height: "84px" }} /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
 
     return (

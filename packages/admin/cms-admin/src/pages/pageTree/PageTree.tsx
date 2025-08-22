@@ -1,29 +1,38 @@
-import { ObservableQuery, useApolloClient } from "@apollo/client";
-import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { gql, type ObservableQuery, useApolloClient } from "@apollo/client";
+import { type IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
-import { Dispatch, forwardRef, ForwardRefRenderFunction, SetStateAction, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import {
+    type Dispatch,
+    forwardRef,
+    type ForwardRefRenderFunction,
+    type SetStateAction,
+    useCallback,
+    useEffect,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+} from "react";
 import { FormattedMessage } from "react-intl";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { Align, FixedSizeList as List } from "react-window";
+import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
+import { type Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useContentScope } from "../../contentScope/Provider";
-import { GQLPagesQuery, GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
+import { usePageTreeScope } from "../config/usePageTreeScope";
+import { type GQLPagesQuery, type GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
 import {
-    GQLMovePageTreeNodesByPosMutation,
-    GQLPagesCacheQuery,
-    GQLPagesCacheQueryVariables,
-    GQLPageSlugPathFragment,
-    GQLResetSlugMutation,
-    GQLResetSlugMutationVariables,
+    type GQLMovePageTreeNodesByPosMutation,
+    type GQLPagesCacheQuery,
+    type GQLPagesCacheQueryVariables,
+    type GQLPageSlugPathFragment,
+    type GQLResetSlugMutation,
+    type GQLResetSlugMutationVariables,
 } from "./PageTree.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
-import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
-import PageTreeService, { DropInfo } from "./PageTreeService";
+import PageTreeRow, { type DropTarget, type PageTreeDragObject } from "./PageTreeRow";
+import { type DropInfo, PageTreeService } from "./PageTreeService";
 import { useDndWindowScroll } from "./useDndWindowScroll/useDndWindowScroll";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 
 interface PageTreeProps {
     pages: PageTreePage[];
@@ -36,7 +45,7 @@ interface PageTreeProps {
 
 type PageTreeRefApi = { scrollToItem: List["scrollToItem"] };
 
-const MOVE_PAGE_TREE_NODES_BY_POS = gql`
+const movePageTreeNodesByPositionMutation = gql`
     mutation MovePageTreeNodesByPos($ids: [ID!]!, $input: MovePageTreeNodesByPosInput!) {
         movePageTreeNodesByPos(ids: $ids, input: $input) {
             id
@@ -48,7 +57,7 @@ const MOVE_PAGE_TREE_NODES_BY_POS = gql`
     }
 `;
 
-const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
+const movePageTreeNodesByNeighboursMutation = gql`
     mutation MovePageTreeNodesByNeighbour($ids: [ID!]!, $input: MovePageTreeNodesByNeighbourInput!) {
         movePageTreeNodesByNeighbour(ids: $ids, input: $input) {
             id
@@ -60,7 +69,7 @@ const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
     }
 `;
 
-const RESET_SLUG = gql`
+const resetSlugMutation = gql`
     mutation ResetSlug($id: ID!, $slug: String!) {
         updatePageTreeNodeSlug(id: $id, slug: $slug) {
             id
@@ -69,7 +78,7 @@ const RESET_SLUG = gql`
     }
 `;
 
-const PAGES_CACHE_QUERY = gql`
+const pagesCacheQuery = gql`
     query PagesCache($contentScope: PageTreeNodeScopeInput!, $category: String!) {
         pages: pageTreeNodeList(scope: $contentScope, category: $category) {
             id
@@ -123,7 +132,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
     }, [pages]);
 
     const pageTreeService = useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const snackbarApi = useSnackbarApi();
 
     const debouncedSetHoverState = useDebouncedCallback(
@@ -147,7 +156,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
         // @TODO: handle path collisions when moving pages
         async ({ ids, parentId, position }: { ids: string[]; parentId: string | null; position: number }) => {
             await client.mutate({
-                mutation: MOVE_PAGE_TREE_NODES_BY_POS,
+                mutation: movePageTreeNodesByPositionMutation,
                 variables: {
                     ids: ids,
                     input: {
@@ -194,7 +203,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                     }
 
                     const pagesQueryData = proxy.readQuery<GQLPagesCacheQuery, GQLPagesCacheQueryVariables>({
-                        query: PAGES_CACHE_QUERY,
+                        query: pagesCacheQuery,
                         variables: {
                             contentScope: scope,
                             category,
@@ -213,7 +222,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
 
                         return updatedPageData;
                     });
-                    proxy.writeQuery({ query: PAGES_CACHE_QUERY, data: { pages: updatedPages } });
+                    proxy.writeQuery({ query: pagesCacheQuery, data: { pages: updatedPages } });
                 },
             });
         },
@@ -223,7 +232,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
     const moveByNeighbourRequest = useCallback(
         async ({ ids, parentId, afterId, beforeId }: { ids: string[]; parentId: string | null; afterId: string | null; beforeId: string | null }) => {
             await client.mutate({
-                mutation: MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
+                mutation: movePageTreeNodesByNeighboursMutation,
                 variables: {
                     ids: ids,
                     input: {
@@ -284,7 +293,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                                 });
 
                                 await client.mutate<GQLResetSlugMutation, GQLResetSlugMutationVariables>({
-                                    mutation: RESET_SLUG,
+                                    mutation: resetSlugMutation,
                                     variables: {
                                         id: pageToUndo.id,
                                         slug: pageToUndo.slug,
@@ -319,7 +328,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
             <Root>
                 <Table>
                     <AutoSizer>
-                        {({ height, width }) => {
+                        {({ height, width }: Size) => {
                             return (
                                 // @TODO: adjust itemSize for smaller screens
                                 <List

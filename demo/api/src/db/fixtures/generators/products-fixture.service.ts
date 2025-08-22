@@ -6,6 +6,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product, ProductStatus } from "@src/products/entities/product.entity";
 import { ProductType } from "@src/products/entities/product-type.enum";
+import { format } from "date-fns";
 
 @Injectable()
 export class ProductsFixtureService {
@@ -24,30 +25,30 @@ export class ProductsFixtureService {
 
         for (let i = 0; i < 10; i++) {
             const manufacturer = this.manufacturersRepository.create({
-                id: faker.datatype.uuid(),
+                id: faker.string.uuid(),
                 name: faker.company.name(),
                 address: {
-                    street: faker.address.street(),
-                    streetNumber: Number(faker.address.buildingNumber()),
-                    zip: Number(faker.address.zipCode("####")),
-                    country: faker.address.country(),
+                    street: faker.location.street(),
+                    streetNumber: Number(faker.location.buildingNumber()),
+                    zip: faker.location.zipCode("####"),
+                    country: faker.location.country(),
                     alternativeAddress: {
-                        street: faker.address.street(),
-                        streetNumber: Number(faker.address.buildingNumber()),
-                        zip: Number(faker.address.zipCode("####")),
-                        country: faker.address.country(),
+                        street: faker.location.street(),
+                        streetNumber: Number(faker.location.buildingNumber()),
+                        zip: faker.location.zipCode("####"),
+                        country: faker.location.country(),
                     },
                 },
                 addressAsEmbeddable: {
-                    street: faker.address.street(),
-                    streetNumber: Number(faker.address.buildingNumber()),
-                    zip: Number(faker.address.zipCode("####")),
-                    country: faker.address.country(),
+                    street: faker.location.street(),
+                    streetNumber: Number(faker.location.buildingNumber()),
+                    zip: faker.location.zipCode("####"),
+                    country: faker.location.country(),
                     alternativeAddress: {
-                        street: faker.address.street(),
-                        streetNumber: Number(faker.address.buildingNumber()),
-                        zip: Number(faker.address.zipCode("####")),
-                        country: faker.address.country(),
+                        street: faker.location.street(),
+                        streetNumber: Number(faker.location.buildingNumber()),
+                        zip: faker.location.zipCode("####"),
+                        country: faker.location.country(),
                     },
                 },
             });
@@ -61,18 +62,21 @@ export class ProductsFixtureService {
             const title = faker.commerce.productName();
 
             const product = this.productsRepository.create({
-                id: faker.datatype.uuid(),
+                id: faker.string.uuid(),
                 title: faker.commerce.productName(),
                 status: faker.helpers.arrayElement([ProductStatus.Published, ProductStatus.Unpublished]),
                 slug: faker.helpers.slugify(title),
                 description: faker.commerce.productDescription(),
-                type: faker.helpers.arrayElement([ProductType.Cap, ProductType.Shirt, ProductType.Tie]),
+                type: faker.helpers.arrayElement([ProductType.cap, ProductType.shirt, ProductType.tie]),
                 additionalTypes: [],
-                price: faker.datatype.number(),
+                price: faker.number.float({ min: 0, max: 1000, fractionDigits: 2 }),
                 inStock: faker.datatype.boolean(),
-                soldCount: faker.datatype.number(),
-                availableSince: faker.date.past(),
-                image: DamImageBlock.blockInputFactory({ attachedBlocks: [] }).transformToBlockData(),
+                soldCount: faker.number.int({ min: 0, max: 100 }),
+                availableSince: format(faker.date.past(), "yyyy-MM-dd"),
+                image: DamImageBlock.blockInputFactory({
+                    attachedBlocks: [{ type: "pixelImage", props: {} }],
+                    activeType: "pixelImage",
+                }).transformToBlockData(),
                 manufacturer: faker.helpers.arrayElement(manufacturers),
             });
 

@@ -1,22 +1,19 @@
-import { generateImageUrl, gql } from "@comet/cms-site";
+import { generateImageUrl, gql } from "@comet/site-nextjs";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
-import { Header } from "@src/layout/header/Header";
-import { headerFragment } from "@src/layout/header/Header.fragment";
-import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
-import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
+import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
-import { Metadata, ResolvingMetadata } from "next";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import { type Metadata, type ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
+import { type GQLPageQuery, type GQLPageQueryVariables } from "./Page.generated";
 
 const pageQuery = gql`
-    query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
+    query Page($pageTreeNodeId: ID!) {
         pageContent: pageTreeNode(id: $pageTreeNodeId) {
             id
             name
@@ -31,16 +28,8 @@ const pageQuery = gql`
             }
             ...Breadcrumbs
         }
-        header: mainMenu(scope: { domain: $domain, language: $language }) {
-            ...Header
-        }
-        topMenu(scope: { domain: $domain, language: $language }) {
-            ...TopMenuPageTreeNode
-        }
     }
     ${breadcrumbsFragment}
-    ${headerFragment}
-    ${topMenuPageTreeNodeFragment}
 `;
 
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
@@ -52,8 +41,6 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
         pageQuery,
         {
             pageTreeNodeId,
-            domain: scope.domain,
-            language: scope.language,
         },
         { method: "GET" }, //for request memoization
     );
@@ -76,12 +63,15 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
 
 export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const data = await fetchData({ pageTreeNodeId, scope });
+    const siteConfig = getSiteConfigForDomain(scope.domain);
+
     const document = data?.pageContent?.document;
     if (!document) {
         return {};
     }
-    const siteUrl = "http://localhost:3000"; //TODO get from site config
-    const canonicalUrl = document.seo.canonicalUrl || `${siteUrl}${data.pageContent.path}`;
+
+    const siteUrl = siteConfig.url;
+    const canonicalUrl = (document.seo.canonicalUrl || `${siteUrl}/${scope.language}${data.pageContent.path}`).replace(/\/$/, ""); // Remove trailing slash for "home"
 
     // TODO move into library
     return {
@@ -123,7 +113,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
     }
     if (document.__typename != "Page") throw new Error(`invalid document type`);
 
-    [document.content, document.seo] = await Promise.all([
+    [document.content, document.seo, document.stage] = await Promise.all([
         recursivelyLoadBlockData({
             blockType: "PageContent",
             blockData: document.content,
@@ -149,8 +139,6 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             {document.seo.structuredData && document.seo.structuredData.length > 0 && (
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: document.seo.structuredData }} />
             )}
-            <TopNavigation data={data.topMenu} />
-            <Header header={data.header} />
             <Breadcrumbs {...data.pageContent} scope={scope} />
             <main>
                 <StageBlock data={document.stage} />

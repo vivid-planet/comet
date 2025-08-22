@@ -1,15 +1,15 @@
 export const dynamic = "error";
 
-import { gql } from "@comet/cms-site";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
-import { VisibilityParam } from "@src/middleware/domainRewrite";
+import { gql } from "@comet/site-nextjs";
+import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { type VisibilityParam } from "@src/middleware/domainRewrite";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { setVisibilityParam } from "@src/util/ServerContext";
 import { notFound } from "next/navigation";
 
 import { Content } from "./content";
 import { fragment } from "./fragment";
-import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
+import { type GQLNewsDetailPageQuery, type GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({
     params: { domain, language, slug, visibility },

@@ -1,9 +1,15 @@
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 
-import { DateRange, DateRangePicker, DateRangePickerProps } from "./DateRangePicker";
+import { type DateRange, DateRangePicker, type DateRangePickerProps } from "./DateRangePicker";
 
-export type FinalFormDateRangePickerProps = DateRangePickerProps & FieldRenderProps<DateRange, HTMLInputElement | HTMLTextAreaElement>;
+export type FinalFormDateRangePickerProps = DateRangePickerProps;
+type FinalFormDateRangePickerInternalProps = FieldRenderProps<DateRange, HTMLInputElement | HTMLTextAreaElement>;
 
-export const FinalFormDateRangePicker = ({ meta, input, ...restProps }: FinalFormDateRangePickerProps) => {
+/**
+ * Final Form-compatible DateRangerPicker component.
+ *
+ * @see {@link DateRangeField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
+export const FinalFormDateRangePicker = ({ meta, input, ...restProps }: FinalFormDateRangePickerProps & FinalFormDateRangePickerInternalProps) => {
     return <DateRangePicker {...input} {...restProps} />;
 };

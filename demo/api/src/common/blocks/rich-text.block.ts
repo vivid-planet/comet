@@ -1,4 +1,5 @@
-import { createRichTextBlock } from "@comet/blocks-api";
-import { LinkBlock } from "@src/common/blocks/link.block";
+import { createRichTextBlock } from "@comet/cms-api";
+
+import { LinkBlock } from "./link.block";
 
 export const RichTextBlock = createRichTextBlock({ link: LinkBlock });

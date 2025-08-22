@@ -25,7 +25,7 @@ target=$(custom_realpath "$1/node_modules/@comet");
 source=$(custom_realpath "$(dirname "$0")")
 echo $target
 echo $source
-packages=( cms-site )
+packages=( site-react site-nextjs )
 for package in "${packages[@]}"; do
     cmd="wml add $source/$package $target/$package"
     echo $cmd

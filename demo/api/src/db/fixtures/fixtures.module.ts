@@ -3,7 +3,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
 import { DamFile } from "@src/dam/entities/dam-file.entity";
-import { FixturesConsole } from "@src/db/fixtures/fixtures.console";
+import { FixturesCommand } from "@src/db/fixtures/fixtures.command";
 import { Link } from "@src/documents/links/entities/link.entity";
 import { LinksModule } from "@src/documents/links/links.module";
 import { Page } from "@src/documents/pages/entities/page.entity";
@@ -11,7 +11,6 @@ import { PagesModule } from "@src/documents/pages/pages.module";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product } from "@src/products/entities/product.entity";
-import { ConsoleModule } from "nestjs-console";
 
 import { AccordionBlockFixtureService } from "./generators/blocks/layout/accordion-block-fixture.service";
 import { ColumnsBlockFixtureService } from "./generators/blocks/layout/columns-block-fixture.service";
@@ -49,6 +48,7 @@ import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.ser
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { NewsFixtureService } from "./generators/news-fixture.service";
 import { PageContentBlockFixtureService } from "./generators/page-content-block-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
@@ -60,13 +60,13 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
 @Module({
     imports: [
         ConfigModule,
-        ConsoleModule,
         PagesModule,
         LinksModule,
         DependenciesModule,
         MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
     ],
     providers: [
+        FixturesCommand,
         AccordionBlockFixtureService,
         AnchorBlockFixtureService,
         BasicStageBlockFixtureService,
@@ -79,7 +79,6 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         DamVideoBlockFixtureService,
         DocumentGeneratorService,
         FileUploadsFixtureService,
-        FixturesConsole,
         FullWidthImageBlockFixtureService,
         HeadingBlockFixtureService,
         ImageFileFixtureService,
@@ -112,6 +111,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         VideoFixtureService,
         VimeoVideoBlockFixtureService,
         YouTubeVideoBlockFixtureService,
+        NewsFixtureService,
     ],
 })
 export class FixturesModule {}

@@ -1,6 +1,6 @@
-import { Slide, Snackbar, SnackbarProps } from "@mui/material";
-import { SlideProps } from "@mui/material/Slide/Slide";
-import { ReactNode } from "react";
+import { Slide, Snackbar, type SnackbarProps } from "@mui/material";
+import { type SlideProps } from "@mui/material/Slide/Slide";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
@@ -26,7 +26,7 @@ export const UndoSnackbar = <Payload,>({ onUndoClick, payload, ...props }: UndoS
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             action={
-                <Button variant="textDark" size="small" onClick={onClick}>
+                <Button variant="textLight" size="small" onClick={onClick}>
                     <FormattedMessage {...messages.undo} />
                 </Button>
             }

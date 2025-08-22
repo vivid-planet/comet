@@ -1,6 +1,6 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { StandaloneMediaBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type StandaloneMediaBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 
 import { MediaBlock } from "./MediaBlock";

@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Table } from "../Table";
-import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
-import { IExportApi } from "./IExportApi";
+import { type Table } from "../Table";
+import { createExcelExportDownload, type IExcelExportOptions } from "./createExcelExportDownload";
+import { type IExportApi } from "./IExportApi";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -17,11 +17,11 @@ export function useExportDisplayedTableData(options?: IExcelExportOptions): IExp
 
     async function exportTable() {
         if (tableRef != null) {
-            await setLoading(true);
+            setLoading(true);
             try {
                 await createExcelExportDownload(tableRef.props.columns, tableRef.props.data, options);
             } finally {
-                await setLoading(false);
+                setLoading(false);
             }
         } else {
             throw new Error("No table ref set");

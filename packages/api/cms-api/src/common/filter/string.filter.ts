@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 
 @InputType()
 export class StringFilter {
@@ -7,6 +7,11 @@ export class StringFilter {
     @IsOptional()
     @IsString()
     contains?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    notContains?: string;
 
     @Field({ nullable: true })
     @IsOptional()
@@ -32,4 +37,14 @@ export class StringFilter {
     @IsOptional()
     @IsString({ each: true })
     isAnyOf?: string[];
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isEmpty?: boolean;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isNotEmpty?: boolean;
 }

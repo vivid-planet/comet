@@ -1,7 +1,7 @@
 import { TableCell } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const PageTreeCell = styled(TableCell)`
+const PageTreeCell = styled(TableCell)`
     border: none;
     height: 100%;
     display: flex;

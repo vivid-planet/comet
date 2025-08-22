@@ -2,36 +2,40 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CheckboxField, ErrorScope, Field, FieldContainer, FinalForm, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Box, Divider, IconButton, MenuItem, Typography } from "@mui/material";
-import { Mutator } from "final-form";
+import { type Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
-import { DocumentNode } from "graphql";
+import { type DocumentNode } from "graphql";
 import debounce from "p-debounce";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
+import { useDebounce } from "use-debounce";
 
-import { useContentScope } from "../contentScope/Provider";
-import { DocumentInterface, DocumentType } from "../documents/types";
+import { useContentLanguage } from "../contentLanguage/useContentLanguage";
+import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
-import { GQLSlugAvailability } from "../graphql.generated";
-import { useLocale } from "../locale/useLocale";
+import { type GQLSlugAvailability } from "../graphql.generated";
+import { useRedirectsScope } from "../redirects/redirectsConfig";
+import { usePageTreeScope } from "./config/usePageTreeScope";
 import {
-    GQLCreatePageNodeMutation,
-    GQLCreatePageNodeMutationVariables,
-    GQLEditPageNodeQuery,
-    GQLEditPageNodeQueryVariables,
-    GQLEditPageParentNodeQuery,
-    GQLEditPageParentNodeQueryVariables,
-    GQLIsPathAvailableQuery,
-    GQLIsPathAvailableQueryVariables,
-    GQLUpdatePageNodeMutation,
-    GQLUpdatePageNodeMutationVariables,
+    type GQLCreatePageNodeMutation,
+    type GQLCreatePageNodeMutationVariables,
+    type GQLEditPageNodeQuery,
+    type GQLEditPageNodeQueryVariables,
+    type GQLEditPageParentNodeQuery,
+    type GQLEditPageParentNodeQueryVariables,
+    type GQLIsPathAvailableQuery,
+    type GQLIsPathAvailableQueryVariables,
+    type GQLRedirectSourceAvailableQuery,
+    type GQLRedirectSourceAvailableQueryVariables,
+    type GQLUpdatePageNodeMutation,
+    type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
 
 type SerializedInitialValues = string;
 
-export interface EditPageNodeFinalFormValues {
+interface EditPageNodeFinalFormValues {
     [key: string]: unknown;
 }
 
@@ -102,8 +106,9 @@ export function createEditPageNode({
 
         const intl = useIntl();
         const apollo = useApolloClient();
-        const { scope } = useContentScope();
-        const locale = useLocale({ scope });
+        const scope = usePageTreeScope();
+        const language = useContentLanguage({ scope });
+        const redirectScope = useRedirectsScope();
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
 
@@ -118,7 +123,7 @@ export function createEditPageNode({
 
         const slug = data?.page?.slug;
 
-        const parentId = mode === "add" ? parent : data?.page?.parentId ?? null;
+        const parentId = mode === "add" ? parent : (data?.page?.parentId ?? null);
 
         const { data: parentNodeData } = useQuery<GQLEditPageParentNodeQuery, GQLEditPageParentNodeQueryVariables>(editPageParentNodeQuery, {
             variables: {
@@ -166,6 +171,24 @@ export function createEditPageNode({
             },
             [apollo, scope, parentId, slug],
         );
+
+        const redirectSource = slug && parentPath ? `${parentPath}/${slug}` : slug ? `/${slug}` : null;
+        const [debouncedRedirectSource] = useDebounce(redirectSource, 500);
+
+        const { data: redirectQueryData } = useQuery<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>(
+            redirectSourceAvailableForPageEdit,
+            {
+                variables: debouncedRedirectSource
+                    ? {
+                          scope: redirectScope,
+                          source: debouncedRedirectSource,
+                      }
+                    : undefined,
+                skip: !debouncedRedirectSource,
+            },
+        );
+
+        const isRedirectSourceAvailable = redirectQueryData?.redirectSourceAvailable ?? true;
 
         const validateSlug = async (value: string) => {
             if (!isValidSlug(value)) {
@@ -219,7 +242,7 @@ export function createEditPageNode({
                             name: values.name,
                             slug: values.slug,
                             hideInMenu: values.hideInMenu,
-                            createAutomaticRedirectsOnSlugChange: values.createAutomaticRedirectsOnSlugChange,
+                            createAutomaticRedirectsOnSlugChange: isRedirectSourceAvailable ? values.createAutomaticRedirectsOnSlugChange : false,
                             attachedDocument: {
                                 id: values.documentType === data?.page?.documentType ? data?.page?.document?.id : undefined,
                                 type: values.documentType,
@@ -273,7 +296,7 @@ export function createEditPageNode({
                                         sourceField="name"
                                         targetField="slug"
                                         onChange={(name) => {
-                                            const slug = transformToSlug(name, locale);
+                                            const slug = transformToSlug(name, language);
                                             if (!form.getFieldState("slug")?.touched) {
                                                 // Set field touched because otherwise no validation errors are shown
                                                 form.mutators.setFieldTouched("slug", true);
@@ -343,11 +366,11 @@ export function createEditPageNode({
                                                         {values.slug === "home" && parentPath === null
                                                             ? "/"
                                                             : parentPath === null
-                                                            ? `/${values.slug}`
-                                                            : `${parentPath}/${values.slug}`}
+                                                              ? `/${values.slug}`
+                                                              : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
-                                                {mode === "edit" && dirtyFields.slug && (
+                                                {mode === "edit" && dirtyFields.slug && isRedirectSourceAvailable && (
                                                     <Box mt={3}>
                                                         <FieldContainer
                                                             variant="horizontal"
@@ -420,6 +443,16 @@ export function createEditPageNode({
                                                             />
                                                         </FieldContainer>
                                                     </Box>
+                                                )}
+                                                {mode === "edit" && dirtyFields.slug && !isRedirectSourceAvailable && (
+                                                    <FieldContainer variant="horizontal">
+                                                        <Typography>
+                                                            <FormattedMessage
+                                                                id="comet.pages.pages.page.redirectAlreadyExists"
+                                                                defaultMessage="The slug was changed, but a redirect for the old path already exists."
+                                                            />
+                                                        </Typography>
+                                                    </FieldContainer>
                                                 )}
                                             </>
                                         );
@@ -522,6 +555,12 @@ const isValidSlug = (value: string) => {
     return /^[a-zA-Z0-9][a-zA-Z0-9-_]*$/.test(value);
 };
 
+const redirectSourceAvailableForPageEdit = gql`
+    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+        redirectSourceAvailable(scope: $scope, source: $source)
+    }
+`;
+
 interface InitialValues {
     parent: null | string;
     pos?: number;
@@ -547,7 +586,7 @@ function unserializeInitialValues(initialValues: string | null = null): InitialV
             if ("pos" in parsed && typeof parsed.pos === "number") {
                 ret.pos = parsed.pos as number;
             }
-        } catch (e) {
+        } catch {
             // failing to parse the initial-values is ok, we use the defaults in this case
         }
     }

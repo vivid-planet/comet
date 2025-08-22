@@ -3,9 +3,11 @@ const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
 const fs = require("fs");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 const port = process.env.APP_PORT ?? 3000;
+const host = process.env.SERVER_HOST ?? "localhost";
 
 let indexFile = fs.readFileSync("./build/index.html", "utf8");
 
@@ -37,8 +39,15 @@ app.use(
 );
 
 app.get("/status/health", (req, res) => {
+    res.setHeader("cache-control", "no-store");
     res.send("OK!");
 });
+
+const proxyMiddleware = createProxyMiddleware({
+    target: process.env.API_URL_INTERNAL + "/dam",
+    changeOrigin: true,
+});
+app.use("/dam", proxyMiddleware);
 
 app.use(
     express.static("./build", {
@@ -64,6 +73,6 @@ app.get("*", (req, res) => {
     res.send(indexFile);
 });
 
-app.listen(port, () => {
-    console.log(`Admin app listening at http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Admin app listening at http://${host}:${port}`);
 });

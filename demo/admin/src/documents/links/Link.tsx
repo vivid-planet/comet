@@ -1,13 +1,13 @@
+import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
-import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
+import { type PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
-import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
+import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
+import { type GQLLink, type GQLLinkInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
-import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import { EditLink } from "./EditLink";
@@ -49,7 +49,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
         }
     `,
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
-        if (page.userGroup !== "All") {
+        if (page.userGroup !== "all") {
             return <Chip size="small" label={page.userGroup} />;
         }
         return null;

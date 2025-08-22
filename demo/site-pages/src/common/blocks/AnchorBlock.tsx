@@ -1,5 +1,5 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { AnchorBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type AnchorBlockData } from "@src/blocks.generated";
 
 export const AnchorBlock = withPreview(
     ({ data: { name } }: PropsWithData<AnchorBlockData>) => {

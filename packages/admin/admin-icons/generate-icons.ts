@@ -1,11 +1,8 @@
+import { pascalCase, pascalCaseTransformMerge } from "change-case";
 import { Presets, SingleBar } from "cli-progress";
-import { ESLint } from "eslint";
 import { XMLBuilder, XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
-import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 import * as path from "path";
-
-const eslint = new ESLint({ fix: true });
 
 type Icon = {
     name: string;
@@ -62,7 +59,7 @@ const main = async () => {
     await writeIndexFile(icons);
 };
 
-const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0], { transform: pascalCaseTransformMerge });
+const getComponentName = (fileName: string) => pascalCase(fileName.split(/[_.]/)[0], { transform: pascalCaseTransformMerge });
 
 const getSVGData = (icon: Icon) => {
     const fileContents = readFileSync(icon.path);
@@ -70,6 +67,15 @@ const getSVGData = (icon: Icon) => {
         ignoreAttributes: false,
         updateTag(_, __, attrs) {
             delete attrs["@_fill"];
+            // Convert all attribute keys to camelCase
+            for (const key of Object.keys(attrs)) {
+                const camelKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+                if (camelKey !== key) {
+                    attrs[camelKey] = attrs[key];
+                    delete attrs[key];
+                }
+            }
+
             return true;
         },
     }).parse(fileContents.toString());
@@ -77,28 +83,19 @@ const getSVGData = (icon: Icon) => {
     return parsedXml.svg;
 };
 
-const getFormattedText = async (text: string) => {
-    const results = await eslint.lintText(text, {
-        // Configures ESLint to treat supplied text as TypeScript JSX file.
-        // See docs: https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
-        filePath: "dummy.tsx",
-    });
-
-    return results[0].output;
-};
-
 const writeComponent = async (icon: Icon, svgString: string) => {
-    const component = await getFormattedText(`
-        import { SvgIcon, SvgIconProps } from "@mui/material";
+    const searchTerms = icon.name.replace(/\.[^/.]+$/, "");
+    const component = `
+        import { SvgIcon, type SvgIconProps } from "@mui/material";
         import { forwardRef } from "react";
-        
+
         ${
             icon.deprecated
                 ? `/**
                     * @deprecated Will be removed in a future major release.
                     */`
                 : ""
-        };
+        }
         export const ${icon.componentName} = forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => {
             return (
                 <SvgIcon {...props} ref={ref} viewBox="0 0 16 16">
@@ -106,8 +103,9 @@ const writeComponent = async (icon: Icon, svgString: string) => {
                 </SvgIcon>
             );
         });
-    `);
 
+        export const ${icon.componentName}SearchTerms = "${searchTerms}";
+    `;
     if (icon.componentName != null && component != null) {
         writeFileSync(`src/generated/${icon.componentName}.tsx`, component);
     }
@@ -122,10 +120,10 @@ const writeGeneratedTypesFile = async (icons: Icon[]) => {
 
 const writeIndexFile = async (icons: Icon[]) => {
     const exports = icons.map((icon) => {
-        return `export { ${icon.componentName} } from "./${icon.componentName}";`;
+        return `export { ${icon.componentName}, ${icon.componentName}SearchTerms } from "./${icon.componentName}";`;
     });
 
-    const indexFile = await getFormattedText(exports.join("\n"));
+    const indexFile = await exports.join("\n");
 
     if (indexFile != null) {
         writeFileSync(`src/generated/index.ts`, indexFile);

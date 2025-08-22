@@ -1,4 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
+import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { ColumnsBlock, ColumnsContentBlock } from "@src/documents/pages/blocks/columns.block";
@@ -9,6 +9,7 @@ import { StandaloneMediaBlockFixtureService } from "../media/standalone-media-bl
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
 import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standalone-heading-block-fixture.service";
+import { TextImageBlockFixtureService } from "../text-and-content/text-image-block-fixture.service";
 import { AccordionBlockFixtureService } from "./accordion-block-fixture.service";
 import { SpaceBlockFixtureService } from "./space-block-fixture.service";
 
@@ -24,6 +25,7 @@ export class ColumnsBlockFixtureService {
         private readonly mediaGalleryBlockFixtureService: MediaGalleryBlockFixtureService,
         private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
         private readonly standaloneMediaBlockFixtureService: StandaloneMediaBlockFixtureService,
+        private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
     ) {}
 
     async generateColumnsContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof ColumnsContentBlock>> {
@@ -38,6 +40,7 @@ export class ColumnsBlockFixtureService {
             mediaGallery: this.mediaGalleryBlockFixtureService,
             richtext: this.richtextBlockFixtureService,
             space: this.spaceBlockFixtureService,
+            textImage: this.textImageBlockFixtureService,
         };
 
         for (const block of Object.entries(blockCfg)) {

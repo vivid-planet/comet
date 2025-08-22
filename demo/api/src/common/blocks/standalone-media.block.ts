@@ -3,12 +3,12 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { MediaBlock } from "@src/common/blocks/media.block";
 import { MediaAspectRatios } from "@src/util/mediaAspectRatios";
 import { IsEnum } from "class-validator";
@@ -30,7 +30,7 @@ class StandaloneMediaBlockInput extends BlockInput {
     aspectRatio: MediaAspectRatios;
 
     transformToBlockData(): StandaloneMediaBlockData {
-        return inputToData(StandaloneMediaBlockData, this);
+        return blockInputToData(StandaloneMediaBlockData, this);
     }
 }
 

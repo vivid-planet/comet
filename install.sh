@@ -7,19 +7,18 @@ cd $(dirname $0)
 # use correct node version and install dependencies
 nvm install
 nvm use
-npm i -g pnpm@8
+corepack enable
+
 pnpm install
 
-
-# admin Blocks
-ln -sf ../../api/blocks-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
 
 # admin CMS
 ln -sf ../../api/cms-api/schema.gql ./packages/admin/cms-admin/schema.gql
 ln -sf ../../api/cms-api/block-meta.json ./packages/admin/cms-admin/block-meta.json
 
 # site CMS
-ln -sf ../../api/cms-api/block-meta.json ./packages/site/cms-site/block-meta.json
+ln -sf ../../api/cms-api/block-meta.json ./packages/site/site-nextjs/block-meta.json
+ln -sf ../../api/cms-api/block-meta.json ./packages/site/site-react/block-meta.json
 
 # api DEMO
 ln -sf ../../.env ./demo/api/.env

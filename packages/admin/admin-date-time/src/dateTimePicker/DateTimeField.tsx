@@ -1,8 +1,8 @@
-import { Field, FieldProps } from "@comet/admin";
+import { Field, type FieldProps } from "@comet/admin";
 
-import { FinalFormDateTimePicker } from "./FinalFormDateTimePicker";
+import { FinalFormDateTimePicker, type FinalFormDateTimePickerProps } from "./FinalFormDateTimePicker";
 
-export type DateTimeFieldProps = FieldProps<Date, HTMLInputElement>;
+export type DateTimeFieldProps = FieldProps<Date, HTMLInputElement> & FinalFormDateTimePickerProps;
 
 export const DateTimeField = ({ ...restProps }: DateTimeFieldProps) => {
     return <Field component={FinalFormDateTimePicker} {...restProps} />;

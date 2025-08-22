@@ -1,10 +1,10 @@
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
-import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
+import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type LinkBlockData, type RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import redraft, { Renderers, TextBlockRenderFn } from "redraft";
+import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";
 import styled, { css } from "styled-components";
 
-import { Typography, TypographyProps } from "../components/Typography";
+import { Typography, type TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
 import { LinkBlock } from "./LinkBlock";
 
@@ -112,16 +112,15 @@ export const PageContentRichTextBlock = (props: RichTextBlockProps) => (
 );
 
 const DisableLastBottomSpacing = styled.div`
-    ${({ theme }) =>
-        css`
-            > *:last-child {
-                margin-bottom: 0;
+    ${({ theme }) => css`
+        > *:last-child {
+            margin-bottom: 0;
 
-                ${theme.breakpoints.xs.mediaQuery} {
-                    margin-bottom: 0;
-                }
+            ${theme.breakpoints.sm.mediaQuery} {
+                margin-bottom: 0;
             }
-        `};
+        }
+    `};
 `;
 
 const Text = styled(Typography)`

@@ -86,7 +86,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -123,7 +124,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -350,9 +352,9 @@
                 "name": "variant",
                 "kind": "Enum",
                 "enum": [
-                    "Contained",
-                    "Outlined",
-                    "Text"
+                    "contained",
+                    "outlined",
+                    "text"
                 ],
                 "nullable": false
             }
@@ -368,9 +370,9 @@
                 "name": "variant",
                 "kind": "Enum",
                 "enum": [
-                    "Contained",
-                    "Outlined",
-                    "Text"
+                    "contained",
+                    "outlined",
+                    "text"
                 ],
                 "nullable": false
             }
@@ -534,7 +536,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -575,7 +578,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -741,6 +745,11 @@
                         {
                             "name": "size",
                             "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "mimetype",
+                            "kind": "String",
                             "nullable": false
                         },
                         {
@@ -930,6 +939,30 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "captions",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "id",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "language",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "fileUrl",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
                         }
                     ]
                 },
@@ -1112,12 +1145,12 @@
                 "name": "htmlTag",
                 "kind": "Enum",
                 "enum": [
-                    "H1",
-                    "H2",
-                    "H3",
-                    "H4",
-                    "H5",
-                    "H6"
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
                 ],
                 "nullable": false
             }
@@ -1139,12 +1172,12 @@
                 "name": "htmlTag",
                 "kind": "Enum",
                 "enum": [
-                    "H1",
-                    "H2",
-                    "H3",
-                    "H4",
-                    "H5",
-                    "H6"
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
                 ],
                 "nullable": false
             }
@@ -1506,9 +1539,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -1543,9 +1576,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -2043,9 +2076,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -2106,9 +2139,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -2765,16 +2798,16 @@
                 "name": "spacing",
                 "kind": "Enum",
                 "enum": [
-                    "D100",
-                    "D200",
-                    "D300",
-                    "D400",
-                    "S100",
-                    "S200",
-                    "S300",
-                    "S400",
-                    "S500",
-                    "S600"
+                    "d100",
+                    "d200",
+                    "d300",
+                    "d400",
+                    "s100",
+                    "s200",
+                    "s300",
+                    "s400",
+                    "s500",
+                    "s600"
                 ],
                 "nullable": false
             }
@@ -2784,16 +2817,16 @@
                 "name": "spacing",
                 "kind": "Enum",
                 "enum": [
-                    "D100",
-                    "D200",
-                    "D300",
-                    "D400",
-                    "S100",
-                    "S200",
-                    "S300",
-                    "S400",
-                    "S500",
-                    "S600"
+                    "d100",
+                    "d200",
+                    "d300",
+                    "d400",
+                    "s100",
+                    "s200",
+                    "s300",
+                    "s400",
+                    "s500",
+                    "s600"
                 ],
                 "nullable": false
             }

@@ -1,18 +1,26 @@
 import { Search } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
+import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { FinalFormInput, FinalFormInputProps } from "./FinalFormInput";
+import { FinalFormInput, type FinalFormInputProps } from "./FinalFormInput";
 
 export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
     icon?: ReactNode;
     clearable?: boolean;
 }
 
-export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps) {
+type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
+
+/**
+ * Final Form-compatible SearchTextField component.
+ *
+ * @see {@link SearchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
+export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps & FinalFormSearchTextFieldInternalProps) {
     const {
         icon = <Search />,
         placeholder,

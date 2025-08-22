@@ -1,8 +1,8 @@
-import { previewParams } from "@comet/cms-site";
+import { previewParams } from "@comet/site-nextjs";
 import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 export type VisibilityParam = "default" | "invisiblePages" | "invisibleBlocks";
 

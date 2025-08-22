@@ -12,9 +12,7 @@ const withBundleAnalyzer = nextBundleAnalyzer({
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-    images: {
-        deviceSizes: cometConfig.dam.allowedImageSizes,
-    },
+    images: cometConfig.images,
     typescript: {
         ignoreBuildErrors: process.env.NODE_ENV === "production",
     },
@@ -25,7 +23,7 @@ const nextConfig = {
         styledComponents: true,
     },
     experimental: {
-        optimizePackageImports: ["@comet/cms-site"],
+        optimizePackageImports: ["@comet/site-nextjs"],
     },
     cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching

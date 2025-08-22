@@ -1,4 +1,4 @@
-import { BlockCategory, createCompositeBlock, createListBlock } from "@comet/blocks-admin";
+import { BlockCategory, createCompositeBlock, createListBlock } from "@comet/cms-admin";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";

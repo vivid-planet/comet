@@ -1,4 +1,4 @@
-import { IRow, Table } from "../Table";
+import { type IRow, type Table } from "../Table";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

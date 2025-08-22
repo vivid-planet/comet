@@ -1,9 +1,9 @@
 import {
     FillSpace,
-    MainContent,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -14,52 +14,50 @@ import {
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
-import ProductTagForm from "./ProductTagForm";
-import ProductTagsTable from "./ProductTagTable";
+import { ProductTagForm } from "./ProductTagForm";
+import { ProductTagsGrid } from "./ProductTagsGrid";
 
-const ProductTagsPage = () => {
+const FormToolbar = () => (
+    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+        <ToolbarBackButton />
+        <ToolbarAutomaticTitleItem />
+        <FillSpace />
+        <ToolbarActions>
+            <SaveBoundarySaveButton />
+        </ToolbarActions>
+    </StackToolbar>
+);
+
+export function ProductTagsPage() {
     const intl = useIntl();
-
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.productTags", defaultMessage: "Product Tags" })}>
-            <StackSwitch initialPage="table">
-                <StackPage name="table">
+            <StackSwitch>
+                <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <MainContent fullHeight>
-                        <ProductTagsTable />
-                    </MainContent>
+                    <StackMainContent fullHeight>
+                        <ProductTagsGrid />
+                    </StackMainContent>
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProductTag", defaultMessage: "Edit product Tag" })}>
-                    {(selectedId) => (
+                <StackPage name="add" title={intl.formatMessage({ id: "products.addProductTag", defaultMessage: "Add product tag" })}>
+                    <SaveBoundary>
+                        <FormToolbar />
+                        <StackMainContent>
+                            <ProductTagForm />
+                        </StackMainContent>
+                    </SaveBoundary>
+                </StackPage>
+                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProductTag", defaultMessage: "Edit product tag" })}>
+                    {(id) => (
                         <SaveBoundary>
-                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
-                                <ToolbarBackButton />
-                                <ToolbarAutomaticTitleItem />
-                                <FillSpace />
-                                <ToolbarActions>
-                                    <SaveBoundarySaveButton />
-                                </ToolbarActions>
-                            </StackToolbar>
-                            <ProductTagForm id={selectedId} />
+                            <FormToolbar />
+                            <StackMainContent>
+                                <ProductTagForm id={id} />
+                            </StackMainContent>
                         </SaveBoundary>
                     )}
-                </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "products.addProductTag", defaultMessage: "Add product Tag" })}>
-                    <SaveBoundary>
-                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
-                            <ToolbarBackButton />
-                            <ToolbarAutomaticTitleItem />
-                            <FillSpace />
-                            <ToolbarActions>
-                                <SaveBoundarySaveButton />
-                            </ToolbarActions>
-                        </StackToolbar>
-                        <ProductTagForm />
-                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>
     );
-};
-
-export default ProductTagsPage;
+}

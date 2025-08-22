@@ -1,5 +1,11 @@
-import { ExternalLinkBlock, ExtractBlockData } from "@comet/blocks-api";
-import { InternalLinkBlock, PageTreeReadApiService, RedirectsLinkBlock, RedirectTargetUrlServiceInterface } from "@comet/cms-api";
+import {
+    ExternalLinkBlock,
+    ExtractBlockData,
+    InternalLinkBlock,
+    PageTreeReadApiService,
+    RedirectsLinkBlock,
+    RedirectTargetUrlServiceInterface,
+} from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Scope } from "@nestjs/common";
@@ -49,7 +55,7 @@ export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterfa
 
                 const scope = news.scope;
                 const baseUrl = this.getSiteUrl(scope);
-                const path = `${await this.predefinedPagesService.predefinedPagePath(PredefinedPageType.News, scope)}/${news.slug}`;
+                const path = `${await this.predefinedPagesService.predefinedPagePath(PredefinedPageType.news, scope)}/${news.slug}`;
 
                 return `${baseUrl}/${scope.language}${path}`;
             }

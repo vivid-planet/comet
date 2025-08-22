@@ -89,19 +89,19 @@ export const _Chip = {
                                 Medium size Chips
                             </Typography>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         label="Deletable"
                                         onDelete={() => {
@@ -111,19 +111,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="outlined" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="outlined" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="outlined" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="outlined" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         variant="outlined"
                                         label="Deletable"
@@ -134,19 +134,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="primary" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip clickable color="primary" label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="primary" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="primary" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         color="primary"
                                         label="Deletable"
@@ -157,19 +157,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="success" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="success" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="success" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="success" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         color="success"
                                         label="Deletable"
@@ -180,19 +180,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="error" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="error" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="error" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="error" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         color="error"
                                         label="Deletable"
@@ -203,19 +203,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="warning" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="warning" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="warning" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip color="warning" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         color="warning"
                                         label="Deletable"
@@ -226,19 +226,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="filled" color="info" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="filled" color="info" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="filled" color="info" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip variant="filled" color="info" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         variant="filled"
                                         color="info"
@@ -255,19 +255,19 @@ export const _Chip = {
                         </Typography>
                         <Box mb={10}>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         label="Deletable"
@@ -278,19 +278,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="outlined" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="outlined" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="outlined" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="outlined" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         variant="outlined"
@@ -302,19 +302,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="primary" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" clickable color="primary" label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" icon={<ChevronDown />} clickable color="primary" label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="primary" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         color="primary"
@@ -326,19 +326,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="success" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="success" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="success" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="success" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         color="success"
@@ -350,19 +350,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="error" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="error" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="error" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="error" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         color="error"
@@ -374,19 +374,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="warning" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="warning" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="warning" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" color="warning" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         color="warning"
@@ -398,19 +398,19 @@ export const _Chip = {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} mb={5}>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="filled" color="info" label="Normal" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="filled" color="info" clickable label="Clickable" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="filled" color="info" icon={<ChevronDown />} clickable label="With Icon" />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip size="small" variant="filled" color="info" label="Disabled" disabled />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Chip
                                         size="small"
                                         variant="filled"

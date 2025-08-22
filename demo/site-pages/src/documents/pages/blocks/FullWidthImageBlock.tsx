@@ -1,5 +1,5 @@
-import { OptionalBlock, PropsWithData, withPreview } from "@comet/cms-site";
-import { FullWidthImageBlockData } from "@src/blocks.generated";
+import { OptionalBlock, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type FullWidthImageBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import styled from "styled-components";

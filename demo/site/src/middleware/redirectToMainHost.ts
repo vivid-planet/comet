@@ -1,8 +1,8 @@
 import type { PublicSiteConfig } from "@src/site-configs";
 import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
 

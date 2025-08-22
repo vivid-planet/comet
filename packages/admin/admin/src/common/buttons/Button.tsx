@@ -1,19 +1,20 @@
 import {
-    Breakpoint,
+    type Breakpoint,
+    // eslint-disable-next-line no-restricted-imports
     Button as MuiButton,
-    ButtonProps as MuiButtonProps,
-    ComponentsOverrides,
+    type ButtonProps as MuiButtonProps,
+    type ComponentsOverrides,
     css,
-    Theme,
-    Tooltip,
+    type Theme,
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { OverridableComponent, OverridableTypeMap } from "@mui/material/OverridableComponent";
-import { ElementType, ForwardedRef, forwardRef, ReactNode } from "react";
+import { type OverridableComponent, type OverridableTypeMap } from "@mui/material/OverridableComponent";
+import { type ElementType, type ForwardedRef, forwardRef, type ReactNode } from "react";
 
+import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";
 
 type Variant = "primary" | "secondary" | "outlined" | "destructive" | "success" | "textLight" | "textDark";
@@ -156,7 +157,6 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
         css`
             color: ${theme.palette.common.black};
             &.Mui-disabled {
-                background-color: ${theme.palette.secondary.contrastText};
                 color: ${theme.palette.grey[200]};
             }
         `}

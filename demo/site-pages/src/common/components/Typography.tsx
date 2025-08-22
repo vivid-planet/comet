@@ -1,7 +1,7 @@
-import { ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import styled, { css } from "styled-components";
 
-export type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "p300" | "p200";
+type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "p300" | "p200";
 
 const typographyVariantStyle: Record<TypographyVariant, ReturnType<typeof css>> = {
     h600: css`
@@ -205,7 +205,7 @@ export const Typography = styled.div.attrs<{
         css`
             margin-bottom: 0;
 
-            ${theme.breakpoints.xs.mediaQuery} {
+            ${theme.breakpoints.sm.mediaQuery} {
                 margin-bottom: 0;
             }
         `};

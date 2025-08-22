@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
-import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
+import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
 
-import { IStackSwitchApi, useStackSwitchApi } from "./Switch";
+import { type IStackSwitchApi, useStackSwitchApi } from "./Switch";
 
 interface StackLinkProps extends Omit<RouterLinkProps, "to"> {
     pageName: string;

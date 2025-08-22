@@ -8,22 +8,22 @@ import { useCallback } from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { useContentLanguage } from "../../contentLanguage/useContentLanguage";
 import { useContentScope } from "../../contentScope/Provider";
-import { useLocale } from "../../locale/useLocale";
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
-import { DamFileDetails, EditFileFormValues } from "./EditFile";
-import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
+import { type DamFileDetails, type EditFileFormValues } from "./EditFile";
+import { type GQLDamIsFilenameOccupiedQuery, type GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
 import {
-    GQLGenerateAltTextMutation,
-    GQLGenerateAltTextMutationVariables,
-    GQLGenerateImageTitleMutation,
-    GQLGenerateImageTitleMutationVariables,
+    type GQLGenerateAltTextMutation,
+    type GQLGenerateAltTextMutationVariables,
+    type GQLGenerateImageTitleMutation,
+    type GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
-import { LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
+import { type LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 
 interface SettingsFormProps {
     file: DamFileDetails;
@@ -45,7 +45,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const formApi = useForm();
     const { contentGeneration } = useDamConfig();
     const contentScope = useContentScope();
-    const locale = useLocale(contentScope);
+    const language = useContentLanguage(contentScope);
 
     const damIsFilenameOccupied = useCallback(
         async (filename: string): Promise<boolean> => {
@@ -126,6 +126,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         return `${value}.${extension}`;
                     }}
                     fullWidth
+                    required
                 />
             </FormSection>
             {isImage && <CropSettingsFields />}
@@ -144,7 +145,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
-                                    const { data } = await generateAltText({ variables: { fileId: file.id, language: locale } });
+                                    const { data } = await generateAltText({ variables: { fileId: file.id, language } });
                                     formApi.change("altText", data?.generateAltText);
                                 }}
                             >
@@ -167,7 +168,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
-                                    const { data } = await generateImageTitle({ variables: { fileId: file.id, language: locale } });
+                                    const { data } = await generateImageTitle({ variables: { fileId: file.id, language } });
                                     formApi.change("title", data?.generateImageTitle);
                                 }}
                             >

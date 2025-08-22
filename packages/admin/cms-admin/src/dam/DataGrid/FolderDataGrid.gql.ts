@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail";
 
-export const damFileTableFragment = gql`
+const damFileTableFragment = gql`
     fragment DamFileTable on DamFile {
         id
         name
@@ -34,11 +34,14 @@ export const damFileTableFragment = gql`
         updatedAt
         createdAt
         importSourceType
+        dependents {
+            totalCount
+        }
     }
     ${damFileThumbnailFragment}
 `;
 
-export const damFolderTableFragment = gql`
+const damFolderTableFragment = gql`
     fragment DamFolderTable on DamFolder {
         id
         name

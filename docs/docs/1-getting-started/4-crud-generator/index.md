@@ -9,12 +9,12 @@ To accelerate the development of a feature, the CRUD Generator can be used to ge
 
 The code is regenerated when changes are made to the entity.
 
--   :heavy_plus_sign: **Advantages**: Changes to the entity and improvements in the generator are directly adopted.
--   :heavy_minus_sign: **Disadvantage**: Inflexible. Changes to the generated code are not possible.
+- :heavy_plus_sign: **Advantages**: Changes to the entity and improvements in the generator are directly adopted.
+- :heavy_minus_sign: **Disadvantage**: Inflexible. Changes to the generated code are not possible.
 
 ### Scaffolding
 
 The generated code is used as a starting point.
 
--   :heavy_plus_sign: **Advantage**: Flexibility. Changes to the generated code are easily possible.
--   :heavy_minus_sign: **Disadvantage**: Improvements in the generator must be manually incorporated.
+- :heavy_plus_sign: **Advantage**: Flexibility. Changes to the generated code are easily possible.
+- :heavy_minus_sign: **Disadvantage**: Improvements in the generator must be manually incorporated.
