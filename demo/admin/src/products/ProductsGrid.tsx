@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
@@ -28,12 +28,12 @@ import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Onli
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
     DataGridPro,
+    getGridStringOperators,
     GridFilterInputSingleSelect,
     type GridRowSelectionModel,
     type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
-import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
@@ -213,6 +213,23 @@ export function ProductsGrid() {
             ],
             valueOptions: ["cap", "shirt", "tie"],
             disableExport: true,
+        },
+        {
+            field: "titleSlugOrDescription",
+            headerName: "Title, Slug or Description",
+            width: 150,
+            visible: theme.breakpoints.down(0), // always hidden but used for filtering
+            disableExport: true,
+            filterOperators: getGridStringOperators().filter((operator) => operator.value === "contains"),
+            toGqlFilter: (filterItem) => {
+                return {
+                    or: [
+                        { title: { contains: filterItem.value } },
+                        { slug: { contains: filterItem.value } },
+                        { description: { contains: filterItem.value } },
+                    ],
+                };
+            },
         },
         {
             field: "category",

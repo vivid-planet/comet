@@ -8,7 +8,7 @@ import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
-export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
+export interface FinalFormSelectProps<T> {
     noOptionsLabel?: ReactNode;
     errorLabel?: ReactNode;
     getOptionLabel?: (option: T) => string;
@@ -17,6 +17,8 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     required?: boolean;
     loadingError?: Error | null;
 }
+
+type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
 
 const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
     if (multiple && Array.isArray(value)) {
@@ -67,7 +69,7 @@ export const FinalFormSelect = <T,>({
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest

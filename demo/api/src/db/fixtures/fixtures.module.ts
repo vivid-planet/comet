@@ -48,6 +48,7 @@ import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.ser
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { NewsFixtureService } from "./generators/news-fixture.service";
 import { PageContentBlockFixtureService } from "./generators/page-content-block-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
@@ -110,6 +111,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         VideoFixtureService,
         VimeoVideoBlockFixtureService,
         YouTubeVideoBlockFixtureService,
+        NewsFixtureService,
     ],
 })
 export class FixturesModule {}

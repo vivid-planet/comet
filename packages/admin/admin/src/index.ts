@@ -158,7 +158,11 @@ export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
-export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
+export {
+    AsyncOptionsProps,
+    /** @deprecated Use AsyncSelectField component instead  */
+    useAsyncOptionsProps,
+} from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
 export { InlineAlert, InlineAlertClassKey, InlineAlertProps } from "./inlineAlert/InlineAlert";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
