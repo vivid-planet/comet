@@ -118,6 +118,5 @@ export class FileUploadsService {
         }
 
         this.entityManager.remove(fileUpload);
-        await this.entityManager.flush();
     }
 }
