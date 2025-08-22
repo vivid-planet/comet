@@ -1,8 +1,8 @@
 "use client";
-import { useEscapeKeyPressed } from "@comet/site-nextjs";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { PageLink } from "@src/layout/header/PageLink";
 import { PageLayout } from "@src/layout/PageLayout";
+import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
 import { useState } from "react";
 import FocusLock from "react-focus-lock";
 import { FormattedMessage, useIntl } from "react-intl";

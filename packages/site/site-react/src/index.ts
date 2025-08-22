@@ -1,4 +1,3 @@
-export { useEscapeKeyPressed } from "./accessibility/useEscapeKeyPressed";
 export { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
