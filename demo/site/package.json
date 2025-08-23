@@ -12,7 +12,6 @@
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "gql:persisted-queries": "ts-node build-persisted-queries.ts",
         "gql:types": "graphql-codegen",
         "gql:watch": "graphql-codegen --watch",
         "intl:compile": "formatjs compile-folder --format simple --ast lang/comet-demo-lang/site lang-compiled/",

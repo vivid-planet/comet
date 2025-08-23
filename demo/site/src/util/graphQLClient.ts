@@ -11,18 +11,10 @@ import { getVisibilityParam } from "./ServerContext";
 
 type Fetch = typeof fetch;
 
-async function sha256(query: string): Promise<string> {
-    const data = new TextEncoder().encode(query);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    const uint8Array = new Uint8Array(hash);
-    return Array.from(uint8Array)
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-}
-
 function createPersistedQueryGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
-    return async function <T, V>(query: string, variables?: V, init?: RequestInit): Promise<T> {
-        const hash = await sha256(query.trim());
+    return async function <T, V>(query: string | { hash: string }, variables?: V, init?: RequestInit): Promise<T> {
+        if (typeof query === "string") throw new Error("at runtime only hashed queries are supported");
+        const hash = query.hash; //await sha256(query.trim());
         let response;
         if (init?.method === "GET") {
             const fetchUrl = new URL(url);
