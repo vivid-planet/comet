@@ -5,6 +5,7 @@ import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
+import { createImageSizes } from "@src/util/createImageSizes";
 import styled from "styled-components";
 
 export const FooterContentBlock = withPreview(
@@ -13,14 +14,32 @@ export const FooterContentBlock = withPreview(
             <Root>
                 <PageLayout grid>
                     <PageLayoutContent>
-                        <TopContainer>
+                        <MobileTopContainer>
                             <ImageWrapper>
-                                <DamImageBlock data={image} aspectRatio="1/1" style={{ objectFit: "contain" }} />
+                                <DamImageBlock
+                                    data={image}
+                                    aspectRatio="1x1"
+                                    style={{ objectFit: "contain" }}
+                                    sizes={createImageSizes({ default: "20vw" })}
+                                />
                             </ImageWrapper>
                             <RichTextWrapper>
                                 <RichTextBlock data={text} disableLastBottomSpacing />
                             </RichTextWrapper>
-                        </TopContainer>
+                        </MobileTopContainer>
+                        <DesktopTopContainer>
+                            <RichTextWrapper>
+                                <RichTextBlock data={text} disableLastBottomSpacing />
+                            </RichTextWrapper>
+                            <ImageWrapper>
+                                <DamImageBlock
+                                    data={image}
+                                    aspectRatio="1x1"
+                                    style={{ objectFit: "contain" }}
+                                    sizes={createImageSizes({ default: "10vw" })}
+                                />
+                            </ImageWrapper>
+                        </DesktopTopContainer>
                         <HorizontalLine />
                         <LinkCopyrightWrapper>
                             <nav>
@@ -67,7 +86,7 @@ const PageLayoutContent = styled.div`
     }
 `;
 
-const TopContainer = styled.div`
+const MobileTopContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -75,8 +94,16 @@ const TopContainer = styled.div`
     gap: ${({ theme }) => theme.spacing.D100};
 
     ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+        display: none;
+    }
+`;
+
+const DesktopTopContainer = styled.div`
+    display: none;
+
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+        display: flex;
         align-self: stretch;
-        flex-direction: row-reverse;
         justify-content: space-between;
     }
 
