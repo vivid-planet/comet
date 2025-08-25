@@ -1,4 +1,11 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockTextField, createRichTextBlock } from "@comet/cms-admin";
+import {
+    BlockCategory,
+    createCompositeBlock,
+    createCompositeBlockSelectField,
+    createCompositeBlockTextField,
+    createRichTextBlock,
+} from "@comet/cms-admin";
+import { type TeaserItemBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { TextLinkBlock } from "@src/common/blocks/TextLinkBlock";
@@ -25,6 +32,21 @@ export const TeaserItemBlock = createCompositeBlock(
             title: {
                 block: createCompositeBlockTextField({
                     label: <FormattedMessage id="teaserItemBlock.title" defaultMessage="Title" />,
+                }),
+            },
+            headlineLevel: {
+                block: createCompositeBlockSelectField<TeaserItemBlockData["headlineLevel"]>({
+                    label: <FormattedMessage id="teaserItemBlock.htmlTag" defaultMessage="HTML tag" />,
+                    defaultValue: "h3",
+                    options: [
+                        { value: "h1", label: <FormattedMessage id="teaserItemBlock.level1" defaultMessage="Level 1" /> },
+                        { value: "h2", label: <FormattedMessage id="teaserItemBlock.level2" defaultMessage="Level 2" /> },
+                        { value: "h3", label: <FormattedMessage id="teaserItemBlock.level3" defaultMessage="Level 3" /> },
+                        { value: "h4", label: <FormattedMessage id="teaserItemBlock.level4" defaultMessage="Level 4" /> },
+                        { value: "h5", label: <FormattedMessage id="teaserItemBlock.level5" defaultMessage="Level 5" /> },
+                        { value: "h6", label: <FormattedMessage id="teaserItemBlock.level6" defaultMessage="Level 6" /> },
+                    ],
+                    required: true,
                 }),
             },
             description: {
