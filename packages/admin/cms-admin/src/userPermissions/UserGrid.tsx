@@ -13,7 +13,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterModel, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
 import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { type ReactNode, useContext } from "react";
@@ -130,11 +130,15 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 },
             },
             {
-                field: "scopesInfo",
+                field: "scope",
                 flex: 1,
                 pinnable: false,
                 sortable: false,
-                filterable: false,
+                type: "singleSelect",
+                valueOptions: availablePermissionsAndContentScopes?.contentScopes.map((scope) => ({
+                    label: Object.values(scope.label).join(" / "),
+                    value: JSON.stringify(scope.scope),
+                })),
                 headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
                 renderCell: ({ row }) => {
                     if (row.contentScopesCount === availablePermissionsAndContentScopes?.contentScopes.length) {
@@ -193,6 +197,29 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         ),
     });
 
+    function gridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel) {
+        // Create a custom filter model by transforming the filterModel's items
+        const customFilterModel = {
+            ...filterModel,
+            items:
+                filterModel?.items.map((item) => {
+                    if (item.field === "scope") {
+                        if (typeof item.value === "string") {
+                            return { ...item, value: JSON.parse(item.value) };
+                        }
+
+                        if (typeof item.value === "object" && Array.isArray(item.value)) {
+                            return { ...item, value: item.value.map((value) => JSON.parse(value)) };
+                        }
+                    }
+
+                    return item;
+                }) ?? [],
+        };
+
+        return muiGridFilterToGql(columns, customFilterModel);
+    }
+
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
             query UserGrid($offset: Int!, $limit: Int!, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
@@ -213,7 +240,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         `,
         {
             variables: {
-                ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+                ...gridFilterToGql(columns, dataGridProps.filterModel),
                 offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                 limit: dataGridProps.paginationModel.pageSize ?? 0,
                 sort: muiGridSortToGql(dataGridProps.sortModel),

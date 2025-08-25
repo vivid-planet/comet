@@ -936,6 +936,7 @@ input UserPermissionsUserFilter {
   email: StringFilter
   status: StringFilter
   permission: PermissionFilter
+  scope: ContentScopeFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
 }
@@ -956,6 +957,12 @@ input PermissionFilter {
   equal: Permission
   notEqual: Permission
   isAnyOf: [Permission!]
+}
+
+input ContentScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
 }
 
 input UserPermissionsUserSort {
@@ -1344,7 +1351,7 @@ input WarningFilter {
   type: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
-  scope: ScopeFilter
+  scope: ContentScopeFilter
   and: [WarningFilter!]
   or: [WarningFilter!]
 }
@@ -1359,12 +1366,6 @@ input WarningStatusEnumFilter {
   isAnyOf: [WarningStatus!]
   equal: WarningStatus
   notEqual: WarningStatus
-}
-
-input ScopeFilter {
-  isAnyOf: [JSONObject!]
-  equal: JSONObject
-  notEqual: JSONObject
 }
 
 input WarningSort {
