@@ -132,10 +132,11 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 #### Start Docs
 
 ```bash
-pnpm run docs
+npx dev-pm start @docs
 ```
 
-The docs will be available at [http://localhost:3300/](http://localhost:3300/)
+The docs will be available at [http://localhost:3300/](http://localhost:3300/)  
+_This will also start Storybook, due to some docs-pages being generated from storybook stories._
 
 ### Stop processes
 

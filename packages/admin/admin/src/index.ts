@@ -25,6 +25,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { DeleteDialog } from "./common/DeleteDialog";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { FillSpace, FillSpaceClassKey, FillSpaceProps } from "./common/FillSpace";
@@ -90,6 +91,14 @@ export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
+export { Future_DatePicker, Future_DatePickerClassKey, Future_DatePickerProps } from "./dateTime/DatePicker";
+export { Future_DatePickerField, Future_DatePickerFieldProps } from "./dateTime/DatePickerField";
+export { type DateRange, Future_DateRangePicker, Future_DateRangePickerClassKey, Future_DateRangePickerProps } from "./dateTime/DateRangePicker";
+export { Future_DateRangePickerField, Future_DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
+export { Future_DateTimePicker, Future_DateTimePickerClassKey, Future_DateTimePickerProps } from "./dateTime/DateTimePicker";
+export { Future_DateTimePickerField, Future_DateTimePickerFieldProps } from "./dateTime/DateTimePickerField";
+export { Future_TimePicker, Future_TimePickerClassKey, Future_TimePickerProps } from "./dateTime/TimePicker";
+export { Future_TimePickerField, Future_TimePickerFieldProps } from "./dateTime/TimePickerField";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
@@ -151,7 +160,11 @@ export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
-export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
+export {
+    AsyncOptionsProps,
+    /** @deprecated Use AsyncSelectField component instead  */
+    useAsyncOptionsProps,
+} from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
 export { InlineAlert, InlineAlertClassKey, InlineAlertProps } from "./inlineAlert/InlineAlert";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
