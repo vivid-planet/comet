@@ -42,7 +42,7 @@ function Header({ header }: Props): JSX.Element {
                 <PageLayoutContent>
                     <Root>
                         <Link href="/">
-                            <SvgUse href="/assets/comet-logo.svg#root" />
+                            <SvgUse href="/assets/comet-logo.svg#root" title="Comet DXP logo" />
                         </Link>
 
                         <DesktopHeaderFullHeightNav>
