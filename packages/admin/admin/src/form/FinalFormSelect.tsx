@@ -9,8 +9,8 @@ import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> {
-    noOptionsLabel?: ReactNode;
-    errorLabel?: ReactNode;
+    noOptionsText?: ReactNode;
+    errorText?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -56,12 +56,12 @@ export const FinalFormSelect = <T,>({
         }
     },
 
-    noOptionsLabel = (
+    noOptionsText = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
         </Typography>
     ),
-    errorLabel = (
+    errorText = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
@@ -158,12 +158,12 @@ export const FinalFormSelect = <T,>({
 
             {showNoOptions && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {noOptionsLabel}
+                    {noOptionsText}
                 </MenuItemDisabledOverrideOpacity>
             )}
             {showError && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {errorLabel}
+                    {errorText}
                 </MenuItemDisabledOverrideOpacity>
             )}
 
