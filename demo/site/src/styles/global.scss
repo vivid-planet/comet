@@ -18,20 +18,20 @@
     --palette-gray-700: #616161;
     --palette-gray-800: #424242;
     --palette-gray-900: #212121;
-    --palette-error-main: #BC3520;
-    --palette-error-light: #C6523F;
+    --palette-error-main: #bc3520;
+    --palette-error-light: #c6523f;
     --palette-error-dark: #832617;
-    --palette-error-contrastText: #B3B3B3;
-    --palette-warning-main: #F3B346;
-    --palette-warning-light: #F5C15F;
-    --palette-warning-dark: #A87D32;
+    --palette-error-contrastText: #b3b3b3;
+    --palette-warning-main: #f3b346;
+    --palette-warning-light: #f5c15f;
+    --palette-warning-dark: #a87d32;
     --palette-warning-contrastText: #090909;
-    --palette-info-main: #F3B346;
-    --palette-info-light: #F5C15F;
-    --palette-info-dark: #A87D32;
+    --palette-info-main: #f3b346;
+    --palette-info-light: #f5c15f;
+    --palette-info-dark: #a87d32;
     --palette-info-contrastText: #090909;
-    --palette-success-main: #66C54F;
-    --palette-success-light: #77D06A;
+    --palette-success-main: #66c54f;
+    --palette-success-light: #77d06a;
     --palette-success-dark: #488938;
     --palette-success-contrastText: #090909;
 
@@ -47,18 +47,21 @@
     --spacing-s300: 12px;
     --spacing-s200: 8px;
     --spacing-s100: 4px;
+
     @media (min-width: $breakpoint-sm) {
         --spacing-d400: 96px;
         --spacing-d300: 68px;
         --spacing-d200: 52px;
         --spacing-d100: 24px;
     }
+
     @media (min-width: $breakpoint-md) {
         --spacing-d400: 120px;
         --spacing-d300: 84px;
         --spacing-d200: 64px;
         --spacing-d100: 32px;
     }
+
     @media (min-width: $breakpoint-lg) {
         --spacing-d400: 172px;
         --spacing-d300: 100px;
@@ -66,7 +69,6 @@
         --spacing-d100: 48px;
     }
 }
-
 
 /* Fix a problem with Flexbox to avoid overflows: https://defensivecss.dev/tip/flexbox-min-content-size/ */
 * {
