@@ -1,5 +1,31 @@
 # @comet/admin-generator
 
+## 8.1.0
+
+### Patch Changes
+
+- 2fa023d: Fix disabling row selection on click
+- 76586dc: Fix generated `ToolbarProps` for `excelExport`-only case
+
+    When generating `ToolbarProps` with `forwardToolbarAction = false` and `excelExport = true`, the generator previously inserted `false` into the generated interface, causing invalid TypeScript output.
+
+    **Example broken output**
+
+    ```ts
+    interface BooksGridToolbarToolbarProps extends GridToolbarProps {
+        false;
+        exportApi: ExportApi;
+    }
+    ```
+
+- 00e7400: Fix generating too many props for grid-component
+
+    This happened if there was a required root gql-arg for the corresponding create-mutation to support copy/paste.
+
+- 177cb58: Fix missing required root gql-arg for export-query
+- dc69279: Admin-Generator: Fix missing readOnly props for async-select
+- ded0cbc: Admin-Generator: Fix using wrong query-var for export
+
 ## 8.0.0
 
 ### Major Changes
