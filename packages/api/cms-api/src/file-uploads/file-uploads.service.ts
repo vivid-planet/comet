@@ -110,4 +110,13 @@ export class FileUploadsService {
         const buffer = Buffer.concat(chunks);
         return buffer;
     }
+
+    async delete(fileUpload: FileUpload): Promise<void> {
+        const filePath = createHashedPath(fileUpload.contentHash);
+        if (await this.blobStorageBackendService.fileExists(this.config.directory, filePath)) {
+            await this.blobStorageBackendService.removeFile(this.config.directory, filePath);
+        }
+
+        this.entityManager.remove(fileUpload);
+    }
 }
