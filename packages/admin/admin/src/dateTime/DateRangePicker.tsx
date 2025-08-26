@@ -1,18 +1,14 @@
 import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
-import {
-    DateRangePicker as MuiDateRangePicker,
-    type DateRangePickerProps as MuiDateRangePickerProps,
-    pickersInputBaseClasses,
-    SingleInputDateRangeField,
-} from "@mui/x-date-pickers-pro";
-import { type ReactNode, useState } from "react";
+import { type DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
+import { type ComponentType, type ReactNode, useMemo, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { useMuiDatePickersProModule } from "./useMuiDatePickersProModule";
 import { getDateValue, getIsoDateString } from "./utils";
 
 export type DateRange = {
@@ -23,7 +19,7 @@ export type DateRange = {
 export type Future_DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiDateRangePicker<Date, true>;
+    root: ComponentType<MuiDateRangePickerProps<Date, true>>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -57,10 +53,44 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
         name: "CometAdminFutureDateRangePicker",
     });
     const [open, setOpen] = useState(false);
+
     const dateRangeValue = getDateRangeValue(stringDateRangeValue);
     const hasDateRangeValue = dateRangeValue.some((date) => date !== null);
 
     const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
+
+    const {
+        module: muiDatePickersProModule,
+        loading: muiDateRangePickerModuleLoading,
+        error: muiDateRangePickerModuleError,
+    } = useMuiDatePickersProModule();
+
+    const Root = useMemo(() => {
+        if (!muiDatePickersProModule || muiDateRangePickerModuleLoading) {
+            return null;
+        }
+
+        return createComponentSlot(muiDatePickersProModule.DateRangePicker)<Future_DateRangePickerClassKey>({
+            componentName: "Future_DateRangePicker",
+            slotName: "root",
+        })(css`
+            .${inputLabelClasses.root} {
+                display: none;
+
+                & + .${muiDatePickersProModule.pickersInputBaseClasses.root} {
+                    margin-top: 0;
+                }
+            }
+        `);
+    }, [muiDateRangePickerModuleLoading, muiDatePickersProModule]);
+
+    if (muiDateRangePickerModuleError) {
+        throw new Error(muiDateRangePickerModuleError);
+    }
+
+    if (!muiDatePickersProModule || !Root) {
+        return null;
+    }
 
     return (
         <Root
@@ -129,25 +159,12 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
                 },
             }}
             slots={{
-                field: SingleInputDateRangeField,
+                field: muiDatePickersProModule.SingleInputDateRangeField,
                 ...slotProps?.root?.slots,
             }}
         />
     );
 };
-
-const Root = createComponentSlot(MuiDateRangePicker<Date, true>)<Future_DateRangePickerClassKey>({
-    componentName: "Future_DateRangePicker",
-    slotName: "root",
-})(css`
-    .${inputLabelClasses.root} {
-        display: none;
-
-        & + .${pickersInputBaseClasses.root} {
-            margin-top: 0;
-        }
-    }
-`);
 
 const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DateRangePickerClassKey>({
     componentName: "Future_DateRangePicker",
