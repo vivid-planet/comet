@@ -39,9 +39,9 @@ export const AccordionItemBlock = createCompositeBlock(
                 }),
                 hiddenInSubroute: true,
             },
-            htmlTag: {
-                block: createCompositeBlockSelectField<AccordionItemBlockData["htmlTag"]>({
-                    label: <FormattedMessage id="accordionItem.htmlTag" defaultMessage="HTML tag" />,
+            titleHtmlTag: {
+                block: createCompositeBlockSelectField<AccordionItemBlockData["titleHtmlTag"]>({
+                    label: <FormattedMessage id="accordionItem.titleHtmlTag" defaultMessage="Title HTML tag" />,
                     defaultValue: "h3",
                     options: [
                         { value: "h1", label: <FormattedMessage id="accordionItem.headline1" defaultMessage="Headline 1" /> },

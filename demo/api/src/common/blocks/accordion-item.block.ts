@@ -32,7 +32,7 @@ export const AccordionContentBlock = createBlocksBlock(
     "AccordionContent",
 );
 
-export enum AccordionItemTitleTag {
+export enum AccordionItemTitleHtmlTag {
     h1 = "h1",
     h2 = "h2",
     h3 = "h3",
@@ -51,8 +51,8 @@ class AccordionItemBlockData extends BlockData {
     @BlockField()
     openByDefault: boolean;
 
-    @BlockField({ type: "enum", enum: AccordionItemTitleTag })
-    htmlTag: AccordionItemTitleTag;
+    @BlockField({ type: "enum", enum: AccordionItemTitleHtmlTag })
+    titleHtmlTag: AccordionItemTitleHtmlTag;
 }
 
 class AccordionItemBlockInput extends BlockInput {
@@ -68,9 +68,9 @@ class AccordionItemBlockInput extends BlockInput {
     @BlockField()
     openByDefault: boolean;
 
-    @IsEnum(AccordionItemTitleTag)
-    @BlockField({ type: "enum", enum: AccordionItemTitleTag })
-    htmlTag: AccordionItemTitleTag;
+    @IsEnum(AccordionItemTitleHtmlTag)
+    @BlockField({ type: "enum", enum: AccordionItemTitleHtmlTag })
+    titleHtmlTag: AccordionItemTitleHtmlTag;
 
     transformToBlockData(): AccordionItemBlockData {
         return blockInputToData(AccordionItemBlockData, this);

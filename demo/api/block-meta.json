@@ -155,7 +155,7 @@
                 "nullable": false
             },
             {
-                "name": "htmlTag",
+                "name": "titleHtmlTag",
                 "kind": "Enum",
                 "enum": [
                     "h1",
@@ -186,7 +186,7 @@
                 "nullable": false
             },
             {
-                "name": "htmlTag",
+                "name": "titleHtmlTag",
                 "kind": "Enum",
                 "enum": [
                     "h1",

@@ -2,7 +2,7 @@ import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
-import { AccordionContentBlock, AccordionItemBlock, AccordionItemTitleTag } from "@src/common/blocks/accordion-item.block";
+import { AccordionContentBlock, AccordionItemBlock, AccordionItemTitleHtmlTag } from "@src/common/blocks/accordion-item.block";
 
 import { BlockFixture } from "../block-fixture";
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
@@ -54,7 +54,7 @@ export class AccordionBlockFixtureService {
             title: faker.lorem.words({ min: 3, max: 9 }),
             content: await this.generateAccordionContentBlock(),
             openByDefault: faker.datatype.boolean(),
-            htmlTag: faker.helpers.arrayElement(Object.values(AccordionItemTitleTag)),
+            titleHtmlTag: faker.helpers.arrayElement(Object.values(AccordionItemTitleHtmlTag)),
         };
     }
 
