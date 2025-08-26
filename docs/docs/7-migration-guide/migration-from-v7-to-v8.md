@@ -1927,6 +1927,7 @@ Add the proxy to your vite config:
 //...
 server: {
     // ...
+    cors: false,
     proxy: process.env.API_URL_INTERNAL
     ? {
          "/api": {
