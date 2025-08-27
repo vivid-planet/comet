@@ -1,122 +1,58 @@
-import { type ThemedComponentBaseProps } from "@comet/admin";
-import { type Box, type ComponentsOverrides, type Theme, type Typography, useThemeProps } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    DbTypeLabel,
-    DbTypeValue,
-    InfoContainer,
-    InfoContent,
-    Root,
-    TitleContainer,
-    TitleTypography,
-    UuidLabel,
-    UuidValue,
-} from "./ActionLogHeader.sc";
+import { InfoContainer, InfoContent, TitleContainer } from "./ActionLogHeader.sc";
 
-export type ActionLogHeaderClassKey =
-    | "root"
-    | "titleContainer"
-    | "infoContainer"
-    | "title"
-    | "infoContent"
-    | "uuidLabel"
-    | "uuidValue"
-    | "dbTypeLabel"
-    | "dbTypeValue";
-
-export interface ActionLogHeaderProps
-    extends ThemedComponentBaseProps<{
-        root: typeof Box;
-        titleContainer: typeof Box;
-        infoContainer: typeof Box;
-        title: typeof Typography;
-        infoContent: typeof Box;
-        uuidLabel: typeof Typography;
-        uuidValue: typeof Typography;
-        dbTypeLabel: typeof Typography;
-        dbTypeValue: typeof Typography;
-    }> {
+export interface ActionLogHeaderProps {
     action?: ReactNode;
     dbTypes?: string[];
     id: string;
     title: ReactNode;
 }
 
-export const ActionLogHeader = (inProps: ActionLogHeaderProps) => {
-    const {
-        action,
-        dbTypes = [],
-        id,
-        title,
-        slotProps,
-        ...restProps
-    } = useThemeProps({
-        props: inProps,
-        name: "CometAdminActionLogHeader",
-    });
-
+export const ActionLogHeader = ({ action, dbTypes = [], id, title }: ActionLogHeaderProps) => {
     return (
-        <Root {...restProps} {...slotProps?.root}>
-            <TitleContainer {...slotProps?.titleContainer}>
-                <TitleTypography variant="h3" {...slotProps?.title}>
-                    {title}
-                </TitleTypography>
+        <Box>
+            <TitleContainer>
+                <Typography variant="h3">{title}</Typography>
             </TitleContainer>
 
-            <InfoContainer {...slotProps?.infoContainer}>
-                <InfoContent {...slotProps?.infoContent}>
-                    <UuidLabel variant="overline" {...slotProps?.uuidLabel}>
+            <InfoContainer>
+                <InfoContent>
+                    <Typography variant="overline">
                         <FormattedMessage
                             defaultMessage="UUID: {uuid}"
                             id="actionLog.actionLogGrid.uuid"
                             values={{
                                 uuid: (
-                                    <UuidValue component="span" variant="caption" {...slotProps?.uuidValue}>
+                                    <Typography component="span" variant="caption">
                                         {id}
-                                    </UuidValue>
+                                    </Typography>
                                 ),
                             }}
                         />
-                    </UuidLabel>
+                    </Typography>
 
                     {dbTypes.length > 0 && (
-                        <DbTypeLabel variant="overline" {...slotProps?.dbTypeLabel}>
+                        <Typography variant="overline">
                             <FormattedMessage
                                 defaultMessage="DB-Type: {uuid}"
                                 id="actionLog.actionLogGrid.entity"
                                 values={{
                                     uuid: (
-                                        <DbTypeValue component="span" variant="caption" {...slotProps?.dbTypeValue}>
+                                        <Typography component="span" variant="caption">
                                             {dbTypes.join(", ")}
-                                        </DbTypeValue>
+                                        </Typography>
                                     ),
                                 }}
                             />
-                        </DbTypeLabel>
+                        </Typography>
                     )}
                 </InfoContent>
 
                 {action}
             </InfoContainer>
-        </Root>
+        </Box>
     );
 };
-
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        CometAdminActionLogHeader: ActionLogHeaderProps;
-    }
-
-    interface ComponentNameToClassKey {
-        CometAdminActionLogHeader: ActionLogHeaderClassKey;
-    }
-
-    interface Components {
-        CometAdminActionLogHeader?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminActionLogHeader"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminActionLogHeader"];
-        };
-    }
-}

@@ -1,4 +1,4 @@
-export { ActionLogHeader, ActionLogHeaderClassKey, ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
+export { ActionLogHeader, ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
