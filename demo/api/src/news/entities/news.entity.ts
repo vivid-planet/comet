@@ -1,4 +1,5 @@
 import {
+    ActionLogs,
     BlockDataInterface,
     CrudField,
     CrudGenerator,
@@ -52,6 +53,9 @@ export class NewsContentScope {
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["news"] })
+@ActionLogs({
+    requiredPermission: ["news"],
+})
 export class News extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
