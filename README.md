@@ -157,17 +157,32 @@ However, we recommend directly using dev-process-manager for greater control ove
 
 See [package.json](/package.json) for a list of all available dev scripts.
 
-## Develop in a project
+## Developing in an external project
 
-### additional Requirements
+### Requirements
 
 -   [watchman](https://facebook.github.io/watchman/)
 -   [wml](https://github.com/wix/wml)
 
-###
+### Setup
 
-    ./wml-add.sh ../example
-    wml start
+Configure `wml` to sync the comet `node_modules` to the external project:
+
+```bash
+./wml-add.sh /path/to/my-project
+```
+
+It may be necessary to configure `watchman` to watch your globally installed `wml`:
+
+```bash
+watchman watch $(dirname "$(dirname "$(which node)")")/lib/node_modules/wml/src
+```
+
+Start syncing the comet `node_modules` to the external project:
+
+```bash
+wml start
+```
 
 ## Contributing
 
