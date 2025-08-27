@@ -1,7 +1,10 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
-export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
+export { ActionLogs } from "./action-logs/action-logs.decorator";
+export { ActionLogsModule } from "./action-logs/action-logs.module";
+export { ActionLogsService } from "./action-logs/action-logs.service";
+export { DISABLE_COMET_GUARDS_METADATA_KEY, DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { CometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
