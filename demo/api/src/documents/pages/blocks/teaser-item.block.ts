@@ -14,7 +14,7 @@ import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { TextLinkBlock } from "@src/common/blocks/text-link.block";
 import { IsEnum, IsString } from "class-validator";
 
-export enum HeadlineLevel {
+export enum TeaserTitleTag {
     h1 = "h1",
     h2 = "h2",
     h3 = "h3",
@@ -36,8 +36,8 @@ class TeaserItemBlockData extends BlockData {
     @ChildBlock(TextLinkBlock)
     link: BlockDataInterface;
 
-    @BlockField({ type: "enum", enum: HeadlineLevel })
-    headlineLevel: HeadlineLevel;
+    @BlockField({ type: "enum", enum: TeaserTitleTag })
+    htmlTag: TeaserTitleTag;
 }
 
 class TeaserItemBlockInput extends BlockInput {
@@ -54,9 +54,9 @@ class TeaserItemBlockInput extends BlockInput {
     @ChildBlockInput(TextLinkBlock)
     link: ExtractBlockInput<typeof TextLinkBlock>;
 
-    @IsEnum(HeadlineLevel)
-    @BlockField({ type: "enum", enum: HeadlineLevel })
-    headlineLevel: HeadlineLevel;
+    @IsEnum(TeaserTitleTag)
+    @BlockField({ type: "enum", enum: TeaserTitleTag })
+    htmlTag: TeaserTitleTag;
 
     transformToBlockData(): TeaserItemBlockData {
         return blockInputToData(TeaserItemBlockData, this);
