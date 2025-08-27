@@ -69,7 +69,7 @@ export const createStyles = (theme: Theme): ReactDiffViewerStylesOverride => {
         },
         diffRemoved: {
             "& pre": {
-                backgroundColor: "#f8b7b7",
+                backgroundColor: `${theme.palette.error.main}4D`, // 30% opacity
                 borderRadius: "4px",
                 color: "white",
                 fontSize: "12px",
