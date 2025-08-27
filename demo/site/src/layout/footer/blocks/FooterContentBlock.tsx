@@ -14,7 +14,7 @@ export const FooterContentBlock = withPreview(
             <Root>
                 <PageLayout grid>
                     <PageLayoutContent>
-                        <MobileTopContainer>
+                        <TopContainer>
                             <ImageWrapper>
                                 <DamImageBlock
                                     data={image}
@@ -26,20 +26,7 @@ export const FooterContentBlock = withPreview(
                             <RichTextWrapper>
                                 <RichTextBlock data={text} disableLastBottomSpacing />
                             </RichTextWrapper>
-                        </MobileTopContainer>
-                        <DesktopTopContainer>
-                            <RichTextWrapper>
-                                <RichTextBlock data={text} disableLastBottomSpacing />
-                            </RichTextWrapper>
-                            <ImageWrapper>
-                                <DamImageBlock
-                                    data={image}
-                                    aspectRatio="1x1"
-                                    style={{ objectFit: "contain" }}
-                                    sizes={createImageSizes({ default: "10vw" })}
-                                />
-                            </ImageWrapper>
-                        </DesktopTopContainer>
+                        </TopContainer>
                         <HorizontalLine />
                         <LinkCopyrightWrapper>
                             <nav>
@@ -86,7 +73,7 @@ const PageLayoutContent = styled.div`
     }
 `;
 
-const MobileTopContainer = styled.div`
+const TopContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -94,16 +81,8 @@ const MobileTopContainer = styled.div`
     gap: ${({ theme }) => theme.spacing.D100};
 
     ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-        display: none;
-    }
-`;
-
-const DesktopTopContainer = styled.div`
-    display: none;
-
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-        display: flex;
         align-self: stretch;
+        flex-direction: row-reverse;
         justify-content: space-between;
     }
 
