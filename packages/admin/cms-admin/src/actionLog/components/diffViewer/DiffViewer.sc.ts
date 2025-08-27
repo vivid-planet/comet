@@ -1,14 +1,9 @@
-import { createComponentSlot } from "@comet/admin";
 import { Box, css, type Theme } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import type { ReactDiffViewerStylesOverride } from "react-diff-viewer-continued";
 
-import { type DiffViewerClassKey } from "./DiffViewer";
-
-export const Root = createComponentSlot(Box)<DiffViewerClassKey>({
-    componentName: "DiffViewer",
-    slotName: "root",
-})(
-    (props: { theme: Theme }) => css`
+export const Root = styled(Box)(
+    ({ theme }) => css`
         div[role="banner"] {
             display: none;
         }
@@ -21,20 +16,17 @@ export const Root = createComponentSlot(Box)<DiffViewerClassKey>({
             }
 
             td:nth-of-type(2) {
-                border-right: 1px solid ${props.theme.palette.grey["200"]};
+                border-right: 1px solid ${theme.palette.grey["200"]};
             }
 
             th:first-of-type {
-                border-right: 1px solid ${props.theme.palette.grey["200"]};
+                border-right: 1px solid ${theme.palette.grey["200"]};
             }
         }
     `,
 );
 
-export const CodeFoldMessageContainer = createComponentSlot(Box)<DiffViewerClassKey>({
-    componentName: "DiffViewer",
-    slotName: "codeFoldMessageContainer",
-})(
+export const CodeFoldMessageContainer = styled(Box)(
     ({ theme }) => css`
         display: flex;
         align-items: center;
