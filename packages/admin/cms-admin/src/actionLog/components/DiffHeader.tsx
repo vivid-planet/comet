@@ -1,72 +1,39 @@
-import { type ThemedComponentBaseProps } from "@comet/admin";
-import { type Box, type ComponentsOverrides, type Theme, type Typography } from "@mui/material";
-import { useThemeProps } from "@mui/material/styles";
+import { Typography } from "@mui/material";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
-import { Date, Info, Root, UserId, Version } from "./DiffHeader.sc";
+import { Root } from "./DiffHeader.sc";
 
-export type DiffHeaderClassKey = "root" | "version" | "userId" | "date" | "info";
-
-export interface DiffHeaderProps
-    extends ThemedComponentBaseProps<{
-        root: typeof Box;
-        version: typeof Typography;
-        userId: typeof Typography;
-        date: typeof Typography;
-        info: typeof Typography;
-    }> {
+export interface DiffHeaderProps {
     createdAt?: string;
     userId?: string;
     version?: number;
 }
 
-export const DiffHeader = (inProps: DiffHeaderProps) => {
-    const { createdAt, userId, version, slotProps, ...restProps } = useThemeProps({
-        props: inProps,
-        name: "CometAdminDiffHeader",
-    });
-
+export const DiffHeader = ({ createdAt, userId, version }: DiffHeaderProps) => {
     return (
-        <Root {...restProps} {...slotProps?.root}>
-            <Version color="white" variant="subtitle1" {...slotProps?.version}>
+        <Root>
+            <Typography color="white" variant="subtitle1">
                 <FormattedMessage defaultMessage="Version {version}" id="actionLog.actionLogCompare.diffHeader.version" values={{ version }} />
-            </Version>
+            </Typography>
 
-            <Info color="textSecondary" variant="caption" {...slotProps?.info}>
+            <Typography color="textSecondary" variant="caption">
                 <FormattedMessage
                     defaultMessage="{userId} on {date}"
                     id="actionLog.actionLogCompare.diffHeader.userIdAndTime"
                     values={{
                         date: (
-                            <Date color="textSecondary" variant="overline" {...slotProps?.date}>
+                            <Typography color="textSecondary" variant="overline" component="span">
                                 <FormattedDate dateStyle="short" timeStyle="short" value={createdAt} />
-                            </Date>
+                            </Typography>
                         ),
                         userId: (
-                            <UserId color="textSecondary" variant="overline" {...slotProps?.userId}>
+                            <Typography color="textSecondary" variant="overline" component="span">
                                 {userId}
-                            </UserId>
+                            </Typography>
                         ),
                     }}
                 />
-            </Info>
+            </Typography>
         </Root>
     );
 };
-
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        CometAdminDiffHeader: DiffHeaderProps;
-    }
-
-    interface ComponentNameToClassKey {
-        CometAdminDiffHeader: DiffHeaderClassKey;
-    }
-
-    interface Components {
-        CometAdminDiffHeader?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDiffHeader"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDiffHeader"];
-        };
-    }
-}
