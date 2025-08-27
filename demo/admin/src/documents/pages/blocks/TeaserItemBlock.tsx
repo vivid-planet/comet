@@ -36,7 +36,7 @@ export const TeaserItemBlock = createCompositeBlock(
             },
             titleHtmlTag: {
                 block: createCompositeBlockSelectField<TeaserItemBlockData["titleHtmlTag"]>({
-                    label: <FormattedMessage id="teaserItemBlock.htmlTag" defaultMessage="HTML tag" />,
+                    label: <FormattedMessage id="teaserItemBlock.titleHtmlTag" defaultMessage="Title HTML tag" />,
                     defaultValue: "h3",
                     options: ([1, 2, 3, 4, 5, 6] as const).map((number) => ({
                         value: `h${number}`,
