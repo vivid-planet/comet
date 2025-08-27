@@ -34,6 +34,9 @@ const damFileTableFragment = gql`
         updatedAt
         createdAt
         importSourceType
+        dependents {
+            totalCount
+        }
     }
     ${damFileThumbnailFragment}
 `;

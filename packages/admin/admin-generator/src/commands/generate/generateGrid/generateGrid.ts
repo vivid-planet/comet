@@ -29,7 +29,7 @@ import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtime
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
-import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./getPropsForFilterProp";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
@@ -255,7 +255,6 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
-    const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
@@ -292,11 +291,7 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    const {
-        imports: forwardedGqlArgsImports,
-        props: forwardedGqlArgsProps,
-        gqlArgs,
-    } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
+    const { imports: forwardedGqlArgsImports, props: forwardedGqlArgsProps, gqlArgs } = getForwardedGqlArgs([gridQueryType]);
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
@@ -913,7 +908,7 @@ export function generateGrid<T extends { __typename?: string }>(
             !allowRowReordering ? `data?.${gridQuery}.nodes` : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
-        ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery)}
+        ${generateGridExportApi(config.excelExport, gqlTypePlural, instanceGqlTypePlural, gridQuery, gqlArgs)}
 
         return (
             <DataGridPro
@@ -990,7 +985,13 @@ const getDataGridSlotProps = (componentName: string, forwardToolbarAction: boole
     }}`;
 };
 
-const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: string, gridQuery: string) => {
+const generateGridExportApi = (
+    excelExport: boolean | undefined,
+    gqlTypePlural: string,
+    instanceGqlTypePlural: string,
+    gridQuery: string,
+    gqlArgs: GqlArg[],
+) => {
     if (!excelExport) {
         return "";
     }
@@ -998,9 +999,12 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
     return `const exportApi = useDataGridExcelExport<GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0], GQL${gqlTypePlural}GridQuery, Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ${[
+                ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQuery).map((arg) => arg.name),
+                `...muiGridFilterToGql(columns, dataGridProps.filterModel)`,
+            ].join(", ")}
         },
-        query: ${gridQuery}Query,
+        query: ${instanceGqlTypePlural}Query,
         resolveQueryNodes: (data) => data.${gridQuery}.nodes,
         totalCount: data?.${gridQuery}.totalCount ?? 0,
         exportOptions: {

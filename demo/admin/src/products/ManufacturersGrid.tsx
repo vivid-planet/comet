@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
@@ -24,7 +24,6 @@ import {
     type GQLManufacturersListQuery,
     type GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
-import gql from "graphql-tag";
 import { FormattedMessage, useIntl } from "react-intl";
 
 function ManufacturersGridToolbar() {

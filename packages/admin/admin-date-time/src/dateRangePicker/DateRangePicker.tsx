@@ -13,6 +13,9 @@ import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
 import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { DateRange, type DateRangePickerClassKey, Root, type SlotProps, StartAdornment } from "./DateRangePicker.slots";
 
+/**
+ * @deprecated `DateRange` from `@comet/admin-date-time` will be replaced by `DateRange` from `@comet/admin` in a future major release.
+ */
 export type DateRange = {
     start: string;
     end: string;
@@ -69,6 +72,9 @@ const getRangeFromValue = (value: undefined | DateRange): Range => {
     };
 };
 
+/**
+ * @deprecated `DateRangePicker` from `@comet/admin-date-time` will be replaced by `DateRangePicker` (currently `Future_DateRangePicker`) from `@comet/admin` in a future major release.
+ */
 export const DateRangePicker = (inProps: DateRangePickerProps) => {
     const {
         onChange,
