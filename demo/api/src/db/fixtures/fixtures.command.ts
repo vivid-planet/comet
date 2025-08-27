@@ -1,4 +1,5 @@
 import {
+    ActionLogsService,
     BlobStorageBackendService,
     DependenciesService,
     PageTreeNodeBaseCreateInput,
@@ -10,6 +11,7 @@ import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
+import { SYSTEM_USER_NAME } from "@src/auth/auth.module";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
@@ -77,6 +79,7 @@ export class FixturesCommand extends CommandRunner {
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
         private readonly newsFixtureService: NewsFixtureService,
+        private readonly actionLogsService: ActionLogsService,
     ) {
         super();
     }
@@ -105,6 +108,16 @@ export class FixturesCommand extends CommandRunner {
         const migrator = this.orm.getMigrator();
         await migrator.up();
 
+        await this.actionLogsService.runWithUserId(SYSTEM_USER_NAME, async () => {
+            try {
+                await this.runFixtures();
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    }
+
+    async runFixtures() {
         const scope = { domain: "main", language: "en" };
 
         const multiBar = new MultiBar(this.barOptions, Presets.shades_classic);

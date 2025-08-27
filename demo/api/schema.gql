@@ -2,6 +2,37 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ActionLog {
+  createdAt: DateTime!
+  entityId: ID!
+  entityName: String!
+  id: ID!
+  scope: [JSONObject!]
+  snapshot: JSONObject
+  userId: ID!
+  version: Int!
+}
+
+input ActionLogFilter {
+  and: [ActionLogFilter!]
+  entityId: StringFilter
+  id: IdFilter
+  or: [ActionLogFilter!]
+  userId: StringFilter
+}
+
+input ActionLogSort {
+  direction: SortDirection! = ASC
+  field: ActionLogSortField!
+}
+
+enum ActionLogSortField {
+  createdAt
+  entityId
+  userId
+  version
+}
+
 type Address {
   alternativeAddress: AlternativeAddress
   country: String!
@@ -925,6 +956,11 @@ enum PageTreeNodeVisibility {
   Unpublished
 }
 
+type PaginatedActionLogs {
+  nodes: [ActionLog!]!
+  totalCount: Int!
+}
+
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -1011,6 +1047,7 @@ type PaginatedWarnings {
 }
 
 enum Permission {
+  actionLogs
   builds
   cronJobs
   dam
@@ -1556,6 +1593,8 @@ input ProductVariantUpdateInput {
 }
 
 type Query {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(entityName: String!, filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scope: JSONObject, sort: [ActionLogSort!]): PaginatedActionLogs!
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   buildTemplates: [BuildTemplate!]!
