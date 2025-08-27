@@ -1,4 +1,4 @@
-export { DiffHeader, DiffHeaderClassKey, DiffHeaderProps } from "./actionLog/components/DiffHeader";
+export { DiffHeader, DiffHeaderProps } from "./actionLog/components/DiffHeader";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
