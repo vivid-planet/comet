@@ -156,6 +156,7 @@ export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
+export { FullPageAlert, FullPageAlertClassKey, FullPageAlertProps } from "./fullPageAlert/FullPageAlert";
 export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
