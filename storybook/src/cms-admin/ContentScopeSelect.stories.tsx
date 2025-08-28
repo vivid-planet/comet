@@ -296,6 +296,7 @@ export const GroupingWithOptionalScopeParts = function () {
                 },
             ]}
             groupBy="country"
+            excludeFromGrouping={(option) => option.company === undefined}
             searchable
             renderOption={(option, query, isSelected) => {
                 let text: string;
