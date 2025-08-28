@@ -5,6 +5,8 @@ import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
+import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
+import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -29,7 +31,7 @@ export class WarningEventSubscriber implements EventSubscriber {
 
         const entities = this.orm.config.get("entities") as EntityClass<unknown>[];
         for (const entity of entities) {
-            const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
+            const rootBlockEntityOptions = Reflect.getMetadata(ROOT_BLOCK_ENTITY_METADATA_KEY, entity);
             const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
 
             if (rootBlockEntityOptions || createWarnings) {
@@ -54,7 +56,7 @@ export class WarningEventSubscriber implements EventSubscriber {
         const definedProperties = args.meta.definedProperties;
 
         if (entity) {
-            const keys = Reflect.getMetadata(`keys:rootBlock`, entity.prototype) || [];
+            const keys = Reflect.getMetadata(ROOT_BLOCK_KEYS_METADATA_KEY, entity.prototype) || [];
             let scope: ContentScope | undefined = "scope" in definedProperties ? definedProperties.scope : undefined;
 
             if (!scope) {
@@ -72,7 +74,7 @@ export class WarningEventSubscriber implements EventSubscriber {
             }
 
             for (const key of keys) {
-                const block = Reflect.getMetadata(`data:rootBlock`, entity.prototype, key);
+                const block = Reflect.getMetadata(ROOT_BLOCK_METADATA_KEY, entity.prototype, key);
 
                 const flatBlocks = new FlatBlocks(args.entity[key], {
                     name: block.name,
