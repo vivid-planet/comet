@@ -3,6 +3,7 @@ import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-o
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
+import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "../decorators/affected-entity.decorator";
@@ -45,7 +46,7 @@ describe("UserPermissionsGuard", () => {
             if (decorator === "requiredPermission") return annotations.requiredPermission;
             if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
             if (decorator === SCOPED_ENTITY_METADATA_KEY) return annotations.scopedEntity;
-            if (decorator === "disableCometGuards") return annotations.disableCometGuards;
+            if (decorator === DISABLE_COMET_GUARDS_METADATA_KEY) return annotations.disableCometGuards;
             return false;
         });
     };
