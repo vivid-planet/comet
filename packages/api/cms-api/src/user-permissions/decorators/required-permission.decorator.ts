@@ -14,11 +14,13 @@ export type RequiredPermissionMetadata = {
     options: RequiredPermissionOptions | undefined;
 };
 
+export const REQUIRED_PERMISSION_METADATA_KEY = "requiredPermission";
+
 export const RequiredPermission = (
     requiredPermission: Permission | Permission[] | DisablePermissionCheckType,
     options?: RequiredPermissionOptions,
 ): CustomDecorator<string> => {
-    return SetMetadata<string, RequiredPermissionMetadata>("requiredPermission", {
+    return SetMetadata<string, RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY, {
         requiredPermission: Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission],
         options,
     });

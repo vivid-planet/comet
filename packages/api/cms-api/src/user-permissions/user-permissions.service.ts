@@ -9,7 +9,7 @@ import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
 import { AbstractAccessControlService } from "./access-control.service";
-import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
@@ -83,10 +83,10 @@ export class UserPermissionsService {
             this.availablePermissions = [
                 ...new Set(
                     [
-                        ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                        ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                        ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                        ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
+                        ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
+                        ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
+                        ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
                     ]
                         .flatMap((p) => p.meta.requiredPermission)
                         .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
