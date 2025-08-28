@@ -2,10 +2,11 @@ import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type SliderBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { BasicSwiper } from "@src/common/components/BasicSwiper";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import { SwiperSlide } from "swiper/react";
 
 type SliderBlockProps = PropsWithData<SliderBlockData>;
 
@@ -15,11 +16,14 @@ export const SliderBlock = withPreview(
             <PageLayout>
                 <Slider>
                     <SwiperContainer>
-                        <Swiper
-                            modules={[Navigation]}
+                        <BasicSwiper
                             slidesPerView={3}
                             spaceBetween={20}
                             longSwipesRatio={0.1}
+                            modules={[Pagination]}
+                            pagination={{
+                                clickable: true,
+                            }}
                             threshold={3}
                             allowTouchMove
                             watchOverflow
@@ -35,7 +39,7 @@ export const SliderBlock = withPreview(
                                     </SliderItemBlockRoot>
                                 </SwiperSlide>
                             ))}
-                        </Swiper>
+                        </BasicSwiper>
                     </SwiperContainer>
                 </Slider>
             </PageLayout>
