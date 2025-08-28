@@ -3,7 +3,7 @@ import { Field } from "@comet/admin";
 import { Video } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import { FormattedMessage } from "react-intl";
+import { defineMessage, FormattedMessage } from "react-intl";
 
 import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { FileField } from "../form/file/FileField";
@@ -151,4 +151,5 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
         return contents;
     },
+    tags: [defineMessage({ id: "damVideoBlock.tag.video", defaultMessage: "Video" })],
 };
