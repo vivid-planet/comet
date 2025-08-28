@@ -32,7 +32,6 @@ const StyledDialogTitle = styled(DialogTitle)`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 `;
 
 const CloseButton = styled(IconButton)`
