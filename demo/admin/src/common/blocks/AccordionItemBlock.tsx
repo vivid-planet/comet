@@ -5,15 +5,16 @@ import {
     createBlocksBlock,
     createCompositeBlock,
     createCompositeBlockField,
+    createCompositeBlockSelectField,
     createCompositeBlockTextField,
 } from "@comet/cms-admin";
 import { type AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
-import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { FormattedMessage } from "react-intl";
 
+import { StandaloneHeadingBlock } from "./StandaloneHeadingBlock";
 import { TextImageBlock } from "./TextImageBlock";
 
 const AccordionContentBlock = createBlocksBlock({
@@ -37,6 +38,17 @@ export const AccordionItemBlock = createCompositeBlock(
                     label: <FormattedMessage id="accordionBlock.accordionItem.title" defaultMessage="Title" />,
                 }),
                 hiddenInSubroute: true,
+            },
+            titleHtmlTag: {
+                block: createCompositeBlockSelectField<AccordionItemBlockData["titleHtmlTag"]>({
+                    label: <FormattedMessage id="accordionItem.titleHtmlTag" defaultMessage="Title HTML tag" />,
+                    defaultValue: "h3",
+                    options: ([1, 2, 3, 4, 5, 6] as const).map((number) => ({
+                        value: `h${number}`,
+                        label: <FormattedMessage id={`teaserItemBlock.headline${number}`} defaultMessage={`Headline ${number}`} />,
+                    })),
+                    required: true,
+                }),
             },
             content: {
                 block: AccordionContentBlock,
