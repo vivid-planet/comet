@@ -47,7 +47,7 @@ import { Education as EducationIcon } from "@comet/admin-icons";
 const productsFragment = gql`
         fragment ProductsGridFuture on Product {
             id
-            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name }
+            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name } slug
         }
     `;
 const productsQuery = gql`
