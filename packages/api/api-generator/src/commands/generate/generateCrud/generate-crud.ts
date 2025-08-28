@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
+import { SCOPED_ENTITY_METADATA_KEY } from "@comet/cms-api/lib/user-permissions/decorators/scoped-entity.decorator";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -88,7 +89,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         : [];
     const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
 
-    const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
+    const scopedEntity = Reflect.getMetadata(SCOPED_ENTITY_METADATA_KEY, metadata.class);
     const skipScopeCheck = !scopeProp && !scopedEntity;
 
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;

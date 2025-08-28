@@ -7,7 +7,7 @@ import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "../decorators/affected-entity.decorator";
 import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
-import { ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
 import { CurrentUser } from "../dto/current-user";
 import { Permission } from "../user-permissions.types";
 import { UserPermissionsGuard } from "./user-permissions.guard";
@@ -44,7 +44,7 @@ describe("UserPermissionsGuard", () => {
         reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
             if (decorator === "requiredPermission") return annotations.requiredPermission;
             if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
-            if (decorator === "scopedEntity") return annotations.scopedEntity;
+            if (decorator === SCOPED_ENTITY_METADATA_KEY) return annotations.scopedEntity;
             if (decorator === "disableCometGuards") return annotations.disableCometGuards;
             return false;
         });
