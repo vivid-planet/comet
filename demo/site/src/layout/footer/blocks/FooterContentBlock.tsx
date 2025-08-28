@@ -98,7 +98,6 @@ const RichTextWrapper = styled.div`
 
     ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         text-align: left;
-        reading-order: 1;
     }
 
     ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
@@ -108,10 +107,6 @@ const RichTextWrapper = styled.div`
 
 const ImageWrapper = styled.div`
     width: 100px;
-
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-        reading-order: 2;
-    }
 
     ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         position: absolute;
