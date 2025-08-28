@@ -141,6 +141,7 @@ export default defineConfig<GQLProduct>({
         },
         {
             type: "actions",
+            queryFields: ["slug"],
             component: ProductsGridPreviewAction,
         },
     ],
