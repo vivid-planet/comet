@@ -6,7 +6,7 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
-import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
@@ -58,7 +58,7 @@ export class WarningEventSubscriber implements EventSubscriber {
             let scope: ContentScope | undefined = "scope" in definedProperties ? definedProperties.scope : undefined;
 
             if (!scope) {
-                const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [entity]);
+                const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                 if (scoped) {
                     const service = this.moduleRef.get(scoped, { strict: false });
