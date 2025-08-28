@@ -8,7 +8,7 @@ import isEqual from "lodash.isequal";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { EntityScopeServiceInterface, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
+import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
@@ -33,7 +33,7 @@ export class ContentScopeService {
         const args = await this.getArgs(context);
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const affectedEntities = this.reflector.getAllAndOverride<AffectedEntityMeta[]>("affectedEntities", [context.getHandler()]) || [];
+        const affectedEntities = this.reflector.getAllAndOverride<AffectedEntityMeta[]>(AFFECTED_ENTITY_METADATA_KEY, [context.getHandler()]) || [];
         for (const affectedEntity of affectedEntities) {
             contentScopes.push(...(await this.getContentScopesFromEntity(affectedEntity, args, location)));
         }

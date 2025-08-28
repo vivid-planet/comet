@@ -5,7 +5,7 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 
 import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
-import { AffectedEntityMeta } from "../decorators/affected-entity.decorator";
+import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "../decorators/affected-entity.decorator";
 import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
 import { CurrentUser } from "../dto/current-user";
@@ -43,7 +43,7 @@ describe("UserPermissionsGuard", () => {
     }) => {
         reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
             if (decorator === "requiredPermission") return annotations.requiredPermission;
-            if (decorator === "affectedEntities") return annotations.affectedEntities;
+            if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
             if (decorator === "scopedEntity") return annotations.scopedEntity;
             if (decorator === "disableCometGuards") return annotations.disableCometGuards;
             return false;
