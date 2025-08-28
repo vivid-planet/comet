@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
+import { CRUD_GENERATOR_METADATA_KEY } from "@comet/cms-api/lib/common/decorators/crud-generator.decorator";
 import { SCOPED_ENTITY_METADATA_KEY } from "@comet/cms-api/lib/user-permissions/decorators/scoped-entity.decorator";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
@@ -1302,7 +1303,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             .filter((prop) => {
                 if (prop.kind === "1:m" && prop.orphanRemoval) {
                     if (!prop.targetMeta) throw new Error(`Target metadata not set`);
-                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    const hasOwnCrudGenerator = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, prop.targetMeta.class);
                     if (!hasOwnCrudGenerator) {
                         //generate nested resolver only if target entity has no own crud generator
                         return true;
