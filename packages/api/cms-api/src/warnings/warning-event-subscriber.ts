@@ -8,7 +8,7 @@ import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
 import { WarningService } from "./warning.service";
 
@@ -30,7 +30,7 @@ export class WarningEventSubscriber implements EventSubscriber {
         const entities = this.orm.config.get("entities") as EntityClass<unknown>[];
         for (const entity of entities) {
             const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
-            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
 
             if (rootBlockEntityOptions || createWarnings) {
                 subscribedEntities.push(entity);
@@ -110,7 +110,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                 }
             }
 
-            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
             if (createWarnings && args.entity.id) {
                 const repository: EntityRepository<{ id: string; scope: ContentScope }> = this.entityManager.getRepository(entity);
 
