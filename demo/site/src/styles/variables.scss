@@ -1,0 +1,5 @@
+/* breakpoints as sass-variables, as css-variables don't work for breakpoints */
+$breakpoint-sm: 600px;
+$breakpoint-md: 900px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1600px;
