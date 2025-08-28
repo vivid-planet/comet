@@ -32,7 +32,9 @@ type BlockFieldOptions =
           block: Block;
       };
 
+/** @knipignore */
 export const BLOCK_FIELD_METADATA_KEY = "data:fieldType";
+/** @knipignore */
 export const BLOCK_FIELD_KEYS_METADATA_KEY = "keys:field";
 
 export function BlockField(

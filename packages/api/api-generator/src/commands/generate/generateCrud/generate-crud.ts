@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
-import { CRUD_GENERATOR_METADATA_KEY } from "@comet/cms-api/lib/common/decorators/crud-generator.decorator";
-import { SCOPED_ENTITY_METADATA_KEY } from "@comet/cms-api/lib/user-permissions/decorators/scoped-entity.decorator";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    getCrudSearchFieldsFromMetadata,
+    hasCrudFieldFeature,
+    SCOPED_ENTITY_METADATA_KEY,
+} from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
