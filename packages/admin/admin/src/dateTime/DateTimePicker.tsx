@@ -12,6 +12,7 @@ import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { isValidDate } from "./utils";
 
 export type Future_DateTimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
@@ -60,7 +61,7 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
             disableOpenPicker
             value={value}
             onChange={(date) => {
-                const dateIsInvalid = date !== null && isNaN(date.getTime());
+                const dateIsInvalid = date !== null && !isValidDate(date);
                 if (dateIsInvalid) {
                     return;
                 }

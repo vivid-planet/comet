@@ -17,3 +17,7 @@ export const getDateValue = (value: string | null | undefined): Date | null => {
 export const getIsoDateString = (date: Date) => {
     return format(date, "yyyy-MM-dd");
 };
+
+export const isValidDate = (date: Date) => {
+    return !isNaN(date.getTime());
+};

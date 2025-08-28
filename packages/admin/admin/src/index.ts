@@ -97,6 +97,8 @@ export { type DateRange, Future_DateRangePicker, Future_DateRangePickerClassKey,
 export { Future_DateRangePickerField, Future_DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
 export { Future_DateTimePicker, Future_DateTimePickerClassKey, Future_DateTimePickerProps } from "./dateTime/DateTimePicker";
 export { Future_DateTimePickerField, Future_DateTimePickerFieldProps } from "./dateTime/DateTimePickerField";
+export { type DateTimeRange, DateTimeRangePicker, DateTimeRangePickerClassKey, DateTimeRangePickerProps } from "./dateTime/DateTimeRangePicker";
+export { DateTimeRangePickerField, DateTimeRangePickerFieldProps } from "./dateTime/DateTimeRangePickerField";
 export { Future_TimePicker, Future_TimePickerClassKey, Future_TimePickerProps } from "./dateTime/TimePicker";
 export { Future_TimePickerField, Future_TimePickerFieldProps } from "./dateTime/TimePickerField";
 export { DeleteMutation } from "./DeleteMutation";
