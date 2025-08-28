@@ -1,7 +1,11 @@
 import console from "node:console";
 
-import type { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "@comet/cms-api";
-import { CRUD_GENERATOR_METADATA_KEY, CRUD_SINGLE_GENERATOR_METADATA_KEY } from "@comet/cms-api/lib/common/decorators/crud-generator.decorator";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    CRUD_SINGLE_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    type CrudSingleGeneratorOptions,
+} from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
 import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
