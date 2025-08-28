@@ -9,6 +9,7 @@ const config = [
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
+            "react/jsx-no-literals": "off"
         },
     },
 ];
