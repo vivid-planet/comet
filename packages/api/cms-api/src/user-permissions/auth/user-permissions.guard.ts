@@ -5,7 +5,7 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
-import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
@@ -23,7 +23,7 @@ export class UserPermissionsGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
+        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, REQUIRED_PERMISSION_METADATA_KEY);
         const skipScopeCheck = requiredPermission?.options?.skipScopeCheck ?? false;
 
         let requiredContentScopes: ContentScope[][] = [];
