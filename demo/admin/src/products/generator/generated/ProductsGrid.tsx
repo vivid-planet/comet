@@ -163,7 +163,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         { field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "boolean",
-            valueFormatter: (value, row) => typeof row.inStock === "boolean" ? row.inStock.toString() : "",
             flex: 1,
             visible: theme.breakpoints.up('md'),
             minWidth: 80, },

@@ -417,7 +417,6 @@ export function generateGrid<T extends { __typename?: string }>(
             }`;
         } else if (type == "boolean") {
             gridType = "boolean";
-            valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;
         } else if (column.type == "block") {
             renderCell = `(params) => {
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
