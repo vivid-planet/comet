@@ -9,7 +9,7 @@ export type AsyncAutocompleteFieldProps<
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
 > = FieldProps<T, HTMLInputElement | HTMLTextAreaElement> & {
-    loadOptions: () => Promise<T[]>;
+    loadOptions: (search?: string) => Promise<T[]>;
 } & Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "options" | "renderInput"> & {
         clearable?: boolean;
     };

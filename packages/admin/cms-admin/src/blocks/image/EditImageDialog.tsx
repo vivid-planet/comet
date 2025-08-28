@@ -29,6 +29,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { CropSettingsFields } from "../../dam/FileForm/CropSettingsFields";
 import { type EditImageFormValues } from "../../dam/FileForm/EditFile";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
+import { DamPathLazy } from "../../form/file/DamPathLazy";
 import { type GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
@@ -184,6 +185,14 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
 
                                         {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
+                                                <>
+                                                    <Typography variant="subtitle1">
+                                                        <FormattedMessage id="comet.blocks.image.damPath" defaultMessage="DAM Path: " />
+                                                    </Typography>
+                                                    <Typography mb={2}>
+                                                        <DamPathLazy fileId={damFileId} />
+                                                    </Typography>
+                                                </>
                                                 <Button
                                                     variant="outlined"
                                                     color="inherit"

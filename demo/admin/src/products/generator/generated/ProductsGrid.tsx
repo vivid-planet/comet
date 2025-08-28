@@ -205,12 +205,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
             flex: 1,
+            disableExport: true,
             minWidth: 150, },
         { ...dataGridOneToManyColumn, field: "variants",
             headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
             sortable: false,
             renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
             flex: 1,
+            disableExport: true,
             minWidth: 150, },
         { field: "actions",
             headerName: "",
@@ -247,7 +249,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const exportApi = useDataGridExcelExport<GQLProductsGridQuery["products"]["nodes"][0], GQLProductsGridQuery, Omit<GQLProductsGridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel)
         },
         query: productsQuery,
         resolveQueryNodes: (data) => data.products.nodes,

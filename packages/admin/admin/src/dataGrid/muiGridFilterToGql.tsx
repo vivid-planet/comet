@@ -41,8 +41,8 @@ interface GqlNumberFilter {
     greaterThanEqual?: number | null;
     notEqual?: number | null;
 }
-type GqlFilter = {
-    [key: string]: GqlStringFilter | GqlNumberFilter; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
+export type GqlFilter = {
+    [key: string]: GqlStringFilter | GqlNumberFilter | undefined; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
 } & {
     and?: GqlFilter[] | null;
     or?: GqlFilter[] | null;
@@ -51,6 +51,10 @@ type GqlFilter = {
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items.map((filterItem) => {
+        const column = columns.find((col) => col.field === filterItem.field);
+        if (column?.toGqlFilter) {
+            return column.toGqlFilter(filterItem);
+        }
         if (!filterItem.operator) throw new Error("operator not set");
         const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
         const value = ["isEmpty", "isNotEmpty"].includes(gqlOperator) ? true : filterItem.value;
@@ -62,7 +66,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
     });
     const filter: GqlFilter = {};
     const op: "and" | "or" = filterModel.logicOperator ?? "and";
-    filter[op] = filterItems;
+    filter[op] = filterItems.filter((item) => item != null);
 
     let search: undefined | string = undefined;
 
