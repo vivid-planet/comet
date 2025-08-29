@@ -31,11 +31,21 @@ const gqlHashLoader = function (this: any, source: string) {
         const query = match[1];
         const hash = hashQuery(query);
         hashMap[hash] = query;
-        replacements.push({
-            start: match.index,
-            end: match.index + match[0].length,
-            replacement: `{ hash: "${hash}" }`,
-        });
+        if (query.match(/^\s*fragment\s+(\w+)\s+on\s+\w+/m)) {
+            // fragment
+            replacements.push({
+                start: match.index,
+                end: match.index + match[0].length,
+                replacement: `{ fragment: true }`,
+            });
+        } else {
+            // query or mutation
+            replacements.push({
+                start: match.index,
+                end: match.index + match[0].length,
+                replacement: `{ hash: "${hash}" }`,
+            });
+        }
     }
     let modifiedSource = source;
     for (let i = replacements.length - 1; i >= 0; i--) {
