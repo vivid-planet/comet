@@ -7,16 +7,16 @@ import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type SectionHeadlineClassKey = "root" | "headlineWrapper" | "titleContainer" | "divider" | "supportText" | "infoTooltip" | "infoIcon";
+export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "divider" | "supportText" | "infoTooltip" | "infoIcon";
 
 const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
     slotName: "root",
 })();
 
-const HeadlineWrapper = createComponentSlot("div")<SectionHeadlineClassKey>({
+const Header = createComponentSlot("div")<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
-    slotName: "headlineWrapper",
+    slotName: "header",
 })(
     () => css`
         display: flex;
@@ -77,7 +77,7 @@ const StyledInfoIcon = createComponentSlot(Info)<SectionHeadlineClassKey>({
 export interface SectionHeadlineProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        headlineWrapper: "div";
+        header: "div";
         titleContainer: "div";
         infoTooltip: typeof Tooltip;
         infoIcon: typeof Info;
@@ -98,7 +98,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <HeadlineWrapper {...slotProps?.headlineWrapper}>
+            <Header {...slotProps?.header}>
                 <TitleContainer {...slotProps?.titleContainer}>
                     {children}
                     {infoTooltip && (
@@ -113,7 +113,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
                         {supportText}
                     </SupportText>
                 )}
-            </HeadlineWrapper>
+            </Header>
 
             {divider && <StyledDivider {...slotProps?.divider} />}
         </Root>
