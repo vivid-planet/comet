@@ -496,6 +496,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-focus-lock:
+        specifier: ^2.13.6
+        version: 2.13.6(@types/react@18.3.23)(react@18.3.1)
       react-intl:
         specifier: ^7.1.11
         version: 7.1.11(react@18.3.1)(typescript@5.7.3)
@@ -508,6 +511,9 @@ importers:
       swiper:
         specifier: ^11.2.10
         version: 11.2.10
+      usehooks-ts:
+        specifier: ^3.1.1
+        version: 3.1.1(react@18.3.1)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -11023,6 +11029,9 @@ packages:
     resolution: {integrity: sha512-qE3Veg1YXzGHQhlA6jzebZN2qVf6NX+A7m7qlhCGG30dJixrAQhYOsJjsnBjJkCSmuOPpCk30145fr8FV0bzog==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  detect-node-es@1.1.0:
+    resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
+
   detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
 
@@ -12006,6 +12015,10 @@ packages:
 
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
+
+  focus-lock@1.3.6:
+    resolution: {integrity: sha512-Ik/6OCk9RQQ0T5Xw+hKNLWrjSMtv51dD4GRmJjbD5a58TIEpI5a5iXagKVl3Z5UuyslMCA8Xwnu76jQob62Yhg==}
+    engines: {node: '>=10'}
 
   follow-redirects@1.15.9:
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
@@ -15658,6 +15671,11 @@ packages:
     resolution: {integrity: sha512-OfBnObtnGgLGfweORmdZbyEz+3dgVePQBb3zipiaDsMHV1NpWm0rDFYIVXFV/AK+x4VIIfWHhrdMIeoTLyRr2g==}
     engines: {node: '>=6'}
 
+  react-clientside-effect@1.2.8:
+    resolution: {integrity: sha512-ma2FePH0z3px2+WOu6h+YycZcEvFmmxIlAb62cF52bG86eMySciO/EQZeQMXd07kPCYB0a1dWDT5J+KE9mCDUw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
   react-colorful@5.6.1:
     resolution: {integrity: sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==}
     peerDependencies:
@@ -15746,6 +15764,15 @@ packages:
     peerDependencies:
       final-form: ^4.20.4
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  react-focus-lock@2.13.6:
+    resolution: {integrity: sha512-ehylFFWyYtBKXjAO9+3v8d0i+cnc1trGS0vlTGhzFW1vbFXVUTmR8s2tt/ZQG8x5hElg6rhENlLG1H3EZK0Llg==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   react-hotkeys-hook@3.4.7:
     resolution: {integrity: sha512-+bbPmhPAl6ns9VkXkNNyxlmCAIyDAcWbB76O4I0ntr3uWCRuIQf/aRLartUahe9chVMPj+OEzzfk3CQSjclUEQ==}
@@ -17502,6 +17529,16 @@ packages:
   urlpattern-polyfill@10.0.0:
     resolution: {integrity: sha512-H/A06tKD7sS1O1X2SshBVeA5FLycRpjqiBeqGKmBwBDBy28EnRjORxTNe269KSSr5un5qyWi1iL61wLxpd+ZOg==}
 
+  use-callback-ref@1.3.3:
+    resolution: {integrity: sha512-jQL3lRnocaFtu3V00JToYz/4QkNWswxijDaCVNZRiRTO3HQDLsdu1ZtmIUvV4yPp+rvWm5j0y0TG/S61cuijTg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   use-constant@1.1.1:
     resolution: {integrity: sha512-sy2ttlE4kuAnNbp2P6a5aTZiGYwsZojkqaGZ31yDDjIurteUS8GOcYiPGmJ3y/LHOHkdazDdVRBZPzH3RZHffA==}
     peerDependencies:
@@ -17517,6 +17554,16 @@ packages:
     resolution: {integrity: sha512-7wVD2JbfAFJ3DK0vITvXBdpd9JAz5BcKAAolsnLBuBn6UDDwBGuCIAGvR3yA2BNKm578vAMVHFCWaOcA+BhhiA==}
     peerDependencies:
       react: '>= 16.8.0'
+
+  use-sidecar@1.1.3:
+    resolution: {integrity: sha512-Fedw0aZvkhynoPYlA5WXrMCAMm+nSWdZt6lzJQ7Ok8S6Q+VsHmHpRWndVRJ8Be0ZbkfPc5LRYH+5XrzXcEeLRQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   use-sync-external-store@1.5.0:
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
@@ -23618,7 +23665,7 @@ snapshots:
 
   '@mui/utils@7.1.0(@types/react@18.3.23)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.6
       '@mui/types': 7.4.5(@types/react@18.3.23)
       '@types/prop-types': 15.7.14
       clsx: 2.1.1
@@ -27877,7 +27924,7 @@ snapshots:
 
   babel-plugin-macros@3.1.0:
     dependencies:
-      '@babel/runtime': 7.28.2
+      '@babel/runtime': 7.28.3
       cosmiconfig: 7.1.0
       resolve: 1.22.8
 
@@ -29464,6 +29511,8 @@ snapshots:
 
   detect-newline@4.0.1: {}
 
+  detect-node-es@1.1.0: {}
+
   detect-node@2.1.0: {}
 
   detect-port@1.5.1:
@@ -30764,6 +30813,10 @@ snapshots:
   flatted@3.3.2: {}
 
   flatted@3.3.3: {}
+
+  focus-lock@1.3.6:
+    dependencies:
+      tslib: 2.8.1
 
   follow-redirects@1.15.9(debug@4.4.0):
     optionalDependencies:
@@ -35239,6 +35292,11 @@ snapshots:
       regenerator-runtime: 0.13.11
       whatwg-fetch: 3.6.2
 
+  react-clientside-effect@1.2.8(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.27.6
+      react: 18.3.1
+
   react-colorful@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -35353,6 +35411,18 @@ snapshots:
       '@babel/runtime': 7.27.6
       final-form: 4.20.10
       react: 18.3.1
+
+  react-focus-lock@2.13.6(@types/react@18.3.23)(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.27.6
+      focus-lock: 1.3.6
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-clientside-effect: 1.2.8(react@18.3.1)
+      use-callback-ref: 1.3.3(@types/react@18.3.23)(react@18.3.1)
+      use-sidecar: 1.1.3(@types/react@18.3.23)(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.23
 
   react-hotkeys-hook@3.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -37513,6 +37583,13 @@ snapshots:
 
   urlpattern-polyfill@10.0.0: {}
 
+  use-callback-ref@1.3.3(@types/react@18.3.23)(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      tslib: 2.8.1
+    optionalDependencies:
+      '@types/react': 18.3.23
+
   use-constant@1.1.1(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -37524,6 +37601,14 @@ snapshots:
   use-editable@2.3.3(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  use-sidecar@1.1.3(@types/react@18.3.23)(react@18.3.1):
+    dependencies:
+      detect-node-es: 1.1.0
+      react: 18.3.1
+      tslib: 2.8.1
+    optionalDependencies:
+      '@types/react': 18.3.23
 
   use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:

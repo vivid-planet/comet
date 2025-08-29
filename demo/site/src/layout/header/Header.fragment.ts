@@ -1,23 +1,13 @@
 import { gql } from "@comet/site-nextjs";
 
-import { pageLinkFragment } from "./PageLink.fragment";
+import { desktopMenuFragment } from "./DesktopMenu.fragment";
+import { mobileMenuFragment } from "./MobileMenu.fragment";
 
 export const headerFragment = gql`
     fragment Header on MainMenu {
-        items {
-            id
-            node {
-                id
-                name
-                ...PageLink
-                childNodes {
-                    id
-                    name
-                    ...PageLink
-                }
-            }
-        }
+        ...DesktopMenu
+        ...MobileMenu
     }
-
-    ${pageLinkFragment}
+    ${desktopMenuFragment}
+    ${mobileMenuFragment}
 `;
