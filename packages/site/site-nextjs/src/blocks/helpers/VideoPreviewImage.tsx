@@ -26,4 +26,4 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw",
     );
 };
 
-const PlayIcon = () => <span className={styles.playIcon} />;
+const PlayIcon = () => <span className={styles.playIcon} aria-label="Play video" />;
