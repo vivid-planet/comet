@@ -5,7 +5,7 @@ import Link from "next/link";
 import styled from "styled-components";
 
 import { PageLayout } from "../PageLayout";
-import { DesktopMenu } from "./DekstopMenu";
+import { DesktopMenu } from "./DesktopMenu";
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
 import { MobileMenu } from "./MobileMenu";
 
