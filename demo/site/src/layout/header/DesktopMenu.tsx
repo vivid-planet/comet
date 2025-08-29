@@ -10,10 +10,10 @@ import styled from "styled-components";
 import { type GQLDesktopMenuFragment } from "./DesktopMenu.fragment.generated";
 
 interface Props {
-    header: GQLDesktopMenuFragment;
+    menu: GQLDesktopMenuFragment;
 }
 
-export const DesktopMenu = ({ header }: Props) => {
+export const DesktopMenu = ({ menu }: Props) => {
     const intl = useIntl();
     const [expandedSubLevelNavigation, setExpandedSubLevelNavigation] = useState<string | null>(null);
     const [autoFocus, setAutoFocus] = useState<boolean>(false);
@@ -35,7 +35,7 @@ export const DesktopMenu = ({ header }: Props) => {
     return (
         <DesktopHeaderFullHeightNav>
             <TopLevelNavigation>
-                {header.items.map((node) => {
+                {menu.items.map((node) => {
                     return (
                         <TopLevelLinkContainer
                             key={node.id}

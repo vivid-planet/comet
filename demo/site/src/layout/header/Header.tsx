@@ -22,8 +22,8 @@ function Header({ header }: Props): JSX.Element {
                         <Link href="/">
                             <SvgUse href="/assets/comet-logo.svg#root" />
                         </Link>
-                        <DesktopMenu header={header} />
-                        <MobileMenu header={header} />
+                        <DesktopMenu menu={header} />
+                        <MobileMenu menu={header} />
                     </Root>
                 </PageLayoutContent>
             </PageLayout>

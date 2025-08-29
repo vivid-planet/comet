@@ -11,10 +11,10 @@ import styled, { css } from "styled-components";
 import { type GQLMobileMenuFragment } from "./MobileMenu.fragment.generated";
 
 interface Props {
-    header: GQLMobileMenuFragment;
+    menu: GQLMobileMenuFragment;
 }
 
-export const MobileMenu = ({ header }: Props) => {
+export const MobileMenu = ({ menu }: Props) => {
     const intl = useIntl();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [expandedSubLevelNavigation, setExpandedSubLevelNavigation] = useState<string | null>(null);
@@ -79,7 +79,7 @@ export const MobileMenu = ({ header }: Props) => {
                                             <FormattedMessage id="header.closeMenu" defaultMessage="Close Menu" />
                                         </BackButton>
                                     </li>
-                                    {header.items.map((node) => {
+                                    {menu.items.map((node) => {
                                         return (
                                             <li key={node.id}>
                                                 {node.node.childNodes.length > 0 ? (
