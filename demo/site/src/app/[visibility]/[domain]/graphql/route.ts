@@ -30,7 +30,7 @@ async function injectFragments(query: string) {
     query = query.replaceAll(/\${.*?}/g, ""); // remove interpolations that would be injected at runtime
 
     const injected = new Set<string>();
-    query.matchAll(/^\s*fragment\s+(\w+)\s+on\s+\w+/mg).forEach((m) => injected.add(m[1])); // fragments in the initial query
+    query.matchAll(/^\s*fragment\s+(\w+)\s+on\s+\w+/gm).forEach((m) => injected.add(m[1])); // fragments in the initial query
     function inject(q: string): string {
         if (!fragmentsMap) throw new Error(); //narrow type
 
