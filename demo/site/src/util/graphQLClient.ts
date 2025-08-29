@@ -14,7 +14,7 @@ type Fetch = typeof fetch;
 function createPersistedQueryGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
     return async function <T, V>(query: string | { hash: string }, variables?: V, init?: RequestInit): Promise<T> {
         if (typeof query === "string") throw new Error("at runtime only hashed queries are supported");
-        const hash = query.hash; //await sha256(query.trim());
+        const hash = query.hash;
         let response;
         if (init?.method === "GET") {
             const fetchUrl = new URL(url);
