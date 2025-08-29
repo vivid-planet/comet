@@ -37,6 +37,7 @@ export {
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
     BlockWarning,
+    ChildBlockInfo,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
