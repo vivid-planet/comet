@@ -4,7 +4,7 @@ import { createGraphQLFetch } from "@src/util/graphQLClient";
 
 import { type GQLNewsIndexPageQuery, type GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";
 
-export const newsFragment = gql`
+const newsFragment = gql`
     fragment NewsListItem on News {
         id
         title
