@@ -7,7 +7,7 @@ import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "divider" | "supportText" | "infoTooltip";
+export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "headline" | "divider" | "supportText" | "infoTooltip";
 
 const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
@@ -35,6 +35,11 @@ const TitleContainer = createComponentSlot("div")<SectionHeadlineClassKey>({
         align-items: center;
     `,
 );
+
+const Headline = createComponentSlot(Typography)<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "headline",
+})();
 
 const SupportText = createComponentSlot(Typography)<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
@@ -103,7 +108,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         <Root {...slotProps?.root} {...restProps}>
             <Header {...slotProps?.header}>
                 <TitleContainer {...slotProps?.titleContainer}>
-                    {children}
+                    <Headline variant="h4">{children}</Headline>
                     {infoTooltip && infoIcon && isValidElement(infoIcon) && (
                         <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
                             {infoIcon}
