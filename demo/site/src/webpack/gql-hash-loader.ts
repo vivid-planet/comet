@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import * as fs from "fs";
+import type { LoaderContext } from "webpack";
 
 // Path to store the mapping of hashes to queries
 const HASH_MAP_PATH = ".next/persisted-queries.json";
@@ -23,7 +24,7 @@ function hashQuery(query: string): string {
 // This regex matches gql`...` template literals, including multiline queries
 const gqlTagRegex = /gql`([\s\S]*?)`/gm;
 
-const gqlHashLoader = function (this: any, source: string) {
+const gqlHashLoader = function (this: LoaderContext<unknown>, source: string) {
     const hashMap = loadHashMap();
     const replacements: { start: number; end: number; replacement: string }[] = [];
     let match;
