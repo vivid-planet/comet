@@ -1,13 +1,13 @@
 import { Info } from "@comet/admin-icons";
 import { type ComponentsOverrides, Divider, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import { isValidElement, type ReactNode } from "react";
 
 import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "divider" | "supportText" | "infoTooltip" | "infoIcon";
+export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "divider" | "supportText" | "infoTooltip";
 
 const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
@@ -65,22 +65,12 @@ const StyledDivider = createComponentSlot(Divider)<SectionHeadlineClassKey>({
     `,
 );
 
-const StyledInfoIcon = createComponentSlot(Info)<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "infoIcon",
-})(
-    () => css`
-        font-size: 12px;
-    `,
-);
-
 export interface SectionHeadlineProps
     extends ThemedComponentBaseProps<{
         root: "div";
         header: "div";
         titleContainer: "div";
         infoTooltip: typeof Tooltip;
-        infoIcon: typeof Info;
         supportText: typeof Typography;
         divider: typeof Divider;
     }> {
@@ -88,22 +78,35 @@ export interface SectionHeadlineProps
     divider?: boolean;
     supportText?: string;
     infoTooltip?: string;
+    iconMapping?: {
+        infoIcon?: ReactNode;
+    };
 }
 
 export function SectionHeadline(inProps: SectionHeadlineProps) {
-    const { children, divider, supportText, infoTooltip, slotProps, ...restProps } = useThemeProps({
+    const {
+        children,
+        divider,
+        supportText,
+        infoTooltip,
+        iconMapping = {},
+        slotProps,
+        ...restProps
+    } = useThemeProps({
         props: inProps,
         name: "CometAdminSectionHeadline",
     });
+
+    const { infoIcon = <Info color="inherit" style={{ fontSize: "12px" }} /> } = iconMapping;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
             <Header {...slotProps?.header}>
                 <TitleContainer {...slotProps?.titleContainer}>
                     {children}
-                    {infoTooltip && (
+                    {infoTooltip && infoIcon && isValidElement(infoIcon) && (
                         <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
-                            <StyledInfoIcon {...slotProps?.infoIcon} />
+                            {infoIcon}
                         </InfoTooltip>
                     )}
                 </TitleContainer>
