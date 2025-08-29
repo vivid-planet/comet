@@ -7,10 +7,10 @@ import FocusLock from "react-focus-lock";
 import { useIntl } from "react-intl";
 import styled from "styled-components";
 
-import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import { type GQLDesktopMenuFragment } from "./DesktopMenu.fragment.generated";
 
 interface Props {
-    header: GQLHeaderFragment;
+    header: GQLDesktopMenuFragment;
 }
 
 export const DesktopMenu = ({ header }: Props) => {

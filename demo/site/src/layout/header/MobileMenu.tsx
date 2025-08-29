@@ -8,10 +8,10 @@ import FocusLock from "react-focus-lock";
 import { FormattedMessage, useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
-import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import { type GQLMobileMenuFragment } from "./MobileMenu.fragment.generated";
 
 interface Props {
-    header: GQLHeaderFragment;
+    header: GQLMobileMenuFragment;
 }
 
 export const MobileMenu = ({ header }: Props) => {
