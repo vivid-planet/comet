@@ -3,7 +3,7 @@ import { readFile } from "fs/promises";
 let queryMap: Record<string, string> | undefined;
 async function loadQuery(hash: string): Promise<string | null> {
     if (!queryMap) {
-        const file = await readFile("persisted-queries.json", "utf-8");
+        const file = await readFile(".next/persisted-queries.json", "utf-8");
         queryMap = JSON.parse(file.toString());
     }
     return queryMap![hash] || null;

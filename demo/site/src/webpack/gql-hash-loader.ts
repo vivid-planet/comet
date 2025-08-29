@@ -1,9 +1,8 @@
 import { createHash } from "crypto";
 import * as fs from "fs";
-import * as path from "path";
 
 // Path to store the mapping of hashes to queries
-const HASH_MAP_PATH = "persisted-queries.json";
+const HASH_MAP_PATH = ".next/persisted-queries.json";
 
 // Load or initialize the hash map
 function loadHashMap(): Record<string, string> {
@@ -21,12 +20,8 @@ function hashQuery(query: string): string {
     return createHash("sha256").update(query).digest("hex");
 }
 
-
 // This regex matches gql`...` template literals, including multiline queries
 const gqlTagRegex = /gql`([\s\S]*?)`/gm;
-
-
-
 
 const gqlHashLoader = function (this: any, source: string) {
     const hashMap = loadHashMap();
