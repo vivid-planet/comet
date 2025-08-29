@@ -7,7 +7,7 @@ import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type SectionHeadlineClassKey = "root" | "headlineWrapper" | "titleContainer" | "divider" | "supportText" | "infoTooltipText" | "infoIcon";
+export type SectionHeadlineClassKey = "root" | "headlineWrapper" | "titleContainer" | "divider" | "supportText" | "infoTooltip" | "infoIcon";
 
 const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
@@ -45,9 +45,9 @@ const SupportText = createComponentSlot(Typography)<SectionHeadlineClassKey>({
     `,
 );
 
-const StyledTooltip = createComponentSlot(Tooltip)<SectionHeadlineClassKey>({
+const InfoTooltip = createComponentSlot(Tooltip)<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",
-    slotName: "infoTooltipText",
+    slotName: "infoTooltip",
 })(
     ({ theme }) => css`
         color: ${theme.palette.text.secondary};
@@ -79,7 +79,7 @@ export interface SectionHeadlineProps
         root: "div";
         headlineWrapper: "div";
         titleContainer: "div";
-        infoTooltipText: typeof Tooltip;
+        infoTooltip: typeof Tooltip;
         infoIcon: typeof Info;
         supportText: typeof Typography;
         divider: typeof Divider;
@@ -87,11 +87,11 @@ export interface SectionHeadlineProps
     children: ReactNode;
     divider?: boolean;
     supportText?: string;
-    infoTooltipText?: string;
+    infoTooltip?: string;
 }
 
 export function SectionHeadline(inProps: SectionHeadlineProps) {
-    const { children, divider, supportText, infoTooltipText, slotProps, ...restProps } = useThemeProps({
+    const { children, divider, supportText, infoTooltip, slotProps, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminSectionHeadline",
     });
@@ -101,10 +101,10 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
             <HeadlineWrapper {...slotProps?.headlineWrapper}>
                 <TitleContainer {...slotProps?.titleContainer}>
                     {children}
-                    {infoTooltipText && (
-                        <StyledTooltip title={infoTooltipText} {...slotProps?.infoTooltipText}>
+                    {infoTooltip && (
+                        <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
                             <StyledInfoIcon {...slotProps?.infoIcon} />
-                        </StyledTooltip>
+                        </InfoTooltip>
                     )}
                 </TitleContainer>
 
