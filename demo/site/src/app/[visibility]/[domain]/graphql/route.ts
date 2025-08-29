@@ -24,6 +24,7 @@ function injectFragments(query: string) {
     query = query.replaceAll(/\${.*?}/g, ""); // remove interpolations that would be injected at runtime
 
     const injected = new Set<string>();
+    query.matchAll(/^\s*fragment\s+(\w+)\s+on\s+\w+/m).forEach((m) => injected.add(m[1])); // fragments in the initial query
     function inject(q: string): string {
         // Find all fragment spreads in the query
         const spreads = Array.from(q.matchAll(/\.\.\.(\w+)/g)).map((m) => m[1]);
