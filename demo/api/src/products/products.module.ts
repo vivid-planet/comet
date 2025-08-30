@@ -22,6 +22,8 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
+import { ProductHighlight } from "./entities/product-highlights.entity";
+import { ProductHighlightResolver } from "./generated/product-highlight.resolver";
 
 @Module({
     imports: [
@@ -36,6 +38,7 @@ import { ProductVariantsService } from "./generated/product-variants.service";
             Manufacturer,
             FileUpload,
             ManufacturerCountry,
+            ProductHighlight
         ]),
     ],
     providers: [
@@ -50,6 +53,7 @@ import { ProductVariantsService } from "./generated/product-variants.service";
         ProductToTagResolver,
         ProductColorResolver,
         CustomProductResolver,
+        ProductHighlightResolver
     ],
     exports: [],
 })
