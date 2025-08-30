@@ -46,6 +46,7 @@ public/robots.txt
 tsconfig.tsbuildinfo
 
 src/comet-config.json
+persisted-queries.json
 
 lang
 lang-extracted
