@@ -83,7 +83,7 @@ export interface SectionHeadlineProps
     children: ReactNode;
     divider?: boolean;
     supportText?: ReactNode;
-    infoTooltip?: ReactNode;
+    infoTooltipText?: ReactNode;
     iconMapping?: {
         tooltip?: ReactElement;
     };
@@ -94,7 +94,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         children,
         divider,
         supportText,
-        infoTooltip,
+        infoTooltipText,
         iconMapping = {},
         slotProps,
         ...restProps
@@ -112,8 +112,8 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
                     <Headline variant="h4" {...slotProps?.headline}>
                         {children}
                     </Headline>
-                    {infoTooltip && (
-                        <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
+                    {infoTooltipText && (
+                        <InfoTooltip title={infoTooltipText} {...slotProps?.infoTooltip}>
                             {tooltip}
                         </InfoTooltip>
                     )}
