@@ -1,6 +1,6 @@
 ---
-"@comet/site-nextjs": minor
-"@comet/cms-admin": minor
+"@comet/site-nextjs": patch
+"@comet/cms-admin": patch
 ---
 
 Prevent phishing in SitePreview
