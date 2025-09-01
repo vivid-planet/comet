@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 7.25.8
+
+### Patch Changes
+
+-   c85d16277: Fix styling of `DialogTitle` in `ChooseFileDialog`
+    -   @comet/admin@7.25.8
+    -   @comet/admin-date-time@7.25.8
+    -   @comet/admin-icons@7.25.8
+    -   @comet/admin-rte@7.25.8
+    -   @comet/admin-theme@7.25.8
+    -   @comet/blocks-admin@7.25.8
+
 ## 7.25.7
 
 ### Patch Changes
