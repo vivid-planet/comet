@@ -40,6 +40,7 @@ export const OpenPickerAdornment = (inProps: OpenPickerAdornmentProps) => {
     return (
         <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <OpenPickerButton
+                tabIndex={-1}
                 onClick={onClick}
                 disabled={inputIsDisabled || inputIsReadOnly}
                 ownerState={ownerState}
