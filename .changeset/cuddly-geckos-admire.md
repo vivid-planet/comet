@@ -1,4 +1,5 @@
 ---
+"@comet/cms-site": patch
 "@comet/site-nextjs": patch
 "@comet/cms-admin": patch
 ---
