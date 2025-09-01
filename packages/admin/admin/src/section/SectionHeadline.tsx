@@ -82,8 +82,8 @@ export interface SectionHeadlineProps
     }> {
     children: ReactNode;
     divider?: boolean;
-    supportText?: string;
-    infoTooltip?: string;
+    supportText?: ReactNode;
+    infoTooltip?: ReactNode;
     iconMapping?: {
         infoIcon?: ReactNode;
     };
