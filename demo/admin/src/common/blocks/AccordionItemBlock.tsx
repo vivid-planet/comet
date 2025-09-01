@@ -43,9 +43,9 @@ export const AccordionItemBlock = createCompositeBlock(
                 block: createCompositeBlockSelectField<AccordionItemBlockData["titleHtmlTag"]>({
                     label: <FormattedMessage id="accordionItem.titleHtmlTag" defaultMessage="Title HTML tag" />,
                     defaultValue: "h3",
-                    options: ([1, 2, 3, 4, 5, 6] as const).map((number) => ({
-                        value: `h${number}`,
-                        label: <FormattedMessage id={`teaserItemBlock.headline${number}`} defaultMessage={`Headline ${number}`} />,
+                    options: ([1, 2, 3, 4, 5, 6] as const).map((level) => ({
+                        value: `h${level}`,
+                        label: <FormattedMessage id="accordionItem.headline" defaultMessage="Headline {level}" values={{ level }} />,
                     })),
                     required: true,
                 }),
