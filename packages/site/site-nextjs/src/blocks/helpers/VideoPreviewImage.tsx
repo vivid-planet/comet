@@ -13,9 +13,19 @@ export interface VideoPreviewImageProps {
     fill?: boolean;
     icon?: ReactNode;
     className?: string;
+    playButtonAriaLabel?: string;
 }
 
-export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon />, className }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({
+    onPlay,
+    image,
+    aspectRatio,
+    sizes = "100vw",
+    fill,
+    playButtonAriaLabel = "Play video",
+    icon = <PlayIcon playButtonAriaLabel={playButtonAriaLabel} />,
+    className,
+}: VideoPreviewImageProps) => {
     return (
         <div className={clsx(styles.root, fill && styles.fill, className)}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
@@ -26,4 +36,8 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw",
     );
 };
 
-const PlayIcon = () => <span className={styles.playIcon} aria-label="Play video" />;
+interface PlayIconProps {
+    playButtonAriaLabel: string;
+}
+
+const PlayIcon = ({ playButtonAriaLabel }: PlayIconProps) => <span className={styles.playIcon} aria-label={playButtonAriaLabel} />;
