@@ -8,7 +8,7 @@ export default {
 export const _SectionHeadline = () => {
     return (
         <Stack spacing={15}>
-            <SectionHeadline supportText="Support Text" divider infoTooltip="Tooltip Info Text">
+            <SectionHeadline supportText="Support Text" divider infoTooltipText="Tooltip Info Text">
                 Section Title
             </SectionHeadline>
 
