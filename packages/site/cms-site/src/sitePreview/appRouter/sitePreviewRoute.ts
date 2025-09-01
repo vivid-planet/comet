@@ -31,6 +31,10 @@ export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unkn
 
     draftMode().enable();
 
+    if (!data.path.startsWith("/") || data.path.startsWith("//")) {
+        return NextResponse.json({ error: `Redirect to ${data.path} disallowed: only relative paths are valid.` }, { status: 400 });
+    }
+
     return redirect(data.path);
 }
 
