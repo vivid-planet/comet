@@ -1,7 +1,7 @@
 {
     "name": "@comet/site-react",
     "type": "module",
-    "version": "7.25.8",
+    "version": "7.25.9",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",

@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 7.25.9
+
+### Patch Changes
+
+-   79a90e7f6: Prevent phishing in SitePreview
+
+    Affected applications: if the property `resolvePath` of the `SitePreview` component returns the plain path. The default implementation in the starter is not affected.
+
+    -   @comet/admin@7.25.9
+    -   @comet/admin-date-time@7.25.9
+    -   @comet/admin-icons@7.25.9
+    -   @comet/admin-rte@7.25.9
+    -   @comet/admin-theme@7.25.9
+    -   @comet/blocks-admin@7.25.9
+
 ## 7.25.8
 
 ### Patch Changes
