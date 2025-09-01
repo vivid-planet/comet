@@ -84,7 +84,7 @@ export interface SectionHeadlineProps
     supportText?: ReactNode;
     infoTooltip?: ReactNode;
     iconMapping?: {
-        infoIcon?: ReactNode;
+        tooltip?: ReactNode;
     };
 }
 
@@ -102,16 +102,16 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         name: "CometAdminSectionHeadline",
     });
 
-    const { infoIcon = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
+    const { tooltip = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
             <Header {...slotProps?.header}>
                 <TitleContainer {...slotProps?.titleContainer}>
                     <Headline variant="h4">{children}</Headline>
-                    {infoTooltip && infoIcon && isValidElement(infoIcon) && (
+                    {infoTooltip && tooltip && isValidElement(tooltip) && (
                         <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
-                            {infoIcon}
+                            {tooltip}
                         </InfoTooltip>
                     )}
                 </TitleContainer>
