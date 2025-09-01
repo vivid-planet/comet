@@ -57,6 +57,7 @@ const InfoTooltip = createComponentSlot(Tooltip)<SectionHeadlineClassKey>({
     ({ theme }) => css`
         color: ${theme.palette.text.secondary};
         margin-left: 10px;
+        font-size: 12px;
     `,
 );
 
@@ -102,7 +103,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         name: "CometAdminSectionHeadline",
     });
 
-    const { infoIcon = <Info style={{ fontSize: "12px" }} /> } = iconMapping;
+    const { infoIcon = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
