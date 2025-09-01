@@ -55,9 +55,6 @@ export function ClearInputButton(inProps: ClearInputButtonProps) {
     );
 }
 
-/**
- * @deprecated Use `ClearInputAdornment` directly as the InputAdornment
- */
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminClearInputButton: ClearInputButtonClassKey;
