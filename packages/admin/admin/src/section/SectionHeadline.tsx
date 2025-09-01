@@ -1,7 +1,7 @@
 import { Info } from "@comet/admin-icons";
 import { type ComponentsOverrides, Divider, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { isValidElement, type ReactNode } from "react";
+import { type ReactElement, type ReactNode } from "react";
 
 import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -84,7 +84,7 @@ export interface SectionHeadlineProps
     supportText?: ReactNode;
     infoTooltip?: ReactNode;
     iconMapping?: {
-        tooltip?: ReactNode;
+        tooltip?: ReactElement;
     };
 }
 
@@ -109,7 +109,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
             <Header {...slotProps?.header}>
                 <TitleContainer {...slotProps?.titleContainer}>
                     <Headline variant="h4">{children}</Headline>
-                    {infoTooltip && tooltip && isValidElement(tooltip) && (
+                    {infoTooltip && (
                         <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
                             {tooltip}
                         </InfoTooltip>
