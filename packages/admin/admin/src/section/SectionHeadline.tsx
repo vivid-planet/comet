@@ -102,7 +102,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         name: "CometAdminSectionHeadline",
     });
 
-    const { infoIcon = <Info color="inherit" style={{ fontSize: "12px" }} /> } = iconMapping;
+    const { infoIcon = <Info style={{ fontSize: "12px" }} /> } = iconMapping;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
