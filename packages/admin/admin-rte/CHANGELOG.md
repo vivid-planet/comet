@@ -1,5 +1,12 @@
 # @comet/admin-rte
 
+## 8.1.1
+
+### Patch Changes
+
+- @comet/admin@8.1.1
+- @comet/admin-icons@8.1.1
+
 ## 8.1.0
 
 ### Patch Changes
