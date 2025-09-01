@@ -1,7 +1,5 @@
 import { gql } from "@comet/site-nextjs";
 
-import { pageLinkFragment } from "./PageLink.fragment";
-
 export const mobileMenuFragment = gql`
     fragment MobileMenu on MainMenu {
         items {
@@ -18,6 +16,4 @@ export const mobileMenuFragment = gql`
             }
         }
     }
-
-    ${pageLinkFragment}
 `;

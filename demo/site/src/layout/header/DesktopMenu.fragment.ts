@@ -1,7 +1,5 @@
 import { gql } from "@comet/site-nextjs";
 
-import { pageLinkFragment } from "./PageLink.fragment";
-
 export const desktopMenuFragment = gql`
     fragment DesktopMenu on MainMenu {
         items {
@@ -18,6 +16,4 @@ export const desktopMenuFragment = gql`
             }
         }
     }
-
-    ${pageLinkFragment}
 `;
