@@ -67,7 +67,6 @@ const StyledDivider = createComponentSlot(Divider)<SectionHeadlineClassKey>({
 })(
     () => css`
         margin-top: 10px;
-        color: "inherit";
     `,
 );
 
