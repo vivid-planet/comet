@@ -8,6 +8,7 @@ import { ManufacturerCountry } from "./entities/manufacturer-country.entity";
 import { Product } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
+import { ProductHighlight } from "./entities/product-highlights.entity";
 import { ProductStatistics } from "./entities/product-statistics.entity";
 import { ProductTag } from "./entities/product-tag.entity";
 import { ProductToTag } from "./entities/product-to-tag.entity";
@@ -18,12 +19,11 @@ import { ProductResolver } from "./generated/product.resolver";
 import { ProductCategoriesService } from "./generated/product-categories.service";
 import { ProductCategoryResolver } from "./generated/product-category.resolver";
 import { ProductColorResolver } from "./generated/product-color.resolver";
+import { ProductHighlightResolver } from "./generated/product-highlight.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
-import { ProductHighlight } from "./entities/product-highlights.entity";
-import { ProductHighlightResolver } from "./generated/product-highlight.resolver";
 
 @Module({
     imports: [
@@ -38,7 +38,7 @@ import { ProductHighlightResolver } from "./generated/product-highlight.resolver
             Manufacturer,
             FileUpload,
             ManufacturerCountry,
-            ProductHighlight
+            ProductHighlight,
         ]),
     ],
     providers: [
@@ -53,7 +53,7 @@ import { ProductHighlightResolver } from "./generated/product-highlight.resolver
         ProductToTagResolver,
         ProductColorResolver,
         CustomProductResolver,
-        ProductHighlightResolver
+        ProductHighlightResolver,
     ],
     exports: [],
 })
