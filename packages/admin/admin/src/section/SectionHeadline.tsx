@@ -75,6 +75,7 @@ export interface SectionHeadlineProps
         root: "div";
         header: "div";
         titleContainer: "div";
+        headline: typeof Typography;
         infoTooltip: typeof Tooltip;
         supportText: typeof Typography;
         divider: typeof Divider;
@@ -108,7 +109,9 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         <Root {...slotProps?.root} {...restProps}>
             <Header {...slotProps?.header}>
                 <TitleContainer {...slotProps?.titleContainer}>
-                    <Headline variant="h4">{children}</Headline>
+                    <Headline variant="h4" {...slotProps?.headline}>
+                        {children}
+                    </Headline>
                     {infoTooltip && (
                         <InfoTooltip title={infoTooltip} {...slotProps?.infoTooltip}>
                             {tooltip}
