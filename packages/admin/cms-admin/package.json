@@ -52,6 +52,7 @@
         "mime-db": "^1.54.0",
         "p-debounce": "^4.0.0",
         "react-cool-dimensions": "^2.0.7",
+        "react-diff-viewer-continued": "^4.0.6",
         "react-dropzone": "^14.3.8",
         "react-final-form-arrays": "^3.1.4",
         "react-hotkeys-hook": "^3.4.7",
