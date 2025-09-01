@@ -2443,7 +2443,7 @@ The `MenuContext` has been removed, use the new `useMainNavigation` hook instead
 
 :::warning
 `Dialog` now supports a `title` prop that automatically adds a `DialogTitle` component.
-So if you have a `Dialog` with a `DialogTitle` as a child, you should remove the `DialogTitle` and pass the title as a prop to `Dialog`.
+So if you have a `Dialog` with a `DialogTitle` as a child, you should remove the `DialogTitle` and pass its children as `title` prop to `Dialog`.
 :::
 
 :::note Execute the following upgrade script:
