@@ -37,6 +37,15 @@ interface ToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
 }
 
+function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
+    return (
+        <DataGridToolbar>
+            <FillSpace />
+            {toolbarAction}
+        </DataGridToolbar>
+    );
+}
+
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [open, setOpen] = useState(false);
@@ -64,15 +73,6 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     }
 
     const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
-
-    function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
-        return (
-            <DataGridToolbar>
-                <FillSpace />
-                {toolbarAction}
-            </DataGridToolbar>
-        );
-    }
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (

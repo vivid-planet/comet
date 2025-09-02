@@ -1456,7 +1456,7 @@ You can remove previously generated files and generate them on demand:
     }
     ```
 
-2. `lint:generated-files-not-modified` script can be removed:
+2. Remove `lint:generated-files-not-modified` and execute `npm run api-generator` before lint:
 
     ```diff title="api/package.json"
     scripts: {
@@ -1927,6 +1927,7 @@ Add the proxy to your vite config:
 //...
 server: {
     // ...
+    cors: false,
     proxy: process.env.API_URL_INTERNAL
     ? {
          "/api": {
@@ -2439,6 +2440,11 @@ The `MenuContext` has been removed, use the new `useMainNavigation` hook instead
 ### Dialog-related changes
 
 #### 🤖 Import `Dialog` from `@comet/admin` package
+
+:::warning
+`Dialog` now supports a `title` prop that automatically adds a `DialogTitle` component.
+So if you have a `Dialog` with a `DialogTitle` as a child, you should remove the `DialogTitle` and pass its children as `title` prop to `Dialog`.
+:::
 
 :::note Execute the following upgrade script:
 

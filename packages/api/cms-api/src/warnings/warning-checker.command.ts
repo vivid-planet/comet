@@ -8,9 +8,14 @@ import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
-import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import {
+    CREATE_WARNINGS_METADATA_KEY,
+    CreateWarningsFunction,
+    CreateWarningsMeta,
+    CreateWarningsServiceInterface,
+} from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -75,7 +80,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
                         if (!scope) {
                             const entity = this.orm.getMetadata().get(className).class;
-                            const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [entity]);
+                            const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                             if (scoped) {
                                 const service = this.moduleRef.get(scoped, { strict: false });
@@ -132,7 +137,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
         for (const entity of entities) {
             const entityMetadata = metadataStorage.get(entity.name);
-            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
             if (createWarnings) {
                 const repository = this.entityManager.getRepository(entity);
 

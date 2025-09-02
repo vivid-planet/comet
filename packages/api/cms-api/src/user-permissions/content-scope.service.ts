@@ -6,9 +6,9 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { EntityScopeServiceInterface, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { EntityScopeServiceInterface, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
+import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
@@ -33,7 +33,7 @@ export class ContentScopeService {
         const args = await this.getArgs(context);
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const affectedEntities = this.reflector.getAllAndOverride<AffectedEntityMeta[]>("affectedEntities", [context.getHandler()]) || [];
+        const affectedEntities = this.reflector.getAllAndOverride<AffectedEntityMeta[]>(AFFECTED_ENTITY_METADATA_KEY, [context.getHandler()]) || [];
         for (const affectedEntity of affectedEntities) {
             contentScopes.push(...(await this.getContentScopesFromEntity(affectedEntity, args, location)));
         }
@@ -86,7 +86,7 @@ export class ContentScopeService {
                     if (row.scope) {
                         contentScopes.push([row.scope as ContentScope]);
                     } else {
-                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [affectedEntity.entity]);
+                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [affectedEntity.entity]);
                         if (!scoped) throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
                         let scopes;
                         if (this.isService(scoped)) {

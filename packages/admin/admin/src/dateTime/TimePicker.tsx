@@ -1,5 +1,5 @@
 import { Time } from "@comet/admin-icons";
-import { type ComponentsOverrides, css, type InputAdornment, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
@@ -15,7 +15,7 @@ export type Future_TimePickerClassKey = "root" | "clearInputAdornment" | "readOn
 export type Future_TimePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiTimePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
-    readOnlyAdornment: typeof InputAdornment;
+    readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
     fullWidth?: boolean;
