@@ -122,31 +122,7 @@ async publishAllProducts(): Promise<boolean> {
 
 ## Deleting Old Mail Logs
 
-You can delete old mail logs from the database using the CLI command:
-
-```
-npm run console -- mailer:delete-mail-logs-older-than <count> <duration> [--type <type>]
-```
-
-- `<count>`: Number of units (e.g., 30)
-- `<duration>`: Time unit (years, months, weeks, days, hours, minutes, seconds)
-- `--type <type>` (optional): Filter logs by mail type
-
-**Example:**
-
-To delete all mail logs older than 30 days:
-
-```
-npm run console -- mailer:delete-mail-logs-older-than 30 days
-```
-
-To delete all mail logs of type `notification` older than 7 days:
-
-```
-npm run console -- mailer:delete-mail-logs-older-than 7 days --type notification
-```
-
-This command will remove all mail logs created before the specified duration. Use with caution, as this operation is irreversible.
+This is done automatically after creating a new mail log entry. For any custom cleanup you should use the MailLog Repository in your application.
 
 ---
 
