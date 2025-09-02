@@ -4,19 +4,18 @@
 
 Add `tags` property to block factories to support adding translatable key words and improve searching for blocks in the `AddBlockDrawer`
 
+Tags of child blocks can be overwritten by passing tags to their parent.
+
 Example usage:
 
 ```tsx
-createCompositeBlock({
-    name: "Media",
-    displayName: "Media Block",
+const MediaGalleryBlock = createCompositeBlock({
+    name: "MediaGallery",
+    displayName: "Media Gallery",
     blocks: {
         /* ... */
     },
-    tags: [
-        defineMessage({ id: "standaloneMedia.tag.image", defaultMessage: "Image" }),
-        defineMessage({ id: "standaloneMedia.tag.video", defaultMessage: "Video" }),
-    ],
+    tags: [defineMessage({ id: "mediaGallery.tag.slider", defaultMessage: "Slider" })],
     /* ... */
 });
 ```
