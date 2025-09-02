@@ -5,6 +5,7 @@ import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
+import { createImageSizes } from "@src/util/createImageSizes";
 import styled from "styled-components";
 
 export const FooterContentBlock = withPreview(
@@ -15,7 +16,12 @@ export const FooterContentBlock = withPreview(
                     <PageLayoutContent>
                         <TopContainer>
                             <ImageWrapper>
-                                <DamImageBlock data={image} aspectRatio="1/1" style={{ objectFit: "contain" }} />
+                                <DamImageBlock
+                                    data={image}
+                                    aspectRatio="1x1"
+                                    style={{ objectFit: "contain" }}
+                                    sizes={createImageSizes({ default: "20vw" })}
+                                />
                             </ImageWrapper>
                             <RichTextWrapper>
                                 <RichTextBlock data={text} disableLastBottomSpacing />
@@ -78,6 +84,7 @@ const TopContainer = styled.div`
         align-self: stretch;
         flex-direction: row-reverse;
         justify-content: space-between;
+        reading-flow: flex-visual;
     }
 
     ${({ theme }) => theme.breakpoints.lg.mediaQuery} {

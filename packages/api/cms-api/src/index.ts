@@ -37,6 +37,7 @@ export {
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
     BlockWarning,
+    ChildBlockInfo,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
@@ -85,7 +86,7 @@ export {
 } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
-export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
+export { createSeoBlock, type SeoBlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
 export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";

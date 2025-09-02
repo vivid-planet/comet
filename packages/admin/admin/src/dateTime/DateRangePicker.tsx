@@ -1,14 +1,13 @@
 import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { type DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
-import { type ComponentType, type ReactNode, useMemo, useState } from "react";
+import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { useMuiDatePickersProModule } from "./useMuiDatePickersProModule";
 import { getDateValue, getIsoDateString } from "./utils";
 
 export type DateRange = {
@@ -59,112 +58,100 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
 
     const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
 
-    const {
-        module: muiDatePickersProModule,
-        loading: muiDateRangePickerModuleLoading,
-        error: muiDateRangePickerModuleError,
-    } = useMuiDatePickersProModule();
-
-    const Root = useMemo(() => {
-        if (!muiDatePickersProModule || muiDateRangePickerModuleLoading) {
-            return null;
-        }
-
-        return createComponentSlot(muiDatePickersProModule.DateRangePicker)<Future_DateRangePickerClassKey>({
-            componentName: "Future_DateRangePicker",
-            slotName: "root",
-        })(css`
-            .${inputLabelClasses.root} {
-                display: none;
-
-                & + .${muiDatePickersProModule.pickersInputBaseClasses.root} {
-                    margin-top: 0;
-                }
-            }
-        `);
-    }, [muiDateRangePickerModuleLoading, muiDatePickersProModule]);
-
-    if (muiDateRangePickerModuleError) {
-        throw new Error(muiDateRangePickerModuleError);
-    }
-
-    if (!muiDatePickersProModule || !Root) {
-        return null;
-    }
-
     return (
-        <Root
-            enableAccessibleFieldDOMStructure
-            disabled={disabled}
-            readOnly={readOnly}
-            open={open}
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
-            disableOpenPicker
-            value={dateRangeValue}
-            onChange={([startDate, endDate]) => {
-                if (!startDate && !endDate) {
-                    onChange?.(undefined);
-                    return;
-                }
+        <Suspense>
+            <LazyRoot
+                enableAccessibleFieldDOMStructure
+                disabled={disabled}
+                readOnly={readOnly}
+                open={open}
+                onOpen={() => setOpen(true)}
+                onClose={() => setOpen(false)}
+                disableOpenPicker
+                value={dateRangeValue}
+                onChange={([startDate, endDate]) => {
+                    if (!startDate && !endDate) {
+                        onChange?.(undefined);
+                        return;
+                    }
 
-                onChange?.({
-                    start: startDate ? getIsoDateString(startDate) : null,
-                    end: endDate ? getIsoDateString(endDate) : null,
-                });
-            }}
-            {...slotProps?.root}
-            {...restProps}
-            slotProps={{
-                ...slotProps?.root?.slotProps,
-                textField: (ownerState) => {
-                    const textFieldProps = {
-                        ...slotProps?.root?.slotProps?.textField,
-                        ownerState,
-                    };
+                    onChange?.({
+                        start: startDate ? getIsoDateString(startDate) : null,
+                        end: endDate ? getIsoDateString(endDate) : null,
+                    });
+                }}
+                {...slotProps?.root}
+                {...restProps}
+                slotProps={{
+                    ...slotProps?.root?.slotProps,
+                    textField: (ownerState) => {
+                        const textFieldProps = {
+                            ...slotProps?.root?.slotProps?.textField,
+                            ownerState,
+                        };
 
-                    return {
-                        fullWidth,
-                        required,
-                        ...textFieldProps,
-                        InputProps: {
-                            ...textFieldProps?.InputProps,
-                            startAdornment: (
-                                <>
-                                    <OpenPickerAdornment
-                                        inputIsDisabled={disabled}
-                                        inputIsReadOnly={readOnly}
-                                        onClick={() => setOpen(true)}
-                                        {...slotProps?.openPickerAdornment}
-                                    >
-                                        {openPickerIcon}
-                                    </OpenPickerAdornment>
-                                    {textFieldProps?.InputProps?.startAdornment}
-                                </>
-                            ),
-                            endAdornment: (
-                                <>
-                                    {textFieldProps?.InputProps?.endAdornment}
-                                    <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={hasDateRangeValue && !required && !disabled && !readOnly}
-                                        onClick={() => onChange?.(undefined)}
-                                        {...slotProps?.clearInputAdornment}
-                                    />
-                                </>
-                            ),
-                        },
-                    };
-                },
-            }}
-            slots={{
-                field: muiDatePickersProModule.SingleInputDateRangeField,
-                ...slotProps?.root?.slots,
-            }}
-        />
+                        return {
+                            fullWidth,
+                            required,
+                            ...textFieldProps,
+                            InputProps: {
+                                ...textFieldProps?.InputProps,
+                                startAdornment: (
+                                    <>
+                                        <OpenPickerAdornment
+                                            inputIsDisabled={disabled}
+                                            inputIsReadOnly={readOnly}
+                                            onClick={() => setOpen(true)}
+                                            {...slotProps?.openPickerAdornment}
+                                        >
+                                            {openPickerIcon}
+                                        </OpenPickerAdornment>
+                                        {textFieldProps?.InputProps?.startAdornment}
+                                    </>
+                                ),
+                                endAdornment: (
+                                    <>
+                                        {textFieldProps?.InputProps?.endAdornment}
+                                        <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
+                                        <ClearInputAdornment
+                                            position="end"
+                                            hasClearableContent={hasDateRangeValue && !required && !disabled && !readOnly}
+                                            onClick={() => onChange?.(undefined)}
+                                            {...slotProps?.clearInputAdornment}
+                                        />
+                                    </>
+                                ),
+                            },
+                        };
+                    },
+                }}
+            />
+        </Suspense>
     );
 };
+
+const LazyRoot = lazy(async () => {
+    const module = await import("@mui/x-date-pickers-pro");
+
+    const Root = createComponentSlot(module.DateRangePicker<Date, true>)<Future_DateRangePickerClassKey>({
+        componentName: "Future_DateRangePicker",
+        slotName: "root",
+    })(css`
+        .${inputLabelClasses.root} {
+            display: none;
+
+            & + .${module.pickersInputBaseClasses.root} {
+                margin-top: 0;
+            }
+        }
+    `);
+
+    return {
+        default: (props: MuiDateRangePickerProps<Date, true>) => (
+            <Root {...props} slots={{ field: module.SingleInputDateRangeField, ...props.slots }} />
+        ),
+    };
+});
 
 const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DateRangePickerClassKey>({
     componentName: "Future_DateRangePicker",
