@@ -1,6 +1,5 @@
 "use client";
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { PageLink } from "@src/layout/header/PageLink";
 import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
 import { useId, useState } from "react";
 import FocusLock from "react-focus-lock";
@@ -46,9 +45,7 @@ export const DesktopMenu = ({ menu }: Props) => {
                             }}
                         >
                             <LinkContainer>
-                                <MenuPageLink page={node.node} activeClassName="active">
-                                    {node.node.name}
-                                </MenuPageLink>
+                                <MenuPageLink href={node.node.path}>{node.node.name}</MenuPageLink>
                                 {node.node.childNodes.length > 0 && (
                                     <ToggleSubLevelNavigationButton
                                         aria-label={intl.formatMessage(
@@ -91,9 +88,7 @@ export const DesktopMenu = ({ menu }: Props) => {
 
                                         {node.node.childNodes.map((node) => (
                                             <li key={node.id}>
-                                                <MenuPageLink page={node} activeClassName="active">
-                                                    {node.name}
-                                                </MenuPageLink>
+                                                <MenuPageLink href={node.path}>{node.name}</MenuPageLink>
                                             </li>
                                         ))}
                                     </SubLevelNavigation>
@@ -200,7 +195,7 @@ const CloseSublevelNavigationButton = styled.button`
     }
 `;
 
-const MenuPageLink = styled(PageLink)`
+const MenuPageLink = styled.a`
     text-decoration: none;
     display: inline-block;
     padding: ${({ theme }) => theme.spacing.S100} 0;
@@ -211,7 +206,7 @@ const MenuPageLink = styled(PageLink)`
         color: ${({ theme }) => theme.palette.primary.main};
     }
 
-    &.active {
+    &:active {
         text-decoration: underline ${({ theme }) => theme.palette.primary.main};
         text-underline-offset: 8px;
     }

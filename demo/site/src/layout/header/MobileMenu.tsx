@@ -1,6 +1,5 @@
 "use client";
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { PageLink } from "@src/layout/header/PageLink";
 import { PageLayout } from "@src/layout/PageLayout";
 import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
 import { useState } from "react";
@@ -98,7 +97,7 @@ export const MobileMenu = ({ menu }: Props) => {
                                                         <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} color="inherit" />
                                                     </ButtonLink>
                                                 ) : (
-                                                    <Link page={node.node}>{node.node.name}</Link>
+                                                    <Link href={node.node.path}>{node.node.name}</Link>
                                                 )}
                                                 {node.node.childNodes.length > 0 && (
                                                     <FocusLock disabled={expandedSubLevelNavigation !== node.id}>
@@ -123,7 +122,7 @@ export const MobileMenu = ({ menu }: Props) => {
                                                                         </BackButton>
                                                                     </li>
                                                                     <li>
-                                                                        <OverviewButton page={node.node}>
+                                                                        <OverviewButton href={node.node.path}>
                                                                             <SvgUse
                                                                                 href="/assets/icons/overview.svg#root"
                                                                                 width={16}
@@ -137,7 +136,7 @@ export const MobileMenu = ({ menu }: Props) => {
                                                                     </li>
                                                                     {node.node.childNodes.map((node) => (
                                                                         <li key={node.id}>
-                                                                            <Link page={node}>{node.name}</Link>
+                                                                            <Link href={node.path}>{node.name}</Link>
                                                                         </li>
                                                                     ))}
                                                                 </PageLayoutContent>
@@ -233,7 +232,7 @@ const SubLevelNavigation = styled.ol<{ $isExpanded: boolean }>`
         `}
 `;
 
-const Link = styled(PageLink)`
+const Link = styled.a`
     width: 100%;
     text-decoration: none;
     display: inline-block;
@@ -276,7 +275,7 @@ const BackButton = styled(ButtonLinkBase)`
     border-bottom: 1px solid ${({ theme }) => theme.palette.gray["300"]};
 `;
 
-const OverviewButton = styled(PageLink)`
+const OverviewButton = styled.a`
     display: flex;
     flex-direction: row;
     align-items: center;
