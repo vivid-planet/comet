@@ -182,6 +182,11 @@ module.exports = {
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
+        {
+            name: "demo-site-css-types",
+            script: "pnpm --filter comet-demo-site run css:types:watch",
+            group: ["demo-site", "demo"],
+        },
 
         //group demo site pages
         {
