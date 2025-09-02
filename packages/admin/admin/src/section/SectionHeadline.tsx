@@ -103,7 +103,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         name: "CometAdminSectionHeadline",
     });
 
-    const { tooltip: tooltooltipIcon = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
+    const { tooltip: tooltipIcon = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
@@ -114,7 +114,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
                     </Headline>
                     {infoTooltipText && (
                         <InfoTooltip title={infoTooltipText} {...slotProps?.infoTooltip}>
-                            {tooltooltipIcon}
+                            {tooltipIcon}
                         </InfoTooltip>
                     )}
                 </TitleContainer>
