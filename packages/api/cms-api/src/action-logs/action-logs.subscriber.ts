@@ -2,7 +2,7 @@ import { AnyEntity, ChangeSet, ChangeSetType, EntityManager, EventSubscriber, Fl
 import { Injectable } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 
-import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { ACTION_LOGS_METADATA_KEY, ActionLogMetadata } from "./action-logs.decorator";
 import { ActionLogsService } from "./action-logs.service";
@@ -35,8 +35,8 @@ export class ActionLogsSubscriber implements EventSubscriber {
         const entityId = changeSet.entity[actionLogsMetadata.idArg ?? "id"];
 
         let scope: ContentScope[] | undefined;
-        if (Reflect.hasOwnMetadata("scopedEntity", changeSet.entity.constructor.prototype)) {
-            const scopedEntityMetadata: ScopedEntityMeta = Reflect.getMetadata("scopedEntity", changeSet.entity.constructor.prototype);
+        if (Reflect.hasOwnMetadata(SCOPED_ENTITY_METADATA_KEY, changeSet.entity.constructor.prototype)) {
+            const scopedEntityMetadata: ScopedEntityMeta = Reflect.getMetadata(SCOPED_ENTITY_METADATA_KEY, changeSet.entity.constructor.prototype);
             const service = this.moduleRef.get(scopedEntityMetadata, { strict: false });
             const scopedEntityScope = await service.getEntityScope(changeSet.entity.constructor.prototype);
 
