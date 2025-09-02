@@ -14,6 +14,7 @@ export type MailerModuleConfig = {
     sendAllMailsTo?: string[];
     sendAllMailsBcc?: string[];
     disableMailLog?: boolean;
+    daysToKeepMailLog: number;
     transport: SMTPTransport | SMTPTransport.Options;
 };
 

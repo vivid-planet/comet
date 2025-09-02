@@ -2,6 +2,7 @@ import { EntityManager } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Logger } from "@nestjs/common";
+import { subDays } from "date-fns";
 import { Transporter } from "nodemailer";
 import Mail, { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
@@ -73,6 +74,9 @@ export class MailerService {
             logEntry.assign({ result });
             await this.entityManager.flush();
         }
+
+        // Delete outdated logs, purposely not using await because it is not important for the mail sending process
+        this.mailerLogRepository.nativeDelete({ createdAt: { $lt: subDays(new Date(), this.mailerConfig.daysToKeepMailLog) } });
 
         return result;
     }

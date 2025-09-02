@@ -36,6 +36,8 @@ mailer: {
     sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
     sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 
+    daysToKeepMailLog: 90,
+
     transport: { // nodemailer configuration
         host: envVars.MAILER_HOST,
         port: envVars.MAILER_PORT,
