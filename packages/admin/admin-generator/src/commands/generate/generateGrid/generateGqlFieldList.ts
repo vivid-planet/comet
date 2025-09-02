@@ -28,6 +28,8 @@ export function generateGqlFieldList<T extends { __typename?: string }>({ column
                     objectPath.set(acc, queryField, true);
                 });
             }
+        } else if (field.name === "id") {
+            // exclude id because it's always required
         } else {
             let hasCustomFields = false;
 
