@@ -1,5 +1,9 @@
 # @comet/eslint-plugin
 
+## 8.1.1
+
+## 8.1.0
+
 ## 8.0.0
 
 ### Major Changes

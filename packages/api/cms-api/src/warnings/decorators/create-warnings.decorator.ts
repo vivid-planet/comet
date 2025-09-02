@@ -35,6 +35,8 @@ export interface CreateWarningsServiceInterface<Entity extends AnyEntity = AnyEn
 
 export type CreateWarningsMeta<Entity extends AnyEntity = AnyEntity> = CreateWarningsFunction<Entity> | Type<CreateWarningsServiceInterface<Entity>>;
 
+export const CREATE_WARNINGS_METADATA_KEY = "createWarnings";
+
 export function CreateWarnings<Entity extends AnyEntity = AnyEntity>(value: CreateWarningsMeta<Entity>): CustomDecorator<string> {
-    return SetMetadata<string, CreateWarningsMeta<Entity>>("createWarnings", value);
+    return SetMetadata<string, CreateWarningsMeta<Entity>>(CREATE_WARNINGS_METADATA_KEY, value);
 }

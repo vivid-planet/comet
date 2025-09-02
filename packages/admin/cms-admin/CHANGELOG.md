@@ -1,5 +1,39 @@
 # @comet/cms-admin
 
+## 8.1.1
+
+### Patch Changes
+
+- @comet/admin@8.1.1
+- @comet/admin-date-time@8.1.1
+- @comet/admin-icons@8.1.1
+- @comet/admin-rte@8.1.1
+
+## 8.1.0
+
+### Minor Changes
+
+- f6f20e1: Add column to `FolderDataGrid` to display number of dependents of files in DAM
+- ec0c8bd: Display the DAM file path in `EditImageDialog`
+- 0e0eb90: Add toGqlFilter callback to GridColDefExtension
+
+    This allows to map custom filters to more complex gql filter structures, especially if it's required to combine multiple gql-filter objects with `and` or `or`.
+
+### Patch Changes
+
+- cd7b87a: Style `PermissionGrid` in user permissions detail page to match Comet DXP design
+- c922a91: Style `ContentScopeGrid` in user permissions to match Comet DXP design
+- Updated dependencies [00e6a12]
+- Updated dependencies [2f33286]
+- Updated dependencies [ec9bce5]
+- Updated dependencies [3323fa9]
+- Updated dependencies [e70eb31]
+- Updated dependencies [911a6da]
+    - @comet/admin@8.1.0
+    - @comet/admin-date-time@8.1.0
+    - @comet/admin-rte@8.1.0
+    - @comet/admin-icons@8.1.0
+
 ## 8.0.0
 
 ### Major Changes
