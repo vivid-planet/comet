@@ -52,24 +52,16 @@ export class MailerService {
 
         let logEntry: MailerLog<unknown> | undefined;
         if (logMail && !this.mailerConfig.disableMailLog) {
-            // @Transactional() throws "@Transactional() should be used with async functions", because
-            // code is compiled to ES2015, which does transpile async functions to generators/promises.
-            // Instead using em.fork() solution.
-            const em = this.entityManager.fork();
-            await em.begin();
-            logEntry = em.getRepository(MailerLog).create({
-                to: this.normalizeToArray(originMailOptions.to).map<string>(this.convertAddressToString),
-                subject: originMailOptions.subject,
-                mailOptions: mailOptionsWithDefaults,
-                additionalData,
-                mailTypeForLogging, // for statistic and filter purposes
+            await this.entityManager.fork().transactional((em) => {
+                logEntry = em.getRepository(MailerLog).create({
+                    to: this.normalizeToArray(originMailOptions.to).map<string>(this.convertAddressToString),
+                    subject: originMailOptions.subject,
+                    mailOptions: mailOptionsWithDefaults,
+                    additionalData,
+                    mailTypeForLogging, // for statistic and filter purposes
+                });
+                // em.flush();
             });
-            try {
-                await em.commit();
-            } catch (e) {
-                await em.rollback();
-                throw e;
-            }
         }
 
         // this is needed because only on production stage we are allowed to send mails to customers
@@ -80,19 +72,12 @@ export class MailerService {
         const result = await this.mailerTransport.sendMail(mailOptions);
         if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
 
-        if (logMail && !this.mailerConfig.disableMailLog && logEntry) {
-            // @Transactional() throws "@Transactional() should be used with async functions", because
-            // code is compiled to ES2015, which does transpile async functions to generators/promises.
-            // Instead using em.fork() solution.
-            const em = this.entityManager.fork();
-            await em.begin();
-            logEntry.assign({ result });
-            try {
-                await em.commit();
-            } catch (e) {
-                await em.rollback();
-                throw e;
-            }
+        if (logMail && !this.mailerConfig.disableMailLog) {
+            await this.entityManager.fork().transactional((em) => {
+                if (logEntry) {
+                    logEntry.assign({ result });
+                }
+            });
         }
 
         // Delete outdated logs, purposely not using await because it is not important for the mail sending process
