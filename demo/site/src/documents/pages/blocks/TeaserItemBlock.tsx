@@ -13,7 +13,7 @@ const descriptionRenderers: Renderers = {
 };
 
 export const TeaserItemBlock = withPreview(
-    ({ data: { media, title, description, link } }: PropsWithData<TeaserItemBlockData>) => (
+    ({ data: { media, title, description, link, titleHtmlTag } }: PropsWithData<TeaserItemBlockData>) => (
         <Link data={link.link}>
             <MediaMobile>
                 <MediaBlock data={media} aspectRatio="1x1" sizes="20vw" />
@@ -22,7 +22,9 @@ export const TeaserItemBlock = withPreview(
                 <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
             </MediaDesktop>
             <ContentContainer>
-                <TitleTypography variant="h350">{title}</TitleTypography>
+                <TitleTypography variant="h350" as={titleHtmlTag}>
+                    {title}
+                </TitleTypography>
                 <Typography variant="p200">
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
                 </Typography>
