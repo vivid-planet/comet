@@ -226,9 +226,8 @@ export default defineConfig({
         // group docs
         {
             name: "storybook",
-            group: ["storybook"],
             script: "pnpm --filter comet-storybook run storybook",
-            group: ["docs"],
+            group: ["storybook", "docs"],
         },
         {
             name: "docs",
@@ -237,7 +236,7 @@ export default defineConfig({
             waitOn: ["tcp:26638"], // storybook
         },
         {
-            name: "storybook comet-admin",
+            name: "storybook-comet-admin",
             script: "pnpm --filter @comet/admin run storybook",
             group: ["storybook"],
             waitOn: waitOnPackages("@comet/admin-icons"),
