@@ -5,9 +5,8 @@ import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { http, HttpResponse } from "msw";
 
-import { fileUploadsHandler } from "./handler/fileUploads";
-
 import { currentUserHandler } from "./currentUserHandler";
+import { fileUploadsHandler } from "./handler/fileUploads";
 
 type StringFilter = {
     contains: string;
