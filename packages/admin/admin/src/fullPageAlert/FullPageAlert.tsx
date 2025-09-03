@@ -122,7 +122,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
             <ContentContainer {...slotProps.contentContainer}>
                 <InlineAlertStyled
                     title={
-                        <Title variant="h3" {...slotProps.title}>
+                        <Title variant="h3" component="span" {...slotProps.title}>
                             {title}
                         </Title>
                     }
@@ -138,7 +138,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
                 {detailDescription && (
                     <>
                         <DividerStyled {...slotProps.divider} />
-                        <DetailDescription variant="body2" {...slotProps.detailDescription}>
+                        <DetailDescription variant="body2" component="span" {...slotProps.detailDescription}>
                             {detailDescription}
                         </DetailDescription>
                     </>
