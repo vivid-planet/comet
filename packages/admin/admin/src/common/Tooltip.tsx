@@ -193,11 +193,11 @@ export const Tooltip = (inProps: TooltipProps) => {
             ...props.slots,
         },
         slotProps: {
+            ...props.slotProps,
             popper: {
                 ownerState,
                 ...props.slotProps?.popper,
             },
-            ...props.slotProps,
         },
     };
 

@@ -205,6 +205,7 @@ export {
     useSaveBoundaryState,
 } from "./saveBoundary/SaveBoundary";
 export { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
+export { SectionHeadline, SectionHeadlineClassKey, SectionHeadlineProps } from "./section/SectionHeadline";
 export { Selected } from "./Selected";
 export { ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
 export { ISelectionApi } from "./SelectionApi";
