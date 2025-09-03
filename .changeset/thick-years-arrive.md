@@ -2,4 +2,4 @@
 "@comet/eslint-config": minor
 ---
 
-Introduce new future/react.js config, and Enable ESLint rule react/jsx-no-literals
+Introduce a new future/react.js configuration and enable the ESLint rule react/jsx-no-literals.
