@@ -1,4 +1,4 @@
-import eslintConfigReact from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/future/react.js";
 import storybook from "eslint-plugin-storybook";
 
 /** @type {import('eslint')} */
