@@ -1,4 +1,4 @@
-import { ErrorPage } from "@comet/admin";
+import { FullPageAlert } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { type FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
@@ -12,17 +12,17 @@ export const NoContentScopeFallback: FunctionComponent = () => {
     const user = useCurrentUser();
 
     return (
-        <ErrorPage
+        <FullPageAlert
             title={<FormattedMessage id="comet.admin.contentScope.noContentScopeError.title" defaultMessage="No access - authorizations missing" />}
             description={
-                <Typography variant="body1">
+                <Typography variant="body1" component="span">
                     <FormattedMessage
                         id="comet.admin.contentScope.noContentScopeError.description"
                         defaultMessage="Your account is active, but you do not have access rights."
                     />
                 </Typography>
             }
-            help={
+            detailDescription={
                 <>
                     <Typography variant="subtitle1">
                         <FormattedMessage
@@ -32,7 +32,7 @@ export const NoContentScopeFallback: FunctionComponent = () => {
                     </Typography>
                     <BulletList component="ul">
                         <BulletListItem component="li">
-                            <Typography variant="body1">
+                            <Typography variant="body1" component="span">
                                 <FormattedMessage
                                     id="comet.admin.contentScope.noContentScopeError.help.reason1"
                                     defaultMessage="Your access has not yet been activated by an administrator."
@@ -40,7 +40,7 @@ export const NoContentScopeFallback: FunctionComponent = () => {
                             </Typography>
                         </BulletListItem>
                         <BulletListItem component="li">
-                            <Typography variant="body1">
+                            <Typography variant="body1" component="span">
                                 <FormattedMessage
                                     id="comet.admin.contentScope.noContentScopeError.help.reason2"
                                     defaultMessage="You are not authorized for this environment or this company."
