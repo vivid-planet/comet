@@ -5,7 +5,7 @@ export default {
     title: "@comet/admin/SectionHeadline",
 };
 
-export const _SectionHeadline = () => {
+export const Default = () => {
     return (
         <Stack spacing={15}>
             <SectionHeadline supportText="Support Text" divider infoTooltipText="Tooltip Info Text">
