@@ -1,3 +1,4 @@
+export { DiffHeader, DiffHeaderProps } from "./actionLog/components/DiffHeader";
 export { DiffViewer, DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
