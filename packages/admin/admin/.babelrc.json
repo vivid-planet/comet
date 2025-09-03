@@ -1,14 +1,4 @@
 {
-    "ignore": [
-        "**/*.test.ts",
-        "**/*.test.tsx",
-        "**/*.spec.ts",
-        "**/*.spec.tsx",
-        "**/__tests__/**",
-        "**.stories.js",
-        "**/*.stories.tsx",
-        "**/*.stories.ts",
-        "**/documentation/**"
-    ],
+    "ignore": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**", "**.stories.js"],
     "presets": ["@comet/admin-babel-preset"]
 }

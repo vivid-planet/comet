@@ -5,7 +5,7 @@
         "**/*.spec.tsx",
         "**/*.spec.ts",
         "**/__tests__/**",
-        "**/documentation/**",
+        "**/__stories__/**",
         "**/*.stories.js",
         "**/*.stories.tsx",
         "**/*.stories.ts"
