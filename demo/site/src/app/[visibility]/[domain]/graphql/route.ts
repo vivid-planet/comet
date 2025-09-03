@@ -1,39 +1,27 @@
-import { readFile } from "fs/promises";
+import { readFileSync } from "fs";
 
-type QueryMap = Record<string, string>;
-let queryMap: QueryMap | undefined;
-async function loadQueryMap(): Promise<QueryMap> {
-    if (!queryMap) {
-        const file = await readFile(".next/persisted-queries.json", "utf-8");
-        queryMap = JSON.parse(file.toString()) as QueryMap;
-    }
-    return queryMap;
-}
-async function loadQuery(hash: string): Promise<string | null> {
-    const map = await loadQueryMap();
-    return map[hash] || null;
-}
+let queryMap: Record<string, string>;
+let fragmentsMap: Record<string, string>;
+{
+    const file = readFileSync(".next/persisted-queries.json", "utf-8");
+    queryMap = JSON.parse(file.toString()) as typeof queryMap;
 
-let fragmentsMap: Record<string, string> | undefined;
-async function injectFragments(query: string) {
-    if (!fragmentsMap) {
-        fragmentsMap = {};
-        for (const [, query] of Object.entries(await loadQueryMap())) {
-            const match = query.match(/^\s*fragment\s+(\w+)\s+on\s+\w+/m);
-            if (match) {
-                const fragmentName = match[1];
-                fragmentsMap[fragmentName] = query.replaceAll(/\${.*?}/g, ""); // remove interpolations that would be injected at runtime;
-            }
+    fragmentsMap = {};
+    for (const [, query] of Object.entries(queryMap)) {
+        const match = query.match(/^\s*fragment\s+(\w+)\s+on\s+\w+/m);
+        if (match) {
+            const fragmentName = match[1];
+            fragmentsMap[fragmentName] = query.replaceAll(/\${.*?}/g, ""); // remove interpolations that would be injected at runtime;
         }
     }
+}
 
+function injectFragments(query: string) {
     query = query.replaceAll(/\${.*?}/g, ""); // remove interpolations that would be injected at runtime
 
     const injected = new Set<string>();
     query.matchAll(/^\s*fragment\s+(\w+)\s+on\s+\w+/gm).forEach((m) => injected.add(m[1])); // fragments in the initial query
     function inject(q: string): string {
-        if (!fragmentsMap) throw new Error(); //narrow type
-
         // Find all fragment spreads in the query
         const spreads = Array.from(q.matchAll(/\.\.\.(\w+)/g)).map((m) => m[1]);
         let result = q;
@@ -75,11 +63,11 @@ async function handler(req: Request) {
         return Response.json({ error: "OnlyPersistedQueriesAllowed" }, { status: 400 });
     }
 
-    let query = await loadQuery(hash);
+    let query = queryMap[hash];
     if (!query) {
         return Response.json({ error: "PersistedQueryNotFound", hash }, { status: 400 });
     }
-    query = await injectFragments(query);
+    query = injectFragments(query);
 
     // CSRF protection for GET requests, similar to Apollo Server's CSRF protection
     if (req.method === "GET") {
