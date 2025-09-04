@@ -141,24 +141,24 @@ export function generateAsyncSelect({
               let filterVar = "";
 
               if (config.filter.type === "field") {
-                  filterField = findFieldByName(config.filter.fieldName, formConfig.fields);
+                  filterField = findFieldByName(config.filter.formFieldName, formConfig.fields);
                   if (!filterField) {
                       throw new Error(
                           `Field ${String(config.name)}: No field with name "${
-                              config.filter.fieldName
-                          }" referenced as filter.fieldName found in form-config.`,
+                              config.filter.formFieldName
+                          }" referenced as filter.formFieldName found in form-config.`,
                       );
                   }
                   if (!isFormFieldConfig(filterField)) {
                       throw new Error(
-                          `Field ${String(config.name)}: Field with name "${config.filter.fieldName}" referenced as filter.fieldName is no FormField.`,
+                          `Field ${String(config.name)}: Field with name "${config.filter.formFieldName}" referenced as filter.fieldName is no FormField.`,
                       );
                   }
 
                   filterVar = `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
 
                   if (!rootQueryArg) {
-                      rootQueryArg = config.filter.fieldName;
+                      rootQueryArg = config.filter.formFieldName;
                   }
               } else if (config.filter.type === "formProp") {
                   filterVar = config.filter.propName;

@@ -90,7 +90,7 @@ export type FormFieldConfig<T> = (
                     /**
                      * Name of the field in current form, that will be used to filter the query
                      */
-                    fieldName: string;
+                    formFieldName: string;
                     /**
                      * Name of the graphql argument the prop will be applied to. Defaults to propdName.
                      *

@@ -116,7 +116,7 @@ describe("AsyncSelect filter", () => {
             name: "category",
             filter: {
                 type: "field",
-                fieldName: "title",
+                formFieldName: "title",
             },
         };
         const formConfig: FormConfig<GQLProduct> = {
