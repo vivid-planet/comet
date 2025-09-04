@@ -6,7 +6,6 @@ import { FormattedMessage } from "react-intl";
 import { SignOutButton } from "../../common/signOutButton/SignOutButton";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { StopImpersonationButton } from "../../userPermissions/user/ImpersonationButtons";
-import { BulletList, BulletListItem } from "./NoContentScopeFallback.sc";
 
 export const NoContentScopeFallback: FunctionComponent = () => {
     const user = useCurrentUser();
@@ -30,32 +29,28 @@ export const NoContentScopeFallback: FunctionComponent = () => {
                             defaultMessage="You have successfully logged in, but your account is not authorized for any area (scope). Possible reasons:"
                         />
                     </Typography>
-                    <BulletList component="ul">
-                        <BulletListItem component="li">
-                            <Typography variant="body1" component="span">
-                                <FormattedMessage
-                                    id="comet.admin.contentScope.noContentScopeError.help.reason1"
-                                    defaultMessage="Your access has not yet been activated by an administrator."
-                                />
-                            </Typography>
-                        </BulletListItem>
-                        <BulletListItem component="li">
-                            <Typography variant="body1" component="span">
-                                <FormattedMessage
-                                    id="comet.admin.contentScope.noContentScopeError.help.reason2"
-                                    defaultMessage="You are not authorized for this environment or this company."
-                                />
-                            </Typography>
-                        </BulletListItem>
-                        <BulletListItem component="li">
-                            <Typography variant="body1">
-                                <FormattedMessage
-                                    id="comet.admin.contentScope.noContentScopeError.help.reason3"
-                                    defaultMessage="There is a technical problem with your access rights."
-                                />
-                            </Typography>
-                        </BulletListItem>
-                    </BulletList>
+                    <Typography variant="list">
+                        <Typography variant="listItem">
+                            <FormattedMessage
+                                id="comet.admin.contentScope.noContentScopeError.help.reason1"
+                                defaultMessage="Your access has not yet been activated by an administrator."
+                            />
+                        </Typography>
+
+                        <Typography variant="listItem">
+                            <FormattedMessage
+                                id="comet.admin.contentScope.noContentScopeError.help.reason2"
+                                defaultMessage="You are not authorized for this environment or this company."
+                            />
+                        </Typography>
+
+                        <Typography variant="listItem">
+                            <FormattedMessage
+                                id="comet.admin.contentScope.noContentScopeError.help.reason3"
+                                defaultMessage="There is a technical problem with your access rights."
+                            />
+                        </Typography>
+                    </Typography>
 
                     <Typography variant="subtitle1" marginBottom={2} marginTop={4}>
                         <FormattedMessage id="comet.admin.contentScope.noContentScopeError.help.whatCanYouDo" defaultMessage="What can you do?" />
