@@ -59,6 +59,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type PaginatedActionLogs {
+  nodes: [ActionLog!]!
+  totalCount: Int!
+}
+
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
@@ -498,6 +503,8 @@ type Query {
   blockPreviewJwt(scope: JSONObject!, url: String!, includeInvisible: Boolean!): String!
   warning(id: ID!): Warning!
   warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  actionLogs(offset: Int! = 0, limit: Int! = 25, scope: JSONObject, entityName: String!, filter: ActionLogFilter, sort: [ActionLogSort!]): PaginatedActionLogs!
+  actionLog(id: ID!): ActionLog!
   damMediaAlternative(id: ID!): DamMediaAlternative!
   damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
 }
@@ -689,6 +696,32 @@ enum WarningSortField {
   type
   severity
   status
+}
+
+input ActionLogFilter {
+  id: IdFilter
+  userId: StringFilter
+  entityId: StringFilter
+  and: [ActionLogFilter!]
+  or: [ActionLogFilter!]
+}
+
+input IdFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
+}
+
+input ActionLogSort {
+  field: ActionLogSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ActionLogSortField {
+  userId
+  entityId
+  version
+  createdAt
 }
 
 input DamMediaAlternativeSort {

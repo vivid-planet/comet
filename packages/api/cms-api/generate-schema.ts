@@ -43,6 +43,7 @@ import { UserContentScopesResolver } from "./src/user-permissions/user-content-s
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
 import { WarningResolver } from "./src/warnings/warning.resolver";
 import { CombinedPermission } from "./src/user-permissions/user-permissions.types";
+import { ActionLogsResolver } from "./src/action-logs/action-logs.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -126,6 +127,7 @@ async function generateSchema(): Promise<void> {
             FileUploadsResolver,
             SitePreviewResolver,
             WarningResolver,
+            ActionLogsResolver,
             createDamMediaAlternativeResolver({ File }),
         ]
     );
