@@ -1,5 +1,5 @@
 ---
-"@comet/admin": patch
+"@comet/admin": minor
 ---
 
 Implement NoContentScopeFallback component according to design specifications
