@@ -198,11 +198,7 @@ export function ProductForm({ id, width }: FormProps) {
                         component={FinalFormRangeInput}
                         min={5}
                         max={100}
-                        startAdornment={
-                            <InputAdornment position="start">
-                                <FormattedMessage id="product.priceRange.startAdornment.euro" defaultMessage="€" />
-                            </InputAdornment>
-                        }
+                        startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         disableSlider
                     />
                     <TextAreaField fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description" />} />

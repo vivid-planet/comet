@@ -138,7 +138,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                                     />
                                 ) : (
                                     <InvalidPreview type="invalid" {...slotProps?.previewIndicator} {...slotProps?.previewIndicatorInvalid}>
-                                        <FormattedMessage id="comet.colorPicker.invalid" defaultMessage="?" />
+                                        ?
                                     </InvalidPreview>
                                 )
                             ) : (

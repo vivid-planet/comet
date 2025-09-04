@@ -1,7 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { ButtonBase, type ComponentsOverrides, css, ListItemText, Menu, MenuItem, type Theme, Typography, useThemeProps } from "@mui/material";
 import { Fragment, type ReactNode, useRef, useState } from "react";
-import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -114,7 +113,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                     <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
                         <>
                             <BreadcrumbsEllipsisItem variant="body2" {...slotProps?.breadcrumbsEllipsisItem}>
-                                <FormattedMessage id="comet.admin.toolbarBreadcrumbs.ellipsis" defaultMessage="..." />
+                                …
                             </BreadcrumbsEllipsisItem>
                             {itemSeparator}
                         </>

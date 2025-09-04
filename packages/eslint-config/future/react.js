@@ -7,7 +7,12 @@ const config = [
         files: ["**/*.ts", "**/*.tsx"],
         ignores: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
         rules: {
-            "react/jsx-no-literals": "error",
+            "react/jsx-no-literals": [
+                "error",
+                {
+                    allowedStrings: ["…", "€", "$", "?"],
+                },
+            ],
         },
     },
 ];
