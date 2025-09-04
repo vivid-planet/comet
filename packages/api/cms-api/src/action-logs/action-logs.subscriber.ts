@@ -48,7 +48,9 @@ export class ActionLogsSubscriber implements EventSubscriber {
         const entityId = changeSet.entity[entityMetadata.primaryKeys[0]];
 
         let scope: ContentScope[] | undefined;
-        if (Reflect.hasOwnMetadata(SCOPED_ENTITY_METADATA_KEY, changeSet.entity.constructor.prototype)) {
+        if ("scope" in changeSet.entity) {
+            scope = Array.isArray(changeSet.entity.scope) ? changeSet.entity.scope : [changeSet.entity.scope];
+        } else if (Reflect.hasOwnMetadata(SCOPED_ENTITY_METADATA_KEY, changeSet.entity.constructor.prototype)) {
             const scopedEntityMetadata: ScopedEntityMeta = Reflect.getMetadata(SCOPED_ENTITY_METADATA_KEY, changeSet.entity.constructor.prototype);
             const service = this.moduleRef.get(scopedEntityMetadata, { strict: false });
             const scopedEntityScope = await service.getEntityScope(changeSet.entity);
