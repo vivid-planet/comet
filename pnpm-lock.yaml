@@ -475,6 +475,9 @@ importers:
       cache-manager:
         specifier: ^5.7.6
         version: 5.7.6
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       filesize:
         specifier: ^10.1.6
         version: 10.1.6
