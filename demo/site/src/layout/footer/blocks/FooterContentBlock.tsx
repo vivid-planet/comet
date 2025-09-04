@@ -12,7 +12,7 @@ import styles from "./FooterContentBlock.module.scss";
 export const FooterContentBlock = withPreview(
     ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
         return (
-            <footer className={styles.footerRoot}>
+            <footer className={styles.root}>
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <div className={styles.topContainer}>
