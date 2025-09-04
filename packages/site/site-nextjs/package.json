@@ -38,7 +38,7 @@
         "@comet/site-react": "workspace:*",
         "clsx": "^2.1.1",
         "jose": "^5.10.0",
-        "rimraf": "^3.0.2",
+        "rimraf": "^6.0.0",
         "server-only": "^0.0.1"
     },
     "devDependencies": {
