@@ -1,6 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ExecutionContext, Module } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import { ModuleRef, Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import type { Request } from "express";
 import { ClsModule } from "nestjs-cls";
@@ -16,10 +16,10 @@ import { ActionLog } from "./entities/action-log.entity";
     imports: [
         MikroOrmModule.forFeature([ActionLog]),
         ClsModule.forRootAsync({
-            useFactory: (reflector: Reflector) => ({
+            useFactory: (reflector: Reflector, moduleRef: ModuleRef) => ({
                 interceptor: {
                     mount: true,
-                    setup: async (cls, context: ExecutionContext) => {
+                    setup: async (_cls, context: ExecutionContext) => {
                         const request: Request & { user: User } =
                             context.getType().toString() === "graphql"
                                 ? GqlExecutionContext.create(context).getContext().req
@@ -30,11 +30,12 @@ import { ActionLog } from "./entities/action-log.entity";
                         ]);
                         if (disableCometGuard) return;
 
-                        await new ActionLogsService(cls).setUserId(request.user.id);
+                        const service = moduleRef.get(ActionLogsService, { strict: false });
+                        await service.setUserId(request.user.id);
                     },
                 },
             }),
-            inject: [Reflector],
+            inject: [Reflector, ModuleRef],
         }),
     ],
     providers: [ActionLogsService, ActionLogsSubscriber, ActionLogsResolver],
