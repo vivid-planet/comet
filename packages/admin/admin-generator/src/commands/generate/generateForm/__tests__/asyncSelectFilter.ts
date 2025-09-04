@@ -439,7 +439,7 @@ describe("AsyncSelect filter", () => {
                 filter: {
                     type: "formProp",
                     propName: "categoryType",
-                    gqlName: "type",
+                    rootQueryArg: "type",
                 },
             };
             const formConfig: FormConfig<GQLProduct> = {

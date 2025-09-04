@@ -96,7 +96,7 @@ export type FormFieldConfig<T> = (
                      *
                      * Root Argument or filter argument are supported.
                      */
-                    gqlName?: string;
+                    rootQueryArg?: string;
                 }
               | {
                     /**
@@ -112,7 +112,7 @@ export type FormFieldConfig<T> = (
                      *
                      * Root Argument or filter argument are supported.
                      */
-                    gqlName?: string;
+                    rootQueryArg?: string;
                 };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
