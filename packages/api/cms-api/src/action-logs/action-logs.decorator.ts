@@ -1,7 +1,6 @@
 import type { Permission } from "../user-permissions/user-permissions.types";
 
 export interface ActionLogMetadata {
-    idArg?: string;
     requiredPermission: Array<Permission>;
 }
 

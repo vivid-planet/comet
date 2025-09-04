@@ -31,14 +31,21 @@ export class ActionLogsSubscriber implements EventSubscriber {
     }
 
     async createEntity(changeSet: ChangeSet<AnyEntity>): Promise<ActionLog | null> {
+        const entityName = changeSet.entity.constructor.name;
+        const entityMetadata = this.entityManager.getMetadata(entityName);
+        if (!entityMetadata) return null;
+
         const actionLogsMetadata: ActionLogMetadata | undefined = Reflect.getMetadata(
             ACTION_LOGS_METADATA_KEY,
             changeSet.entity.constructor.prototype,
         );
         if (!actionLogsMetadata) return null;
 
-        const entityName = changeSet.entity.constructor.name;
-        const entityId = changeSet.entity[actionLogsMetadata.idArg ?? "id"];
+        if (entityMetadata.primaryKeys.length != 1) {
+            console.error(`entity '${entityMetadata}' doesn't have a single primary key`);
+            return null;
+        }
+        const entityId = changeSet.entity[entityMetadata.primaryKeys[0]];
 
         let scope: ContentScope[] | undefined;
         if (Reflect.hasOwnMetadata(SCOPED_ENTITY_METADATA_KEY, changeSet.entity.constructor.prototype)) {
