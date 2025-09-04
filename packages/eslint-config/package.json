@@ -13,6 +13,9 @@
         "./core.js": {
             "import": "./core.js"
         },
+        "./future/react.js": {
+            "import": "./future/react.js"
+        },
         "./nestjs.js": {
             "import": "./nestjs.js"
         },
