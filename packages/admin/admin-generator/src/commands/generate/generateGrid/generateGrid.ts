@@ -226,10 +226,7 @@ export function generateGrid<T extends { __typename?: string }>(
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({
-        // exclude id because it's always required
-        columns: config.columns.filter((column) => column.type !== "actions" && column.name !== "id"),
-    });
+    const fieldList = generateGqlFieldList({ columns: config.columns });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
@@ -362,7 +359,7 @@ export function generateGrid<T extends { __typename?: string }>(
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
 
-    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
+    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig<any>;
     const {
         component: actionsColumnComponent,
         type: actionsColumnType,
@@ -370,6 +367,8 @@ export function generateGrid<T extends { __typename?: string }>(
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = defaultActionsColumnWidth,
         visible: actionsColumnVisible = undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        queryFields: actionsColumnQueryFields = [], // not needed here, but needs to be removed from restActionsColumnConfig because it's directly used in to generate component props in tsCodeRecordToString
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
     if (actionsColumnComponent) {
