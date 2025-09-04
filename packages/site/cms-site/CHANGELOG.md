@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.25.10
+
+### Patch Changes
+
+-   9b3292dad: Prevent phishing in SitePreview (for pages router)
+
 ## 7.25.9
 
 ### Patch Changes

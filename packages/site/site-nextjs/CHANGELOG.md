@@ -1,5 +1,12 @@
 # @comet/site-nextjs
 
+## 7.25.10
+
+### Patch Changes
+
+-   9b3292dad: Prevent phishing in SitePreview (for pages router)
+    -   @comet/site-react@7.25.10
+
 ## 7.25.9
 
 ### Patch Changes
