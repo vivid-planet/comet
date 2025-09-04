@@ -66,7 +66,7 @@ const Column = styled.div<{ $layout: string }>`
             }
         `};
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         ${({ $layout }) =>
             $layout === "4-16-4" &&
             css`
