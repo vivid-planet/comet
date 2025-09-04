@@ -15,7 +15,7 @@ export class ProductHighlight extends BaseEntity {
     @Field(() => ID)
     id: string = uuid();
 
-    @Property()
+    @Property({ type: "text" })
     @Field()
     description: string;
 

@@ -8,7 +8,7 @@ import { ManufacturerCountry } from "./entities/manufacturer-country.entity";
 import { Product } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
-import { ProductHighlight } from "./entities/product-highlights.entity";
+import { ProductHighlight } from "./entities/product-highlight.entity";
 import { ProductStatistics } from "./entities/product-statistics.entity";
 import { ProductTag } from "./entities/product-tag.entity";
 import { ProductToTag } from "./entities/product-to-tag.entity";

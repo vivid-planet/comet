@@ -7,7 +7,7 @@ import { ProductHighlightInput, ProductHighlightUpdateInput } from "./dto/produc
 import { PaginatedProductHighlights } from "./dto/paginated-product-highlights";
 import { ProductHighlightsArgs } from "./dto/product-highlights.args";
 import { Product } from "../entities/product.entity";
-import { ProductHighlight } from "../entities/product-highlights.entity";
+import { ProductHighlight } from "../entities/product-highlight.entity";
 import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 @Resolver(() => ProductHighlight)
 @RequiredPermission(["products"], { skipScopeCheck: true })
