@@ -19,6 +19,10 @@ async function legacyPagesRouterSitePreviewApiHandler(
         return res.status(400).json({ error: "JWT-validation failed." });
     }
 
+    if (!data.path.startsWith("/") || data.path.startsWith("//")) {
+        return res.status(400).json({ error: `Redirect to ${data.path} disallowed: only relative paths are valid.` });
+    }
+
     res.setPreviewData(data);
     res.redirect(data.path);
 }
