@@ -33,6 +33,7 @@ import { useMemo } from "react";
 import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
+import { productTypeValues } from "../productTypeValues";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
 import { FinalFormSwitch } from "@comet/admin";
@@ -157,18 +158,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
             <Field readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" component={FinalFormDatePicker} label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
 
         <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
-        <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={[
-                {
-                    label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap"/>,
-                    value: "cap",
-                }, {
-                    label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt"/>,
-                    value: "shirt",
-                }, {
-                    label: <FormattedMessage id="product.type.tie" defaultMessage="Tie"/>,
-                    value: "tie",
-                }
-            ]}/>
+        <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={productTypeValues}/>
         <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
                     query: gql`query ProductCategoriesSelect {

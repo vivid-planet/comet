@@ -8,22 +8,22 @@ export default {
 };
 
 export const Select = () => {
-    const options: SelectFieldOption[] = [
+    const options = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
         { value: "raspberry", label: "Raspberry" },
         { value: "vanilla", label: "Vanilla", disabled: true },
         { value: "mango", label: "Mango" },
-    ];
+    ] satisfies SelectFieldOption[];
 
-    const numberOptions: SelectFieldOption[] = [
+    const numberOptions = [
         { value: 0, label: "Zero" },
         { value: 1, label: "One" },
         { value: 2, label: "Two" },
         { value: 3, label: "Three" },
         { value: 4, label: "Four", disabled: true },
         { value: 5, label: "Five" },
-    ];
+    ] satisfies SelectFieldOption[];
 
     return (
         <Box width={500}>
