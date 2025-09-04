@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import {
-    ActionLogHeader,
     type GridColDef,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -11,10 +10,10 @@ import {
 import { View } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { DataGridPro, gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid-pro";
-//import { ActionLogHeader } from "@src/actionLog/components/header/ActionLogHeader";
 import { type FunctionComponent, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
+import { ActionLogHeader } from "../components/header/ActionLogHeader";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
 import { actionLogGridQuery } from "./ActionLogGrid.gql";
 import {
