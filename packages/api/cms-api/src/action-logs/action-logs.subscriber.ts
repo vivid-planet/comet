@@ -24,13 +24,19 @@ export class ActionLogsSubscriber implements EventSubscriber {
             Reflect.hasOwnMetadata(ACTION_LOGS_METADATA_KEY, changeSet.entity.constructor.prototype),
         )) {
             const entity = await this.createEntity(changeSet);
+            if (!entity) continue;
             args.uow.computeChangeSet(entity, ChangeSetType.CREATE);
             args.uow.recomputeSingleChangeSet(entity);
         }
     }
 
-    async createEntity(changeSet: ChangeSet<AnyEntity>): Promise<ActionLog> {
-        const actionLogsMetadata: ActionLogMetadata = Reflect.getMetadata(ACTION_LOGS_METADATA_KEY, changeSet.entity.constructor.prototype);
+    async createEntity(changeSet: ChangeSet<AnyEntity>): Promise<ActionLog | null> {
+        const actionLogsMetadata: ActionLogMetadata | undefined = Reflect.getMetadata(
+            ACTION_LOGS_METADATA_KEY,
+            changeSet.entity.constructor.prototype,
+        );
+        if (!actionLogsMetadata) return null;
+
         const entityName = changeSet.entity.constructor.name;
         const entityId = changeSet.entity[actionLogsMetadata.idArg ?? "id"];
 
