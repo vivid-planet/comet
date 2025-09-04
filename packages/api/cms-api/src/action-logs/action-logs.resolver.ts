@@ -26,8 +26,11 @@ export class ActionLogsResolver {
         @Args() { scope, entityName, filter, offset, limit, sort }: PaginatedActionLogsArgs,
         @GetCurrentUser() user: CurrentUser,
     ): Promise<PaginatedActionLogs> {
-        const metadata: ActionLogMetadata = Reflect.getMetadata(ACTION_LOGS_METADATA_KEY, this.entityManager.getMetadata(entityName).class.prototype);
-        const hasPermission = metadata.requiredPermission.some((permission) => this.accessControlService.isAllowed(user, permission, scope));
+        const entityMetadata = this.entityManager.getMetadata(entityName);
+        if (!entityMetadata) throw new Error(`Entity with name "${entityName}" not found`);
+
+        const metadata: ActionLogMetadata | undefined = Reflect.getMetadata(ACTION_LOGS_METADATA_KEY, entityMetadata.class.prototype);
+        const hasPermission = (metadata?.requiredPermission ?? []).some((permission) => this.accessControlService.isAllowed(user, permission, scope));
         if (!hasPermission) throw new ForbiddenException();
 
         const where = gqlArgsToMikroOrmQuery({ filter }, this.entityManager.getMetadata(ActionLog));
@@ -45,11 +48,11 @@ export class ActionLogsResolver {
     async actionLog(@Args("id", { type: () => ID }) id: string, @GetCurrentUser() user: CurrentUser): Promise<ActionLog> {
         const row = await this.entityManager.findOneOrFail(ActionLog, { id });
 
-        const metadata: ActionLogMetadata = Reflect.getMetadata(
-            ACTION_LOGS_METADATA_KEY,
-            this.entityManager.getMetadata(row.entityName).class.prototype,
-        );
-        const hasPermission = metadata.requiredPermission.some((permission) =>
+        const entityMetadata = this.entityManager.getMetadata(row.entityName);
+        if (!entityMetadata) throw new Error(`Entity with name "${row.entityName}" not found`);
+
+        const metadata: ActionLogMetadata | undefined = Reflect.getMetadata(ACTION_LOGS_METADATA_KEY, entityMetadata.class.prototype);
+        const hasPermission = (metadata?.requiredPermission ?? []).some((permission) =>
             row.scope
                 ? row.scope.some((scope) => this.accessControlService.isAllowed(user, permission, scope))
                 : this.accessControlService.isAllowed(user, permission),
