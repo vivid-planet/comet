@@ -17,6 +17,10 @@
     font-size: 16px;
     font-weight: 700;
     line-height: 110%;
+
+    &:disabled {
+        pointer-events: none;
+    }
 }
 
 .contained {
@@ -33,7 +37,6 @@
         background-color: var(--palette-gray-50);
         color: var(--palette-gray-400);
         border-color: var(--palette-gray-200);
-        pointer-events: none;
     }
 }
 
@@ -50,7 +53,6 @@
     &:disabled {
         color: var(--palette-gray-300);
         border-color: var(--palette-gray-200);
-        pointer-events: none;
     }
 }
 
@@ -65,6 +67,5 @@
 
     &:disabled {
         color: var(--palette-gray-300);
-        pointer-events: none;
     }
 }
