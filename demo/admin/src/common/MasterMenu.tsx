@@ -28,6 +28,7 @@ import { ProductCategoriesPage } from "@src/products/generator/ProductCategories
 import { ProductsPage } from "@src/products/generator/ProductsPage";
 import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
 import { ProductTagsPage } from "@src/products/generator/ProductTagsPage";
+import { ProductHighlightsPage as ProductHighlightsHandmadePage } from "@src/products/highlights/ProductHighlightsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
@@ -298,6 +299,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/product-tags-handmade",
                             component: ProductTagsHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productHighlights" defaultMessage="Product Highlights Handmade" />,
+                        route: {
+                            path: "/product-highlights-handmade",
+                            component: ProductHighlightsHandmadePage,
                         },
                     },
                 ],
