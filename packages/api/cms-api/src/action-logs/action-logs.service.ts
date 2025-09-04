@@ -19,7 +19,7 @@ export class ActionLogsService {
         this.cls.set("userId", userId);
     }
 
-    async runWithUserId(userId: string, callback: () => void): Promise<void> {
+    async runWithUserId(userId: string, callback: () => Promise<void>): Promise<void> {
         return this.cls.runWith({ userId }, callback);
     }
 }
