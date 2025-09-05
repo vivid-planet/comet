@@ -12,8 +12,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
-        "lib",
-        "assets"
+        "lib"
     ],
     "scripts": {
         "build": "$npm_execpath run clean && run-p build:babel build:types",
