@@ -1,0 +1,9 @@
+.root {
+  max-width: var(--page-layout-max-width);
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--page-layout-grid-total-columns), 1fr);
+}
