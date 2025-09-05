@@ -1,5 +1,36 @@
 # @comet/admin-generator
 
+## 8.2.0
+
+### Minor Changes
+
+- 67c52d5: Admin Generator: support export boolean column as real boolean column
+- ef669d4: **Breaking:** Rename `filter.gqlName` to `filter.rootQueryArg` and `filter.fieldName` to `filter.formFieldName` for `asyncSelect` form fields
+
+    This is done to better reflect what the options are used for.
+    To upgrade, rename the fields in your Admin Generator configs:
+
+    ```diff
+    {
+        fields: [
+            {
+                type: "asyncSelect",
+                name: "manufacturer",
+                rootQuery: "manufacturers",
+                filter: {
+                    type: "typeField",
+    -               fieldName: "manufacturerCountry",
+    +               formFieldName: "manufacturerCountry",
+    -               gqlName: "addressAsEmbeddable_country",
+    +               rootQueryArg: "addressAsEmbeddable_country",
+                },
+            },
+        ];
+    }
+    ```
+
+- 7f066d1: Admin Generator: Allow fetching additional fields for action columns
+
 ## 8.1.1
 
 ## 8.1.0

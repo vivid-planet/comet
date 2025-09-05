@@ -47,7 +47,7 @@ import { Education as EducationIcon } from "@comet/admin-icons";
 const productsFragment = gql`
         fragment ProductsGridFuture on Product {
             id
-            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name }
+            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name } slug
         }
     `;
 const productsQuery = gql`
@@ -163,7 +163,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         { field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "boolean",
-            valueFormatter: (value, row) => typeof row.inStock === "boolean" ? row.inStock.toString() : "",
             flex: 1,
             visible: theme.breakpoints.up('md'),
             minWidth: 80, },

@@ -71,7 +71,7 @@ export default defineConfig<GQLProduct>({
                     filter: {
                         type: "formProp",
                         propName: "manufacturerCountry",
-                        gqlName: "addressAsEmbeddable_country",
+                        rootQueryArg: "addressAsEmbeddable_country",
                     },
                     startAdornment: { icon: "Location" },
                 },

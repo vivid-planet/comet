@@ -90,13 +90,13 @@ export type FormFieldConfig<T> = (
                     /**
                      * Name of the field in current form, that will be used to filter the query
                      */
-                    fieldName: string;
+                    formFieldName: string;
                     /**
                      * Name of the graphql argument the prop will be applied to. Defaults to propdName.
                      *
                      * Root Argument or filter argument are supported.
                      */
-                    gqlName?: string;
+                    rootQueryArg?: string;
                 }
               | {
                     /**
@@ -112,7 +112,7 @@ export type FormFieldConfig<T> = (
                      *
                      * Root Argument or filter argument are supported.
                      */
-                    gqlName?: string;
+                    rootQueryArg?: string;
                 };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
@@ -213,7 +213,11 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
       }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
+export type ActionsGridColumnConfig<T> = {
+    type: "actions";
+    queryFields?: UsableFields<T, true>[];
+    component?: ComponentType<GridCellParams>;
+} & BaseColumnConfig;
 export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     type: "virtual";
     name: string;
@@ -228,7 +232,7 @@ type InitialFilterConfig = {
 };
 
 // Additional type is necessary to avoid "TS2589: Type instantiation is excessively deep and possibly infinite."
-type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
+type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig<T> | VirtualGridColumnConfig<T>;
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";

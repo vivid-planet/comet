@@ -1,5 +1,14 @@
 # @comet/eslint-config
 
+## 8.2.0
+
+### Patch Changes
+
+- 594331e: Fix import restriction of `@mui/material` components: `Alert`, `Button`, `Dialog`, `Tooltip`
+
+    The restriction was not working for deep imports like `import Button from "@mui/material/Button"`.
+    - @comet/eslint-plugin@8.2.0
+
 ## 8.1.1
 
 ### Patch Changes

@@ -32,7 +32,7 @@ export const ProductsGridPreviewAction = ({ row }: Props) => {
                 </DialogTitle>
                 <DialogContent>
                     <Typography variant="h3" gutterBottom>
-                        {row.title}
+                        {row.title}/{row.slug}
                     </Typography>
                     <Typography>{row.description}</Typography>
                 </DialogContent>

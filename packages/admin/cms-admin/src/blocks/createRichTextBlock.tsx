@@ -10,7 +10,7 @@ import {
     type RawDraftContentState,
 } from "draft-js";
 import isEqual from "lodash.isequal";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { type RichTextBlockData, type RichTextBlockInput } from "../blocks.generated";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
@@ -92,6 +92,7 @@ export interface RichTextBlockFactoryOptions {
     link: BlockInterface & LinkBlockInterface;
     rte?: IRteOptions;
     minHeight?: number;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState>;
@@ -144,6 +145,8 @@ export const createRichTextBlock = (
         defaultValues: () => ({ editorState: createEmptyState() }),
 
         category: BlockCategory.TextAndContent,
+
+        tags: options.tags,
 
         input2State: ({ draftContent }) => {
             return {
