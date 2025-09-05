@@ -8,6 +8,7 @@ import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 import { type InlineAlert, type InlineAlertSeverity } from "../inlineAlert/InlineAlert";
 import {
     ActionContainer,
+    BackgroundStyled,
     ContentContainer,
     DetailDescription,
     DividerStyled,
@@ -16,10 +17,12 @@ import {
     Root,
     Title,
 } from "./FullPageAlert.styles";
+import { type FullPageAlertBackground } from "./FullPageAlertBackground";
 
 export type FullPageAlertClassKey =
     | "root"
     | "title"
+    | "background"
     | "detailDescription"
     | "contentContainer"
     | "divider"
@@ -33,6 +36,7 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
     root: "div";
     contentContainer: "div";
     iconContainer: "div";
+    background: typeof FullPageAlertBackground;
     divider: typeof Divider;
     title: typeof Typography;
     inlineAlert: typeof InlineAlert;
@@ -114,6 +118,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
 
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
+            <BackgroundStyled {...slotProps.background} />
             <ContentContainer {...slotProps.contentContainer}>
                 <InlineAlertStyled
                     title={

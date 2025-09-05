@@ -3,19 +3,31 @@ import { Card, css, Divider, Typography } from "@mui/material";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { InlineAlert } from "../inlineAlert/InlineAlert";
 import { type FullPageAlertClassKey } from "./FullPageAlert";
+import { FullPageAlertBackground } from "./FullPageAlertBackground";
 
 export const Root = createComponentSlot("div")<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
     slotName: "root",
-})(
-    ({ theme }) => css`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: ${theme.palette.grey["100"]};
-    `,
-);
+})(css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+`);
+
+export const BackgroundStyled = createComponentSlot(FullPageAlertBackground)<FullPageAlertClassKey>({
+    componentName: "FullPageAlert",
+    slotName: "background",
+})(css`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+`);
 
 export const ContentContainer = createComponentSlot(Card)<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
