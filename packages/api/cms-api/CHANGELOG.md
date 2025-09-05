@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 8.2.0
+
+### Minor Changes
+
+- 5456186: Add `delete` method to `FileUploadsService`
+
+### Patch Changes
+
+- 049d5cd: Fix recipient option for mailer:send-test-mail command
+
 ## 8.1.1
 
 ### Patch Changes
