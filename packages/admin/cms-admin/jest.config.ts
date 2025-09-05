@@ -31,8 +31,7 @@ export default {
         "^react-dnd$": "<rootDir>/testing/stub-file.ts",
         "@mui/material/styles/createPalette": "<rootDir>/testing/stub-file.ts",
         "@mui/material/styles/createTypography": "<rootDir>/testing/stub-file.ts",
-        "@mui/material/styles/zIndex": "<rootDir>/testing/stub-file.ts",
-        "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/testing/stub-file.ts",
+        "@mui/material/styles/zIndex": "<rootDir>/testing/stub-file.ts"
     },
     transform: {
         "^.+\\.tsx?$": [
