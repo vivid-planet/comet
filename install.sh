@@ -28,6 +28,7 @@ ln -sf ../../site-configs/site-configs.d.ts ./demo/api/src/
 
 # admin DEMO
 ln -sf ../../.env ./demo/admin/.env
+ln -sf ../../.env.local ./demo/admin/.env.local
 ln -sf ../.env.site-configs ./demo/admin/.env.site-configs
 ln -sf ../api/schema.gql ./demo/admin/schema.gql
 ln -sf ../api/block-meta.json ./demo/admin/block-meta.json
@@ -47,6 +48,9 @@ ln -sf ../../.env ./demo/site-pages/.env
 ln -sf ../api/schema.gql ./demo/site-pages/schema.gql
 ln -sf ../api/block-meta.json ./demo/site-pages/block-meta.json
 ln -sf ../../api/src/comet-config.json ./demo/site-pages/src/comet-config.json
+
+# Storybook
+ln -sf ../.env.local ./storybook/.env.local
 
 # Lang install
 sh ./demo/admin/intl-update.sh

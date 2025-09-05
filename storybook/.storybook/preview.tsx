@@ -1,5 +1,6 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
+import { LicenseInfo } from "@mui/x-license";
 import type { Preview } from "@storybook/react-webpack5";
 import { type GlobalTypes } from "storybook/internal/csf";
 
@@ -8,6 +9,13 @@ import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator
 import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
+
+if (process.env.MUI_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(process.env.MUI_LICENSE_KEY);
+}
+
+// Initialize MSW
+worker.start();
 
 export const globalTypes: GlobalTypes = {
     theme: {
