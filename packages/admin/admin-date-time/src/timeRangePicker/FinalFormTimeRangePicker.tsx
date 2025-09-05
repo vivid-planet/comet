@@ -2,13 +2,14 @@ import { type FieldRenderProps } from "react-final-form";
 
 import { type TimeRange, TimeRangePicker, type TimeRangePickerProps } from "./TimeRangePicker";
 
-export type FinalFormTimeRangePickerProps = TimeRangePickerProps & FieldRenderProps<TimeRange, HTMLInputElement | HTMLTextAreaElement>;
+export type FinalFormTimeRangePickerProps = TimeRangePickerProps;
+type FinalFormTimeRangePickerInternalProps = FieldRenderProps<TimeRange, HTMLInputElement | HTMLTextAreaElement>;
 
 /**
  * Final Form-compatible TimeRangePicker component.
  *
  * @see {@link TimeRangeField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
-export const FinalFormTimeRangePicker = ({ meta, input, ...restProps }: FinalFormTimeRangePickerProps) => {
+export const FinalFormTimeRangePicker = ({ meta, input, ...restProps }: FinalFormTimeRangePickerProps & FinalFormTimeRangePickerInternalProps) => {
     return <TimeRangePicker {...input} {...restProps} />;
 };

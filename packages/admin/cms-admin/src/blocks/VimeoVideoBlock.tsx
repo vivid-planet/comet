@@ -107,4 +107,5 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, State, VimeoVi
 
         return contents;
     },
+    tags: ["Vimeo"],
 };

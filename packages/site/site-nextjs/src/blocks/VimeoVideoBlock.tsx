@@ -29,6 +29,7 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
     previewImageIcon?: ReactNode;
+    playButtonAriaLabel?: string;
 }
 
 export const VimeoVideoBlock = withPreview(
@@ -39,6 +40,7 @@ export const VimeoVideoBlock = withPreview(
         renderPreviewImage,
         fill,
         previewImageIcon,
+        playButtonAriaLabel,
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -94,6 +96,7 @@ export const VimeoVideoBlock = withPreview(
                             sizes={previewImageSizes}
                             fill={fill}
                             icon={previewImageIcon}
+                            playButtonAriaLabel={playButtonAriaLabel}
                         />
                     )
                 ) : (

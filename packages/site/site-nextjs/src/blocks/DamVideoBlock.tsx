@@ -14,6 +14,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
     previewImageIcon?: ReactNode;
+    playButtonAriaLabel?: string;
 }
 
 export const DamVideoBlock = withPreview(
@@ -24,6 +25,7 @@ export const DamVideoBlock = withPreview(
         renderPreviewImage,
         fill,
         previewImageIcon,
+        playButtonAriaLabel,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -64,6 +66,7 @@ export const DamVideoBlock = withPreview(
                             sizes={previewImageSizes}
                             fill={fill}
                             icon={previewImageIcon}
+                            playButtonAriaLabel={playButtonAriaLabel}
                         />
                     )
                 ) : (

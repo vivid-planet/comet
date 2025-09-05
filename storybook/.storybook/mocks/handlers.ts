@@ -3,8 +3,9 @@ import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
 import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
-import { type ResponseResolver, rest } from "msw";
-import { type RestContext } from "msw/lib/types/handlers/RestHandler";
+import { http, HttpResponse } from "msw";
+
+import { fileUploadsHandler } from "./handler/fileUploads";
 
 type StringFilter = {
     contains: string;
@@ -113,7 +114,7 @@ type Product {
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
-    manufacturers: [Manufacturer!]!
+    manufacturers(search: String): [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
 }
 `;
@@ -207,9 +208,9 @@ const launchesPastPagePaging: GraphQLFieldResolver<unknown, unknown, { page?: nu
     };
 };
 
-const launchesPastRest: ResponseResolver = (req, res, ctx: RestContext) => {
-    return res(ctx.status(200), ctx.json(allLaunches));
-};
+const launchesPastRest = http.get("/launches", (info) => {
+    return HttpResponse.json(allLaunches);
+});
 
 export type Manufacturer = {
     id: string;
@@ -227,9 +228,11 @@ for (let i = 0; i < 10; i += 1) {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const manufacturers: GraphQLFieldResolver<unknown, unknown> = async () => {
+const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, args, context, info) => {
     await sleep(500);
-    return allManufacturers;
+    return allManufacturers.filter((manufacturer) => {
+        return !args.search || manufacturer.name.toLowerCase().includes(args.search.toLowerCase());
+    });
 };
 
 export type Product = {
@@ -273,4 +276,4 @@ const graphqlHandler = new GraphQLHandler({
     },
 });
 
-export const handlers = [rest.post("/graphql", mswResolver(graphqlHandler)), rest.get("/launches", launchesPastRest)];
+export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), fileUploadsHandler, launchesPastRest];

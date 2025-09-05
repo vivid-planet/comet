@@ -16,7 +16,6 @@ import {
     toolbarClasses,
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
-import type {} from "@mui/x-data-grid/themeAugmentation";
 
 import { DataGridColumnsManagement } from "../../dataGrid/columnsManagement/DataGridColumnsManagement";
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";

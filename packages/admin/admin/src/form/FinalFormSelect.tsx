@@ -8,15 +8,17 @@ import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
-export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
-    noOptionsLabel?: ReactNode;
-    errorLabel?: ReactNode;
+export interface FinalFormSelectProps<T> {
+    noOptionsText?: ReactNode;
+    errorText?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
     loadingError?: Error | null;
 }
+
+type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
 
 const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
     if (multiple && Array.isArray(value)) {
@@ -54,12 +56,12 @@ export const FinalFormSelect = <T,>({
         }
     },
 
-    noOptionsLabel = (
+    noOptionsText = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
         </Typography>
     ),
-    errorLabel = (
+    errorText = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
@@ -67,7 +69,7 @@ export const FinalFormSelect = <T,>({
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
@@ -156,12 +158,12 @@ export const FinalFormSelect = <T,>({
 
             {showNoOptions && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {noOptionsLabel}
+                    {noOptionsText}
                 </MenuItemDisabledOverrideOpacity>
             )}
             {showError && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {errorLabel}
+                    {errorText}
                 </MenuItemDisabledOverrideOpacity>
             )}
 

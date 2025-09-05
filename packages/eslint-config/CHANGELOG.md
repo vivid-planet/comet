@@ -1,5 +1,63 @@
 # @comet/eslint-config
 
+## 8.2.0
+
+### Patch Changes
+
+- 594331e: Fix import restriction of `@mui/material` components: `Alert`, `Button`, `Dialog`, `Tooltip`
+
+    The restriction was not working for deep imports like `import Button from "@mui/material/Button"`.
+    - @comet/eslint-plugin@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.1.1
+
+## 8.1.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- 6d3c196: Add import restriction for MUI's `Button`
+
+    Buttons used in Comet DXP applications should match the Comet CI.
+    Use `Button` from `@comet/admin` instead.
+
+- ceaf99d: Bump ESLint peer dependency to v9
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 4d0d820: Prevent `@mui/material` tooltip imports
+
+    Tooltips used in Comet DXP applications should match the Comet CI.
+    Use tooltips from `@comet/admin` instead.
+
+- c6d87a2: Bump Prettier peer dependency to v3
+- 9509f97: Enable rule to restrict barrel React imports
+
+    Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+    Use individual named imports instead, e.g, `import { useState } from "react"`.
+
+### Minor Changes
+
+- a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
+
+### Patch Changes
+
+- 6ec43c9: Use recommended config from eslint-plugin-package-json correctly
+- 649297e: Readd `@comet/eslint-plugin` dependency that was mistakenly removed
+- Updated dependencies [f904b71]
+    - @comet/eslint-plugin@8.0.0
+
 ## 8.0.0-beta.6
 
 ### Patch Changes

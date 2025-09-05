@@ -59,7 +59,7 @@ const main = async () => {
     await writeIndexFile(icons);
 };
 
-const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0], { transform: pascalCaseTransformMerge });
+const getComponentName = (fileName: string) => pascalCase(fileName.split(/[_.]/)[0], { transform: pascalCaseTransformMerge });
 
 const getSVGData = (icon: Icon) => {
     const fileContents = readFileSync(icon.path);
@@ -84,6 +84,7 @@ const getSVGData = (icon: Icon) => {
 };
 
 const writeComponent = async (icon: Icon, svgString: string) => {
+    const searchTerms = icon.name.replace(/\.[^/.]+$/, "");
     const component = `
         import { SvgIcon, type SvgIconProps } from "@mui/material";
         import { forwardRef } from "react";
@@ -102,6 +103,8 @@ const writeComponent = async (icon: Icon, svgString: string) => {
                 </SvgIcon>
             );
         });
+
+        export const ${icon.componentName}SearchTerms = "${searchTerms}";
     `;
     if (icon.componentName != null && component != null) {
         writeFileSync(`src/generated/${icon.componentName}.tsx`, component);
@@ -117,7 +120,7 @@ const writeGeneratedTypesFile = async (icons: Icon[]) => {
 
 const writeIndexFile = async (icons: Icon[]) => {
     const exports = icons.map((icon) => {
-        return `export { ${icon.componentName} } from "./${icon.componentName}";`;
+        return `export { ${icon.componentName}, ${icon.componentName}SearchTerms } from "./${icon.componentName}";`;
     });
 
     const indexFile = await exports.join("\n");

@@ -2,7 +2,7 @@ import { Injectable, Logger, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef } from "@nestjs/core";
 
-import { EntityInfoGetter, EntityInfoInterface, EntityInfoServiceInterface } from "./entity-info.decorator";
+import { ENTITY_INFO_METADATA_KEY, EntityInfoGetter, EntityInfoInterface, EntityInfoServiceInterface } from "./entity-info.decorator";
 
 @Injectable()
 export class EntityInfoService {
@@ -11,7 +11,7 @@ export class EntityInfoService {
     constructor(private readonly moduleRef: ModuleRef) {}
 
     async getEntityInfo(instance: object): Promise<EntityInfoInterface | undefined> {
-        const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(`data:entityInfo`, instance.constructor);
+        const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, instance.constructor);
 
         if (entityInfoGetter === undefined) {
             this.logger.warn(

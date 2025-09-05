@@ -1,0 +1,116 @@
+@use "../../../styles/variables" as *;
+
+.root {
+    margin-top: auto;
+    background-color: var(--palette-gray-900);
+    color: var(--palette-gray-50);
+}
+
+.pageLayoutContent {
+    grid-column: 2 / -2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-d400) 0;
+
+    @media (min-width: $breakpoint-lg) {
+        position: relative;
+        gap: var(--spacing-d100);
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.topContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-d100);
+
+    @media (min-width: $breakpoint-sm) {
+        align-self: stretch;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        reading-flow: flex-visual;
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        flex-direction: row;
+    }
+}
+
+.richTextWrapper {
+    width: 100%;
+    text-align: center;
+
+    @media (min-width: $breakpoint-sm) {
+        text-align: left;
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        max-width: 80%;
+    }
+}
+
+.imageWrapper {
+    width: 100px;
+
+    @media (min-width: $breakpoint-lg) {
+        position: absolute;
+        width: 100%;
+        max-width: 100px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.linkCopyrightWrapper {
+    color: var(--palette-gray-400);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-s500);
+
+    @media (min-width: $breakpoint-lg) {
+        width: 80%;
+        align-items: flex-end;
+    }
+}
+
+.linksWrapper {
+    display: flex;
+    gap: var(--spacing-s500);
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.copyrightNotice {
+    text-align: center;
+
+    @media (min-width: $breakpoint-lg) {
+        text-align: right;
+    }
+}
+
+.linkText {
+    color: var(--palette-primary-main);
+    text-decoration: underline;
+}
+
+.horizontalLine {
+    width: 100%;
+    height: 1px;
+    border: none;
+    background-color: var(--palette-gray-600);
+    color: var(--palette-gray-600);
+    margin: var(--spacing-d300) 0;
+
+    @media (min-width: $breakpoint-lg) {
+        display: none;
+    }
+}
