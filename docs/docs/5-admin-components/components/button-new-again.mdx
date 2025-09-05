@@ -1,0 +1,33 @@
+---
+title: Button (new example)
+slug: button-new-example
+---
+
+import {
+    StoryIframe,
+    PrimaryStoryIframe,
+} from "../../../src/components/StorybookAdminComponentDocsIframe";
+
+# Button
+
+This is an example description for the button component. It's used to test the documentation generation.
+
+This is a second paragraph, with a link to the normal [Button](./Button) component. <br/>
+And this is a nother line in the same paragraph.
+
+<PrimaryStoryIframe componentName="button" />
+
+## All variants
+
+<StoryIframe componentName="button" storyName="AllVariants" />
+
+## Responsive behavior
+
+When using the button in a place where the width can be constrained, such as in a toolbar on a mobile device, you can set the `responsive`.
+
+This causes the text-content to be hidden on smaller devices and be moved to a tooltip instead.
+The button will only show an icon then by default.
+This requires either a `startIcon` or `endIcon` to be set, or the `mobileIcon` which is used specifically for this purpose.
+The breakpoint at which the button will be responsive can be set using the `mobileBreakpoint` prop.
+
+<StoryIframe componentName="button" storyName="ResponsiveBehavior" />

@@ -1,4 +1,4 @@
-import { Controls, Description, type Of, Primary, Stories } from "@storybook/addon-docs/blocks";
+import { Controls, type Of, Primary } from "@storybook/addon-docs/blocks";
 
 type DocsPageProps = {
     defaultStory: Of;
@@ -7,10 +7,8 @@ type DocsPageProps = {
 export const DocsPage = ({ defaultStory }: DocsPageProps) => {
     return (
         <>
-            <Description of={defaultStory} />
             <Primary />
             <Controls />
-            <Stories title="" includePrimary={false} />
         </>
     );
 };
