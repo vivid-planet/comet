@@ -1,8 +1,7 @@
 import { type PureQueryOptions } from "@apollo/client";
 import { Delete } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { Button, IconButton } from "@mui/material";
-import { type ButtonProps } from "@mui/material/Button";
+import { Button, type ButtonProps, IconButton } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Component, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
