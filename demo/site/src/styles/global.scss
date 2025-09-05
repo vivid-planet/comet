@@ -37,6 +37,10 @@
 
     --font-family: "Roboto, sans-serif";
 
+    --header-height: 100px;
+    --page-layout-grid-total-columns: 24;
+    --page-layout-max-width: 1920px;
+
     --spacing-d400: 72px;
     --spacing-d300: 44px;
     --spacing-d200: 28px;
@@ -79,7 +83,6 @@ html {
     /* Prevent font size adjustments after orientation changes in mobile devices */
     text-size-adjust: 100%;
 
-    --header-height: 100px;
     --full-viewport-height: 100vh;
 
     @supports (height: 100dvh) {
