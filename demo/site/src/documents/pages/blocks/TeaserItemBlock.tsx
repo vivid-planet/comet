@@ -44,12 +44,12 @@ const Link = styled(LinkBlock)`
     display: flex;
     flex: 1;
     flex-direction: row;
-    gap: ${({ theme }) => theme.spacing.S300};
+    gap: ${({ theme }) => theme.spacing.s300};
     color: ${({ theme }) => theme.palette.text.primary};
 
     ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         flex: unset;
-        gap: ${({ theme }) => theme.spacing.S400};
+        gap: ${({ theme }) => theme.spacing.s400};
         flex-direction: column;
     }
 `;
@@ -76,14 +76,14 @@ const ContentContainer = styled.div`
 `;
 
 const TitleTypography = styled(Typography)`
-    margin-bottom: ${({ theme }) => theme.spacing.S100};
+    margin-bottom: ${({ theme }) => theme.spacing.s100};
 `;
 
 const TextLinkContainer = styled.div`
-    margin-top: ${({ theme }) => theme.spacing.S300};
+    margin-top: ${({ theme }) => theme.spacing.s300};
     display: flex;
     align-items: center;
-    gap: ${({ theme }) => theme.spacing.S200};
+    gap: ${({ theme }) => theme.spacing.s200};
     color: ${({ theme }) => theme.palette.primary.main};
     transition: color 0.3s ease-in-out;
 

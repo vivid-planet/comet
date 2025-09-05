@@ -24,7 +24,7 @@ const PageLayoutContent = styled.div`
 
 const ItemWrapper = styled.div<{ $listItemCount: number }>`
     display: grid;
-    gap: ${({ theme }) => theme.spacing.D100};
+    gap: ${({ theme }) => theme.spacing.d100};
 
     ${({ $listItemCount, theme }) =>
         $listItemCount > 0 &&
