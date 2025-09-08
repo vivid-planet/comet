@@ -50,7 +50,7 @@ module.exports = {
         {
             name: "admin-generator",
             script: "pnpm --filter @comet/admin-generator run dev",
-            group: ["cms-admin"],
+            group: ["cms-admin", "cms"],
             waitOn: waitOnPackages("@comet/cms-admin"),
         },
 
@@ -181,6 +181,11 @@ module.exports = {
             script: "pnpm --filter comet-demo-site run generate-block-types:watch",
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "demo-site-css-types",
+            script: "pnpm --filter comet-demo-site run css:types:watch",
+            group: ["demo-site", "demo"],
         },
 
         //group demo site pages

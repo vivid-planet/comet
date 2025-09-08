@@ -5,6 +5,8 @@ import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { http, HttpResponse } from "msw";
 
+import { fileUploadsHandler } from "./handler/fileUploads";
+
 type StringFilter = {
     contains: string;
     equal: string;
@@ -112,7 +114,7 @@ type Product {
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
-    manufacturers: [Manufacturer!]!
+    manufacturers(search: String): [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
 }
 `;
@@ -226,9 +228,11 @@ for (let i = 0; i < 10; i += 1) {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const manufacturers: GraphQLFieldResolver<unknown, unknown> = async () => {
+const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, args, context, info) => {
     await sleep(500);
-    return allManufacturers;
+    return allManufacturers.filter((manufacturer) => {
+        return !args.search || manufacturer.name.toLowerCase().includes(args.search.toLowerCase());
+    });
 };
 
 export type Product = {
@@ -272,4 +276,4 @@ const graphqlHandler = new GraphQLHandler({
     },
 });
 
-export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), launchesPastRest];
+export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), fileUploadsHandler, launchesPastRest];

@@ -1,5 +1,24 @@
 # @comet/cms-api
 
+## 8.2.0
+
+### Minor Changes
+
+- 5456186: Add `delete` method to `FileUploadsService`
+
+### Patch Changes
+
+- 049d5cd: Fix recipient option for mailer:send-test-mail command
+
+## 8.1.1
+
+### Patch Changes
+
+- ef0f848: Export `SeoBlockInputInterface` type
+- 5b61069: Export `ChildBlockInfo`
+
+## 8.1.0
+
 ## 8.0.0
 
 ### Major Changes

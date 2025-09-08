@@ -1,5 +1,261 @@
 # @comet/admin
 
+## 8.2.0
+
+### Minor Changes
+
+- ea545c4: Add `FullPageAlert` component
+- dfafdb3: Add a `warning` variant to `Tooltip`
+
+    ```tsx
+    <Tooltip title="This is a warning" variant="warning">
+        <WarningSolid color="warning" />
+    </Tooltip>
+    ```
+
+- 08ad5fe: Add new admin component `SectionHeadline`
+- 85141bf: Add new `DateTimeRangePicker` and `DateTimeRangePickerField` components
+
+    The new components are based on the `@mui/x-date-pickers-pro` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/api/date-pickers/date-time-range-picker/) for more details.
+    Unlike the MUI components, these components use an object with `start` and `end` properties, both of which use a `Date` object as the value, instead of an array of two `Date` objects.
+
+    Note: Using these components requires a [MUI X Pro license](https://v7.mui.com/x/introduction/licensing/).
+
+    **Using the new `DateTimeRangePicker`**
+
+    ```tsx
+    import { type DateTimeRange, FieldContainer, DateTimeRangePicker } from "@comet/admin";
+    import { useState } from "react";
+
+    export const Example = () => {
+        const [dateTimeRangeValue, setDateTimeRangeValue] = useState<DateTimeRange | undefined>();
+
+        return (
+            <FieldContainer label="Date-Time Range Picker">
+                <DateTimeRangePicker value={dateTimeRangeValue} onChange={setDateTimeRangeValue} />
+            </FieldContainer>
+        );
+    };
+    ```
+
+    **Using the new `DateTimeRangePickerField` in Final Form**
+
+    ```tsx
+    import { type DateTimeRange, FieldContainer, DateTimeRangePicker } from "@comet/admin";
+    import { useState } from "react";
+
+    type Values = {
+        dateTimeRange: DateTimeRange;
+    };
+
+    export const Example = () => {
+        return (
+            <Form<Values>
+                initialValues={{ dateTimeRange: { start: new Date("2025-07-23 11:30:00"), end: new Date("2025-07-25 14:30:00") } }}
+                onSubmit={() => {}}
+            >
+                {() => <DateTimeRangePickerField name="dateTimeRange" label="Date-Time Range Picker" />}
+            </Form>
+        );
+    };
+    ```
+
+- 0cfcf90: Allow exporting columns with value type boolean
+
+### Patch Changes
+
+- d7ab390: The clear-button, inside `ClearInputAdornment` can now be focused
+- 01ef80b: Fix props of `Tooltip`'s `slotProps.popper` when setting custom values
+
+    When setting custom values to `slotProps.popper`, some default props would unintentionally be reset.
+
+- 0b08988: Prevent the `OpenPickerButton` from appearing focused while not actually being focused
+
+    This was achieved by preventing the `OpenPickerButton` from being focused at all.
+    The input value can still be changed in an accessible way, without using the picker.
+
+    This affects the following components:
+    - `DatePicker`
+    - `DatePickerField`
+    - `DateRangePicker`
+    - `DateRangePickerField`
+    - `DateTimePicker`
+    - `DateTimePickerField`
+    - `TimePicker`
+    - `TimePickerField`
+    - @comet/admin-icons@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.1.1
+
+## 8.1.0
+
+### Minor Changes
+
+- 00e6a12: Add new `Future_DateRangePicker` and `Future_DateRangePickerField` components
+
+    These will replace the existing `DateRangePicker`, `FinalFormDateRangePicker`, and `DateRangeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers-pro` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/api/date-pickers/date-range-picker/) for more details.
+    Unlike the MUI components, these components use an object with `start` and `end` properties, both of which use a `string` (`YYYY-MM-DD`) as the value, instead of an array of two `Date` objects, just like the existing components from `@comet/admin-date-time`.
+
+    Note: Using these components requires a [MUI X Pro license](https://v7.mui.com/x/introduction/licensing/).
+
+    **Using the new `DateRangePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { type DateRange, DateRangePicker } from "@comet/admin-date-time";
+    +import { type DateRange, FieldContainer, Future_DateRangePicker as DateRangePicker } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateRangeValue, setDateRangeValue] = useState<DateRange | undefined>();
+
+         return (
+             <FieldContainer label="Date-Range Picker">
+                 <DateRangePicker value={dateRangeValue} onChange={setDateRangeValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DateRangePickerField` in Final Form**
+
+    ```diff
+    -import { type DateRange, DateRangeField } from "@comet/admin-date-time";
+    +import { type DateRange, Future_DateRangePickerField as DateRangePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         dateRange: DateRange;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ dateRange: { start: "2025-07-23", end: "2025-07-25" } }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateRangeField name="dateRange" label="Date-Range Picker" />
+    +                <DateRangePickerField name="dateRange" label="Date-Range Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- 2f33286: Add new `Future_DateTimePicker` and `Future_DateTimePickerField` components
+
+    These will replace the existing `DateTimePicker`, `FinalFormDateTimePicker` and `DateTimeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/date-time-picker/) for more details.
+
+    **Using the new `DateTimePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { DateTimePicker } from "@comet/admin-date-time";
+    +import { Future_DateTimePicker as DateTimePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateTime, setDateTime] = useState<Date | undefined>();
+
+         return (
+             <FieldContainer label="Date-Time Picker">
+                 <DateTimePicker value={dateTime} onChange={setDateTime} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DateTimePickerField` in Final Form**
+
+    ```diff
+    -import { DateTimeField } from "@comet/admin-date-time";
+    +import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         dateTime: Date;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ dateTime: new Date("2025-07-23 14:30") }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateTimeField name="dateTime" label="Date-Time Picker" />
+    +                <DateTimePickerField name="dateTime" label="Date-Time Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- ec9bce5: Add new `Future_TimePicker` and `Future_TimePickerField` components
+
+    These will replace the existing `TimePicker`, `FinalFormTimePicker` and `TimeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/time-picker/) for more details.
+    Unlike the MUI components, these components use a 24h `string` (`HH:mm`) as the value, instead of `Date`, just like the existing components from `@comet/admin-date-time`.
+
+    **Using the new `TimePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { TimePicker } from "@comet/admin-date-time";
+    +import { Future_TimePicker as TimePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [timeValue, setTimeValue] = useState<string | undefined>();
+
+         return (
+             <FieldContainer label="Time Picker">
+                 <TimePicker value={timeValue} onChange={setTimeValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `TimePickerField` in Final Form**
+
+    ```diff
+    -import { TimeField } from "@comet/admin-date-time";
+    +import { Future_TimePickerField as TimePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         time: string;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ time: "11:30" }} onSubmit={() => {}}>
+                 {() => (
+    -                <TimeField name="time" label="Time Picker" />
+    +                <TimePickerField name="time" label="Time Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- 3323fa9: Add search parameter to `loadOptions` in `AsyncAutocompleteField`, representing the current user input
+
+    Deprecate `useAsyncOptionsProps` in favor of `AsyncSelectField` component which
+
+- 911a6da: Renamed two props of `FinalFormSelect` to align with `FinalFormAutocomplete`
+    - `noOptionsLabel` → `noOptionsText`
+    - `errorLabel` → `errorText`
+
+### Patch Changes
+
+- e70eb31: Fix renderStaticSelectCell support for null values
+    - @comet/admin-icons@8.1.0
+
 ## 8.0.0
 
 ### Major Changes

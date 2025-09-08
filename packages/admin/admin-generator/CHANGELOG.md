@@ -1,5 +1,64 @@
 # @comet/admin-generator
 
+## 8.2.0
+
+### Minor Changes
+
+- 67c52d5: Admin Generator: support export boolean column as real boolean column
+- ef669d4: **Breaking:** Rename `filter.gqlName` to `filter.rootQueryArg` and `filter.fieldName` to `filter.formFieldName` for `asyncSelect` form fields
+
+    This is done to better reflect what the options are used for.
+    To upgrade, rename the fields in your Admin Generator configs:
+
+    ```diff
+    {
+        fields: [
+            {
+                type: "asyncSelect",
+                name: "manufacturer",
+                rootQuery: "manufacturers",
+                filter: {
+                    type: "typeField",
+    -               fieldName: "manufacturerCountry",
+    +               formFieldName: "manufacturerCountry",
+    -               gqlName: "addressAsEmbeddable_country",
+    +               rootQueryArg: "addressAsEmbeddable_country",
+                },
+            },
+        ];
+    }
+    ```
+
+- 7f066d1: Admin Generator: Allow fetching additional fields for action columns
+
+## 8.1.1
+
+## 8.1.0
+
+### Patch Changes
+
+- 2fa023d: Fix disabling row selection on click
+- 76586dc: Fix generated `ToolbarProps` for `excelExport`-only case
+
+    When generating `ToolbarProps` with `forwardToolbarAction = false` and `excelExport = true`, the generator previously inserted `false` into the generated interface, causing invalid TypeScript output.
+
+    **Example broken output**
+
+    ```ts
+    interface BooksGridToolbarToolbarProps extends GridToolbarProps {
+        false;
+        exportApi: ExportApi;
+    }
+    ```
+
+- 00e7400: Fix generating too many props for grid-component
+
+    This happened if there was a required root gql-arg for the corresponding create-mutation to support copy/paste.
+
+- 177cb58: Fix missing required root gql-arg for export-query
+- dc69279: Admin-Generator: Fix missing readOnly props for async-select
+- ded0cbc: Admin-Generator: Fix using wrong query-var for export
+
 ## 8.0.0
 
 ### Major Changes

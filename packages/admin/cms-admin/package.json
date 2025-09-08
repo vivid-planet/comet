@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "8.0.0",
+    "version": "8.2.0",
     "description": "Comet CMS Admin package",
     "repository": {
         "directory": "packages/admin/cms-admin",
@@ -45,7 +45,6 @@
         "file-saver": "^2.0.5",
         "final-form-arrays": "^3.1.0",
         "final-form-set-field-touched": "^1.0.1",
-        "graphql-tag": "^2.12.6",
         "js-cookie": "^3.0.5",
         "lodash.escaperegexp": "^4.1.2",
         "lodash.isequal": "^4.5.0",

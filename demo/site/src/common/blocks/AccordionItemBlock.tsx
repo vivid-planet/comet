@@ -32,17 +32,17 @@ type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData> & {
 };
 
 export const AccordionItemBlock = withPreview(
-    ({ data: { title, content }, isExpanded, onChange }: AccordionItemBlockProps) => {
+    ({ data: { title, content, titleHtmlTag }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const headlineId = useId();
         const contentId = useId();
 
         return (
             <>
                 <TitleWrapper id={headlineId} onClick={onChange} aria-expanded={isExpanded} aria-controls={contentId}>
-                    <Typography variant="h350">{title}</Typography>
-                    <IconWrapper>
-                        <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
-                    </IconWrapper>
+                    <Typography variant="h350" as={titleHtmlTag}>
+                        {title}
+                    </Typography>
+                    <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
                 </TitleWrapper>
                 <ContentWrapper id={contentId} $isExpanded={isExpanded} aria-labelledby={headlineId}>
                     <ContentWrapperInner>
@@ -60,6 +60,7 @@ const TitleWrapper = styled.button`
     border: none;
     background-color: transparent;
     color: inherit;
+    text-align: left;
 
     display: flex;
     justify-content: space-between;
@@ -69,16 +70,10 @@ const TitleWrapper = styled.button`
     padding: ${({ theme }) => theme.spacing.S300} 0;
 `;
 
-const IconWrapper = styled.div`
-    display: inline-block;
+const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
+    flex-shrink: 0;
     width: 32px;
     height: 32px;
-    position: relative;
-`;
-
-const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
-    width: 100%;
-    height: 100%;
     transform: rotate(${({ $isExpanded }) => ($isExpanded ? "-180deg" : "0deg")});
     transition: transform 0.4s ease;
 `;
