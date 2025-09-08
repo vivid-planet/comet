@@ -27,8 +27,8 @@ importers:
         specifier: ^9.0.0
         version: 9.2.1
       dotenv-cli:
-        specifier: ^7.4.4
-        version: 7.4.4
+        specifier: ^9.0.0
+        version: 9.0.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -226,8 +226,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       dotenv-cli:
-        specifier: ^7.4.4
-        version: 7.4.4
+        specifier: ^9.0.0
+        version: 9.0.0
       eslint:
         specifier: ^9.30.1
         version: 9.34.0(jiti@2.5.1)
@@ -422,8 +422,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       dotenv-cli:
-        specifier: ^7.4.4
-        version: 7.4.4
+        specifier: ^9.0.0
+        version: 9.0.0
       eslint:
         specifier: ^9.30.1
         version: 9.34.0(jiti@2.5.1)
@@ -11229,8 +11229,8 @@ packages:
     resolution: {integrity: sha512-tE7ztYzXHIeyvc7N+hR3oi7FIbf/NIjVP9hmAt3yMXzrQ072/fpjGLx2GxNxGxUl5V73MEqYzioOMoVhGMJ5cA==}
     engines: {node: '>=10'}
 
-  dotenv-cli@7.4.4:
-    resolution: {integrity: sha512-XkBYCG0tPIes+YZr4SpfFv76SQrV/LeCE8CI7JSEMi3VR9MvTihCGTOtbIexD6i2mXF+6px7trb1imVCXSNMDw==}
+  dotenv-cli@9.0.0:
+    resolution: {integrity: sha512-NhGrQum/u1VTBxnSnlNwVkTP3gojYO8T6Fntyru93wbR1hPo8aFhDFJiBPmkT0771i7f5Rd7EQDaOreS8jY8gA==}
     hasBin: true
 
   dotenv-expand@10.0.0:
@@ -29671,10 +29671,10 @@ snapshots:
     dependencies:
       is-obj: 2.0.0
 
-  dotenv-cli@7.4.4:
+  dotenv-cli@9.0.0:
     dependencies:
       cross-spawn: 7.0.6
-      dotenv: 16.4.5
+      dotenv: 17.2.1
       dotenv-expand: 10.0.0
       minimist: 1.2.8
 
