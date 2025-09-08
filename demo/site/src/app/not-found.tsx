@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 export default function NotFound404() {
     return (
         <html lang="en">
