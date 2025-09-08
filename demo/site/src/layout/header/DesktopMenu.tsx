@@ -121,21 +121,21 @@ const TopLevelNavigation = styled.ol`
     list-style-type: none;
     padding: 0;
     margin: 0;
-    gap: ${({ theme }) => theme.spacing.S600};
+    gap: ${({ theme }) => theme.spacing.s600};
     height: 100%;
 `;
 
 const SubLevelNavigation = styled.ol<{ $isExpanded: boolean }>`
     display: ${({ $isExpanded }) => ($isExpanded ? "flex" : "none")};
     flex-direction: column;
-    gap: ${({ theme }) => theme.spacing.S200};
+    gap: ${({ theme }) => theme.spacing.s200};
     position: absolute;
     z-index: 40;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
     list-style-type: none;
-    padding: ${({ theme }) => theme.spacing.D100};
+    padding: ${({ theme }) => theme.spacing.s100};
     background-color: white;
     border-left: 1px solid ${({ theme }) => theme.palette.gray["200"]};
     border-bottom: 1px solid ${({ theme }) => theme.palette.gray["200"]};
@@ -155,7 +155,7 @@ const TopLevelLinkContainer = styled.li`
 const LinkContainer = styled.div`
     display: flex;
     align-items: center;
-    gap: ${({ theme }) => theme.spacing.S100};
+    gap: ${({ theme }) => theme.spacing.s100};
     height: 100%;
     position: relative;
 `;
@@ -203,7 +203,7 @@ const CloseSublevelNavigationButton = styled.button`
 const MenuPageLink = styled(PageLink)`
     text-decoration: none;
     display: inline-block;
-    padding: ${({ theme }) => theme.spacing.S100} 0;
+    padding: ${({ theme }) => theme.spacing.s100} 0;
     font-family: ${({ theme }) => theme.fontFamily};
     color: ${({ theme }) => theme.palette.text.primary};
 

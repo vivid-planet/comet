@@ -51,14 +51,14 @@
         "@types/node": "^22.16.3",
         "knip": "^5.61.3",
         "cspell": "^9.0.0",
-        "dotenv-cli": "^7.4.4",
+        "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.2",
         "npm-run-all2": "^7.0.2",
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
-        "typescript": "^5.7.3"
+        "typescript": "5.8.3"
     },
     "packageManager": "pnpm@10.15.1",
     "engines": {

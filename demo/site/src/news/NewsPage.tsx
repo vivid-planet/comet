@@ -6,9 +6,10 @@ import { useState } from "react";
 import { FormattedDate } from "react-intl";
 import styled from "styled-components";
 
+import { fetchNewsList } from "./NewsPage.loader";
 import { type GQLNewsIndexPageQuery } from "./NewsPage.loader.generated";
 
-export function NewsPage({ initialData }: { initialData: GQLNewsIndexPageQuery["newsList"] }) {
+export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPageQuery["newsList"]; scope: { domain: string; language: string } }) {
     const pathname = usePathname();
     const [newsList, setNewsList] = useState(initialData.nodes);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,19 +37,13 @@ export function NewsPage({ initialData }: { initialData: GQLNewsIndexPageQuery["
                             setIsLoading(true);
                             setError(null);
                             try {
-                                const response = await fetch(
-                                    `${pathname}/api?${new URLSearchParams({
-                                        offset: `${newsList.length}`,
-                                        limit: "2",
-                                    })}`,
-                                );
+                                const response = await fetchNewsList({
+                                    scope,
+                                    offset: newsList.length,
+                                    limit: 2,
+                                });
                                 setIsLoading(false);
-
-                                if (response.ok) {
-                                    setNewsList([...newsList, ...(await response.json()).nodes]);
-                                } else if (response.status === 400) {
-                                    setError((await response.json()).message);
-                                }
+                                setNewsList([...newsList, ...response.nodes]);
                             } catch (e) {
                                 setError(e.message);
                             }
