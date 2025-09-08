@@ -137,40 +137,40 @@ export function generateAsyncSelect({
     const filterConfig = config.filter
         ? (() => {
               let filterField: FormFieldConfig<unknown> | undefined;
-              let gqlName = config.filter.gqlName;
+              let rootQueryArg = config.filter.rootQueryArg;
               let filterVar = "";
 
               if (config.filter.type === "field") {
-                  filterField = findFieldByName(config.filter.fieldName, formConfig.fields);
+                  filterField = findFieldByName(config.filter.formFieldName, formConfig.fields);
                   if (!filterField) {
                       throw new Error(
                           `Field ${String(config.name)}: No field with name "${
-                              config.filter.fieldName
-                          }" referenced as filter.fieldName found in form-config.`,
+                              config.filter.formFieldName
+                          }" referenced as filter.formFieldName found in form-config.`,
                       );
                   }
                   if (!isFormFieldConfig(filterField)) {
                       throw new Error(
-                          `Field ${String(config.name)}: Field with name "${config.filter.fieldName}" referenced as filter.fieldName is no FormField.`,
+                          `Field ${String(config.name)}: Field with name "${config.filter.formFieldName}" referenced as filter.fieldName is no FormField.`,
                       );
                   }
 
                   filterVar = `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
 
-                  if (!gqlName) {
-                      gqlName = config.filter.fieldName;
+                  if (!rootQueryArg) {
+                      rootQueryArg = config.filter.formFieldName;
                   }
               } else if (config.filter.type === "formProp") {
                   filterVar = config.filter.propName;
-                  if (!gqlName) {
-                      gqlName = config.filter.propName;
+                  if (!rootQueryArg) {
+                      rootQueryArg = config.filter.propName;
                   }
               } else {
                   throw new Error("unsupported filter type");
               }
 
               // try to find arg used to filter by checking names of root-arg and filter-arg-fields
-              const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+              const rootArgForName = rootQueryType.args.find((arg) => arg.name === rootQueryArg);
               let filterType = rootArgForName ? buildTypeInfo(rootArgForName, gqlIntrospection) : undefined;
               let filterVarName = undefined;
               let filterVarValue = undefined;
@@ -179,7 +179,7 @@ export function generateAsyncSelect({
 
               if (filterType) {
                   // there is a query root arg with same name, filter using it
-                  filterVarName = gqlName;
+                  filterVarName = rootQueryArg;
                   filterVarValue = filterVar;
                   if (filterType.typeKind === "INPUT_OBJECT" || filterType.typeKind === "ENUM") {
                       filterVarType = `GQL${filterType.typeClass}`;
@@ -196,29 +196,29 @@ export function generateAsyncSelect({
                   filterType = rootArgFilter ? buildTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
                   if (filterType) {
                       filterVarName = "filter";
-                      filterVarValue = `{ ${gqlName}: { equal: ${filterVar} } }`;
+                      filterVarValue = `{ ${rootQueryArg}: { equal: ${filterVar} } }`;
                       // get type of field.equal in filter-arg used for filtering
                       if (filterType.inputType?.kind !== "INPUT_OBJECT") {
                           throw new Error(`Field ${String(config.name)}: Type of filter is no object-type.`);
                       }
-                      const nestedFilterInput = filterType.inputType.inputFields.find((inputField) => inputField.name === gqlName);
+                      const nestedFilterInput = filterType.inputType.inputFields.find((inputField) => inputField.name === rootQueryArg);
                       if (!nestedFilterInput) {
-                          throw new Error(`Field ${String(config.name)}: Field filter.${gqlName} does not exist`);
+                          throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg} does not exist`);
                       }
                       const gqlFilterInputType = buildTypeInfo(nestedFilterInput, gqlIntrospection);
                       if (!gqlFilterInputType?.inputType || gqlFilterInputType.inputType.kind !== "INPUT_OBJECT") {
                           throw new Error(
-                              `Field ${String(config.name)}: Type of filter.${gqlName} is no object-type, but needs to be e.g. StringFilter-type.`,
+                              `Field ${String(config.name)}: Type of filter.${rootQueryArg} is no object-type, but needs to be e.g. StringFilter-type.`,
                           );
                       }
                       const gqlFilterEqualInputType = gqlFilterInputType.inputType.inputFields.find((inputField) => inputField.name === "equal");
                       if (!gqlFilterEqualInputType) {
-                          throw new Error(`Field ${String(config.name)}: Field filter.${gqlName}.equal does not exist`);
+                          throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist`);
                       }
                       const equalFieldType = buildTypeInfo(gqlFilterEqualInputType, gqlIntrospection);
                       if (!equalFieldType) {
                           throw new Error(
-                              `Field ${String(config.name)}: Field filter.${gqlName}.equal does not exist but is required for filtering.`,
+                              `Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist but is required for filtering.`,
                           );
                       }
                       if (equalFieldType.typeKind === "INPUT_OBJECT" || equalFieldType.typeKind === "ENUM") {
@@ -232,7 +232,7 @@ export function generateAsyncSelect({
                       }
                   } else {
                       throw new Error(
-                          `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                          `Neither filter-prop nor root-prop with name: ${rootQueryArg} for asyncSelect-query not found. Consider setting filter.rootQueryArg explicitly.`,
                       );
                   }
               }

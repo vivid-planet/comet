@@ -5,10 +5,12 @@
     "description": "Comet Site Demo Application",
     "type": "commonjs",
     "scripts": {
-        "build": "run-s intl:compile && run-p gql:types generate-block-types build-server && next build",
+        "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build",
         "build-server": "tsc --project tsconfig.server.json",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
-        "dev": "$npm_execpath check-node-version && run-s intl:compile && run-p gql:types generate-block-types build-server && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node --inspect=localhost:9230 --max-old-space-size=512 dist/server.js",
+        "css:types": "typed-scss-modules src",
+        "css:types:watch": "typed-scss-modules src --watch",
+        "dev": "$npm_execpath check-node-version && run-s intl:compile && run-p gql:types generate-block-types css:types build-server && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node --inspect=localhost:9230 --max-old-space-size=512 dist/server.js",
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
@@ -18,7 +20,7 @@
         "intl:extract": "formatjs extract \"src/**/*.{ts,tsx}\" --ignore **/*.d.ts --out-file lang-extracted/en.json --format simple",
         "lint": "run-s intl:compile && run-p gql:types generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml,scss}'",
         "lint:tsc": "tsc --project .",
         "serve": "NODE_ENV=production node dist/server.js"
     },
@@ -33,6 +35,7 @@
         "@opentelemetry/instrumentation-runtime-node": "^0.15.0",
         "@opentelemetry/sdk-node": "^0.53.0",
         "cache-manager": "^5.7.6",
+        "clsx": "^2.1.1",
         "filesize": "^10.1.6",
         "graphql": "^15.10.1",
         "ioredis": "^5.6.1",
@@ -67,6 +70,8 @@
         "eslint": "^9.30.1",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
+        "sass": "^1.90.0",
+        "typed-scss-modules": "^8.1.1",
         "typescript": "^5.7.3"
     },
     "engines": {

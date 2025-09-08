@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    getCrudSearchFieldsFromMetadata,
+    hasCrudFieldFeature,
+    SCOPED_ENTITY_METADATA_KEY,
+} from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -88,7 +94,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         : [];
     const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
 
-    const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
+    const scopedEntity = Reflect.getMetadata(SCOPED_ENTITY_METADATA_KEY, metadata.class);
     const skipScopeCheck = !scopeProp && !scopedEntity;
 
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
@@ -1301,7 +1307,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             .filter((prop) => {
                 if (prop.kind === "1:m" && prop.orphanRemoval) {
                     if (!prop.targetMeta) throw new Error(`Target metadata not set`);
-                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    const hasOwnCrudGenerator = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, prop.targetMeta.class);
                     if (!hasOwnCrudGenerator) {
                         //generate nested resolver only if target entity has no own crud generator
                         return true;

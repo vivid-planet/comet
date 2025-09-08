@@ -22,9 +22,11 @@ export class SendTestMailCommand extends CommandRunner {
     }
 
     @Option({
-        flags: "-r, --receiver",
+        flags: "-r, --receiver [receiver]",
     })
-    parseReceiver() {}
+    parseReceiver(value: string) {
+        return value;
+    }
 
     @CreateRequestContext()
     async run(_arguments: string[], { receiver }: { receiver?: string }): Promise<void> {

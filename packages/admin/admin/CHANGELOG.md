@@ -1,5 +1,90 @@
 # @comet/admin
 
+## 8.2.0
+
+### Minor Changes
+
+- ea545c4: Add `FullPageAlert` component
+- dfafdb3: Add a `warning` variant to `Tooltip`
+
+    ```tsx
+    <Tooltip title="This is a warning" variant="warning">
+        <WarningSolid color="warning" />
+    </Tooltip>
+    ```
+
+- 08ad5fe: Add new admin component `SectionHeadline`
+- 85141bf: Add new `DateTimeRangePicker` and `DateTimeRangePickerField` components
+
+    The new components are based on the `@mui/x-date-pickers-pro` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/api/date-pickers/date-time-range-picker/) for more details.
+    Unlike the MUI components, these components use an object with `start` and `end` properties, both of which use a `Date` object as the value, instead of an array of two `Date` objects.
+
+    Note: Using these components requires a [MUI X Pro license](https://v7.mui.com/x/introduction/licensing/).
+
+    **Using the new `DateTimeRangePicker`**
+
+    ```tsx
+    import { type DateTimeRange, FieldContainer, DateTimeRangePicker } from "@comet/admin";
+    import { useState } from "react";
+
+    export const Example = () => {
+        const [dateTimeRangeValue, setDateTimeRangeValue] = useState<DateTimeRange | undefined>();
+
+        return (
+            <FieldContainer label="Date-Time Range Picker">
+                <DateTimeRangePicker value={dateTimeRangeValue} onChange={setDateTimeRangeValue} />
+            </FieldContainer>
+        );
+    };
+    ```
+
+    **Using the new `DateTimeRangePickerField` in Final Form**
+
+    ```tsx
+    import { type DateTimeRange, FieldContainer, DateTimeRangePicker } from "@comet/admin";
+    import { useState } from "react";
+
+    type Values = {
+        dateTimeRange: DateTimeRange;
+    };
+
+    export const Example = () => {
+        return (
+            <Form<Values>
+                initialValues={{ dateTimeRange: { start: new Date("2025-07-23 11:30:00"), end: new Date("2025-07-25 14:30:00") } }}
+                onSubmit={() => {}}
+            >
+                {() => <DateTimeRangePickerField name="dateTimeRange" label="Date-Time Range Picker" />}
+            </Form>
+        );
+    };
+    ```
+
+- 0cfcf90: Allow exporting columns with value type boolean
+
+### Patch Changes
+
+- d7ab390: The clear-button, inside `ClearInputAdornment` can now be focused
+- 01ef80b: Fix props of `Tooltip`'s `slotProps.popper` when setting custom values
+
+    When setting custom values to `slotProps.popper`, some default props would unintentionally be reset.
+
+- 0b08988: Prevent the `OpenPickerButton` from appearing focused while not actually being focused
+
+    This was achieved by preventing the `OpenPickerButton` from being focused at all.
+    The input value can still be changed in an accessible way, without using the picker.
+
+    This affects the following components:
+    - `DatePicker`
+    - `DatePickerField`
+    - `DateRangePicker`
+    - `DateRangePickerField`
+    - `DateTimePicker`
+    - `DateTimePickerField`
+    - `TimePicker`
+    - `TimePickerField`
+    - @comet/admin-icons@8.2.0
+
 ## 8.1.1
 
 ### Patch Changes

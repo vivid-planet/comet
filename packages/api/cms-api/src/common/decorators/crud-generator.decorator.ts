@@ -11,6 +11,8 @@ export interface CrudGeneratorOptions {
     position?: { groupByFields: string[] };
 }
 
+export const CRUD_GENERATOR_METADATA_KEY = "data:crudGeneratorOptions";
+
 export function CrudGenerator({
     targetDirectory,
     requiredPermission,
@@ -24,7 +26,7 @@ export function CrudGenerator({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(
-            `data:crudGeneratorOptions`,
+            CRUD_GENERATOR_METADATA_KEY,
             { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position },
             target,
         );
@@ -36,10 +38,12 @@ export interface CrudSingleGeneratorOptions {
     requiredPermission: Permission | Permission[];
 }
 
+export const CRUD_SINGLE_GENERATOR_METADATA_KEY = "data:crudSingleGeneratorOptions";
+
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudSingleGeneratorOptions`, options, target);
+        Reflect.defineMetadata(CRUD_SINGLE_GENERATOR_METADATA_KEY, options, target);
     };
 }
 
@@ -52,6 +56,8 @@ export interface CrudFieldOptions {
     input?: boolean;
 }
 
+export const CRUD_FIELD_METADATA_KEY = "data:crudField";
+
 export function CrudField({
     resolveField = true,
     dedicatedResolverArg = false,
@@ -63,7 +69,7 @@ export function CrudField({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
         Reflect.defineMetadata(
-            `data:crudField`,
+            CRUD_FIELD_METADATA_KEY,
             { resolveField, dedicatedResolverArg, search, filter, sort, input },
             target.constructor,
             propertyKey,
