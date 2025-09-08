@@ -5,7 +5,8 @@ on:
         branches: [main]
     pull_request:
         branches: [main]
-
+        paths:
+            - "pnpm-lock.yaml"
 jobs:
     check-peer-deps:
         runs-on: ubuntu-latest
