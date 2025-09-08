@@ -1,5 +1,4 @@
 import { getNotFoundContext } from "@src/util/ServerContext";
-import Link from "next/link";
 
 export default async function NotFound404(): Promise<JSX.Element> {
     const scope = getNotFoundContext() || { domain: "main", language: "en" };
@@ -8,7 +7,7 @@ export default async function NotFound404(): Promise<JSX.Element> {
         <html lang={scope.language}>
             <body>
                 <p>Page not found (Scope {JSON.stringify(scope)}).</p>
-                <Link href={`/${scope.language}`}>Return Home</Link>
+                <a href={`/${scope.language}`}>Return Home</a>
             </body>
         </html>
     );

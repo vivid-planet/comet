@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -6,7 +5,7 @@ export const Container = styled.div`
     grid-column: 2 / 24;
 `;
 
-export const Link = styled(NextLink)`
+export const Link = styled.a`
     color: ${({ theme }) => theme.palette.primary.main};
     text-decoration: none;
 
