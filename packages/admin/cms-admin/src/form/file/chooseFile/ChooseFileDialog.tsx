@@ -79,7 +79,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             slotProps={{
                 root: {
                     PaperProps: {
-                        sx: { height: "100%" },
+                        sx: { height: "100%" }, // The fixed height prevents the height of the dialog from changing when navigating between folders which may have different heights depending on the number of items in the folder
                     },
                 },
             }}
