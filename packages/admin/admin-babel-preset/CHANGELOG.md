@@ -1,5 +1,7 @@
 # @comet/admin-babel-preset
 
+## 8.2.0
+
 ## 8.1.1
 
 ## 8.1.0
