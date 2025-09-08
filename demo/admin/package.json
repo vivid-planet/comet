@@ -89,7 +89,7 @@
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
-        "typescript": "^5.7.3",
+        "typescript": "5.8.3",
         "vite": "^5.4.19",
         "vite-plugin-html": "^3.2.2"
     }

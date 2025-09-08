@@ -115,7 +115,7 @@
         "rxjs": "^7.8.2",
         "ts-jest": "^29.4.0",
         "ts-node": "^10.9.2",
-        "typescript": "^5.7.3"
+        "typescript": "5.8.3"
     },
     "peerDependencies": {
         "@kubernetes/client-node": "^1.0.0",
