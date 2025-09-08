@@ -20,9 +20,9 @@ export const CallToActionListBlock = withPreview(
 const Root = styled.div`
     display: flex;
     flex-flow: row wrap;
-    gap: ${({ theme }) => theme.spacing.S300};
+    gap: ${({ theme }) => theme.spacing.s300};
 
     ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-        gap: ${({ theme }) => theme.spacing.S400};
+        gap: ${({ theme }) => theme.spacing.s400};
     }
 `;
