@@ -14,9 +14,6 @@ if (process.env.MUI_LICENSE_KEY) {
     LicenseInfo.setLicenseKey(process.env.MUI_LICENSE_KEY);
 }
 
-// Initialize MSW
-worker.start();
-
 export const globalTypes: GlobalTypes = {
     theme: {
         description: "Global MUI Theme",
