@@ -17,6 +17,11 @@ const config: StorybookConfig = {
         },
         "@storybook/addon-webpack5-compiler-babel",
     ],
+
+    env: (config) => ({
+        ...config,
+        MUI_LICENSE_KEY: process.env.MUI_LICENSE_KEY || "",
+    }),
     staticDirs: ["../public"],
 };
 
