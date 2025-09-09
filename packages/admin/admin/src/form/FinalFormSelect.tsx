@@ -20,7 +20,10 @@ export interface FinalFormSelectProps<T> {
 
 type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
 
-const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined, disabled: boolean | undefined) => {
+    if (disabled) {
+        return false;
+    }
     if (multiple && Array.isArray(value)) {
         return value.length > 0;
     }
@@ -66,6 +69,7 @@ export const FinalFormSelect = <T,>({
             <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
     ),
+    disabled,
     children,
     required,
     ...rest
@@ -78,7 +82,7 @@ export const FinalFormSelect = <T,>({
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={getHasClearableContent(value, multiple)}
+            hasClearableContent={getHasClearableContent(value, multiple, disabled)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;
@@ -86,6 +90,7 @@ export const FinalFormSelect = <T,>({
     const selectProps = {
         ...rest,
         multiple,
+        disabled,
         endAdornment,
         name,
         onChange,
