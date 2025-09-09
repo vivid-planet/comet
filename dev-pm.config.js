@@ -146,6 +146,11 @@ module.exports = {
 
         //group demo api
         {
+            name: "demo-oidc-provider",
+            script: "pnpm run oidc-provider",
+            group: ["demo-api", "demo"],
+        },
+        {
             name: "demo-docker",
             script: "docker compose up",
             group: ["demo-api", "demo"],
