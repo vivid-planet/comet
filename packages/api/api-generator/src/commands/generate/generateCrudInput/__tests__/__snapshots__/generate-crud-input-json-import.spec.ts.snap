@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GenerateCrudInputJsonImport should generate import for array class property 1`] = `
+"import { Field, InputType, ID, Int } from "@nestjs/graphql";
+import { Transform, Type } from "class-transformer";
+import {
+    IsString,
+    IsNotEmpty,
+    ValidateNested,
+    IsNumber,
+    IsBoolean,
+    IsDate,
+    IsDateString,
+    IsOptional,
+    IsEnum,
+    IsUUID,
+    IsArray,
+    IsInt,
+} from "class-validator";
+import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
+import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { NestedObject } from "../.generate-crud-input-json-import-nested-object";
+
+@InputType()
+export class TestEntityWithJsonObject1Input {
+    @IsNotEmpty()
+    @ValidateNested()
+    @Type(() => NestedObject)
+    @Field(() => NestedObject)
+    foo: NestedObject;
+}
+
+@InputType()
+export class TestEntityWithJsonObject1UpdateInput extends PartialType(TestEntityWithJsonObject1Input) {}
+"
+`;
+
+exports[`GenerateCrudInputJsonImport should generate import for array type property 1`] = `
+"import { Field, InputType, ID, Int } from "@nestjs/graphql";
+import { Transform, Type } from "class-transformer";
+import {
+    IsString,
+    IsNotEmpty,
+    ValidateNested,
+    IsNumber,
+    IsBoolean,
+    IsDate,
+    IsDateString,
+    IsOptional,
+    IsEnum,
+    IsUUID,
+    IsArray,
+    IsInt,
+} from "class-validator";
+import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
+import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { NestedType } from "../.generate-crud-input-json-import-nested-object";
+
+@InputType()
+export class TestEntityWithJsonType2Input {
+    @IsNotEmpty()
+    @IsArray()
+    @Field(() => [GraphQLJSONObject]) // Warning: this input is not validated properly
+    foo: NestedType[];
+}
+
+@InputType()
+export class TestEntityWithJsonType2UpdateInput extends PartialType(TestEntityWithJsonType2Input) {}
+"
+`;
+
+exports[`GenerateCrudInputJsonImport should generate import for class property 1`] = `
+"import { Field, InputType, ID, Int } from "@nestjs/graphql";
+import { Transform, Type } from "class-transformer";
+import {
+    IsString,
+    IsNotEmpty,
+    ValidateNested,
+    IsNumber,
+    IsBoolean,
+    IsDate,
+    IsDateString,
+    IsOptional,
+    IsEnum,
+    IsUUID,
+    IsArray,
+    IsInt,
+} from "class-validator";
+import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
+import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { NestedObject } from "../.generate-crud-input-json-import-nested-object";
+
+@InputType()
+export class TestEntityWithJsonObject1Input {
+    @IsNotEmpty()
+    @ValidateNested()
+    @Type(() => NestedObject)
+    @Field(() => NestedObject)
+    foo: NestedObject;
+}
+
+@InputType()
+export class TestEntityWithJsonObject1UpdateInput extends PartialType(TestEntityWithJsonObject1Input) {}
+"
+`;
+
+exports[`GenerateCrudInputJsonImport should generate import for type property 1`] = `
+"import { Field, InputType, ID, Int } from "@nestjs/graphql";
+import { Transform, Type } from "class-transformer";
+import {
+    IsString,
+    IsNotEmpty,
+    ValidateNested,
+    IsNumber,
+    IsBoolean,
+    IsDate,
+    IsDateString,
+    IsOptional,
+    IsEnum,
+    IsUUID,
+    IsArray,
+    IsInt,
+} from "class-validator";
+import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
+import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { NestedType } from "../.generate-crud-input-json-import-nested-object";
+
+@InputType()
+export class TestEntityWithJsonType1Input {
+    @IsNotEmpty()
+    @Field(() => GraphQLJSONObject) // Warning: this input is not validated properly
+    foo: NestedType;
+}
+
+@InputType()
+export class TestEntityWithJsonType1UpdateInput extends PartialType(TestEntityWithJsonType1Input) {}
+"
+`;
