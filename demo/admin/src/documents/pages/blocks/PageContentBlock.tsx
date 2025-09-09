@@ -2,6 +2,7 @@ import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@comet/cms-admin"
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
+import { MultipleOptionsBlock } from "@src/common/blocks/MultipleOptionsBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
@@ -46,6 +47,7 @@ export const PageContentBlock = createBlocksBlock({
         layout: LayoutBlock,
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
+        multipleOptions: MultipleOptionsBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

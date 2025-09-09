@@ -22,6 +22,8 @@ import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
 
+import { MulitpleOptionsBlock } from "./MultipleOptionsBlock";
+
 const supportedBlocks: SupportedBlocks = {
     accordion: (props) => <PageContentAccordionBlock data={props} />,
     anchor: (props) => <AnchorBlock data={props} />,
@@ -44,6 +46,7 @@ const supportedBlocks: SupportedBlocks = {
     layout: (props) => <LayoutBlock data={props} />,
     textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
+    multipleOptions: (props) => <MulitpleOptionsBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

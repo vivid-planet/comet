@@ -1823,6 +1823,25 @@
         ]
     },
     {
+        "name": "MultipleOptions",
+        "fields": [
+            {
+                "name": "options",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "options",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ]
+    },
+    {
         "name": "NewsContent",
         "fields": [
             {
@@ -2094,7 +2113,8 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "multipleOptions": "MultipleOptions"
                             },
                             "nullable": false
                         },
@@ -2157,7 +2177,8 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "multipleOptions": "MultipleOptions"
                             },
                             "nullable": false
                         },
