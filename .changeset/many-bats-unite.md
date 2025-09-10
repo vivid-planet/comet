@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-ySelectField / FinalFormSelect: The clear button is now always hidden when the field is disabled.
+SelectField / FinalFormSelect: hide the clear button when the field is disabled
