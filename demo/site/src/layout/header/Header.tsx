@@ -1,6 +1,5 @@
 "use client";
 
-import { useIntl } from "react-intl";
 import styled from "styled-components";
 
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
@@ -11,15 +10,9 @@ interface Props {
 }
 
 function Header({ header }: Props): JSX.Element {
-    const intl = useIntl();
     return (
         <Root>
-            <nav
-                aria-label={intl.formatMessage({
-                    defaultMessage: "Skip links",
-                    id: "skipLinks.ariaLabel",
-                })}
-            >
+            <nav>
                 <TopLevelNavigation>
                     {header.items.map((item) => (
                         <TopLevelLinkContainer key={item.id}>
