@@ -324,33 +324,35 @@ export function generateFormField({
                       .join(",")}
             ]}/>`;
         } else {
-            code = `<Field
-            ${required ? "required" : ""}
-            variant="horizontal"
-            fullWidth
-            name="${nameWithPrefix}"
-            label={${fieldLabel}}
-            ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
-            ${
-                config.helperText
-                    ? `helperText={<FormattedMessage id=` +
-                      `"${formattedMessageRootId}.${name}.helperText" ` +
-                      `defaultMessage="${config.helperText}" />}`
-                    : ""
-            }
-            ${validateCode}>
-            {(props) =>
-                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
-                ${values
-                    .map((value) => {
-                        const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
-                        const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
-                        return `<MenuItem value="${value.value}">${label}</MenuItem>`;
-                    })
-                    .join("\n")}
-                </FinalFormSelect>
-            }
-        </Field>`;
+            imports.push({
+                name: "SelectField",
+                importPath: "@comet/admin",
+            });
+            code = `<SelectField
+                            ${required ? "required" : ""}
+                             fullWidth
+                                variant={"horizontal"}
+                                name="${nameWithPrefix}"
+                                label={${fieldLabel}}
+                                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                                ${
+                                    config.helperText
+                                        ? `helperText={<FormattedMessage id=` +
+                                          `"${formattedMessageRootId}.${name}.helperText" ` +
+                                          `defaultMessage="${config.helperText}" />}`
+                                        : ""
+                                }
+                                ${validateCode}
+                                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                                options={[${values.map((value) => {
+                                    const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+
+                                    return `{
+                                        value: "${value.value}",
+                                        label: <FormattedMessage id="${id}" defaultMessage="${value.label}" />
+                                    }`;
+                                })}]}
+                            />`;
         }
     } else {
         throw new Error(`Unsupported type`);

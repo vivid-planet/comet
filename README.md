@@ -37,6 +37,15 @@ sh install.sh
 
 _It is recommended to run `install.sh` every time you switch to the `main` branch._
 
+### MUI X Data Grid Pro License
+
+If you want to use features from `@mui/x-data-grid-pro`, you need to configure your MUI license key. Create a `.env.local` file in your project root and add your license key:
+
+`.env.local`:
+```
+MUI_LICENSE_KEY=your_license_key_here
+```
+
 ### Build packages
 
 Before starting individual development processes, build all Comet packages at least once.
