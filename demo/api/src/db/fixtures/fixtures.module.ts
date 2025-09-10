@@ -1,4 +1,4 @@
-import { ActionLogsModule, AttachedDocument, DependenciesModule } from "@comet/cms-api";
+import { AttachedDocument, DependenciesModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
@@ -63,7 +63,6 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         PagesModule,
         LinksModule,
         DependenciesModule,
-        ActionLogsModule,
         MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
     ],
     providers: [
