@@ -98,8 +98,10 @@ const SkipLink = styled.a`
     left: 20px;
     opacity: 0;
     z-index: 100;
+    pointer-events: none;
 
     &:focus {
         opacity: 1;
+        pointer-events: auto;
     }
 `;
