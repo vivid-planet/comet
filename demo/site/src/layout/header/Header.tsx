@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@src/common/components/Button";
+import { FormattedMessage, useIntl } from "react-intl";
 import styled from "styled-components";
 
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
@@ -10,9 +12,25 @@ interface Props {
 }
 
 function Header({ header }: Props): JSX.Element {
+    const intl = useIntl();
     return (
         <Root>
-            <nav>
+            <nav
+                aria-label={intl.formatMessage({
+                    defaultMessage: "Skip links",
+                    id: "skipLinks.ariaLabel",
+                })}
+            >
+                <SkipLink href="#mainContent">
+                    <Button as="span">
+                        <FormattedMessage defaultMessage="Skip to main content" id="skipLink.skipToMainContent" />
+                    </Button>
+                </SkipLink>
+                <SkipLink href="#footer">
+                    <Button as="span">
+                        <FormattedMessage defaultMessage="Skip to footer" id="skipLink.skipToFooter" />
+                    </Button>
+                </SkipLink>
                 <TopLevelNavigation>
                     {header.items.map((item) => (
                         <TopLevelLinkContainer key={item.id}>
@@ -84,4 +102,15 @@ const Link = styled(PageLink)`
     }
 `;
 
+const SkipLink = styled.a`
+    position: fixed;
+    top: 120px;
+    left: 20px;
+    opacity: 0;
+    z-index: 100;
+
+    &:focus {
+        opacity: 1;
+    }
+`;
 export { Header };

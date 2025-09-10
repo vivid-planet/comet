@@ -16,7 +16,7 @@ export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPage
     const [error, setError] = useState<string | null>(null);
 
     return (
-        <>
+        <div id="mainContent">
             <h1>News</h1>
             <CardList>
                 {newsList.map((news) => (
@@ -55,7 +55,7 @@ export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPage
                 {isLoading && <div>Loading</div>}
                 {error && <div>Error: {error}</div>}
             </div>
-        </>
+        </div>
     );
 }
 

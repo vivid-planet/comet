@@ -47,5 +47,9 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+    return (
+        <div id="mainContent">
+            <BlocksBlock data={data} supportedBlocks={supportedBlocks} />
+        </div>
+    );
 };
