@@ -81,7 +81,6 @@ export const Readonly: Story = {
                                 label="SelectField"
                                 fullWidth
                                 variant="horizontal"
-                                readOnly
                                 disabled
                                 endAdornment={
                                     <InputAdornment position="end">
