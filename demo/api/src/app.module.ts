@@ -1,5 +1,6 @@
 import {
     AccessLogModule,
+    ActionLogsModule,
     AzureAiTranslatorModule,
     AzureOpenAiContentGenerationModule,
     BlobStorageModule,
@@ -205,6 +206,7 @@ export class AppModule {
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,
+                ActionLogsModule,
             ],
         };
     }
