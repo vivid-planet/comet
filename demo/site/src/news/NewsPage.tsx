@@ -16,6 +16,7 @@ export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPage
     const [error, setError] = useState<string | null>(null);
 
     return (
+        // ID is used for skip link
         <div id="mainContent">
             <h1>News</h1>
             <CardList>

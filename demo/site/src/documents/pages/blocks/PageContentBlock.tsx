@@ -48,6 +48,7 @@ const supportedBlocks: SupportedBlocks = {
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {
     return (
+        // ID is used for skip link
         <div id="mainContent">
             <BlocksBlock data={data} supportedBlocks={supportedBlocks} />
         </div>
