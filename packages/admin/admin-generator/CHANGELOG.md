@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.3.0
+
+### Patch Changes
+
+- ebc6fff: Form Generation: `StaticSelect` with `inputType: "select"` now generates `SelectField` instead of `Field` + `FinalFormSelect`.
+
 ## 8.2.0
 
 ### Minor Changes
