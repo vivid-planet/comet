@@ -1,5 +1,12 @@
 # @comet/api-generator
 
+## 8.3.0
+
+### Patch Changes
+
+- 881827a: input-dto: generate import for typed (using type not class) json property
+    - @comet/cms-api@8.3.0
+
 ## 8.2.0
 
 ### Patch Changes

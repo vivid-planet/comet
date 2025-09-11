@@ -1,5 +1,15 @@
 # @comet/admin
 
+## 8.3.0
+
+### Minor Changes
+
+- 422328b: Add backgroundImage to FullPageAlert
+
+### Patch Changes
+
+- @comet/admin-icons@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

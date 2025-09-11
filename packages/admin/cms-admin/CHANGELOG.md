@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 8.3.0
+
+### Patch Changes
+
+- 678b319: The most recently visited scope is no longer stored in local storage in development mode
+- 5aa462f: Fix pagination of `UserPermissionsUserGrid`
+- Updated dependencies [422328b]
+    - @comet/admin@8.3.0
+    - @comet/admin-date-time@8.3.0
+    - @comet/admin-rte@8.3.0
+    - @comet/admin-icons@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes
