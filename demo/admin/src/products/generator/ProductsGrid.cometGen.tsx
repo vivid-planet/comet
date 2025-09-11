@@ -130,17 +130,20 @@ export default defineConfig<GQLProduct>({
         {
             type: "manyToMany",
             name: "tags",
+            disableExport: true,
             headerName: "Tags",
             labelField: "title",
         },
         {
             type: "oneToMany",
             name: "variants",
+            disableExport: true,
             headerName: "Variants",
             labelField: "name",
         },
         {
             type: "actions",
+            queryFields: ["slug"],
             component: ProductsGridPreviewAction,
         },
     ],

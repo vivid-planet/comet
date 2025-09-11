@@ -3,7 +3,7 @@ import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type FunctionComponent, type ReactNode } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
@@ -83,6 +83,7 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
@@ -98,6 +99,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         additionalItemFields,
         AdditionalItemContextMenuItems,
         AdditionalItemContent,
+        tags,
     }: CreateListBlockOptions<T, AdditionalItemFields>,
     override?: (
         block: BlockInterface<
@@ -136,6 +138,8 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         name,
 
         displayName,
+
+        tags: tags ? tags : block.tags,
 
         defaultValues: () => ({
             blocks:

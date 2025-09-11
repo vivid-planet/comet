@@ -67,8 +67,8 @@ const PageLayoutContent = styled.div`
 `;
 
 const MediaCaption = styled(Typography)`
-    margin-top: ${({ theme }) => theme.spacing.S300};
-    padding-right: calc(var(--swiper-button-size) * 2 + ${({ theme }) => theme.spacing.S300} + ${({ theme }) => theme.spacing.S500});
+    margin-top: ${({ theme }) => theme.spacing.s300};
+    padding-right: calc(var(--swiper-button-size) * 2 + ${({ theme }) => theme.spacing.s300} + ${({ theme }) => theme.spacing.s500});
 
     /* min-height to show arrows when no caption */
     min-height: 20px;
@@ -92,7 +92,7 @@ const SwiperWrapper = styled(Swiper)<{ $aspectRatioHorizontal: string; $aspectRa
         cursor: pointer;
 
         /* Move buttons just below the image height, calculated with aspectRatio. not possible with top: 100% because this moves them down the whole slider height which is variable because of caption text */
-        padding-top: ${({ theme }) => theme.spacing.S300};
+        padding-top: ${({ theme }) => theme.spacing.s300};
         margin-top: calc(${({ $aspectRatioVertical }) => $aspectRatioVertical} / ${({ $aspectRatioHorizontal }) => $aspectRatioHorizontal} * 100%);
 
         &::after {
@@ -109,7 +109,7 @@ const SwiperWrapper = styled(Swiper)<{ $aspectRatioHorizontal: string; $aspectRa
 
     .swiper-button-prev {
         /* Button width plus space */
-        right: calc(var(--swiper-button-size) + ${({ theme }) => theme.spacing.S300});
+        right: calc(var(--swiper-button-size) + ${({ theme }) => theme.spacing.s300});
         left: auto;
 
         &::after {

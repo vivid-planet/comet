@@ -16,7 +16,7 @@ export interface TooltipProps extends MuiTooltipProps {
     variant?: Variant;
 }
 
-type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success";
+type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success" | "warning";
 
 export type TooltipClassKey = "root" | Variant | MuiTooltipClassKey;
 
@@ -113,6 +113,17 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             }
         `};
 
+        ${ownerState.variant === "warning" &&
+        css`
+            .${tooltipClasses.arrow} {
+                color: ${theme.palette.warning.light};
+            }
+            .${tooltipClasses.tooltip} {
+                background-color: ${theme.palette.warning.light};
+                color: ${theme.palette.common.black};
+            }
+        `};
+
         // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L55
         z-index: ${theme.zIndex.tooltip};
         pointer-events: none;
@@ -193,11 +204,11 @@ export const Tooltip = (inProps: TooltipProps) => {
             ...props.slots,
         },
         slotProps: {
+            ...props.slotProps,
             popper: {
                 ownerState,
                 ...props.slotProps?.popper,
             },
-            ...props.slotProps,
         },
     };
 

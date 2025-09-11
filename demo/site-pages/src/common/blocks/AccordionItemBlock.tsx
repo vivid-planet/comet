@@ -66,7 +66,7 @@ const TitleWrapper = styled.button`
     align-items: center;
     cursor: pointer;
     border-top: 1px solid ${({ theme }) => theme.palette.gray["300"]};
-    padding: ${({ theme }) => theme.spacing.S300} 0;
+    padding: ${({ theme }) => theme.spacing.s300} 0;
 `;
 
 const IconWrapper = styled.div`
@@ -93,7 +93,7 @@ const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
         $isExpanded &&
         css`
             grid-template-rows: 1fr;
-            padding-bottom: ${({ theme }) => theme.spacing.S300};
+            padding-bottom: ${({ theme }) => theme.spacing.s300};
         `}
 `;
 

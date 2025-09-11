@@ -26,8 +26,8 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { DamImageBlock } from "@comet/cms-admin";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
+import { DamImageBlock } from "@comet/cms-admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const newsFragment = gql`

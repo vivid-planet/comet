@@ -1,7 +1,6 @@
-import { type ObservableQuery, useApolloClient } from "@apollo/client";
+import { gql, type ObservableQuery, useApolloClient } from "@apollo/client";
 import { type IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
 import {
     type Dispatch,

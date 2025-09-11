@@ -1,4 +1,5 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
 import { type MouseEvent } from "react";

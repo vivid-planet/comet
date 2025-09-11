@@ -51,6 +51,10 @@ type InputBaseFieldConfig = {
 };
 
 export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
+function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
+    return arg && arg.type === "component";
+}
+
 export type StaticSelectValue = { value: string; label: string } | string;
 
 export type FormFieldConfig<T> = (
@@ -74,7 +78,42 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?:
+              | {
+                    /**
+                     * Filter by value of field in current form
+                     */
+                    type: "field";
+                    /**
+                     * Name of the field in current form, that will be used to filter the query
+                     */
+                    formFieldName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    rootQueryArg?: string;
+                }
+              | {
+                    /**
+                     * Filter by a prop passed into the form, this prop will be generated
+                     */
+                    type: "formProp";
+                    /**
+                     * Name of the prop generated for this form
+                     */
+                    propName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    rootQueryArg?: string;
+                };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
@@ -90,7 +129,7 @@ export type FormFieldConfig<T> = (
 };
 
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
-    return !isFormLayoutConfig(arg);
+    return !isFormLayoutConfig(arg) && !isComponentFormFieldConfig(arg);
 }
 
 type OptionalNestedFieldsConfig<T> = {
@@ -174,7 +213,11 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
       }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
+export type ActionsGridColumnConfig<T> = {
+    type: "actions";
+    queryFields?: UsableFields<T, true>[];
+    component?: ComponentType<GridCellParams>;
+} & BaseColumnConfig;
 export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     type: "virtual";
     name: string;
@@ -189,7 +232,7 @@ type InitialFilterConfig = {
 };
 
 // Additional type is necessary to avoid "TS2589: Type instantiation is excessively deep and possibly infinite."
-type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
+type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig<T> | VirtualGridColumnConfig<T>;
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";

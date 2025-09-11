@@ -25,6 +25,7 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
     previewImageIcon?: ReactNode;
+    playButtonAriaLabel?: string;
 }
 
 export const YouTubeVideoBlock = withPreview(
@@ -35,6 +36,7 @@ export const YouTubeVideoBlock = withPreview(
         renderPreviewImage,
         fill,
         previewImageIcon,
+        playButtonAriaLabel,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -103,6 +105,7 @@ export const YouTubeVideoBlock = withPreview(
                             sizes={previewImageSizes}
                             fill={fill}
                             icon={previewImageIcon}
+                            playButtonAriaLabel={playButtonAriaLabel}
                         />
                     )
                 ) : (

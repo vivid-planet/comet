@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.0.0-beta.6",
+    "version": "8.2.0",
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
@@ -27,6 +27,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
+        "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules jest --updateSnapshot",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
     },
     "dependencies": {
@@ -54,7 +55,7 @@
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.0.1",
         "ts-jest": "^29.4.0",
-        "typescript": "^5.7.3",
+        "typescript": "5.8.3",
         "uuid": "^11.1.0"
     },
     "peerDependencies": {

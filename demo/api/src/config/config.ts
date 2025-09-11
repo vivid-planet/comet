@@ -89,8 +89,8 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 
             transport: {
-                host: "localhost",
-                port: 1025,
+                host: envVars.MAILER_HOST,
+                port: envVars.MAILER_PORT,
             },
         },
         cdn: {

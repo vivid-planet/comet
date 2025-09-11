@@ -76,6 +76,7 @@ export class AppModule {
                         graphiql: config.debug ? { url: "/api/graphql" } : undefined,
                         playground: false,
                         autoSchemaFile: "schema.gql",
+                        sortSchema: true,
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
