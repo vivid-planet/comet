@@ -17,7 +17,7 @@ export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPage
 
     return (
         // ID is used for skip link
-        <div id="mainContent">
+        <main id="mainContent">
             <h1>News</h1>
             <CardList>
                 {newsList.map((news) => (
@@ -56,7 +56,7 @@ export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPage
                 {isLoading && <div>Loading</div>}
                 {error && <div>Error: {error}</div>}
             </div>
-        </div>
+        </main>
     );
 }
 
