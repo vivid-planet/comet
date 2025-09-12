@@ -12,7 +12,6 @@ import { RadioGroupField } from "@comet/admin";
 import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState } from "@comet/cms-admin";
 import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
@@ -23,6 +22,7 @@ import { useMemo } from "react";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { DamImageBlock } from "@comet/cms-admin";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
+import { Future_DatePickerField } from "@comet/admin";
 import { newsFormFragment } from "./NewsForm.gql";
 import { GQLNewsFormFragment } from "./NewsForm.gql.generated";
 import { newsQuery } from "./NewsForm.gql";
@@ -118,7 +118,7 @@ export function NewsForm({ id, scope }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title"/>}/>
 
-            <Field required variant="horizontal" fullWidth name="date" component={FinalFormDatePicker} label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
+            <Future_DatePickerField required variant="horizontal" fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
         <RadioGroupField required variant="horizontal" fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category"/>} options={[
                 {
                     label: <FormattedMessage id="news.category.events" defaultMessage="Events"/>,

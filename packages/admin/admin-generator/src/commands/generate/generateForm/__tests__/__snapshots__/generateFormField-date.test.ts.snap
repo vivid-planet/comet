@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateFormField - datePicker should generate simple date field with LocalType scalar 1`] = `
+"
+            <Future_DatePickerField
+                
+                
+                variant="horizontal"
+                fullWidth
+                name="availableSince"
+                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                
+                
+                
+                
+            />"
+`;

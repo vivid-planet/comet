@@ -12,7 +12,6 @@ import { TextAreaField } from "@comet/admin";
 import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState } from "@comet/cms-admin";
 import { createFinalFormBlock } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
@@ -23,6 +22,7 @@ import { validateTitle } from "../validateTitle";
 import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
+import { Future_DatePickerField } from "@comet/admin";
 import { GQLCreateCapProductFormDetailsFragment } from "./CreateCapProductForm.gql.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import { GQLCreateProductMutation } from "./CreateCapProductForm.gql.generated";
@@ -87,7 +87,7 @@ export function CreateCapProductForm({ type }: FormProps) {
             }} getOptionLabel={(option) => option.title}/>
         <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
 
-            <Field variant="horizontal" fullWidth name="availableSince" component={FinalFormDatePicker} label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
+            <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
         <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.image)}
         </Field>
