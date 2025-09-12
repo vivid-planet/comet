@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateFormField - datePicker should generate simple date field with LocalType scalar 1`] = `
+"
+            <Field
+                
+                
+                variant="horizontal"
+                fullWidth
+                name="availableSince"
+                component={FinalFormDatePicker}
+                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                
+                
+                
+                
+            />"
+`;
