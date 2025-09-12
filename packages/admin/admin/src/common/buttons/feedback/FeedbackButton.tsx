@@ -82,7 +82,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             case "success":
                 return "success";
             default:
-                return "neutral";
+                return "light";
         }
     };
 
@@ -143,7 +143,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             title={displayState === "error" ? tooltipErrorMessage : displayState === "success" ? tooltipSuccessMessage : ""}
             open={displayState === "error" || displayState === "success"}
             placement={endIcon && !startIcon ? "top-end" : "top-start"}
-            variant={resolveTooltipForDisplayState(displayState)}
+            color={resolveTooltipForDisplayState(displayState)}
             {...slotProps?.tooltip}
         >
             <span>{startIcon || endIcon}</span>
