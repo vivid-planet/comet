@@ -200,6 +200,10 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "date") {
+        imports.push({
+            name: "Future_DatePickerField",
+            importPath: "@comet/admin",
+        });
         code = `
             <Future_DatePickerField
                 ${required ? "required" : ""}
