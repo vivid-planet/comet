@@ -7,6 +7,7 @@ import { Transporter } from "nodemailer";
 import Mail, { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
 import { MailerLog } from "./entities/mailer-log.entity";
+import { MailerLogStatus } from "./entities/mailer-log-status.enum";
 import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
 import { MailerModuleConfig } from "./mailer.module";
 
@@ -54,13 +55,13 @@ export class MailerService {
         if (logMail && !this.mailerConfig.disableMailLog) {
             await this.entityManager.fork().transactional((em) => {
                 logEntry = em.getRepository(MailerLog).create({
+                    status: MailerLogStatus.error,
                     to: this.normalizeToArray(originMailOptions.to).map<string>(this.convertAddressToString),
                     subject: originMailOptions.subject,
                     mailOptions: mailOptionsWithDefaults,
                     additionalData,
                     mailTypeForLogging, // for statistic and filter purposes
                 });
-                // em.flush();
             });
         }
 
@@ -70,15 +71,17 @@ export class MailerService {
             : mailOptionsWithDefaults;
 
         const result = await this.mailerTransport.sendMail(mailOptions);
-        if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
 
         if (logMail && !this.mailerConfig.disableMailLog) {
             await this.entityManager.fork().transactional((em) => {
                 if (logEntry) {
-                    logEntry.assign({ result });
+                    if (result.messageId) logEntry.assign({ status: MailerLogStatus.sent });
+                    logEntry.assign({ result: result });
+                    em.persist(logEntry);
                 }
             });
         }
+        if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
 
         // Delete outdated logs, purposely not using await because it is not important for the mail sending process
         this.mailerLogRepository.nativeDelete({ createdAt: { $lt: subDays(new Date(), this.mailerConfig.daysToKeepMailLog ?? 90) } });

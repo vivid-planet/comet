@@ -1,8 +1,11 @@
+import { Enum } from "@mikro-orm/core";
 import { ArrayType, BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { SentMessageInfo } from "nodemailer";
 import { Options as MailOptions } from "nodemailer/lib/mailer";
 import { v4 } from "uuid";
+
+import { MailerLogStatus } from "./mailer-log-status.enum";
 
 @ObjectType()
 @Entity()
@@ -12,6 +15,10 @@ export class MailerLog<AdditionalData> extends BaseEntity {
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
     id: string = v4();
+
+    @Enum({ items: () => MailerLogStatus })
+    @Field(() => MailerLogStatus)
+    status: MailerLogStatus = MailerLogStatus.error;
 
     @Field(() => [String])
     @Property({ type: ArrayType })
