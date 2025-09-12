@@ -7,24 +7,38 @@ import {
     tooltipClasses,
     type TooltipClassKey as MuiTooltipClassKey,
     type TooltipProps as MuiTooltipProps,
+    Typography,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export interface TooltipProps extends MuiTooltipProps {
+type SlotProps = MuiTooltipProps["slotProps"] &
+    ThemedComponentBaseProps<{
+        title: typeof Typography;
+        text: typeof Typography;
+    }>["slotProps"];
+
+export interface TooltipProps extends Omit<MuiTooltipProps, "slotProps"> {
     variant?: Variant;
+    description?: ReactNode;
+    slotProps?: SlotProps;
 }
 
+type Slot = "root" | "title" | "text";
 type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success" | "warning";
+type ComponentState = "hasDescription";
 
-export type TooltipClassKey = "root" | Variant | MuiTooltipClassKey;
+export type TooltipClassKey = Slot | Variant | ComponentState | MuiTooltipClassKey;
 
 type OwnerState = {
     variant: Variant;
     disableInteractive: boolean | undefined;
     arrow: boolean | undefined;
     isRtl: boolean;
+    hasDescription: boolean;
 };
 
 const TooltipRoot = createComponentSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
@@ -41,10 +55,16 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L48
             !ownerState.disableInteractive && "popperInteractive",
             ownerState.arrow && "popperArrow",
+            ownerState.hasDescription && "hasDescription",
         ];
     },
 })(
     ({ theme, ownerState }) => css`
+        ${ownerState.hasDescription &&
+        css`
+            min-width: 200px;
+        `}
+
         ${ownerState.variant === "light" &&
         css`
             .${tooltipClasses.arrow} {
@@ -183,8 +203,27 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
     `,
 );
 
+const Title = createComponentSlot(Typography)<TooltipClassKey>({
+    componentName: "Tooltip",
+    slotName: "title",
+})();
+
+const Text = createComponentSlot(Typography)<TooltipClassKey>({
+    componentName: "Tooltip",
+    slotName: "text",
+})();
+
 export const Tooltip = (inProps: TooltipProps) => {
-    const { variant = "dark", disableInteractive, arrow, children, ...props } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const {
+        variant = "dark",
+        disableInteractive,
+        arrow,
+        children,
+        title,
+        description,
+        slotProps = {},
+        ...props
+    } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
 
     const ownerState: OwnerState = {
@@ -192,10 +231,29 @@ export const Tooltip = (inProps: TooltipProps) => {
         disableInteractive,
         arrow,
         isRtl: theme.direction === "rtl",
+        hasDescription: !!description,
     };
+
+    const { title: titleSlotProps, text: textSlotProps, ...muiSlotProps } = slotProps;
+
+    const tooltipContent = description ? (
+        <>
+            <Title variant="subtitle2" {...titleSlotProps}>
+                {title}
+            </Title>
+            <Text variant="body2" {...textSlotProps}>
+                {description}
+            </Text>
+        </>
+    ) : (
+        <Text variant="body2" {...textSlotProps}>
+            {title}
+        </Text>
+    );
 
     const commonTooltipProps = {
         ...props,
+        title: tooltipContent,
         disableInteractive,
         arrow,
         ownerState,
@@ -204,10 +262,10 @@ export const Tooltip = (inProps: TooltipProps) => {
             ...props.slots,
         },
         slotProps: {
-            ...props.slotProps,
+            ...muiSlotProps,
             popper: {
                 ownerState,
-                ...props.slotProps?.popper,
+                ...muiSlotProps?.popper,
             },
         },
     };
