@@ -64,93 +64,91 @@ export const MobileMenu = ({ menu }: Props) => {
             <MenuContainer $isMenuOpen={isMenuOpen} aria-hidden={!isMenuOpen}>
                 <PageLayout grid>
                     <PageLayoutContent>
-                        <nav>
-                            <FocusLock>
-                                <TopLevelNavigation>
-                                    <li>
-                                        <BackButton
-                                            aria-label={intl.formatMessage({
-                                                id: "header.closeButton.arialLabel",
-                                                defaultMessage: "Close Menu",
-                                            })}
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
-                                            <SvgUse href="/assets/icons/arrow-left.svg#root" width={16} height={16} color="inherit" />
-                                            <FormattedMessage id="header.closeMenu" defaultMessage="Close Menu" />
-                                        </BackButton>
-                                    </li>
-                                    {menu.items.map((node) => {
-                                        return (
-                                            <li key={node.id}>
-                                                {node.node.childNodes.length > 0 ? (
-                                                    <ButtonLink
-                                                        aria-label={intl.formatMessage(
-                                                            {
-                                                                id: "header.subMenu.arialLabel",
-                                                                defaultMessage: "Submenu of {name}",
-                                                            },
-                                                            { name: node.node.name },
-                                                        )}
-                                                        aria-expanded={expandedSubLevelNavigation === node.id}
-                                                        onClick={() => handleSubLevelNavigationButtonClick(node.id)}
-                                                    >
-                                                        {node.node.name}
-                                                        <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} color="inherit" />
-                                                    </ButtonLink>
-                                                ) : (
-                                                    <Link page={node.node}>{node.node.name}</Link>
-                                                )}
-                                                {node.node.childNodes.length > 0 && (
-                                                    <FocusLock disabled={expandedSubLevelNavigation !== node.id}>
-                                                        <SubLevelNavigation $isExpanded={expandedSubLevelNavigation === node.id}>
-                                                            <PageLayout grid>
-                                                                <PageLayoutContent>
-                                                                    <li>
-                                                                        <BackButton
-                                                                            aria-label={intl.formatMessage({
-                                                                                id: "header.backButton.arialLabel",
-                                                                                defaultMessage: "Go back",
-                                                                            })}
-                                                                            onClick={() => setExpandedSubLevelNavigation(null)}
-                                                                        >
-                                                                            <SvgUse
-                                                                                href="/assets/icons/arrow-left.svg#root"
-                                                                                width={16}
-                                                                                height={16}
-                                                                                color="inherit"
-                                                                            />
-                                                                            <FormattedMessage id="header.back" defaultMessage="Back" />
-                                                                        </BackButton>
+                        <FocusLock>
+                            <TopLevelNavigation>
+                                <li>
+                                    <BackButton
+                                        aria-label={intl.formatMessage({
+                                            id: "header.closeButton.arialLabel",
+                                            defaultMessage: "Close Menu",
+                                        })}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <SvgUse href="/assets/icons/arrow-left.svg#root" width={16} height={16} color="inherit" />
+                                        <FormattedMessage id="header.closeMenu" defaultMessage="Close Menu" />
+                                    </BackButton>
+                                </li>
+                                {menu.items.map((node) => {
+                                    return (
+                                        <li key={node.id}>
+                                            {node.node.childNodes.length > 0 ? (
+                                                <ButtonLink
+                                                    aria-label={intl.formatMessage(
+                                                        {
+                                                            id: "header.subMenu.arialLabel",
+                                                            defaultMessage: "Submenu of {name}",
+                                                        },
+                                                        { name: node.node.name },
+                                                    )}
+                                                    aria-expanded={expandedSubLevelNavigation === node.id}
+                                                    onClick={() => handleSubLevelNavigationButtonClick(node.id)}
+                                                >
+                                                    {node.node.name}
+                                                    <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} color="inherit" />
+                                                </ButtonLink>
+                                            ) : (
+                                                <Link page={node.node}>{node.node.name}</Link>
+                                            )}
+                                            {node.node.childNodes.length > 0 && (
+                                                <FocusLock disabled={expandedSubLevelNavigation !== node.id}>
+                                                    <SubLevelNavigation $isExpanded={expandedSubLevelNavigation === node.id}>
+                                                        <PageLayout grid>
+                                                            <PageLayoutContent>
+                                                                <li>
+                                                                    <BackButton
+                                                                        aria-label={intl.formatMessage({
+                                                                            id: "header.backButton.arialLabel",
+                                                                            defaultMessage: "Go back",
+                                                                        })}
+                                                                        onClick={() => setExpandedSubLevelNavigation(null)}
+                                                                    >
+                                                                        <SvgUse
+                                                                            href="/assets/icons/arrow-left.svg#root"
+                                                                            width={16}
+                                                                            height={16}
+                                                                            color="inherit"
+                                                                        />
+                                                                        <FormattedMessage id="header.back" defaultMessage="Back" />
+                                                                    </BackButton>
+                                                                </li>
+                                                                <li>
+                                                                    <OverviewButton page={node.node}>
+                                                                        <SvgUse
+                                                                            href="/assets/icons/overview.svg#root"
+                                                                            width={16}
+                                                                            height={16}
+                                                                            color="inherit"
+                                                                        />
+                                                                        <FormattedMessage id="header.overview" defaultMessage="Overview" />
+                                                                        <span aria-hidden="true"> | </span>
+                                                                        {node.node.name}
+                                                                    </OverviewButton>
+                                                                </li>
+                                                                {node.node.childNodes.map((node) => (
+                                                                    <li key={node.id}>
+                                                                        <Link page={node}>{node.name}</Link>
                                                                     </li>
-                                                                    <li>
-                                                                        <OverviewButton page={node.node}>
-                                                                            <SvgUse
-                                                                                href="/assets/icons/overview.svg#root"
-                                                                                width={16}
-                                                                                height={16}
-                                                                                color="inherit"
-                                                                            />
-                                                                            <FormattedMessage id="header.overview" defaultMessage="Overview" />
-                                                                            <span aria-hidden="true"> | </span>
-                                                                            {node.node.name}
-                                                                        </OverviewButton>
-                                                                    </li>
-                                                                    {node.node.childNodes.map((node) => (
-                                                                        <li key={node.id}>
-                                                                            <Link page={node}>{node.name}</Link>
-                                                                        </li>
-                                                                    ))}
-                                                                </PageLayoutContent>
-                                                            </PageLayout>
-                                                        </SubLevelNavigation>
-                                                    </FocusLock>
-                                                )}
-                                            </li>
-                                        );
-                                    })}
-                                </TopLevelNavigation>
-                            </FocusLock>
-                        </nav>
+                                                                ))}
+                                                            </PageLayoutContent>
+                                                        </PageLayout>
+                                                    </SubLevelNavigation>
+                                                </FocusLock>
+                                            )}
+                                        </li>
+                                    );
+                                })}
+                            </TopLevelNavigation>
+                        </FocusLock>
                     </PageLayoutContent>
                 </PageLayout>
             </MenuContainer>
@@ -249,11 +247,6 @@ const Link = styled(PageLink)`
 `;
 
 const ButtonLinkBase = styled.button`
-    appearance: none;
-    border: none;
-    background-color: transparent;
-    color: inherit;
-    cursor: pointer;
     display: flex;
     flex-direction: row;
     width: 100%;
