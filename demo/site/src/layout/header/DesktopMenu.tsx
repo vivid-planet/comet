@@ -107,7 +107,7 @@ export const DesktopMenu = ({ menu }: Props) => {
     );
 };
 
-const DesktopHeaderFullHeightNav = styled.nav`
+const DesktopHeaderFullHeightNav = styled.div`
     height: 100%;
     display: none;
 

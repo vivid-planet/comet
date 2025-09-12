@@ -19,11 +19,13 @@ function Header({ header }: Props): JSX.Element {
             <PageLayout grid>
                 <PageLayoutContent>
                     <Root>
-                        <Link href="/">
-                            <SvgUse href="/assets/comet-logo.svg#root" />
-                        </Link>
-                        <DesktopMenu menu={header} />
-                        <MobileMenu menu={header} />
+                        <nav>
+                            <Link href="/">
+                                <SvgUse href="/assets/comet-logo.svg#root" />
+                            </Link>
+                            <DesktopMenu menu={header} />
+                            <MobileMenu menu={header} />
+                        </nav>
                     </Root>
                 </PageLayoutContent>
             </PageLayout>
