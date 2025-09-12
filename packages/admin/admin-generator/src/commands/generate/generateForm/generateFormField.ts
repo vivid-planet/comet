@@ -29,7 +29,7 @@ export function generateFormField({
     gqlType: string;
     namePrefix?: string;
 }): GenerateFieldsReturn {
-    if (config.type == "asyncSelect") {
+    if (config.type == "asyncSelect" || config.type == "asyncSelectFilter") {
         return generateAsyncSelect({ gqlIntrospection, baseOutputFilename, config, formConfig, gqlType, namePrefix });
     }
     const imports: Imports = [];
@@ -82,7 +82,7 @@ export function generateFormField({
 
     let code = "";
     let formValueToGqlInputCode = "";
-    let formFragmentField = name;
+    let formFragmentFields = [name];
     if (config.type == "text") {
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
@@ -174,7 +174,7 @@ export function generateFormField({
                 ${validateCode}
             />`;
 
-        formFragmentField = `${name} { min max }`;
+        formFragmentFields = [`${name}.min`, `${name}.max`];
     } else if (config.type == "boolean") {
         code = `<CheckboxField
                         label={${fieldLabel}}
@@ -285,7 +285,7 @@ export function generateFormField({
         } else {
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
-        formFragmentField = `${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`;
+        formFragmentFields = [`${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`];
     } else if (config.type == "staticSelect") {
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
@@ -361,7 +361,7 @@ export function generateFormField({
         code,
         hooksCode,
         formValueToGqlInputCode,
-        formFragmentFields: [formFragmentField],
+        formFragmentFields,
         gqlDocuments,
         imports,
         formProps,

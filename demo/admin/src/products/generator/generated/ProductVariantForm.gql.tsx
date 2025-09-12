@@ -3,11 +3,8 @@
 import { gql } from "@apollo/client";
 export const productVariantFormFragment = gql`
         fragment ProductVariantForm on ProductVariant {
-            name
-image
+            name image
         }
-        
-        
     `;
 export const productVariantQuery = gql`
             query ProductVariant($id: ID!) {
