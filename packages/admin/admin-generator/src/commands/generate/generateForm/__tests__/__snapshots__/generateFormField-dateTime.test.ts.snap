@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateFormField - datePicker should generate simple dateTime field  with DateTime scalar 1`] = `
+"<DateTimeField
+                
+                
+                variant="horizontal"
+                fullWidth
+                name="lastCheckedAt"
+                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last Checked At" />}
+                
+                
+                
+                
+            />"
+`;
