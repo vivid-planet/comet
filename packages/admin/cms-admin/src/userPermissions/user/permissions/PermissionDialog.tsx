@@ -1,12 +1,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton, SectionHeadline } from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton, Tooltip } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { Info } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     Typography,
 } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -129,10 +131,15 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             <FormattedMessage id="comet.userPermissions.addScopesToPermission" defaultMessage="Add scopes to permission" />
                         </DialogTitle>
                         <DialogContent>
-                            <FormSection>
-                                <SectionHeadline divider slotProps={{ divider: { sx: { marginBottom: 4 } } }}>
-                                    <FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />
-                                </SectionHeadline>
+                            <FormSection
+                                title={
+                                    <Typography variant="h4">
+                                        <FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />
+                                    </Typography>
+                                }
+                                disableTypography
+                            >
+                                <Divider sx={{ marginBottom: 4 }} />
                                 <Field
                                     required
                                     fullWidth
@@ -145,29 +152,35 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     variant="horizontal"
                                 />
                             </FormSection>
-                            <FormSection>
-                                <SectionHeadline
-                                    divider
-                                    infoTooltipText={
-                                        <>
-                                            <Typography variant="subtitle2">
-                                                <FormattedMessage
-                                                    id="comet.userPermission.validityDuration.tooltip.title"
-                                                    defaultMessage="Validity duration"
-                                                />
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                <FormattedMessage
-                                                    id="comet.userPermission.validityDuration.tooltip.content"
-                                                    defaultMessage="Leave empty for unlimited validity"
-                                                />
-                                            </Typography>
-                                        </>
-                                    }
-                                    slotProps={{ divider: { sx: { marginBottom: 4 } } }}
-                                >
-                                    <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
-                                </SectionHeadline>
+                            <FormSection
+                                title={
+                                    <Typography variant="h4">
+                                        <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
+                                        <Tooltip
+                                            children={<Info />}
+                                            title={
+                                                <>
+                                                    <Typography variant="subtitle1">
+                                                        <FormattedMessage
+                                                            id="comet.userPermission.validityDuration.tooltip.title"
+                                                            defaultMessage="Validity duration"
+                                                        />
+                                                    </Typography>
+                                                    <Typography>
+                                                        <FormattedMessage
+                                                            id="comet.userPermission.validityDuration.tooltip.content"
+                                                            defaultMessage="Leave empty for unlimited validity"
+                                                        />
+                                                    </Typography>
+                                                </>
+                                            }
+                                            sx={{ marginLeft: "5px" }}
+                                        />
+                                    </Typography>
+                                }
+                                disableTypography
+                            >
+                                <Divider sx={{ marginBottom: 4 }} />
                                 <Field
                                     name="validFrom"
                                     label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
@@ -189,10 +202,15 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     variant="horizontal"
                                 />
                             </FormSection>
-                            <FormSection>
-                                <SectionHeadline divider slotProps={{ divider: { sx: { marginBottom: 4 } } }}>
-                                    <FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />
-                                </SectionHeadline>
+                            <FormSection
+                                title={
+                                    <Typography variant="h4">
+                                        <FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />
+                                    </Typography>
+                                }
+                                disableTypography
+                            >
+                                <Divider sx={{ marginBottom: 4 }} />
                                 <Field
                                     fullWidth
                                     name="reason"
