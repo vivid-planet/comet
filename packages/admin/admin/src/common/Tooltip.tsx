@@ -58,91 +58,49 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             ownerState.hasDescription && "hasDescription",
         ];
     },
-})(
-    ({ theme, ownerState }) => css`
+})(({ theme, ownerState }) => {
+    const variantToTextColor: Record<Variant, string> = {
+        light: theme.palette.grey[900],
+        dark: theme.palette.common.white,
+        neutral: theme.palette.grey[900],
+        primary: theme.palette.grey[900],
+        error: theme.palette.common.white,
+        success: theme.palette.common.black,
+        warning: theme.palette.common.black,
+    };
+
+    const variantToBackgroundColor: Record<Variant, string> = {
+        light: theme.palette.common.white,
+        dark: ownerState.hasDescription ? theme.palette.grey[900] : theme.palette.grey[500],
+        neutral: theme.palette.grey[100],
+        primary: theme.palette.primary.light,
+        error: theme.palette.error.light,
+        success: theme.palette.success.light,
+        warning: theme.palette.warning.light,
+    };
+
+    return css`
         ${ownerState.hasDescription &&
         css`
             min-width: 200px;
         `}
 
-        ${ownerState.variant === "light" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.common.white};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.common.white};
-                color: ${theme.palette.common.black};
-                box-shadow: ${theme.shadows[1]};
-            }
-        `}
+        .${tooltipClasses.tooltip} {
+            box-shadow: ${theme.shadows[3]};
+            border-radius: 4px;
+            padding: 3px 6px;
+            color: ${variantToTextColor[ownerState.variant]};
+            background-color: ${variantToBackgroundColor[ownerState.variant]};
 
-        ${ownerState.variant === "dark" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.grey[900]};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.grey[900]};
-                color: ${theme.palette.common.white};
-                box-shadow: ${theme.shadows[1]};
-            }
-        `}
+            ${ownerState.hasDescription &&
+            css`
+                padding: 10px;
+            `}
+        }
 
-        ${ownerState.variant === "neutral" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.grey[100]};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.grey[100]};
-                color: ${theme.palette.common.black};
-            }
-        `}
-
-        ${ownerState.variant === "primary" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.primary.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.primary.light};
-                color: ${theme.palette.common.black};
-            }
-        `};
-
-        ${ownerState.variant === "error" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.error.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.error.light};
-                color: ${theme.palette.common.white};
-            }
-        `};
-
-        ${ownerState.variant === "success" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.success.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.success.light};
-                color: ${theme.palette.common.black};
-            }
-        `};
-
-        ${ownerState.variant === "warning" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.warning.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.warning.light};
-                color: ${theme.palette.common.black};
-            }
-        `};
+        .${tooltipClasses.arrow} {
+            color: ${variantToBackgroundColor[ownerState.variant]};
+        }
 
         // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L55
         z-index: ${theme.zIndex.tooltip};
@@ -200,13 +158,15 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
                 }
             }
         `};
-    `,
-);
+    `;
+});
 
 const Title = createComponentSlot(Typography)<TooltipClassKey>({
     componentName: "Tooltip",
     slotName: "title",
-})();
+})(css`
+    margin-bottom: 2px;
+`);
 
 const Text = createComponentSlot(Typography)<TooltipClassKey>({
     componentName: "Tooltip",
