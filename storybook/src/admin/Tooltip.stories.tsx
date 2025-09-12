@@ -1,6 +1,6 @@
 import { Tooltip } from "@comet/admin";
 import { Add, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
 import { type Decorator } from "@storybook/react-webpack5";
 import { useEffect, useState } from "react";
 
@@ -58,65 +58,17 @@ export const StackedTooltipsFromDesign = {
         }, []);
 
         return (
-            <Stack pb={8} spacing={16} direction="row">
-                <Tooltip
-                    title={
-                        <>
-                            <Typography variant="subtitle2" sx={{ minWidth: 180 }}>
-                                Title
-                            </Typography>
-                            <Typography variant="body2">Notification Text</Typography>
-                        </>
-                    }
-                    variant="light"
-                    placement="bottom-start"
-                    open={showTooltips}
-                >
+            <Stack pb={12} spacing={16} direction="row">
+                <Tooltip title="Title" description="Notification Text" variant="light" placement="bottom-start" open={showTooltips}>
                     <Chip label="Light" sx={{ width: 140 }} />
                 </Tooltip>
-                <Tooltip
-                    title={
-                        <>
-                            <Typography variant="subtitle2" sx={{ minWidth: 180 }}>
-                                Title
-                            </Typography>
-                            <Typography variant="body2">Notification Text</Typography>
-                        </>
-                    }
-                    variant="dark"
-                    placement="bottom-start"
-                    open={showTooltips}
-                >
+                <Tooltip title="Title" description="Notification Text" variant="dark" placement="bottom-start" open={showTooltips}>
                     <Chip label="Dark" sx={{ width: 140 }} />
                 </Tooltip>
-                <Tooltip
-                    title={
-                        <>
-                            <Typography variant="subtitle2" sx={{ minWidth: 180 }}>
-                                Title
-                            </Typography>
-                            <Typography variant="body2">Notification Text</Typography>
-                        </>
-                    }
-                    variant="neutral"
-                    placement="bottom-start"
-                    open={showTooltips}
-                >
+                <Tooltip title="Title" description="Notification Text" variant="neutral" placement="bottom-start" open={showTooltips}>
                     <Chip label="Neutral (deprecated)" sx={{ width: 140 }} />
                 </Tooltip>
-                <Tooltip
-                    title={
-                        <>
-                            <Typography variant="subtitle2" sx={{ minWidth: 180 }}>
-                                Title
-                            </Typography>
-                            <Typography variant="body2">Notification Text</Typography>
-                        </>
-                    }
-                    variant="primary"
-                    placement="bottom-start"
-                    open={showTooltips}
-                >
+                <Tooltip title="Title" description="Notification Text" variant="primary" placement="bottom-start" open={showTooltips}>
                     <Chip label="Primary (deprecated)" sx={{ width: 140 }} />
                 </Tooltip>
             </Stack>
@@ -136,7 +88,7 @@ export const FeedbackTooltipsFromDesign = {
         }, []);
 
         return (
-            <Stack pb={8} spacing={10} direction="row">
+            <Stack pb={8} spacing={12} direction="row">
                 <Tooltip title="Notification text" variant="dark" placement="bottom-start" open={showTooltips}>
                     <Chip label="Dark" sx={{ width: 70 }} />
                 </Tooltip>
