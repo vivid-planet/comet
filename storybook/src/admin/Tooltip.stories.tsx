@@ -1,5 +1,5 @@
 import { Tooltip } from "@comet/admin";
-import { Add, Info } from "@comet/admin-icons";
+import { Add, Info, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
 import { Stack } from "@mui/material";
 
 export default {
@@ -16,6 +16,24 @@ export const IconWithTooltip = {
     },
 
     name: "Icon with Tooltip",
+};
+
+export const StatusIndicators = {
+    render: () => {
+        return (
+            <Stack py={5} spacing={5}>
+                <Tooltip title="Success variant" placement="top-start" variant="success">
+                    <StatusSuccessSolid color="success" />
+                </Tooltip>
+                <Tooltip title="Warning variant" placement="top-start" variant="warning">
+                    <StatusWarningSolid color="warning" />
+                </Tooltip>
+                <Tooltip title="Error variant" placement="top-start" variant="error">
+                    <StatusErrorSolid color="error" />
+                </Tooltip>
+            </Stack>
+        );
+    },
 };
 
 export const AllVariants = {
