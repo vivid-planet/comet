@@ -58,7 +58,7 @@ export const StackedTooltipsFromDesign = {
         }, []);
 
         return (
-            <Stack pb={8} spacing={16} direction="row">
+            <Stack pb={12} spacing={16} direction="row">
                 <Tooltip title="Title" description="Notification Text" variant="light" placement="bottom-start" open={showTooltips}>
                     <Chip label="Light" sx={{ width: 140 }} />
                 </Tooltip>
@@ -88,7 +88,7 @@ export const FeedbackTooltipsFromDesign = {
         }, []);
 
         return (
-            <Stack pb={8} spacing={10} direction="row">
+            <Stack pb={8} spacing={12} direction="row">
                 <Tooltip title="Notification text" variant="dark" placement="bottom-start" open={showTooltips}>
                     <Chip label="Dark" sx={{ width: 70 }} />
                 </Tooltip>
