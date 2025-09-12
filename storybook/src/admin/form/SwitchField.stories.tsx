@@ -1,4 +1,5 @@
-import { Alert, FinalForm, SwitchField } from "@comet/admin";
+import { Alert, FieldSet, FinalForm, SwitchField } from "@comet/admin";
+import { Stack } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 type Story = StoryObj<typeof SwitchField>;
@@ -32,6 +33,56 @@ export const Default: Story = {
                         </>
                     );
                 }}
+            </FinalForm>
+        );
+    },
+};
+
+export const LayoutVariants: Story = {
+    render: () => {
+        return (
+            <FinalForm
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+            >
+                {() => (
+                    <Stack spacing={5} p={5}>
+                        <FieldSet title="Single line SwitchField">
+                            <SwitchField
+                                name="singleLineHorizontal"
+                                fieldLabel="Single Line Horizontal"
+                                label="Hello Switch"
+                                variant="horizontal"
+                                fullWidth
+                            />
+                            <SwitchField
+                                name="singleLineVertical"
+                                fieldLabel="Single Line Vertical"
+                                label="Hello Switch"
+                                variant="vertical"
+                                fullWidth
+                            />
+                        </FieldSet>
+                        <FieldSet title="Multi line SwitchField">
+                            <SwitchField
+                                name="multiLineHorizontal"
+                                fieldLabel="Multi Line Horizontal"
+                                label="Nulla vitae elit libero, a pharetra augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Nullam quis risus eget urna mollis ornare vel eu leo."
+                                variant="horizontal"
+                                fullWidth
+                            />
+                            <SwitchField
+                                name="multiLineVertical"
+                                fieldLabel="Multi Line Vertical"
+                                label="Nulla vitae elit libero, a pharetra augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Nullam quis risus eget urna mollis ornare vel eu leo."
+                                variant="vertical"
+                                fullWidth
+                            />
+                        </FieldSet>
+                    </Stack>
+                )}
             </FinalForm>
         );
     },
