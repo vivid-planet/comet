@@ -74,8 +74,11 @@ export function buildFormFieldOptions({
     if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
 
     const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-    if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-    const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+    const introspectionFieldType = introspectionField
+        ? introspectionField.type.kind === "NON_NULL"
+            ? introspectionField.type.ofType
+            : introspectionField.type
+        : undefined;
 
     const imports: Imports = [];
     let startAdornment: AdornmentData = { adornmentString: "" };

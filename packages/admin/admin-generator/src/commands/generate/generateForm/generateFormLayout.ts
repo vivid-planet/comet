@@ -118,7 +118,7 @@ export function generateFormLayout({
             namePrefix: name,
         });
         hooksCode += generatedFields.hooksCode;
-        formFragmentFields.push(`${name} { ${generatedFields.formFragmentFields.join(" ")} }`);
+        formFragmentFields.push(...generatedFields.formFragmentFields.map((field) => `${name}.${field}`));
         for (const name in generatedFields.gqlDocuments) {
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
