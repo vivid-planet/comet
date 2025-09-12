@@ -161,11 +161,6 @@ const LinkContainer = styled.div`
 `;
 
 const ToggleSubLevelNavigationButton = styled.button`
-    appearance: none;
-    border: none;
-    background-color: transparent;
-    color: inherit;
-    padding: 0;
     width: 20px;
     height: 20px;
 `;
