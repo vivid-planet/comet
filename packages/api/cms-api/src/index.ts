@@ -270,6 +270,7 @@ export {
     AccessControlServiceInterface,
     ContentScopesForUser,
     Permission,
+    PermissionForUser,
     PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
