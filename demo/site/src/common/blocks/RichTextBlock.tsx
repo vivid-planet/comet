@@ -11,7 +11,7 @@ import { LinkBlock } from "./LinkBlock";
 import styles from "./RichTextBlock.module.scss";
 
 export const createTextBlockRenderFn =
-    (props: TypographyProps): TextBlockRenderFn =>
+    (props: TypographyProps<keyof HTMLElementTagNameMap>): TextBlockRenderFn =>
     (children, { keys }) =>
         children.map((child, index) => (
             <Typography key={keys[index]} {...props} className={clsx(styles.text, props.className)}>
