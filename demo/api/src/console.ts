@@ -25,12 +25,14 @@ async function bootstrap() {
         useContainer(app.select(appModule), { fallbackOnErrors: true });
 
         await CommandFactory.runApplication(app);
+
+        await app.close();
         process.exit(0);
     } catch (e) {
         console.error(e);
-        process.exit(1);
-    } finally {
+
         await app.close();
+        process.exit(1);
     }
 }
 
