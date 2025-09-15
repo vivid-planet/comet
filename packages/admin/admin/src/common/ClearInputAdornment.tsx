@@ -52,7 +52,7 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
     return (
         <Grow in={hasClearableContent}>
             <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
-                <Button tabIndex={-1} onClick={onClick} {...slotProps?.buttonBase}>
+                <Button onClick={onClick} focusRipple {...slotProps?.buttonBase}>
                     {icon}
                 </Button>
             </Root>

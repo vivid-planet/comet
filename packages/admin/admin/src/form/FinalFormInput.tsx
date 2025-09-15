@@ -9,13 +9,22 @@ import { Tooltip } from "../common/Tooltip";
 import { PlainTextTranslationDialog } from "../translator/PlainTextTranslationDialog";
 import { useContentTranslationService } from "../translator/useContentTranslationService";
 
-export type FinalFormInputProps = InputBaseProps &
-    FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
-        clearable?: boolean;
-        disableContentTranslation?: boolean;
-    };
+export type FinalFormInputProps = InputBaseProps & {
+    clearable?: boolean;
+    disableContentTranslation?: boolean;
+};
 
-export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable, disableContentTranslation, ...props }: FinalFormInputProps) {
+type FinalFormInputInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
+
+export function FinalFormInput({
+    meta,
+    input,
+    innerRef,
+    endAdornment,
+    clearable,
+    disableContentTranslation,
+    ...props
+}: FinalFormInputProps & FinalFormInputInternalProps) {
     const type = props.type ?? input.type ?? "text";
     const { enabled: translationEnabled, showApplyTranslationDialog, translate } = useContentTranslationService();
     const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;

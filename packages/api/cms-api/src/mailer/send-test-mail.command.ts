@@ -22,9 +22,11 @@ export class SendTestMailCommand extends CommandRunner {
     }
 
     @Option({
-        flags: "-r, --receiver",
+        flags: "-r, --receiver [receiver]",
     })
-    parseReceiver() {}
+    parseReceiver(value: string) {
+        return value;
+    }
 
     @CreateRequestContext()
     async run(_arguments: string[], { receiver }: { receiver?: string }): Promise<void> {
@@ -37,7 +39,7 @@ export class SendTestMailCommand extends CommandRunner {
         }
 
         const result = await this.mailerService.sendMail({
-            type: "mail-server-communication-test",
+            mailTypeForLogging: "mail-server-communication-test",
             to: receiver || defaultReceiver,
             subject: "Mail-Server communication works",
             text: "Lorem ipsum dolor sit amet",

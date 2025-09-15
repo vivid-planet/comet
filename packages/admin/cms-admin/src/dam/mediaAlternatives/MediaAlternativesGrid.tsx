@@ -2,6 +2,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     DataGridToolbar,
+    DeleteDialog,
     FillSpace,
     GridCellContent,
     type GridColDef,
@@ -15,7 +16,6 @@ import {
     useEditDialog,
     usePersistentColumnState,
 } from "@comet/admin";
-import { DeleteDialog } from "@comet/admin/lib/common/DeleteDialog";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DialogContent, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";

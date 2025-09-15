@@ -55,7 +55,7 @@ export const MultipleDimensions = function () {
     );
 };
 
-MultipleDimensions.storyName = "Multiple dimensions";
+MultipleDimensions.name = "Multiple dimensions";
 
 export const Searchable = function () {
     const [value, setValue] = useState({ domain: "main", language: "en" });
@@ -115,7 +115,7 @@ export const CustomIcon = function () {
     );
 };
 
-CustomIcon.storyName = "Custom icon";
+CustomIcon.name = "Custom icon";
 
 export const CustomRenderOption = function () {
     const [value, setValue] = useState({ domain: "main", language: "en" });
@@ -149,7 +149,7 @@ export const CustomRenderOption = function () {
     );
 };
 
-CustomRenderOption.storyName = "Custom renderOption";
+CustomRenderOption.name = "Custom renderOption";
 
 export const CustomRenderOptionWithSearchHighlighting = {
     render: () => {
@@ -213,7 +213,7 @@ export const CustomRenderSelectedOption = function () {
     );
 };
 
-CustomRenderSelectedOption.storyName = "Custom renderSelectedOption";
+CustomRenderSelectedOption.name = "Custom renderSelectedOption";
 
 export const ThreeDimensions = function () {
     const [value, setValue] = useState({ company: "a-inc", country: "at", language: "de" });
@@ -259,7 +259,7 @@ export const ThreeDimensions = function () {
     );
 };
 
-ThreeDimensions.storyName = "Three dimensions";
+ThreeDimensions.name = "Three dimensions";
 
 export const GroupingWithOptionalScopeParts = function () {
     const [value, setValue] = useState({ country: "at" });
@@ -324,4 +324,4 @@ export const GroupingWithOptionalScopeParts = function () {
     );
 };
 
-GroupingWithOptionalScopeParts.storyName = "Grouping with optional scope parts";
+GroupingWithOptionalScopeParts.name = "Grouping with optional scope parts";

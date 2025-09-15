@@ -2,12 +2,13 @@ import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
-import { AccordionContentBlock, AccordionItemBlock } from "@src/common/blocks/accordion-item.block";
+import { AccordionContentBlock, AccordionItemBlock, AccordionItemTitleHtmlTag } from "@src/common/blocks/accordion-item.block";
 
 import { BlockFixture } from "../block-fixture";
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
 import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standalone-heading-block-fixture.service";
+import { TextImageBlockFixtureService } from "../text-and-content/text-image-block-fixture.service";
 import { SpaceBlockFixtureService } from "./space-block-fixture.service";
 
 @Injectable()
@@ -17,6 +18,7 @@ export class AccordionBlockFixtureService {
         private readonly headingBlockFixtureService: StandaloneHeadingBlockFixtureService,
         private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
         private readonly callToActionListBlockFixtureService: StandaloneCallToActionListBlockFixtureService,
+        private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
     ) {}
 
     async generateAccordionContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof AccordionContentBlock>> {
@@ -26,6 +28,7 @@ export class AccordionBlockFixtureService {
             heading: this.headingBlockFixtureService,
             space: this.spaceBlockFixtureService,
             callToActionList: this.callToActionListBlockFixtureService,
+            textImage: this.textImageBlockFixtureService,
         };
 
         for (const block of Object.entries(blockCfg)) {
@@ -51,6 +54,7 @@ export class AccordionBlockFixtureService {
             title: faker.lorem.words({ min: 3, max: 9 }),
             content: await this.generateAccordionContentBlock(),
             openByDefault: faker.datatype.boolean(),
+            titleHtmlTag: faker.helpers.arrayElement(Object.values(AccordionItemTitleHtmlTag)),
         };
     }
 

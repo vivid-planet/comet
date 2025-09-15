@@ -56,10 +56,10 @@ app.use(
             if (path.endsWith(".js")) {
                 // The js file is static and the index.html uses a parameter as cache buster
                 // implemented as suggested by https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#caching_static_assets
-                res.setHeader("cache-control", "public, max-age=31536000, immutable");
+                res.setHeader("cache-control", "private, max-age=31536000, immutable");
             } else {
                 // Icons and Fonts could be changed over time, cache for 7d
-                res.setHeader("cache-control", "public, max-age=604800, immutable");
+                res.setHeader("cache-control", "private, max-age=604800, immutable");
             }
         },
     }),

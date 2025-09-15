@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.0.0-beta.6",
+    "version": "8.2.0",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -36,7 +36,7 @@
         "@azure-rest/ai-translation-text": "^1.0.1",
         "@azure/storage-blob": "^12.27.0",
         "@fast-csv/parse": "^4.3.6",
-        "@golevelup/nestjs-discovery": "^4.0.3",
+        "@golevelup/nestjs-discovery": "^5.0.0",
         "@hapi/accept": "^6.0.3",
         "@nestjs/mapped-types": "^2.1.0",
         "@opentelemetry/api": "^1.9.0",
@@ -115,7 +115,7 @@
         "rxjs": "^7.8.2",
         "ts-jest": "^29.4.0",
         "ts-node": "^10.9.2",
-        "typescript": "^5.7.3"
+        "typescript": "5.8.3"
     },
     "peerDependencies": {
         "@kubernetes/client-node": "^1.0.0",

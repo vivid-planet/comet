@@ -50,7 +50,7 @@ module.exports = {
         {
             name: "admin-generator",
             script: "pnpm --filter @comet/admin-generator run dev",
-            group: ["cms-admin"],
+            group: ["cms-admin", "cms"],
             waitOn: waitOnPackages("@comet/cms-admin"),
         },
 
@@ -182,6 +182,11 @@ module.exports = {
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
+        {
+            name: "demo-site-css-types",
+            script: "pnpm --filter comet-demo-site run css:types:watch",
+            group: ["demo-site", "demo"],
+        },
 
         //group demo site pages
         {
@@ -202,13 +207,18 @@ module.exports = {
             group: ["demo-site-pages", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
-        {
-            name: "docs",
-            script: "pnpm --filter comet-docs start",
-        },
+
+        // group docs
         {
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
+            group: ["docs"],
+        },
+        {
+            name: "docs",
+            script: "pnpm --filter comet-docs start",
+            group: ["docs"],
+            waitOn: ["tcp:26638"], // storybook
         },
     ],
 };

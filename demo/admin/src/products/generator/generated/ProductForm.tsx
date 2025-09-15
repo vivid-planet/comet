@@ -20,7 +20,6 @@ import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
 import { Lock } from "@comet/admin-icons";
 import { DateTimeField } from "@comet/admin-date-time";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState } from "@comet/cms-admin";
 import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
@@ -33,6 +32,7 @@ import { useMemo } from "react";
 import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
+import { Future_DatePickerField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
 import { FinalFormSwitch } from "@comet/admin";
@@ -41,7 +41,6 @@ import { FormControlLabel } from "@mui/material";
 import { FieldSet } from "@comet/admin";
 import { FormSpy } from "react-final-form";
 import { Location as LocationIcon } from "@comet/admin-icons";
-import { OnChangeField } from "@comet/admin";
 import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
@@ -76,9 +75,10 @@ type FormValues = Omit<ProductFormDetailsFragment, keyof typeof rootBlocks | "di
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
+    manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ id }: FormProps) {
+export function ProductForm({ manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -154,7 +154,7 @@ export function ProductForm({ id }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>}/>
 
-            <Field readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" component={FinalFormDatePicker} label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
+            <Future_DatePickerField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
 
         <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
         <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={[
@@ -209,19 +209,13 @@ export function ProductForm({ id }: FormProps) {
                                     name
                                 }
                             }
-                        }`, variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } }
+                        }`, variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } }
                 });
                 return data.manufacturers.nodes;
-            }} getOptionLabel={(option) => option.name} disabled={!values?.type}/><OnChangeField name="type">
-                            {(value, previousValue) => {
-                if (value.id !== previousValue.id) {
-                    form.change("manufacturer", undefined);
-                }
-            }}
-                        </OnChangeField>
+            }} getOptionLabel={(option) => option.name}/>
         <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
 
-            <Field variant="horizontal" fullWidth name="availableSince" component={FinalFormDatePicker} label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
+            <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
         <FutureProductNotice />
         <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.image)}

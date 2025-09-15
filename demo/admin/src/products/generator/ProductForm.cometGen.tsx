@@ -68,9 +68,10 @@ export default defineConfig<GQLProduct>({
                     type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
-                    filterField: {
-                        name: "type",
-                        gqlName: "addressAsEmbeddable_country",
+                    filter: {
+                        type: "formProp",
+                        propName: "manufacturerCountry",
+                        rootQueryArg: "addressAsEmbeddable_country",
                     },
                     startAdornment: { icon: "Location" },
                 },

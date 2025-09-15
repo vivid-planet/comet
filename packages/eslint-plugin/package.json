@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-plugin",
-    "version": "8.0.0-beta.6",
+    "version": "8.2.0",
     "description": "A set of ESLint rules and configurations for Comet projects",
     "type": "commonjs",
     "main": "lib/index.js",
@@ -22,7 +22,7 @@
         "eslint-config-prettier": "^10.1.5",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-jsonc": "^2.20.1",
-        "eslint-plugin-package-json": "^0.44.0",
+        "eslint-plugin-package-json": "^0.56.0",
         "eslint-plugin-prettier": "^5.5.1",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
@@ -31,7 +31,7 @@
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "ts-jest": "^29.4.0",
-        "typescript": "^5.7.3",
+        "typescript": "5.8.3",
         "typescript-eslint": "^8.24.1"
     },
     "peerDependencies": {
