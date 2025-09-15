@@ -2,4 +2,4 @@
 "@comet/admin-generator": patch
 ---
 
-Fix selection of generated singleSelect grid
+Fix selection for `selectionProps` `"singleSelect"`: set `disableRowSelectionOnClick` to `false`
