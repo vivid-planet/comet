@@ -2,4 +2,4 @@
 "@comet/admin-generator": minor
 ---
 
-Add form field type asyncSelectFilter that can be used to filter a asyncSelect
+Add form field type asyncSelectFilter that can be used to filter an asyncSelect
