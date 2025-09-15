@@ -1,0 +1,35 @@
+@use "@src/styles/variables" as *;
+
+.disableLastBottomSpacing {
+    > *:last-child {
+        margin-bottom: 0;
+
+        @media (min-width: $breakpoint-sm) {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.text {
+    white-space: pre-line;
+
+    // Show empty lines as spacing between paragraphs
+    &:empty:not(:first-child:last-child)::before {
+        white-space: pre;
+        content: " ";
+    }
+}
+
+.inlineLink {
+    color: var(--palette-primary-main);
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+        color: var(--palette-primary-dark);
+        text-decoration-thickness: 2px;
+    }
+}
+
+.pageLayoutContent {
+    grid-column: 3 / -3;
+}
