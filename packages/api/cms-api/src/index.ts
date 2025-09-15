@@ -265,10 +265,12 @@ export { ContentScope } from "./user-permissions/interfaces/content-scope.interf
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
+export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
     Permission,
+    PermissionForUser,
     PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
