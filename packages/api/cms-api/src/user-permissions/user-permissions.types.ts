@@ -42,7 +42,7 @@ export interface UserPermissionsUserServiceInterface {
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
 }
 
-type ContentScopeWithLabel = {
+export type ContentScopeWithLabel = {
     scope: ContentScope;
     label?: { [key in keyof ContentScope]?: string };
 };
