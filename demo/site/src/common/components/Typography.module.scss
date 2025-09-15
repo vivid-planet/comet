@@ -1,6 +1,6 @@
 @use "@src/styles/variables" as *;
 
-.typography {
+.root {
     font-family: var(--font-family);
     margin-top: 0;
 }
@@ -175,9 +175,9 @@
 }
 
 .noBottomSpacing {
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 
     @media (min-width: $breakpoint-sm) {
-        margin-bottom: 0 !important;
+        margin-bottom: 0;
     }
 }
