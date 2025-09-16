@@ -1,14 +1,6 @@
-import { CancelButton, OkayButton, SelectField } from "@comet/admin";
+import { CancelButton, Dialog, OkayButton, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
-import {
-    // eslint-disable-next-line no-restricted-imports
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    ListItemIcon,
-    MenuItem,
-} from "@mui/material";
+import { DialogActions, DialogContent, ListItemIcon, MenuItem } from "@mui/material";
 import { type GQLUserGroup } from "@src/graphql.generated";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -62,10 +54,8 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                     setDialogOpen(false);
                     onMenuClose();
                 }}
+                title={<FormattedMessage id="pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />}
             >
-                <DialogTitle>
-                    <FormattedMessage id="pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
-                </DialogTitle>
                 <Form<FormValues> onSubmit={handleSubmit} initialValues={{ userGroup: item.userGroup }}>
                     {({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
