@@ -111,7 +111,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
             throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, dimensions: dimensionsEnabled && formValues.dimensions ? { width: parseFloat(formValues.dimensions.width), height: parseFloat(formValues.dimensions.height), depth: parseFloat(formValues.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, image: rootBlocks.image.state2Output(formValues.image), priceList: formValues.priceList ? formValues.priceList.id : null, datasheets: formValues.datasheets?.map(({ id }) => id), lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
+            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, dimensions: dimensionsEnabled && formValues.dimensions ? { width: parseFloat(formValues.dimensions.width), height: parseFloat(formValues.dimensions.height), depth: parseFloat(formValues.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), priceList: formValues.priceList ? formValues.priceList.id : null, datasheets: formValues.datasheets?.map(({ id }) => id), lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
         };
         if (mode === "edit") {
             if (!id)
