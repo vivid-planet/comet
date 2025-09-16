@@ -51,3 +51,6 @@ codegen
 usehooks
 graphiql
 retryable
+exif
+brevo
+timestamptz
