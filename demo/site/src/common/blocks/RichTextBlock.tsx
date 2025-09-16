@@ -53,7 +53,7 @@ const defaultRichTextRenderers: Renderers = {
         // List
         // or depth for nested lists
         "unordered-list-item": (children, { depth, keys }) => (
-            <ul key={keys[keys.length - 1]} className={`ul-level-${depth}`}>
+            <ul key={keys[keys.length - 1]}>
                 {children.map((child, index) => (
                     <Typography as="li" key={keys[index]} className={styles.text}>
                         {child}
@@ -62,14 +62,9 @@ const defaultRichTextRenderers: Renderers = {
             </ul>
         ),
         "ordered-list-item": (children, { depth, keys }) => (
-            <ol key={keys.join("|")} className={`ol-level-${depth}`}>
+            <ol key={keys.join("|")} className={styles[`ol-level-${depth % 3}`]}>
                 {children.map((child, index) => (
-                    <Typography
-                        as="li"
-                        key={keys[index]}
-                        className={styles.text}
-                        style={{ listStyleType: depth % 3 === 1 ? "lower-alpha" : depth % 3 === 2 ? "lower-roman" : "decimal" }}
-                    >
+                    <Typography as="li" key={keys[index]} className={styles.text}>
                         {child}
                     </Typography>
                 ))}
