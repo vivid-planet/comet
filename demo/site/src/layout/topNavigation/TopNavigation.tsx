@@ -1,79 +1,34 @@
 "use client";
 import { PageLink } from "@src/layout/header/PageLink";
-import styled from "styled-components";
 
 import { type GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
+import styles from "./TopNavigation.module.scss";
 
 interface Props {
     data: GQLTopMenuPageTreeNodeFragment[];
 }
 
-export function TopNavigation({ data }: Props): JSX.Element {
+export const TopNavigation = ({ data }: Props) => {
     return (
-        <TopLevelNavigation>
+        <ol className={styles.topLevelNavigation}>
             {data.map((item) => (
-                <TopLevelLinkContainer key={item.id}>
-                    <Link page={item} activeClassName="active">
+                <li className={styles.topLevelLinkContainer} key={item.id}>
+                    <PageLink page={item} activeClassName={styles.active} className={styles.link}>
                         {item.name}
-                    </Link>
+                    </PageLink>
                     {item.childNodes.length > 0 && (
-                        <SubLevelNavigation>
+                        <ol className={styles.subLevelNavigation}>
                             {item.childNodes.map((node) => (
                                 <li key={node.id}>
-                                    <Link page={node} activeClassName="active">
+                                    <PageLink page={node} activeClassName={styles.active} className={styles.link}>
                                         {node.name}
-                                    </Link>
+                                    </PageLink>
                                 </li>
                             ))}
-                        </SubLevelNavigation>
+                        </ol>
                     )}
-                </TopLevelLinkContainer>
+                </li>
             ))}
-        </TopLevelNavigation>
+        </ol>
     );
-}
-
-const TopLevelNavigation = styled.ol`
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-`;
-
-const SubLevelNavigation = styled.ol`
-    display: none;
-    position: absolute;
-    min-width: 100px;
-    list-style-type: none;
-    padding: 5px;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const TopLevelLinkContainer = styled.li`
-    position: relative;
-
-    &:hover {
-        text-decoration: underline;
-
-        & > ${SubLevelNavigation} {
-            display: block;
-        }
-    }
-`;
-
-const Link = styled(PageLink)`
-    text-decoration: none;
-    padding: 5px 10px;
-    color: ${({ theme }) => theme.palette.text.primary};
-    font-size: 12px;
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &.active {
-        color: ${({ theme }) => theme.palette.text.inverted};
-    }
-`;
+};

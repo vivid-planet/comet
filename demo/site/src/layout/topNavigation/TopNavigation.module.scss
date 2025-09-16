@@ -1,0 +1,46 @@
+@use "@src/styles/variables" as *;
+
+.topLevelNavigation {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--palette-primary-main);
+}
+
+.subLevelNavigation {
+    display: none;
+    position: absolute;
+    min-width: 100px;
+    list-style-type: none;
+    padding: 5px;
+    background-color: var(--palette-primary-main);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topLevelLinkContainer {
+    position: relative;
+
+    &:hover {
+        text-decoration: underline;
+
+        > .subLevelNavigation {
+            display: block;
+        }
+    }
+}
+
+.link {
+    text-decoration: none;
+    padding: 5px 10px;
+    color: var(--palette-text-primary);
+    font-size: 12px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.active {
+    color: var(--palette-text-inverted);
+}
