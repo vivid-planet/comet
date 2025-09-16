@@ -1,6 +1,6 @@
 import { Tooltip } from "@comet/admin";
 import { Add, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
-import { Box, Chip, Stack } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import { type Decorator } from "@storybook/react-webpack5";
 import { useEffect, useState } from "react";
 
@@ -101,6 +101,105 @@ export const FeedbackTooltipsFromDesign = {
                 <Tooltip title="Notification text" variant="warning" placement="bottom-start" open={showTooltips}>
                     <Chip label="Warning" sx={{ width: 70 }} />
                 </Tooltip>
+            </Stack>
+        );
+    },
+};
+
+/**
+ * This demonstrates using custom content in tooltips where a simple title and description is not sufficient. <br />
+ * Currently, ther is no obvious correct way to do this, which causes inconsistent styling, depending on how the content is provided.
+ */
+export const TooltipsWithCustomContent = {
+    decorators: [lightGrayBackgroundDecorator],
+    render: () => {
+        const [showTooltips, setShowTooltips] = useState(false);
+
+        useEffect(() => {
+            setTimeout(() => {
+                // Delay showing tooltips to prevent them being rendered in the wrong place due to the underlying element not being rendered properly yet.
+                setShowTooltips(true);
+            }, 1000);
+        }, []);
+
+        const tooltipCustomContent = (
+            <>
+                <Typography variant="caption">Normal description text</Typography>
+                <Box
+                    sx={{
+                        backgroundColor: "primary.main",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: 1,
+                        paddingY: 1,
+                        paddingX: 2,
+                        borderRadius: 2,
+                    }}
+                >
+                    <Typography variant="overline">Custom</Typography>
+                    <Typography variant="overline">Element</Typography>
+                </Box>
+            </>
+        );
+
+        const tooltipCustomContentIncludingTitle = (
+            <>
+                <Typography variant="subtitle2">Title</Typography>
+                <Typography variant="caption">Normal description text</Typography>
+                <Box
+                    sx={{
+                        backgroundColor: "primary.main",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: 1,
+                        paddingY: 1,
+                        paddingX: 2,
+                        borderRadius: 2,
+                    }}
+                >
+                    <Typography variant="overline">Custom</Typography>
+                    <Typography variant="overline">Element</Typography>
+                </Box>
+            </>
+        );
+
+        const tooltipTextAndImageContent = (
+            <Box sx={{ lineHeight: 0 }}>
+                <Typography variant="caption" gutterBottom sx={{ display: "block", marginBottom: 1 }}>
+                    Normal description text
+                </Typography>
+                <Box component="img" src="https://picsum.photos/400/200" sx={{ display: "block", width: 200, height: 100 }} />
+            </Box>
+        );
+
+        const tooltipImageOnlyContent = (
+            <Box component="img" src="https://picsum.photos/400/200" sx={{ display: "block", width: 200, height: 100 }} />
+        );
+
+        return (
+            <Stack pb={30} spacing={30} direction="column">
+                <Stack spacing={15} direction="row">
+                    <Tooltip title="Title" description={tooltipCustomContent} variant="light" open={showTooltips}>
+                        <Chip sx={{ width: 200 }} label="Normal title / custom description" />
+                    </Tooltip>
+                    <Tooltip title="" description={tooltipCustomContentIncludingTitle} variant="light" open={showTooltips}>
+                        <Chip sx={{ width: 200 }} label="Custom content including title" />
+                    </Tooltip>
+                    <Tooltip title={tooltipCustomContentIncludingTitle} variant="light" open={showTooltips}>
+                        <Chip sx={{ width: 200 }} label="Custom content as title" />
+                    </Tooltip>
+                </Stack>
+                <Stack spacing={15} direction="row">
+                    <Tooltip title="Title" description={tooltipTextAndImageContent} variant="light" open={showTooltips}>
+                        <Chip sx={{ width: 200 }} label="Text and image content" />
+                    </Tooltip>
+                    <Tooltip title={tooltipImageOnlyContent} variant="light" open={showTooltips}>
+                        <Chip sx={{ width: 200 }} label="Image-only as title" />
+                    </Tooltip>
+                    <Tooltip title="" description={tooltipImageOnlyContent} variant="light" open={showTooltips}>
+                        <Chip sx={{ width: 200 }} label="Image-only as description" />
+                    </Tooltip>
+                </Stack>
             </Stack>
         );
     },
