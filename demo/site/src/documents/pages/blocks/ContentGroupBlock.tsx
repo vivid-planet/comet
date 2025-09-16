@@ -12,7 +12,9 @@ import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { PageLayout } from "@src/layout/PageLayout";
-import styled, { css } from "styled-components";
+import clsx from "clsx";
+
+import styles from "./ContentGroupBlock.module.scss";
 
 const supportedBlocks: SupportedBlocks = {
     accordion: (props) => <PageContentAccordionBlock data={props} />,
@@ -37,24 +39,9 @@ const ContentGroupContentBlock = withPreview(
 
 export const ContentGroupBlock = withPreview(
     ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => (
-        <RootPageLayout $background={backgroundColor}>
+        <PageLayout className={clsx(backgroundColor === "lightGray" && styles.lightGray, backgroundColor === "darkGray" && styles.darkGray)}>
             <ContentGroupContentBlock data={content} />
-        </RootPageLayout>
+        </PageLayout>
     ),
     { label: "ContentGroup" },
 );
-
-const RootPageLayout = styled(PageLayout)<{ $background: ContentGroupBlockData["backgroundColor"] }>`
-    ${({ theme, $background }) => css`
-        ${$background === "lightGray" &&
-        css`
-            background-color: ${theme.palette.gray["100"]};
-        `}
-
-        ${$background === "darkGray" &&
-        css`
-            background-color: ${theme.palette.gray["900"]};
-            color: ${theme.palette.text.inverted};
-        `}
-    `};
-`;
