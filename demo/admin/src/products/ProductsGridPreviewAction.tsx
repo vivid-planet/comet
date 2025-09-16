@@ -32,7 +32,11 @@ export const ProductsGridPreviewAction = ({ row }: Props) => {
                 </DialogTitle>
                 <DialogContent>
                     <Typography variant="h3" gutterBottom>
-                        {row.title}/{row.slug}
+                        <FormattedMessage
+                            id="productsGrid.detailsDialog.description"
+                            defaultMessage="{title}/{slug}"
+                            values={{ title: row.title, slug: row.slug }}
+                        />
                     </Typography>
                     <Typography>{row.description}</Typography>
                 </DialogContent>
