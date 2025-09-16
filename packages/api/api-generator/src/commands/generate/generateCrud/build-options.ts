@@ -5,23 +5,8 @@ import { buildNameVariants } from "../utils/build-name-variants";
 import { integerTypes } from "../utils/constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
-    const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
-
-    const dedicatedResolverArgProps = metadata.props.filter((prop) => {
-        if (hasCrudFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
-            if (prop.kind == "m:1") {
-                return true;
-            } else {
-                console.warn(`${metadata.className} ${prop.name} can't use dedicatedResolverArg as it's not a m:1 relation`);
-                return false;
-            }
-        }
-        return false;
-    });
-
-    const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
-    const hasSearchArg = crudSearchPropNames.length > 0;
+function buildFilterProps(metadata: EntityMetadata<any>) {
+    const dedicatedResolverArgProps = buildDedicatedResolverArgProps(metadata);
 
     const crudFilterProps = metadata.props.filter(
         (prop) =>
@@ -46,7 +31,11 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "uuid") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
-    const hasFilterArg = crudFilterProps.length > 0;
+    return crudFilterProps;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildSortProps(metadata: EntityMetadata<any>) {
     const crudSortProps = metadata.props.filter(
         (prop) =>
             hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
@@ -65,6 +54,37 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "EnumArrayType" ||
                 prop.enum),
     );
+    return crudSortProps;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildDedicatedResolverArgProps(metadata: EntityMetadata<any>) {
+    return metadata.props.filter((prop) => {
+        if (hasCrudFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
+            if (prop.kind == "m:1") {
+                return true;
+            } else {
+                console.warn(`${metadata.className} ${prop.name} can't use dedicatedResolverArg as it's not a m:1 relation`);
+                return false;
+            }
+        }
+        return false;
+    });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
+    const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
+
+    const dedicatedResolverArgProps = buildDedicatedResolverArgProps(metadata);
+
+    const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
+    const hasSearchArg = crudSearchPropNames.length > 0;
+
+    const crudFilterProps = buildFilterProps(metadata);
+    const hasFilterArg = crudFilterProps.length > 0;
+
+    const crudSortProps = buildSortProps(metadata);
     const hasSortArg = crudSortProps.length > 0;
 
     const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
