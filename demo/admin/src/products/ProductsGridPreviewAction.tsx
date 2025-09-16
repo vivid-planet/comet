@@ -26,7 +26,6 @@ export const ProductsGridPreviewAction = ({ row }: Props) => {
             >
                 <DialogContent>
                     <Typography variant="h3" gutterBottom>
-                        {/* eslint-disable-next-line react/jsx-no-literals */}
                         {row.title}/{row.slug}
                     </Typography>
                     <Typography>{row.description}</Typography>
