@@ -53,6 +53,6 @@ describe("GenerateCrudResolveIdInteger", () => {
         expect(deleteMethod?.parameters?.[0].name).toBe("id");
         expect(deleteMethod?.parameters?.[0].type).toBe("number");
 
-        orm.close();
+        await orm.close();
     });
 });

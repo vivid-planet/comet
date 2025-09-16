@@ -55,7 +55,7 @@ describe("GenerateCrudInputRelations", () => {
             expect(decorators).toContain("IsUUID");
             expect(decorators).toContain("IsNullable");
         }
-        orm.close();
+        await orm.close();
     });
 
     it("1:n input dto should contain relation id", async () => {
@@ -93,6 +93,6 @@ describe("GenerateCrudInputRelations", () => {
             expect(decorators).toContain("IsUUID");
             expect(decorators).toContain("IsArray");
         }
-        orm.close();
+        await orm.close();
     });
 });
