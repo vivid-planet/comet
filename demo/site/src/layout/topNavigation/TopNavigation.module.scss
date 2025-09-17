@@ -49,12 +49,22 @@
     position: fixed;
     top: 120px;
     left: 20px;
-    opacity: 0;
     z-index: 100;
-    pointer-events: none;
+    opacity: 0;
+
+    /* Hide the skip link visually but keep it accessible for screen readers */
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
 
     &:focus {
         opacity: 1;
-        pointer-events: auto;
+        height: auto;
+        width: auto;
+        clip: auto;
+        clip-path: none;
     }
 }
