@@ -13,7 +13,8 @@ export type MailerModuleConfig = {
     sendAllMailsTo?: string[];
     sendAllMailsBcc?: string[];
     disableMailLog?: boolean;
-    daysToKeepMailLog?: number; // default: 90
+    /** @default 90 */
+    daysToKeepMailLog?: number;
     transport: SMTPTransport | SMTPTransport.Options;
 };
 
