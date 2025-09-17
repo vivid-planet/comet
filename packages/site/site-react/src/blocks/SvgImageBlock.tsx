@@ -19,6 +19,7 @@ export const SvgImageBlock = withPreview(
                 width={width === "auto" ? undefined : width}
                 height={height === "auto" ? undefined : height}
                 alt={damFile.altText ?? ""}
+                title={damFile.title ?? ""}
             />
         );
     },
