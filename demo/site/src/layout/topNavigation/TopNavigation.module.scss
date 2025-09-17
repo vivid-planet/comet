@@ -44,3 +44,17 @@
 .linkActive {
     color: var(--palette-text-inverted);
 }
+
+.skipLink {
+    position: fixed;
+    top: 120px;
+    left: 20px;
+    opacity: 0;
+    z-index: 100;
+    pointer-events: none;
+
+    &:focus {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

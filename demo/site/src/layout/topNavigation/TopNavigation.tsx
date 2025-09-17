@@ -2,7 +2,6 @@
 import { Button } from "@src/common/components/Button";
 import { PageLink } from "@src/layout/header/PageLink";
 import { FormattedMessage } from "react-intl";
-import styled from "styled-components";
 
 import { type GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
 import styles from "./TopNavigation.module.scss";
@@ -14,16 +13,16 @@ interface Props {
 export const TopNavigation = ({ data }: Props) => {
     return (
         <>
-            <SkipLink href="#mainContent">
+            <a className={styles.skipLink} href="#mainContent">
                 <Button as="span">
                     <FormattedMessage defaultMessage="Skip to main content" id="skipLink.skipToMainContent" />
                 </Button>
-            </SkipLink>
-            <SkipLink href="#footer">
+            </a>
+            <a className={styles.skipLink} href="#footer">
                 <Button as="span">
                     <FormattedMessage defaultMessage="Skip to footer" id="skipLink.skipToFooter" />
                 </Button>
-            </SkipLink>
+            </a>
             <ol className={styles.topLevelNavigation}>
                 {data.map((item) => (
                     <li className={styles.topLevelLinkContainer} key={item.id}>
@@ -47,17 +46,3 @@ export const TopNavigation = ({ data }: Props) => {
         </>
     );
 };
-
-const SkipLink = styled.a`
-    position: fixed;
-    top: 120px;
-    left: 20px;
-    opacity: 0;
-    z-index: 100;
-    pointer-events: none;
-
-    &:focus {
-        opacity: 1;
-        pointer-events: auto;
-    }
-`;
