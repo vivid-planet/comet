@@ -6,7 +6,6 @@ import { type MediaGalleryBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
-import { type CSSProperties } from "react";
 import { Pagination } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 
@@ -22,7 +21,7 @@ export const MediaGalleryBlock = withPreview(
         const swiperStyle = {
             "--aspect-ratio-horizontal": aspectRatioValues[0],
             "--aspect-ratio-vertical": aspectRatioValues[1],
-        } as CSSProperties;
+        };
 
         return (
             <BasicSwiper
