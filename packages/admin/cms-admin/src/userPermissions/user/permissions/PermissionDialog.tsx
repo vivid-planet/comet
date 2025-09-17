@@ -151,7 +151,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             </FormSection>
                             <FormSection
                                 title={
-                                    <Typography variant="h4">
+                                    <>
                                         <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
                                         {/* */}
                                         <Tooltip
@@ -174,7 +174,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                             }
                                             sx={{ marginLeft: "5px" }}
                                         />
-                                    </Typography>
+                                    </>
                                 }
                             >
                                 <Field
@@ -198,13 +198,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     variant="horizontal"
                                 />
                             </FormSection>
-                            <FormSection
-                                title={
-                                    <Typography variant="h4">
-                                        <FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />
-                                    </Typography>
-                                }
-                            >
+                            <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
                                 <Field
                                     fullWidth
                                     name="reason"
