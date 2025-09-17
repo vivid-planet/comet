@@ -137,7 +137,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                         <FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />
                                     </Typography>
                                 }
-                                disableTypography
                             >
                                 <Divider sx={{ marginBottom: 4 }} />
                                 <Field
@@ -179,7 +178,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                         />
                                     </Typography>
                                 }
-                                disableTypography
                             >
                                 <Divider sx={{ marginBottom: 4 }} />
                                 <Field
@@ -209,7 +207,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                         <FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />
                                     </Typography>
                                 }
-                                disableTypography
                             >
                                 <Divider sx={{ marginBottom: 4 }} />
                                 <Field
