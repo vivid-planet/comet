@@ -51,10 +51,10 @@ export class MailerService {
     }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown; logMail?: boolean }): Promise<Mail> {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
 
-        let logEntry: MailerLog<unknown> | undefined;
+        let logEntryId: string | undefined;
         if (logMail && !this.mailerConfig.disableMailLog) {
             await this.entityManager.fork().transactional((em) => {
-                logEntry = em.getRepository(MailerLog).create({
+                const logEntry = em.getRepository(MailerLog).create({
                     status: MailerLogStatus.error,
                     to: this.normalizeToArray(originMailOptions.to).map<string>(this.convertAddressToString),
                     subject: originMailOptions.subject,
@@ -62,6 +62,7 @@ export class MailerService {
                     additionalData,
                     mailTypeForLogging, // for statistic and filter purposes
                 });
+                logEntryId = logEntry.id;
             });
         }
 
@@ -73,12 +74,13 @@ export class MailerService {
         const result = await this.mailerTransport.sendMail(mailOptions);
 
         if (logMail && !this.mailerConfig.disableMailLog) {
-            await this.entityManager.fork().transactional((em) => {
-                if (logEntry) {
-                    if (result.messageId) logEntry.assign({ status: MailerLogStatus.sent });
-                    logEntry.assign({ result: result });
-                    em.persist(logEntry);
-                }
+            await this.entityManager.fork().transactional(async (em) => {
+                if (!logEntryId) return;
+                const logEntry = await em.getRepository(MailerLog).findOne({ id: logEntryId });
+                if (!logEntry) return;
+
+                if (result.messageId) logEntry.assign({ status: MailerLogStatus.sent });
+                logEntry.assign({ result: result });
             });
         }
         if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
