@@ -42,7 +42,7 @@
 
         // Move buttons just below the image height, calculated with aspectRatio. not possible with top: 100% because this moves them down the whole slider height which is variable because of caption text
         padding-top: var(--spacing-s300);
-        margin-top: calc(var(--aspect-ratio-vertical) / var(--aspect-ratio-horizontal) * 100%);
+        margin-top: calc(1 / var(--aspect-ratio-numeric) * 100%);
         &::after {
             content: "";
             width: inherit;

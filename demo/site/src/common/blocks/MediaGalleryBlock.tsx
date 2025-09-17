@@ -1,11 +1,12 @@
 import "swiper/css";
 import "swiper/css/navigation";
 
-import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { parseAspectRatio, type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type MediaGalleryBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
+import { type CSSProperties } from "react";
 import { Pagination } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 
@@ -16,12 +17,8 @@ type MediaGalleryBlockProps = PropsWithData<MediaGalleryBlockData>;
 
 export const MediaGalleryBlock = withPreview(
     ({ data }: MediaGalleryBlockProps) => {
-        const aspectRatioValues = data.aspectRatio.split("x");
-        // Set aspect ratio as CSS variables for use in SCSS
-        const swiperStyle = {
-            "--aspect-ratio-horizontal": aspectRatioValues[0],
-            "--aspect-ratio-vertical": aspectRatioValues[1],
-        };
+        // Set aspect ratio as CSS variable for use in calculation in SCSS
+        const swiperStyle: CSSProperties = { "--aspect-ratio-numeric": parseAspectRatio(data.aspectRatio) };
 
         return (
             <BasicSwiper
