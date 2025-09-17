@@ -95,7 +95,7 @@ describe("GenerateCrudPosition", () => {
             expect(minDecorator?.arguments).toContain("1");
         }
 
-        orm.close();
+        await orm.close();
     });
     it("service should implement position-functions", async () => {
         LazyMetadataStorage.load();
@@ -134,7 +134,7 @@ describe("GenerateCrudPosition", () => {
             expect(getLastPositionFunction).not.toBeUndefined();
         }
 
-        orm.close();
+        await orm.close();
     });
     it("service should implement getPositionGroupCondition-function if scope existent", async () => {
         LazyMetadataStorage.load();
@@ -167,7 +167,7 @@ describe("GenerateCrudPosition", () => {
             expect(getLastPositionFunction).not.toBeUndefined();
         }
 
-        orm.close();
+        await orm.close();
     });
     it("service should implement getPositionGroupCondition-function if configured", async () => {
         LazyMetadataStorage.load();
@@ -200,6 +200,6 @@ describe("GenerateCrudPosition", () => {
             expect(getLastPositionFunction).not.toBeUndefined();
         }
 
-        orm.close();
+        await orm.close();
     });
 });

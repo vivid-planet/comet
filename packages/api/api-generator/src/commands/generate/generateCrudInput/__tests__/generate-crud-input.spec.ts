@@ -123,7 +123,7 @@ describe("GenerateCrudInput", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
     describe("date input class", () => {
@@ -162,7 +162,7 @@ describe("GenerateCrudInput", () => {
                 expect(decorators).toContain("IsNotEmpty");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
     describe("boolean input class", () => {
@@ -201,7 +201,7 @@ describe("GenerateCrudInput", () => {
                 expect(decorators).toContain("IsNotEmpty");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -241,7 +241,7 @@ describe("GenerateCrudInput", () => {
                 expect(decorators).toContain("IsNotEmpty");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -281,7 +281,7 @@ describe("GenerateCrudInput", () => {
                 expect(decorators).toContain("IsNotEmpty");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -321,7 +321,7 @@ describe("GenerateCrudInput", () => {
                 expect(decorators).toContain("IsNotEmpty");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -368,7 +368,7 @@ describe("GenerateCrudInput", () => {
                 expect(fieldDecoratorArguments[0]).toContain("defaultValue: null");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -415,7 +415,7 @@ describe("GenerateCrudInput", () => {
                 expect(fieldDecoratorArguments[0]).toContain("defaultValue: null");
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 });
