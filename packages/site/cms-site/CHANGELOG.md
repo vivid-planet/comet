@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.25.11
+
+### Patch Changes
+
+-   cb057eeab: Add SEO `title` property to PixelImageBlock and SvgImageBlock
+
 ## 7.25.10
 
 ### Patch Changes

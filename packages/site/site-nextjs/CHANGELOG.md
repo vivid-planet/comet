@@ -1,5 +1,13 @@
 # @comet/site-nextjs
 
+## 7.25.11
+
+### Patch Changes
+
+-   cb057eeab: Add SEO `title` property to PixelImageBlock and SvgImageBlock
+-   Updated dependencies [cb057eeab]
+    -   @comet/site-react@7.25.11
+
 ## 7.25.10
 
 ### Patch Changes
