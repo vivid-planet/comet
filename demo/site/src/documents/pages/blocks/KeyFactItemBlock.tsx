@@ -13,11 +13,7 @@ const descriptionRenderers: Renderers = {
 export const KeyFactItemBlock = withPreview(
     ({ data: { icon, fact, label, description } }: PropsWithData<KeyFactsItemBlockData>) => (
         <div className={styles.root}>
-            {icon.damFile && (
-                <div className={styles.icon}>
-                    <SvgImageBlock data={icon} width={48} height={48} />
-                </div>
-            )}
+            {icon.damFile && <SvgImageBlock data={icon} width={48} height={48} className={styles.icon} />}
             <Typography variant="h500" className={styles.factTypography}>
                 {fact}
             </Typography>
