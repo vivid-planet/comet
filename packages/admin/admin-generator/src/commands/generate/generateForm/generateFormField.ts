@@ -200,14 +200,17 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "date") {
+        imports.push({
+            name: "Future_DatePickerField",
+            importPath: "@comet/admin",
+        });
         code = `
-            <Field
+            <Future_DatePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
                 name="${nameWithPrefix}"
-                component={FinalFormDatePicker}
                 label={${fieldLabel}}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
@@ -220,6 +223,9 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
+        if (!config.virtual && !required && !config.readOnly) {
+            formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
+        }
     } else if (config.type == "dateTime") {
         code = `<DateTimeField
                 ${required ? "required" : ""}
