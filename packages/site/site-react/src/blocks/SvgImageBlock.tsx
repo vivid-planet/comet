@@ -13,7 +13,12 @@ interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
 }
 
 export const SvgImageBlock = withPreview(
-    ({ data: { damFile }, width = "100%", height = "auto", ...restProps }: SvgImageBlockProps & HTMLAttributes<HTMLImageElement>) => {
+    ({
+        data: { damFile },
+        width = "100%",
+        height = "auto",
+        ...restProps
+    }: SvgImageBlockProps & Omit<HTMLAttributes<HTMLImageElement>, "width" | "height">) => {
         if (!damFile) return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;
         return (
             <img
