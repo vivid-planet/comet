@@ -35,25 +35,44 @@ function buildFilterProps(metadata: EntityMetadata<any>) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildSortProps(metadata: EntityMetadata<any>) {
-    const crudSortProps = metadata.props.filter(
-        (prop) =>
-            hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
-            !prop.name.startsWith("scope_") &&
-            (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
-            (prop.type === "string" ||
-                prop.type === "text" ||
-                prop.type === "DecimalType" ||
-                prop.type === "number" ||
-                integerTypes.includes(prop.type) ||
-                prop.type === "BooleanType" ||
-                prop.type === "boolean" ||
-                prop.type === "DateType" ||
-                prop.type === "Date" ||
-                prop.kind === "m:1" ||
-                prop.type === "EnumArrayType" ||
-                prop.enum),
-    );
+export function buildSortProps(metadata: EntityMetadata<any>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function directSortProps(metadata: EntityMetadata<any>) {
+        return metadata.props
+            .filter(
+                (prop) =>
+                    hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
+                    !prop.name.startsWith("scope_") &&
+                    (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
+                    (prop.type === "string" ||
+                        prop.type === "text" ||
+                        prop.type === "DecimalType" ||
+                        prop.type === "number" ||
+                        integerTypes.includes(prop.type) ||
+                        prop.type === "BooleanType" ||
+                        prop.type === "boolean" ||
+                        prop.type === "DateType" ||
+                        prop.type === "Date" ||
+                        prop.kind === "m:1" ||
+                        prop.type === "EnumArrayType" ||
+                        prop.enum),
+            )
+            .map((prop) => {
+                return prop.name;
+            });
+    }
+    const crudSortProps = directSortProps(metadata);
+
+    // add nested from relations, one level deep
+    metadata.props.forEach((prop) => {
+        if (hasCrudFieldFeature(metadata.class, prop.name, "sort")) {
+            if ((prop.kind == "1:1" || prop.kind == "m:1") && prop.targetMeta) {
+                crudSortProps.push(...directSortProps(prop.targetMeta).map((nestedProp) => `${prop.name}.${nestedProp}`));
+                return true;
+            }
+        }
+    });
+
     return crudSortProps;
 }
 
