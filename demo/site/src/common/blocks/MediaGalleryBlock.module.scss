@@ -17,8 +17,11 @@
 
 .mediaCaption {
     margin-top: var(--spacing-s300);
-    padding-right: calc(16px * 2 + var(--spacing-s300) + var(--spacing-s500));
+    padding-right: calc(var(--swiper-button-size) * 2 + var(--spacing-s300) + var(--spacing-s500));
+
+    // min-height to show arrows when no caption
     min-height: 20px;
+
     @media (min-width: $breakpoint-md) {
         min-height: 22px;
     }
@@ -36,6 +39,8 @@
         top: 0;
         transition: opacity 0.2s linear;
         cursor: pointer;
+
+        // Move buttons just below the image height, calculated with aspectRatio. not possible with top: 100% because this moves them down the whole slider height which is variable because of caption text
         padding-top: var(--spacing-s300);
         margin-top: calc(var(--aspect-ratio-vertical) / var(--aspect-ratio-horizontal) * 100%);
         &::after {
@@ -49,7 +54,7 @@
         }
     }
     :global(.swiper-button-prev) {
-        right: calc(16px + var(--spacing-s300));
+        right: calc(var(--swiper-button-size) + var(--spacing-s300));
         left: auto;
         &::after {
             transform: rotate(180deg);
