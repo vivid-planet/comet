@@ -66,6 +66,7 @@ export const PixelImageBlock = withPreview(
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
                 alt={damFile.altText ?? ""}
+                title={damFile.title ?? ""}
                 {...nextImageProps}
             />
         );
