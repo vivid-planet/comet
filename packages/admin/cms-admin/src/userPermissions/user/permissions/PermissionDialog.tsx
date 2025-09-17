@@ -153,7 +153,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 title={
                                     <>
                                         <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
-                                        {/* */}
+                                        {/* TODO: Icon with Tooltip needs to be updated once supported by FormSection in COM-2474*/}
                                         <Tooltip
                                             children={<Info />}
                                             title={
