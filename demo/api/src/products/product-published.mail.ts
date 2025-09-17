@@ -1,27 +1,27 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
 import { PreparedTestParams } from "@src/../../../packages/api/cms-api/src/mail-templates/mail-template.service";
 
-type MailProps = {
+type MailParams = {
     recipientName: string;
     countProductPublished: "all" | number;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isMailProp(arg: any): arg is MailProps {
+export function isMailParams(arg: any): arg is MailParams {
     return arg.recipientName !== undefined && arg.countProductPublished !== undefined;
 }
 
 @MailTemplate()
-export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
+export class ProductPublishedMail implements MailTemplateInterface<MailParams> {
     id = "products-published";
     type = "products";
     name = "Products published";
 
-    async generateMail(params: MailProps): Promise<{
+    async generateMail(params: MailParams): Promise<{
         subject: string;
         text: string;
         html: string;
     }> {
-        if (!isMailProp(params)) throw new Error(`Incompatible params`);
+        if (!isMailParams(params)) throw new Error(`Incompatible params`);
 
         return {
             subject: "Products published",
@@ -42,7 +42,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         };
     }
 
-    async getPreparedTestParams(): Promise<PreparedTestParams<MailProps>[]> {
+    async getPreparedTestParams(): Promise<PreparedTestParams<MailParams>[]> {
         return [
             {
                 name: `Testing "all" Mail`,

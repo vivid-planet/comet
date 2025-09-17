@@ -23,14 +23,14 @@ import { renderToMjml } from "mjml-react";
 export const MY_CUSTOM_MAIL_ID = "static-mail_my-custom-mail";
 
 @MailTemplate()
-export class MyCustomMail implements MailTemplateInterface<MailProps> {
+export class MyCustomMail implements MailTemplateInterface<MailParams> {
     id = MY_CUSTOM_MAIL_ID; // this is used to access this mail-template in code.
     name = "My Custom Mail"; // this is used to display the mail-template in the UI.
     type = "type1"; // this can be used to allow selecting from different templates for same params.
 
     constructor() {} // add dependencies if needed
 
-    async generateMail(intl: IntlShape, params: MailProps): Promise<MailOptions> {
+    async generateMail(intl: IntlShape, params: MailParams): Promise<MailOptions> {
         if (!isMailProp(params)) throw new Error(`Not possible to generate mail for given params.`); // is recommended because typescript can be mislead if wrong type for generic is used when calling mailTemplate.generateMail<T>(...).
 
         return {
@@ -49,21 +49,21 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
         };
     }
 
-    async getPreparedTestParams(): Promise<PreparedTestParams<MailProps>[]> {
+    async getPreparedTestParams(): Promise<PreparedTestParams<MailParams>[]> {
         // this is used for styling mail-templates and in admin for testing.
         // it's also possible to access any imported service to generate test-data.
         return [
             {
                 name: "Testdata 1",
-                params: { ... }, // MailProps
+                params: { ... }, // MailParams
             },
         ];
     }
 }
 
-export type MailProps = { ... }; // define params required to generate/render the mail
+export type MailParams = { ... }; // define params required to generate/render the mail
 
-const MailContent: React.FC<MailProps> = ({ recipient }) => {
+const MailContent: React.FC<MailParams> = ({ recipient }) => {
     return (
         <div>
             {recipient.name} LOREM IPSUM
@@ -73,23 +73,23 @@ const MailContent: React.FC<MailProps> = ({ recipient }) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isMailProp(arg: any): arg is MailProps {
-    return true; // validate required params are present
+export function isMailParams(arg: any): arg is MailParams {
+    return ....; // validate required params are present
 }
 ```
 
 #### Use MailTemplate
 
 ```typescript
-import { MY_CUSTOM_MAIL_ID, MailProps } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
+import { MY_CUSTOM_MAIL_ID, MailParams } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 
 @Injectable()
 export class MyService {
     constructor(readonly mailTemplateService: MailTemplateService) {}
 
     async sendMail() {
-        const mailTemplate = await this.mailTemplateService.getMailTemplate<MailProps>(MY_CUSTOM_MAIL_ID);
-        await this.mailTemplateService.sendMail<MailProps>(mailTemplate, { ... }); // MailProps
+        const mailTemplate = await this.mailTemplateService.getMailTemplate<MailParams>(MY_CUSTOM_MAIL_ID);
+        await this.mailTemplateService.sendMail<MailParams>(mailTemplate, { ... }); // MailParams
     }
 }
 ```

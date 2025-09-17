@@ -14,7 +14,7 @@ export type MailTemplateInterface<T> = {
     name: string;
 
     availableForScopes?: () => Promise<ContentScope[]>;
-    generateMail: (intl: IntlShape, params: T) => Promise<MailOptions>; // TODO remove messages from MailProps
+    generateMail: (intl: IntlShape, params: T) => Promise<MailOptions>; // TODO remove messages from MailParams
     getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;
 };
 
