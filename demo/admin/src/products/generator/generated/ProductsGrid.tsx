@@ -194,7 +194,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             width: 170, },
         { field: "manufacturer",
             headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
-            sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
             flex: 1,

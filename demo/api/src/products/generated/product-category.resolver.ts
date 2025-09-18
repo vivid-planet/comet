@@ -9,7 +9,7 @@ import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
-import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => ProductCategory)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryResolver {
@@ -44,11 +44,7 @@ export class ProductCategoryResolver {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<ProductCategory, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(ProductCategory, where, options);
         return new PaginatedProductCategories(entities, totalCount);

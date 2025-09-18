@@ -29,22 +29,25 @@ const gqlHashLoader = function (this: LoaderContext<unknown>, source: string) {
     const replacements: { start: number; end: number; replacement: string }[] = [];
     let match;
     while ((match = gqlTagRegex.exec(source)) !== null) {
-        const query = match[1];
+        const query = (match as RegExpExecArray)[1];
         const hash = hashQuery(query);
         hashMap[hash] = query;
+        const fragmentVariables = Array.from(query.matchAll(/\${.*?}/g) ?? [])
+            .map((m) => m[0])
+            .join(" ");
         if (query.match(/^\s*fragment\s+(\w+)\s+on\s+\w+/m)) {
             // fragment
             replacements.push({
                 start: match.index,
                 end: match.index + match[0].length,
-                replacement: `{ fragment: true }`,
+                replacement: `{ fragment: true, fragmentVariables: \`${fragmentVariables}\` }`,
             });
         } else {
             // query or mutation
             replacements.push({
                 start: match.index,
                 end: match.index + match[0].length,
-                replacement: `{ hash: "${hash}" }`,
+                replacement: `{ hash: "${hash}", fragmentVariables: \`${fragmentVariables}\` }`,
             });
         }
     }

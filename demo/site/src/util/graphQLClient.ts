@@ -17,7 +17,7 @@ function createPersistedQueryGraphQLFetch(fetch: Fetch, url: string): GraphQLFet
         const hash = query.hash;
         let response;
         if (init?.method === "GET") {
-            const fetchUrl = new URL(url);
+            const fetchUrl = new URL(url, window.location.origin);
             fetchUrl.searchParams.append("extensions.persistedQuery.sha256Hash", hash);
             fetchUrl.searchParams.append("variables", JSON.stringify(variables));
             response = await fetch(fetchUrl, {

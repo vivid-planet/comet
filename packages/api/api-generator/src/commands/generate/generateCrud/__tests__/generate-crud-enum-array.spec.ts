@@ -56,7 +56,7 @@ describe("GenerateCrudEnumArray", () => {
         expect(decorators).toContain("Field");
         expect(decorators).toContain("IsEnum");
 
-        orm.close();
+        await orm.close();
     });
     it("should correctly add EnumArrayType in filter type", async () => {
         LazyMetadataStorage.load();
@@ -94,6 +94,6 @@ describe("GenerateCrudEnumArray", () => {
             expect(prop.type).toBe("TestEnumEnumsFilter");
         }
 
-        orm.close();
+        await orm.close();
     });
 });
