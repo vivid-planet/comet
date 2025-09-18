@@ -111,7 +111,7 @@ export type FormFieldConfig<T> = (
     | ({
           type: "asyncSelectFilter";
           name: string;
-          queryField: string; //TODO improve typing, use something similar to UsableFields<T>;
+          loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
           rootQuery: string;
           labelField?: string;
       } & Omit<InputBaseFieldConfig, "endAdornment">)

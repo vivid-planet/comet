@@ -41,7 +41,12 @@ describe("generateAsyncSelect", () => {
         });
         it("should find object for a standard select", () => {
             const objectType = findIntrospectionObjectType({
-                config: { type: "asyncSelectFilter", name: "productCategory", queryField: "product.category", rootQuery: "productCategories" },
+                config: {
+                    type: "asyncSelectFilter",
+                    name: "productCategory",
+                    loadValueQueryField: "product.category",
+                    rootQuery: "productCategories",
+                },
                 gqlType: "ProductHighlight",
                 gqlIntrospection: introspection,
             });

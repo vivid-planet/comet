@@ -86,8 +86,8 @@ export function findIntrospectionObjectType({
         return objectType;
     }
     if (config.type === "asyncSelectFilter") {
-        //for a filter select the field is "virtual", and it's ObjectType is defined by the path in config.queryField
-        return config.queryField.split(".").reduce((acc, fieldName) => {
+        //for a filter select the field is "virtual", and it's ObjectType is defined by the path in config.loadValueQueryField
+        return config.loadValueQueryField.split(".").reduce((acc, fieldName) => {
             const ret = findIntrospectionField(acc, fieldName);
             if (!ret) throw new Error(`Field ${fieldName} not found in gql introspection`);
             return ret;
@@ -176,7 +176,7 @@ export function generateAsyncSelect({
 
     let formFragmentFields: string[];
     if (config.type == "asyncSelectFilter") {
-        formFragmentFields = [`${config.queryField}.id`, `${config.queryField}.${labelField}`];
+        formFragmentFields = [`${config.loadValueQueryField}.id`, `${config.loadValueQueryField}.${labelField}`];
     } else {
         formFragmentFields = [`${name}.id`, `${name}.${labelField}`];
     }
@@ -327,7 +327,7 @@ export function generateAsyncSelect({
     if (config.type == "asyncSelectFilter") {
         // add (in the gql schema) non existing value for virtual filter field
         formValueConfig.typeCode = `${name}?: { id: string; ${labelField}: string };`;
-        formValueConfig.initializationCode = `${name}: data.${instanceGqlType}.${config.queryField}`;
+        formValueConfig.initializationCode = `${name}: data.${instanceGqlType}.${config.loadValueQueryField}`;
     }
 
     code = `<AsyncSelectField

@@ -70,7 +70,7 @@ describe("AsyncSelectFilter", () => {
                 {
                     type: "asyncSelectFilter",
                     rootQuery: "productCategories",
-                    queryField: "product.category",
+                    loadValueQueryField: "product.category",
                     name: "productCategory",
                 },
                 {
