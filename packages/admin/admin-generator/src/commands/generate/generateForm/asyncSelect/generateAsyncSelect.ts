@@ -88,6 +88,7 @@ export function findIntrospectionObjectType({
     if (config.type === "asyncSelectFilter") {
         //for a filter select the field is "virtual", and it's ObjectType is defined by the path in config.loadValueQueryField
         return config.loadValueQueryField.split(".").reduce((acc, fieldName) => {
+            fieldName = fieldName.replace(/\?$/, ""); //remove optional marker
             const ret = findIntrospectionField(acc, fieldName);
             if (!ret) throw new Error(`Field ${fieldName} not found in gql introspection`);
             return ret;
@@ -176,130 +177,129 @@ export function generateAsyncSelect({
 
     let formFragmentFields: string[];
     if (config.type == "asyncSelectFilter") {
-        formFragmentFields = [`${config.loadValueQueryField}.id`, `${config.loadValueQueryField}.${labelField}`];
+        formFragmentFields = [`${config.loadValueQueryField.replace("?", "")}.id`, `${config.loadValueQueryField.replace("?", "")}.${labelField}`];
     } else {
         formFragmentFields = [`${name}.id`, `${name}.${labelField}`];
     }
 
-    const filterConfig =
-        config.type == "asyncSelect" && config.filter
-            ? (() => {
-                  let filterField: FormFieldConfig<unknown> | undefined;
-                  let rootQueryArg = config.filter.rootQueryArg;
-                  let filterVar = "";
+    const filterConfig = config.filter
+        ? (() => {
+              let filterField: FormFieldConfig<unknown> | undefined;
+              let rootQueryArg = config.filter.rootQueryArg;
+              let filterVar = "";
 
-                  if (config.filter.type === "field") {
-                      filterField = findFieldByName(config.filter.formFieldName, formConfig.fields);
-                      if (!filterField) {
-                          throw new Error(
-                              `Field ${String(config.name)}: No field with name "${
-                                  config.filter.formFieldName
-                              }" referenced as filter.formFieldName found in form-config.`,
-                          );
-                      }
-                      if (!isFormFieldConfig(filterField)) {
-                          throw new Error(
-                              `Field ${String(config.name)}: Field with name "${config.filter.formFieldName}" referenced as filter.formFieldName is no FormField.`,
-                          );
-                      }
-
-                      filterVar = `values.${filterField.type === "asyncSelect" || filterField.type === "asyncSelectFilter" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
-
-                      if (!rootQueryArg) {
-                          rootQueryArg = config.filter.formFieldName;
-                      }
-                  } else if (config.filter.type === "formProp") {
-                      filterVar = config.filter.propName;
-                      if (!rootQueryArg) {
-                          rootQueryArg = config.filter.propName;
-                      }
-                  } else {
-                      throw new Error("unsupported filter type");
+              if (config.filter.type === "field") {
+                  filterField = findFieldByName(config.filter.formFieldName, formConfig.fields);
+                  if (!filterField) {
+                      throw new Error(
+                          `Field ${String(config.name)}: No field with name "${
+                              config.filter.formFieldName
+                          }" referenced as filter.formFieldName found in form-config.`,
+                      );
+                  }
+                  if (!isFormFieldConfig(filterField)) {
+                      throw new Error(
+                          `Field ${String(config.name)}: Field with name "${config.filter.formFieldName}" referenced as filter.formFieldName is no FormField.`,
+                      );
                   }
 
-                  // try to find arg used to filter by checking names of root-arg and filter-arg-fields
-                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === rootQueryArg);
-                  let filterType = rootArgForName ? buildTypeInfo(rootArgForName, gqlIntrospection) : undefined;
-                  let filterVarName = undefined;
-                  let filterVarValue = undefined;
+                  filterVar = `values.${filterField.type === "asyncSelect" || filterField.type === "asyncSelectFilter" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
 
-                  let filterVarType = "unknown";
+                  if (!rootQueryArg) {
+                      rootQueryArg = config.filter.formFieldName;
+                  }
+              } else if (config.filter.type === "formProp") {
+                  filterVar = config.filter.propName;
+                  if (!rootQueryArg) {
+                      rootQueryArg = config.filter.propName;
+                  }
+              } else {
+                  throw new Error("unsupported filter type");
+              }
 
+              // try to find arg used to filter by checking names of root-arg and filter-arg-fields
+              const rootArgForName = rootQueryType.args.find((arg) => arg.name === rootQueryArg);
+              let filterType = rootArgForName ? buildTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+              let filterVarName = undefined;
+              let filterVarValue = undefined;
+
+              let filterVarType = "unknown";
+
+              if (filterType) {
+                  // there is a query root arg with same name, filter using it
+                  filterVarName = rootQueryArg;
+                  filterVarValue = filterVar;
+                  if (filterType.typeKind === "INPUT_OBJECT" || filterType.typeKind === "ENUM") {
+                      filterVarType = `GQL${filterType.typeClass}`;
+                      imports.push({
+                          name: filterVarType,
+                          importPath: "@src/graphql.generated",
+                      });
+                  } else if (filterType.typeKind === "SCALAR") {
+                      filterVarType = gqlScalarToTypescriptType(filterType.typeClass);
+                  }
+              } else {
+                  // no root-arg with same name, check filter-arg-fields
+                  const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
+                  filterType = rootArgFilter ? buildTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
                   if (filterType) {
-                      // there is a query root arg with same name, filter using it
-                      filterVarName = rootQueryArg;
-                      filterVarValue = filterVar;
-                      if (filterType.typeKind === "INPUT_OBJECT" || filterType.typeKind === "ENUM") {
-                          filterVarType = `GQL${filterType.typeClass}`;
+                      filterVarName = "filter";
+                      filterVarValue = `{ ${rootQueryArg}: { equal: ${filterVar} } }`;
+                      // get type of field.equal in filter-arg used for filtering
+                      if (filterType.inputType?.kind !== "INPUT_OBJECT") {
+                          throw new Error(`Field ${String(config.name)}: Type of filter is no object-type.`);
+                      }
+                      const nestedFilterInput = filterType.inputType.inputFields.find((inputField) => inputField.name === rootQueryArg);
+                      if (!nestedFilterInput) {
+                          throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg} does not exist`);
+                      }
+                      const gqlFilterInputType = buildTypeInfo(nestedFilterInput, gqlIntrospection);
+                      if (!gqlFilterInputType?.inputType || gqlFilterInputType.inputType.kind !== "INPUT_OBJECT") {
+                          throw new Error(
+                              `Field ${String(config.name)}: Type of filter.${rootQueryArg} is no object-type, but needs to be e.g. StringFilter-type.`,
+                          );
+                      }
+                      const gqlFilterEqualInputType = gqlFilterInputType.inputType.inputFields.find((inputField) => inputField.name === "equal");
+                      if (!gqlFilterEqualInputType) {
+                          throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist`);
+                      }
+                      const equalFieldType = buildTypeInfo(gqlFilterEqualInputType, gqlIntrospection);
+                      if (!equalFieldType) {
+                          throw new Error(
+                              `Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist but is required for filtering.`,
+                          );
+                      }
+                      if (equalFieldType.typeKind === "INPUT_OBJECT" || equalFieldType.typeKind === "ENUM") {
+                          filterVarType = `GQL${equalFieldType.typeClass}`;
                           imports.push({
                               name: filterVarType,
                               importPath: "@src/graphql.generated",
                           });
-                      } else if (filterType.typeKind === "SCALAR") {
-                          filterVarType = gqlScalarToTypescriptType(filterType.typeClass);
+                      } else if (equalFieldType.typeKind === "SCALAR") {
+                          filterVarType = gqlScalarToTypescriptType(equalFieldType.typeClass);
                       }
                   } else {
-                      // no root-arg with same name, check filter-arg-fields
-                      const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
-                      filterType = rootArgFilter ? buildTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
-                      if (filterType) {
-                          filterVarName = "filter";
-                          filterVarValue = `{ ${rootQueryArg}: { equal: ${filterVar} } }`;
-                          // get type of field.equal in filter-arg used for filtering
-                          if (filterType.inputType?.kind !== "INPUT_OBJECT") {
-                              throw new Error(`Field ${String(config.name)}: Type of filter is no object-type.`);
-                          }
-                          const nestedFilterInput = filterType.inputType.inputFields.find((inputField) => inputField.name === rootQueryArg);
-                          if (!nestedFilterInput) {
-                              throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg} does not exist`);
-                          }
-                          const gqlFilterInputType = buildTypeInfo(nestedFilterInput, gqlIntrospection);
-                          if (!gqlFilterInputType?.inputType || gqlFilterInputType.inputType.kind !== "INPUT_OBJECT") {
-                              throw new Error(
-                                  `Field ${String(config.name)}: Type of filter.${rootQueryArg} is no object-type, but needs to be e.g. StringFilter-type.`,
-                              );
-                          }
-                          const gqlFilterEqualInputType = gqlFilterInputType.inputType.inputFields.find((inputField) => inputField.name === "equal");
-                          if (!gqlFilterEqualInputType) {
-                              throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist`);
-                          }
-                          const equalFieldType = buildTypeInfo(gqlFilterEqualInputType, gqlIntrospection);
-                          if (!equalFieldType) {
-                              throw new Error(
-                                  `Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist but is required for filtering.`,
-                              );
-                          }
-                          if (equalFieldType.typeKind === "INPUT_OBJECT" || equalFieldType.typeKind === "ENUM") {
-                              filterVarType = `GQL${equalFieldType.typeClass}`;
-                              imports.push({
-                                  name: filterVarType,
-                                  importPath: "@src/graphql.generated",
-                              });
-                          } else if (equalFieldType.typeKind === "SCALAR") {
-                              filterVarType = gqlScalarToTypescriptType(equalFieldType.typeClass);
-                          }
-                      } else {
-                          throw new Error(
-                              `Neither filter-prop nor root-prop with name: ${rootQueryArg} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
-                          );
-                      }
+                      throw new Error(
+                          `Neither filter-prop nor root-prop with name: ${rootQueryArg} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                      );
                   }
-                  if (config.filter.type === "formProp") {
-                      formProps.push({
-                          name: config.filter.propName,
-                          optional: false,
-                          type: filterVarType,
-                      });
-                  }
+              }
+              if (config.filter.type === "formProp") {
+                  formProps.push({
+                      name: config.filter.propName,
+                      optional: false,
+                      type: filterVarType,
+                  });
+              }
 
-                  return {
-                      filterField,
-                      filterType,
-                      filterVarName,
-                      filterVarValue,
-                  };
-              })()
-            : undefined;
+              return {
+                  filterField,
+                  filterType,
+                  filterVarName,
+                  filterVarValue,
+              };
+          })()
+        : undefined;
     if (filterConfig) {
         imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
         finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };

@@ -9,10 +9,20 @@ export default defineConfig<GQLProductHighlight>({
         { type: "text", name: "description" },
         {
             type: "asyncSelectFilter",
+            name: "productCategoryType",
+            rootQuery: "productCategoryTypes",
+            loadValueQueryField: "product.category?.type",
+        },
+        {
+            type: "asyncSelectFilter",
             name: "productCategory",
             rootQuery: "productCategories",
             loadValueQueryField: "product.category",
-            labelField: "title",
+            filter: {
+                type: "field",
+                formFieldName: "productCategoryType",
+                rootQueryArg: "type",
+            },
         },
         {
             type: "asyncSelect",
