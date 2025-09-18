@@ -39,7 +39,7 @@ const ContentGroupContentBlock = withPreview(
 
 export const ContentGroupBlock = withPreview(
     ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => (
-        <PageLayout className={clsx(backgroundColor === "lightGray" && styles.lightGray, backgroundColor === "darkGray" && styles.darkGray)}>
+        <PageLayout className={styles[backgroundColor]}>
             <ContentGroupContentBlock data={content} />
         </PageLayout>
     ),
