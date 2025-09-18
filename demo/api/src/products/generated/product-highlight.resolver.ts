@@ -8,7 +8,7 @@ import { PaginatedProductHighlights } from "./dto/paginated-product-highlights";
 import { ProductHighlightsArgs } from "./dto/product-highlights.args";
 import { Product } from "../entities/product.entity";
 import { ProductHighlight } from "../entities/product-highlight.entity";
-import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => ProductHighlight)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductHighlightResolver {
@@ -36,11 +36,7 @@ export class ProductHighlightResolver {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<ProductHighlight, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(ProductHighlight, where, options);
         return new PaginatedProductHighlights(entities, totalCount);

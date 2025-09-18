@@ -3,7 +3,7 @@ import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 import { SyntaxKind } from "ts-morph";
 
-import { buildOptions } from "../generateCrud/generate-crud";
+import { buildOptions } from "../generateCrud/build-options";
 import { buildNameVariants } from "../utils/build-name-variants";
 import { integerTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";

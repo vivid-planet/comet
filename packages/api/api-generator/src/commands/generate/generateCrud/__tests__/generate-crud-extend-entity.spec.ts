@@ -68,6 +68,6 @@ describe("GenerateCrudInputExtendEntity", () => {
         expect(updatedAtField).toBeDefined();
         expect(updatedAtField?.type).toBe("DateTimeFilter");
 
-        orm.close();
+        await orm.close();
     });
 });

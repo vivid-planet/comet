@@ -63,7 +63,7 @@ describe("GenerateCrudResolveField", () => {
             const paginatedQuery = structure.methods?.find((method) => method.name === "testEntityProducts");
             expect(paginatedQuery?.statements?.toString().includes(`populate.push("categories");`)).toBe(false);
 
-            orm.close();
+            await orm.close();
         });
     });
 });

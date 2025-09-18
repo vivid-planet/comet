@@ -77,7 +77,7 @@ describe("GenerateCrudRelations", () => {
             expect(structure.properties?.length).toBe(0);
             expect(structure.methods?.length).toBe(6);
 
-            orm.close();
+            await orm.close();
         });
 
         it("should be a valid generated ts file", async () => {
@@ -110,7 +110,7 @@ describe("GenerateCrudRelations", () => {
             expect(structure.properties?.length).toBe(0);
             expect(structure.methods?.length).toBe(6);
 
-            orm.close();
+            await orm.close();
         });
 
         it("input type to category relation should be string with uuid validator", async () => {
@@ -146,7 +146,7 @@ describe("GenerateCrudRelations", () => {
             expect(decorators).not.toContain("IsInt");
             expect(decorators).not.toContain("IsString");
 
-            orm.close();
+            await orm.close();
         });
     });
 });

@@ -1,4 +1,4 @@
-import eslintConfigReact from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/future/react.js";
 
 /** @type {import('eslint')} */
 const config = [
@@ -9,6 +9,7 @@ const config = [
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
+            "react/jsx-no-literals": "off"
         },
     },
 ];

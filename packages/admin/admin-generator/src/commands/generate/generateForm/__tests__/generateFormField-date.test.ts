@@ -59,5 +59,6 @@ describe("generateFormField - datePicker", () => {
             gqlType: "Product",
         });
         expect(formOutput.code).toMatchSnapshot();
+        expect(formOutput.formValueToGqlInputCode).toMatchSnapshot();
     });
 });
