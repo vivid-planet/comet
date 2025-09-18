@@ -1,5 +1,28 @@
 # @comet/admin
 
+## 8.3.0
+
+### Minor Changes
+
+- 422328b: Add backgroundImage to FullPageAlert
+
+### Patch Changes
+
+- becc06c: The title of `FormSection` now matches the Comet design
+
+    The prop `disableTypography` has been deprecated, use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
+
+- 12e9230: Prevent labels from overlaying and inconsistent spacings of fields
+
+    This affects `CheckboxField`, `CheckboxListField`, `RadioGroupField`, and `SwitchField`.
+
+- 6f30126: SelectField / FinalFormSelect: hide the clear button when the field is disabled
+- becc06c: Deprecate `SectionHeadline`
+
+    The component is only meant to be used internally, inside `FormSection`.
+    Use the `FormSection` component with it's `title` prop to create sections in forms.
+    - @comet/admin-icons@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

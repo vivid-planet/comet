@@ -1,5 +1,18 @@
 # @comet/admin-generator
 
+## 8.3.0
+
+### Minor Changes
+
+- dbd83d6: Use `Future_DatePickerField` instead of `FinalFormDatePicker`
+- 5ba61ab: Add form field type asyncSelectFilter that can be used to filter an asyncSelect
+
+### Patch Changes
+
+- ebc6fff: Form Generation: `StaticSelect` with `inputType: "select"` now generates `SelectField` instead of `Field` + `FinalFormSelect`.
+- fb9b950: Fix sending null for date field
+- 512bd43: Fix selection for `selectionProps` `"singleSelect"`: set `disableRowSelectionOnClick` to `false`
+
 ## 8.2.0
 
 ### Minor Changes

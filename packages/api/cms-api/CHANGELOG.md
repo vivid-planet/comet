@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 8.3.0
+
+### Minor Changes
+
+- 78b7703: Export additional types for UserPermissions
+    - `ContentScopeWithLabel`
+    - `PermissionForUser` (`PermissionsForUser` is already exported)
+
+- 99950fa: Add new GraphQL to MikroORM helper: `gqlSortToMikroOrmOrderBy`, used by API Generator
+
 ## 8.2.0
 
 ### Minor Changes
