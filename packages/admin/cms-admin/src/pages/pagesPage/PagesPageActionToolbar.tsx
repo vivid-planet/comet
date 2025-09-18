@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { Button, Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
+import { Archive, Copy, Delete, Offline, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
 import { Checkbox, Grid, IconButton, useTheme } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -152,7 +152,7 @@ export const PagesPageActionToolbar = ({
                                 }}
                                 size="large"
                             >
-                                {!unpublishLoading ? <Disabled /> : <ThreeDotSaving />}
+                                {!unpublishLoading ? <Offline /> : <ThreeDotSaving />}
                             </IconButton>
                         </span>
                     </Tooltip>
