@@ -166,8 +166,8 @@ const ToggleSubLevelNavigationButton = styled.button`
 `;
 
 const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
-    width: 100%;
-    height: 100%;
+    width: 20px;
+    height: 20px;
     color: ${({ theme, $isExpanded }) => ($isExpanded ? theme.palette.primary.main : theme.palette.text.primary)};
     transform: rotate(${({ $isExpanded }) => ($isExpanded ? "-180deg" : "0deg")});
     transition: transform 0.4s ease;
