@@ -10,12 +10,12 @@ import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
 
-import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
-import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
-import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import { generateCrudInput } from "../generateCrudInput/generate-crud-input.js";
+import { buildNameVariants } from "../utils/build-name-variants.js";
+import { integerTypes } from "../utils/constants.js";
+import { generateImportsCode, type Imports } from "../utils/generate-imports-code.js";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper.js";
+import { type GeneratedFile } from "../utils/write-generated-files.js";
 
 // TODO move into own file
 export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
