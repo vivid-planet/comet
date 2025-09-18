@@ -161,8 +161,8 @@ const LinkContainer = styled.div`
 `;
 
 const ToggleSubLevelNavigationButton = styled.button`
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
 `;
 
 const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
