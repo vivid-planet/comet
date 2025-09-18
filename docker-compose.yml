@@ -1,6 +1,6 @@
 services:
     postgres:
-        image: bitnami/postgresql:16
+        image: bitnamilegacy/postgresql:16
         pull_policy: weekly
         tty: true
         volumes:
