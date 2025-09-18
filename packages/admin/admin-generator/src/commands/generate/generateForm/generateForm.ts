@@ -13,6 +13,7 @@ import { findMutationTypeOrThrow } from "../utils/findMutationType";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
+import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
 import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
 
 export type Prop = { type: string; optional: boolean; name: string };
@@ -156,12 +157,6 @@ export function generateForm(
 
     if (fileFields.length > 0) {
         imports.push({ name: "GQLFinalFormFileUploadFragment", importPath: "@comet/cms-admin" });
-    }
-
-    // Unnecessary field.type == "fileUpload" check to make TypeScript happy
-    const downloadableFileFields = fileFields.filter((field) => field.type == "fileUpload" && field.download);
-
-    if (fileFields.length > 0) {
         imports.push({ name: "GQLFinalFormFileUploadDownloadableFragment", importPath: "@comet/cms-admin" });
     }
 
@@ -193,13 +188,7 @@ export function generateForm(
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = {
-        document: `
-        fragment ${formFragmentName} on ${gqlType} {
-            ${formFragmentFields.join("\n")}
-        }
-        ${fileFields.length > 0 && fileFields.length !== downloadableFileFields.length ? "${finalFormFileUploadFragment}" : ""}
-        ${downloadableFileFields.length > 0 ? "${finalFormFileUploadDownloadableFragment}" : ""}
-    `,
+        document: generateFragmentByFormFragmentFields({ formFragmentName, gqlType, formFragmentFields }),
         export: editMode,
     };
 
