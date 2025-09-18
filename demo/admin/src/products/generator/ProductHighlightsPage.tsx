@@ -46,7 +46,7 @@ export function ProductHighlightsPage() {
                             <>
                                 <FormToolbar />
                                 <MainContent>
-                                    <ProductHighlightForm id={selectedProductId} productCategory="asdf" />
+                                    <ProductHighlightForm id={selectedProductId} />
                                 </MainContent>
                             </>
                         </SaveBoundary>
@@ -56,7 +56,7 @@ export function ProductHighlightsPage() {
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <ProductHighlightForm productCategory="asdf" />
+                            <ProductHighlightForm />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>
