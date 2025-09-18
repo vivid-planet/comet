@@ -8,7 +8,7 @@ import { PaginatedProductCategoryTypes } from "./dto/paginated-product-category-
 import { ProductCategoryTypesArgs } from "./dto/product-category-types.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductCategoryType } from "../entities/product-category-type.entity";
-import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => ProductCategoryType)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryTypeResolver {
@@ -36,11 +36,7 @@ export class ProductCategoryTypeResolver {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<ProductCategoryType, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(ProductCategoryType, where, options);
         return new PaginatedProductCategoryTypes(entities, totalCount);

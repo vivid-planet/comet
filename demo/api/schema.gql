@@ -1121,6 +1121,7 @@ enum ProductCategorySortField {
   slug
   title
   type
+  type_title
   updatedAt
 }
 
@@ -1342,6 +1343,7 @@ enum ProductSortField {
   category_position
   category_slug
   category_title
+  category_type
   category_updatedAt
   createdAt
   description
