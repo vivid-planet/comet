@@ -2,8 +2,8 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Command, CommandRunner } from "nest-commander";
 
-import { FileInterface } from "../files/entities/file.entity";
-import { FilesService } from "../files/files.service";
+import { FileInterface } from "../files/entities/file.entity.js";
+import { FilesService } from "../files/files.service.js";
 
 @Command({
     name: "cms.dam.calculateDominantImageColor",

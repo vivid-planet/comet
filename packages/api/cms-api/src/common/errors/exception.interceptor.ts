@@ -10,8 +10,8 @@ import {
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 
-import { CometException } from "./comet.exception";
-import { CometValidationException } from "./validation.exception";
+import { CometException } from "./comet.exception.js";
+import { CometValidationException } from "./validation.exception.js";
 
 // Inspired by https://docs.nestjs.com/interceptors#more-operators
 @Injectable()

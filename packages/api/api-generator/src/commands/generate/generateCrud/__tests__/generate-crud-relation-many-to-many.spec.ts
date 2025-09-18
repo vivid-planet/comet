@@ -11,12 +11,12 @@ import {
     Ref,
     types,
 } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
-import { GeneratedFile } from "../../utils/write-generated-files";
-import { generateCrud } from "../generate-crud";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper.js";
+import { GeneratedFile } from "../../utils/write-generated-files.js";
+import { generateCrud } from "../generate-crud.js";
 
 @Entity()
 export class Product extends BaseEntity {

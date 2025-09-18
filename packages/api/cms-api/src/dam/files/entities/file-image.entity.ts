@@ -3,8 +3,8 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
-import { ImageCropArea } from "../../images/entities/image-crop-area.entity";
-import { FileInterface } from "./file.entity";
+import { ImageCropArea } from "../../images/entities/image-crop-area.entity.js";
+import { FileInterface } from "./file.entity.js";
 
 @Entity({ tableName: "DamFileImage" })
 @ObjectType("DamFileImage")

@@ -2,11 +2,11 @@ import { DynamicModule, Global, Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { Request } from "express";
 
-import { CurrentUser } from "../user-permissions/dto/current-user";
-import { User } from "../user-permissions/interfaces/user";
-import { SystemUser } from "../user-permissions/user-permissions.types";
-import { ACCESS_LOG_CONFIG } from "./access-log.constants";
-import { AccessLogInterceptor } from "./access-log.interceptor";
+import { CurrentUser } from "../user-permissions/dto/current-user.js";
+import { User } from "../user-permissions/interfaces/user.js";
+import { SystemUser } from "../user-permissions/user-permissions.types.js";
+import { ACCESS_LOG_CONFIG } from "./access-log.constants.js";
+import { AccessLogInterceptor } from "./access-log.interceptor.js";
 
 type ShouldLogRequest = ({ user, req }: { user?: CurrentUser | SystemUser; req: Request }) => boolean;
 

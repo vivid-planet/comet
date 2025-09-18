@@ -1,14 +1,14 @@
 import { MikroORM } from "@mikro-orm/postgresql";
 import { ExecutionContext, Injectable, Optional, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants.js";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { PageTreeService } from "../page-tree/page-tree.service";
-import { EntityScopeServiceInterface, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
+import { PageTreeService } from "../page-tree/page-tree.service.js";
+import { EntityScopeServiceInterface, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator.js";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
+import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator.js";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()

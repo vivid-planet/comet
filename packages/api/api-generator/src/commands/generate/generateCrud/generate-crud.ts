@@ -1,24 +1,54 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     CRUD_GENERATOR_METADATA_KEY,
-    type CrudGeneratorOptions,
+    // type CrudGeneratorOptions,
     getCrudSearchFieldsFromMetadata,
     hasCrudFieldFeature,
+    type Permission,
     SCOPED_ENTITY_METADATA_KEY,
 } from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
-import { singular } from "pluralize";
+import pluralize from "pluralize";
 
-import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
-import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
-import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import { generateCrudInput } from "../generateCrudInput/generate-crud-input.js";
+import { buildNameVariants } from "../utils/build-name-variants.js";
+import { integerTypes } from "../utils/constants.js";
+import { generateImportsCode, type Imports } from "../utils/generate-imports-code.js";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper.js";
+import { type GeneratedFile } from "../utils/write-generated-files.js";
+
+interface CrudGeneratorOptions {
+    targetDirectory: string;
+    requiredPermission: Permission | Permission[];
+    create?: boolean;
+    update?: boolean;
+    delete?: boolean;
+    list?: boolean;
+    single?: boolean;
+    position?: { groupByFields: string[] };
+}
+
+export interface BuildOptionsResult {
+    crudSearchPropNames: any[];
+    hasSearchArg: boolean;
+    crudFilterProps: any[]; // Use the correct type if possible
+    hasFilterArg: boolean;
+    crudSortProps: any[];
+    hasSortArg: boolean;
+    hasSlugProp: boolean;
+    hasPositionProp: boolean;
+    positionGroupProps: any[];
+    scopeProp: any;
+    skipScopeCheck: boolean;
+    argsClassName: string;
+    argsFileName: string;
+    blockProps: any[];
+    dedicatedResolverArgProps: any[];
+}
 
 // TODO move into own file
-export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
+export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions): BuildOptionsResult {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const dedicatedResolverArgProps = metadata.props.filter((prop) => {
@@ -543,7 +573,7 @@ function generateInputHandling(
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
             return {
                 name: prop.name,
-                singularName: singular(prop.name),
+                singularName: pluralize.singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
             };
@@ -556,7 +586,7 @@ function generateInputHandling(
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
             return {
                 name: prop.name,
-                singularName: singular(prop.name),
+                singularName: pluralize.singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
                 targetMeta,
@@ -569,7 +599,7 @@ function generateInputHandling(
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
             return {
                 name: prop.name,
-                singularName: singular(prop.name),
+                singularName: pluralize.singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
                 orphanRemoval: prop.orphanRemoval,

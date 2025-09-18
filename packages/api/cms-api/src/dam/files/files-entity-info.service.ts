@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
-import { EntityInfoServiceInterface } from "../../common/entityInfo/entity-info.decorator";
-import { FileInterface } from "./entities/file.entity";
-import { FilesService } from "./files.service";
+import { EntityInfoServiceInterface } from "../../common/entityInfo/entity-info.decorator.js";
+import { FileInterface } from "./entities/file.entity.js";
+import { FilesService } from "./files.service.js";
 
 @Injectable()
 export class FilesEntityInfoService implements EntityInfoServiceInterface<FileInterface> {

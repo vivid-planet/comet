@@ -1,4 +1,4 @@
-import { PixelImageBlock } from "../../dam/blocks/pixel-image.block";
+import { PixelImageBlock } from "../../dam/blocks/pixel-image.block.js";
 import {
     Block,
     BlockData,
@@ -9,10 +9,10 @@ import {
     createBlock,
     ExtractBlockInput,
     SimpleBlockInputInterface,
-} from "../block";
-import { ChildBlock } from "../decorators/child-block";
-import { ChildBlockInput } from "../decorators/child-block-input";
-import { BlockFactoryNameOrOptions } from "./types";
+} from "../block.js";
+import { ChildBlock } from "../decorators/child-block.js";
+import { ChildBlockInput } from "../decorators/child-block-input.js";
+import { BlockFactoryNameOrOptions } from "./types.js";
 
 interface CreateImageLinkBlockOptions<LinkBlock extends Block, ImageBlock extends Block> {
     image?: ImageBlock;

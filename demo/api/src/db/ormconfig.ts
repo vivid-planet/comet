@@ -2,6 +2,8 @@ import { createMigrationsList, createOrmConfig } from "@comet/cms-api";
 import { defineConfig, EntityCaseNamingStrategy } from "@mikro-orm/postgresql";
 import path from "path";
 
+console.log('createMigrationsList(path.resolve(__dirname, "migrations")) ', createMigrationsList(path.resolve(__dirname, "migrations")));
+
 export const ormConfig = createOrmConfig(
     defineConfig({
         host: process.env.POSTGRESQL_HOST,

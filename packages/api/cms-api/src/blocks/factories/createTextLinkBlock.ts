@@ -10,12 +10,12 @@ import {
     createBlock,
     ExtractBlockInput,
     SimpleBlockInputInterface,
-} from "../block";
-import { ChildBlock } from "../decorators/child-block";
-import { ChildBlockInput } from "../decorators/child-block-input";
-import { BlockField } from "../decorators/field";
-import { SearchText } from "../search/get-search-text";
-import { BlockFactoryNameOrOptions } from "./types";
+} from "../block.js";
+import { ChildBlock } from "../decorators/child-block.js";
+import { ChildBlockInput } from "../decorators/child-block-input.js";
+import { BlockField } from "../decorators/field.js";
+import { SearchText } from "../search/get-search-text.js";
+import { BlockFactoryNameOrOptions } from "./types.js";
 
 interface CreateTextLinkBlockOptions<LinkBlock extends Block> {
     link: LinkBlock;

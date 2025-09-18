@@ -12,14 +12,14 @@ import {
     ChildBlockInfo,
     ExtractBlockInput,
     registerBlock,
-} from "../block";
-import { AnnotationBlockMeta, BlockField } from "../decorators/field";
-import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator";
-import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator";
-import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
-import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
-import { SearchText } from "../search/get-search-text";
-import { BlockFactoryNameOrOptions } from "./types";
+} from "../block.js";
+import { AnnotationBlockMeta, BlockField } from "../decorators/field.js";
+import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator.js";
+import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator.js";
+import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator.js";
+import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion.js";
+import { SearchText } from "../search/get-search-text.js";
+import { BlockFactoryNameOrOptions } from "./types.js";
 
 interface CreateRichTextBlockOptions {
     link: Block;

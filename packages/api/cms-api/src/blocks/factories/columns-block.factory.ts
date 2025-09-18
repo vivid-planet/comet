@@ -15,9 +15,9 @@ import {
     isBlockInputInterface,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
-} from "../block";
-import { BlockField } from "../decorators/field";
-import { BlockFactoryNameOrOptions } from "./types";
+} from "../block.js";
+import { BlockField } from "../decorators/field.js";
+import { BlockFactoryNameOrOptions } from "./types.js";
 
 interface ColumnsBlockLayout {
     name: string;

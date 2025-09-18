@@ -2,19 +2,19 @@ import { V1CronJob } from "@kubernetes/client-node";
 import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
-import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
-import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { CurrentUser } from "../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
-import { BuildsService } from "./builds.service";
-import { AutoBuildStatus } from "./dto/auto-build-status.object";
-import { Build } from "./dto/build.object";
-import { CreateBuildsInput } from "./dto/create-builds.input";
-import { SkipBuild } from "./skip-build.decorator";
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator.js";
+import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants.js";
+import { KubernetesService } from "../kubernetes/kubernetes.service.js";
+import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard.js";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator.js";
+import { CurrentUser } from "../user-permissions/dto/current-user.js";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants.js";
+import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types.js";
+import { BuildsService } from "./builds.service.js";
+import { AutoBuildStatus } from "./dto/auto-build-status.object.js";
+import { Build } from "./dto/build.object.js";
+import { CreateBuildsInput } from "./dto/create-builds.input.js";
+import { SkipBuild } from "./skip-build.decorator.js";
 
 @Resolver(() => Build)
 @RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in code

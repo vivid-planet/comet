@@ -3,11 +3,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
-import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { KubernetesJobStatus } from "./job-status.enum";
-import { KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants";
-import { KubernetesConfig } from "./kubernetes.module";
+import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants.js";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
+import { KubernetesJobStatus } from "./job-status.enum.js";
+import { KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants.js";
+import { KubernetesConfig } from "./kubernetes.module.js";
 
 @Injectable()
 export class KubernetesService {

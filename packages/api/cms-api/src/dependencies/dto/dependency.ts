@@ -1,6 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 
-import { BaseDependencyInterface } from "./base-dependency.interface";
+import { BaseDependencyInterface } from "./base-dependency.interface.js";
 
 @ObjectType()
 export class Dependency implements BaseDependencyInterface {

@@ -1,18 +1,18 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants.js";
 import { ModuleRef, Reflector } from "@nestjs/core";
-import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
+import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block.js";
 
-import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
-import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
-import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
-import { WarningData } from "./dto/warning-data";
-import { WarningService } from "./warning.service";
+import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block.js";
+import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity.js";
+import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks.js";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator.js";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
+import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator.js";
+import { WarningData } from "./dto/warning-data.js";
+import { WarningService } from "./warning.service.js";
 
 @Injectable()
 export class WarningEventSubscriber implements EventSubscriber {

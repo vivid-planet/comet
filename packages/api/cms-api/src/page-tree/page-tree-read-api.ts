@@ -2,11 +2,11 @@ import { type EntityRepository, NotFoundError, type QueryBuilder } from "@mikro-
 import opentelemetry from "@opentelemetry/api";
 import { compareAsc, compareDesc, isEqual } from "date-fns";
 
-import { SortDirection } from "../common/sorting/sort-direction.enum";
-import { type PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
-import { type AttachedDocument } from "./entities/attached-document.entity";
-import { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, type ScopeInterface } from "./types";
-import pathBuilder from "./utils/path-builder";
+import { SortDirection } from "../common/sorting/sort-direction.enum.js";
+import { type PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort.js";
+import { type AttachedDocument } from "./entities/attached-document.entity.js";
+import { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, type ScopeInterface } from "./types.js";
+import pathBuilder from "./utils/path-builder.js";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 

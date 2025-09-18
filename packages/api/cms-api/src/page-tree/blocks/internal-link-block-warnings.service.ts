@@ -2,9 +2,9 @@ import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
 
-import { BlockWarning, BlockWarningsServiceInterface } from "../../blocks/block";
-import { PageTreeNodeBase } from "../entities/page-tree-node-base.entity";
-import type { InternalLinkBlockData } from "./internal-link.block";
+import { BlockWarning, BlockWarningsServiceInterface } from "../../blocks/block.js";
+import { PageTreeNodeBase } from "../entities/page-tree-node-base.entity.js";
+import type { InternalLinkBlockData } from "./internal-link.block.js";
 
 @Injectable()
 export class InternalLinkBlockWarningsService implements BlockWarningsServiceInterface<InternalLinkBlockData> {

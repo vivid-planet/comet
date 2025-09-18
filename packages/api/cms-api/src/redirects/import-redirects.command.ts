@@ -6,13 +6,13 @@ import * as console from "console";
 import * as fs from "fs";
 import { Command, CommandRunner } from "nest-commander";
 
-import { PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeReadApiOptions } from "../page-tree/page-tree-read-api";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
-import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
-import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
-import { RedirectsLinkBlock } from "./redirects.module";
-import { RedirectScopeInterface } from "./types";
+import { PageTreeService } from "../page-tree/page-tree.service.js";
+import { PageTreeReadApiOptions } from "../page-tree/page-tree-read-api.js";
+import { RedirectInterface } from "./entities/redirect-entity.factory.js";
+import { REDIRECTS_LINK_BLOCK } from "./redirects.constants.js";
+import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum.js";
+import { RedirectsLinkBlock } from "./redirects.module.js";
+import { RedirectScopeInterface } from "./types.js";
 
 interface Row {
     target: string;

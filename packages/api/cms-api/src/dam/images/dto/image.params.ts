@@ -1,10 +1,10 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsHash, IsInt, IsNumber, IsOptional, IsString, IsUUID, Max, Min, ValidateIf } from "class-validator";
 
-import { FocalPoint } from "../../../file-utils/focal-point.enum";
-import { ImageCropArea } from "../entities/image-crop-area.entity";
-import { IsAllowedImageSize } from "../validators/is-allowed-image-size.validator";
-import { IsValidImageAspectRatio } from "../validators/is-valid-aspect-ratio.validator";
+import { FocalPoint } from "../../../file-utils/focal-point.enum.js";
+import { ImageCropArea } from "../entities/image-crop-area.entity.js";
+import { IsAllowedImageSize } from "../validators/is-allowed-image-size.validator.js";
+import { IsValidImageAspectRatio } from "../validators/is-valid-aspect-ratio.validator.js";
 
 export class ImageParams {
     @IsUUID()
@@ -75,5 +75,5 @@ export class HashImageParams extends ImageParams {
 
     @IsOptional()
     @IsHash("md5")
-    contentHash?: string;
+    declare contentHash?: string; // TODO ESM: check if works correctly
 }

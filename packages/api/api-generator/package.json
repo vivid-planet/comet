@@ -8,8 +8,8 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
+    "type": "module",
+    "exports": "./lib/index.js",
     "typings": "lib/index.d.ts",
     "bin": {
         "comet-api-generator": "bin/api-generator.js"

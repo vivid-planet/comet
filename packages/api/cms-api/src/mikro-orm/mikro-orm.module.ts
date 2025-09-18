@@ -4,39 +4,39 @@ import { DynamicModule, Module } from "@nestjs/common";
 import fs from "fs";
 import path from "path";
 
-import { Migration20220127085859 } from "./migrations/Migration20220127085859";
-import { Migration20220127085946 } from "./migrations/Migration20220127085946";
-import { Migration20220127091538 } from "./migrations/Migration20220127091538";
-import { Migration20220127091751 } from "./migrations/Migration20220127091751";
-import { Migration20220127111301 } from "./migrations/Migration20220127111301";
-import { Migration20220127142112 } from "./migrations/Migration20220127142112";
-import { Migration20220620124134 } from "./migrations/Migration20220620124134";
-import { Migration20220905145606 } from "./migrations/Migration20220905145606";
-import { Migration20230209111818 } from "./migrations/Migration20230209111818";
-import { Migration20230302145445 } from "./migrations/Migration20230302145445";
-import { Migration20230613150332 } from "./migrations/Migration20230613150332";
-import { Migration20230802124224 } from "./migrations/Migration20230802124224";
-import { Migration20230808085034 } from "./migrations/Migration20230808085034";
-import { Migration20230821090303 } from "./migrations/Migration20230821090303";
-import { Migration20231204140305 } from "./migrations/Migration20231204140305";
-import { Migration20231206123505 } from "./migrations/Migration20231206123505";
-import { Migration20231215103630 } from "./migrations/Migration20231215103630";
-import { Migration20231218092313 } from "./migrations/Migration20231218092313";
-import { Migration20231222090009 } from "./migrations/Migration20231222090009";
-import { Migration20240702123233 } from "./migrations/Migration20240702123233";
-import { Migration20240725071750 } from "./migrations/Migration20240725071750";
-import { Migration20240814090503 } from "./migrations/Migration20240814090503";
-import { Migration20240814090541 } from "./migrations/Migration20240814090541";
-import { Migration20240814090653 } from "./migrations/Migration20240814090653";
-import { Migration20250403134629 } from "./migrations/Migration20250403134629";
-import { Migration20250623085054 } from "./migrations/Migration20250623085054";
-import { Migration20250623113026 } from "./migrations/Migration20250623113026";
+import { Migration20220127085859 } from "./migrations/Migration20220127085859.js";
+import { Migration20220127085946 } from "./migrations/Migration20220127085946.js";
+import { Migration20220127091538 } from "./migrations/Migration20220127091538.js";
+import { Migration20220127091751 } from "./migrations/Migration20220127091751.js";
+import { Migration20220127111301 } from "./migrations/Migration20220127111301.js";
+import { Migration20220127142112 } from "./migrations/Migration20220127142112.js";
+import { Migration20220620124134 } from "./migrations/Migration20220620124134.js";
+import { Migration20220905145606 } from "./migrations/Migration20220905145606.js";
+import { Migration20230209111818 } from "./migrations/Migration20230209111818.js";
+import { Migration20230302145445 } from "./migrations/Migration20230302145445.js";
+import { Migration20230613150332 } from "./migrations/Migration20230613150332.js";
+import { Migration20230802124224 } from "./migrations/Migration20230802124224.js";
+import { Migration20230808085034 } from "./migrations/Migration20230808085034.js";
+import { Migration20230821090303 } from "./migrations/Migration20230821090303.js";
+import { Migration20231204140305 } from "./migrations/Migration20231204140305.js";
+import { Migration20231206123505 } from "./migrations/Migration20231206123505.js";
+import { Migration20231215103630 } from "./migrations/Migration20231215103630.js";
+import { Migration20231218092313 } from "./migrations/Migration20231218092313.js";
+import { Migration20231222090009 } from "./migrations/Migration20231222090009.js";
+import { Migration20240702123233 } from "./migrations/Migration20240702123233.js";
+import { Migration20240725071750 } from "./migrations/Migration20240725071750.js";
+import { Migration20240814090503 } from "./migrations/Migration20240814090503.js";
+import { Migration20240814090541 } from "./migrations/Migration20240814090541.js";
+import { Migration20240814090653 } from "./migrations/Migration20240814090653.js";
+import { Migration20250403134629 } from "./migrations/Migration20250403134629.js";
+import { Migration20250623085054 } from "./migrations/Migration20250623085054.js";
+import { Migration20250623113026 } from "./migrations/Migration20250623113026.js";
 
 export interface MikroOrmModuleOptions {
     ormConfig: MikroOrmNestjsOptions;
 }
 
-export function createMigrationsList(migrationsDir: string): MigrationObject[] {
+export async function createMigrationsList(migrationsDir: string): Promise<MigrationObject[]> {
     if (!fs.existsSync(migrationsDir)) {
         return [];
     }
@@ -50,17 +50,13 @@ export function createMigrationsList(migrationsDir: string): MigrationObject[] {
     const isInSourceDirectory = files.filter((file) => file != ".snapshot-main.json").every((file) => file.endsWith(".ts"));
     const fileExtension = isInSourceDirectory ? ".ts" : ".js";
 
-    return files
-        .filter((file) => file.endsWith(fileExtension))
-        .map((file) => {
-            const { name } = path.parse(file);
-
-            return {
-                name,
-                // eslint-disable-next-line @typescript-eslint/no-require-imports
-                class: require(`${migrationsDir}/${file}`)[name],
-            };
-        });
+    const migrations: MigrationObject[] = [];
+    for (const file of files.filter((file) => file.endsWith(fileExtension))) {
+        const { name } = path.parse(file);
+        const mod = await import(`${migrationsDir}/${file}`);
+        migrations.push({ name, class: mod[name] });
+    }
+    return migrations;
 }
 
 export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptions<PostgreSqlDriver>): MikroOrmNestjsOptions<PostgreSqlDriver> {

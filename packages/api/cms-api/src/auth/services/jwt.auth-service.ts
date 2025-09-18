@@ -1,12 +1,12 @@
 import { Injectable, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants.js";
 import { ModuleRef } from "@nestjs/core";
 import { JwtService, JwtVerifyOptions } from "@nestjs/jwt";
 import { Request } from "express";
 import JwksRsa, { JwksClient } from "jwks-rsa";
 
-import { User } from "../../user-permissions/interfaces/user";
-import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
+import { User } from "../../user-permissions/interfaces/user.js";
+import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type JwtPayload = { [key: string]: any };

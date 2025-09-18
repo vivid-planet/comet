@@ -4,13 +4,13 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import isEqual from "lodash.isequal";
 
-import { SkipBuild } from "../builds/skip-build.decorator";
-import { RequiredPermission } from "./decorators/required-permission.decorator";
-import { ContentScopeWithLabel } from "./dto/content-scope";
-import { UserContentScopesInput } from "./dto/user-content-scopes.input";
-import { UserContentScopes } from "./entities/user-content-scopes.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
-import { UserPermissionsService } from "./user-permissions.service";
+import { SkipBuild } from "../builds/skip-build.decorator.js";
+import { RequiredPermission } from "./decorators/required-permission.decorator.js";
+import { ContentScopeWithLabel } from "./dto/content-scope.js";
+import { UserContentScopesInput } from "./dto/user-content-scopes.input.js";
+import { UserContentScopes } from "./entities/user-content-scopes.entity.js";
+import { ContentScope } from "./interfaces/content-scope.interface.js";
+import { UserPermissionsService } from "./user-permissions.service.js";
 
 @Resolver()
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })

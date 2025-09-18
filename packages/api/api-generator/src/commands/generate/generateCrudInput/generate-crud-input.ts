@@ -3,10 +3,10 @@ import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 import { SyntaxKind } from "ts-morph";
 
-import { buildOptions } from "../generateCrud/generate-crud";
-import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
-import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
+import { buildOptions } from "../generateCrud/generate-crud.js";
+import { buildNameVariants } from "../utils/build-name-variants.js";
+import { integerTypes } from "../utils/constants.js";
+import { generateImportsCode, type Imports } from "../utils/generate-imports-code.js";
 import {
     findBlockImportPath,
     findBlockName,
@@ -17,8 +17,8 @@ import {
     findValidatorImportPath,
     getFieldDecoratorClassName,
     morphTsProperty,
-} from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+} from "../utils/ts-morph-helper.js";
+import { type GeneratedFile } from "../utils/write-generated-files.js";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);

@@ -1,6 +1,4 @@
-import base64url from "base64url";
-
-import { type Extension, Gravity, ResizingType } from "./imgproxy.enum";
+import { type Extension, Gravity, ResizingType } from "./imgproxy.enum.js";
 
 export class ImgproxyBuilder {
     private defaultQuality: number;
@@ -45,6 +43,7 @@ export class ImgproxyBuilder {
             .map((option) => `${option}:${this.options[option]}`)
             .join("/");
 
-        return `/${[url, base64url(sourceUrl)].join("/")}`;
+        // TODO ESM: test this
+        return `/${[url, Buffer.from(sourceUrl).toString("base64url")].join("/")}`;
     }
 }

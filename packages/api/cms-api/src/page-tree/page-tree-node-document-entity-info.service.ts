@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
-import { EntityInfoServiceInterface } from "../common/entityInfo/entity-info.decorator";
-import { DocumentInterface } from "../document/dto/document-interface";
-import { PageTreeService } from "./page-tree.service";
+import { EntityInfoServiceInterface } from "../common/entityInfo/entity-info.decorator.js";
+import { DocumentInterface } from "../document/dto/document-interface.js";
+import { PageTreeService } from "./page-tree.service.js";
 
 @Injectable()
 export class PageTreeNodeDocumentEntityInfoService implements EntityInfoServiceInterface<DocumentInterface> {

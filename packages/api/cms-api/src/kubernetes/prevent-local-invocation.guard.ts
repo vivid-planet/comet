@@ -1,6 +1,6 @@
 import { CanActivate, Injectable, Logger } from "@nestjs/common";
 
-import { KubernetesService } from "./kubernetes.service";
+import { KubernetesService } from "./kubernetes.service.js";
 
 @Injectable()
 export class PreventLocalInvocationGuard implements CanActivate {

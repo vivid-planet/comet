@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { EntityInfoService } from "./entity-info.service";
+import { EntityInfoService } from "./entity-info.service.js";
 
 @Module({
     imports: [],

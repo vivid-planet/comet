@@ -4,10 +4,10 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { Observable } from "rxjs";
 
-import { ContentScopeService } from "../user-permissions/content-scope.service";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { BuildsService } from "./builds.service";
-import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
+import { ContentScopeService } from "../user-permissions/content-scope.service.js";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
+import { BuildsService } from "./builds.service.js";
+import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator.js";
 
 @Injectable()
 export class ChangesCheckerInterceptor implements NestInterceptor {

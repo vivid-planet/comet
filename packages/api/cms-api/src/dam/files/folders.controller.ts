@@ -1,12 +1,12 @@
 import { Controller, ForbiddenException, Get, Inject, NotFoundException, Param, Res, Type } from "@nestjs/common";
 import { Response } from "express";
 
-import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { FoldersService } from "./folders.service";
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator.js";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator.js";
+import { CurrentUser } from "../../user-permissions/dto/current-user.js";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants.js";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types.js";
+import { FoldersService } from "./folders.service.js";
 
 export const createFoldersController = ({ damBasePath }: { damBasePath: string }): Type<unknown> => {
     @Controller(`${damBasePath}/folders`)

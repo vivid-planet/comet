@@ -1,5 +1,5 @@
-import { type BlockDataInterface } from "../block";
-import { FlatBlocks } from "../flat-blocks/flat-blocks";
+import { type BlockDataInterface } from "../block.js";
+import { FlatBlocks } from "../flat-blocks/flat-blocks.js";
 
 export interface WeightedSearchText {
     text: string;

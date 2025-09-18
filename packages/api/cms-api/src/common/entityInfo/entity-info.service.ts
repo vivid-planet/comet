@@ -1,8 +1,8 @@
 import { Injectable, Logger, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants.js";
 import { ModuleRef } from "@nestjs/core";
 
-import { ENTITY_INFO_METADATA_KEY, EntityInfoGetter, EntityInfoInterface, EntityInfoServiceInterface } from "./entity-info.decorator";
+import { ENTITY_INFO_METADATA_KEY, EntityInfoGetter, EntityInfoInterface, EntityInfoServiceInterface } from "./entity-info.decorator.js";
 
 @Injectable()
 export class EntityInfoService {

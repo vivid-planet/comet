@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 
-import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
-import { FilesService } from "../files/files.service";
-import { ImageCropArea } from "../images/entities/image-crop-area.entity";
-import { ImagesService } from "../images/images.service";
-import { DamScopeInterface } from "../types";
-import { PixelImageBlockData } from "./pixel-image.block";
+import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block.js";
+import { FilesService } from "../files/files.service.js";
+import { ImageCropArea } from "../images/entities/image-crop-area.entity.js";
+import { ImagesService } from "../images/images.service.js";
+import { DamScopeInterface } from "../types.js";
+import { PixelImageBlockData } from "./pixel-image.block.js";
 
 type TransformResponse = {
     damFile?: {

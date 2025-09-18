@@ -1,7 +1,7 @@
 import { addDays, subDays } from "date-fns";
 
-import { RedirectGenerationType } from "./redirects.enum";
-import { type FilterableRedirect, isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
+import { RedirectGenerationType } from "./redirects.enum.js";
+import { type FilterableRedirect, isEmptyFilter, redirectMatchesFilter } from "./redirects.util.js";
 
 describe("redirectMatchesFilter", () => {
     it("should match for empty filter", () => {

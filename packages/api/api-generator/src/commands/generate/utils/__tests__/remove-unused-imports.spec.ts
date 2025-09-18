@@ -1,6 +1,6 @@
 import ts from "typescript";
 
-import { removeUnusedImports } from "../write-generated-file";
+import { removeUnusedImports } from "../write-generated-file.js";
 
 function runTransform(input: string): string {
     input = input.trim().replace(/^\s+/gm, "");

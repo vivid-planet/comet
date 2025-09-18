@@ -4,13 +4,13 @@ import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
-import { DiscoverService } from "./discover.service";
-import { BaseDependencyInterface } from "./dto/base-dependency.interface";
-import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
-import { Dependency } from "./dto/dependency";
-import { PaginatedDependencies } from "./dto/paginated-dependencies";
-import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
+import { EntityInfoService } from "../common/entityInfo/entity-info.service.js";
+import { DiscoverService } from "./discover.service.js";
+import { BaseDependencyInterface } from "./dto/base-dependency.interface.js";
+import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter.js";
+import { Dependency } from "./dto/dependency.js";
+import { PaginatedDependencies } from "./dto/paginated-dependencies.js";
+import { BlockIndexRefresh } from "./entities/block-index-refresh.entity.js";
 
 interface PGStatActivity {
     pid: number;

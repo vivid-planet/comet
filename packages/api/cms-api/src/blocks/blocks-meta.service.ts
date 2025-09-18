@@ -1,7 +1,7 @@
 import { Logger, type OnModuleInit } from "@nestjs/common";
 import { promises as fs } from "fs";
 
-import { getBlocksMeta } from "./blocks-meta";
+import { getBlocksMeta } from "./blocks-meta.js";
 
 export class BlocksMetaService implements OnModuleInit {
     private readonly logger = new Logger(BlocksMetaService.name);

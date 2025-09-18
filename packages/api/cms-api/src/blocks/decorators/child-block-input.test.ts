@@ -1,8 +1,8 @@
-import { BlockData, BlockDataInterface, BlockInput, blockInputToData, createBlock, ExtractBlockData, ExtractBlockInput } from "../block";
-import { ExternalLinkBlock } from "../ExternalLinkBlock";
-import { createRichTextBlock } from "../factories/createRichTextBlock";
-import { ChildBlock } from "./child-block";
-import { ChildBlockInput } from "./child-block-input";
+import { BlockData, BlockDataInterface, BlockInput, blockInputToData, createBlock, ExtractBlockData, ExtractBlockInput } from "../block.js";
+import { ExternalLinkBlock } from "../ExternalLinkBlock.js";
+import { createRichTextBlock } from "../factories/createRichTextBlock.js";
+import { ChildBlock } from "./child-block.js";
+import { ChildBlockInput } from "./child-block-input.js";
 
 const RichTextBlock = createRichTextBlock({ link: ExternalLinkBlock });
 

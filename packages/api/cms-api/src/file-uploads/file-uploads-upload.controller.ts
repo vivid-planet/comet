@@ -2,14 +2,14 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { rimraf } from "rimraf";
 
-import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
-import { FileUploadInput } from "../file-utils/file-upload.input";
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { FileUpload } from "./entities/file-upload.entity";
-import { FileUploadsConfig } from "./file-uploads.config";
-import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
-import { FileUploadsService } from "./file-uploads.service";
-import { FileUploadsFileInterceptor } from "./file-uploads-file.interceptor";
+import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator.js";
+import { FileUploadInput } from "../file-utils/file-upload.input.js";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator.js";
+import { FileUpload } from "./entities/file-upload.entity.js";
+import { FileUploadsConfig } from "./file-uploads.config.js";
+import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants.js";
+import { FileUploadsService } from "./file-uploads.service.js";
+import { FileUploadsFileInterceptor } from "./file-uploads-file.interceptor.js";
 
 type FileUploadsUploadResponse = Pick<FileUpload, "id" | "name" | "size" | "mimetype" | "contentHash" | "createdAt" | "updatedAt"> & {
     downloadUrl?: string;

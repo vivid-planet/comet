@@ -1,8 +1,8 @@
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 
-import { formatSource, testPermission } from "../../utils/test-helper";
-import { generateCrudInput } from "../generate-crud-input";
+import { formatSource, testPermission } from "../../utils/test-helper.js";
+import { generateCrudInput } from "../generate-crud-input.js";
 
 @Entity()
 class TestEntity extends BaseEntity {

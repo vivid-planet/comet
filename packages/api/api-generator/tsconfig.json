@@ -1,14 +1,16 @@
 {
     "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "lib": ["ESNext"],
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "lib": ["ES2020"],
         "outDir": "lib",
         "rootDir": "src",
         "strict": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
-        "target": "ES2015"
     },
     "exclude": ["node_modules", "lib"],
     "extends": "../../../tsconfig.core.json",

@@ -1,4 +1,4 @@
-import { IsSlugConstraint } from "./is-slug";
+import { IsSlugConstraint } from "./is-slug.js";
 
 describe("IsSlug", () => {
     describe("findAll", () => {

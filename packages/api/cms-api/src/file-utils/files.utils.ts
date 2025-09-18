@@ -2,17 +2,16 @@ import { XMLParser } from "fast-xml-parser";
 import FileType from "file-type";
 import fs from "fs";
 import { unlink } from "fs/promises";
-import got from "got";
-import * as mimedb from "mime-db";
+import mimedb from "mime-db";
 import os from "os";
 import { basename, extname } from "path";
-import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { type FileUploadInput } from "./file-upload.input";
-import { FILE_UPLOAD_FIELD } from "./files.constants";
+import slugify from "../imports/slugify.js";
+import { type FileUploadInput } from "./file-upload.input.js";
+import { FILE_UPLOAD_FIELD } from "./files.constants.js";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -128,7 +127,11 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
     const tempFile = `${tempDir}/${fakeName}`;
 
     if (url.substring(0, 4) === "http") {
-        await pipeline(got.stream(url), fs.createWriteStream(tempFile));
+        // TODO ESM: check if this still works
+        const response = await fetch(url);
+        if (!response.ok || !response.body) throw new Error(`Failed to fetch: ${response.statusText}`);
+        const nodeStream = stream.Readable.fromWeb(response.body);
+        await pipeline(nodeStream, fs.createWriteStream(tempFile));
         //TODO when downloading the file from http use mime type from response header
     } else {
         fs.copyFileSync(url, tempFile);

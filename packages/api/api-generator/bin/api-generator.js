@@ -1,6 +1,3 @@
 #!/usr/bin/env node
-require("ts-node").register({
-    require: ["tsconfig-paths/register"],
-    transpileOnly: true,
-});
-require("../lib/apiGenerator");
+import "ts-node/register";
+await import("../lib/apiGenerator.js");

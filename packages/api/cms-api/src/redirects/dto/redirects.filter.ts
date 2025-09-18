@@ -2,9 +2,9 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
-import { BooleanFilter } from "../../common/filter/boolean.filter";
-import { DateTimeFilter } from "../../common/filter/date-time.filter";
-import { StringFilter } from "../../common/filter/string.filter";
+import { BooleanFilter } from "../../common/filter/boolean.filter.js";
+import { DateTimeFilter } from "../../common/filter/date-time.filter.js";
+import { StringFilter } from "../../common/filter/string.filter.js";
 
 @InputType()
 export class RedirectFilter {

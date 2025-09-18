@@ -2,14 +2,14 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/commo
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
-import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
-import { getRequestFromExecutionContext } from "../../common/decorators/utils";
-import { ContentScopeService } from "../content-scope.service";
-import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
-import { CurrentUser } from "../dto/current-user";
-import { ContentScope } from "../interfaces/content-scope.interface";
-import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
-import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
+import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator.js";
+import { getRequestFromExecutionContext } from "../../common/decorators/utils.js";
+import { ContentScopeService } from "../content-scope.service.js";
+import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator.js";
+import { CurrentUser } from "../dto/current-user.js";
+import { ContentScope } from "../interfaces/content-scope.interface.js";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants.js";
+import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsOptions } from "../user-permissions.types.js";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {

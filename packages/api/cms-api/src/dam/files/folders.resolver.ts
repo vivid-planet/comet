@@ -1,16 +1,16 @@
 import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
-import { SkipBuild } from "../../builds/skip-build.decorator";
-import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
-import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { DamScopeInterface } from "../types";
-import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args";
-import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
-import { FolderInterface } from "./entities/folder.entity";
-import { FoldersService } from "./folders.service";
+import { SkipBuild } from "../../builds/skip-build.decorator.js";
+import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory.js";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator.js";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator.js";
+import { DamScopeInterface } from "../types.js";
+import { EmptyDamScope } from "./dto/empty-dam-scope.js";
+import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args.js";
+import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input.js";
+import { FolderInterface } from "./entities/folder.entity.js";
+import { FoldersService } from "./folders.service.js";
 
 export function createFoldersResolver({
     Folder,

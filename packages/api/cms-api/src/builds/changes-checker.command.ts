@@ -2,7 +2,7 @@ import { CreateRequestContext, MikroORM } from "@mikro-orm/postgresql";
 import { Logger } from "@nestjs/common";
 import { Command, CommandRunner } from "nest-commander";
 
-import { BuildsService } from "./builds.service";
+import { BuildsService } from "./builds.service.js";
 
 @Command({
     name: "check-changes",

@@ -1,23 +1,23 @@
 import { CreateRequestContext, EntityClass, MikroORM } from "@mikro-orm/core";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants.js";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
 
-import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
-import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
-import { DiscoverService } from "../dependencies/discover.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block.js";
+import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks.js";
+import { DiscoverService } from "../dependencies/discover.service.js";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator.js";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
 import {
     CREATE_WARNINGS_METADATA_KEY,
     CreateWarningsFunction,
     CreateWarningsMeta,
     CreateWarningsServiceInterface,
-} from "./decorators/create-warnings.decorator";
-import { Warning } from "./entities/warning.entity";
-import { WarningService } from "./warning.service";
+} from "./decorators/create-warnings.decorator.js";
+import { Warning } from "./entities/warning.entity.js";
+import { WarningService } from "./warning.service.js";
 
 interface RootBlockEntityData {
     primaryKey: string;

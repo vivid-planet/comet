@@ -1,6 +1,6 @@
 import { IsValidRedirectSource } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import {
     IsEmail,
     IsISO8601,
@@ -13,8 +13,8 @@ import {
 } from "class-validator";
 import { v4 as uuid } from "uuid";
 
-import { generateCrud } from "../../generateCrud/generate-crud";
-import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
+import { generateCrud } from "../../generateCrud/generate-crud.js";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper.js";
 
 export const IsTrueAsString = (validationOptions?: ValidationOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

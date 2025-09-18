@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Transporter } from "nodemailer";
-import { Address, Options as MailOptions } from "nodemailer/lib/mailer";
+import type { Address, Options as MailOptions } from "nodemailer/lib/mailer/index.js";
 
-import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
-import { MailerModuleConfig } from "./mailer.module";
+import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants.js";
+import { MailerModuleConfig } from "./mailer.module.js";
 
 type MailerServiceConfig = Omit<MailerModuleConfig, "transport">;
 

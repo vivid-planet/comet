@@ -1,6 +1,6 @@
 import { type ValidationError } from "@nestjs/common";
 
-import { CometException } from "./comet.exception";
+import { CometException } from "./comet.exception.js";
 
 export class CometValidationException extends CometException {
     constructor(

@@ -4,10 +4,10 @@ import { Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 import { basename, extname } from "path";
 
-import { slugifyFilename } from "../../../file-utils/files.utils";
-import { UpdateFileInput } from "../../files/dto/file.input";
-import { UpdateDamFileArgs } from "../../files/dto/update-dam-file.args";
-import { FILE_ENTITY, FileInterface } from "../../files/entities/file.entity";
+import { slugifyFilename } from "../../../file-utils/files.utils.js";
+import { UpdateFileInput } from "../../files/dto/file.input.js";
+import { UpdateDamFileArgs } from "../../files/dto/update-dam-file.args.js";
+import { FILE_ENTITY, FileInterface } from "../../files/entities/file.entity.js";
 
 export const HasValidFilename = () => {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types

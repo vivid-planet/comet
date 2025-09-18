@@ -2,7 +2,7 @@ import { Injectable, Type } from "@nestjs/common";
 import { Request } from "express";
 import { errors, jwtVerify } from "jose";
 
-import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
+import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface.js";
 
 export interface SitePreviewAuthServiceConfig {
     sitePreviewSecret: string;

@@ -1,5 +1,5 @@
 import { Scope, type Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants.js";
 import { type ContextId, type ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
@@ -9,7 +9,7 @@ import {
     type BlockTransformerServiceInterface,
     isBlockDataInterface,
     type TraversableTransformBlockResponse,
-} from "./block";
+} from "./block.js";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 

@@ -1,6 +1,6 @@
-import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block";
-import { ExternalLinkBlock } from "../ExternalLinkBlock";
-import { createLinkBlock } from "./createLinkBlock";
+import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block.js";
+import { ExternalLinkBlock } from "../ExternalLinkBlock.js";
+import { createLinkBlock } from "./createLinkBlock.js";
 
 describe("createLinkBlock", () => {
     it("should have a title", () => {

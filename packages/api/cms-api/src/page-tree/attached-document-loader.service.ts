@@ -3,8 +3,8 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, Scope } from "@nestjs/common";
 import DataLoader from "dataloader";
 
-import { AttachedDocument } from "./entities/attached-document.entity";
-import { PageTreeNodeInterface } from "./types";
+import { AttachedDocument } from "./entities/attached-document.entity.js";
+import { PageTreeNodeInterface } from "./types.js";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AttachedDocumentLoaderService {

@@ -17,15 +17,15 @@ import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfo } from "../../../common/entityInfo/entity-info.decorator";
-import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
-import { DamScopeInterface } from "../../types";
-import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
-import { FileWarningService } from "../file-warning.service";
-import { FilesEntityInfoService } from "../files-entity-info.service";
-import { DamFileImage } from "./file-image.entity";
-import { FolderInterface } from "./folder.entity";
-import { License } from "./license.embeddable";
+import { EntityInfo } from "../../../common/entityInfo/entity-info.decorator.js";
+import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator.js";
+import { DamScopeInterface } from "../../types.js";
+import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity.js";
+import { FileWarningService } from "../file-warning.service.js";
+import { FilesEntityInfoService } from "../files-entity-info.service.js";
+import { DamFileImage } from "./file-image.entity.js";
+import { FolderInterface } from "./folder.entity.js";
+import { License } from "./license.embeddable.js";
 
 export interface FileInterface extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";

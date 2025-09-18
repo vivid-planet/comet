@@ -15,11 +15,11 @@ import {
     ValidateNested,
 } from "class-validator";
 
-import { IsNullable } from "../../../common/validators/is-nullable";
-import { IsUndefinable } from "../../../common/validators/is-undefinable";
-import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
-import { DamScopeInterface } from "../../types";
-import { LicenseType } from "../entities/license.embeddable";
+import { IsNullable } from "../../../common/validators/is-nullable.js";
+import { IsUndefinable } from "../../../common/validators/is-undefinable.js";
+import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input.js";
+import { DamScopeInterface } from "../../types.js";
+import { LicenseType } from "../entities/license.embeddable.js";
 
 export class ImageFileInput {
     @IsInt()

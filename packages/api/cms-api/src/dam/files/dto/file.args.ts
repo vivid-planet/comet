@@ -3,11 +3,11 @@ import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphq
 import { Type as TransformerType } from "class-transformer";
 import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
-import { SortArgs } from "../../../common/sorting/sort.args";
-import { IsNullable } from "../../../common/validators/is-nullable";
-import { DamScopeInterface } from "../../types";
-import { EmptyDamScope } from "./empty-dam-scope";
+import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args.js";
+import { SortArgs } from "../../../common/sorting/sort.args.js";
+import { IsNullable } from "../../../common/validators/is-nullable.js";
+import { DamScopeInterface } from "../../types.js";
+import { EmptyDamScope } from "./empty-dam-scope.js";
 
 @InputType()
 export class FileFilterInput {

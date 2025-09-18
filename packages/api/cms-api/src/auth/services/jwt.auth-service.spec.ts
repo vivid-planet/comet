@@ -1,7 +1,7 @@
 import { JwtService } from "@nestjs/jwt";
 
-import { SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
-import { createJwtAuthService, type JwtAuthServiceOptions } from "./jwt.auth-service";
+import { SKIP_AUTH_SERVICE } from "../util/auth-service.interface.js";
+import { createJwtAuthService, type JwtAuthServiceOptions } from "./jwt.auth-service.js";
 
 describe("createJwtAuthService", () => {
     const instantianteService = (options: JwtAuthServiceOptions) => new (createJwtAuthService(options))(new JwtService());

@@ -1,10 +1,10 @@
 import { type DynamicModule, Global, Module } from "@nestjs/common";
 import { createTransport } from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 
-import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
-import { MailerService } from "./mailer.service";
-import { SendTestMailCommand } from "./send-test-mail.command";
+import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants.js";
+import { MailerService } from "./mailer.service.js";
+import { SendTestMailCommand } from "./send-test-mail.command.js";
 
 export type MailerModuleConfig = {
     defaultFrom: string;

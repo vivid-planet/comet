@@ -1,8 +1,8 @@
 import { type ArgumentsHost, BadRequestException, HttpException, InternalServerErrorException } from "@nestjs/common";
 
-import { CometEntityNotFoundException } from "./entity-not-found.exception";
-import { ExceptionFilter } from "./exception.filter";
-import { CometValidationException } from "./validation.exception";
+import { CometEntityNotFoundException } from "./entity-not-found.exception.js";
+import { ExceptionFilter } from "./exception.filter.js";
+import { CometValidationException } from "./validation.exception.js";
 import Mock = jest.Mock;
 
 const graphQLHost = {

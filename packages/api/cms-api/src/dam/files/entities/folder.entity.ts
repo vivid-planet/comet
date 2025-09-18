@@ -15,8 +15,8 @@ import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { DamScopeInterface } from "../../types";
-import { FileInterface } from "./file.entity";
+import { DamScopeInterface } from "../../types.js";
+import { FileInterface } from "./file.entity.js";
 
 export interface FolderInterface extends BaseEntity {
     [OptionalProps]?:
@@ -122,7 +122,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
             scope: typeof Scope;
 
             @Field(() => DamFolder, { nullable: true })
-            parent: DamFolder | null;
+            declare parent: DamFolder | null; // TODO ESM: check if works correctly
         }
         return DamFolder;
     } else {
@@ -130,7 +130,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @ObjectType("DamFolder")
         class DamFolder extends FolderBase {
             @Field(() => DamFolder, { nullable: true })
-            parent: DamFolder | null;
+            declare parent: DamFolder | null; // TODO ESM: check if works correctly
         }
         return DamFolder;
     }

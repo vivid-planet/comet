@@ -7,11 +7,11 @@ import {
     InternalServerErrorException,
     Logger,
 } from "@nestjs/common";
-import { ErrorHttpStatusCode } from "@nestjs/common/utils/http-error-by-code.util";
+import { ErrorHttpStatusCode } from "@nestjs/common/utils/http-error-by-code.util.js";
 import { Response } from "express";
 
-import { CometException } from "./comet.exception";
-import { CometValidationException } from "./validation.exception";
+import { CometException } from "./comet.exception.js";
+import { CometValidationException } from "./validation.exception.js";
 
 @Catch()
 export class ExceptionFilter implements NestExceptionFilter {

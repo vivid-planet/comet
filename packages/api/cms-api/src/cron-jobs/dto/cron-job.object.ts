@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
-import { LABEL_ANNOTATION } from "../../kubernetes/kubernetes.constants";
+import { LABEL_ANNOTATION } from "../../kubernetes/kubernetes.constants.js";
 
 @ObjectType("KubernetesCronJob")
 export class CronJob {

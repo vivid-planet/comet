@@ -8,11 +8,11 @@ import {
 } from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
 import { type MikroORM } from "@mikro-orm/core";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 
-import { generateCrud } from "./generateCrud/generate-crud";
-import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
-import { writeGeneratedFiles } from "./utils/write-generated-files";
+import { generateCrud } from "./generateCrud/generate-crud.js";
+import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single.js";
+import { writeGeneratedFiles } from "./utils/write-generated-files.js";
 
 /**
  * Generate mode for the generator.

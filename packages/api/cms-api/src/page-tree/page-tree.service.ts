@@ -2,24 +2,24 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
-import { CometValidationException } from "../common/errors/validation.exception";
-import { RedirectsService } from "../redirects/redirects.service";
-import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
-import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
-import { AttachedDocument } from "./entities/attached-document.entity";
-import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
-import { PageTreeConfig } from "./page-tree.module";
-import { createReadApi, PageTreeReadApi } from "./page-tree-read-api";
+import { CometValidationException } from "../common/errors/validation.exception.js";
+import { RedirectsService } from "../redirects/redirects.service.js";
+import { AttachedDocumentStrictInput } from "./dto/attached-document.input.js";
+import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input.js";
+import { AttachedDocument } from "./entities/attached-document.entity.js";
+import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants.js";
+import type { PageTreeConfig } from "./page-tree.module.js";
+import { createReadApi, type PageTreeReadApi } from "./page-tree-read-api.js";
 import {
-    PageTreeNodeCategory,
-    PageTreeNodeInterface,
-    PageTreeNodeUpdateInputInterface,
+    type PageTreeNodeCategory,
+    type PageTreeNodeInterface,
+    type PageTreeNodeUpdateInputInterface,
     PageTreeNodeVisibility,
     PageTreeNodeVisibility as Visibility,
-    ScopeInterface,
-} from "./types";
+    type ScopeInterface,
+} from "./types.js";
 
-export { PageTreeReadApi } from "./page-tree-read-api";
+export { PageTreeReadApi } from "./page-tree-read-api.js";
 
 @Injectable()
 export class PageTreeService {

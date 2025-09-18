@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import isEqual from "lodash.isequal";
 
-import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
-import { ContentScope } from "./interfaces/content-scope.interface";
-import { AccessControlServiceInterface, Permission } from "./user-permissions.types";
+import { CurrentUser, CurrentUserPermission } from "./dto/current-user.js";
+import { ContentScope } from "./interfaces/content-scope.interface.js";
+import { AccessControlServiceInterface, Permission } from "./user-permissions.types.js";
 
 @Injectable()
 export abstract class AbstractAccessControlService implements AccessControlServiceInterface {

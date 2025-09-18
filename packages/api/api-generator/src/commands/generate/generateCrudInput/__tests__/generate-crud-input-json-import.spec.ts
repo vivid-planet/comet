@@ -1,10 +1,10 @@
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
-import { formatSource, testPermission } from "../../utils/test-helper";
-import { generateCrudInput } from "../generate-crud-input";
-import { NestedObject, type NestedType } from "./.generate-crud-input-json-import-nested-object";
+import { formatSource, testPermission } from "../../utils/test-helper.js";
+import { generateCrudInput } from "../generate-crud-input.js";
+import { NestedObject, type NestedType } from "./.generate-crud-input-json-import-nested-object.js";
 
 @Entity()
 export class TestEntityWithJsonObject1 extends BaseEntity {

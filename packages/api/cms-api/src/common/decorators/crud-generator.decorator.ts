@@ -1,4 +1,4 @@
-import { type Permission } from "../../user-permissions/user-permissions.types";
+import { type Permission } from "../../user-permissions/user-permissions.types.js";
 
 export interface CrudGeneratorOptions {
     targetDirectory: string;

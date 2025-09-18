@@ -7,15 +7,15 @@ import hasha from "hasha";
 import { basename, extname, parse } from "path";
 import { Readable } from "stream";
 
-import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
-import { FileUploadInput } from "../file-utils/file-upload.input";
-import { slugifyFilename } from "../file-utils/files.utils";
-import { ALL_TYPES } from "../file-utils/images.constants";
-import { DownloadParams, ImageParams } from "./dto/file-uploads-download.params";
-import { FileUpload } from "./entities/file-upload.entity";
-import { FileUploadsConfig } from "./file-uploads.config";
-import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
+import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service.js";
+import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util.js";
+import { FileUploadInput } from "../file-utils/file-upload.input.js";
+import { slugifyFilename } from "../file-utils/files.utils.js";
+import { ALL_TYPES } from "../file-utils/images.constants.js";
+import { DownloadParams, ImageParams } from "./dto/file-uploads-download.params.js";
+import { FileUpload } from "./entities/file-upload.entity.js";
+import { FileUploadsConfig } from "./file-uploads.config.js";
+import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants.js";
 
 @Injectable()
 export class FileUploadsService {

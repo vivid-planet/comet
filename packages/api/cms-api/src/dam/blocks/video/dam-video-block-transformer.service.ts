@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
-import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../../blocks/block";
-import { FilesService } from "../../files/files.service";
-import { DamScopeInterface } from "../../types";
-import { DamVideoBlockData } from "./dam-video.block";
+import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../../blocks/block.js";
+import { FilesService } from "../../files/files.service.js";
+import { DamScopeInterface } from "../../types.js";
+import { DamVideoBlockData } from "./dam-video.block.js";
 
 type TransformResponse = {
     damFile?: {

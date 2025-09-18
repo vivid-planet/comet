@@ -5,28 +5,28 @@ import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, R
 import { IncomingMessage } from "http";
 import { basename, extname } from "path";
 
-import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { SkipBuild } from "../../builds/skip-build.decorator";
-import { CometValidationException } from "../../common/errors/validation.exception";
-import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FileValidationService } from "../../file-utils/file-validation.service";
-import { createFileUploadInputFromUrl, slugifyFilename } from "../../file-utils/files.utils";
-import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
-import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
-import { DamScopeInterface } from "../types";
-import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
-import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
-import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
-import { UpdateFileInput } from "./dto/file.input";
-import { FilenameInput, FilenameResponse } from "./dto/filename.args";
-import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
-import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
-import { FileInterface } from "./entities/file.entity";
-import { FolderInterface } from "./entities/folder.entity";
-import { FilesService } from "./files.service";
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator.js";
+import { SkipBuild } from "../../builds/skip-build.decorator.js";
+import { CometValidationException } from "../../common/errors/validation.exception.js";
+import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory.js";
+import { FileValidationService } from "../../file-utils/file-validation.service.js";
+import { createFileUploadInputFromUrl, slugifyFilename } from "../../file-utils/files.utils.js";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator.js";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator.js";
+import { CurrentUser } from "../../user-permissions/dto/current-user.js";
+import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants.js";
+import { DamScopeInterface } from "../types.js";
+import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity.js";
+import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types.js";
+import { EmptyDamScope } from "./dto/empty-dam-scope.js";
+import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args.js";
+import { UpdateFileInput } from "./dto/file.input.js";
+import { FilenameInput, FilenameResponse } from "./dto/filename.args.js";
+import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args.js";
+import { UpdateDamFileArgs } from "./dto/update-dam-file.args.js";
+import { FileInterface } from "./entities/file.entity.js";
+import { FolderInterface } from "./entities/folder.entity.js";
+import { FilesService } from "./files.service.js";
 
 export function createFilesResolver({
     File,

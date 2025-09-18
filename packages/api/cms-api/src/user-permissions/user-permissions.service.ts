@@ -8,16 +8,16 @@ import isEqual from "lodash.isequal";
 import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
-import { AbstractAccessControlService } from "./access-control.service";
-import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
-import { ContentScopeWithLabel } from "./dto/content-scope";
-import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
-import { FindUsersArgs } from "./dto/paginated-user-list";
-import { UserContentScopes } from "./entities/user-content-scopes.entity";
-import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
-import { User } from "./interfaces/user";
-import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
+import { AbstractAccessControlService } from "./access-control.service.js";
+import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator.js";
+import { ContentScopeWithLabel } from "./dto/content-scope.js";
+import { CurrentUser, CurrentUserPermission } from "./dto/current-user.js";
+import { FindUsersArgs } from "./dto/paginated-user-list.js";
+import { UserContentScopes } from "./entities/user-content-scopes.entity.js";
+import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity.js";
+import { ContentScope } from "./interfaces/content-scope.interface.js";
+import { User } from "./interfaces/user.js";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants.js";
 import {
     AccessControlServiceInterface,
     AvailableContentScope,
@@ -25,7 +25,7 @@ import {
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
-} from "./user-permissions.types";
+} from "./user-permissions.types.js";
 
 @Injectable()
 export class UserPermissionsService {

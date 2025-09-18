@@ -3,11 +3,11 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CONTEXT } from "@nestjs/graphql";
 
-import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
-import { AttachedDocument } from "./entities/attached-document.entity";
-import { PAGE_TREE_REPOSITORY } from "./page-tree.constants";
-import { createReadApi, PageTreeReadApi, PageTreeReadApiOptions } from "./page-tree-read-api";
-import { PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
+import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator.js";
+import { AttachedDocument } from "./entities/attached-document.entity.js";
+import { PAGE_TREE_REPOSITORY } from "./page-tree.constants.js";
+import { createReadApi, PageTreeReadApi, PageTreeReadApiOptions } from "./page-tree-read-api.js";
+import { PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types.js";
 
 @Injectable()
 export class PageTreeReadApiService {

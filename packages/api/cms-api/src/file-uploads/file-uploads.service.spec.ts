@@ -3,11 +3,11 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Test, type TestingModule } from "@nestjs/testing";
 import { Readable } from "stream";
 
-import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { FileUpload } from "./entities/file-upload.entity";
-import { type FileUploadsConfig } from "./file-uploads.config";
-import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
-import { FileUploadsService } from "./file-uploads.service";
+import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service.js";
+import { FileUpload } from "./entities/file-upload.entity.js";
+import { type FileUploadsConfig } from "./file-uploads.config.js";
+import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants.js";
+import { FileUploadsService } from "./file-uploads.service.js";
 
 const mockBlobStorageBackendService = {
     upload: jest.fn(),

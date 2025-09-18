@@ -1,7 +1,11 @@
 {
     "compilerOptions": {
         "baseUrl": "./",
-        "outDir": "./lib"
+        "outDir": "./lib",
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "lib": ["ESNext"]
     },
     "exclude": ["node_modules", "lib"],
     "extends": "../tsconfig.base.json",

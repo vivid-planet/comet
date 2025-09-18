@@ -1,4 +1,4 @@
-import { isValidSvg } from "./files.utils";
+import { isValidSvg } from "./files.utils.js";
 
 describe("Files Utils", () => {
     describe("isValidSvg", () => {

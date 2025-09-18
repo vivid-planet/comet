@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "description": "Comet API Demo Application",
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
         "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
         "api-generator:watch": "rimraf --glob 'src/**/generated' && comet-api-generator generate --watch",

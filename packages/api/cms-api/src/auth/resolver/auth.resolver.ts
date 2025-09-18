@@ -4,15 +4,15 @@ import { GraphQLJSONObject } from "graphql-scalars";
 import { IncomingMessage } from "http";
 import isEqual from "lodash.isequal";
 
-import { SkipBuild } from "../../builds/skip-build.decorator";
-import { DisablePermissionCheck, RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { ContentScopeWithLabel } from "../../user-permissions/dto/content-scope";
-import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { GetCurrentUser } from "../decorators/get-current-user.decorator";
+import { SkipBuild } from "../../builds/skip-build.decorator.js";
+import { DisablePermissionCheck, RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator.js";
+import { ContentScopeWithLabel } from "../../user-permissions/dto/content-scope.js";
+import { CurrentUser } from "../../user-permissions/dto/current-user.js";
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface.js";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants.js";
+import { UserPermissionsService } from "../../user-permissions/user-permissions.service.js";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types.js";
+import { GetCurrentUser } from "../decorators/get-current-user.decorator.js";
 
 interface AuthResolverConfig {
     endSessionEndpoint?: string;

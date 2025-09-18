@@ -4,17 +4,17 @@ import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { EntityInfoObject } from "../common/entityInfo/entity-info.object";
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
-import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
-import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { CurrentUser } from "../user-permissions/dto/current-user";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { PaginatedWarnings } from "./dto/paginated-warnings";
-import { WarningsArgs } from "./dto/warnings.args";
-import { Warning } from "./entities/warning.entity";
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator.js";
+import { EntityInfoObject } from "../common/entityInfo/entity-info.object.js";
+import { EntityInfoService } from "../common/entityInfo/entity-info.service.js";
+import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm.js";
+import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator.js";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator.js";
+import { CurrentUser } from "../user-permissions/dto/current-user.js";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
+import { PaginatedWarnings } from "./dto/paginated-warnings.js";
+import { WarningsArgs } from "./dto/warnings.args.js";
+import { Warning } from "./entities/warning.entity.js";
 
 @Resolver(() => Warning)
 @RequiredPermission(["warnings"], { skipScopeCheck: true })

@@ -5,17 +5,17 @@ import { Type } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
-import { CometValidationException } from "../../../common/errors/validation.exception";
-import { searchToMikroOrmQuery } from "../../../common/filter/mikro-orm";
-import { extractGraphqlFields } from "../../../common/graphql/extract-graphql-fields";
-import { AffectedEntity } from "../../../user-permissions/decorators/affected-entity.decorator";
-import { RequiredPermission } from "../../../user-permissions/decorators/required-permission.decorator";
-import { DamScopeInterface } from "../../types";
-import { FILE_ENTITY, FileInterface } from "../entities/file.entity";
-import { DamMediaAlternativeInput, DamMediaAlternativeUpdateInput } from "./dto/dam-media-alternative.input";
-import { DamMediaAlternativesArgs } from "./dto/dam-media-alternatives.args";
-import { PaginatedDamMediaAlternatives } from "./dto/paginated-dam-media-alternatives";
-import { DamMediaAlternative } from "./entities/dam-media-alternative.entity";
+import { CometValidationException } from "../../../common/errors/validation.exception.js";
+import { searchToMikroOrmQuery } from "../../../common/filter/mikro-orm.js";
+import { extractGraphqlFields } from "../../../common/graphql/extract-graphql-fields.js";
+import { AffectedEntity } from "../../../user-permissions/decorators/affected-entity.decorator.js";
+import { RequiredPermission } from "../../../user-permissions/decorators/required-permission.decorator.js";
+import { DamScopeInterface } from "../../types.js";
+import { FILE_ENTITY, FileInterface } from "../entities/file.entity.js";
+import { DamMediaAlternativeInput, DamMediaAlternativeUpdateInput } from "./dto/dam-media-alternative.input.js";
+import { DamMediaAlternativesArgs } from "./dto/dam-media-alternatives.args.js";
+import { PaginatedDamMediaAlternatives } from "./dto/paginated-dam-media-alternatives.js";
+import { DamMediaAlternative } from "./entities/dam-media-alternative.entity.js";
 
 export function createDamMediaAlternativeResolver({
     File,

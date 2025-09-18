@@ -1,8 +1,8 @@
 import { V1CronJob } from "@kubernetes/client-node";
 import { Injectable } from "@nestjs/common";
 
-import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants";
-import { CronJob } from "./dto/cron-job.object";
+import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants.js";
+import { CronJob } from "./dto/cron-job.object.js";
 
 @Injectable()
 export class CronJobsService {

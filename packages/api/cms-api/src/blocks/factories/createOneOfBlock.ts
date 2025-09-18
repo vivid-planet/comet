@@ -20,9 +20,9 @@ import {
     MigrateOptions,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
-} from "../block";
-import { AnnotationBlockMeta, BlockField } from "../decorators/field";
-import { BlockFactoryNameOrOptions } from "./types";
+} from "../block.js";
+import { AnnotationBlockMeta, BlockField } from "../decorators/field.js";
+import { BlockFactoryNameOrOptions } from "./types.js";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
 

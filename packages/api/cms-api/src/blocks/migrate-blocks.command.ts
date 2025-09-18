@@ -1,6 +1,6 @@
 import { Command, CommandRunner } from "nest-commander";
 
-import { BlockMigrateService } from "./block-migrate.service";
+import { BlockMigrateService } from "./block-migrate.service.js";
 
 @Command({
     name: "migrateBlocks",

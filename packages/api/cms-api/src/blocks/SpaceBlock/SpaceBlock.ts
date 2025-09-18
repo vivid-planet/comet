@@ -1,10 +1,10 @@
 import { IsInt, Max } from "class-validator";
 
-// import { typeSafeBlockMigrationPipe } from "../../migrations/typeSafeBlockMigrationPipe";
-import { BlockData, BlockInput, blockInputToData, createBlock } from "../block";
-import { BlockField } from "../decorators/field";
-// import { MigrationTo1 } from "./migrations/MigrationTo1";
-// import { MigrationTo2 } from "./migrations/MigrationTo2";
+// import { typeSafeBlockMigrationPipe } from "../../migrations/typeSafeBlockMigrationPipe.js";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "../block.js";
+import { BlockField } from "../decorators/field.js";
+// import { MigrationTo1 } from "./migrations/MigrationTo1.js";
+// import { MigrationTo2 } from "./migrations/MigrationTo2.js";
 
 class SpaceBlockData extends BlockData {
     @BlockField()

@@ -4,17 +4,17 @@ import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import JSZip from "jszip";
 import isEqual from "lodash.isequal";
 
-import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
-import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
-import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
-import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
-import { DamScopeInterface } from "../types";
-import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
-import { UpdateFolderInput } from "./dto/folder.input";
-import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
-import { FilesService } from "./files.service";
+import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service.js";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util.js";
+import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception.js";
+import { SortDirection } from "../../common/sorting/sort-direction.enum.js";
+import { DamConfig } from "../dam.config.js";
+import { DAM_CONFIG } from "../dam.constants.js";
+import { DamScopeInterface } from "../types.js";
+import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args.js";
+import { UpdateFolderInput } from "./dto/folder.input.js";
+import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity.js";
+import { FilesService } from "./files.service.js";
 
 const withFoldersSelect = (
     qb: QueryBuilder<FolderInterface>,

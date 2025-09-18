@@ -2,15 +2,15 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FilterQuery } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
-import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
-import { PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeNodeInterface } from "../page-tree/types";
-import { RedirectFilter } from "./dto/redirects.filter";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
-import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
-import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
-import { RedirectsLinkBlock } from "./redirects.module";
-import { RedirectScopeInterface } from "./types";
+import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "../common/filter/mikro-orm.js";
+import { PageTreeService } from "../page-tree/page-tree.service.js";
+import type { PageTreeNodeInterface } from "../page-tree/types.js";
+import { RedirectFilter } from "./dto/redirects.filter.js";
+import type { RedirectInterface } from "./entities/redirect-entity.factory.js";
+import { REDIRECTS_LINK_BLOCK } from "./redirects.constants.js";
+import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum.js";
+import { RedirectsLinkBlock } from "./redirects.module.js";
+import type { RedirectScopeInterface } from "./types.js";
 
 @Injectable()
 export class RedirectsService {

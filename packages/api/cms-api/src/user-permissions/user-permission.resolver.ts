@@ -3,11 +3,11 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
-import { SkipBuild } from "../builds/skip-build.decorator";
-import { RequiredPermission } from "./decorators/required-permission.decorator";
-import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
-import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
-import { UserPermissionsService } from "./user-permissions.service";
+import { SkipBuild } from "../builds/skip-build.decorator.js";
+import { RequiredPermission } from "./decorators/required-permission.decorator.js";
+import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input.js";
+import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity.js";
+import { UserPermissionsService } from "./user-permissions.service.js";
 
 @ArgsType()
 export class UserPermissionListArgs {

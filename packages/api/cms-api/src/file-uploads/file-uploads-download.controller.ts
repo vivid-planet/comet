@@ -18,21 +18,21 @@ import { Response } from "express";
 import mime from "mime";
 import { PassThrough, Readable } from "stream";
 
-import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
-import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { ScaledImagesCacheService } from "../blob-storage/cache/scaled-images-cache.service";
-import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
-import { calculatePartialRanges } from "../file-utils/files.utils";
-import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../file-utils/images.constants";
-import { getSupportedMimeType } from "../file-utils/images.util";
-import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
-import { ImgproxyService } from "../imgproxy/imgproxy.service";
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { DownloadParams, HashDownloadParams, HashImageParams, ImageParams } from "./dto/file-uploads-download.params";
-import { FileUpload } from "./entities/file-upload.entity";
-import { FileUploadsConfig } from "./file-uploads.config";
-import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
-import { FileUploadsService } from "./file-uploads.service";
+import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator.js";
+import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service.js";
+import { ScaledImagesCacheService } from "../blob-storage/cache/scaled-images-cache.service.js";
+import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util.js";
+import { calculatePartialRanges } from "../file-utils/files.utils.js";
+import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../file-utils/images.constants.js";
+import { getSupportedMimeType } from "../file-utils/images.util.js";
+import { Extension, ResizingType } from "../imgproxy/imgproxy.enum.js";
+import { ImgproxyService } from "../imgproxy/imgproxy.service.js";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator.js";
+import { DownloadParams, HashDownloadParams, HashImageParams, ImageParams } from "./dto/file-uploads-download.params.js";
+import { FileUpload } from "./entities/file-upload.entity.js";
+import { FileUploadsConfig } from "./file-uploads.config.js";
+import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants.js";
+import { FileUploadsService } from "./file-uploads.service.js";
 
 export function createFileUploadsDownloadController(options: { public: boolean }): Type<unknown> {
     @Controller("file-uploads")

@@ -2,9 +2,9 @@ import { V1Job } from "@kubernetes/client-node";
 import { Injectable } from "@nestjs/common";
 import { format } from "date-fns";
 
-import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants";
-import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { Job } from "./dto/job.object";
+import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants.js";
+import { KubernetesService } from "../kubernetes/kubernetes.service.js";
+import { Job } from "./dto/job.object.js";
 
 @Injectable()
 export class JobsService {

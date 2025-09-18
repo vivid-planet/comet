@@ -13,11 +13,11 @@ import {
     MigrateOptions,
     registerBlock,
     TransformBlockResponse,
-} from "../block";
-import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
-import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
-import { strictBlockDataFactoryDecorator } from "./strictBlockDataFactoryDecorator";
-import { strictBlockInputFactoryDecorator } from "./strictBlockInputFactoryDecorator";
+} from "../block.js";
+import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator.js";
+import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion.js";
+import { strictBlockDataFactoryDecorator } from "./strictBlockDataFactoryDecorator.js";
+import { strictBlockInputFactoryDecorator } from "./strictBlockInputFactoryDecorator.js";
 
 type BaseBlockMap = Record<string, Block>;
 

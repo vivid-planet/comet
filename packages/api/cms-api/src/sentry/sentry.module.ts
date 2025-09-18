@@ -2,8 +2,8 @@ import { DynamicModule, Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import type { NodeOptions } from "@sentry/node";
 
-import { SENTRY_CONFIG } from "./sentry.constants";
-import { SentryInterceptor } from "./sentry.interceptor";
+import { SENTRY_CONFIG } from "./sentry.constants.js";
+import { SentryInterceptor } from "./sentry.interceptor.js";
 
 type SentryNodeOptions = Omit<NodeOptions, "dsn" | "environment"> & {
     dsn: string;

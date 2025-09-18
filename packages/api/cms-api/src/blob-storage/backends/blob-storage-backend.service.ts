@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Readable } from "stream";
 
-import { BlobStorageConfig } from "../blob-storage.config";
-import { BLOB_STORAGE_CONFIG } from "../blob-storage.constants";
-import { BlobStorageFileUploadInterface } from "../dto/blob-storage-file-upload.interface";
-import { createHashedPath } from "../utils/create-hashed-path.util";
-import { BlobStorageAzureStorage } from "./azure/blob-storage-azure.storage";
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage-backend.interface";
-import { BlobStorageFileStorage } from "./file/blob-storage-file.storage";
-import { BlobStorageS3Storage } from "./s3/blob-storage-s3.storage";
+import { BlobStorageConfig } from "../blob-storage.config.js";
+import { BLOB_STORAGE_CONFIG } from "../blob-storage.constants.js";
+import { BlobStorageFileUploadInterface } from "../dto/blob-storage-file-upload.interface.js";
+import { createHashedPath } from "../utils/create-hashed-path.util.js";
+import { BlobStorageAzureStorage } from "./azure/blob-storage-azure.storage.js";
+import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage-backend.interface.js";
+import { BlobStorageFileStorage } from "./file/blob-storage-file.storage.js";
+import { BlobStorageS3Storage } from "./s3/blob-storage-s3.storage.js";
 
 @Injectable()
 export class BlobStorageBackendService implements BlobStorageBackendInterface {

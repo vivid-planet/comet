@@ -2,8 +2,8 @@ import { BaseEntity, Entity, Enum, ManyToOne, PrimaryKey, Property, Ref } from "
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { ScopedEntity } from "../../../../user-permissions/decorators/scoped-entity.decorator";
-import { FILE_ENTITY, FileInterface } from "../../entities/file.entity";
+import { ScopedEntity } from "../../../../user-permissions/decorators/scoped-entity.decorator.js";
+import { FILE_ENTITY, FileInterface } from "../../entities/file.entity.js";
 
 export enum DamMediaAlternativeType {
     captions = "captions",

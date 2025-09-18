@@ -3,27 +3,27 @@ import { EntityManager, EntityRepository, FilterQuery, FindOptions, wrap } from 
 import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
-import { type ExtractBlockData } from "../blocks/block";
-import { CometValidationException } from "../common/errors/validation.exception";
-import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
-import { validateNotModified } from "../document/validateNotModified";
-import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service";
-import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
-import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
-import { RedirectInputInterface } from "./dto/redirect-input.factory";
-import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
-import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
-import { RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
-import { REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
-import { RedirectSourceTypeValues } from "./redirects.enum";
-import { RedirectsLinkBlock } from "./redirects.module";
-import { RedirectsService } from "./redirects.service";
-import { isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
-import { RedirectScopeInterface } from "./types";
+import { type ExtractBlockData } from "../blocks/block.js";
+import { CometValidationException } from "../common/errors/validation.exception.js";
+import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory.js";
+import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe.js";
+import { validateNotModified } from "../document/validateNotModified.js";
+import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service.js";
+import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator.js";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator.js";
+import { EmptyRedirectScope } from "./dto/empty-redirect-scope.js";
+import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory.js";
+import { RedirectInputInterface } from "./dto/redirect-input.factory.js";
+import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input.js";
+import { RedirectsArgsFactory } from "./dto/redirects-args.factory.js";
+import { RedirectInterface } from "./entities/redirect-entity.factory.js";
+import { RedirectTargetUrlServiceInterface } from "./redirect-target-url.service.js";
+import { REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants.js";
+import { RedirectSourceTypeValues } from "./redirects.enum.js";
+import { RedirectsLinkBlock } from "./redirects.module.js";
+import { RedirectsService } from "./redirects.service.js";
+import { isEmptyFilter, redirectMatchesFilter } from "./redirects.util.js";
+import { RedirectScopeInterface } from "./types.js";
 
 export function createRedirectsResolver({
     Redirect,

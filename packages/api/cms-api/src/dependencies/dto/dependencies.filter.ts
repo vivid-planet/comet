@@ -1,7 +1,7 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
-import { IsUndefinable } from "../../common/validators/is-undefinable";
+import { IsUndefinable } from "../../common/validators/is-undefinable.js";
 
 @InputType()
 export class DependencyFilter {

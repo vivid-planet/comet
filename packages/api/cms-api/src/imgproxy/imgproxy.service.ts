@@ -1,9 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import base64url from "base64url";
 import { createHmac } from "crypto";
 
-import { ImgproxyBuilder } from "./imgproxy.builder";
-import { IMGPROXY_CONFIG } from "./imgproxy.constants";
+import { ImgproxyBuilder } from "./imgproxy.builder.js";
+import { IMGPROXY_CONFIG } from "./imgproxy.constants.js";
 
 export interface ImgproxyConfig {
     url: string;
@@ -14,10 +13,6 @@ export interface ImgproxyConfig {
 
 @Injectable()
 export class ImgproxyService {
-    url = this.config.url;
-    salt = this.config.salt;
-    key = this.config.key;
-
     constructor(@Inject(IMGPROXY_CONFIG) private readonly config: ImgproxyConfig) {}
 
     builder(): ImgproxyBuilder {
@@ -25,13 +20,13 @@ export class ImgproxyService {
     }
 
     getSignedUrl(path: string): string {
-        return `${this.url}/${this.sign(path)}${path}`;
+        return `${this.config.url}/${this.sign(path)}${path}`;
     }
 
     sign(target: string): string {
-        const hmac = createHmac("sha256", Buffer.from(this.key, "hex"));
-        hmac.update(Buffer.from(this.salt, "hex"));
+        const hmac = createHmac("sha256", Buffer.from(this.config.key, "hex"));
+        hmac.update(Buffer.from(this.config.salt, "hex"));
         hmac.update(target);
-        return base64url(hmac.digest());
+        return Buffer.from(hmac.digest()).toString("base64url");
     }
 }

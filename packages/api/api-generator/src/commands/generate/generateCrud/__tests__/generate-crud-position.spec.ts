@@ -1,13 +1,13 @@
 import { CrudGenerator } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, Int } from "@nestjs/graphql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
-import { generateCrudInput } from "../../generateCrudInput/generate-crud-input";
-import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
-import { generateCrud } from "../generate-crud";
+import { generateCrudInput } from "../../generateCrudInput/generate-crud-input.js";
+import { formatSource, parseSource, testPermission } from "../../utils/test-helper.js";
+import { generateCrud } from "../generate-crud.js";
 
 @Entity()
 class TestEntityWithPositionField extends BaseEntity {
