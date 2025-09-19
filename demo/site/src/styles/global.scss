@@ -173,7 +173,7 @@ legend {
 }
 
 /* Create a root stacking context: https://www.joshwcomeau.com/css/custom-css-reset/#eight-root-stacking-context-9 */
-/* stylelint-disable selector-id-pattern */
+/* stylelint-disable selector-max-id */
 #root,
 #__next {
     isolation: isolate;
