@@ -2,6 +2,7 @@
 
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import Link from "next/link";
+import { useIntl } from "react-intl";
 
 import { PageLayout } from "../PageLayout";
 import { DesktopMenu } from "./DesktopMenu";
@@ -14,12 +15,14 @@ interface Props {
 }
 
 export const Header = ({ header }: Props) => {
+    const intl = useIntl();
+
     return (
         <header>
             <PageLayout grid>
                 <div className={styles.pageLayoutContent}>
                     <nav className={styles.root}>
-                        <Link href="/">
+                        <Link href="/" title={intl.formatMessage({ id: "header.logo.title", defaultMessage: "Comet DXP Logo" })}>
                             <SvgUse href="/assets/comet-logo.svg#root" />
                         </Link>
                         <DesktopMenu menu={header} />
