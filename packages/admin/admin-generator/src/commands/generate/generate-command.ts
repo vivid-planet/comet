@@ -71,6 +71,11 @@ export type FormFieldConfig<T> = (
           name: keyof T;
           rootQuery: string;
           labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
           /**
            * filter for query, passed as variable to graphql query
            */
@@ -114,6 +119,11 @@ export type FormFieldConfig<T> = (
           loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
           rootQuery: string;
           labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; name: keyof T; block: BlockInterface }
     | ({ type: "fileUpload"; multiple?: false; name: keyof T; maxFiles?: 1; download?: boolean } & Pick<
