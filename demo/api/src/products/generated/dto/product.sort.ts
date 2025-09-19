@@ -26,6 +26,7 @@ export enum ProductSortField {
     category_title = "category_title",
     category_slug = "category_slug",
     category_position = "category_position",
+    category_type = "category_type",
     category_createdAt = "category_createdAt",
     category_updatedAt = "category_updatedAt",
     manufacturer_name = "manufacturer_name",

@@ -17,9 +17,11 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { GQLProductCategoryTypesSelectQuery } from "./ProductHighlightForm.generated";
+import { GQLProductCategoryTypesSelectQueryVariables } from "./ProductHighlightForm.generated";
+import { OnChangeField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductHighlightForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductHighlightForm.generated";
-import { OnChangeField } from "@comet/admin";
 import { GQLProductsSelectQuery } from "./ProductHighlightForm.generated";
 import { GQLProductsSelectQueryVariables } from "./ProductHighlightForm.generated";
 import { productHighlightFormFragment } from "./ProductHighlightForm.gql";
@@ -35,6 +37,10 @@ import { GQLUpdateProductHighlightMutation } from "./ProductHighlightForm.gql.ge
 import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightForm.gql.generated";
 import isEqual from "lodash.isequal";
 type FormValues = GQLProductHighlightFormDetailsFragment & {
+    productCategoryType?: {
+        id: string;
+        title: string;
+    };
     productCategory?: {
         id: string;
         title: string;
@@ -52,6 +58,7 @@ export function ProductHighlightForm({ id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
         ? {
             ...filterByFragment<GQLProductHighlightFormDetailsFragment>(productHighlightFormFragment, data.productHighlight),
+            productCategoryType: data.productHighlight.product.category?.type,
             productCategory: data.productHighlight.product.category
         }
         : {}, [data]);
@@ -65,7 +72,7 @@ export function ProductHighlightForm({ id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ productCategoryType, productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
         const output = {
@@ -108,10 +115,10 @@ export function ProductHighlightForm({ id }: FormProps) {
                         <>
                             
         <TextField required variant="horizontal" fullWidth name="description" label={<FormattedMessage id="productHighlight.description" defaultMessage="Description"/>}/>
-        <AsyncSelectField required variant="horizontal" fullWidth name="productCategory" label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category"/>} loadOptions={async () => {
-                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect {
-                            productCategories {
+        <AsyncSelectField required variant="horizontal" fullWidth name="productCategoryType" label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type"/>} loadOptions={async () => {
+                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
+                    query: gql`query ProductCategoryTypesSelect {
+                            productCategoryTypes {
                                 nodes {
                                     id
                                     title
@@ -119,8 +126,27 @@ export function ProductHighlightForm({ id }: FormProps) {
                             }
                         }`
                 });
-                return data.productCategories.nodes;
+                return data.productCategoryTypes.nodes;
             }} getOptionLabel={(option) => option.title}/>
+        <AsyncSelectField required variant="horizontal" fullWidth name="productCategory" label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category"/>} loadOptions={async () => {
+                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                    query: gql`query ProductCategoriesSelect($filter: ProductCategoryFilter) {
+                            productCategories(filter: $filter) {
+                                nodes {
+                                    id
+                                    title
+                                }
+                            }
+                        }`, variables: { filter: { type: { equal: values.productCategoryType?.id } } }
+                });
+                return data.productCategories.nodes;
+            }} getOptionLabel={(option) => option.title} disabled={!values?.productCategoryType}/><OnChangeField name="productCategoryType">
+                            {(value, previousValue) => {
+                if (value.id !== previousValue.id) {
+                    form.change("productCategory", undefined);
+                }
+            }}
+                        </OnChangeField>
         <AsyncSelectField required variant="horizontal" fullWidth name="product" label={<FormattedMessage id="productHighlight.product" defaultMessage="Product"/>} loadOptions={async () => {
                 const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
                     query: gql`query ProductsSelect($filter: ProductFilter) {
