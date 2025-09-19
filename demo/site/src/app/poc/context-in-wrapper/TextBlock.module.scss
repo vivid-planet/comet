@@ -1,0 +1,17 @@
+.root {
+    --text-block-background: var(--brand-grey-100);
+    --text-block-color: var(--brand-grey-900);
+    --text-block-divider-color: var(--brand-primary-dark);
+
+    &--inverted {
+        --text-block-background: var(--brand-grey-900);
+        --text-block-color: var(--brand-grey-100);
+        --text-block-divider-color: var(--brand-primary-light);
+    }
+
+    font-family: sans-serif;
+    background-color: var(--text-block-background);
+    color: var(--text-block-color);
+    border-bottom: 10px solid var(--text-block-divider-color);
+    padding: 10px;
+}

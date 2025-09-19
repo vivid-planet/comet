@@ -1,0 +1,12 @@
+@use "./theme.scss" as *;
+
+.root {
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    @include global-theme-default;
+
+    &--inverted {
+        @include global-theme-inverted;
+    }
+}

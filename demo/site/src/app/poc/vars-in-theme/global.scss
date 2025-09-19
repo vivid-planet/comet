@@ -1,0 +1,29 @@
+@use "./theme.scss" as *;
+
+:root {
+    @include global-theme-default;
+
+    background-color: white;
+    color: black;
+
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    font-family: sans-serif;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    pre {
+        margin-top: 0;
+        margin-bottom: 6px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
