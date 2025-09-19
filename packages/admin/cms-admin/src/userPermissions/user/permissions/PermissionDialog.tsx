@@ -1,14 +1,16 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton, Tooltip } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { Info } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
+    Typography,
 } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
@@ -30,7 +32,9 @@ interface FormProps {
     handleDialogClose: () => void;
 }
 export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: FormProps) => {
+    const intl = useIntl();
     const client = useApolloClient();
+
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data
 
@@ -123,37 +127,77 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                 render={({ values }) => (
                     <>
                         <DialogTitle>
-                            <FormattedMessage id="comet.userPermissions.showPermission" defaultMessage="Show permission" />
+                            <FormattedMessage id="comet.userPermissions.addScopesToPermission" defaultMessage="Add scopes to permission" />
                         </DialogTitle>
                         <DialogContent>
-                            <Field
-                                required
-                                fullWidth
-                                name="permission"
-                                component={FinalFormSelect}
-                                options={availablePermissionsData.availablePermissions}
-                                getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
-                                disabled={disabled}
-                                label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
-                            />
-                            <Field
-                                name="validFrom"
-                                label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
-                                fullWidth
-                                component={FinalFormDatePicker}
-                                disabled={disabled}
-                                clearable={true}
-                                formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
-                            />
-                            <Field
-                                name="validTo"
-                                label={<FormattedMessage id="comet.userPermissions.validTo" defaultMessage="Valid to" />}
-                                fullWidth
-                                component={FinalFormDatePicker}
-                                disabled={disabled}
-                                clearable={true}
-                                formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
-                            />
+                            <FormSection
+                                title={
+                                    <Typography variant="h4">
+                                        <FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />
+                                    </Typography>
+                                }
+                            >
+                                <Field
+                                    required
+                                    fullWidth
+                                    name="permission"
+                                    component={FinalFormSelect}
+                                    options={availablePermissionsData.availablePermissions}
+                                    getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
+                                    disabled={disabled}
+                                    label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
+                                    variant="horizontal"
+                                />
+                            </FormSection>
+                            <FormSection
+                                title={
+                                    <>
+                                        <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
+                                        {/* TODO: Icon with Tooltip needs to be updated once supported by FormSection in COM-2474*/}
+                                        <Tooltip
+                                            children={<Info />}
+                                            title={
+                                                <>
+                                                    <Typography variant="subtitle1">
+                                                        <FormattedMessage
+                                                            id="comet.userPermission.validityDuration.tooltip.title"
+                                                            defaultMessage="Validity duration"
+                                                        />
+                                                    </Typography>
+                                                    <Typography>
+                                                        <FormattedMessage
+                                                            id="comet.userPermission.validityDuration.tooltip.content"
+                                                            defaultMessage="Leave empty for unlimited validity"
+                                                        />
+                                                    </Typography>
+                                                </>
+                                            }
+                                            sx={{ marginLeft: "5px" }}
+                                        />
+                                    </>
+                                }
+                            >
+                                <Field
+                                    name="validFrom"
+                                    label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
+                                    fullWidth
+                                    component={FinalFormDatePicker}
+                                    disabled={disabled}
+                                    clearable={true}
+                                    formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                                    variant="horizontal"
+                                />
+                                <Field
+                                    name="validTo"
+                                    label={<FormattedMessage id="comet.userPermissions.validTo" defaultMessage="Valid to" />}
+                                    fullWidth
+                                    component={FinalFormDatePicker}
+                                    disabled={disabled}
+                                    clearable={true}
+                                    formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                                    variant="horizontal"
+                                />
+                            </FormSection>
                             <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
                                 <Field
                                     fullWidth
@@ -162,6 +206,11 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
                                     disableContentTranslation
+                                    variant="horizontal"
+                                    placeholder={intl.formatMessage({
+                                        id: "comet.userPermissions.reason.placeholder",
+                                        defaultMessage: "Reason why this role is needed",
+                                    })}
                                 />
                                 <Field
                                     fullWidth
@@ -170,6 +219,11 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
                                     disableContentTranslation
+                                    variant="horizontal"
+                                    placeholder={intl.formatMessage({
+                                        id: "comet.userPermissions.requestedBy.placeholder",
+                                        defaultMessage: "Who has requested this?",
+                                    })}
                                 />
                                 <Field
                                     fullWidth
@@ -178,6 +232,11 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
                                     disableContentTranslation
+                                    variant="horizontal"
+                                    placeholder={intl.formatMessage({
+                                        id: "comet.userPermissions.approvedBy.placeholder",
+                                        defaultMessage: "Who approved this request?",
+                                    })}
                                 />
                             </FormSection>
                         </DialogContent>

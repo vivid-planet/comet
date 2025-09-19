@@ -1209,6 +1209,22 @@ enum ProductHighlightSortField {
   createdAt
   description
   product
+  product_additionalTypes
+  product_availableSince
+  product_category
+  product_createdAt
+  product_description
+  product_inStock
+  product_lastCheckedAt
+  product_manufacturer
+  product_price
+  product_priceList
+  product_slug
+  product_soldCount
+  product_status
+  product_title
+  product_type
+  product_updatedAt
   updatedAt
 }
 
@@ -1276,15 +1292,39 @@ enum ProductSortField {
   additionalTypes
   availableSince
   category
+  category_createdAt
+  category_position
+  category_slug
+  category_title
+  category_updatedAt
   createdAt
   description
   inStock
   lastCheckedAt
   manufacturer
+  manufacturer_addressAsEmbeddable_alternativeAddress_country
+  manufacturer_addressAsEmbeddable_alternativeAddress_street
+  manufacturer_addressAsEmbeddable_alternativeAddress_streetNumber
+  manufacturer_addressAsEmbeddable_alternativeAddress_zip
+  manufacturer_addressAsEmbeddable_country
+  manufacturer_addressAsEmbeddable_street
+  manufacturer_addressAsEmbeddable_streetNumber
+  manufacturer_addressAsEmbeddable_zip
+  manufacturer_name
+  manufacturer_updatedAt
   price
   priceList
+  priceList_contentHash
+  priceList_createdAt
+  priceList_id
+  priceList_mimetype
+  priceList_name
+  priceList_updatedAt
   slug
   soldCount
+  statistics_createdAt
+  statistics_updatedAt
+  statistics_views
   status
   title
   type
@@ -1442,6 +1482,22 @@ enum ProductVariantSortField {
   name
   position
   product
+  product_additionalTypes
+  product_availableSince
+  product_category
+  product_createdAt
+  product_description
+  product_inStock
+  product_lastCheckedAt
+  product_manufacturer
+  product_price
+  product_priceList
+  product_slug
+  product_soldCount
+  product_status
+  product_title
+  product_type
+  product_updatedAt
   updatedAt
 }
 
