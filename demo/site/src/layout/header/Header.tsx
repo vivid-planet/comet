@@ -25,7 +25,7 @@ export const Header = ({ header }: Props) => {
                         <Link href="/">
                             <SvgUse
                                 href="/assets/comet-logo.svg#root"
-                                title={intl.formatMessage({ id: "header.logo", defaultMessage: "Comet DXP Logo" })}
+                                title={intl.formatMessage({ id: "header.logo.title", defaultMessage: "Comet DXP Logo" })}
                             />
                         </Link>
                         <DesktopMenu menu={header} />
