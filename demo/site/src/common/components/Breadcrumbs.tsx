@@ -1,7 +1,6 @@
 "use client";
 import { PageLayout } from "@src/layout/PageLayout";
 import { createSitePath } from "@src/util/createSitePath";
-import NextLink from "next/link";
 import { Fragment } from "react";
 import styled from "styled-components";
 
@@ -46,7 +45,7 @@ const Container = styled.div`
     grid-column: 2 / -2;
 `;
 
-const Link = styled(NextLink)`
+const Link = styled.a`
     color: ${({ theme }) => theme.palette.primary.main};
     text-decoration: none;
 
