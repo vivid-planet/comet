@@ -22,11 +22,8 @@ export const Header = ({ header }: Props) => {
             <PageLayout grid>
                 <div className={styles.pageLayoutContent}>
                     <nav className={styles.root}>
-                        <Link href="/">
-                            <SvgUse
-                                href="/assets/comet-logo.svg#root"
-                                title={intl.formatMessage({ id: "header.logo.title", defaultMessage: "Comet DXP Logo" })}
-                            />
+                        <Link href="/" title={intl.formatMessage({ id: "header.logo.title", defaultMessage: "Comet DXP Logo" })}>
+                            <SvgUse href="/assets/comet-logo.svg#root" />
                         </Link>
                         <DesktopMenu menu={header} />
                         <MobileMenu menu={header} />
