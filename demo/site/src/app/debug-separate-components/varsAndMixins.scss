@@ -1,0 +1,6 @@
+@mixin globalSelector($globalClass) {
+    .root:global(#{$globalClass}),
+    :not(.root):global(#{$globalClass}) {
+        @content;
+    }
+}

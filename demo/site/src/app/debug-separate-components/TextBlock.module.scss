@@ -1,0 +1,20 @@
+@use "./varsAndMixins" as *;
+
+@include globalSelector(".backgroundBlock--default") {
+    --text-block-background: var(--global-light-background);
+    --text-block-color: var(--global-light-color);
+}
+
+@include globalSelector(".backgroundBlock--inverted") {
+    --text-block-background: var(--global-dark-background);
+    --text-block-color: var(--global-dark-color);
+}
+
+.root {
+    font-family: sans-serif;
+    background-color: var(--text-block-background);
+    color: var(--text-block-color);
+
+    padding: 10px;
+    margin-bottom: 20px;
+}
