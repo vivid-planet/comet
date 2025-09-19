@@ -9,6 +9,7 @@ describe("generateGrid", () => {
 
     beforeAll(() => {
         schema = buildSchema(`
+            scalar LocalDate
             input StringFilter {
                 equal: String
             }
@@ -34,9 +35,16 @@ describe("generateGrid", () => {
                 totalCount: Int!
             }
 
+            type Author {
+                id: ID!
+                name: String!
+                birthDate: LocalDate
+            }
+
             type Book {
                 id: ID!
                 title: String!
+                author: Author!
             }
 
             input BookFilter {
@@ -75,6 +83,11 @@ describe("generateGrid", () => {
         __typename: "Book";
         id: string;
         title: string;
+        author?: {
+            __typename: "Author";
+            name: string;
+            birthDate?: string;
+        };
     };
 
     it("should generate a grid with book configuration", () => {
@@ -112,6 +125,38 @@ describe("generateGrid", () => {
                 {
                     type: "text",
                     name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
+
+    it("should generate valueGetter for date in nested field", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "books",
+            excelExport: true,
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+                {
+                    type: "date",
+                    name: "author.birthDate",
+                    headerName: "Author Birthdate",
                 },
             ],
         };
