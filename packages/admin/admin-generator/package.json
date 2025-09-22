@@ -21,7 +21,7 @@
     "scripts": {
         "admin-generator": "./bin/admin-generator.js generate",
         "build": "$npm_execpath run clean && run-s generate-block-types gql:types && tsc -p tsconfig.build.json",
-        "build-storybook": "storybook build",
+        "build-storybook": "run-s generate-block-types gql:types admin-generator && storybook build",
         "clean": "rimraf lib && rimraf --glob 'src/**/generated'",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-types": "comet generate-block-types --inputs",
