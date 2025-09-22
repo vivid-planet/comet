@@ -1,17 +1,22 @@
 import "@fontsource-variable/roboto-flex/full.css";
 import { initialize, mswLoader } from "msw-storybook-addon";
 
-import type { Preview } from "@storybook/react-vite";
+import type { Preview } from "@storybook/react-webpack5";
 import { IntlDecorator, LocaleOptions } from "./decorators/IntlDecorator.decorator";
 import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { LayoutDecorator, LayoutOptions } from "./decorators/Layout.decorator";
 import { ApolloProviderDecorator } from "./decorators/ApolloProvider.decorator";
 import { ErrorBoundaryDecorator } from "./decorators/ErrorBoundary.decorator";
-import { routerDecorator, storyRouterDecorator } from "./decorators/Router.decorator";
+import { storyRouterDecorator } from "./decorators/Router.decorator";
 import { SnackbarProviderDecorator } from "./decorators/SnackbarProvider.decorator";
+import { LicenseInfo } from "@mui/x-license";
 
 // Initialize MSW
 initialize();
+
+if (process.env.MUI_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(process.env.MUI_LICENSE_KEY);
+}
 
 export const globalTypes = {
     locale: {
@@ -59,7 +64,7 @@ export const globalTypes = {
     },
 };
 
-export default {
+export const preview: Preview  = {
     tags: ["autodocs"],
     decorators: [
         ThemeProviderDecorator,
@@ -82,4 +87,5 @@ export default {
         },
     },
     loaders: [mswLoader],
-} satisfies Preview;
+};
+export default preview;

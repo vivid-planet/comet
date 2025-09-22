@@ -1,6 +1,6 @@
 import { RouterMemoryRouter } from "@comet/admin";
-import { action } from "@storybook/addon-actions";
-import { type Decorator } from "@storybook/react-vite";
+import { action } from "storybook/actions";
+import { type Decorator } from "@storybook/react-webpack5";
 import { type Action, type History, type UnregisterCallback } from "history";
 import { type PropsWithChildren, type ReactNode, useEffect } from "react";
 import { type MemoryRouterProps, Route, type RouteComponentProps } from "react-router";
