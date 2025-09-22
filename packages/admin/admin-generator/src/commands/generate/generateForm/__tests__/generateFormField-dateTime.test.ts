@@ -35,7 +35,7 @@ type GQLProduct = {
     lastCheckedAt: string | null;
 };
 
-describe("generateFormField - datePicker", () => {
+describe("generateFormField - dateTime", () => {
     it("should generate simple dateTime field  with DateTime scalar", async () => {
         const fieldConfig: FormFieldConfig<GQLProduct> = {
             type: "dateTime",
