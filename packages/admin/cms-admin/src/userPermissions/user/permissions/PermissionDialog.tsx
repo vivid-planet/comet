@@ -1,14 +1,12 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton, Tooltip } from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Info } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    Typography,
 } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -130,13 +128,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             <FormattedMessage id="comet.userPermissions.addScopesToPermission" defaultMessage="Add scopes to permission" />
                         </DialogTitle>
                         <DialogContent>
-                            <FormSection
-                                title={
-                                    <Typography variant="h4">
-                                        <FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />
-                                    </Typography>
-                                }
-                            >
+                            <FormSection title={<FormattedMessage id="comet.userPermissions.setPermission" defaultMessage="Set permission" />}>
                                 <Field
                                     required
                                     fullWidth
@@ -150,32 +142,28 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 />
                             </FormSection>
                             <FormSection
-                                title={
-                                    <>
-                                        <FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />
-                                        {/* TODO: Icon with Tooltip needs to be updated once supported by FormSection in COM-2474*/}
-                                        <Tooltip
-                                            children={<Info />}
-                                            title={
-                                                <>
-                                                    <Typography variant="subtitle1">
-                                                        <FormattedMessage
-                                                            id="comet.userPermission.validityDuration.tooltip.title"
-                                                            defaultMessage="Validity duration"
-                                                        />
-                                                    </Typography>
-                                                    <Typography>
-                                                        <FormattedMessage
-                                                            id="comet.userPermission.validityDuration.tooltip.content"
-                                                            defaultMessage="Leave empty for unlimited validity"
-                                                        />
-                                                    </Typography>
-                                                </>
-                                            }
-                                            sx={{ marginLeft: "5px" }}
-                                        />
-                                    </>
-                                }
+                                title={<FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />}
+                                slotProps={{
+                                    title: {
+                                        slotProps: {
+                                            infoTooltip: {
+                                                title: (
+                                                    <FormattedMessage
+                                                        id="comet.userPermission.validityDuration.tooltip.title"
+                                                        defaultMessage="Validity duration"
+                                                    />
+                                                ),
+                                                // @ts-expect-error Will work once the Tooltip update is merged: https://github.com/vivid-planet/comet/pull/4487
+                                                description: (
+                                                    <FormattedMessage
+                                                        id="comet.userPermission.validityDuration.tooltip.content"
+                                                        defaultMessage="Leave empty for unlimited validity"
+                                                    />
+                                                ),
+                                            },
+                                        },
+                                    },
+                                }}
                             >
                                 <Field
                                     name="validFrom"
