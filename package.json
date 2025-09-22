@@ -12,6 +12,7 @@
         "build:storybook": "pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@comet/*' run build",
         "build:docs": "pnpm run copy-schema-files && pnpm build:storybook && pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter '!@comet/admin-generator' --filter 'comet-docs' run build",
+        "chromatic": "pnpm --recursive --filter '@comet/*' run chromatic",
         "clean": "pnpm --recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
         "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
