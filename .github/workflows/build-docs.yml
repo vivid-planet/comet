@@ -40,3 +40,6 @@ jobs:
 
             - name: Build docs
               run: pnpm build:docs
+
+            - name: Run Chromatic
+              run: pnpm chromatic
