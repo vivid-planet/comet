@@ -39,7 +39,7 @@ jobs:
 
             - run: pnpm copy-schema-files
 
-            - run: pnpm build:packages
+            - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
 
             - name: Publish admin-generator to Chromatic
               uses: chromaui/action@v1
