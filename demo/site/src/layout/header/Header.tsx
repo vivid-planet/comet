@@ -1,7 +1,6 @@
 "use client";
 
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import Link from "next/link";
 
 import { PageLayout } from "../PageLayout";
 import { DesktopMenu } from "./DesktopMenu";
@@ -19,9 +18,9 @@ export const Header = ({ header }: Props) => {
             <PageLayout grid>
                 <div className={styles.pageLayoutContent}>
                     <nav className={styles.root}>
-                        <Link href="/">
+                        <a href="/">
                             <SvgUse href="/assets/comet-logo.svg#root" />
-                        </Link>
+                        </a>
                         <DesktopMenu menu={header} />
                         <MobileMenu menu={header} />
                     </nav>
