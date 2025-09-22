@@ -1334,9 +1334,6 @@ importers:
       '@types/react':
         specifier: ^18.3.23
         version: 18.3.24
-      chromatic:
-        specifier: ^13.2.0
-        version: 13.3.0
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -10188,18 +10185,6 @@ packages:
 
   chroma-js@2.4.2:
     resolution: {integrity: sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A==}
-
-  chromatic@13.3.0:
-    resolution: {integrity: sha512-OtXVKSFqGS1x6E6xYzmYX2iImSknbvo5CfTxP3ztFvXQhIAwhJzJuA3XpnIewER9gtWUNnV2DDi8/f9JyZJSfg==}
-    hasBin: true
-    peerDependencies:
-      '@chromatic-com/cypress': ^0.*.* || ^1.0.0
-      '@chromatic-com/playwright': ^0.*.* || ^1.0.0
-    peerDependenciesMeta:
-      '@chromatic-com/cypress':
-        optional: true
-      '@chromatic-com/playwright':
-        optional: true
 
   chrome-trace-event@1.0.4:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
@@ -29493,8 +29478,6 @@ snapshots:
       readdirp: 4.0.2
 
   chroma-js@2.4.2: {}
-
-  chromatic@13.3.0: {}
 
   chrome-trace-event@1.0.4: {}
 
