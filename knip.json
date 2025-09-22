@@ -61,7 +61,7 @@
             "ignore": ["**/*.generated.ts"]
         },
         "packages/admin/admin-generator": {
-            "entry": ["./src/adminGenerator.ts", "./src/**/*.stories.tsx", "./src/index.ts", "./src/**/*.cometGen.ts*"],
+            "entry": ["./src/adminGenerator.ts", "./src/**/*.stories.tsx", "./src/index.ts", "./src/**/*.cometGen.ts*", "./src/storybook.d.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["/.storybook/public/mockServiceWorker.js", "./src/**/*.generated.ts"]
         },
