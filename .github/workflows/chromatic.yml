@@ -3,15 +3,13 @@ name: Build Docs
 on:
     pull_request:
         paths:
-            - docs/**
-            - storybook/**
+            - packages/admin/admin-generator/**
         branches:
             - main
             - next
     push:
         paths:
-            - docs/**
-            - storybook/**
+            - packages/admin/admin-generator/**
         branches:
             - main
             - next
@@ -26,6 +24,7 @@ jobs:
             - uses: actions/checkout@v4
               with:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
+                  fetch-depth: 0
 
             - uses: pnpm/action-setup@v4
 
@@ -38,5 +37,7 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            - name: Build docs
-              run: pnpm build:docs
+            - name: Run Chromatic
+              run: pnpm chromatic
+              env:
+                  CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR: ${{ secrets.CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR }}
