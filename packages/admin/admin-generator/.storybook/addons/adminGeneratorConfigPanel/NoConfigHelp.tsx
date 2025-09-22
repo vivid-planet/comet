@@ -8,7 +8,7 @@ const EXAMPLE_CONFIG = `export const SampleGrid = {
     columns: [{ type: "text", name: "sample" }]
 };`;
 
-const EXAMPLE_STORY = `import type { Meta, StoryFn } from "@storybook/react-vite";
+const EXAMPLE_STORY = `import type { Meta, StoryFn } from "@storybook/react-webpack5";
 
 const config = {
     component: YourComponent,

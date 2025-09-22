@@ -1,4 +1,4 @@
-import { type Decorator } from "@storybook/react-vite";
+import { type Decorator } from "@storybook/react-webpack5";
 import { MuiThemeProvider, createCometTheme } from "@comet/admin";
 
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";

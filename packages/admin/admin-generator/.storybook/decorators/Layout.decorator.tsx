@@ -1,4 +1,4 @@
-import { type Decorator } from "@storybook/react-vite";
+import { type Decorator } from "@storybook/react-webpack5";
 import { MainContent } from "@comet/admin";
 
 export enum LayoutOptions {
