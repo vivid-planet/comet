@@ -2,9 +2,9 @@
 "@comet/admin": minor
 ---
 
-Add an optional `description` prop to `Tooltip` in addition to the existing `title` prop
+Add `description` and `customContent` props to `Tooltip`
 
-This simplifies creating detailed tooltips that match the Comet design:
+`description` is intended to be used together with `title` to simplify creating detailed tooltips that match the Comet design:
 
 ```diff
  <Tooltip
@@ -20,4 +20,12 @@ This simplifies creating detailed tooltips that match the Comet design:
  >
      <Info />
  </Tooltip>
+```
+
+`customContent` is an alternative to `title` and `description` for use-cases that require custom elements or styling:
+
+```tsx
+<Tooltip customContent={<SomethingCustom />}>
+    <Info />
+</Tooltip>
 ```

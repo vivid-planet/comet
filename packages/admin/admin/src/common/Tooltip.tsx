@@ -21,15 +21,17 @@ type SlotProps = MuiTooltipProps["slotProps"] &
         text: typeof Typography;
     }>["slotProps"];
 
-export interface TooltipProps extends Omit<MuiTooltipProps, "slotProps"> {
+export interface TooltipProps extends Omit<MuiTooltipProps, "slotProps" | "title"> {
     variant?: Variant;
+    title?: ReactNode;
     description?: ReactNode;
+    cusotmContent?: ReactNode;
     slotProps?: SlotProps;
 }
 
 type Slot = "root" | "title" | "text";
 type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success" | "warning";
-type ComponentState = "hasDescription";
+type ComponentState = "hasTitleOnly";
 
 export type TooltipClassKey = Slot | Variant | ComponentState | MuiTooltipClassKey;
 
@@ -38,7 +40,7 @@ type OwnerState = {
     disableInteractive: boolean | undefined;
     arrow: boolean | undefined;
     isRtl: boolean;
-    hasDescription: boolean;
+    hasTitleOnly: boolean;
 };
 
 const TooltipRoot = createComponentSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
@@ -55,7 +57,7 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L48
             !ownerState.disableInteractive && "popperInteractive",
             ownerState.arrow && "popperArrow",
-            ownerState.hasDescription && "hasDescription",
+            ownerState.hasTitleOnly && "hasTitleOnly",
         ];
     },
 })(({ theme, ownerState }) => {
@@ -71,7 +73,7 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
 
     const variantToBackgroundColor: Record<Variant, string> = {
         light: theme.palette.common.white,
-        dark: ownerState.hasDescription ? theme.palette.grey[900] : theme.palette.grey[500],
+        dark: ownerState.hasTitleOnly ? theme.palette.grey[500] : theme.palette.grey[900],
         neutral: theme.palette.grey[100],
         primary: theme.palette.primary.light,
         error: theme.palette.error.light,
@@ -80,7 +82,7 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
     };
 
     return css`
-        ${ownerState.hasDescription &&
+        ${!ownerState.hasTitleOnly &&
         css`
             min-width: 200px;
         `}
@@ -91,8 +93,9 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             padding: 3px 6px;
             color: ${variantToTextColor[ownerState.variant]};
             background-color: ${variantToBackgroundColor[ownerState.variant]};
+            line-height: 0; // Custom content may include space-caracters, due to code indentation. Removing the line-height prevents these from adding unintended whitespace.
 
-            ${ownerState.hasDescription &&
+            ${!ownerState.hasTitleOnly &&
             css`
                 padding: 10px;
             `}
@@ -181,35 +184,47 @@ export const Tooltip = (inProps: TooltipProps) => {
         children,
         title,
         description,
+        cusotmContent,
         slotProps = {},
         ...props
     } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
+
+    if (cusotmContent && (title || description)) {
+        throw new Error("You cannot provide a `title` or `description` when using custom content via the `cusotmContent` prop.");
+    }
+
+    if (!title && !cusotmContent) {
+        throw new Error("You must provide a `title` or `cusotmContent` when using the `Tooltip` component.");
+    }
 
     const ownerState: OwnerState = {
         variant,
         disableInteractive,
         arrow,
         isRtl: theme.direction === "rtl",
-        hasDescription: !!description,
+        hasTitleOnly: !description && !cusotmContent,
     };
 
     const { title: titleSlotProps, text: textSlotProps, ...muiSlotProps } = slotProps;
 
-    const tooltipContent = description ? (
-        <>
-            <Title variant="subtitle2" {...titleSlotProps}>
-                {title}
-            </Title>
+    const tooltipContent =
+        typeof cusotmContent !== "undefined" ? (
+            cusotmContent
+        ) : description ? (
+            <>
+                <Title variant="subtitle2" {...titleSlotProps}>
+                    {title}
+                </Title>
+                <Text variant="body2" {...textSlotProps}>
+                    {description}
+                </Text>
+            </>
+        ) : (
             <Text variant="body2" {...textSlotProps}>
-                {description}
+                {title}
             </Text>
-        </>
-    ) : (
-        <Text variant="body2" {...textSlotProps}>
-            {title}
-        </Text>
-    );
+        );
 
     const commonTooltipProps = {
         ...props,

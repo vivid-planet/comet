@@ -1,6 +1,6 @@
 import { Tooltip } from "@comet/admin";
 import { Add, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
-import { Box, Chip, Stack } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import { type Decorator } from "@storybook/react-webpack5";
 import { useEffect, useState } from "react";
 
@@ -100,6 +100,70 @@ export const FeedbackTooltipsFromDesign = {
                 </Tooltip>
                 <Tooltip title="Notification text" variant="warning" placement="bottom-start" open={showTooltips}>
                     <Chip label="Warning" sx={{ width: 70 }} />
+                </Tooltip>
+            </Stack>
+        );
+    },
+};
+
+/**
+ * This demonstrates using custom content in tooltips where a simple title and description is not sufficient. <br/>
+ * Currently, ther is no obvious correct way to do this, which causes inconsistent styling, depending on how the content is provided.
+ */
+export const TooltipsWithCustomContent = {
+    decorators: [lightGrayBackgroundDecorator],
+    render: () => {
+        const [showTooltips, setShowTooltips] = useState(false);
+
+        useEffect(() => {
+            setTimeout(() => {
+                // Delay showing tooltips to prevent them being rendered in the wrong place due to the underlying element not being rendered properly yet.
+                setShowTooltips(true);
+            }, 1000);
+        }, []);
+
+        const customElementsContent = (
+            <>
+                <Typography variant="subtitle1">Title</Typography>
+                <Typography variant="caption">Detail information</Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        backgroundColor: "primary.main",
+                        px: 2,
+                        py: 1,
+                        borderRadius: 2,
+                        marginTop: 1,
+                    }}
+                >
+                    <Typography variant="overline">Custom</Typography>
+                    <Typography variant="overline">Element</Typography>
+                </Box>
+            </>
+        );
+
+        const imageContent = <Box sx={{ width: 200, height: 100 }} component="img" src="https://picsum.photos/400/200" />;
+
+        const imageWithDescriptionContent = (
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, width: 200 }}>
+                <Box sx={{ width: 200, height: 100 }} component="img" src="https://picsum.photos/400/200" />
+                <Typography variant="caption" sx={{ textAlign: "center" }}>
+                    This could be some information about the image above.
+                </Typography>
+            </Box>
+        );
+
+        return (
+            <Stack pb={32} spacing={24} direction="row">
+                <Tooltip cusotmContent={customElementsContent} variant="light" open={showTooltips}>
+                    <Chip label="Custom elements" sx={{ width: 150 }} />
+                </Tooltip>
+                <Tooltip cusotmContent={imageContent} variant="light" open={showTooltips}>
+                    <Chip label="Image" sx={{ width: 150 }} />
+                </Tooltip>
+                <Tooltip cusotmContent={imageWithDescriptionContent} variant="light" open={showTooltips}>
+                    <Chip label="Image with description" sx={{ width: 150 }} />
                 </Tooltip>
             </Stack>
         );
