@@ -45,3 +45,5 @@ jobs:
 
             - name: Run Chromatic
               run: pnpm chromatic
+              env:
+                  CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR: ${{ secrets.CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR }}
