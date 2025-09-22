@@ -44,7 +44,7 @@ import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
-import { Future_DateTimePickerField as DateTimePicker } from "@comet/admin";
+import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormDetailsFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -222,7 +222,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         </Field>
         <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304}/>
         <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304}/>
-        <DateTimePicker variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
+        <DateTimePickerField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
         </FieldSet>
                         </>
                     </>)}
