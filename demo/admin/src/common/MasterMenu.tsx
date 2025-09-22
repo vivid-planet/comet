@@ -25,6 +25,7 @@ import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
 import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
 import { ProductCategoriesPage } from "@src/products/generator/ProductCategoriesPage";
+import { ProductHighlightsPage } from "@src/products/generator/ProductHighlightsPage";
 import { ProductsPage } from "@src/products/generator/ProductsPage";
 import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
 import { ProductTagsPage } from "@src/products/generator/ProductTagsPage";
@@ -260,6 +261,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/product-tags",
                             component: ProductTagsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productHighlights" defaultMessage="Product Highlights" />,
+                        route: {
+                            path: "/product-highlights",
+                            component: ProductHighlightsPage,
                         },
                     },
                 ],

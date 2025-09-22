@@ -162,7 +162,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     return filterOut;
 }
 
-function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+export function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
     const { crudSortProps } = buildOptions(metadata, generatorOptions);
 
@@ -174,7 +174,7 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {
-                return `${prop.name} = "${prop.name}",`;
+                return `${prop.replace(".", "_")} = "${prop.replace(".", "_")}",`;
             })
             .join("\n")}
     }
@@ -823,6 +823,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
     imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
+    imports.push({ name: "gqlSortToMikroOrmOrderBy", importPath: "@comet/cms-api" });
 
     const resolverOut = `import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
@@ -938,11 +939,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${
                 hasSortArg
                     ? `if (sort) {
-                options.orderBy = sort.map((sortItem) => {
-                    return {
-                        [sortItem.field]: sortItem.direction,
-                    };
-                });
+                options.orderBy = gqlSortToMikroOrmOrderBy(sort);
             }`
                     : ""
             }

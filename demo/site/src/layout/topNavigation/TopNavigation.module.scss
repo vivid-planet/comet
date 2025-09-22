@@ -39,10 +39,10 @@
     &:hover {
         text-decoration: underline;
     }
-}
 
-.linkActive {
-    color: var(--palette-text-inverted);
+    &--active {
+        color: var(--palette-text-inverted);
+    }
 }
 
 .skipLink {
