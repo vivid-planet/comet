@@ -20,6 +20,12 @@ export const getMessages = (language: "de" | "en"): ResolvedIntlConfig["messages
     if (import.meta.env.MODE === "development") {
         return {};
     }
+    if (language === "de") {
+        return {
+            ...cometMessages["de"],
+            ...cometDemoMessages["de"],
+        }
+    }
 
     return {
         ...cometMessages["en"],
