@@ -37,7 +37,8 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            - name: Run Chromatic
-              run: pnpm chromatic
-              env:
-                  CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR: ${{ secrets.CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR }}
+            - name: Publish admin-generator to Chromatic
+              uses: chromaui/action@v1
+              with:
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_ADMIN_GENERATOR }}
+                  workingDir: packages/admin/admin-generator
