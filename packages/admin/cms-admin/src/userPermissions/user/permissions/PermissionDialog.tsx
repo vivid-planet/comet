@@ -162,7 +162,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                                         defaultMessage="Validity duration"
                                                     />
                                                 ),
-                                                // @ts-expect-error Will work once the Tooltip update is merged: https://github.com/vivid-planet/comet/pull/4487
                                                 description: (
                                                     <FormattedMessage
                                                         id="comet.userPermission.validityDuration.tooltip.content"
