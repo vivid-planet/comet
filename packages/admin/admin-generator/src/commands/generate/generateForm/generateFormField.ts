@@ -228,10 +228,10 @@ export function generateFormField({
         }
     } else if (config.type == "dateTime") {
         imports.push({
-            name: "Future_DateTimePickerField",
+            name: "Future_DateTimePickerField as DateTimePicker",
             importPath: "@comet/admin",
         });
-        code = `<Future_DateTimePickerField
+        code = `<DateTimePicker
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
