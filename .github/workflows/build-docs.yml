@@ -5,6 +5,7 @@ on:
         paths:
             - docs/**
             - storybook/**
+            - packages/admin/admin-generator/**
         branches:
             - main
             - next
@@ -12,6 +13,7 @@ on:
         paths:
             - docs/**
             - storybook/**
+            - packages/admin/admin-generator/**
         branches:
             - main
             - next
