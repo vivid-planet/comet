@@ -557,7 +557,7 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -599,7 +599,7 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",

@@ -1,6 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
+import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 
 import { BlockFixture } from "./blocks/block-fixture";
@@ -48,6 +49,7 @@ export class PageContentBlockFixtureService {
         private readonly teaserBlockFixtureService: TeaserBlockFixtureService,
         private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
         private readonly sliderBlockFixtureService: SliderBlockFixtureService,
+        private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -73,7 +75,7 @@ export class PageContentBlockFixtureService {
             teaser: ["teaser", this.teaserBlockFixtureService],
             heading: ["textAndContent", this.headingBlockFixtureService],
             keyFacts: ["textAndContent", this.keyFactsBlockFixtureService],
-            richtext: ["textAndContent", this.richtextBlockFixtureService],
+            richtext: ["textAndContent", this.standaloneRichTextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
         };
 
