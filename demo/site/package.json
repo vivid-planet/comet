@@ -22,7 +22,7 @@
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml,scss}'",
         "lint:tsc": "tsc --project .",
-        "lint:style": "npx stylelint '**/*.{css,scss}'",
+        "lint:style": "npx stylelint '**/*.scss'",
         "serve": "NODE_ENV=production node dist/server.js"
     },
     "dependencies": {
@@ -69,11 +69,10 @@
         "eslint": "^9.30.1",
         "graphql": "^15.10.1",
         "npm-run-all2": "^5.0.2",
-        "postcss": "^8.5.6",
         "prettier": "^3.6.2",
         "sass": "^1.90.0",
         "stylelint": "^16.24.0",
-        "stylelint-config-sass-guidelines": "^12.1.0",
+        "stylelint-config-standard-scss": "^16.0.0",
         "typed-scss-modules": "^8.1.1",
         "typescript": "5.8.3",
         "webpack": "^5.101.3"
