@@ -229,9 +229,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             </FormSection>
                         </DialogContent>
                         <DialogActions>
-                            <CancelButton onClick={handleDialogClose}>
-                                <FormattedMessage id="comet.userPermissions.close" defaultMessage="Close" />
-                            </CancelButton>
+                            <CancelButton onClick={handleDialogClose} />
                             {!disabled && <SaveButton type="submit" />}
                         </DialogActions>
                     </>
