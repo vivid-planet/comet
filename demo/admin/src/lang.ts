@@ -24,7 +24,7 @@ export const getMessages = (language: "de" | "en"): ResolvedIntlConfig["messages
         return {
             ...cometMessages["de"],
             ...cometDemoMessages["de"],
-        }
+        };
     }
 
     return {
