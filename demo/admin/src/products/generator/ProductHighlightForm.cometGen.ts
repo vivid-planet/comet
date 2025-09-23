@@ -11,7 +11,7 @@ export default defineConfig<GQLProductHighlight>({
             type: "asyncSelectFilter",
             name: "productCategoryType",
             rootQuery: "productCategoryTypes",
-            loadValueQueryField: "product.category?.type",
+            loadValueQueryField: "product.category.type",
         },
         {
             type: "asyncSelectFilter",

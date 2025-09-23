@@ -58,8 +58,8 @@ export function ProductHighlightForm({ id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
         ? {
             ...filterByFragment<GQLProductHighlightFormDetailsFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategoryType: data.productHighlight.product.category?.type,
-            productCategory: data.productHighlight.product.category
+            productCategoryType: data.productHighlight.product?.category?.type,
+            productCategory: data.productHighlight.product?.category
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
