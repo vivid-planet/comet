@@ -1,8 +1,12 @@
 import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { type MultipleOptionsBlockData } from "@src/blocks.generated";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-const options = [
+export const options: Array<{
+    value: MultipleOptionsBlockData["options"];
+    label: ReactNode;
+}> = [
     {
         value: "option1",
         label: <FormattedMessage id="option1" defaultMessage="Option 1" />,
@@ -23,7 +27,7 @@ export const MultipleOptionsBlock = createCompositeBlock({
     blocks: {
         options: {
             block: createCompositeBlockSelectField<MultipleOptionsBlockData["options"]>({
-                defaultValue: [],
+                defaultValue: "option1",
                 label: <FormattedMessage id="multipleOptions.options" defaultMessage="Options" />,
                 options: options,
                 multiple: true,
