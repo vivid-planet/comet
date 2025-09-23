@@ -177,24 +177,15 @@ const Text = createComponentSlot(Typography)<TooltipClassKey>({
 })();
 
 export const Tooltip = (inProps: TooltipProps) => {
-    const {
-        variant = "dark",
-        disableInteractive,
-        arrow,
-        children,
-        title,
-        description,
-        cusotmContent,
-        slotProps = {},
-        ...props
-    } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const props = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const { variant = "dark", disableInteractive, arrow, children, title, description, cusotmContent, slotProps = {}, ...restProps } = props;
     const theme = useTheme();
 
     if (cusotmContent && (title || description)) {
         throw new Error("You cannot provide a `title` or `description` when using custom content via the `cusotmContent` prop.");
     }
 
-    if (!title && !cusotmContent) {
+    if (!("title" in props) && !cusotmContent) {
         throw new Error("You must provide a `title` or `cusotmContent` when using the `Tooltip` component.");
     }
 
@@ -227,14 +218,14 @@ export const Tooltip = (inProps: TooltipProps) => {
         );
 
     const commonTooltipProps = {
-        ...props,
+        ...restProps,
         title: tooltipContent,
         disableInteractive,
         arrow,
         ownerState,
         slots: {
             popper: TooltipPopper,
-            ...props.slots,
+            ...restProps.slots,
         },
         slotProps: {
             ...muiSlotProps,
