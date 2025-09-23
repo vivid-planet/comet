@@ -10,4 +10,5 @@ export enum CorePermission {
     fileUploads = "fileUploads",
     dependencies = "dependencies",
     warnings = "warnings",
+    actionLogs = "actionLogs",
 }
