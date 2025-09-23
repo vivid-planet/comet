@@ -70,7 +70,7 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                         </li>
                         <li className={styles.linkContainer}>
                             <Link className={styles.link} href="/">
-                                Home
+                                <FormattedMessage id="header.breadcrumbs.home" defaultMessage="Home" />
                             </Link>
                         </li>
                         {breadcrumbs.parentNodes.map((parentNode, idx) => (
