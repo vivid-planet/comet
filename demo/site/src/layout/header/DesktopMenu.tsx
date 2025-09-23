@@ -50,7 +50,7 @@ export const DesktopMenu = ({ menu }: Props) => {
                             }}
                         >
                             <div className={styles.linkContainer}>
-                                <PageLink page={node.node} activeClassName={styles.active} className={styles.menuPageLink}>
+                                <PageLink page={node.node} activeClassName={styles.menuPageLinkActive} className={styles.menuPageLink}>
                                     {node.node.name}
                                 </PageLink>
                                 {hasChildren && (
@@ -72,14 +72,17 @@ export const DesktopMenu = ({ menu }: Props) => {
                                     >
                                         <SvgUse
                                             href="/assets/icons/chevron-down.svg#root"
-                                            className={clsx(styles.animatedChevron, isExpanded && styles.expanded)}
+                                            className={clsx(styles.animatedChevron, isExpanded && styles.animatedChevronExpanded)}
                                         />
                                     </button>
                                 )}
                             </div>
                             {hasChildren && (
                                 <FocusLock disabled={!isExpanded} autoFocus={autoFocus}>
-                                    <ol id={sublevelMenuId} className={clsx(styles.subLevelNavigation, isExpanded && styles.expanded)}>
+                                    <ol
+                                        id={sublevelMenuId}
+                                        className={clsx(styles.subLevelNavigation, isExpanded && styles.subLevelNavigationExpanded)}
+                                    >
                                         <button
                                             className={styles.closeSublevelNavigationButton}
                                             onClick={() => setExpandedSubLevelNavigation(null)}
@@ -96,7 +99,11 @@ export const DesktopMenu = ({ menu }: Props) => {
                                         </button>
                                         {node.node.childNodes.map((childNode) => (
                                             <li key={childNode.id}>
-                                                <PageLink page={childNode} activeClassName={styles.active} className={styles.menuPageLink}>
+                                                <PageLink
+                                                    page={childNode}
+                                                    activeClassName={styles.menuPageLinkActive}
+                                                    className={styles.menuPageLink}
+                                                >
                                                     {childNode.name}
                                                 </PageLink>
                                             </li>

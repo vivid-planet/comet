@@ -34,7 +34,7 @@
     border-bottom: 1px solid var(--palette-gray-200);
     border-right: 1px solid var(--palette-gray-200);
 
-    &.expanded {
+    &Expanded {
         display: flex;
     }
 }
@@ -60,18 +60,18 @@
 }
 
 .toggleSubLevelNavigationButton {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
 }
 
 .animatedChevron {
-    width: 100%;
-    height: 100%;
+    width: 20px;
+    height: 20px;
     color: var(--palette-text-primary);
     transform: rotate(0deg);
     transition: transform 0.4s ease;
 
-    &.expanded {
+    &Expanded {
         color: var(--palette-primary-main);
         transform: rotate(-180deg);
     }
@@ -109,7 +109,7 @@
         color: var(--palette-primary-main);
     }
 
-    &.active {
+    &Active {
         text-decoration: underline var(--palette-primary-main);
         text-underline-offset: 8px;
     }
