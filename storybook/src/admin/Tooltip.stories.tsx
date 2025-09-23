@@ -156,13 +156,13 @@ export const TooltipsWithCustomContent = {
 
         return (
             <Stack pb={32} spacing={24} direction="row">
-                <Tooltip cusotmContent={customElementsContent} variant="light" open={showTooltips}>
+                <Tooltip customContent={customElementsContent} variant="light" open={showTooltips}>
                     <Chip label="Custom elements" sx={{ width: 150 }} />
                 </Tooltip>
-                <Tooltip cusotmContent={imageContent} variant="light" open={showTooltips}>
+                <Tooltip customContent={imageContent} variant="light" open={showTooltips}>
                     <Chip label="Image" sx={{ width: 150 }} />
                 </Tooltip>
-                <Tooltip cusotmContent={imageWithDescriptionContent} variant="light" open={showTooltips}>
+                <Tooltip customContent={imageWithDescriptionContent} variant="light" open={showTooltips}>
                     <Chip label="Image with description" sx={{ width: 150 }} />
                 </Tooltip>
             </Stack>

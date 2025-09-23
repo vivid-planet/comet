@@ -25,7 +25,7 @@ export interface TooltipProps extends Omit<MuiTooltipProps, "slotProps" | "title
     variant?: Variant;
     title?: ReactNode;
     description?: ReactNode;
-    cusotmContent?: ReactNode;
+    customContent?: ReactNode;
     slotProps?: SlotProps;
 }
 
@@ -178,15 +178,15 @@ const Text = createComponentSlot(Typography)<TooltipClassKey>({
 
 export const Tooltip = (inProps: TooltipProps) => {
     const props = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
-    const { variant = "dark", disableInteractive, arrow, children, title, description, cusotmContent, slotProps = {}, ...restProps } = props;
+    const { variant = "dark", disableInteractive, arrow, children, title, description, customContent, slotProps = {}, ...restProps } = props;
     const theme = useTheme();
 
-    if (cusotmContent && (title || description)) {
-        throw new Error("You cannot provide a `title` or `description` when using custom content via the `cusotmContent` prop.");
+    if (customContent && (title || description)) {
+        throw new Error("You cannot provide a `title` or `description` when using custom content via the `customContent` prop.");
     }
 
-    if (!("title" in props) && !cusotmContent) {
-        throw new Error("You must provide a `title` or `cusotmContent` when using the `Tooltip` component.");
+    if (!("title" in props) && !customContent) {
+        throw new Error("You must provide a `title` or `customContent` when using the `Tooltip` component.");
     }
 
     const ownerState: OwnerState = {
@@ -194,14 +194,14 @@ export const Tooltip = (inProps: TooltipProps) => {
         disableInteractive,
         arrow,
         isRtl: theme.direction === "rtl",
-        hasTitleOnly: !description && !cusotmContent,
+        hasTitleOnly: !description && !customContent,
     };
 
     const { title: titleSlotProps, text: textSlotProps, ...muiSlotProps } = slotProps;
 
     const tooltipContent =
-        typeof cusotmContent !== "undefined" ? (
-            cusotmContent
+        typeof customContent !== "undefined" ? (
+            customContent
         ) : description ? (
             <>
                 <Title variant="subtitle2" {...titleSlotProps}>
