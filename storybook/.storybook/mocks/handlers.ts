@@ -162,7 +162,7 @@ input ActionLogSort {
 }
 
 type Query {
-    actionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
+    actionLogs(offset: Int! = 0, limit: Int! = 25, scope: JSONObject, entityName: String!, filter: ActionLogFilter, sort: [ActionLogSort!]): PaginatedActionLogs!
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
     manufacturers(search: String): [Manufacturer!]!

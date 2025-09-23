@@ -1,4 +1,4 @@
-import { Theme, Typography, useTheme } from "@mui/material";
+import { type Theme, Typography, useTheme } from "@mui/material";
 import { type FunctionComponent } from "react";
 
 import { AvatarStyled, Root } from "./UserCell.sc";

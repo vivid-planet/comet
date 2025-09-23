@@ -22,6 +22,9 @@ const meta: Meta<typeof ActionLogGrid> = {
 export default meta;
 
 export const StandardActionLogGrid: Story = {
+    args: {
+        entityName: "News",
+    },
     /*parameters: {
         msw: {
             handlers: [createActionLogGridMock()],
