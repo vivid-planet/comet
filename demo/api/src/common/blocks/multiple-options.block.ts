@@ -8,14 +8,14 @@ export enum Option {
 }
 
 class MultipleOptionsBlockData extends BlockData {
-    @BlockField({ type: "string", array: true })
-    options: Option;
+    @BlockField({ type: "enum", enum: Option, array: true })
+    options: Option[];
 }
 
 class MultipleOptionsBlockInput extends BlockInput {
     @IsArray()
     @IsEnum(Option, { each: true })
-    @BlockField({ type: "string", array: true })
+    @BlockField({ type: "enum", enum: Option, array: true })
     options: Option[];
 
     transformToBlockData(): MultipleOptionsBlockData {
