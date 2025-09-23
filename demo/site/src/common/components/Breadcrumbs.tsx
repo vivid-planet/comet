@@ -1,8 +1,8 @@
 "use client";
+import { SvgUse } from "@src/common/helpers/SvgUse";
 import { PageLayout } from "@src/layout/PageLayout";
 import { createSitePath } from "@src/util/createSitePath";
 import NextLink from "next/link";
-import { Fragment } from "react";
 
 import { type GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import styles from "./Breadcrumbs.module.scss";
@@ -11,9 +11,9 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
     return (
         <PageLayout grid>
             {parentNodes.length > 0 && (
-                <div className={styles.container}>
+                <ol className={styles.container}>
                     {parentNodes.map((parentNode) => (
-                        <Fragment key={parentNode.path}>
+                        <li key={parentNode.path} className={styles.listElement}>
                             <NextLink
                                 className={styles.link}
                                 href={createSitePath({
@@ -23,21 +23,21 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                             >
                                 {parentNode.name}
                             </NextLink>
-
-                            <span className={styles.divider} />
-                        </Fragment>
+                            <SvgUse href="/assets/icons/chevron-down.svg#root" className={styles.chevron} width={16} height={16} />
+                        </li>
                     ))}
-
-                    <NextLink
-                        className={styles.link}
-                        href={createSitePath({
-                            path: path,
-                            scope: scope,
-                        })}
-                    >
-                        {name}
-                    </NextLink>
-                </div>
+                    <li className={styles.listElement}>
+                        <NextLink
+                            className={styles.link}
+                            href={createSitePath({
+                                path: path,
+                                scope: scope,
+                            })}
+                        >
+                            {name}
+                        </NextLink>
+                    </li>
+                </ol>
             )}
         </PageLayout>
     );

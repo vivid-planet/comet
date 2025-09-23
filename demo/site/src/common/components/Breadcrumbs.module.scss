@@ -1,27 +1,43 @@
+@use "../../styles/variables" as *;
+
 .container {
     padding: 30px 0;
     grid-column: 2 / -2;
+    display: none;
+
+    @media (min-width: $breakpoint-md) {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+.listElement {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .link {
-    color: var(--palette-primary-main);
+    color: var(--palette-gray-700);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
 
     &:last-child {
-        font-weight: 700;
-        color: var(--palette-text-primary);
+        color: var(--palette-primary-main);
     }
 
     &:hover {
         text-decoration: underline;
+        color: var(--palette-primary-main);
     }
 }
 
-.divider {
+.chevron {
+    transform: rotate(-90deg);
     display: inline-block;
-    width: 15px;
-    height: 1px;
-    margin: 0 10px 5px 10px;
-    background-color: var(--palette-primary-light);
+    color: var(--palette-gray-400);
 }
