@@ -15,9 +15,11 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
+    text-align: left;
 }
 
 .chevron {
+    flex-shrink: 0;
     color: var(--palette-gray-700);
     transition: transform 0.4s ease;
 }
@@ -71,6 +73,7 @@
 .linkContainer {
     display: flex;
     padding-bottom: var(--spacing-s400);
+    margin-right: 16px;
 
     &:nth-child(2) {
         margin-top: var(--spacing-s600);
@@ -86,11 +89,13 @@
 .cornerDownRight {
     color: var(--palette-gray-700);
     margin-right: 4px;
+    flex-shrink: 0;
 }
 
 .link {
     color: var(--palette-gray-700);
     text-decoration: none;
+    text-align: left;
 }
 
 .activeLink {
