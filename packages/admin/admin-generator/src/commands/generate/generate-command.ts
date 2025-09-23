@@ -127,7 +127,6 @@ export type FormFieldConfig<T> = (
 ) & {
     label?: string;
     required?: boolean;
-    virtual?: boolean;
     validate?: FieldValidator<unknown>;
     helperText?: string;
     readOnly?: boolean;
