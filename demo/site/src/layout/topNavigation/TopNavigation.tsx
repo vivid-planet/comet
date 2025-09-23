@@ -26,14 +26,14 @@ export const TopNavigation = ({ data }: Props) => {
             <ol className={styles.topLevelNavigation}>
                 {data.map((item) => (
                     <li className={styles.topLevelLinkContainer} key={item.id}>
-                        <PageLink page={item} activeClassName={styles["link--active"]} className={styles.link}>
+                        <PageLink page={item} activeClassName={styles.linkActive} className={styles.link}>
                             {item.name}
                         </PageLink>
                         {item.childNodes.length > 0 && (
                             <ol className={styles.subLevelNavigation}>
                                 {item.childNodes.map((node) => (
                                     <li key={node.id}>
-                                        <PageLink page={node} activeClassName={styles["link--active"]} className={styles.link}>
+                                        <PageLink page={node} activeClassName={styles.linkActive} className={styles.link}>
                                             {node.name}
                                         </PageLink>
                                     </li>
