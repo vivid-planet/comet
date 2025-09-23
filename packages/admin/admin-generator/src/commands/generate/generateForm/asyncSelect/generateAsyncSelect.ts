@@ -77,23 +77,33 @@ export function findIntrospectionObjectType({
     function findIntrospectionField(introspectionObject: IntrospectionObjectType, name: string) {
         const introspectionField = introspectionObject.fields.find((field) => field.name === name);
         if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-        const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+        let introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+
+        const multiple = introspectionFieldType?.kind === "LIST";
+        if (introspectionFieldType?.kind === "LIST") {
+            introspectionFieldType =
+                introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
+        }
+
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
             | IntrospectionObjectType
             | undefined;
         if (!objectType) throw new Error(`Object type ${introspectionFieldType.name} not found for field ${name}`);
-        return objectType;
+        return { multiple, objectType };
     }
     if (config.type === "asyncSelectFilter") {
         //for a filter select the field is "virtual", and it's ObjectType is defined by the path in config.loadValueQueryField
-        return config.loadValueQueryField.split(".").reduce((acc, fieldName) => {
-            const ret = findIntrospectionField(acc, fieldName);
-            if (!ret) throw new Error(`Field ${fieldName} not found in gql introspection`);
-            return ret;
-        }, introspectionObject);
+        return {
+            multiple: false,
+            objectType: config.loadValueQueryField.split(".").reduce((acc, fieldName) => {
+                const introspectionField = findIntrospectionField(acc, fieldName);
+                if (introspectionField.multiple) throw new Error(`asyncSelectFilter does not support list fields in loadValueQueryField`);
+                return introspectionField.objectType;
+            }, introspectionObject),
+        };
     } else {
-        //for a standard select we just find the field directly
+        //for a standard select we just find the field directly (no nested path to follow, name can be only one level deep)
         return findIntrospectionField(introspectionObject, name);
     }
 }
@@ -139,7 +149,7 @@ export function generateAsyncSelect({
     let code = "";
     let formValueToGqlInputCode = "";
 
-    const objectType = findIntrospectionObjectType({
+    const { objectType, multiple } = findIntrospectionObjectType({
         config,
         gqlIntrospection,
         gqlType,
@@ -306,10 +316,14 @@ export function generateAsyncSelect({
     }
 
     if (config.type != "asyncSelectFilter") {
-        if (!required) {
-            formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+        if (!multiple) {
+            if (!required) {
+                formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+            } else {
+                formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+            }
         } else {
-            formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+            formValueToGqlInputCode = `${name}: formValues.${name}.map((item) => item.id),`;
         }
     }
 
@@ -335,6 +349,7 @@ export function generateAsyncSelect({
                 variant="horizontal"
                 fullWidth
                 ${config.readOnly ? "readOnly disabled" : ""}
+                ${multiple ? "multiple" : ""}
                 name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
