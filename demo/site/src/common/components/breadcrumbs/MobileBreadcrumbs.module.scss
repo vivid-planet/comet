@@ -3,7 +3,7 @@
 .root {
     background-color: var(--palette-gray-50);
 
-    @media (min-width: $breakpoint-md) {
+    @media (min-width: $breakpoint-sm) {
         display: none;
     }
 }

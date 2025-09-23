@@ -6,7 +6,7 @@
     display: none;
     list-style-type: none;
 
-    @media (min-width: $breakpoint-md) {
+    @media (min-width: $breakpoint-sm) {
         display: flex;
         align-items: center;
         gap: var(--spacing-s200);
