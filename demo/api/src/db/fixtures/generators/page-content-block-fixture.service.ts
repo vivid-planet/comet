@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { UserGroup } from "@src/user-groups/user-group";
 
 import { BlockFixture } from "./blocks/block-fixture";
 import { AccordionBlockFixtureService } from "./blocks/layout/accordion-block-fixture.service";
@@ -93,6 +94,9 @@ export class PageContentBlockFixtureService {
                 type: type as any,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 props: props as any,
+                // TODO add custom block attributes to BlocksBlock types
+                // @ts-expect-error custom block attributes aren't reflected in types
+                userGroup: UserGroup.all,
             });
         }
 

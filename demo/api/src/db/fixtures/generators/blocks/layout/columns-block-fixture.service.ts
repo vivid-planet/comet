@@ -7,6 +7,7 @@ import { ColumnsBlock, ColumnsContentBlock } from "@src/documents/pages/blocks/c
 import { BlockFixture } from "../block-fixture";
 import { MediaGalleryBlockFixtureService } from "../media/media-gallery-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "../media/standalone-media-block-fixture.service";
+import { AnchorBlockFixtureService } from "../navigation/anchor-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "../text-and-content/text-image-block-fixture.service";
@@ -19,6 +20,7 @@ const oneColumnLayouts = [{ name: "2-20-2" }];
 export class ColumnsBlockFixtureService {
     constructor(
         private readonly accordionBlockFixtureService: AccordionBlockFixtureService,
+        private readonly anchorBlockFixtureService: AnchorBlockFixtureService,
         private readonly callToActionListBlockFixtureService: StandaloneCallToActionListBlockFixtureService,
         private readonly headingBlockFixtureService: StandaloneHeadingBlockFixtureService,
         private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
@@ -33,7 +35,7 @@ export class ColumnsBlockFixtureService {
 
         const blockCfg: Record<(typeof blocks)[number]["type"], BlockFixture> = {
             accordion: this.accordionBlockFixtureService,
-            anchor: this.headingBlockFixtureService,
+            anchor: this.anchorBlockFixtureService,
             callToActionList: this.callToActionListBlockFixtureService,
             heading: this.headingBlockFixtureService,
             media: this.standaloneMediaBlockFixtureService,
