@@ -22,7 +22,6 @@ export const MultipleOptionsBlock = createCompositeBlock({
     displayName: <FormattedMessage id="multipleOptionsBlock.displayName" defaultMessage="Multiple Options" />,
     blocks: {
         options: {
-            // @ts-expect-error string array isn't currently allowed as type
             block: createCompositeBlockSelectField<MultipleOptionsBlockData["options"]>({
                 defaultValue: [],
                 label: <FormattedMessage id="multipleOptions.options" defaultMessage="Options" />,
