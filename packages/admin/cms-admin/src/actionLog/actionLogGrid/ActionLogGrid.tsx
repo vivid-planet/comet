@@ -29,6 +29,7 @@ type ActionGridRow = GQLActionLogGridFragmentFragment;
 type ActionLogGridProps = {
     id: string;
 
+    entityName: string;
     /**
      * latest name of the actual object which will be displayed in the title
      */
@@ -37,7 +38,7 @@ type ActionLogGridProps = {
     onCompareVersionsClick: (versionId: string, versionsId2: string) => void;
 };
 
-export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, name, onClick, onCompareVersionsClick }) => {
+export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, entityName, name, onClick, onCompareVersionsClick }) => {
     const intl = useIntl();
     const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
@@ -96,6 +97,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, name,
 
     const { data, error, loading } = useQuery<GQLActionLogGridQuery, GQLActionLogGridQueryVariables>(actionLogGridQuery, {
         variables: {
+            entityName,
             filter: {
                 and: [
                     ...(gqlFilter.and != null ? gqlFilter.and : []),
