@@ -73,7 +73,7 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                                 <FormattedMessage id="header.breadcrumbs.home" defaultMessage="Home" />
                             </Link>
                         </li>
-                        {breadcrumbs.parentNodes.map((parentNode, idx) => (
+                        {breadcrumbs.parentNodes.map((parentNode) => (
                             <li key={parentNode.path} className={styles.linkContainer}>
                                 <SvgUse href="/assets/icons/corner-down-right.svg#root" className={styles.cornerDownRight} width={16} height={16} />
                                 <a
