@@ -87,7 +87,7 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                                 </a>
                             </li>
                         ))}
-                        <li className={styles.linkContainer} style={{ marginLeft: `${(breadcrumbs.parentNodes.length + 2) * 32}px` }}>
+                        <li className={styles.linkContainer}>
                             <SvgUse
                                 href="/assets/icons/corner-down-right.svg#root"
                                 className={clsx(styles.cornerDownRight, styles.activeLink)}
