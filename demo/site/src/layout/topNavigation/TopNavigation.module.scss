@@ -44,3 +44,26 @@
         color: var(--palette-text-inverted);
     }
 }
+
+.skipLink {
+    position: fixed;
+    top: 120px;
+    left: 20px;
+    z-index: 100;
+    opacity: 0;
+
+    /* Hide the skip link visually but keep it accessible for screen readers */
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+
+    &:focus {
+        opacity: 1;
+        height: auto;
+        width: auto;
+        clip: auto;
+        clip-path: none;
+    }
+}
