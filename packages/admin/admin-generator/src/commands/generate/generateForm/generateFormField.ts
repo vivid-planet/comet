@@ -218,7 +218,11 @@ export function generateFormField({
             formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
         }
     } else if (config.type == "dateTime") {
-        code = `<DateTimeField
+        imports.push({
+            name: "Future_DateTimePickerField as DateTimePickerField",
+            importPath: "@comet/admin",
+        });
+        code = `<DateTimePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
