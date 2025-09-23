@@ -58,13 +58,19 @@ export class ActionLogsSubscriber implements EventSubscriber {
             scope = Array.isArray(scopedEntityScope) ? scopedEntityScope : [scopedEntityScope];
         }
 
+        let snapshot: AnyEntity | undefined = undefined;
+        if (changeSet.type !== ChangeSetType.DELETE) {
+            const ignoreFields = entityMetadata.relations.map((entityProperty) => entityProperty.name);
+            snapshot = changeSet.entity.toObject(ignoreFields);
+        }
+
         return this.entityManager.create(
             ActionLog,
             {
                 userId: await this.service.getUserId(),
                 entityName,
                 entityId,
-                snapshot: changeSet.type !== ChangeSetType.DELETE ? changeSet.entity.toObject() : undefined,
+                snapshot,
                 version: raw(
                     `(${this.entityManager
                         .createQueryBuilder(ActionLog)
