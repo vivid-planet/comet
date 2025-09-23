@@ -5,6 +5,7 @@ import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { http, HttpResponse } from "msw";
 
+import { actionLogHandler, actionsLogsHandler } from "./actionlogs/actionsLogsHandler";
 import { fileUploadsHandler } from "./handler/fileUploads";
 
 type StringFilter = {
@@ -60,6 +61,7 @@ schema {
 
 scalar Date
 scalar DateTime
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Launch {
     id: ID!
@@ -111,7 +113,57 @@ type Product {
     manufacturer: Manufacturer!
 }
 
+enum SortDirection {
+  ASC
+  DESC
+}
+
+input IdFilter {
+    equal: ID
+    isAnyOf: [ID!]
+    notEqual: ID
+}
+
+type ActionLog {
+    createdAt: DateTime!
+    entityId: ID!
+    entityName: String!
+    id: ID!
+    snapshot: JSONObject
+    userId: ID!
+    version: Int!
+}
+
+enum ActionLogSortField {
+    createdAt
+    entityId
+    entityName
+    userId
+    version
+}
+
+type PaginatedActionLogs {
+    nodes: [ActionLog!]!
+    totalCount: Int!
+}
+
+input ActionLogFilter {
+    and: [ActionLogFilter!]
+    entityId: StringFilter
+    entityName: StringFilter
+    id: IdFilter
+    or: [ActionLogFilter!]
+    userId: StringFilter
+}
+
+input ActionLogSort {
+    direction: SortDirection! = ASC
+    field: ActionLogSortField!
+}
+
 type Query {
+    actionLogs(offset: Int! = 0, limit: Int! = 25, scope: JSONObject, entityName: String!, filter: ActionLogFilter, sort: [ActionLogSort!]): PaginatedActionLogs!
+    actionLog(id: ID!): ActionLog!
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
     manufacturers(search: String): [Manufacturer!]!
@@ -226,7 +278,7 @@ for (let i = 0; i < 10; i += 1) {
     });
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, args, context, info) => {
     await sleep(500);
@@ -268,6 +320,8 @@ const graphqlHandler = new GraphQLHandler({
             launchesPastPagePaging,
             manufacturers,
             products,
+            actionLogs: actionsLogsHandler,
+            actionLog: actionLogHandler,
         },
     },
 
