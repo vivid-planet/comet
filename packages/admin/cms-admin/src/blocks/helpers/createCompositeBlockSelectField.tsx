@@ -28,14 +28,7 @@ export function createCompositeBlockSelectField<T extends string | number | stri
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }> onSubmit={({ value }) => updateState(value)} initialValues={{ value: state }}>
-                <SelectField
-                    name="value"
-                    fullWidth={fullWidth}
-                    {...legacyFieldProps}
-                    {...fieldProps}
-                    options={options}
-                    multiple={Array.isArray(defaultValue)}
-                />
+                <SelectField name="value" fullWidth={fullWidth} {...legacyFieldProps} {...fieldProps} options={options} />
             </BlocksFinalForm>
         ),
         extractTextContents: (state, options) => extractTextContents?.(state, options) ?? [],
