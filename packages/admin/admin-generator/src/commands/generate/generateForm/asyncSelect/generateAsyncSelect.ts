@@ -132,7 +132,7 @@ export function generateAsyncSelect({
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     const formValueConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
-        destructFromFormValues: config.virtual || config.type == "asyncSelectFilter" ? name : undefined,
+        destructFromFormValues: config.type == "asyncSelectFilter" ? name : undefined,
     };
 
     let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
@@ -305,7 +305,7 @@ export function generateAsyncSelect({
         finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
     }
 
-    if (!config.virtual && config.type != "asyncSelectFilter") {
+    if (config.type != "asyncSelectFilter") {
         if (!required) {
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         } else {

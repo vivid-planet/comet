@@ -12,7 +12,8 @@ import styles from "./FooterContentBlock.module.scss";
 export const FooterContentBlock = withPreview(
     ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
         return (
-            <footer className={styles.root}>
+            // ID is used for skip link
+            <footer className={styles.root} id="footer">
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <div className={styles.topContainer}>
