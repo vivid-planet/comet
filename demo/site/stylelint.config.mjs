@@ -9,5 +9,6 @@ export default {
         "selector-class-pattern": null,
         "selector-pseudo-class-no-unknown": [true, { ignorePseudoClasses: ["global"] }],
         "custom-property-pattern": null,
+        "value-keyword-case": null,
     },
 };
