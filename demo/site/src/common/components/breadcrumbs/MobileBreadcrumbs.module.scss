@@ -1,0 +1,98 @@
+@use "../../../styles/variables" as *;
+
+.root {
+    background-color: var(--palette-gray-50);
+
+    @media (min-width: $breakpoint-md) {
+        display: none;
+    }
+}
+
+.container {
+    grid-column: 2 / -2;
+    padding: 30px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.chevron {
+    color: var(--palette-gray-700);
+    transition: transform 0.4s ease;
+}
+
+.expandedChevron {
+    transform: rotate(180deg);
+}
+
+.dropdown {
+    position: absolute;
+    left: 0;
+    width: 100vw;
+    box-sizing: border-box;
+    z-index: 1;
+    overflow: hidden;
+    background-color: white;
+    transform: translateX(100%);
+    transition:
+        transform 0.2s ease-out,
+        visibility 0s linear 0.2s;
+}
+
+.expandedDropdown {
+    height: auto;
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+        transform 0.2s ease-in,
+        visibility 0s linear 0s;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: var(--spacing-s600);
+}
+
+.backButton {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: var(--spacing-s500) 0;
+    padding-left: var(--spacing-s600);
+    gap: var(--spacing-s200);
+    align-items: center;
+    border-bottom: 1px solid;
+    color: var(--palette-gray-700);
+}
+
+.linkContainer {
+    display: flex;
+    padding-bottom: var(--spacing-s400);
+
+    &:nth-child(2) {
+        margin-top: var(--spacing-s600);
+    }
+
+    @for $i from 2 through 10 {
+        &:nth-child(#{$i}) {
+            margin-left: 32px * ($i - 1);
+        }
+    }
+}
+
+.cornerDownRight {
+    color: var(--palette-gray-700);
+    margin-right: 4px;
+}
+
+.link {
+    color: var(--palette-gray-700);
+    text-decoration: none;
+}
+
+.activeLink {
+    color: var(--palette-primary-main);
+}
