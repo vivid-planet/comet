@@ -41,7 +41,8 @@
         "browser:demo:api": "dotenv -- sh -c 'open-cli $API_URL/graphql'",
         "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
-        "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
+        "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
+        "browser:demo:mitmproxy": "dotenv -- sh -c 'open-cli http://127.0.0.1:$MITMPROXY_WEB_INTERFACE_PORT?token=$MITMPROXY_WEB_PASSWORD'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
