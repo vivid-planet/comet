@@ -1,4 +1,4 @@
-# Mail-Templates
+# Mail-Templates (experimental)
 
 This module provides a way to create and manage mail-templates. It allows you to create reusable mail-templates that can be used in different parts of your application. The templates are created using React components and can be rendered to HTML using MJML.
 
