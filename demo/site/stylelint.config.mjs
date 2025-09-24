@@ -10,5 +10,6 @@ export default {
         "selector-pseudo-class-no-unknown": [true, { ignorePseudoClasses: ["global"] }],
         "custom-property-pattern": null,
         "value-keyword-case": null,
+        "scss/percent-placeholder-pattern": null,
     },
 };
