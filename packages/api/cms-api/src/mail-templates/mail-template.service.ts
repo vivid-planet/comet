@@ -3,7 +3,6 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Options as MailOptions } from "nodemailer/lib/mailer";
 import { createIntl, createIntlCache, IntlCache, IntlShape } from "react-intl";
-import { ContentScope } from "src/user-permissions/interfaces/content-scope.interface";
 
 import { MailerService } from "../mailer/mailer.service";
 import { MAIL_TEMPLATE_METADATA_KEY, MailTemplateMetadata } from "./mail-template.decorator";
@@ -13,7 +12,6 @@ export type MailTemplateInterface<T> = {
     type: string;
     name: string;
 
-    availableForScopes?: () => Promise<ContentScope[]>;
     generateMail: (intl: IntlShape, params: T) => Promise<MailOptions>; // TODO remove messages from MailParams
     getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;
 };
@@ -44,15 +42,14 @@ export class MailTemplateService {
         this.intlCache = createIntlCache();
     }
 
-    async getMailTemplates(filter?: { scope?: ContentScope; type?: string }): Promise<MailTemplateInterface<unknown>[]> {
-        const { scope, type } = filter || {};
+    async getMailTemplates(filter?: { type?: string }): Promise<MailTemplateInterface<unknown>[]> {
+        const { type } = filter || {};
 
         const mailTemplates: MailTemplateInterface<unknown>[] = [];
         for (const discovery of await this.discoveryService.providersWithMetaAtKey<MailTemplateMetadata>(MAIL_TEMPLATE_METADATA_KEY)) {
             const mailTemplate = discovery.discoveredClass.instance;
             if (!isMailTemplate(mailTemplate)) throw new Error(`Class ${discovery.discoveredClass.name} does not implement MailTemplateInterface`);
             if (type && mailTemplate.type !== type) continue;
-            if (scope && mailTemplate.availableForScopes && !(await mailTemplate.availableForScopes()).includes(scope)) continue;
 
             mailTemplates.push(mailTemplate);
         }
