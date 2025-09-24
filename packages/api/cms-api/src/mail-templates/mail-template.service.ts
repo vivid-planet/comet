@@ -71,7 +71,7 @@ export class MailTemplateService {
         const mail = await this.generateMail(mailTemplate, params);
 
         const response = await this.mailerService.sendMail({
-            type: mailTemplate.type,
+            mailTypeForLogging: mailTemplate.type,
             ...mail,
         });
         return !!response.messageId;
