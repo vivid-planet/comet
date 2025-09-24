@@ -181,6 +181,19 @@ export function generateAsyncSelect({
         formFragmentFields = [`${name}.id`, `${name}.${labelField}`];
     }
 
+    const rootQueryHasSearchArg = rootQueryType.args.find((arg) => arg.name === "search");
+    const useAutocomplete = config.autocomplete ?? !!rootQueryHasSearchArg;
+    if (useAutocomplete) {
+        if (!rootQueryHasSearchArg) {
+            throw new Error(`Field ${String(config.name)}: Autocomplete is enabled but root query "${rootQuery}" has no search argument.`);
+        }
+        if (rootQueryHasSearchArg.type.kind !== "SCALAR" || rootQueryHasSearchArg.type.name !== "String") {
+            throw new Error(
+                `Field ${String(config.name)}: Autocomplete is enabled but root query "${rootQuery}" has search argument is not a string.`,
+            );
+        }
+    }
+
     const filterConfig =
         config.type == "asyncSelect" && config.filter
             ? (() => {
@@ -321,6 +334,11 @@ export function generateAsyncSelect({
         name: `GQL${queryName}QueryVariables`,
         importPath: `./${baseOutputFilename}.generated`,
     });
+    if (useAutocomplete) {
+        imports.push({ name: "AsyncAutocompleteField", importPath: "@comet/admin" });
+    } else {
+        imports.push({ name: "AsyncSelectField", importPath: "@comet/admin" });
+    }
 
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
@@ -330,7 +348,7 @@ export function generateAsyncSelect({
         formValueConfig.initializationCode = `${name}: data.${instanceGqlType}.${config.loadValueQueryField}`;
     }
 
-    code = `<AsyncSelectField
+    code = `<${useAutocomplete ? "AsyncAutocompleteField" : "AsyncSelectField"}
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
@@ -338,20 +356,30 @@ export function generateAsyncSelect({
                 name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
-                loadOptions={async () => {
+                loadOptions={async (${useAutocomplete ? `search?: string` : ""}) => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName}${
-                            filterConfig
-                                ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})`
-                                : ``
-                        } {
-                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
+                        query: gql\`query ${queryName}${filterConfig || useAutocomplete ? "(" : ""}
+                            ${
+                                filterConfig
+                                    ? `$${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``}`
+                                    : ``
+                            }
+                            ${filterConfig && useAutocomplete ? "," : ""}
+                            ${useAutocomplete ? `$search: String` : ``}
+                        ${filterConfig || useAutocomplete ? ")" : ""} {
+                            ${rootQuery}${filterConfig || useAutocomplete ? "(" : ""}
+                                ${filterConfig ? `${filterConfig.filterVarName}: $${filterConfig.filterVarName}` : ``}${filterConfig && useAutocomplete ? "," : ""}
+                                ${useAutocomplete ? `search: $search` : ``}
+                            ${filterConfig || useAutocomplete ? ")" : ""} {
                                 nodes {
                                     id
                                     ${labelField}
                                 }
                             }
-                        }\`${filterConfig ? `, variables: { ${filterConfig.filterVarName}: ${filterConfig.filterVarValue} }` : ``}
+                        }\`${filterConfig || useAutocomplete ? ", variables: { " : ""}
+                            ${filterConfig ? `${filterConfig.filterVarName}: ${filterConfig.filterVarValue},` : ``}
+                            ${useAutocomplete ? `search,` : ``}
+                        ${filterConfig || useAutocomplete ? " }" : ""}
                     });
                     return data.${rootQuery}.nodes;
                 }}

@@ -4,7 +4,6 @@ import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -34,6 +33,7 @@ import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { Future_DatePickerField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncAutocompleteField } from "@comet/admin";
 import { FinalFormSwitch } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
@@ -169,16 +169,25 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
                     value: "tie",
                 }
             ]}/>
-        <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {
+        <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect {
-                            productCategories {
+                    query: gql`query ProductCategoriesSelect(
+                            
+                            
+                            $search: String
+                        ) {
+                            productCategories(
+                                
+                                search: $search
+                            ) {
                                 nodes {
                                     id
                                     title
                                 }
                             }
-                        }`
+                        }`, variables: {
+                        search,
+                    }
                 });
                 return data.productCategories.nodes;
             }} getOptionLabel={(option) => option.title}/>
@@ -200,16 +209,26 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         </FieldSet>
 
         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data"/>}>
-            <AsyncSelectField variant="horizontal" fullWidth name="manufacturer" label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer"/>} startAdornment={<InputAdornment position="start"><LocationIcon /></InputAdornment>} loadOptions={async () => {
+            <AsyncAutocompleteField variant="horizontal" fullWidth name="manufacturer" label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer"/>} startAdornment={<InputAdornment position="start"><LocationIcon /></InputAdornment>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
-                    query: gql`query ManufacturersSelect($filter: ManufacturerFilter) {
-                            manufacturers(filter: $filter) {
+                    query: gql`query ManufacturersSelect(
+                            $filter: ManufacturerFilter
+                            ,
+                            $search: String
+                        ) {
+                            manufacturers(
+                                filter: $filter,
+                                search: $search
+                            ) {
                                 nodes {
                                     id
                                     name
                                 }
                             }
-                        }`, variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } }
+                        }`, variables: {
+                        filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } },
+                        search,
+                    }
                 });
                 return data.manufacturers.nodes;
             }} getOptionLabel={(option) => option.name}/>
