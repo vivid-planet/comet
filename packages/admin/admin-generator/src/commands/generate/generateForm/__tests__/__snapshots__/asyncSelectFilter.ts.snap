@@ -83,7 +83,7 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
         const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
         ? {
             ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategory: data.productHighlight.product.category
+            productCategory: data.productHighlight.product?.category
         }
         : {
             
