@@ -1,14 +1,7 @@
-import { Button, CancelButton, Loading, SaveButton } from "@comet/admin";
+import { Button, CancelButton, Dialog, Loading, SaveButton } from "@comet/admin";
 import { Reload } from "@comet/admin-icons";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
-import {
-    Box,
-    // eslint-disable-next-line no-restricted-imports
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-} from "@mui/material";
+import { Box, DialogActions, DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -57,11 +50,12 @@ export const ImportFromPicsum = () => {
             <Button variant="textDark" startIcon={<PicsumIcon />} onClick={handleOpenDialog}>
                 <FormattedMessage id="pages.dam.importFromPicsum" defaultMessage="Import from Picsum" />
             </Button>
-            <Dialog open={isOpen} onClose={handleCloseDialog}>
-                <div>
-                    <DialogTitle>
-                        <FormattedMessage id="pages.dam.importFromPicsum" defaultMessage="Import from Picsum" />
-                    </DialogTitle>
+            <Dialog
+                open={isOpen}
+                onClose={handleCloseDialog}
+                title={<FormattedMessage id="pages.dam.importFromPicsum" defaultMessage="Import from Picsum" />}
+            >
+                <>
                     <DialogContent>
                         <Box sx={{ aspectRatio: "16/9", lineHeight: 0 }}>
                             {picsumImage ? <ImagePreview src={picsumImage?.url} alt="image" /> : <Loading behavior="fillParent" />}
@@ -79,7 +73,7 @@ export const ImportFromPicsum = () => {
                             }}
                         />
                     </DialogActions>
-                </div>
+                </>
             </Dialog>
         </>
     );

@@ -15,10 +15,16 @@ const cometDemoMessages = {
     de: comet_demo_messages_de,
 };
 
-export const getMessages = (): ResolvedIntlConfig["messages"] => {
+export const getMessages = (language: "de" | "en"): ResolvedIntlConfig["messages"] => {
     // in dev mode we use the default messages to have immediate changes
     if (import.meta.env.MODE === "development") {
         return {};
+    }
+    if (language === "de") {
+        return {
+            ...cometMessages["de"],
+            ...cometDemoMessages["de"],
+        };
     }
 
     return {
