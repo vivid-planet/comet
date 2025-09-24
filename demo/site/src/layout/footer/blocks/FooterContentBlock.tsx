@@ -20,7 +20,7 @@ export const FooterContentBlock = withPreview(
                             <div className={styles.imageWrapper}>
                                 <DamImageBlock
                                     data={image}
-                                    aspectRatio="1x1"
+                                    aspectRatio="inherit"
                                     style={{ objectFit: "contain" }}
                                     sizes={createImageSizes({ default: "20vw" })}
                                 />
@@ -31,8 +31,8 @@ export const FooterContentBlock = withPreview(
                         </div>
                         <hr className={styles.horizontalLine} />
                         <div className={styles.linkCopyrightWrapper}>
-                            <nav>
-                                {linkList.blocks.length > 0 && (
+                            {linkList.blocks.length > 0 && (
+                                <nav>
                                     <ul className={styles.linksWrapper}>
                                         {linkList.blocks.map((block) => (
                                             <li key={block.key}>
@@ -42,8 +42,8 @@ export const FooterContentBlock = withPreview(
                                             </li>
                                         ))}
                                     </ul>
-                                )}
-                            </nav>
+                                </nav>
+                            )}
                             {copyrightNotice && (
                                 <Typography variant="p200" className={styles.copyrightNotice}>
                                     {copyrightNotice}
