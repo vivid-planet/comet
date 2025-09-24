@@ -19,7 +19,6 @@ import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
 import { Lock } from "@comet/admin-icons";
-import { DateTimeField } from "@comet/admin-date-time";
 import { BlockState } from "@comet/cms-admin";
 import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
@@ -33,8 +32,11 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { Future_DatePickerField } from "@comet/admin";
+import { SelectField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { GQLProductTagsSelectQuery } from "./ProductForm.generated";
+import { GQLProductTagsSelectQueryVariables } from "./ProductForm.generated";
 import { FinalFormSwitch } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
@@ -45,6 +47,7 @@ import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
+import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormDetailsFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -111,7 +114,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
             throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, dimensions: dimensionsEnabled && formValues.dimensions ? { width: parseFloat(formValues.dimensions.width), height: parseFloat(formValues.dimensions.height), depth: parseFloat(formValues.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), priceList: formValues.priceList ? formValues.priceList.id : null, datasheets: formValues.datasheets?.map(({ id }) => id), lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
+            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, tags: formValues.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValues.dimensions ? { width: parseFloat(formValues.dimensions.width), height: parseFloat(formValues.dimensions.height), depth: parseFloat(formValues.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), priceList: formValues.priceList ? formValues.priceList.id : null, datasheets: formValues.datasheets?.map(({ id }) => id), lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
         };
         if (mode === "edit") {
             if (!id)
@@ -169,6 +172,16 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
                     value: "tie",
                 }
             ]}/>
+        <SelectField required fullWidth variant={"horizontal"} name="additionalTypes" label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types"/>} multiple options={[{
+                    value: "cap",
+                    label: <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap"/>
+                }, {
+                    value: "shirt",
+                    label: <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt"/>
+                }, {
+                    value: "tie",
+                    label: <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie"/>
+                }]}/>
         <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
                     query: gql`query ProductCategoriesSelect {
@@ -181,6 +194,19 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
                         }`
                 });
                 return data.productCategories.nodes;
+            }} getOptionLabel={(option) => option.title}/>
+        <AsyncSelectField required variant="horizontal" fullWidth multiple name="tags" label={<FormattedMessage id="product.tags" defaultMessage="Tags"/>} loadOptions={async () => {
+                const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
+                    query: gql`query ProductTagsSelect {
+                            productTags {
+                                nodes {
+                                    id
+                                    title
+                                }
+                            }
+                        }`
+                });
+                return data.productTags.nodes;
             }} getOptionLabel={(option) => option.title}/>
 
             <Field variant="horizontal" fullWidth name="priceRange" component={FinalFormRangeInput} label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range"/>} min={25} max={500} disableSlider startAdornment={<InputAdornment position="start">€</InputAdornment>}/>
@@ -222,7 +248,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         </Field>
         <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304}/>
         <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304}/>
-        <DateTimeField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
+        <DateTimePickerField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
         </FieldSet>
                         </>
                     </>)}

@@ -46,6 +46,39 @@ function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
 }
 
 export type StaticSelectValue = { value: string; label: string } | string;
+type AsyncSelectFilter =
+    | {
+          /**
+           * Filter by value of field in current form
+           */
+          type: "field";
+          /**
+           * Name of the field in current form, that will be used to filter the query
+           */
+          formFieldName: string;
+          /**
+           * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+           *
+           * Root Argument or filter argument are supported.
+           */
+          rootQueryArg?: string;
+      }
+    | {
+          /**
+           * Filter by a prop passed into the form, this prop will be generated
+           */
+          type: "formProp";
+          /**
+           * Name of the prop generated for this form
+           */
+          propName: string;
+          /**
+           * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+           *
+           * Root Argument or filter argument are supported.
+           */
+          rootQueryArg?: string;
+      };
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; name: keyof T; multiline?: boolean } & InputBaseFieldConfig)
@@ -74,39 +107,7 @@ export type FormFieldConfig<T> = (
           /**
            * filter for query, passed as variable to graphql query
            */
-          filter?:
-              | {
-                    /**
-                     * Filter by value of field in current form
-                     */
-                    type: "field";
-                    /**
-                     * Name of the field in current form, that will be used to filter the query
-                     */
-                    formFieldName: string;
-                    /**
-                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
-                     *
-                     * Root Argument or filter argument are supported.
-                     */
-                    rootQueryArg?: string;
-                }
-              | {
-                    /**
-                     * Filter by a prop passed into the form, this prop will be generated
-                     */
-                    type: "formProp";
-                    /**
-                     * Name of the prop generated for this form
-                     */
-                    propName: string;
-                    /**
-                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
-                     *
-                     * Root Argument or filter argument are supported.
-                     */
-                    rootQueryArg?: string;
-                };
+          filter?: AsyncSelectFilter;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelectFilter";
@@ -114,6 +115,10 @@ export type FormFieldConfig<T> = (
           loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
           rootQuery: string;
           labelField?: string;
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?: AsyncSelectFilter;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; name: keyof T; block: BlockInterface }
     | ({ type: "fileUpload"; multiple?: false; name: keyof T; maxFiles?: 1; download?: boolean } & Pick<

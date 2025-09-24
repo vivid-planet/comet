@@ -83,7 +83,7 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
         const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
         ? {
             ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategory: data.productHighlight.product.category
+            productCategory: data.productHighlight.product?.category
         }
         : {
             
@@ -162,6 +162,7 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="productCategory"
                 label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category" />}
                 
@@ -185,6 +186,7 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="product"
                 label={<FormattedMessage id="productHighlight.product" defaultMessage="Product" />}
@@ -226,6 +228,7 @@ exports[`AsyncSelectFilter generates filter with value dependent on other field 
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
@@ -413,6 +416,7 @@ id?: string;
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
@@ -602,6 +606,7 @@ id?: string;
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
@@ -790,6 +795,7 @@ id?: string;
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}

@@ -2,12 +2,13 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { PageLink } from "@src/layout/header/PageLink";
 import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
+import clsx from "clsx";
 import { useId, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { useIntl } from "react-intl";
-import styled from "styled-components";
 
 import { type GQLDesktopMenuFragment } from "./DesktopMenu.fragment.generated";
+import styles from "./DesktopMenu.module.scss";
 
 interface Props {
     menu: GQLDesktopMenuFragment;
@@ -33,24 +34,28 @@ export const DesktopMenu = ({ menu }: Props) => {
     });
 
     return (
-        <DesktopHeaderFullHeightNav>
-            <TopLevelNavigation>
+        <div className={styles.desktopHeaderFullHeightNav}>
+            <ol className={styles.topLevelNavigation}>
                 {menu.items.map((node) => {
+                    const isExpanded = expandedSubLevelNavigation === node.id;
+                    const hasChildren = node.node.childNodes.length > 0;
                     return (
-                        <TopLevelLinkContainer
+                        <li
                             key={node.id}
+                            className={styles.topLevelLinkContainer}
                             onMouseEnter={() => setExpandedSubLevelNavigation(node.id)}
                             onMouseLeave={() => {
                                 setExpandedSubLevelNavigation(null);
                                 setAutoFocus(false);
                             }}
                         >
-                            <LinkContainer>
-                                <MenuPageLink page={node.node} activeClassName="active">
+                            <div className={styles.linkContainer}>
+                                <PageLink page={node.node} activeClassName={styles.menuPageLinkActive} className={styles.menuPageLink}>
                                     {node.node.name}
-                                </MenuPageLink>
-                                {node.node.childNodes.length > 0 && (
-                                    <ToggleSubLevelNavigationButton
+                                </PageLink>
+                                {hasChildren && (
+                                    <button
+                                        className={styles.toggleSubLevelNavigationButton}
                                         aria-label={intl.formatMessage(
                                             {
                                                 id: "header.subMenu.arialLabel",
@@ -59,23 +64,27 @@ export const DesktopMenu = ({ menu }: Props) => {
                                             { name: node.node.name },
                                         )}
                                         aria-controls={sublevelMenuId}
-                                        aria-expanded={expandedSubLevelNavigation === node.id}
+                                        aria-expanded={isExpanded}
                                         onClick={() => {
                                             setAutoFocus(true);
                                             handleSubLevelNavigationButtonClick(node.id);
                                         }}
                                     >
-                                        <AnimatedChevron
+                                        <SvgUse
                                             href="/assets/icons/chevron-down.svg#root"
-                                            $isExpanded={expandedSubLevelNavigation === node.id}
+                                            className={clsx(styles.animatedChevron, isExpanded && styles.animatedChevronExpanded)}
                                         />
-                                    </ToggleSubLevelNavigationButton>
+                                    </button>
                                 )}
-                            </LinkContainer>
-                            {node.node.childNodes.length > 0 && (
-                                <FocusLock disabled={expandedSubLevelNavigation !== node.id} autoFocus={autoFocus}>
-                                    <SubLevelNavigation id={sublevelMenuId} $isExpanded={expandedSubLevelNavigation === node.id}>
-                                        <CloseSublevelNavigationButton
+                            </div>
+                            {hasChildren && (
+                                <FocusLock disabled={!isExpanded} autoFocus={autoFocus}>
+                                    <ol
+                                        id={sublevelMenuId}
+                                        className={clsx(styles.subLevelNavigation, isExpanded && styles.subLevelNavigationExpanded)}
+                                    >
+                                        <button
+                                            className={styles.closeSublevelNavigationButton}
                                             onClick={() => setExpandedSubLevelNavigation(null)}
                                             aria-label={intl.formatMessage(
                                                 {
@@ -87,127 +96,25 @@ export const DesktopMenu = ({ menu }: Props) => {
                                             aria-controls={sublevelMenuId}
                                         >
                                             <SvgUse href="/assets/icons/menu-open.svg#root" width={16} height={16} />
-                                        </CloseSublevelNavigationButton>
-
-                                        {node.node.childNodes.map((node) => (
-                                            <li key={node.id}>
-                                                <MenuPageLink page={node} activeClassName="active">
-                                                    {node.name}
-                                                </MenuPageLink>
+                                        </button>
+                                        {node.node.childNodes.map((childNode) => (
+                                            <li key={childNode.id}>
+                                                <PageLink
+                                                    page={childNode}
+                                                    activeClassName={styles.menuPageLinkActive}
+                                                    className={styles.menuPageLink}
+                                                >
+                                                    {childNode.name}
+                                                </PageLink>
                                             </li>
                                         ))}
-                                    </SubLevelNavigation>
+                                    </ol>
                                 </FocusLock>
                             )}
-                        </TopLevelLinkContainer>
+                        </li>
                     );
                 })}
-            </TopLevelNavigation>
-        </DesktopHeaderFullHeightNav>
+            </ol>
+        </div>
     );
 };
-
-const DesktopHeaderFullHeightNav = styled.div`
-    height: 100%;
-    display: none;
-
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-        display: block;
-    }
-`;
-
-const TopLevelNavigation = styled.ol`
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    gap: ${({ theme }) => theme.spacing.s600};
-    height: 100%;
-`;
-
-const SubLevelNavigation = styled.ol<{ $isExpanded: boolean }>`
-    display: ${({ $isExpanded }) => ($isExpanded ? "flex" : "none")};
-    flex-direction: column;
-    gap: ${({ theme }) => theme.spacing.s200};
-    position: absolute;
-    z-index: 40;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    list-style-type: none;
-    padding: ${({ theme }) => theme.spacing.s100};
-    background-color: white;
-    border-left: 1px solid ${({ theme }) => theme.palette.gray["200"]};
-    border-bottom: 1px solid ${({ theme }) => theme.palette.gray["200"]};
-    border-right: 1px solid ${({ theme }) => theme.palette.gray["200"]};
-`;
-
-const TopLevelLinkContainer = styled.li`
-    position: relative;
-
-    &:last-child ${SubLevelNavigation} {
-        left: auto;
-        transform: none;
-        right: 0;
-    }
-`;
-
-const LinkContainer = styled.div`
-    display: flex;
-    align-items: center;
-    gap: ${({ theme }) => theme.spacing.s100};
-    height: 100%;
-    position: relative;
-`;
-
-const ToggleSubLevelNavigationButton = styled.button`
-    width: 24px;
-    height: 24px;
-`;
-
-const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
-    width: 20px;
-    height: 20px;
-    color: ${({ theme, $isExpanded }) => ($isExpanded ? theme.palette.primary.main : theme.palette.text.primary)};
-    transform: rotate(${({ $isExpanded }) => ($isExpanded ? "-180deg" : "0deg")});
-    transition: transform 0.4s ease;
-`;
-
-const CloseSublevelNavigationButton = styled.button`
-    opacity: 0;
-    background-color: white;
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    pointer-events: none;
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    width: 1px;
-
-    &:focus-visible {
-        opacity: 1;
-        pointer-events: auto;
-        width: auto;
-        height: auto;
-        clip-path: none;
-    }
-`;
-
-const MenuPageLink = styled(PageLink)`
-    text-decoration: none;
-    display: inline-block;
-    padding: ${({ theme }) => theme.spacing.s100} 0;
-    font-family: ${({ theme }) => theme.fontFamily};
-    color: ${({ theme }) => theme.palette.text.primary};
-
-    &:hover {
-        color: ${({ theme }) => theme.palette.primary.main};
-    }
-
-    &.active {
-        text-decoration: underline ${({ theme }) => theme.palette.primary.main};
-        text-underline-offset: 8px;
-    }
-`;
