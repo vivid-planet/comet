@@ -42,7 +42,7 @@ const oneColumnLayouts = [
         ),
     },
     {
-        name: "9-6-9",
+        name: "6-12-6",
         columns: 1,
         label: <FormattedMessage id="columnsBlock.center.small" defaultMessage="Center small" />,
         preview: (

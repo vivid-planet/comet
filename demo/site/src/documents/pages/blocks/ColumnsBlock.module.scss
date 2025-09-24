@@ -4,20 +4,11 @@
     grid-column: 3 / -3;
 }
 
-.layout-9-6-9 {
-    grid-column: 5 / -5;
+.layout-6-12-6 {
+    grid-column: 4 / -4;
 
     @media (min-width: $breakpoint-sm) {
         grid-column: 7 / -7;
-    }
-    @media (min-width: $breakpoint-md) {
-        grid-column: 8 / -8;
-    }
-    @media (min-width: $breakpoint-lg) {
-        grid-column: 9 / -9;
-    }
-    @media (min-width: $breakpoint-xl) {
-        grid-column: 10 / -10;
     }
 }
 
