@@ -2,7 +2,6 @@ import { DiscoveryService } from "@golevelup/nestjs-discovery";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Options as MailOptions } from "nodemailer/lib/mailer";
-import { createIntl, createIntlCache, IntlCache, IntlShape } from "react-intl";
 
 import { MailerService } from "../mailer/mailer.service";
 import { MAIL_TEMPLATE_METADATA_KEY, MailTemplateMetadata } from "./mail-template.decorator";
@@ -12,7 +11,7 @@ export type MailTemplateInterface<T> = {
     type: string;
     name: string;
 
-    generateMail: (intl: IntlShape, params: T) => Promise<MailOptions>; // TODO remove messages from MailParams
+    generateMail: (params: T) => Promise<MailOptions>;
     getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;
 };
 
@@ -33,14 +32,11 @@ export type PreparedTestParams<T> = {
 
 @Injectable()
 export class MailTemplateService {
-    private readonly intlCache: IntlCache;
     constructor(
         private readonly entityManager: EntityManager,
         private readonly mailerService: MailerService,
         private readonly discoveryService: DiscoveryService,
-    ) {
-        this.intlCache = createIntlCache();
-    }
+    ) {}
 
     async getMailTemplates(filter?: { type?: string }): Promise<MailTemplateInterface<unknown>[]> {
         const { type } = filter || {};
@@ -68,19 +64,7 @@ export class MailTemplateService {
      * @param params
      */
     async generateMail<T>(mailTemplate: MailTemplateInterface<T>, params: T): Promise<MailOptions> {
-        const language = "en"; // TODO correctly set the language, maybe move into the mail template
-        const messages = await getMessages(language);
-        const intl = createIntl(
-            {
-                // Locale of the application
-                locale: language,
-                // Locale of the fallback defaultMessage
-                defaultLocale: language,
-                messages: messages,
-            },
-            this.intlCache,
-        );
-        return mailTemplate.generateMail(intl, { ...params, messages });
+        return mailTemplate.generateMail(params);
     }
 
     async sendMail<T>(mailTemplate: MailTemplateInterface<T>, params: T): Promise<boolean> {
