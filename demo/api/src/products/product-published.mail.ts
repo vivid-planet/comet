@@ -1,5 +1,4 @@
-import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
-import { PreparedTestParams } from "@src/../../../packages/api/cms-api/src/mail-templates/mail-template.service";
+import { MailTemplate, MailTemplateInterface, PreparedTestParams } from "@comet/cms-api";
 
 type MailParams = {
     recipientName: string;
