@@ -2,8 +2,8 @@
 
 .root {
     margin-top: auto;
-    background-color: var(--palette-gray-900);
-    color: var(--palette-gray-50);
+    background-color: var(--brand-grey-900);
+    color: var(--brand-grey-050);
 }
 
 .pageLayoutContent {
@@ -60,11 +60,11 @@
 
 .copyrightNotice {
     text-align: center;
-    color: var(--palette-text-secondary);
+    color: var(--brand-grey-600);
 }
 
 .linkText {
-    color: var(--palette-primary-main);
+    color: var(--brand-primary-main);
     text-decoration: underline;
 }
 
@@ -72,7 +72,7 @@
     width: 100%;
     height: 1px;
     border: none;
-    background-color: var(--palette-gray-600);
-    color: var(--palette-gray-600);
+    background-color: var(--brand-grey-600);
+    color: var(--brand-grey-600);
     margin: var(--spacing-d200) 0;
 }
