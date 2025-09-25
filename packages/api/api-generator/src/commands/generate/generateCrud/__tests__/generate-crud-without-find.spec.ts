@@ -55,6 +55,6 @@ describe("GenerateCrud without find condition", () => {
             expect(bodyText).toContain("const where: ObjectQuery<TestEntity> = {};");
         }
 
-        orm.close();
+        await orm.close();
     });
 });

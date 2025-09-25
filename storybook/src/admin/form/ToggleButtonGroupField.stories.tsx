@@ -31,7 +31,7 @@ export default config;
  * This story demonstrates the simple usage of the `ToggleButtonGroupField` component.
  */
 export const ToggleButtonFieldStory: Story = {
-    storyName: "ToggleButtonGroupField",
+    name: "Toggle Button Field",
     render: () => {
         type SampleType = "label" | "label-2" | "icon" | "icon+label";
         interface FormValues {
@@ -93,7 +93,6 @@ export const ToggleButtonFieldStory: Story = {
  * define how many options should be shown in one row.
  */
 export const MultipleRowsExample: Story = {
-    storyName: "ToggleButtonGroupField",
     render: () => {
         type SampleType = "north-west" | "north" | "north-east" | "west" | "center" | "east" | "south-west" | "south" | "south-east";
         interface FormValues {
@@ -174,7 +173,6 @@ export const MultipleRowsExample: Story = {
  * In this Showcase, the AddressType's - `ToggleButtonGroupField` - toggles between Address and Coordinates and shows/hides the corresponding fields.
  */
 export const ToggleButtonFieldAddressSample: Story = {
-    storyName: "ToggleButtonGroupField",
     render: () => {
         type AddressType = "address" | "coordinates";
         interface FormValues {

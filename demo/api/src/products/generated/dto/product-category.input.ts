@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { IsString, IsNotEmpty, IsOptional, IsUUID, IsArray, IsInt } from "class-validator";
-import { IsSlug, PartialType } from "@comet/cms-api";
+import { IsNullable, IsSlug, PartialType } from "@comet/cms-api";
 import { Min } from "class-validator";
 @InputType()
 export class ProductCategoryInput {
@@ -24,6 +24,11 @@ export class ProductCategoryInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     products: string[];
+    @IsNullable()
+    @Field(() => ID, { nullable: true,
+        defaultValue: null, })
+    @IsUUID()
+    type?: string;
 }
 @InputType()
 export class ProductCategoryUpdateInput extends PartialType(ProductCategoryInput) {

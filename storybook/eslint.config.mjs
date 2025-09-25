@@ -1,4 +1,4 @@
-import eslintConfigReact from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/future/react.js";
 import storybook from "eslint-plugin-storybook";
 
 /** @type {import('eslint')} */
@@ -17,6 +17,7 @@ const config = [
             "no-console": "off",
             "@comet/no-other-module-relative-import": "off",
             "react/react-in-jsx-scope": "off",
+            "react/jsx-no-literals": "off",
         },
     },
 ];

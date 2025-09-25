@@ -1,44 +1,44 @@
 "use client";
+import { PageLayout } from "@src/layout/PageLayout";
 import { createSitePath } from "@src/util/createSitePath";
+import NextLink from "next/link";
 import { Fragment } from "react";
 
 import { type GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
-import * as sc from "./Breadcrumbs.sc";
-import { GridRoot } from "./Breadcrumbs.sc";
+import styles from "./Breadcrumbs.module.scss";
 
-type BreadcrumbsProps = GQLBreadcrumbsFragment;
-const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
+export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFragment) => {
     return (
-        <GridRoot>
+        <PageLayout grid>
             {parentNodes.length > 0 && (
-                <sc.Container>
+                <div className={styles.container}>
                     {parentNodes.map((parentNode) => (
                         <Fragment key={parentNode.path}>
-                            <sc.Link
+                            <NextLink
+                                className={styles.link}
                                 href={createSitePath({
                                     path: parentNode.path,
                                     scope: scope,
                                 })}
                             >
                                 {parentNode.name}
-                            </sc.Link>
+                            </NextLink>
 
-                            <sc.Divider />
+                            <span className={styles.divider} />
                         </Fragment>
                     ))}
 
-                    <sc.Link
+                    <NextLink
+                        className={styles.link}
                         href={createSitePath({
                             path: path,
                             scope: scope,
                         })}
                     >
                         {name}
-                    </sc.Link>
-                </sc.Container>
+                    </NextLink>
+                </div>
             )}
-        </GridRoot>
+        </PageLayout>
     );
 };
-
-export default Breadcrumbs;

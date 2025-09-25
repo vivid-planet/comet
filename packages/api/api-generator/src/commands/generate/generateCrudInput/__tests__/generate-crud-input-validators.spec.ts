@@ -248,7 +248,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 expect(lengthImport).toBeDefined();
                 expect(lengthImport?.getModuleSpecifierValue()).toBe("class-validator");
 
-                orm.close();
+                await orm.close();
             });
         });
 
@@ -288,7 +288,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 expect(isSlugImport).toBeDefined();
                 expect(isSlugImport?.getModuleSpecifierValue()).toBe("@comet/cms-api");
 
-                orm.close();
+                await orm.close();
             });
         });
     });
@@ -329,7 +329,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
             expect(isTrueAsStringImport).toBeDefined();
             expect(isTrueAsStringImport?.getModuleSpecifierValue()).toBe("../generate-crud-input-validators.spec");
 
-            orm.close();
+            await orm.close();
         });
     });
 });

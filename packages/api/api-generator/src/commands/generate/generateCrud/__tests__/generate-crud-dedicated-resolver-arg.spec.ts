@@ -62,7 +62,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             expect(structure.properties?.length).toBe(1);
             expect(structure.properties?.[0].name).toBe("name");
 
-            orm.close();
+            await orm.close();
         });
         it("query list must include product arg", async () => {
             LazyMetadataStorage.load();
@@ -92,7 +92,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const params = structure?.properties?.map((prop) => prop.name);
             expect(params).toContain("product");
 
-            orm.close();
+            await orm.close();
         });
         it("create mutation must include product arg", async () => {
             LazyMetadataStorage.load();
@@ -123,7 +123,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const params = createMethod?.parameters?.map((param) => param.name);
             expect(params).toContain("product");
 
-            orm.close();
+            await orm.close();
         });
     });
 });

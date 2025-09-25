@@ -11,7 +11,7 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
             - run: |
@@ -19,7 +19,7 @@ jobs:
                   git config user.email github-actions@github.com
 
             - name: "Library: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
@@ -28,7 +28,7 @@ jobs:
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 22.x
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
@@ -47,7 +47,7 @@ jobs:
                   cwd: "./demo/admin/lang/comet-lang"
 
             - name: "Demo Admin: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
                   cwd: "./demo/admin/lang/comet-demo-lang"
 
             - name: "Demo Site: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}

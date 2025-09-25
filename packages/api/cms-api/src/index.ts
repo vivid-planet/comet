@@ -144,7 +144,7 @@ export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { IdFilter } from "./common/filter/id.filter";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
-export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";

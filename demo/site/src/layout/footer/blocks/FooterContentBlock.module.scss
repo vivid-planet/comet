@@ -11,14 +11,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--spacing-d400) 0;
-
-    @media (min-width: $breakpoint-lg) {
-        position: relative;
-        gap: var(--spacing-d100);
-        flex-direction: row;
-        justify-content: space-between;
-    }
+    padding: var(--spacing-d200) 0;
 }
 
 .topContainer {
@@ -26,62 +19,38 @@
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-d100);
+    gap: var(--spacing-d200);
 
     @media (min-width: $breakpoint-sm) {
-        align-self: stretch;
-        flex-direction: row-reverse;
-        justify-content: space-between;
-        reading-flow: flex-visual;
-    }
-
-    @media (min-width: $breakpoint-lg) {
+        align-self: center;
         flex-direction: row;
+        justify-content: space-between;
     }
 }
 
 .richTextWrapper {
-    width: 100%;
     text-align: center;
 
     @media (min-width: $breakpoint-sm) {
         text-align: left;
     }
-
-    @media (min-width: $breakpoint-lg) {
-        max-width: 80%;
-    }
 }
 
 .imageWrapper {
-    width: 100px;
-
-    @media (min-width: $breakpoint-lg) {
-        position: absolute;
-        width: 100%;
-        max-width: 100px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
+    width: 160px;
+    flex-shrink: 0;
 }
 
 .linkCopyrightWrapper {
-    color: var(--palette-gray-400);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-s500);
-
-    @media (min-width: $breakpoint-lg) {
-        width: 80%;
-        align-items: flex-end;
-    }
 }
 
 .linksWrapper {
     display: flex;
-    gap: var(--spacing-s500);
+    gap: var(--spacing-s400);
     flex-wrap: wrap;
     justify-content: center;
     list-style: none;
@@ -91,10 +60,7 @@
 
 .copyrightNotice {
     text-align: center;
-
-    @media (min-width: $breakpoint-lg) {
-        text-align: right;
-    }
+    color: var(--palette-text-secondary);
 }
 
 .linkText {
@@ -108,9 +74,5 @@
     border: none;
     background-color: var(--palette-gray-600);
     color: var(--palette-gray-600);
-    margin: var(--spacing-d300) 0;
-
-    @media (min-width: $breakpoint-lg) {
-        display: none;
-    }
+    margin: var(--spacing-d200) 0;
 }
