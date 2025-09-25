@@ -4,11 +4,11 @@ import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
-import { SvgUse } from "@src/common/helpers/SvgUse";
 import clsx from "clsx";
 import { useId } from "react";
 
 import { Typography } from "../components/Typography";
+import { SvgUse } from "../helpers/SvgUse";
 import styles from "./AccordionItemBlock.module.scss";
 import { TextImageBlock } from "./TextImageBlock";
 
@@ -40,13 +40,12 @@ export const AccordionItemBlock = withPreview(
         return (
             <>
                 <button id={headlineId} onClick={onChange} aria-expanded={isExpanded} aria-controls={contentId} className={styles.titleWrapper}>
+                    <div className={styles.iconWrapper}>
+                        <SvgUse href={isExpanded ? "/assets/icons/minus.svg#root" : "/assets/icons/plus.svg#root"} width={16} height={16} />
+                    </div>
                     <Typography variant="h350" as={titleHtmlTag}>
                         {title}
                     </Typography>
-                    <SvgUse
-                        href="/assets/icons/chevron-down.svg#root"
-                        className={clsx(styles.animatedChevron, isExpanded && styles.animatedChevronExpanded)}
-                    />
                 </button>
                 <section
                     id={contentId}
