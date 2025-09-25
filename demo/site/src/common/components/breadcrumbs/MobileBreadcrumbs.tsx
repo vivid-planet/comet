@@ -36,7 +36,7 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
             <PageLayout grid>
                 <div className={styles.container}>
                     <Link
-                        className={styles.activeLink}
+                        className={clsx(styles.link, styles.linkActive)}
                         href={createSitePath({
                             path: breadcrumbs.path,
                             scope: breadcrumbs.scope,
@@ -45,7 +45,7 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                         {breadcrumbs.name}
                     </Link>
                     <SvgUse
-                        className={clsx(styles.chevron, isExpanded && styles.expandedChevron)}
+                        className={clsx(styles.chevron, isExpanded && styles.chevronExpanded)}
                         href="/assets/icons/chevron-down.svg#root"
                         width={16}
                         height={16}
@@ -53,7 +53,7 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                 </div>
             </PageLayout>
             {isExpanded && (
-                <ReactFocusLock className={clsx(styles.dropdown, isExpanded && styles.expandedDropdown)}>
+                <ReactFocusLock className={clsx(styles.dropdown, isExpanded && styles.dropdownExpanded)}>
                     <ol className={styles.list}>
                         <li>
                             <button
@@ -90,12 +90,12 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                         <li className={styles.linkContainer}>
                             <SvgUse
                                 href="/assets/icons/corner-down-right.svg#root"
-                                className={clsx(styles.cornerDownRight, styles.activeLink)}
+                                className={clsx(styles.cornerDownRight, styles.linkActive)}
                                 width={16}
                                 height={16}
                             />
                             <Link
-                                className={clsx(styles.link, styles.activeLink)}
+                                className={clsx(styles.link, styles.linkActive)}
                                 href={createSitePath({
                                     path: breadcrumbs.path,
                                     scope: breadcrumbs.scope,

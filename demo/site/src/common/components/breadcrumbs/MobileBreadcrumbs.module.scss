@@ -22,10 +22,10 @@
     flex-shrink: 0;
     color: var(--palette-gray-700);
     transition: transform 0.4s ease;
-}
 
-.expandedChevron {
-    transform: rotate(180deg);
+    &Expanded {
+        transform: rotate(180deg);
+    }
 }
 
 .dropdown {
@@ -40,15 +40,15 @@
     transition:
         transform 0.2s ease-out,
         visibility 0s linear 0.2s;
-}
 
-.expandedDropdown {
-    height: auto;
-    transform: translateX(0);
-    visibility: visible;
-    transition:
-        transform 0.2s ease-in,
-        visibility 0s linear 0s;
+    &Expanded {
+        height: auto;
+        transform: translateX(0);
+        visibility: visible;
+        transition:
+            transform 0.2s ease-in,
+            visibility 0s linear 0s;
+    }
 }
 
 .list {
@@ -96,8 +96,8 @@
     color: var(--palette-gray-700);
     text-decoration: none;
     text-align: left;
-}
 
-.activeLink {
-    color: var(--palette-primary-main);
+    &Active {
+        color: var(--palette-primary-main);
+    }
 }
