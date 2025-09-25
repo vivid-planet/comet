@@ -6,7 +6,7 @@ import { ManufacturerInput, ManufacturerUpdateInput } from "./dto/manufacturer.i
 import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 import { ManufacturersArgs } from "./dto/manufacturers.args";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Manufacturer)
 @RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerResolver {
@@ -26,11 +26,7 @@ export class ManufacturerResolver {
         const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Manufacturer));
         const options: FindOptions<Manufacturer> = { offset, limit };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(Manufacturer, where, options);
         return new PaginatedManufacturers(entities, totalCount);

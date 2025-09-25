@@ -11,6 +11,7 @@ exports[`generateFormField - staticSelect should generate readonly staticSelect 
                                 
                                 
                                 readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>}
+                                
                                 options={[{
                                         value: "cap",
                                         label: <FormattedMessage id="product.type.cap" defaultMessage="Cap" />

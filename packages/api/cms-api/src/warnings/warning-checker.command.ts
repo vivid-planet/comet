@@ -10,12 +10,7 @@ import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import {
-    CREATE_WARNINGS_METADATA_KEY,
-    CreateWarningsFunction,
-    CreateWarningsMeta,
-    CreateWarningsServiceInterface,
-} from "./decorators/create-warnings.decorator";
+import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsFunction, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -83,8 +78,15 @@ export class WarningCheckerCommand extends CommandRunner {
                             const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                             if (scoped) {
-                                const service = this.moduleRef.get(scoped, { strict: false });
-                                const scopedEntityScope = await service.getEntityScope(rootBlock);
+                                let scopedEntityScope: ContentScope | ContentScope[];
+
+                                if (this.isService(scoped)) {
+                                    const service = this.moduleRef.get(scoped, { strict: false });
+                                    scopedEntityScope = await service.getEntityScope(rootBlock);
+                                } else {
+                                    scopedEntityScope = await scoped(rootBlock);
+                                }
+
                                 if (Array.isArray(scopedEntityScope)) {
                                     throw new Error("Multiple scopes are not supported for warnings");
                                 } else {
@@ -215,9 +217,9 @@ export class WarningCheckerCommand extends CommandRunner {
         } while (rows.length > 0);
     }
 
-    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
+    private isService(target: object): target is Type {
         // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, target);
     }
 
     private isBlockWarningService(

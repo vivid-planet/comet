@@ -76,7 +76,7 @@ describe("GenerateCrud Relation n:m with additional column", () => {
     });
 
     afterEach(async () => {
-        orm.close();
+        await orm.close();
     });
 
     it("should call loadItems on collection", async () => {

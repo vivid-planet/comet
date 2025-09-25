@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { TextLinkBlockFixtureService } from "@src/db/fixtures/generators/blocks/navigation/text-link-block-fixture.service";
+import { UserGroup } from "@src/user-groups/user-group";
 
 @Injectable()
 export class LinkListBlockFixtureService {
@@ -17,6 +18,7 @@ export class LinkListBlockFixtureService {
                 key: faker.string.uuid(),
                 visible: true,
                 props: await this.textLinkBlockFixtureService.generateBlockInput(),
+                userGroup: UserGroup.all,
             });
         }
 

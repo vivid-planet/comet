@@ -1,9 +1,10 @@
-import { type ComponentsOverrides, Typography } from "@mui/material";
+import { type ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { SectionHeadline } from "../section/SectionHeadline";
 
 export type FormSectionClassKey = "root" | "disableMarginBottom" | "title" | "children";
 
@@ -24,7 +25,17 @@ const Root = createComponentSlot("div")<FormSectionClassKey, OwnerState>({
     `,
 );
 
-const Title = createComponentSlot("div")<FormSectionClassKey>({
+const Title = createComponentSlot(SectionHeadline)<FormSectionClassKey>({
+    componentName: "FormSection",
+    slotName: "title",
+})(
+    ({ theme }) => css`
+        margin-bottom: ${theme.spacing(4)};
+    `,
+);
+
+// TODO: Remove this slot once the `disableTypography` prop has been removed
+const LegacyTitle = createComponentSlot("div")<FormSectionClassKey>({
     componentName: "FormSection",
     slotName: "title",
 })(
@@ -41,12 +52,15 @@ const Children = createComponentSlot("div")<FormSectionClassKey>({
 export interface FormSectionProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        title: "div";
+        title: typeof SectionHeadline;
         children: "div";
     }> {
     children: ReactNode;
     title?: ReactNode;
     disableMarginBottom?: boolean;
+    /**
+     * @deprecated Use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
+     */
     disableTypography?: boolean;
 }
 
@@ -62,7 +76,18 @@ export function FormSection(inProps: FormSectionProps) {
 
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            {title && <Title {...slotProps?.title}>{disableTypography ? title : <Typography variant="h3">{title}</Typography>}</Title>}
+            {title && (
+                <>
+                    {disableTypography ? (
+                        <LegacyTitle {...slotProps?.title}>{title}</LegacyTitle>
+                    ) : (
+                        <Title {...slotProps?.title} divider>
+                            {title}
+                        </Title>
+                    )}
+                </>
+            )}
+
             <Children {...slotProps?.children}>{children}</Children>
         </Root>
     );

@@ -12,14 +12,15 @@ import styles from "./FooterContentBlock.module.scss";
 export const FooterContentBlock = withPreview(
     ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
         return (
-            <footer className={styles.root}>
+            // ID is used for skip link
+            <footer className={styles.root} id="footer">
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <div className={styles.topContainer}>
                             <div className={styles.imageWrapper}>
                                 <DamImageBlock
                                     data={image}
-                                    aspectRatio="1x1"
+                                    aspectRatio="inherit"
                                     style={{ objectFit: "contain" }}
                                     sizes={createImageSizes({ default: "20vw" })}
                                 />
@@ -30,8 +31,8 @@ export const FooterContentBlock = withPreview(
                         </div>
                         <hr className={styles.horizontalLine} />
                         <div className={styles.linkCopyrightWrapper}>
-                            <nav>
-                                {linkList.blocks.length > 0 && (
+                            {linkList.blocks.length > 0 && (
+                                <nav>
                                     <ul className={styles.linksWrapper}>
                                         {linkList.blocks.map((block) => (
                                             <li key={block.key}>
@@ -41,8 +42,8 @@ export const FooterContentBlock = withPreview(
                                             </li>
                                         ))}
                                     </ul>
-                                )}
-                            </nav>
+                                </nav>
+                            )}
                             {copyrightNotice && (
                                 <Typography variant="p200" className={styles.copyrightNotice}>
                                     {copyrightNotice}

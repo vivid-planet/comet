@@ -3,11 +3,8 @@
 import { gql } from "@apollo/client";
 export const productCategoryFormFragment = gql`
         fragment ProductCategoryForm on ProductCategory {
-            title
-slug
+            title slug type { id title }
         }
-        
-        
     `;
 export const productCategoryQuery = gql`
             query ProductCategory($id: ID!) {
