@@ -1,18 +1,18 @@
 import { SelectField, type SelectFieldOption, type SelectFieldProps } from "@comet/admin";
 
-type ElementType<T> = T extends (infer U)[] ? U : T;
-
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
-interface Options<T extends string | number | string[] | number[]> extends Partial<SelectFieldProps<ElementType<T>>> {
+type SelectValueType<T> = T extends (infer U)[] ? U : T;
+
+interface Options<T extends string | number | string[] | number[]> extends Partial<SelectFieldProps<SelectValueType<T>>> {
     defaultValue: T;
-    options: Array<SelectFieldOption<ElementType<T>>>;
+    options: Array<SelectFieldOption<SelectValueType<T>>>;
     /**
      * @deprecated Set the props directly instead of nesting inside fieldProps
      */
-    fieldProps?: Partial<SelectFieldProps<ElementType<T>>>;
+    fieldProps?: Partial<SelectFieldProps<SelectValueType<T>>>;
     extractTextContents?: BlockMethods["extractTextContents"];
 }
 
