@@ -27,7 +27,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
     return {
         ...cometConfig,
         debug: processEnv.NODE_ENV !== "production",
-        serverHost: processEnv.SERVER_HOST ?? "localhost",
+        serverHost: processEnv.SERVER_HOST ?? "127.0.0.1",
         helmRelease: envVars.HELM_RELEASE,
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
