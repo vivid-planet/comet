@@ -1,5 +1,20 @@
 # @comet/api-generator
 
+## 8.3.0
+
+### Minor Changes
+
+- 99950fa: Add support for sorting by ManyToOne and OneToOne relation fields
+
+### Patch Changes
+
+- 881827a: input-dto: generate import for typed (using type not class) json property
+- Updated dependencies [613bc13]
+- Updated dependencies [78b7703]
+- Updated dependencies [4a9938a]
+- Updated dependencies [99950fa]
+    - @comet/cms-api@8.3.0
+
 ## 8.2.0
 
 ### Patch Changes

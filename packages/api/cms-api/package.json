@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.2.0",
+    "version": "8.3.0",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
