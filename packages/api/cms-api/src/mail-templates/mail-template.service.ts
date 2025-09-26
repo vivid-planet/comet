@@ -40,13 +40,12 @@ export class MailTemplateService {
         return mailTemplate.generateMail(params);
     }
 
-    async sendMail<T>(mailTemplate: MailTemplateInterface<T>, params: T): Promise<boolean> {
+    async sendMail<T>(mailTemplate: MailTemplateInterface<T>, params: T) {
         const mail = await this.generateMail(mailTemplate, params);
 
-        const response = await this.mailerService.sendMail({
+        return this.mailerService.sendMail({
             mailTypeForLogging: mailTemplate.id,
             ...mail,
         });
-        return !!response.messageId;
     }
 }
