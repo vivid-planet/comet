@@ -508,9 +508,6 @@ importers:
       redraft:
         specifier: ^0.10.2
         version: 0.10.2
-      styled-components:
-        specifier: ^6.1.19
-        version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swiper:
         specifier: ^11.2.10
         version: 11.2.10
