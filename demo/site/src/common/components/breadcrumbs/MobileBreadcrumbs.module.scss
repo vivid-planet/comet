@@ -8,7 +8,7 @@
     }
 }
 
-.container {
+.button {
     grid-column: 2 / -2;
     padding: var(--spacing-s400) 0;
     display: flex;
@@ -16,6 +16,8 @@
     justify-content: space-between;
     position: relative;
     text-align: left;
+    color: var(--palette-primary-main);
+    text-decoration: none;
 }
 
 .chevron {

@@ -32,29 +32,21 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
     });
 
     return (
-        <button className={styles.root} onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded} aria-controls={contentId}>
+        <div className={styles.root}>
             <PageLayout grid>
-                <div className={styles.container}>
-                    <Link
-                        className={clsx(styles.link, styles.linkActive)}
-                        href={createSitePath({
-                            path: breadcrumbs.path,
-                            scope: breadcrumbs.scope,
-                        })}
-                    >
-                        {breadcrumbs.name}
-                    </Link>
+                <button className={styles.button} onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded} aria-controls={contentId}>
+                    {breadcrumbs.name}
                     <SvgUse
                         className={clsx(styles.chevron, isExpanded && styles.chevronExpanded)}
                         href="/assets/icons/chevron-down.svg#root"
                         width={16}
                         height={16}
                     />
-                </div>
+                </button>
             </PageLayout>
             {isExpanded && (
                 <ReactFocusLock className={clsx(styles.dropdown, isExpanded && styles.dropdownExpanded)}>
-                    <ol className={styles.list}>
+                    <ol className={styles.list} id={contentId}>
                         <li>
                             <button
                                 className={styles.backButton}
@@ -107,6 +99,6 @@ export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
                     </ol>
                 </ReactFocusLock>
             )}
-        </button>
+        </div>
     );
 };
