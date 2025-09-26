@@ -2,9 +2,9 @@ import { type BlocksBlockFixturesGeneratorMap, type ExtractBlockInput, type Extr
 import { faker } from "@faker-js/faker";
 import { type Config } from "@src/config/config";
 import { generateImageBlock } from "@src/db/fixtures/generators/blocks/image.generator";
+import { generateStandaloneRichTextBlock } from "@src/db/fixtures/generators/blocks/standalone-richtext.generator";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 
-import { generateRichtextBlock } from "./richtext.generator";
 import { generateSpaceBlock } from "./space.generator";
 import { generateTextImageBlock } from "./text-image.generator";
 
@@ -13,7 +13,7 @@ export const generateBlocksBlock = (
     config: Config,
     blockCfg: Partial<BlocksBlockFixturesGeneratorMap<typeof PageContentBlock>> = {
         space: generateSpaceBlock,
-        richtext: generateRichtextBlock,
+        richtext: generateStandaloneRichTextBlock,
         image: () => generateImageBlock(imageFiles),
         textImage: () => generateTextImageBlock(imageFiles, config),
     },
