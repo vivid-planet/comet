@@ -1,0 +1,42 @@
+@use "@src/styles/variables" as *;
+
+.container {
+    padding: var(--spacing-s400) 0;
+    grid-column: 2 / -2;
+    display: none;
+    list-style-type: none;
+
+    @media (min-width: $breakpoint-sm) {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-s200);
+        flex-wrap: wrap;
+    }
+}
+
+.listElement {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-s200);
+}
+
+.link {
+    color: var(--palette-gray-700);
+    text-decoration: none;
+    font-size: 15px;
+
+    &:last-child {
+        color: var(--palette-primary-main);
+    }
+
+    &:hover {
+        text-decoration: underline;
+        color: var(--palette-primary-main);
+    }
+}
+
+.chevron {
+    transform: rotate(-90deg);
+    display: inline-block;
+    color: var(--palette-gray-400);
+}
