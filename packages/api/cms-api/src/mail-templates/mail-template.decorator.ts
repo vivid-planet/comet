@@ -11,23 +11,18 @@ export function isMailTemplate(arg: unknown): arg is MailTemplateInterface<unkno
         arg !== null &&
         "id" in arg &&
         arg.id !== undefined &&
-        "type" in arg &&
-        arg.type !== undefined &&
-        "name" in arg &&
-        arg.name !== undefined &&
         "generateMail" in arg &&
-        typeof arg.generateMail === "function"
+        typeof arg.generateMail === "function" &&
+        "getPreparedTestParams" in arg &&
+        typeof arg.getPreparedTestParams === "function"
     );
 }
 export type PreparedTestParams<T> = {
-    name: string;
     params: T;
 };
 
 export type MailTemplateInterface<T> = {
     id: string;
-    type: string;
-    name: string;
 
     generateMail: (params: T) => Promise<MailOptions>;
     getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;

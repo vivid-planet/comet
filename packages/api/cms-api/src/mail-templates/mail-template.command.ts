@@ -24,7 +24,7 @@ export class MailTemplateCommand extends CommandRunner {
     async run([mailTemplateId, preparedTestParamsIndex]: Array<string>): Promise<void> {
         const mailTemplate: MailTemplateInterface<object> = await this.mailTemplateService.getMailTemplate(mailTemplateId);
         const preparedTestParams = (await mailTemplate.getPreparedTestParams())[parseInt(preparedTestParamsIndex)];
-        this.logger.log(`Sending test mail for ${mailTemplate.name} (prepared params: ${preparedTestParams.name})`);
+        this.logger.log(`Sending test mail for ${mailTemplate.id}`);
         await this.mailTemplateService.sendMail<object>(mailTemplate, preparedTestParams.params);
     }
 }

@@ -25,8 +25,6 @@ export const MY_CUSTOM_MAIL_ID = "static-mail_my-custom-mail";
 @MailTemplate()
 export class MyCustomMail implements MailTemplateInterface<MailParams> {
     id = MY_CUSTOM_MAIL_ID; // this is used to access this mail-template in code.
-    name = "My Custom Mail"; // this is used to display the mail-template in the UI.
-    type = "type1"; // this can be used to allow selecting from different templates for same params.
 
     constructor(private readonly translationService: TranslationService) {} // add dependencies if needed
 
@@ -55,7 +53,6 @@ export class MyCustomMail implements MailTemplateInterface<MailParams> {
         // it's also possible to access any imported service to generate test-data.
         return [
             {
-                name: "Testdata 1",
                 params: { ... }, // MailParams
             },
         ];

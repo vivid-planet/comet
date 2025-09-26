@@ -14,14 +14,11 @@ export class MailTemplateService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    async getMailTemplates(filter?: { type?: string }): Promise<MailTemplateInterface<unknown>[]> {
-        const { type } = filter || {};
-
+    async getMailTemplates(): Promise<MailTemplateInterface<unknown>[]> {
         const mailTemplates: MailTemplateInterface<unknown>[] = [];
         for (const discovery of await this.discoveryService.providersWithMetaAtKey<MailTemplateMetadata>(MAIL_TEMPLATE_METADATA_KEY)) {
             const mailTemplate = discovery.discoveredClass.instance;
             if (!isMailTemplate(mailTemplate)) throw new Error(`Class ${discovery.discoveredClass.name} does not implement MailTemplateInterface`);
-            if (type && mailTemplate.type !== type) continue;
 
             mailTemplates.push(mailTemplate);
         }
@@ -47,7 +44,7 @@ export class MailTemplateService {
         const mail = await this.generateMail(mailTemplate, params);
 
         const response = await this.mailerService.sendMail({
-            mailTypeForLogging: mailTemplate.type,
+            mailTypeForLogging: mailTemplate.id,
             ...mail,
         });
         return !!response.messageId;
