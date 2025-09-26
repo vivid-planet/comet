@@ -19,16 +19,11 @@ interface Props {
 
 export const MobileBreadcrumbs = ({ breadcrumbs }: Props) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [expandedBreadcrumbs, setExpandedBreadcrumbs] = useState<string | null>(null);
     const intl = useIntl();
     const contentId = useId();
 
     useEscapeKeyPressed(() => {
-        if (expandedBreadcrumbs !== null) {
-            setExpandedBreadcrumbs(null);
-        } else {
-            setIsExpanded(false);
-        }
+        setIsExpanded(false);
     });
 
     return (
