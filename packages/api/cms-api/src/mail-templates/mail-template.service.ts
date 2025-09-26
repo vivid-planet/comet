@@ -4,31 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { Options as MailOptions } from "nodemailer/lib/mailer";
 
 import { MailerService } from "../mailer/mailer.service";
-import { MAIL_TEMPLATE_METADATA_KEY, MailTemplateMetadata } from "./mail-template.decorator";
-
-export type MailTemplateInterface<T> = {
-    id: string;
-    type: string;
-    name: string;
-
-    generateMail: (params: T) => Promise<MailOptions>;
-    getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isMailTemplate(arg: any): arg is MailTemplateInterface<unknown> {
-    return (
-        arg.id !== undefined &&
-        arg.type !== undefined &&
-        arg.name !== undefined &&
-        arg.generateMail !== undefined &&
-        typeof arg.generateMail === "function"
-    );
-}
-export type PreparedTestParams<T> = {
-    name: string;
-    params: T;
-};
+import { isMailTemplate, MAIL_TEMPLATE_METADATA_KEY, MailTemplateInterface, MailTemplateMetadata } from "./mail-template.decorator";
 
 @Injectable()
 export class MailTemplateService {

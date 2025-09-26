@@ -4,9 +4,15 @@ type MailParams = {
     recipientName: string;
     countProductPublished: "all" | number;
 };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isMailParams(arg: any): arg is MailParams {
-    return arg.recipientName !== undefined && arg.countProductPublished !== undefined;
+export function isMailParams(arg: unknown): arg is MailParams {
+    return (
+        typeof arg === "object" &&
+        arg !== null &&
+        "recipientName" in arg &&
+        arg.recipientName !== undefined &&
+        "countProductPublished" in arg &&
+        arg.countProductPublished !== undefined
+    );
 }
 
 @MailTemplate()

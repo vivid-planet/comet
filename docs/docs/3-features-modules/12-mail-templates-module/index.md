@@ -28,10 +28,11 @@ export class MyCustomMail implements MailTemplateInterface<MailParams> {
     name = "My Custom Mail"; // this is used to display the mail-template in the UI.
     type = "type1"; // this can be used to allow selecting from different templates for same params.
 
-    constructor() {} // add dependencies if needed
+    constructor(private readonly translationService: TranslationService) {} // add dependencies if needed
 
-    async generateMail(intl: IntlShape, params: MailParams): Promise<MailOptions> {
+    async generateMail(params: MailParams): Promise<MailOptions> {
         if (!isMailProp(params)) throw new Error(`Not possible to generate mail for given params.`); // is recommended because typescript can be mislead if wrong type for generic is used when calling mailTemplate.generateMail<T>(...).
+        const intl = this.translationService.getIntl();
 
         return {
             to: { name: "Benjamin Hohenwarter", address: "bh@vivid-planet.com" },
@@ -72,9 +73,11 @@ const MailContent: React.FC<MailParams> = ({ recipient }) => {
     );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isMailParams(arg: any): arg is MailParams {
-    return ....; // validate required params are present
+export function isMailParams(arg: unknown): arg is MailParams {
+    return typeof arg === "object" && arg !== null
+        // validate required params are present, e.g.:
+        && "myField" in arg && arg.myField !== undefined
+        && ....;
 }
 ```
 
