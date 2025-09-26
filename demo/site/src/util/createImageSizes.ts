@@ -1,4 +1,10 @@
-import { breakpoints } from "@src/styles/breakpoints";
+// Note: The breakpoints defined here are duplicated in the SCSS file at src/common/styles/variables.scss.
+const breakpoints = {
+    sm: 600,
+    md: 900,
+    lg: 1200,
+    xl: 1600,
+};
 
 type BreakpointWidths = { default: string | number } & Partial<Record<keyof typeof breakpoints, string | number>>;
 
