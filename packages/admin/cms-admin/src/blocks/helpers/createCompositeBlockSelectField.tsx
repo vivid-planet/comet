@@ -4,15 +4,15 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
-type SelectValueType<T> = T extends (infer U)[] ? U : T;
+type Unpacked<T> = T extends (infer U)[] ? U : T;
 
-interface Options<T extends string | number | string[] | number[]> extends Partial<SelectFieldProps<SelectValueType<T>>> {
+interface Options<T extends string | number | string[] | number[]> extends Partial<SelectFieldProps<Unpacked<T>>> {
     defaultValue: T;
-    options: Array<SelectFieldOption<SelectValueType<T>>>;
+    options: Array<SelectFieldOption<Unpacked<T>>>;
     /**
      * @deprecated Set the props directly instead of nesting inside fieldProps
      */
-    fieldProps?: Partial<SelectFieldProps<SelectValueType<T>>>;
+    fieldProps?: Partial<SelectFieldProps<Unpacked<T>>>;
     extractTextContents?: BlockMethods["extractTextContents"];
 }
 
