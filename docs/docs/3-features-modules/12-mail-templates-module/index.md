@@ -33,7 +33,7 @@ export class MyCustomMail implements MailTemplateInterface<MailParams> {
         const intl = this.translationService.getIntl();
 
         return {
-            to: { name: "Benjamin Hohenwarter", address: "bh@vivid-planet.com" },
+            to: { name: "John Doe", address: "bh@vivid-planet.com" },
             subject: intl.formatMessage({
                 id: "mail-templates.static-mail_my-custom-mail.subject",
                 defaultMessage: "My Custom Mail Subject",
