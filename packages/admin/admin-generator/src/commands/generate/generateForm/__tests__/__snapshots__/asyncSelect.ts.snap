@@ -6,6 +6,7 @@ exports[`AsyncSelect filter generates field without filter 1`] = `
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
@@ -32,6 +33,7 @@ exports[`AsyncSelect filter generates filter with value dependent on other field
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
@@ -219,6 +221,7 @@ id?: string;
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
@@ -408,6 +411,7 @@ id?: string;
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
@@ -595,6 +599,7 @@ id?: string;
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
@@ -784,6 +789,7 @@ id?: string;
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
