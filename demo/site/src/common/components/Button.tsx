@@ -8,9 +8,9 @@ export type ButtonVariant = "contained" | "outlined" | "text";
 type ButtonProps<T extends ElementType> = {
     as?: T;
     variant?: ButtonVariant;
-} & ComponentProps<T>;
+} & Omit<ComponentProps<T>, "variant">;
 
 export const Button = <T extends ElementType = "button">(props: ButtonProps<T>) => {
     const { as: Component = "button", variant = "contained", className, ...rest } = props;
-    return <Component className={clsx(styles.button, styles[variant as ButtonVariant], className)} {...rest} />;
+    return <Component className={clsx(styles.button, styles[variant], className)} {...rest} />;
 };
