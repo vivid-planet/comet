@@ -34,7 +34,6 @@
     --palette-success-light: #77d06a;
     --palette-success-dark: #488938;
     --palette-success-contrastText: #090909;
-    --font-family: Roboto, sans-serif;
     --spacing-d400: 72px;
     --spacing-d300: 44px;
     --spacing-d200: 28px;
@@ -87,6 +86,7 @@ html {
 
 body {
     margin: 0;
+    font-family: Roboto, sans-serif;
 
     /* Improve text rendering with font-smoothing */
     -webkit-font-smoothing: antialiased;
