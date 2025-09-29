@@ -1,3 +1,13 @@
+.iconWrapper {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--palette-primary-light);
+}
+
 .titleWrapper {
     text-align: left;
     display: flex;
@@ -8,21 +18,12 @@
 
     &:hover {
         color: var(--palette-primary-light);
+
         .iconWrapper {
             background-color: var(--palette-primary-light);
             color: var(--palette-primary-contrastText);
         }
     }
-}
-
-.iconWrapper {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--palette-primary-light);
 }
 
 .contentWrapper {
