@@ -25,7 +25,7 @@ import { Edit as EditIcon } from "@comet/admin-icons";
 const productCategoriesFragment = gql`
         fragment ProductCategoriesGrid on ProductCategory {
             id
-            title slug position
+            title slug type { title } position
         }
     `;
 const productCategoriesQuery = gql`
@@ -86,6 +86,13 @@ export function ProductCategoriesGrid() {
             headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
             filterable: false,
             sortable: false,
+            flex: 1,
+            minWidth: 150, },
+        { field: "type_title",
+            headerName: intl.formatMessage({ id: "productCategory.type.title", defaultMessage: "Type" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.type?.title,
             flex: 1,
             minWidth: 150, },
         { field: "position",

@@ -1,8 +1,9 @@
 import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
+import { SyntaxKind } from "ts-morph";
 
-import { buildOptions } from "../generateCrud/generate-crud";
+import { buildOptions } from "../generateCrud/build-options";
 import { buildNameVariants } from "../utils/build-name-variants";
 import { integerTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
@@ -11,6 +12,7 @@ import {
     findBlockName,
     findEnumImportPath,
     findEnumName,
+    findImportPath,
     findInputClassImportPath,
     findValidatorImportPath,
     getFieldDecoratorClassName,
@@ -361,6 +363,15 @@ export async function generateCrudInput(
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
                 } else {
+                    const typeNode = tsProp.getTypeNodeOrThrow().asKindOrThrow(SyntaxKind.ArrayType);
+                    const elementTypeNode = typeNode.getElementTypeNode();
+                    if (elementTypeNode.isKind(SyntaxKind.TypeReference)) {
+                        // if the element type is a type reference, we need to find the import path
+                        const { importPath } = findImportPath(elementTypeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                        if (importPath) {
+                            imports.push({ name: elementTypeNode.getText(), importPath });
+                        }
+                    }
                     decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
             } else if (tsType.isClass()) {
@@ -371,6 +382,14 @@ export async function generateCrudInput(
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
             } else {
+                const typeNode = tsProp.getTypeNodeOrThrow();
+                if (typeNode.isKind(SyntaxKind.TypeReference)) {
+                    // if the element type is a type reference, we need to find the import path
+                    const { importPath } = findImportPath(typeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                    if (importPath) {
+                        imports.push({ name: typeNode.getText(), importPath });
+                    }
+                }
                 decorators.push(
                     `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
                 );

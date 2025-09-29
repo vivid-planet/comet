@@ -4,7 +4,7 @@ export type ButtonVariant = "contained" | "outlined" | "text";
 
 export const Button = styled.button<{ variant?: ButtonVariant }>`
     display: inline-flex;
-    padding: ${({ theme }) => `${theme.spacing.S400} ${theme.spacing.S500}`};
+    padding: ${({ theme }) => `${theme.spacing.s400} ${theme.spacing.s500}`};
     border-radius: 4px;
     cursor: pointer;
     justify-content: center;

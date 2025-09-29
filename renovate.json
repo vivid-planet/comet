@@ -1,6 +1,8 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:recommended", ":semanticCommitsDisabled"],
+    "minimumReleaseAge": "3 days",
+    "internalChecksFilter": "strict",
     "packageRules": [
         {
             "groupName": "Low-Risk Patches and Minors",
@@ -103,7 +105,7 @@
         },
         {
             "groupName": "OpenTelemetry",
-            "matchPackageNames": ["/^open-telemetry/*/"]
+            "matchPackageNames": ["/^@opentelemetry/*/"]
         },
         {
             "groupName": "lodash",

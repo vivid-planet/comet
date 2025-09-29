@@ -226,10 +226,7 @@ export function generateGrid<T extends { __typename?: string }>(
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({
-        // exclude id because it's always required
-        columns: config.columns.filter((column) => column.type !== "actions" && column.name !== "id"),
-    });
+    const fieldList = generateGqlFieldList({ columns: config.columns });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
@@ -362,7 +359,7 @@ export function generateGrid<T extends { __typename?: string }>(
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
 
-    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
+    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig<any>;
     const {
         component: actionsColumnComponent,
         type: actionsColumnType,
@@ -370,6 +367,8 @@ export function generateGrid<T extends { __typename?: string }>(
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = defaultActionsColumnWidth,
         visible: actionsColumnVisible = undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        queryFields: actionsColumnQueryFields = [], // not needed here, but needs to be removed from restActionsColumnConfig because it's directly used in to generate component props in tsCodeRecordToString
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
     if (actionsColumnComponent) {
@@ -390,6 +389,7 @@ export function generateGrid<T extends { __typename?: string }>(
         let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
         let valueFormatter: string | undefined = undefined;
+        let valueGetter = name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
@@ -405,8 +405,14 @@ export function generateGrid<T extends { __typename?: string }>(
 
         if (type == "dateTime") {
             gridColumnType = "...dataGridDateTimeColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "date") {
             gridColumnType = "...dataGridDateColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "number") {
             gridType = "number";
             const defaultDecimals = column.currency ? 2 : 0;
@@ -417,7 +423,6 @@ export function generateGrid<T extends { __typename?: string }>(
             }`;
         } else if (type == "boolean") {
             gridType = "boolean";
-            valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;
         } else if (column.type == "block") {
             renderCell = `(params) => {
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
@@ -547,7 +552,7 @@ export function generateGrid<T extends { __typename?: string }>(
             gridType,
             columnType: gridColumnType,
             renderCell,
-            valueGetter: name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined,
+            valueGetter,
             filterOperators: filterOperators,
             valueFormatter,
             width: column.width,
@@ -727,7 +732,7 @@ export function generateGrid<T extends { __typename?: string }>(
             config.selectionProps === "multiSelect"
                 ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
                 : config.selectionProps === "singleSelect"
-                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: true`
+                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
                   : ``
         } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}

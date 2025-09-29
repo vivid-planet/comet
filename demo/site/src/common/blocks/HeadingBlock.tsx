@@ -3,7 +3,6 @@ import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPrevi
 import { type HeadingBlockData } from "@src/blocks.generated";
 import { Typography } from "@src/common/components/Typography";
 import { type Renderers } from "redraft";
-import styled from "styled-components";
 
 import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "./RichTextBlock";
 
@@ -48,9 +47,9 @@ export const HeadingBlock = withPreview(
                 <PreviewSkeleton
                     hasContent={hasRichTextBlockContent(headline)}
                     title={
-                        <HeadlineSkeleton variant="h550" as="span">
+                        <Typography variant="h550" as="span">
                             Headline
-                        </HeadlineSkeleton>
+                        </Typography>
                     }
                 >
                     <RichTextBlock data={headline} renderers={getHeadlineRenderers(headlineTag)} />
@@ -60,7 +59,3 @@ export const HeadingBlock = withPreview(
     },
     { label: "Heading" },
 );
-
-const HeadlineSkeleton = styled(Typography)`
-    color: inherit;
-`;

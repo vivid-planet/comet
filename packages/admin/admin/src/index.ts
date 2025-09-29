@@ -97,6 +97,8 @@ export { type DateRange, Future_DateRangePicker, Future_DateRangePickerClassKey,
 export { Future_DateRangePickerField, Future_DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
 export { Future_DateTimePicker, Future_DateTimePickerClassKey, Future_DateTimePickerProps } from "./dateTime/DateTimePicker";
 export { Future_DateTimePickerField, Future_DateTimePickerFieldProps } from "./dateTime/DateTimePickerField";
+export { type DateTimeRange, DateTimeRangePicker, DateTimeRangePickerClassKey, DateTimeRangePickerProps } from "./dateTime/DateTimeRangePicker";
+export { DateTimeRangePickerField, DateTimeRangePickerFieldProps } from "./dateTime/DateTimeRangePickerField";
 export { Future_TimePicker, Future_TimePickerClassKey, Future_TimePickerProps } from "./dateTime/TimePicker";
 export { Future_TimePickerField, Future_TimePickerFieldProps } from "./dateTime/TimePickerField";
 export { DeleteMutation } from "./DeleteMutation";
@@ -205,6 +207,12 @@ export {
     useSaveBoundaryState,
 } from "./saveBoundary/SaveBoundary";
 export { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
+export {
+    /** @deprecated Use the `FormSection` component with it's `title` prop to create sections in forms. SectionHeadline is only meant for internal use. */
+    SectionHeadline,
+    SectionHeadlineClassKey,
+    SectionHeadlineProps,
+} from "./section/SectionHeadline";
 export { Selected } from "./Selected";
 export { ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
 export { ISelectionApi } from "./SelectionApi";

@@ -7,6 +7,7 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
+    useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
@@ -221,6 +222,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         },
     );
 
+    const rowCount = useBufferedRowCount(data?.users.totalCount);
     if (error) throw new Error(error.message);
 
     return (
@@ -228,7 +230,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             {...dataGridProps}
             rows={data?.users.nodes ?? []}
             columns={columns}
-            rowCount={data?.users.totalCount ?? 0}
+            rowCount={rowCount}
             loading={loading}
             slots={{
                 toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],

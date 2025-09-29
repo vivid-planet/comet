@@ -1202,6 +1202,10 @@ This section highlights the necessary changes to convert a nestjs-console comman
 
     **Arguments:** Move from `command` field into `arguments` field:
 
+    :::info
+    Optional arguments must be defined in square brackets `[]`, required arguments in angle brackets `<>`.
+    :::
+
     ```diff title="import-redirects.command.ts"
     @Command({
         name: "import-redirects",

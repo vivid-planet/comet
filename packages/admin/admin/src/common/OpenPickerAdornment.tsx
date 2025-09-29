@@ -19,6 +19,9 @@ type OwnerState = {
     inputIsDisabled: boolean;
 };
 
+/**
+ * TODO: Remove this component once we can use MUI-X V8 - set `slotProps.field.openPickerButtonPosition = "start"` on each picker-component instead
+ */
 export const OpenPickerAdornment = (inProps: OpenPickerAdornmentProps) => {
     const {
         inputIsDisabled,
@@ -40,6 +43,7 @@ export const OpenPickerAdornment = (inProps: OpenPickerAdornmentProps) => {
     return (
         <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <OpenPickerButton
+                tabIndex={-1}
                 onClick={onClick}
                 disabled={inputIsDisabled || inputIsReadOnly}
                 ownerState={ownerState}

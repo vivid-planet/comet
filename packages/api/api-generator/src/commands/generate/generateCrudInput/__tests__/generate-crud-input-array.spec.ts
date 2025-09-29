@@ -70,6 +70,6 @@ describe("GenerateCrudInputArray", () => {
             expect(structure.properties?.[4].type).toBe("string[]");
         }
 
-        orm.close();
+        await orm.close();
     });
 });

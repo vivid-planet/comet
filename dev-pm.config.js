@@ -162,7 +162,6 @@ module.exports = {
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
-
         //group demo site
         {
             name: "demo-site",
@@ -181,6 +180,11 @@ module.exports = {
             script: "pnpm --filter comet-demo-site run generate-block-types:watch",
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "demo-site-css-types",
+            script: "pnpm --filter comet-demo-site run css:types:watch",
+            group: ["demo-site", "demo"],
         },
 
         //group demo site pages

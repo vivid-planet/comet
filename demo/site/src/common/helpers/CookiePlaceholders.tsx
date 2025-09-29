@@ -1,30 +1,20 @@
 import { useCookieApi } from "@comet/site-nextjs";
-import styled from "styled-components";
+
+import styles from "./CookiePlaceholders.module.scss";
 
 export const LoadingCookiePlaceholder = () => (
-    <Root>
+    <div className={styles.root}>
         <h4>Loading cookie provider...</h4>
-    </Root>
+    </div>
 );
 
 export const FallbackCookiePlaceholder = () => {
     const { openCookieSettings } = useCookieApi();
 
     return (
-        <Root>
+        <div className={styles.root}>
             <h4>Cookies need to be accepted to view this content.</h4>
             <button onClick={() => openCookieSettings()}>Open Cookie Settings</button>
-        </Root>
+        </div>
     );
 };
-
-const Root = styled.div`
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    background-color: ${({ theme }) => theme.palette.primary.light};
-`;

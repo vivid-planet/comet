@@ -631,6 +631,8 @@ type Mutation {
   createPageTreeNode(category: String!, input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!): PageTreeNode!
   createProduct(input: ProductInput!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
+  createProductCategoryType(input: ProductCategoryTypeInput!): ProductCategoryType!
+  createProductHighlight(input: ProductHighlightInput!): ProductHighlight!
   createProductTag(input: ProductTagInput!): ProductTag!
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
   createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
@@ -644,6 +646,8 @@ type Mutation {
   deletePageTreeNode(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
   deleteProductCategory(id: ID!): Boolean!
+  deleteProductCategoryType(id: ID!): Boolean!
+  deleteProductHighlight(id: ID!): Boolean!
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
@@ -673,6 +677,8 @@ type Mutation {
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
   updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
+  updateProductCategoryType(id: ID!, input: ProductCategoryTypeUpdateInput!): ProductCategoryType!
+  updateProductHighlight(id: ID!, input: ProductHighlightUpdateInput!): ProductHighlight!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
@@ -969,6 +975,16 @@ type PaginatedProductCategories {
   totalCount: Int!
 }
 
+type PaginatedProductCategoryTypes {
+  nodes: [ProductCategoryType!]!
+  totalCount: Int!
+}
+
+type PaginatedProductHighlights {
+  nodes: [ProductHighlight!]!
+  totalCount: Int!
+}
+
 type PaginatedProductTags {
   nodes: [ProductTag!]!
   totalCount: Int!
@@ -1070,6 +1086,7 @@ type ProductCategory {
   products: [Product!]!
   slug: String!
   title: String!
+  type: ProductCategoryType
   updatedAt: DateTime!
 }
 
@@ -1081,6 +1098,7 @@ input ProductCategoryFilter {
   products: OneToManyFilter
   slug: StringFilter
   title: StringFilter
+  type: ManyToOneFilter
   updatedAt: DateTimeFilter
 }
 
@@ -1089,6 +1107,7 @@ input ProductCategoryInput {
   products: [ID!]! = []
   slug: String!
   title: String!
+  type: ID = null
 }
 
 input ProductCategorySort {
@@ -1101,7 +1120,42 @@ enum ProductCategorySortField {
   position
   slug
   title
+  type
+  type_title
   updatedAt
+}
+
+type ProductCategoryType {
+  categories: [ProductCategory!]!
+  id: ID!
+  title: String!
+}
+
+input ProductCategoryTypeFilter {
+  and: [ProductCategoryTypeFilter!]
+  categories: OneToManyFilter
+  id: IdFilter
+  or: [ProductCategoryTypeFilter!]
+  title: StringFilter
+}
+
+input ProductCategoryTypeInput {
+  categories: [ID!]! = []
+  title: String!
+}
+
+input ProductCategoryTypeSort {
+  direction: SortDirection! = ASC
+  field: ProductCategoryTypeSortField!
+}
+
+enum ProductCategoryTypeSortField {
+  title
+}
+
+input ProductCategoryTypeUpdateInput {
+  categories: [ID!]
+  title: String
 }
 
 input ProductCategoryUpdateInput {
@@ -1109,6 +1163,7 @@ input ProductCategoryUpdateInput {
   products: [ID!]
   slug: String
   title: String
+  type: ID
 }
 
 type ProductColor implements DocumentInterface {
@@ -1167,6 +1222,62 @@ input ProductFilter {
   type: ProductTypeEnumFilter
   updatedAt: DateTimeFilter
   variants: OneToManyFilter
+}
+
+type ProductHighlight {
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  product: Product!
+  updatedAt: DateTime!
+}
+
+input ProductHighlightFilter {
+  and: [ProductHighlightFilter!]
+  createdAt: DateTimeFilter
+  description: StringFilter
+  id: IdFilter
+  or: [ProductHighlightFilter!]
+  product: ManyToOneFilter
+  updatedAt: DateTimeFilter
+}
+
+input ProductHighlightInput {
+  description: String!
+  product: ID!
+}
+
+input ProductHighlightSort {
+  direction: SortDirection! = ASC
+  field: ProductHighlightSortField!
+}
+
+enum ProductHighlightSortField {
+  createdAt
+  description
+  product
+  product_additionalTypes
+  product_availableSince
+  product_category
+  product_createdAt
+  product_description
+  product_inStock
+  product_lastCheckedAt
+  product_manufacturer
+  product_price
+  product_priceList
+  product_slug
+  product_soldCount
+  product_status
+  product_title
+  product_type
+  product_updatedAt
+  updatedAt
+}
+
+input ProductHighlightUpdateInput {
+  description: String
+  product: ID
 }
 
 input ProductInput {
@@ -1228,15 +1339,40 @@ enum ProductSortField {
   additionalTypes
   availableSince
   category
+  category_createdAt
+  category_position
+  category_slug
+  category_title
+  category_type
+  category_updatedAt
   createdAt
   description
   inStock
   lastCheckedAt
   manufacturer
+  manufacturer_addressAsEmbeddable_alternativeAddress_country
+  manufacturer_addressAsEmbeddable_alternativeAddress_street
+  manufacturer_addressAsEmbeddable_alternativeAddress_streetNumber
+  manufacturer_addressAsEmbeddable_alternativeAddress_zip
+  manufacturer_addressAsEmbeddable_country
+  manufacturer_addressAsEmbeddable_street
+  manufacturer_addressAsEmbeddable_streetNumber
+  manufacturer_addressAsEmbeddable_zip
+  manufacturer_name
+  manufacturer_updatedAt
   price
   priceList
+  priceList_contentHash
+  priceList_createdAt
+  priceList_id
+  priceList_mimetype
+  priceList_name
+  priceList_updatedAt
   slug
   soldCount
+  statistics_createdAt
+  statistics_updatedAt
+  statistics_views
   status
   title
   type
@@ -1394,6 +1530,22 @@ enum ProductVariantSortField {
   name
   position
   product
+  product_additionalTypes
+  product_availableSince
+  product_category
+  product_createdAt
+  product_description
+  product_inStock
+  product_lastCheckedAt
+  product_manufacturer
+  product_price
+  product_priceList
+  product_slug
+  product_soldCount
+  product_status
+  product_title
+  product_type
+  product_updatedAt
   updatedAt
 }
 
@@ -1451,6 +1603,10 @@ type Query {
   productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
+  productCategoryType(id: ID!): ProductCategoryType!
+  productCategoryTypes(filter: ProductCategoryTypeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategoryTypeSort!]): PaginatedProductCategoryTypes!
+  productHighlight(id: ID!): ProductHighlight!
+  productHighlights(filter: ProductHighlightFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductHighlightSort!]): PaginatedProductHighlights!
   productTag(id: ID!): ProductTag!
   productTags(filter: ProductTagFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductTagSort!]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!
