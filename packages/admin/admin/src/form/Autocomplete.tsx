@@ -35,9 +35,9 @@ type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRe
  */
 export const FinalFormAutocomplete = <
     T extends Record<string, any>,
-    Multiple extends boolean | undefined,
-    DisableClearable extends boolean | undefined,
-    FreeSolo extends boolean | undefined,
+    Multiple extends boolean | undefined = false,
+    DisableClearable extends boolean | undefined = false,
+    FreeSolo extends boolean | undefined = false,
 >({
     input: { onChange, value, multiple, ...restInput },
     loading = false,
