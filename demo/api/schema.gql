@@ -715,6 +715,8 @@ type Mutation {
 }
 
 type News {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
   category: NewsCategory!
   comments: [NewsComment!]!
   content: NewsContentBlockData!

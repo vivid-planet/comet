@@ -2,8 +2,6 @@ import { ActionLogsModule, DependenciesResolverFactory, DependentsResolverFactor
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { News, NewsContentScope } from "@src/news/entities/news.entity";
-import { Manufacturer } from "@src/products/entities/manufacturer.entity";
-import { Product } from "@src/products/entities/product.entity";
 
 import { NewsLinkBlockTransformerService } from "./blocks/news-link-block-transformer.service";
 import { NewsComment } from "./entities/news-comment.entity";
@@ -13,7 +11,7 @@ import { NewsCommentResolver } from "./news-comment.resolver";
 import { NewsFieldResolver } from "./news-field.resolver";
 
 @Module({
-    imports: [MikroOrmModule.forFeature([News, NewsComment, NewsContentScope]), ActionLogsModule.forFeature([Product, Manufacturer])],
+    imports: [MikroOrmModule.forFeature([News, NewsComment, NewsContentScope]), ActionLogsModule.forFeature([News])],
     providers: [
         NewsResolver,
         NewsCommentResolver,
