@@ -53,10 +53,7 @@ app.prepare().then(() => {
                 res.setHeader("Cache-Control", `public, max-age=${maxAge}`);
 
                 const origSetHeader = res.setHeader;
-                res.setHeader = function (
-                    name: string,
-                    value: string | number | readonly string[],
-                ): ServerResponse<IncomingMessage> & { req: IncomingMessage } {
+                res.setHeader = function (name: string, value: string | number | readonly string[]) {
                     if (name === "cache-control" || name === "Cache-Control") {
                         // ignore
                         return this;
