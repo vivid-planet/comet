@@ -9,8 +9,6 @@ export function isMailTemplate(arg: unknown): arg is MailTemplateInterface<unkno
     return (
         typeof arg === "object" &&
         arg !== null &&
-        "id" in arg &&
-        arg.id !== undefined &&
         "generateMail" in arg &&
         typeof arg.generateMail === "function" &&
         "getPreparedTestProps" in arg &&
@@ -22,8 +20,6 @@ export type PreparedTestProps<T> = {
 };
 
 export type MailTemplateInterface<T> = {
-    id: string;
-
     generateMail: (props: T) => Promise<MailOptions>;
     getPreparedTestProps: () => Promise<PreparedTestProps<T>[]>;
 };

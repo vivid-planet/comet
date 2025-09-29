@@ -7,8 +7,6 @@ type MailProps = {
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
-    id = "products-published";
-
     async generateMail(props: MailProps) {
         return {
             subject: "All products published",

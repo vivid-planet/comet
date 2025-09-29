@@ -7,8 +7,8 @@ import { MailTemplateService } from "./mail-template.service";
 
 @Command({
     name: "mail-template:test",
-    description: "test mail template, e.g. ",
-    arguments: "[mailTemplateId] [preparedTestPropsIndex]",
+    description: "test mail template",
+    arguments: "[mailTemplateClassName] [preparedTestPropsIndex]",
 })
 export class MailTemplateCommand extends CommandRunner {
     private readonly logger = new Logger(MailTemplateCommand.name);
@@ -21,10 +21,10 @@ export class MailTemplateCommand extends CommandRunner {
     }
 
     @CreateRequestContext()
-    async run([mailTemplateId, preparedTestPropsIndex]: Array<string>): Promise<void> {
-        const mailTemplate: MailTemplateInterface<object> = await this.mailTemplateService.getMailTemplate(mailTemplateId);
+    async run([mailTemplateClassName, preparedTestPropsIndex]: Array<string>): Promise<void> {
+        const mailTemplate: MailTemplateInterface<unknown> = await this.mailTemplateService.getMailTemplate(mailTemplateClassName);
         const preparedTestProps = (await mailTemplate.getPreparedTestProps())[parseInt(preparedTestPropsIndex)];
-        this.logger.log(`Sending test mail for ${mailTemplate.id}`);
-        await this.mailTemplateService.sendMail<object>(mailTemplate, preparedTestProps.props);
+        this.logger.log(`Sending test mail for ${mailTemplateClassName}`, preparedTestProps);
+        await this.mailTemplateService.sendMail(mailTemplate, preparedTestProps.props);
     }
 }

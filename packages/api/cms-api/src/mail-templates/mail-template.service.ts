@@ -14,21 +14,21 @@ export class MailTemplateService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    async getMailTemplates(): Promise<MailTemplateInterface<unknown>[]> {
-        const mailTemplates: MailTemplateInterface<unknown>[] = [];
+    private async getMailTemplatesWithClassName(): Promise<{ name: string; instance: MailTemplateInterface<unknown> }[]> {
+        const mailTemplates: { name: string; instance: MailTemplateInterface<unknown> }[] = [];
         for (const discovery of await this.discoveryService.providersWithMetaAtKey<MailTemplateMetadata>(MAIL_TEMPLATE_METADATA_KEY)) {
             const mailTemplate = discovery.discoveredClass.instance;
             if (!isMailTemplate(mailTemplate)) throw new Error(`Class ${discovery.discoveredClass.name} does not implement MailTemplateInterface`);
 
-            mailTemplates.push(mailTemplate);
+            mailTemplates.push({ name: discovery.discoveredClass.name, instance: mailTemplate });
         }
         return mailTemplates;
     }
 
-    async getMailTemplate<T>(id: string): Promise<MailTemplateInterface<T>> {
-        const ret = (await this.getMailTemplates()).find((mailTemplate) => mailTemplate.id === id);
-        if (!ret) throw new Error(`MailTemplate not found: ${id}`);
-        return ret as MailTemplateInterface<T>; // ATTENTION: this is a cast, we should check if the type is correct
+    async getMailTemplate<T>(className: string): Promise<MailTemplateInterface<T>> {
+        const ret = (await this.getMailTemplatesWithClassName()).find((mailTemplateWithClassName) => mailTemplateWithClassName.name === className);
+        if (!ret) throw new Error(`MailTemplate not found: ${className}`);
+        return ret.instance as MailTemplateInterface<T>;
     }
 
     /**
@@ -44,7 +44,7 @@ export class MailTemplateService {
         const mail = await this.generateMail(mailTemplate, props);
 
         return this.mailerService.sendMail({
-            mailTypeForLogging: mailTemplate.id,
+            mailTypeForLogging: mailTemplate.constructor.name,
             ...mail,
         });
     }
