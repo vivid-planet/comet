@@ -1,4 +1,4 @@
-import { FileUpload } from "@comet/cms-api";
+import { FileUpload, MailTemplatesModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 
@@ -42,6 +42,7 @@ import { ProductPublishedMail } from "./product-published.mail";
             ManufacturerCountry,
             ProductHighlight,
         ]),
+        MailTemplatesModule,
     ],
     providers: [
         ProductResolver,

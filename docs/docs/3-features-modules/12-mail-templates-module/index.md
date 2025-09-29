@@ -85,11 +85,13 @@ import { MY_CUSTOM_MAIL_ID, MailParams } from "@src/my-module/my-custom-mail/my-
 
 @Injectable()
 export class MyService {
-    constructor(readonly mailTemplateService: MailTemplateService) {}
+    constructor(
+        private readonly mailTemplateService: MailTemplateService,
+        private readonly productPublishedMail: ProductPublishedMail,
+    ) {}
 
     async sendMail() {
-        const mailTemplate = await this.mailTemplateService.getMailTemplate<MailParams>(MY_CUSTOM_MAIL_ID);
-        await this.mailTemplateService.sendMail<MailParams>(mailTemplate, { ... }); // MailParams
+        await this.mailTemplateService.sendMail(this.productPublishedMail, { ... }); // MailParams
     }
 }
 ```
