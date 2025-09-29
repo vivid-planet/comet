@@ -217,7 +217,7 @@ export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
-export { MailTemplate, MailTemplateInterface, PreparedTestParams } from "./mail-templates/mail-template.decorator";
+export { MailTemplate, MailTemplateInterface, PreparedTestProps } from "./mail-templates/mail-template.decorator";
 export { MailTemplateService } from "./mail-templates/mail-template.service";
 export { MailTemplatesModule } from "./mail-templates/mail-templates.module";
 export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";

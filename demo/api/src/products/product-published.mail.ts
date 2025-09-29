@@ -1,45 +1,45 @@
-import { MailTemplate, MailTemplateInterface, PreparedTestParams } from "@comet/cms-api";
+import { MailTemplate, MailTemplateInterface, PreparedTestProps } from "@comet/cms-api";
 
-type MailParams = {
+type MailProps = {
     recipient: { name: string; email: string };
     countProductPublished: "all" | number;
 };
 
 @MailTemplate()
-export class ProductPublishedMail implements MailTemplateInterface<MailParams> {
+export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
     id = "products-published";
 
-    async generateMail(params: MailParams) {
+    async generateMail(props: MailProps) {
         return {
             subject: "All products published",
-            to: params.recipient.email,
+            to: props.recipient.email,
             text:
-                `Hello ${params.recipient.name},` +
+                `Hello ${props.recipient.name},` +
                 "\r\n" +
                 `${
-                    params.countProductPublished === "all"
+                    props.countProductPublished === "all"
                         ? "All products have been published"
-                        : `${params.countProductPublished} products have been published`
+                        : `${props.countProductPublished} products have been published`
                 }`,
-            html: `<p>Hello ${params.recipient.name},</p>
+            html: `<p>Hello ${props.recipient.name},</p>
                 ${
-                    params.countProductPublished === "all"
+                    props.countProductPublished === "all"
                         ? "<p>All products have been published</p>"
-                        : `<p>${params.countProductPublished} products have been published<p>`
+                        : `<p>${props.countProductPublished} products have been published<p>`
                 }`,
         };
     }
 
-    async getPreparedTestParams(): Promise<PreparedTestParams<MailParams>[]> {
+    async getPreparedTestProps(): Promise<PreparedTestProps<MailProps>[]> {
         return [
             {
-                params: {
+                props: {
                     recipient: { name: "John Doe", email: "abc" },
                     countProductPublished: "all",
                 },
             },
             {
-                params: {
+                props: {
                     recipient: { name: "John Doe", email: "" },
                     countProductPublished: 5,
                 },

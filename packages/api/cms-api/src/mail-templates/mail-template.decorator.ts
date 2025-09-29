@@ -13,19 +13,19 @@ export function isMailTemplate(arg: unknown): arg is MailTemplateInterface<unkno
         arg.id !== undefined &&
         "generateMail" in arg &&
         typeof arg.generateMail === "function" &&
-        "getPreparedTestParams" in arg &&
-        typeof arg.getPreparedTestParams === "function"
+        "getPreparedTestProps" in arg &&
+        typeof arg.getPreparedTestProps === "function"
     );
 }
-export type PreparedTestParams<T> = {
-    params: T;
+export type PreparedTestProps<T> = {
+    props: T;
 };
 
 export type MailTemplateInterface<T> = {
     id: string;
 
-    generateMail: (params: T) => Promise<MailOptions>;
-    getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;
+    generateMail: (props: T) => Promise<MailOptions>;
+    getPreparedTestProps: () => Promise<PreparedTestProps<T>[]>;
 };
 
 export const MailTemplate = (): CustomDecorator<string> => {

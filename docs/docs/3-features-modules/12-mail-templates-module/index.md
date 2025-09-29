@@ -23,12 +23,12 @@ import { renderToMjml } from "mjml-react";
 export const MY_CUSTOM_MAIL_ID = "static-mail_my-custom-mail";
 
 @MailTemplate()
-export class MyCustomMail implements MailTemplateInterface<MailParams> {
+export class MyCustomMail implements MailTemplateInterface<MailProps> {
     id = MY_CUSTOM_MAIL_ID; // this is used to access this mail-template in code.
 
     constructor(private readonly translationService: TranslationService) {} // add dependencies if needed
 
-    async generateMail(params: MailParams): Promise<MailOptions> {
+    async generateMail(props: MailProps): Promise<MailOptions> {
         const intl = this.translationService.getIntl();
 
         return {
@@ -40,27 +40,27 @@ export class MyCustomMail implements MailTemplateInterface<MailParams> {
             text: "LOREM IPSUM",
             html: renderToMjml(
                 <IntlProvider locale={"de"} defaultLocale={"de"} messages={intl.messages}>
-                    <MailContent {...params} />
+                    <MailContent {...props} />
                 </IntlProvider>,
             ),
             attachments: [],
         };
     }
 
-    async getPreparedTestParams(): Promise<PreparedTestParams<MailParams>[]> {
+    async getPreparedTestProps(): Promise<PreparedTestProps<MailProps>[]> {
         // this is used for styling mail-templates and in admin for testing.
         // it's also possible to access any imported service to generate test-data.
         return [
             {
-                params: { ... }, // MailParams
+                props: { ... }, // MailProps
             },
         ];
     }
 }
 
-export type MailParams = { ... }; // define params required to generate/render the mail
+export type MailProps = { ... }; // define props required to generate/render the mail
 
-const MailContent: React.FC<MailParams> = ({ recipient }) => {
+const MailContent: React.FC<MailProps> = ({ recipient }) => {
     return (
         <div>
             {recipient.name} LOREM IPSUM
@@ -73,7 +73,7 @@ const MailContent: React.FC<MailParams> = ({ recipient }) => {
 #### Use MailTemplate
 
 ```typescript
-import { MY_CUSTOM_MAIL_ID, MailParams } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
+import { MY_CUSTOM_MAIL_ID, MailProps } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 
 @Injectable()
 export class MyService {
@@ -83,7 +83,7 @@ export class MyService {
     ) {}
 
     async sendMail() {
-        await this.mailTemplateService.sendMail(this.productPublishedMail, { ... }); // MailParams
+        await this.mailTemplateService.sendMail(this.productPublishedMail, { ... }); // MailProps
     }
 }
 ```
@@ -91,6 +91,6 @@ export class MyService {
 #### Send test-mail
 
 ```shell
-# npm run console mail-template:test [mailTemplateId] [preparedTestParamsIndex]
+# npm run console mail-template:test [mailTemplateId] [preparedTestPropsIndex]
 npm run console mail-template:test static-mail_my-custom-mail 0
 ```

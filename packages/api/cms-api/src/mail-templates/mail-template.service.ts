@@ -32,16 +32,16 @@ export class MailTemplateService {
     }
 
     /**
-     * Generates a mail from the template and the params, can for example be used to render the template in admin
+     * Generates a mail from the template and the props, can for example be used to render the template in admin
      * @param mailTemplate
-     * @param params
+     * @param props
      */
-    async generateMail<T>(mailTemplate: MailTemplateInterface<T>, params: T): Promise<MailOptions> {
-        return mailTemplate.generateMail(params);
+    async generateMail<T>(mailTemplate: MailTemplateInterface<T>, props: T): Promise<MailOptions> {
+        return mailTemplate.generateMail(props);
     }
 
-    async sendMail<T>(mailTemplate: MailTemplateInterface<T>, params: T) {
-        const mail = await this.generateMail(mailTemplate, params);
+    async sendMail<T>(mailTemplate: MailTemplateInterface<T>, props: T) {
+        const mail = await this.generateMail(mailTemplate, props);
 
         return this.mailerService.sendMail({
             mailTypeForLogging: mailTemplate.id,
