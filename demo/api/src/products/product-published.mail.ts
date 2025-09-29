@@ -34,13 +34,13 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         return [
             {
                 props: {
-                    recipient: { name: "John Doe", email: "abc" },
+                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com" },
                     countProductPublished: "all",
                 },
             },
             {
                 props: {
-                    recipient: { name: "John Doe", email: "" },
+                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com" },
                     countProductPublished: 5,
                 },
             },
