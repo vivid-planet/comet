@@ -33,25 +33,16 @@ export class EnvironmentVariables {
     @IsString()
     API_URL: string;
 
-    @IsOptional()
-    @IsBoolean()
-    @Transform(({ value }) => value === "true")
-    USE_AUTHPROXY: boolean;
-
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_CLIENT_ID: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_JWKS_URI: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_END_SESSION_ENDPOINT: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     POST_LOGOUT_REDIRECT_URI: string;
 
     @IsString()
