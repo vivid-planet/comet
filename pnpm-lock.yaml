@@ -1058,9 +1058,6 @@ importers:
       '@babel/core':
         specifier: ^7.28.0
         version: 7.28.4
-      '@babel/plugin-proposal-class-properties':
-        specifier: ^7.18.6
-        version: 7.18.6(@babel/core@7.28.4)
       '@babel/preset-env':
         specifier: ^7.28.0
         version: 7.28.3(@babel/core@7.28.4)
