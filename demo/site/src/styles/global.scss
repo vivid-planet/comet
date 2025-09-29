@@ -34,7 +34,7 @@
     --palette-success-light: #77d06a;
     --palette-success-dark: #488938;
     --palette-success-contrastText: #090909;
-    --palette-functional-highlight-magenta: #d817fa;
+    --palette-functional-highlight-main: #d817fa;
     --font-family: Roboto, sans-serif;
     --spacing-d400: 72px;
     --spacing-d300: 44px;
@@ -179,7 +179,7 @@ legend {
 }
 
 :focus {
-    outline: 3px solid var(--palette-functional-highlight-magenta);
+    outline: 3px solid var(--palette-functional-highlight-main);
     outline-offset: 0;
     border: 2px solid var(--palette-primary-contrastText);
 }
