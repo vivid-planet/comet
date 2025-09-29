@@ -1,4 +1,4 @@
-import { createServer } from "http";
+import { createServer, IncomingMessage, ServerResponse } from "http";
 import next from "next";
 import { parse } from "url";
 
@@ -53,10 +53,13 @@ app.prepare().then(() => {
                 res.setHeader("Cache-Control", `public, max-age=${maxAge}`);
 
                 const origSetHeader = res.setHeader;
-                res.setHeader = function (name: string, value: string | number | readonly string[]) {
+                res.setHeader = function (
+                    name: string,
+                    value: string | number | readonly string[],
+                ): ServerResponse<IncomingMessage> & { req: IncomingMessage } {
                     if (name === "cache-control" || name === "Cache-Control") {
                         // ignore
-                        return;
+                        return this;
                     }
                     return origSetHeader.call(this, name, value);
                 };
