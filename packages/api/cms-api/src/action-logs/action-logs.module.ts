@@ -1,5 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { ExecutionContext, Module } from "@nestjs/common";
+import { AnyEntity } from "@mikro-orm/postgresql";
+import { DynamicModule, ExecutionContext, Module, Type } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import type { Request } from "express";
@@ -7,9 +8,10 @@ import { ClsModule } from "nestjs-cls";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../auth/decorators/disable-comet-guards.decorator";
 import { User } from "../user-permissions/interfaces/user";
-import { ActionLogsResolver } from "./action-logs.resolver";
+import { ActionLogsResolverFactory } from "./action-logs.resolver.factory";
 import { ActionLogsService } from "./action-logs.service";
 import { ActionLogsSubscriber } from "./action-logs.subscriber";
+import { ActionLogsContextService } from "./action-logs-context.service";
 import { ActionLog } from "./entities/action-log.entity";
 
 @Module({
@@ -30,7 +32,7 @@ import { ActionLog } from "./entities/action-log.entity";
                         ]);
                         if (disableCometGuard) return;
 
-                        const service = moduleRef.get(ActionLogsService, { strict: false });
+                        const service = moduleRef.get(ActionLogsContextService, { strict: false });
                         await service.setUserId(request.user.id);
                     },
                 },
@@ -38,7 +40,15 @@ import { ActionLog } from "./entities/action-log.entity";
             inject: [Reflector, ModuleRef],
         }),
     ],
-    providers: [ActionLogsService, ActionLogsSubscriber, ActionLogsResolver],
-    exports: [ActionLogsService],
+    providers: [ActionLogsService, ActionLogsContextService, ActionLogsSubscriber],
+    exports: [ActionLogsService, ActionLogsContextService],
 })
-export class ActionLogsModule {}
+export class ActionLogsModule {
+    static forFeature(entities: Array<Type<AnyEntity>>): DynamicModule {
+        const resolvers = entities.map((entity) => ActionLogsResolverFactory.create(entity));
+        return {
+            module: ActionLogsModule,
+            providers: [...resolvers],
+        };
+    }
+}

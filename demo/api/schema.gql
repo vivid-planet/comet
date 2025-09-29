@@ -13,14 +13,6 @@ type ActionLog {
   version: Int!
 }
 
-input ActionLogFilter {
-  and: [ActionLogFilter!]
-  entityId: StringFilter
-  id: IdFilter
-  or: [ActionLogFilter!]
-  userId: StringFilter
-}
-
 input ActionLogSort {
   direction: SortDirection! = ASC
   field: ActionLogSortField!
@@ -28,7 +20,6 @@ input ActionLogSort {
 
 enum ActionLogSortField {
   createdAt
-  entityId
   userId
   version
 }
@@ -551,6 +542,8 @@ input MainMenuItemInput {
 }
 
 type Manufacturer {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   coordinates: Coordinates
@@ -1047,7 +1040,6 @@ type PaginatedWarnings {
 }
 
 enum Permission {
-  actionLogs
   builds
   cronJobs
   dam
@@ -1086,6 +1078,8 @@ enum PredefinedPageType {
 }
 
 type Product {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
   additionalTypes: [ProductType!]!
   articleNumbers: [String!]!
   availableSince: LocalDate
@@ -1593,8 +1587,6 @@ input ProductVariantUpdateInput {
 }
 
 type Query {
-  actionLog(id: ID!): ActionLog!
-  actionLogs(entityName: String!, filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scope: JSONObject, sort: [ActionLogSort!]): PaginatedActionLogs!
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   buildTemplates: [BuildTemplate!]!

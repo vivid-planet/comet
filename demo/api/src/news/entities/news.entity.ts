@@ -53,9 +53,7 @@ export class NewsContentScope {
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["news"] })
-@ActionLogs({
-    requiredPermission: ["news"],
-})
+@ActionLogs()
 export class News extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 

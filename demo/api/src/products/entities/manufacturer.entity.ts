@@ -81,9 +81,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 @Entity()
 @ObjectType()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["manufacturers"] })
-@ActionLogs({
-    requiredPermission: ["manufacturers"],
-})
+@ActionLogs()
 export class Manufacturer extends BaseEntity {
     [OptionalProps]?: "updatedAt";
 
