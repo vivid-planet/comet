@@ -35,33 +35,6 @@ app.prepare().then(() => {
                 }
             }
 
-            let maxAge: string | undefined;
-
-            if (parsedUrl.pathname?.startsWith("/assets/")) {
-                // assets in public/assets/* are cached for 1 week. When updated without changing the filename, the cache is not invalidated.
-                // To force an immediate update of a file, ensure the filename is changed as well
-                maxAge = "604800"; // 1 week cache
-            } else if (parsedUrl.pathname == "/apple-icon.png" || parsedUrl.pathname == "/icon.svg") {
-                // the icon and apple-icon in the /app folder automatically have a generated string added to the filename, so they can be cached for a long time because the hash changes when the file content changes
-                // see: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons#icon
-                maxAge = "31536000"; // 1 year cache
-            } else if (parsedUrl.pathname == "/robots.txt" || parsedUrl.pathname == "/sitemap.xml" || parsedUrl.pathname == "/favicon.ico") {
-                maxAge = "900"; // 15 minutes cache
-            }
-
-            if (maxAge) {
-                res.setHeader("Cache-Control", `public, max-age=${maxAge}`);
-
-                const origSetHeader = res.setHeader;
-                res.setHeader = function (name: string, value: string | number | readonly string[]) {
-                    if (name === "cache-control" || name === "Cache-Control") {
-                        // ignore
-                        return;
-                    }
-                    return origSetHeader.call(this, name, value);
-                };
-            }
-
             // For Rsc requests: don't cache the response if the _rsc query param is missing
             const rscParamMissing = !!req.headers["rsc"] && !new URLSearchParams(parsedUrl.search || "").has("_rsc");
 
@@ -71,6 +44,15 @@ app.prepare().then(() => {
                 if (statusCode >= 400 || rscParamMissing) {
                     // prevent caching of error responses
                     res.setHeader("Cache-Control", "private, no-cache, no-store, max-age=0, must-revalidate");
+                } else if (
+                    parsedUrl.pathname?.startsWith("/assets/") ||
+                    parsedUrl.pathname === "/favicon.ico" ||
+                    parsedUrl.pathname === "/apple-icon.png" ||
+                    parsedUrl.pathname === "/icon.svg" ||
+                    parsedUrl.pathname === "/robots.txt" ||
+                    parsedUrl.pathname === "/sitemap.xml"
+                ) {
+                    res.setHeader("Cache-Control", "public, max-age=900");
                 }
 
                 // For redirects: append _rsc query param to redirect location if set in the original request
@@ -85,7 +67,8 @@ app.prepare().then(() => {
                     }
                 }
 
-                return originalWriteHead.apply(this, [statusCode, ...args]);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                return (originalWriteHead as any).apply(this, [statusCode, ...args]);
             };
 
             await handle(req, res, parsedUrl);
