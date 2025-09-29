@@ -12,7 +12,6 @@ import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { PageLayout } from "@src/layout/PageLayout";
-import clsx from "clsx";
 
 import styles from "./ContentGroupBlock.module.scss";
 
@@ -39,7 +38,7 @@ const ContentGroupContentBlock = withPreview(
 
 export const ContentGroupBlock = withPreview(
     ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => (
-        <PageLayout className={clsx(backgroundColor === "darkGray" && styles.darkGray, backgroundColor === "lightGray" && styles.lightGray)}>
+        <PageLayout className={backgroundColor !== "default" ? styles[backgroundColor] : undefined}>
             <ContentGroupContentBlock data={content} />
         </PageLayout>
     ),
