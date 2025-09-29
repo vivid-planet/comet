@@ -71,15 +71,6 @@ app.prepare().then(() => {
                 if (statusCode >= 400 || rscParamMissing) {
                     // prevent caching of error responses
                     res.setHeader("Cache-Control", "private, no-cache, no-store, max-age=0, must-revalidate");
-                } else if (
-                    parsedUrl.pathname?.startsWith("/assets/") ||
-                    parsedUrl.pathname === "/favicon.ico" ||
-                    parsedUrl.pathname === "/apple-icon.png" ||
-                    parsedUrl.pathname === "/icon.svg" ||
-                    parsedUrl.pathname === "/robots.txt" ||
-                    parsedUrl.pathname === "/sitemap.xml"
-                ) {
-                    res.setHeader("Cache-Control", "public, max-age=900");
                 }
 
                 // For redirects: append _rsc query param to redirect location if set in the original request
