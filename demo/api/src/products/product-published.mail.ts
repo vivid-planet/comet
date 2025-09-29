@@ -4,24 +4,12 @@ type MailParams = {
     recipient: { name: string; email: string };
     countProductPublished: "all" | number;
 };
-export function isMailParams(arg: unknown): arg is MailParams {
-    return (
-        typeof arg === "object" &&
-        arg !== null &&
-        "recipient" in arg &&
-        arg.recipient !== undefined &&
-        "countProductPublished" in arg &&
-        arg.countProductPublished !== undefined
-    );
-}
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailParams> {
     id = "products-published";
 
     async generateMail(params: MailParams) {
-        if (!isMailParams(params)) throw new Error(`Incompatible params`);
-
         return {
             subject: "All products published",
             to: params.recipient.email,

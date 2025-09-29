@@ -29,7 +29,6 @@ export class MyCustomMail implements MailTemplateInterface<MailParams> {
     constructor(private readonly translationService: TranslationService) {} // add dependencies if needed
 
     async generateMail(params: MailParams): Promise<MailOptions> {
-        if (!isMailProp(params)) throw new Error(`Not possible to generate mail for given params.`); // is recommended because typescript can be mislead if wrong type for generic is used when calling mailTemplate.generateMail<T>(...).
         const intl = this.translationService.getIntl();
 
         return {
@@ -68,13 +67,6 @@ const MailContent: React.FC<MailParams> = ({ recipient }) => {
             <FormattedMessage id="mail-templates.static-mail_my-custom-mail.introHeadline" defaultMessage="Intro Headline" />
         </div>
     );
-}
-
-export function isMailParams(arg: unknown): arg is MailParams {
-    return typeof arg === "object" && arg !== null
-        // validate required params are present, e.g.:
-        && "myField" in arg && arg.myField !== undefined
-        && ....;
 }
 ```
 
