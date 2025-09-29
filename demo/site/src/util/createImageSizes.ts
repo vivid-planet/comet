@@ -8,7 +8,7 @@ export function createImageSizes(breakpointWidths: BreakpointWidths) {
     const defaultSize = breakpointWidths.default;
 
     breakpoints.forEach(([breakpointKey, breakpointValue]) => {
-        const size = breakpointWidths[breakpointKey];
+        const size = breakpointWidths[breakpointKey as keyof BreakpointWidths];
         const minWidth = breakpointValue.value;
 
         if (size !== undefined) {

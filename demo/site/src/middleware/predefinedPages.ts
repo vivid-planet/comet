@@ -63,9 +63,9 @@ async function fetchPredefinedPages(domain: string) {
             });
 
             for (const node of paginatedPageTreeNodes.nodes) {
-                if (node.document?.__typename === "PredefinedPage" && node.document.type) {
+                if (node.document?.__typename === "PredefinedPage" && node.document.type === "news") {
                     pages.push({
-                        codePath: `/${language}${predefinedPagePaths[node.document.type]}`,
+                        codePath: `/${language}${predefinedPagePaths.News}`,
                         pageTreeNodePath: `/${language}${node.path}`,
                     });
                 }

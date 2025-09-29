@@ -24,9 +24,12 @@ export type TypographyProps<T extends ElementType> = {
 
 export const Typography = <T extends ElementType = "p">(props: PropsWithChildren<TypographyProps<T>>) => {
     const { as, variant = "p300", bottomSpacing = false, className, children, ...restProps } = props;
-    const Component = as || variantToElementMap[variant] || "p";
+    const Component = as || variantToElementMap[variant as TypographyVariant] || "p";
     return (
-        <Component className={clsx(styles.root, styles[variant], !bottomSpacing && styles.noBottomSpacing, className)} {...restProps}>
+        <Component
+            className={clsx(styles.root, styles[variant as TypographyVariant], !bottomSpacing && styles.noBottomSpacing, className)}
+            {...restProps}
+        >
             {children}
         </Component>
     );
