@@ -108,7 +108,7 @@
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts", "./server.ts", "./opentelemetry-metrics.ts"],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]

@@ -11,6 +11,8 @@ import { PagesModule } from "@src/documents/pages/pages.module";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product } from "@src/products/entities/product.entity";
+import { ProductCategory } from "@src/products/entities/product-category.entity";
+import { ProductCategoryType } from "@src/products/entities/product-category-type.entity";
 
 import { AccordionBlockFixtureService } from "./generators/blocks/layout/accordion-block-fixture.service";
 import { ColumnsBlockFixtureService } from "./generators/blocks/layout/columns-block-fixture.service";
@@ -63,7 +65,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         PagesModule,
         LinksModule,
         DependenciesModule,
-        MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
+        MikroOrmModule.forFeature([DamFile, Page, Link, Product, ProductCategory, ProductCategoryType, Manufacturer, PageTreeNode, AttachedDocument]),
     ],
     providers: [
         FixturesCommand,

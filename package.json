@@ -41,7 +41,8 @@
         "browser:demo:api": "dotenv -- sh -c 'open-cli $API_URL/graphql'",
         "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
-        "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
+        "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
+        "browser:demo:mitmproxy": "dotenv -- sh -c 'open-cli http://127.0.0.1:$MITMPROXY_WEB_INTERFACE_PORT?token=$MITMPROXY_WEB_PASSWORD'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
@@ -50,19 +51,19 @@
         "@formatjs/cli": "^6.7.2",
         "@types/node": "^22.16.3",
         "knip": "^5.61.3",
-        "cspell": "^8.19.4",
-        "dotenv-cli": "^7.4.4",
+        "cspell": "^9.0.0",
+        "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.2",
-        "npm-run-all2": "^7.0.2",
+        "npm-run-all2": "^8.0.0",
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
-        "typescript": "^5.7.3"
+        "typescript": "5.8.3"
     },
-    "packageManager": "pnpm@10.15.1",
+    "packageManager": "pnpm@10.17.0",
     "engines": {
         "node": "22",
-        "pnpm": "10.15.1"
+        "pnpm": "10.17.0"
     }
 }

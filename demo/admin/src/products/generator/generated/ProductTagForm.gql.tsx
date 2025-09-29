@@ -5,8 +5,6 @@ export const productTagFormFragment = gql`
         fragment ProductTagForm on ProductTag {
             title
         }
-        
-        
     `;
 export const productTagQuery = gql`
             query ProductTag($id: ID!) {

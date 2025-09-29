@@ -3,7 +3,8 @@ import { type KeyFactsItemBlockData } from "@src/blocks.generated";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { type Renderers } from "redraft";
-import styled from "styled-components";
+
+import styles from "./KeyFactItemBlock.module.scss";
 
 const descriptionRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
@@ -11,36 +12,18 @@ const descriptionRenderers: Renderers = {
 
 export const KeyFactItemBlock = withPreview(
     ({ data: { icon, fact, label, description } }: PropsWithData<KeyFactsItemBlockData>) => (
-        <Root>
-            {icon.damFile && <Icon data={icon} width={48} height={48} />}
-            <FactTypography variant="h500">{fact}</FactTypography>
+        <div className={styles.root}>
+            {icon.damFile && <SvgImageBlock data={icon} width={48} height={48} className={styles.icon} />}
+            <Typography variant="h500" className={styles.fact}>
+                {fact}
+            </Typography>
             <Typography variant="h350">{label}</Typography>
             {hasRichTextBlockContent(description) && (
-                <DescriptionTypography variant="p200">
+                <Typography variant="p200" className={styles.description}>
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
-                </DescriptionTypography>
+                </Typography>
             )}
-        </Root>
+        </div>
     ),
     { label: "Key fact" },
 );
-
-const Root = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-`;
-
-const Icon = styled(SvgImageBlock)`
-    margin-bottom: ${({ theme }) => theme.spacing.S100};
-`;
-
-const FactTypography = styled(Typography)`
-    margin-bottom: ${({ theme }) => theme.spacing.S300};
-    color: ${({ theme }) => theme.palette.primary.dark};
-`;
-
-const DescriptionTypography = styled(Typography)`
-    margin-top: ${({ theme }) => theme.spacing.S100};
-`;

@@ -55,7 +55,21 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
                 throw new TypeError("Block displayName must be either a string or a FormattedMessage");
             }
 
-            if (!blockName.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
+            const searchValueLower = searchValue.toLocaleLowerCase();
+
+            let blockTags: string[] = [];
+            if (block.tags) {
+                blockTags = block.tags.map((tag) => {
+                    if (typeof tag === "string") {
+                        return tag.toLocaleLowerCase();
+                    } else {
+                        return intl.formatMessage(tag).toLocaleLowerCase();
+                    }
+                });
+            }
+            const tagMatches = blockTags.some((tag) => tag.includes(searchValueLower));
+
+            if (!blockName.toLocaleLowerCase().includes(searchValueLower) && !tagMatches) {
                 continue;
             }
 

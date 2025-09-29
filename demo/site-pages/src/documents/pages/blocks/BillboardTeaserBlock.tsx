@@ -58,7 +58,7 @@ const AbsoluteGridRoot = styled(PageLayout)`
 `;
 
 const Content = styled.div`
-    padding: ${({ theme }) => theme.spacing.D200} 0;
+    padding: ${({ theme }) => theme.spacing.d200} 0;
     display: flex;
     flex: 1;
     flex-direction: column;

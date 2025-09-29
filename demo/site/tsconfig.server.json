@@ -8,5 +8,5 @@
         "target": "es2019"
     },
     "extends": "./tsconfig.json",
-    "include": ["server.ts", "tracing.production.ts", "tracing.dev.ts", "cache-handler.ts"]
+    "include": ["server.ts", "tracing.production.ts", "tracing.dev.ts", "cache-handler.ts", "src/webpack"]
 }

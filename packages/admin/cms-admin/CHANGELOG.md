@@ -1,5 +1,48 @@
 # @comet/cms-admin
 
+## 8.2.0
+
+### Minor Changes
+
+- 8ba4f62: Prevent phishing in SitePreview
+
+    Affected applications: if the property `resolvePath` of the `SitePreview` component returns the plain path. The default implementation in the starter is not affected.
+
+- 8d3d048: Add `tags` property to block factories to support adding translatable key words and improve searching for blocks in the `AddBlockDrawer`
+
+    Tags of child blocks can be overwritten by passing tags to their parent.
+
+    Example usage:
+
+    ```tsx
+    const MediaGalleryBlock = createCompositeBlock({
+        name: "MediaGallery",
+        displayName: "Media Gallery",
+        blocks: {
+            /* ... */
+        },
+        tags: [defineMessage({ id: "mediaGallery.tag.slider", defaultMessage: "Slider" })],
+        /* ... */
+    });
+    ```
+
+- 165e2ac: Add optional `noContentScopeError` prop to `ContentScopeProvider`, to customize error message when user has no content scope
+
+### Patch Changes
+
+- Updated dependencies [ea545c4]
+- Updated dependencies [dfafdb3]
+- Updated dependencies [d7ab390]
+- Updated dependencies [08ad5fe]
+- Updated dependencies [01ef80b]
+- Updated dependencies [0b08988]
+- Updated dependencies [85141bf]
+- Updated dependencies [0cfcf90]
+    - @comet/admin@8.2.0
+    - @comet/admin-date-time@8.2.0
+    - @comet/admin-rte@8.2.0
+    - @comet/admin-icons@8.2.0
+
 ## 8.1.1
 
 ### Patch Changes

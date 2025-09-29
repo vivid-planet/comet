@@ -1,5 +1,19 @@
 # @comet/site-nextjs
 
+## 8.2.0
+
+### Minor Changes
+
+- 8ba4f62: Prevent phishing in SitePreview
+
+    Affected applications: if the property `resolvePath` of the `SitePreview` component returns the plain path. The default implementation in the starter is not affected.
+
+- f1890f0: Improve accessibility of `playIcon` by setting an aria-label that can be overridden by using the `playButtonAriaLabel` prop in `DamVideoBlock`, `YoutubeBlock` and `VimeoBlock`
+
+### Patch Changes
+
+- @comet/site-react@8.2.0
+
 ## 8.1.1
 
 ### Patch Changes

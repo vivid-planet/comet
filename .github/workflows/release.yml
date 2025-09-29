@@ -16,12 +16,12 @@ jobs:
             cancel-in-progress: true
         steps:
             - name: Checkout Repo
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 22.x
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
