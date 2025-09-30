@@ -2427,7 +2427,12 @@
         "fields": [
             {
                 "name": "products",
-                "kind": "String",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
                 "nullable": false,
                 "array": true
             }
@@ -2435,7 +2440,12 @@
         "inputFields": [
             {
                 "name": "products",
-                "kind": "String",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
                 "nullable": false,
                 "array": true
             }

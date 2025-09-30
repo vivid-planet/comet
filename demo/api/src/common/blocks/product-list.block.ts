@@ -8,14 +8,14 @@ export enum ProductList {
 }
 
 class ProductListBlockData extends BlockData {
-    @BlockField({ type: "string", array: true })
+    @BlockField({ type: "enum", enum: ProductList, array: true })
     products: ProductList[];
 }
 
 class ProductListBlockInput extends BlockInput {
     @IsArray()
     @IsEnum(ProductList, { each: true })
-    @BlockField({ type: "string", array: true })
+    @BlockField({ type: "enum", enum: ProductList, array: true })
     products: ProductList[];
 
     transformToBlockData(): ProductListBlockData {
