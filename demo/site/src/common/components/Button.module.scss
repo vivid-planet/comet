@@ -30,7 +30,7 @@
     &:hover {
         color: var(--brand-primary-dark);
         border-color: var(--brand-primary-dark);
-        background-color: var(--brand-primary-contrastText);
+        background-color: var(--brand-primary-contrastColor);
     }
 
     &:disabled {
@@ -47,7 +47,7 @@
 
     &:hover {
         background-color: var(--brand-primary-dark);
-        color: var(--brand-primary-contrastText);
+        color: var(--brand-primary-contrastColor);
         border-color: var(--brand-primary-dark);
     }
 
