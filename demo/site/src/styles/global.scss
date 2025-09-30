@@ -4,7 +4,7 @@
     --brand-primary-light: #4f99dc;
     --brand-primary-main: #166dba;
     --brand-primary-dark: #0e4c82;
-    --brand-primary-contrastColor: #ffffff;
+    --brand-primary-contrastColor: #fff;
     --brand-grey-050: #f5f5f5;
     --brand-grey-100: #ececec;
     --brand-grey-200: #d8d8d8;
@@ -18,11 +18,11 @@
     --functional-error-main: #bc3520;
     --functional-error-light: #c6523f;
     --functional-error-dark: #832617;
-    --functional-error-contrastColor: #ffffff;
+    --functional-error-contrastColor: #fff;
     --functional-warning-main: #f3b346;
     --functional-warning-light: #f5c15f;
     --functional-warning-dark: #a87d32;
-    --functional-warning-contrastText: #000000;
+    --functional-warning-contrastText: #000;
     --functional-info-main: #5cb4f0;
     --functional-info-light: #73c1f2;
     --functional-info-dark: #417da6;
@@ -30,13 +30,11 @@
     --functional-success-main: #66c54f;
     --functional-success-light: #77d06a;
     --functional-success-dark: #488938;
-    --functional-success-contrastText: #000000;
+    --functional-success-contrastText: #000;
     --functional-highlight-main: #d817fa;
-    --common-black: #000000;
-    --common-white: #ffffff;
-
+    --common-black: #000;
+    --common-white: #fff;
     --font-family: Roboto, sans-serif;
-
     --spacing-d400: 72px;
     --spacing-d300: 44px;
     --spacing-d200: 28px;
