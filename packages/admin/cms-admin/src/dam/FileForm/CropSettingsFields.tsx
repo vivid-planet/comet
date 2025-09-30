@@ -16,9 +16,7 @@ interface Props {
 
 export function CropSettingsFields({ disabled }: Props): JSX.Element {
     const form = useForm<EditImageFormValues>();
-    const {
-        values: { focalPoint },
-    } = useFormState<EditImageFormValues>();
+    const { values } = useFormState<EditImageFormValues>();
 
     const handleSmartFocalPointChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
@@ -28,8 +26,8 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
         }
     };
 
-    const showChooseManualFocusPointButtons = focalPoint !== "SMART";
-    const showResetCropAreaButton = focalPoint !== "SMART";
+    const showChooseManualFocusPointButtons = values?.focalPoint !== "SMART";
+    const showResetCropAreaButton = values?.focalPoint !== "SMART";
 
     const Container = disabled ? DisabledFormSection : "div";
 
@@ -57,9 +55,9 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
                     >
                         <FormControlLabel
-                            control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
+                            control={<Switch checked={values?.focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
                             label={
-                                focalPoint === "SMART" ? (
+                                values?.focalPoint === "SMART" ? (
                                     <FormattedMessage id="comet.dam.file.smartFocusPoint.yes" defaultMessage="Yes" />
                                 ) : (
                                     <FormattedMessage id="comet.dam.file.smartFocusPoint.no" defaultMessage="No" />

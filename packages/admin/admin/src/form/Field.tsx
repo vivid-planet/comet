@@ -1,10 +1,12 @@
 import { type FieldValidator } from "final-form";
 import { type ComponentType, createElement, type ReactNode, useRef } from "react";
-import { Field as FinalFormField, type FieldMetaState, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
+import { Field as FinalFormField, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { FieldContainer, type FieldContainerProps } from "./FieldContainer";
 import { useFinalFormContext } from "./FinalFormContextProvider";
+
+export type FieldMetaState<FieldValue = any> = FieldRenderProps<FieldValue>["meta"];
 
 const requiredValidator = (value: any) => {
     if (value === undefined || value === null || value === false || value === "") {
@@ -65,7 +67,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     function renderField({
         input,
         meta,
-        fieldContainerProps,
+        /* TODO: check how to forward rest props to fieldContainer --> fieldContainerProps,*/
         ...rest
     }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
         function render() {
@@ -75,7 +77,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 if (typeof children !== "function") {
                     throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);
                 }
-                return children({ input, meta, disabled, required });
+                return children({ input, meta /*disabled, required  TODO: how to forward disabled and required to fields*/ });
             }
         }
         return (
@@ -89,7 +91,6 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
-                {...fieldContainerProps}
             >
                 {render()}
             </FieldContainer>
@@ -98,12 +99,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 
     return (
         <>
-            <FinalFormField<FieldValue, FieldElement, FieldValue, FieldRenderProps<FieldValue, FieldElement>>
-                name={name}
-                validate={validateError}
-                required={required}
-                {...otherProps}
-            >
+            <FinalFormField<FieldValue, FieldElement, FieldValue> name={name} validate={validateError} required={required} {...otherProps}>
                 {renderField}
             </FinalFormField>
             {validateWarning && (
@@ -120,7 +116,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                         currentWarningValidationRound.current++;
                         const validationRound = currentWarningValidationRound.current;
 
-                        const warning = await Promise.resolve(validateWarning(values[name], values));
+                        const warning = await Promise.resolve(validateWarning(values?.[name] ?? undefined, values ?? {}));
 
                         if (currentWarningValidationRound.current > validationRound) {
                             // Another validation has been started, skip this one

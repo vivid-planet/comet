@@ -20,7 +20,6 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
     const RteField: FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">> = ({
         input: { value, onChange, ...restInput },
         meta,
-        value: remove,
         ...rest
     }) => {
         const ref = useRef<any>();

@@ -7,6 +7,17 @@ export default {
     title: "@comet/admin/form",
 };
 
+interface FormValues {
+    flavor?: SelectFieldOption;
+    number?: SelectFieldOption;
+    multipleFlavors?: SelectFieldOption[];
+    multipleNumbers?: SelectFieldOption[];
+    requiredFlavor: SelectFieldOption;
+    requiredNumber: SelectFieldOption;
+    multipleRequiredFlavors: SelectFieldOption[];
+    flavorWithCustomOptionsRendering: string;
+    flavorMultipleAdornments: SelectFieldOption;
+}
 export const Select = () => {
     const options: SelectFieldOption[] = [
         { value: "chocolate", label: "Chocolate" },
@@ -27,7 +38,7 @@ export const Select = () => {
 
     return (
         <Box width={500}>
-            <Form
+            <Form<FormValues>
                 initialValues={{
                     multipleFlavors: [],
                     multipleNumbers: [],
@@ -41,14 +52,14 @@ export const Select = () => {
                         <FieldSet title="Basic selects">
                             <SelectField name="flavor" label="Select a flavor" options={options} fullWidth />
                             <SelectField name="number" label="Select a number" options={numberOptions} fullWidth />
-                            <Box component="pre">{JSON.stringify({ flavor: values.flavor, number: values.number }, null, 2)}</Box>
+                            <Box component="pre">{JSON.stringify({ flavor: values?.flavor, number: values?.number }, null, 2)}</Box>
                         </FieldSet>
 
                         <FieldSet title="Multi selects">
                             <SelectField name="multipleFlavors" label="Select multiple flavors" options={options} multiple fullWidth />
                             <SelectField name="multipleNumbers" label="Select multiple numbers" options={numberOptions} multiple fullWidth />
                             <Box component="pre">
-                                {JSON.stringify({ multipleFlavors: values.multipleFlavors, multipleNumbers: values.multipleNumbers }, null, 2)}
+                                {JSON.stringify({ multipleFlavors: values?.multipleFlavors, multipleNumbers: values?.multipleNumbers }, null, 2)}
                             </Box>
                         </FieldSet>
 
@@ -66,9 +77,9 @@ export const Select = () => {
                             <Box component="pre">
                                 {JSON.stringify(
                                     {
-                                        requiredFlavor: values.requiredFlavor,
-                                        requiredNumber: values.requiredNumber,
-                                        multipleRequiredFlavors: values.multipleRequiredFlavors,
+                                        requiredFlavor: values?.requiredFlavor,
+                                        requiredNumber: values?.requiredNumber,
+                                        multipleRequiredFlavors: values?.multipleRequiredFlavors,
                                     },
                                     null,
                                     2,
@@ -104,7 +115,7 @@ export const Select = () => {
                             >
                                 {options.map((option) => (
                                     <MenuItem value={option.value} key={option.value}>
-                                        <Checkbox checked={option.value === values.flavorWithCustomOptionsRendering} />
+                                        <Checkbox checked={option.value === values?.flavorWithCustomOptionsRendering} />
                                         <ListItemText primary={option.label} secondary={`The value is ${option.value}`} />
                                         <ListItemIcon>
                                             <Account />
@@ -115,8 +126,8 @@ export const Select = () => {
                             <Box component="pre">
                                 {JSON.stringify(
                                     {
-                                        flavorMultipleAdornments: values.flavorMultipleAdornments,
-                                        flavorWithCustomOptionsRendering: values.flavorWithCustomOptionsRendering,
+                                        flavorMultipleAdornments: values?.flavorMultipleAdornments,
+                                        flavorWithCustomOptionsRendering: values?.flavorWithCustomOptionsRendering,
                                     },
                                     null,
                                     2,

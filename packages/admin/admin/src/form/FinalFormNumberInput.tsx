@@ -20,7 +20,6 @@ type FinalFormNumberInputInternalProps = FieldRenderProps<number>;
 export function FinalFormNumberInput({
     meta,
     input,
-    innerRef,
     clearable,
     endAdornment,
     decimals = 0,

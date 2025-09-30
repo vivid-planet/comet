@@ -20,11 +20,9 @@ const clipValue = (value?: number) => {
 
 export const ImageCrop = (props: ImageCropProps) => {
     const form = useForm<EditImageFormValues>();
-    const {
-        values: { focalPoint },
-    } = useFormState<EditImageFormValues>();
+    const { values } = useFormState<EditImageFormValues>();
 
-    const disabled = props.disabled === true || focalPoint === "SMART";
+    const disabled = props.disabled === true || values?.focalPoint === "SMART";
 
     const handleFocalPointChange = (newFocalPoint: GQLFocalPoint) => {
         form.change("focalPoint", newFocalPoint);
@@ -60,7 +58,7 @@ export const ImageCrop = (props: ImageCropProps) => {
                                         <sc.FocalPointHandle
                                             key={point}
                                             point={point}
-                                            selected={point === focalPoint}
+                                            selected={point === values?.focalPoint}
                                             type="button"
                                             onClick={() => handleFocalPointChange(point)}
                                         />

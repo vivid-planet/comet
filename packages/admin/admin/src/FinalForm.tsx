@@ -1,5 +1,6 @@
 import { getApolloContext } from "@apollo/client";
 import {
+    type AnyObject,
     type Config,
     type Decorator,
     FORM_ERROR,
@@ -12,7 +13,7 @@ import {
 } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import { type MutableRefObject, type PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
-import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
+import { Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { type FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
@@ -23,13 +24,13 @@ import { useSubRoutePrefix } from "./router/SubRoute";
 import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
 import { TableQueryContext } from "./table/TableQueryContext";
 
-export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
+export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues extends Partial<FormValues> = Partial<FormValues>>() =>
     useRef<FormApi<FormValues, InitialFormValues>>();
 
 // copy of FormProps from final-form, because Omit doen't work on it
-interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
+interface IProps<FormValues = Record<string, any>, InitialFormValues extends Partial<FormValues> = Partial<FormValues>>
     extends Omit<Config<FormValues, InitialFormValues>, "onSubmit">,
-        RenderableProps<FormRenderProps<FormValues, InitialFormValues>> {
+        RenderableProps<FormRenderProps<FormValues>> {
     subscription?: FormSubscription;
     decorators?: Array<Decorator<FormValues, InitialFormValues>>;
     form?: FormApi<FormValues, InitialFormValues>;
@@ -108,14 +109,16 @@ export class FinalFormSubmitEvent extends Event {
     navigatingBack?: boolean;
 }
 
-export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<FormValues>>(props: IProps<FormValues, InitialFormValues>) {
+export function FinalForm<FormValues = AnyObject, InitialFormValues extends Partial<FormValues> = Partial<FormValues>>(
+    props: IProps<FormValues, InitialFormValues>,
+) {
     const { client } = useContext(getApolloContext());
     const tableQuery = useContext(TableQueryContext);
 
     const { onAfterSubmit, validateWarning } = props;
 
     return (
-        <Form<FormValues, InitialFormValues>
+        <Form<FormValues>
             {...props}
             mutators={{
                 ...props.mutators,
@@ -128,10 +131,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
         />
     );
 
-    function RenderForm({
-        formContext = {},
-        ...formRenderProps
-    }: FormRenderProps<FormValues, InitialFormValues> & { formContext: Partial<FinalFormContext> }) {
+    function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const subRoutePrefix = useSubRoutePrefix();
         const saveBoundaryApi = useSaveBoundaryApi();
         // Explicit cast to set InitialFormValues because FormRenderProps doesn't pass InitialFormValues to RenderableProps here:
@@ -180,7 +180,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                     currentWarningValidationRound.current++;
                     const validationRound = currentWarningValidationRound.current;
 
-                    const validationWarnings = await Promise.resolve(validateWarning(formRenderProps.values));
+                    const validationWarnings = await Promise.resolve(validateWarning(formRenderProps.values as FormValues));
 
                     if (currentWarningValidationRound.current > validationRound) {
                         // Another validation has been started, skip this one
@@ -229,11 +229,11 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                         {(props) => {
                             return (
                                 <Savable
-                                    hasChanges={props.dirty}
+                                    hasChanges={props.dirty ?? false}
                                     doSave={doSave}
                                     doReset={doReset}
                                     checkForChanges={() => {
-                                        return formRenderProps.form.getState().dirty;
+                                        return formRenderProps.form.getState().dirty ?? false;
                                     }}
                                 />
                             );
@@ -243,7 +243,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
                     <form onSubmit={submit}>
                         <div>
-                            {renderFinalFormChildren<FormValues, InitialFormValues>(
+                            {renderFinalFormChildren<FormValues>(
                                 {
                                     children: props.children,
                                     component: props.component,
@@ -307,7 +307,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boolean => {
     const formState = form.getState();
     if (!formState.validating) {
-        return formState.hasValidationErrors;
+        return formState.hasValidationErrors ?? false;
     }
 
     return new Promise((resolve) => {
@@ -315,7 +315,7 @@ const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boole
             (state) => {
                 if (!state.validating) {
                     unsubscribe();
-                    resolve(state.hasValidationErrors);
+                    resolve(state.hasValidationErrors ?? false);
                 }
             },
             { validating: true, hasValidationErrors: true },
