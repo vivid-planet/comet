@@ -2,9 +2,9 @@ import { createElement, type ReactNode } from "react";
 import { type FormRenderProps, type RenderableProps } from "react-final-form";
 
 // Render children like final-form does.
-export function renderFinalFormChildren<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>(
-    props: RenderableProps<FormRenderProps<FormValues, InitialFormValues>>,
-    formRenderProps: FormRenderProps<FormValues, InitialFormValues>,
+export function renderFinalFormChildren<FormValues = Record<string, any>>(
+    props: RenderableProps<FormRenderProps<FormValues>>,
+    formRenderProps: FormRenderProps<FormValues>,
 ) {
     const { render, children, component } = props; // not using this.props as final-form-render-component does also use function-parameters and this solves "multiple implementations" hint
     if (component) {
