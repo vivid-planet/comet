@@ -93,7 +93,7 @@ export const ClearableProp = {
                             >
                                 <Field name="select" label="FinalFormSelect" fullWidth>
                                     {(props) => (
-                                        <FinalFormSelect {...props} clearable>
+                                        <FinalFormSelect {...props}>
                                             {selectOptions.map((option) => (
                                                 <MenuItem value={option.value} key={option.value}>
                                                     {option.label}
