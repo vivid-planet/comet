@@ -43,7 +43,7 @@ export function FormSection(inProps: FormSectionProps) {
                     {disableTypography ? (
                         <LegacyTitle {...slotProps?.title}>{title}</LegacyTitle>
                     ) : (
-                        <Title infoTooltip={infoTooltip} {...slotProps?.title} divider>
+                        <Title infoTooltip={infoTooltip} divider {...slotProps?.title}>
                             {title}
                         </Title>
                     )}
