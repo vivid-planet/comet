@@ -20,15 +20,11 @@ This module provides a way to create and manage mail-templates. It allows you to
 ```typescript
 import { renderToMjml } from "mjml-react";
 
-export const MY_CUSTOM_MAIL_ID = "static-mail_my-custom-mail";
-
 @MailTemplate()
 export class MyCustomMail implements MailTemplateInterface<MailProps> {
-    id = MY_CUSTOM_MAIL_ID; // this is used to access this mail-template in code.
-
     constructor(private readonly translationService: TranslationService) {} // add dependencies if needed
 
-    async generateMail(props: MailProps): Promise<MailOptions> {
+    async generateMail(props: MailProps) {
         const intl = this.translationService.getIntl();
 
         return {
@@ -47,7 +43,7 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
         };
     }
 
-    async getPreparedTestProps(): Promise<PreparedTestProps<MailProps>[]> {
+    async getPreparedTestProps() {
         // this is used for styling mail-templates and in admin for testing.
         // it's also possible to access any imported service to generate test-data.
         return [
@@ -70,20 +66,27 @@ const MailContent: React.FC<MailProps> = ({ recipient }) => {
 }
 ```
 
+#### Register in related module, required for debug-tools to find the mail-template
+
+    providers: [
+        ...
+        MyCustomMail,
+    ]
+
 #### Use MailTemplate
 
 ```typescript
-import { MY_CUSTOM_MAIL_ID, MailProps } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
+import { MyCustomMail } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 
 @Injectable()
 export class MyService {
     constructor(
         private readonly mailTemplateService: MailTemplateService,
-        private readonly productPublishedMail: ProductPublishedMail,
+        private readonly myCustomMail: MyCustomMail,
     ) {}
 
     async sendMail() {
-        await this.mailTemplateService.sendMail(this.productPublishedMail, { ... }); // MailProps
+        await this.mailTemplateService.sendMail(this.myCustomMail, { ... }); // MailProps
     }
 }
 ```
@@ -91,6 +94,6 @@ export class MyService {
 #### Send test-mail
 
 ```shell
-# npm run console mail-template:test [mailTemplateId] [preparedTestPropsIndex]
-npm run console mail-template:test static-mail_my-custom-mail 0
+# npm run console mail-template:test [mailTemplateClassName] [preparedTestPropsIndex]
+npm run console mail-template:test MyCustomMail 0
 ```

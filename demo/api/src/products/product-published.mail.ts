@@ -1,4 +1,4 @@
-import { MailTemplate, MailTemplateInterface, PreparedTestProps } from "@comet/cms-api";
+import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
 
 type MailProps = {
     recipient: { name: string; email: string };
@@ -28,12 +28,12 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         };
     }
 
-    async getPreparedTestProps(): Promise<PreparedTestProps<MailProps>[]> {
+    async getPreparedTestProps() {
         return [
             {
                 props: {
                     recipient: { name: "John Doe", email: "product-manager@comet-dxp.com" },
-                    countProductPublished: "all",
+                    countProductPublished: "all" as const,
                 },
             },
             {
