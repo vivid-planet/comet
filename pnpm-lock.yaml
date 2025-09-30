@@ -366,6 +366,9 @@ importers:
       nest-commander:
         specifier: ^3.17.0
         version: 3.19.0(@nestjs/common@11.1.3(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.3)(@types/inquirer@8.2.12)(@types/node@22.18.0)(typescript@5.8.3)
+      nestjs-cls:
+        specifier: ^6.0.1
+        version: 6.0.1(@nestjs/common@11.1.3(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -779,7 +782,7 @@ importers:
         version: 18.3.1
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.3.0)(@types/react@18.3.24)(react@18.3.1)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.18.0)(@types/react@18.3.24)(react@18.3.1)
       react-dnd-html5-backend:
         specifier: ^16.0.1
         version: 16.0.1
@@ -852,7 +855,7 @@ importers:
         version: 25.0.1
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.13.3)(@types/node@24.3.0)(typescript@5.8.3)
+        version: 10.9.2(@swc/core@1.13.3)(@types/node@22.18.0)(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -35994,19 +35997,6 @@ snapshots:
       '@types/node': 22.18.0
       '@types/react': 18.3.24
 
-  react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.3.0)(@types/react@18.3.24)(react@18.3.1):
-    dependencies:
-      '@react-dnd/invariant': 4.0.2
-      '@react-dnd/shallowequal': 4.0.2
-      dnd-core: 16.0.1
-      fast-deep-equal: 3.1.3
-      hoist-non-react-statics: 3.3.2
-      react: 18.3.1
-    optionalDependencies:
-      '@types/hoist-non-react-statics': 3.3.1
-      '@types/node': 24.3.0
-      '@types/react': 18.3.24
-
   react-docgen-typescript@2.4.0(typescript@5.8.3):
     dependencies:
       typescript: 5.8.3
@@ -37970,6 +37960,7 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.13.3
+    optional: true
 
   tsconfig-paths-webpack-plugin@4.2.0:
     dependencies:

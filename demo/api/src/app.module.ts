@@ -1,5 +1,6 @@
 import {
     AccessLogModule,
+    ActionLogsContextPlugin,
     ActionLogsModule,
     AzureAiTranslatorModule,
     AzureOpenAiContentGenerationModule,
@@ -34,6 +35,7 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/documents/links/links.module";
 import { PagesModule } from "@src/documents/pages/pages.module";
 import { Request } from "express";
+import { ClsModule } from "nestjs-cls";
 
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
@@ -206,7 +208,14 @@ export class AppModule {
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,
-                ActionLogsModule,
+                ClsModule.forRoot({
+                    global: true,
+                    interceptor: {
+                        mount: true,
+                    },
+                    plugins: [new ActionLogsContextPlugin()],
+                }),
+                ActionLogsModule.forRoot(),
             ],
         };
     }

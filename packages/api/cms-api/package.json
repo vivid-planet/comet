@@ -142,6 +142,9 @@
     "peerDependenciesMeta": {
         "@sentry/node": {
             "optional": true
+        },
+        "nestjs-cls": {
+            "optional": true
         }
     },
     "engines": {
