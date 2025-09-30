@@ -61,14 +61,6 @@ services:
             - "127.0.0.1:1025:1025"
             - "127.0.0.1:8025:8025"
 
-    mitmproxy:
-        image: mitmproxy/mitmproxy:12
-        pull_policy: weekly
-        command: mitmweb --mode reverse:http://host.docker.internal:${API_PORT} --listen-port ${API_MITMPROXY_PORT} --web-host 0.0.0.0 --web-port ${MITMPROXY_WEB_INTERFACE_PORT} --no-web-open-browser --set web_password='${MITMPROXY_WEB_PASSWORD}'
-        ports:
-            - "127.0.0.1:${API_MITMPROXY_PORT}:${API_MITMPROXY_PORT}"  # Proxy port
-            - "127.0.0.1:${MITMPROXY_WEB_INTERFACE_PORT}:${MITMPROXY_WEB_INTERFACE_PORT}"  # Web interface port
-
 networks:
     postgres:
         driver: bridge
