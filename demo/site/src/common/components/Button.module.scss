@@ -28,8 +28,9 @@
     border: 1px solid var(--palette-primary-main);
 
     &:hover {
-        background-color: var(--palette-primary-dark);
+        color: var(--palette-primary-dark);
         border-color: var(--palette-primary-dark);
+        background-color: var(--palette-primary-contrastText);
     }
 
     &:disabled {
@@ -45,7 +46,8 @@
     border: 1px solid var(--palette-primary-main);
 
     &:hover {
-        color: var(--palette-primary-dark);
+        background-color: var(--palette-primary-dark);
+        color: var(--palette-primary-contrastText);
         border-color: var(--palette-primary-dark);
     }
 
@@ -59,9 +61,12 @@
     background-color: transparent;
     color: var(--palette-primary-main);
     border: 1px solid transparent;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 
     &:hover {
         color: var(--palette-primary-dark);
+        text-decoration-thickness: 2px;
     }
 
     &:disabled {
