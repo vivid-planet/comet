@@ -10,45 +10,6 @@ export type FormSectionClassKey = "root" | "disableMarginBottom" | "title" | "ch
 
 type OwnerState = Pick<FormSectionProps, "disableMarginBottom">;
 
-const Root = createComponentSlot("div")<FormSectionClassKey, OwnerState>({
-    componentName: "FormSection",
-    slotName: "root",
-    classesResolver(ownerState) {
-        return [ownerState.disableMarginBottom && "disableMarginBottom"];
-    },
-})(
-    ({ theme, ownerState }) => css`
-        ${!ownerState.disableMarginBottom &&
-        css`
-            margin-bottom: ${theme.spacing(12)};
-        `}
-    `,
-);
-
-const Title = createComponentSlot(SectionHeadline)<FormSectionClassKey>({
-    componentName: "FormSection",
-    slotName: "title",
-})(
-    ({ theme }) => css`
-        margin-bottom: ${theme.spacing(4)};
-    `,
-);
-
-// TODO: Remove this slot once the `disableTypography` prop has been removed
-const LegacyTitle = createComponentSlot("div")<FormSectionClassKey>({
-    componentName: "FormSection",
-    slotName: "title",
-})(
-    ({ theme }) => css`
-        margin-bottom: ${theme.spacing(4)};
-    `,
-);
-
-const Children = createComponentSlot("div")<FormSectionClassKey>({
-    componentName: "FormSection",
-    slotName: "children",
-})();
-
 export interface FormSectionProps
     extends ThemedComponentBaseProps<{
         root: "div";
@@ -92,6 +53,45 @@ export function FormSection(inProps: FormSectionProps) {
         </Root>
     );
 }
+
+const Root = createComponentSlot("div")<FormSectionClassKey, OwnerState>({
+    componentName: "FormSection",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.disableMarginBottom && "disableMarginBottom"];
+    },
+})(
+    ({ theme, ownerState }) => css`
+        ${!ownerState.disableMarginBottom &&
+        css`
+            margin-bottom: ${theme.spacing(12)};
+        `}
+    `,
+);
+
+const Title = createComponentSlot(SectionHeadline)<FormSectionClassKey>({
+    componentName: "FormSection",
+    slotName: "title",
+})(
+    ({ theme }) => css`
+        margin-bottom: ${theme.spacing(4)};
+    `,
+);
+
+// TODO: Remove this slot once the `disableTypography` prop has been removed
+const LegacyTitle = createComponentSlot("div")<FormSectionClassKey>({
+    componentName: "FormSection",
+    slotName: "title",
+})(
+    ({ theme }) => css`
+        margin-bottom: ${theme.spacing(4)};
+    `,
+);
+
+const Children = createComponentSlot("div")<FormSectionClassKey>({
+    componentName: "FormSection",
+    slotName: "children",
+})();
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

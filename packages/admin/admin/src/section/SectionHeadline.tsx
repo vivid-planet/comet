@@ -9,67 +9,6 @@ import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 
 export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "headline" | "divider" | "supportText" | "infoTooltip";
 
-const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "root",
-})();
-
-const Header = createComponentSlot("div")<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "header",
-})(
-    () => css`
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-        justify-content: space-between;
-    `,
-);
-
-const TitleContainer = createComponentSlot("div")<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "titleContainer",
-})(
-    () => css`
-        display: flex;
-        align-items: center;
-    `,
-);
-
-const Headline = createComponentSlot(Typography)<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "headline",
-})();
-
-const SupportText = createComponentSlot(Typography)<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "supportText",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.text.secondary};
-    `,
-);
-
-const InfoTooltip = createComponentSlot(Tooltip)<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "infoTooltip",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.text.secondary};
-        margin-left: 10px;
-        font-size: 12px;
-    `,
-);
-
-const StyledDivider = createComponentSlot(Divider)<SectionHeadlineClassKey>({
-    componentName: "SectionHeadline",
-    slotName: "divider",
-})(
-    () => css`
-        margin-top: 10px;
-    `,
-);
-
 export interface SectionHeadlineProps
     extends ThemedComponentBaseProps<{
         root: "div";
@@ -130,6 +69,61 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         </Root>
     );
 }
+
+const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "root",
+})();
+
+const Header = createComponentSlot("div")<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "header",
+})(css`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+`);
+
+const TitleContainer = createComponentSlot("div")<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "titleContainer",
+})(css`
+    display: flex;
+    align-items: center;
+`);
+
+const Headline = createComponentSlot(Typography)<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "headline",
+})();
+
+const SupportText = createComponentSlot(Typography)<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "supportText",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.text.secondary};
+    `,
+);
+
+const InfoTooltip = createComponentSlot(Tooltip)<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "infoTooltip",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.text.secondary};
+        margin-left: 10px;
+        font-size: 12px;
+    `,
+);
+
+const StyledDivider = createComponentSlot(Divider)<SectionHeadlineClassKey>({
+    componentName: "SectionHeadline",
+    slotName: "divider",
+})(css`
+    margin-top: 10px;
+`);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
