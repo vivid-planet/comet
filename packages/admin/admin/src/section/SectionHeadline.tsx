@@ -1,7 +1,7 @@
 import { Info } from "@comet/admin-icons";
 import { type ComponentsOverrides, Divider, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactElement, type ReactNode } from "react";
+import { type ComponentProps, isValidElement, type ReactElement, type ReactNode } from "react";
 
 import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -22,6 +22,10 @@ export interface SectionHeadlineProps
     children: ReactNode;
     divider?: boolean;
     supportText?: ReactNode;
+    infoTooltip?: ReactNode | Omit<ComponentProps<typeof InfoTooltip>, "children">;
+    /*
+     * @deprecated Use the `infoTooltip` prop instead
+     */
     infoTooltipText?: ReactNode;
     iconMapping?: {
         tooltip?: ReactElement;
@@ -33,6 +37,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         children,
         divider,
         supportText,
+        infoTooltip,
         infoTooltipText,
         iconMapping = {},
         slotProps,
@@ -43,6 +48,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
     });
 
     const { tooltip: tooltipIcon = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
+    const infoTooltipProps = getTooltipProps(infoTooltip);
 
     return (
         <Root {...slotProps?.root} {...restProps}>
@@ -51,8 +57,8 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
                     <Headline variant="h4" {...slotProps?.headline}>
                         {children}
                     </Headline>
-                    {(infoTooltipText || slotProps?.infoTooltip?.title !== undefined) && (
-                        <InfoTooltip title={infoTooltipText} {...slotProps?.infoTooltip}>
+                    {(infoTooltipText || infoTooltipProps || slotProps?.infoTooltip?.title !== undefined) && (
+                        <InfoTooltip title={infoTooltipText} {...infoTooltipProps} {...slotProps?.infoTooltip}>
                             {tooltipIcon}
                         </InfoTooltip>
                     )}
@@ -69,6 +75,22 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         </Root>
     );
 }
+
+const getTooltipProps = (infoTooltip: SectionHeadlineProps["infoTooltip"]) => {
+    if (!infoTooltip) return null;
+
+    if (isValidElement(infoTooltip) || typeof infoTooltip === "string") {
+        return {
+            title: infoTooltip,
+        };
+    }
+
+    if (typeof infoTooltip === "object") {
+        return infoTooltip;
+    }
+
+    return null;
+};
 
 const Root = createComponentSlot("div")<SectionHeadlineClassKey>({
     componentName: "SectionHeadline",

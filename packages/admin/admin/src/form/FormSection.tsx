@@ -1,6 +1,6 @@
 import { type ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -19,6 +19,7 @@ export interface FormSectionProps
     children: ReactNode;
     title?: ReactNode;
     disableMarginBottom?: boolean;
+    infoTooltip?: ComponentProps<typeof Title>["infoTooltip"];
     /**
      * @deprecated Use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
      */
@@ -26,7 +27,7 @@ export interface FormSectionProps
 }
 
 export function FormSection(inProps: FormSectionProps) {
-    const { children, title, disableMarginBottom, disableTypography, slotProps, ...restProps } = useThemeProps({
+    const { children, title, disableMarginBottom, disableTypography, slotProps, infoTooltip, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminFormSection",
     });
@@ -42,7 +43,7 @@ export function FormSection(inProps: FormSectionProps) {
                     {disableTypography ? (
                         <LegacyTitle {...slotProps?.title}>{title}</LegacyTitle>
                     ) : (
-                        <Title {...slotProps?.title} divider>
+                        <Title infoTooltip={infoTooltip} {...slotProps?.title} divider>
                             {title}
                         </Title>
                     )}
