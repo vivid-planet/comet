@@ -2094,7 +2094,8 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList"
                             },
                             "nullable": false
                         },
@@ -2157,7 +2158,8 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList"
                             },
                             "nullable": false
                         },
@@ -2417,6 +2419,25 @@
                     ]
                 },
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductList",
+        "fields": [
+            {
+                "name": "products",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "products",
+                "kind": "String",
+                "nullable": false,
+                "array": true
             }
         ]
     },
