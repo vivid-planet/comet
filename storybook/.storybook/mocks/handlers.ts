@@ -7,6 +7,7 @@ import { http, HttpResponse } from "msw";
 
 import { currentUserHandler } from "./currentUserHandler";
 import { fileUploadsHandler } from "./handler/fileUploads";
+import { folderHandler, foldersHandler } from "./handler/folders";
 
 type StringFilter = {
     contains: string;
@@ -160,12 +161,19 @@ type ContentScopeWithLabel {
   label: JSONObject!
 }
 
+type Folder {
+  id: ID!
+  name: String!
+}
+
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
     manufacturers(search: String): [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
     currentUser: CurrentUser!
+    folder(id: ID): Folder
+    folderChildren(id: ID): [Folder!]!
 }
 `;
 
@@ -319,6 +327,8 @@ const graphqlHandler = new GraphQLHandler({
             manufacturers,
             products,
             currentUser: currentUserHandler,
+            folder: folderHandler,
+            folderChildren: foldersHandler,
         },
     },
 
