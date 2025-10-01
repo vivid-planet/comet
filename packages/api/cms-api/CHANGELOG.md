@@ -1,5 +1,20 @@
 # @comet/cms-api
 
+## 8.3.0
+
+### Minor Changes
+
+- 78b7703: Export additional types for UserPermissions
+    - `ContentScopeWithLabel`
+    - `PermissionForUser` (`PermissionsForUser` is already exported)
+
+- 99950fa: Add new GraphQL to MikroORM helper: `gqlSortToMikroOrmOrderBy`, used by API Generator
+
+### Patch Changes
+
+- 613bc13: Warnings Module: fix `@ScopedEntity()` checks
+- 4a9938a: Warnings Module: make warnings feature truly optional
+
 ## 8.2.0
 
 ### Minor Changes

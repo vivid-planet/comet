@@ -15,14 +15,14 @@ import {
 import {
     type GQLCreateProductCategoryMutation,
     type GQLCreateProductCategoryMutationVariables,
-    type GQLProductCategoryFormFragment,
+    type GQLProductCategoryFormHandmadeFragment,
     type GQLProductCategoryQuery,
     type GQLProductCategoryQueryVariables,
     type GQLUpdateProductCategoryMutation,
     type GQLUpdateProductCategoryMutationVariables,
 } from "./ProductCategoryForm.gql.generated";
 
-type FormValues = GQLProductCategoryFormFragment;
+type FormValues = GQLProductCategoryFormHandmadeFragment;
 interface FormProps {
     id?: string;
 }
@@ -39,7 +39,7 @@ export function ProductCategoryForm({ id }: FormProps) {
         () =>
             data?.productCategory
                 ? {
-                      ...filterByFragment<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
+                      ...filterByFragment<GQLProductCategoryFormHandmadeFragment>(productCategoryFormFragment, data.productCategory),
                   }
                 : {},
         [data],

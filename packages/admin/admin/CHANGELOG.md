@@ -1,5 +1,58 @@
 # @comet/admin
 
+## 8.3.0
+
+### Minor Changes
+
+- 422328b: Add backgroundImage to FullPageAlert
+- 1bd73a0: Implement NoContentScopeFallback component according to design specifications
+- ae1dbab: Add `description` and `customContent` props to `Tooltip`
+
+    `description` is intended to be used together with `title` to simplify creating detailed tooltips that match the Comet design:
+
+    ```diff
+     <Tooltip
+    -    title={
+    -        <>
+    -            <Typography variant="subtitle2">Tooltip Title</Typography>
+    -            <Typography variant="body2">This is a detailed description of what's going on.</Typography>
+    -        </>
+    -    }
+    -    sx={{ width: 180 }}
+    +    title="Tooltip Title"
+    +    description="This is a detailed description of what's going on."
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+    `customContent` is an alternative to `title` and `description` for use-cases that require custom elements or styling:
+
+    ```tsx
+    <Tooltip customContent={<SomethingCustom />}>
+        <Info />
+    </Tooltip>
+    ```
+
+### Patch Changes
+
+- ae1dbab: Adjust styling of `Tooltip` to match the Comet design
+- becc06c: The title of `FormSection` now matches the Comet design
+
+    The prop `disableTypography` has been deprecated, use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
+
+- 12e9230: Prevent labels from overlaying and inconsistent spacings of fields
+
+    This affects `CheckboxField`, `CheckboxListField`, `RadioGroupField`, and `SwitchField`.
+
+- 6f30126: SelectField / FinalFormSelect: hide the clear button when the field is disabled
+- d682135: AsyncAutocompleteField: fix inferred option type, commonly used in getOptionLabel
+- becc06c: Deprecate `SectionHeadline`
+
+    The component is only meant to be used internally, inside `FormSection`.
+    Use the `FormSection` component with it's `title` prop to create sections in forms.
+    - @comet/admin-icons@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

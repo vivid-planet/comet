@@ -389,6 +389,7 @@ export function generateGrid<T extends { __typename?: string }>(
         let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
         let valueFormatter: string | undefined = undefined;
+        let valueGetter = name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
@@ -404,8 +405,14 @@ export function generateGrid<T extends { __typename?: string }>(
 
         if (type == "dateTime") {
             gridColumnType = "...dataGridDateTimeColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "date") {
             gridColumnType = "...dataGridDateColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "number") {
             gridType = "number";
             const defaultDecimals = column.currency ? 2 : 0;
@@ -545,7 +552,7 @@ export function generateGrid<T extends { __typename?: string }>(
             gridType,
             columnType: gridColumnType,
             renderCell,
-            valueGetter: name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined,
+            valueGetter,
             filterOperators: filterOperators,
             valueFormatter,
             width: column.width,

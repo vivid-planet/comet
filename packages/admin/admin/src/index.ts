@@ -207,7 +207,12 @@ export {
     useSaveBoundaryState,
 } from "./saveBoundary/SaveBoundary";
 export { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
-export { SectionHeadline, SectionHeadlineClassKey, SectionHeadlineProps } from "./section/SectionHeadline";
+export {
+    /** @deprecated Use the `FormSection` component with it's `title` prop to create sections in forms. SectionHeadline is only meant for internal use. */
+    SectionHeadline,
+    SectionHeadlineClassKey,
+    SectionHeadlineProps,
+} from "./section/SectionHeadline";
 export { Selected } from "./Selected";
 export { ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
 export { ISelectionApi } from "./SelectionApi";

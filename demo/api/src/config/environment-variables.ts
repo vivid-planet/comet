@@ -23,9 +23,8 @@ export class EnvironmentVariables {
     @IsString()
     POSTGRESQL_DB: string;
 
-    @IsOptional()
     @IsString()
-    POSTGRESQL_USER?: string;
+    POSTGRESQL_USER: string;
 
     @IsString()
     POSTGRESQL_PWD: string;
