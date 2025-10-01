@@ -1,6 +1,6 @@
 import { type ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -9,6 +9,51 @@ import { SectionHeadline } from "../section/SectionHeadline";
 export type FormSectionClassKey = "root" | "disableMarginBottom" | "title" | "children";
 
 type OwnerState = Pick<FormSectionProps, "disableMarginBottom">;
+
+export interface FormSectionProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        title: typeof SectionHeadline;
+        children: "div";
+    }> {
+    children: ReactNode;
+    title?: ReactNode;
+    disableMarginBottom?: boolean;
+    infoTooltip?: ComponentProps<typeof Title>["infoTooltip"];
+    /**
+     * @deprecated Use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
+     */
+    disableTypography?: boolean;
+}
+
+export function FormSection(inProps: FormSectionProps) {
+    const { children, title, disableMarginBottom, disableTypography, slotProps, infoTooltip, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFormSection",
+    });
+
+    const ownerState: OwnerState = {
+        disableMarginBottom,
+    };
+
+    return (
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            {title && (
+                <>
+                    {disableTypography ? (
+                        <LegacyTitle {...slotProps?.title}>{title}</LegacyTitle>
+                    ) : (
+                        <Title infoTooltip={infoTooltip} divider {...slotProps?.title}>
+                            {title}
+                        </Title>
+                    )}
+                </>
+            )}
+
+            <Children {...slotProps?.children}>{children}</Children>
+        </Root>
+    );
+}
 
 const Root = createComponentSlot("div")<FormSectionClassKey, OwnerState>({
     componentName: "FormSection",
@@ -48,50 +93,6 @@ const Children = createComponentSlot("div")<FormSectionClassKey>({
     componentName: "FormSection",
     slotName: "children",
 })();
-
-export interface FormSectionProps
-    extends ThemedComponentBaseProps<{
-        root: "div";
-        title: typeof SectionHeadline;
-        children: "div";
-    }> {
-    children: ReactNode;
-    title?: ReactNode;
-    disableMarginBottom?: boolean;
-    /**
-     * @deprecated Use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
-     */
-    disableTypography?: boolean;
-}
-
-export function FormSection(inProps: FormSectionProps) {
-    const { children, title, disableMarginBottom, disableTypography, slotProps, ...restProps } = useThemeProps({
-        props: inProps,
-        name: "CometAdminFormSection",
-    });
-
-    const ownerState: OwnerState = {
-        disableMarginBottom,
-    };
-
-    return (
-        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            {title && (
-                <>
-                    {disableTypography ? (
-                        <LegacyTitle {...slotProps?.title}>{title}</LegacyTitle>
-                    ) : (
-                        <Title {...slotProps?.title} divider>
-                            {title}
-                        </Title>
-                    )}
-                </>
-            )}
-
-            <Children {...slotProps?.children}>{children}</Children>
-        </Root>
-    );
-}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
