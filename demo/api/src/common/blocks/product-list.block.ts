@@ -1,21 +1,16 @@
 import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
+import { ProductType } from "@src/products/entities/product-type.enum";
 import { IsEnum } from "class-validator";
 
-export enum ProductList {
-    cap = "cap",
-    shirt = "shirt",
-    tie = "tie",
-}
-
 class ProductListBlockData extends BlockData {
-    @BlockField({ type: "enum", enum: ProductList, array: true })
-    products: ProductList[];
+    @BlockField({ type: "enum", enum: ProductType, array: true })
+    products: ProductType[];
 }
 
 class ProductListBlockInput extends BlockInput {
-    @IsEnum(ProductList, { each: true })
-    @BlockField({ type: "enum", enum: ProductList, array: true })
-    products: ProductList[];
+    @IsEnum(ProductType, { each: true })
+    @BlockField({ type: "enum", enum: ProductType, array: true })
+    products: ProductType[];
 
     transformToBlockData(): ProductListBlockData {
         return blockInputToData(ProductListBlockData, this);
