@@ -87,6 +87,8 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
             sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 
+            daysToKeepMailLog: 90,
+
             transport: {
                 host: envVars.MAILER_HOST,
                 port: envVars.MAILER_PORT,

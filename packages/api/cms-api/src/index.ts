@@ -217,6 +217,7 @@ export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
+export { MailerLog } from "./mailer/entities/mailer-log.entity";
 export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
 export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
 export { MailerService } from "./mailer/mailer.service";

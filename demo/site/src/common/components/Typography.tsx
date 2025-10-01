@@ -20,7 +20,7 @@ export type TypographyProps<T extends ElementType> = {
     as?: T;
     variant?: TypographyVariant;
     bottomSpacing?: boolean;
-} & ComponentProps<T>;
+} & Omit<ComponentProps<T>, "variant">;
 
 export const Typography = <T extends ElementType = "p">(props: PropsWithChildren<TypographyProps<T>>) => {
     const { as, variant = "p300", bottomSpacing = false, className, children, ...restProps } = props;
