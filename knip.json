@@ -67,7 +67,7 @@
         "packages/api/cms-api": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./src/**/migrations/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@sentry/node"]
+            "ignoreDependencies": ["@sentry/node", "nestjs-cls"]
         },
         "packages/api/api-generator": {
             "entry": ["./src/apiGenerator.ts"],
