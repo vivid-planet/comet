@@ -4,13 +4,13 @@ import { IsEnum } from "class-validator";
 
 class ProductListBlockData extends BlockData {
     @BlockField({ type: "enum", enum: ProductType, array: true })
-    products: ProductType[];
+    types: ProductType[];
 }
 
 class ProductListBlockInput extends BlockInput {
     @IsEnum(ProductType, { each: true })
     @BlockField({ type: "enum", enum: ProductType, array: true })
-    products: ProductType[];
+    types: ProductType[];
 
     transformToBlockData(): ProductListBlockData {
         return blockInputToData(ProductListBlockData, this);

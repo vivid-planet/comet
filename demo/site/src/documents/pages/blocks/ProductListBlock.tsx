@@ -3,12 +3,12 @@ import { type ProductListBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 
 export const ProductListBlock = withPreview(
-    ({ data: { products } }: PropsWithData<ProductListBlockData>) => {
+    ({ data: { types } }: PropsWithData<ProductListBlockData>) => {
         return (
             <PageLayout grid>
                 <ul>
-                    {products.map((product, index) => (
-                        <li key={index}>{product}</li>
+                    {types.map((type, index) => (
+                        <li key={index}>{type}</li>
                     ))}
                 </ul>
             </PageLayout>

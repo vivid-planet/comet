@@ -2426,7 +2426,7 @@
         "name": "ProductList",
         "fields": [
             {
-                "name": "products",
+                "name": "types",
                 "kind": "Enum",
                 "enum": [
                     "cap",
@@ -2439,7 +2439,7 @@
         ],
         "inputFields": [
             {
-                "name": "products",
+                "name": "types",
                 "kind": "Enum",
                 "enum": [
                     "cap",

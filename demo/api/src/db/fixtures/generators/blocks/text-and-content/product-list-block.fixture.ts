@@ -10,7 +10,7 @@ export class ProductListBlockFixtureService {
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof ProductListBlock>> {
         return {
-            products: faker.helpers.arrayElements(Object.values(ProductType)),
+            types: faker.helpers.arrayElements(Object.values(ProductType)),
         };
     }
 }
