@@ -4,4 +4,4 @@
 "@comet/cli": minor
 ---
 
-Support for enum arrays in `BlockFieldOptions` and the `generate-block-types` generator to allow fields to be defined as arrays of enums
+Add support for literal arrays to block meta
