@@ -7,8 +7,8 @@ export const ProductListBlock = withPreview(
         return (
             <PageLayout grid>
                 <ul>
-                    {(Array.isArray(products) ? products : [products]).map((product) => (
-                        <li key={product.key}>{product}</li>
+                    {products.map((product, index) => (
+                        <li key={index}>{product}</li>
                     ))}
                 </ul>
             </PageLayout>
