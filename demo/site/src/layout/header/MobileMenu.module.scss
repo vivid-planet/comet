@@ -11,7 +11,6 @@
 }
 
 .menuButton {
-    padding: 0;
     width: 24px;
     height: 24px;
 }
@@ -72,7 +71,6 @@
     text-decoration: none;
     display: inline-block;
     padding: var(--spacing-s500) 0;
-    font-family: var(--font-family);
     color: var(--palette-text-primary);
 
     @media (min-width: $breakpoint-sm) {
@@ -82,7 +80,7 @@
     }
 }
 
-.buttonBase {
+%buttonBase {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -96,19 +94,19 @@
     }
 }
 
-.menuButton {
-    @extend .buttonBase;
+.menuItemButton {
+    @extend %buttonBase;
     justify-content: space-between;
 }
 
 .backButton {
-    @extend .buttonBase;
+    @extend %buttonBase;
     align-items: center;
     border-bottom: 1px solid var(--palette-gray-300);
 }
 
 .overviewButton {
-    @extend .buttonBase;
+    @extend %buttonBase;
     align-items: center;
     text-decoration: none;
     color: var(--palette-text-primary);

@@ -81,7 +81,7 @@ export const MobileMenu = ({ menu }: Props) => {
                                         <li key={node.id}>
                                             {node.node.childNodes.length > 0 ? (
                                                 <button
-                                                    className={styles.menuButton}
+                                                    className={styles.menuItemButton}
                                                     aria-label={intl.formatMessage(
                                                         {
                                                             id: "header.subMenu.arialLabel",

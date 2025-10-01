@@ -21,9 +21,9 @@ type FinalFormAsyncAutocompleteInternalProps<T extends Record<string, any>> = Fi
  */
 export function FinalFormAsyncAutocomplete<
     T extends Record<string, any>,
-    Multiple extends boolean | undefined,
-    DisableClearable extends boolean | undefined,
-    FreeSolo extends boolean | undefined,
+    Multiple extends boolean | undefined = false,
+    DisableClearable extends boolean | undefined = false,
+    FreeSolo extends boolean | undefined = false,
 >({ loadOptions, ...rest }: FinalFormAsyncAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAsyncAutocompleteInternalProps<T>) {
     return (
         <FinalFormAutocomplete<T, Multiple, DisableClearable, FreeSolo>
