@@ -37,7 +37,7 @@ export class ProductVariantsService {
         product: string;
     }): FilterQuery<ProductVariant> {
         return {
-            product: { $eq: group.product }
+            product: group.product
         };
     }
 }
