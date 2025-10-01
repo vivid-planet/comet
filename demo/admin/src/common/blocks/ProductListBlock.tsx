@@ -2,7 +2,7 @@ import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/cm
 import { type ProductListBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
-const options = [
+const options: { value: ProductListBlockData["products"]; label: JSX.Element }[] = [
     {
         value: "cap",
         label: <FormattedMessage id="cap" defaultMessage="Cap" />,
@@ -23,7 +23,7 @@ export const ProductListBlock = createCompositeBlock({
     blocks: {
         products: {
             block: createCompositeBlockSelectField<ProductListBlockData["products"]>({
-                defaultValue: [],
+                defaultValue: "cap",
                 label: <FormattedMessage id="productListBlock.products" defaultMessage="Products" />,
                 options: options,
                 multiple: true,
