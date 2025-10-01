@@ -82,9 +82,6 @@ export const WithObjectOptions: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -143,9 +140,6 @@ export const MultipleSelect: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -203,9 +197,6 @@ export const LongLoading: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -273,9 +264,6 @@ export const AsyncAutocompleteLoadingDataFromApi: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -324,9 +312,6 @@ export const ErrorLoadingOptions: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -375,9 +360,6 @@ export const ErrorLoadingOptionsWithCustomErrorText: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                                 errorText={

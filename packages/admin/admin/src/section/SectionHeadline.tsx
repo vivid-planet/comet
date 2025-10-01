@@ -112,7 +112,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
                     <Headline variant="h4" {...slotProps?.headline}>
                         {children}
                     </Headline>
-                    {infoTooltipText && (
+                    {(infoTooltipText || slotProps?.infoTooltip?.title !== undefined) && (
                         <InfoTooltip title={infoTooltipText} {...slotProps?.infoTooltip}>
                             {tooltipIcon}
                         </InfoTooltip>

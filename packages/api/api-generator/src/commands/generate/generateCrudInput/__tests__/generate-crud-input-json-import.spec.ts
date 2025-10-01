@@ -60,7 +60,7 @@ describe("GenerateCrudInputJsonImport", () => {
 
         expect(formattedOut).toMatchSnapshot();
 
-        orm.close();
+        await orm.close();
     });
     it("should generate import for array class property", async () => {
         LazyMetadataStorage.load();
@@ -80,7 +80,7 @@ describe("GenerateCrudInputJsonImport", () => {
 
         expect(formattedOut).toMatchSnapshot();
 
-        orm.close();
+        await orm.close();
     });
 
     it("should generate import for type property", async () => {
@@ -101,7 +101,7 @@ describe("GenerateCrudInputJsonImport", () => {
 
         expect(formattedOut).toMatchSnapshot();
 
-        orm.close();
+        await orm.close();
     });
 
     it("should generate import for array type property", async () => {
@@ -122,6 +122,6 @@ describe("GenerateCrudInputJsonImport", () => {
 
         expect(formattedOut).toMatchSnapshot();
 
-        orm.close();
+        await orm.close();
     });
 });

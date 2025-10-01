@@ -3,15 +3,8 @@
 import { gql } from "@apollo/client";
 export const newsFormFragment = gql`
         fragment NewsForm on News {
-            slug
-title
-date
-category
-image
-content
+            slug title date category image content
         }
-        
-        
     `;
 export const newsQuery = gql`
             query News($id: ID!) {

@@ -8,5 +8,6 @@ export default defineConfig<GQLProductCategory>({
     fields: [
         { type: "text", name: "title" },
         { type: "text", name: "slug" },
+        { type: "asyncSelect", name: "type", rootQuery: "productCategoryTypes" },
     ],
 });

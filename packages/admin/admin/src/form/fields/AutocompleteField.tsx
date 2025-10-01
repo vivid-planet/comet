@@ -10,9 +10,9 @@ export type AutocompleteFieldProps<
 
 export function AutocompleteField<
     T extends Record<string, any>,
-    Multiple extends boolean | undefined,
-    DisableClearable extends boolean | undefined,
-    FreeSolo extends boolean | undefined,
+    Multiple extends boolean | undefined = false,
+    DisableClearable extends boolean | undefined = false,
+    FreeSolo extends boolean | undefined = false,
 >(props: AutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
     return <Field component={FinalFormAutocomplete} {...props} />;
 }
