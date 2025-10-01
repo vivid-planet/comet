@@ -1,3 +1,7 @@
+.root {
+    position: relative;
+}
+
 .video {
     width: 100%;
     object-fit: cover;
@@ -6,4 +10,10 @@
 
 .fill {
     height: 100%;
+}
+
+.playPause {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
 }
