@@ -1,5 +1,5 @@
 import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
-import { IsArray, IsEnum } from "class-validator";
+import { IsEnum } from "class-validator";
 
 export enum ProductList {
     cap = "cap",
@@ -13,7 +13,6 @@ class ProductListBlockData extends BlockData {
 }
 
 class ProductListBlockInput extends BlockInput {
-    @IsArray()
     @IsEnum(ProductList, { each: true })
     @BlockField({ type: "enum", enum: ProductList, array: true })
     products: ProductList[];
