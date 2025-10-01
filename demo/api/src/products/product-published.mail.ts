@@ -23,7 +23,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
                 ${
                     props.countProductPublished === "all"
                         ? "<p>All products have been published</p>"
-                        : `<p>${props.countProductPublished} products have been published<p>`
+                        : `<p>${props.countProductPublished} products have been published</p>`
                 }`,
         };
     }
