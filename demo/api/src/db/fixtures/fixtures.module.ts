@@ -42,6 +42,7 @@ import { BillboardTeaserBlockFixtureService } from "./generators/blocks/teaser/b
 import { TeaserBlockFixtureService } from "./generators/blocks/teaser/teaser-block-fixture.service";
 import { HeadingBlockFixtureService } from "./generators/blocks/text-and-content/heading-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "./generators/blocks/text-and-content/key-facts-block-fixture.service";
+import { ProductListBlockFixtureService } from "./generators/blocks/text-and-content/product-list-block.fixture";
 import { RichTextBlockFixtureService } from "./generators/blocks/text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "./generators/blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./generators/blocks/text-and-content/text-image-block-fixture.service";
@@ -114,6 +115,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         VimeoVideoBlockFixtureService,
         YouTubeVideoBlockFixtureService,
         NewsFixtureService,
+        ProductListBlockFixtureService,
     ],
 })
 export class FixturesModule {}
