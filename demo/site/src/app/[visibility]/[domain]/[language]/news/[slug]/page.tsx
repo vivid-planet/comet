@@ -11,11 +11,10 @@ import { Content } from "./content";
 import { fragment } from "./fragment";
 import { type GQLNewsDetailPageQuery, type GQLNewsDetailPageQueryVariables } from "./page.generated";
 
-export default async function NewsDetailPage({
-    params: { domain, language, slug, visibility },
-}: {
-    params: { domain: string; language: string; slug: string; visibility: VisibilityParam };
-}) {
+type Params = Promise<{ domain: string; language: string; slug: string; visibility: VisibilityParam }>;
+
+export default async function NewsDetailPage({ params }: { params: Params }) {
+    const { domain, language, slug, visibility } = await params;
     setVisibilityParam(visibility);
     const graphqlFetch = createGraphQLFetch();
 
