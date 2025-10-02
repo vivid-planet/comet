@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-nextjs",
-    "version": "8.2.0",
+    "version": "8.3.0",
     "description": "Comet Site Next.js package",
     "repository": {
         "type": "git",
@@ -38,7 +38,6 @@
         "@comet/site-react": "workspace:*",
         "clsx": "^2.1.1",
         "jose": "^5.10.0",
-        "rimraf": "^3.0.2",
         "server-only": "^0.0.1"
     },
     "devDependencies": {
@@ -54,10 +53,11 @@
         "jest-environment-jsdom": "^29.7.0",
         "jest-junit": "^16.0.0",
         "next": "^14.2.30",
-        "npm-run-all2": "^5.0.2",
+        "npm-run-all2": "^8.0.0",
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
+        "rimraf": "^6.0.1",
         "rollup": "^4.44.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass": "^1.89.2",

@@ -196,7 +196,7 @@ class CoreErrorBoundary extends Component<ErrorBoundaryProps, IErrorBoundaryStat
                                     {error != null && error.toString()}
                                 </ExceptionSummaryTitle>
                             </ExceptionSummary>
-                            <ExceptionStackTrace {...slotProps?.exceptionStackTrace}>{errorInfo.componentStack}__</ExceptionStackTrace>
+                            <ExceptionStackTrace {...slotProps?.exceptionStackTrace}>{errorInfo.componentStack}</ExceptionStackTrace>
                         </ExceptionDetails>
                     )}
                 </Alert>
