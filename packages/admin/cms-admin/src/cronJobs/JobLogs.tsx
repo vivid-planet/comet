@@ -1,34 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { Loading, StackPageTitle } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { type GQLKubernetesJobWithLogsQuery, type GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
-
-function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string | null } }) {
-    const { kubernetesJob } = props;
-    if (!kubernetesJob) {
-        return null;
-    }
-
-    return (
-        <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
-            <ToolbarBackButton />
-            <ToolbarTitleItem>
-                <FormattedMessage
-                    id="comet.jobLogs.title"
-                    defaultMessage="Job logs for {job}"
-                    values={{
-                        job: kubernetesJob.label ? `${kubernetesJob.label} (${kubernetesJob.name})` : kubernetesJob.name,
-                    }}
-                />
-            </ToolbarTitleItem>
-            <FillSpace />
-        </Toolbar>
-    );
-}
 
 const LogsContainer = styled("pre")`
     margin: 0;
@@ -66,23 +42,31 @@ export function JobLogs(props: { jobName: string }) {
 
     return (
         <>
-            <JobLogsToolbar kubernetesJob={job} />
-            <MainContent>
-                {logs ? (
-                    <Box paddingLeft={4}>
-                        <LogsContainer>{logs}</LogsContainer>
-                    </Box>
-                ) : (
-                    <Box padding={4}>
-                        <Typography>
-                            <FormattedMessage
-                                id="comet.cronJobs.noLogs"
-                                defaultMessage="No logs available. You may consider checking external logging tools if available."
-                            />
-                        </Typography>
-                    </Box>
-                )}
-            </MainContent>
+            <StackPageTitle
+                title={
+                    <FormattedMessage
+                        id="comet.jobLogs.title"
+                        defaultMessage="Job logs for {job}"
+                        values={{
+                            job: job?.label ? `${job?.label} (${job?.name})` : job?.name,
+                        }}
+                    />
+                }
+            />
+            {logs ? (
+                <Box paddingLeft={4}>
+                    <LogsContainer>{logs}</LogsContainer>
+                </Box>
+            ) : (
+                <Box padding={4}>
+                    <Typography>
+                        <FormattedMessage
+                            id="comet.cronJobs.noLogs"
+                            defaultMessage="No logs available. You may consider checking external logging tools if available."
+                        />
+                    </Typography>
+                </Box>
+            )}
         </>
     );
 }

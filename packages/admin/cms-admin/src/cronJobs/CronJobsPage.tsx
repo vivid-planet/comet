@@ -1,4 +1,4 @@
-import { MainContent, Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import { MainContent, Stack, StackPage, StackSwitch, StackToolbar, ToolbarAutomaticTitleItem, ToolbarBackButton } from "@comet/admin";
 import { useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
@@ -24,7 +24,19 @@ export function CronJobsPage() {
                             <StackPage name="grid">
                                 <JobsGrid cronJob={selectedCronJobName} />
                             </StackPage>
-                            <StackPage name="logs">{(selectedJobName) => <JobLogs jobName={selectedJobName} />}</StackPage>
+                            <StackPage name="logs">
+                                {(selectedJobName) => (
+                                    <>
+                                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                                            <ToolbarBackButton />
+                                            <ToolbarAutomaticTitleItem />
+                                        </StackToolbar>
+                                        <MainContent>
+                                            <JobLogs jobName={selectedJobName} />
+                                        </MainContent>
+                                    </>
+                                )}
+                            </StackPage>
                         </StackSwitch>
                     )}
                 </StackPage>
