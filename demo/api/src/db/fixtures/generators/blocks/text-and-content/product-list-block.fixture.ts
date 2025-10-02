@@ -1,7 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { ProductListBlock } from "@src/common/blocks/product-list.block";
+import { ProductListBlock } from "@src/products/blocks/product-list.block";
 import { ProductType } from "@src/products/entities/product-type.enum";
 
 @Injectable()
