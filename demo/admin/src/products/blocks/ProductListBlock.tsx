@@ -22,8 +22,8 @@ export const ProductListBlock = createCompositeBlock({
     displayName: <FormattedMessage id="productListBlock.displayName" defaultMessage="Product List" />,
     blocks: {
         products: {
-            block: createCompositeBlockSelectField<ProductListBlockData["types"][number]>({
-                defaultValue: "cap",
+            block: createCompositeBlockSelectField<ProductListBlockData["types"]>({
+                defaultValue: ["cap"],
                 label: <FormattedMessage id="productListBlock.products" defaultMessage="Products" />,
                 options: options,
                 multiple: true,
