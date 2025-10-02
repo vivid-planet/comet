@@ -1,14 +1,16 @@
 "use client";
 
 import { type PropsWithData, usePreview } from "@comet/site-react";
-import { cloneElement, type MouseEventHandler, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type MouseEventHandler, type ReactElement } from "react";
 
 import { type ExternalLinkBlockData } from "../blocks.generated";
 import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
-    children: ReactElement;
+    children: ReactElement<
+        Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "onClick" | "target" | "title">
+    >;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;

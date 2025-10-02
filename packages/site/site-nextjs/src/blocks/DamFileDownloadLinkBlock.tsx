@@ -1,12 +1,12 @@
 "use client";
 
 import { type PropsWithData, withPreview } from "@comet/site-react";
-import { cloneElement, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
 import { type DamFileDownloadLinkBlockData } from "../blocks.generated";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
-    children: ReactElement;
+    children: ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "target" | "title">>;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;

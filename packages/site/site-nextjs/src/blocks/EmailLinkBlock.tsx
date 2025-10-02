@@ -1,10 +1,10 @@
 import { type PropsWithData } from "@comet/site-react";
-import { cloneElement, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
 import { type EmailLinkBlockData } from "../blocks.generated";
 
 interface EmailLinkBlockProps extends PropsWithData<EmailLinkBlockData> {
-    children: ReactElement;
+    children: ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
