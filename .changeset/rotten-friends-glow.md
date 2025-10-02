@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Fix layout of `CronjobsPage`
+Fix layout of `CronJobsPage`
