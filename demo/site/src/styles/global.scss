@@ -34,15 +34,7 @@
     --functional-highlight-main: #d817fa;
     --common-black: #000;
     --common-white: #fff;
-    --font-family-headlines: Arial, sans-serif;
-    --font-family-eyebrows: Arial, sans-serif;
-    --font-family-paragraphs: Arial, sans-serif;
-    --font-family-buttons: Arial, sans-serif;
-    --font-weight-headlines: bold;
-    --font-weight-eyebrows: bold;
-    --font-weight-paragraphs-regular: normal;
-    --font-weight-paragraphs-bold: bold;
-    --font-weight-buttons: bold;
+    --font-family: Arial, sans-serif;
     --spacing-d400: 72px;
     --spacing-d300: 44px;
     --spacing-d200: 28px;
@@ -95,7 +87,7 @@ html {
 
 body {
     margin: 0;
-    font-family: var(--font-family-paragraphs);
+    font-family: var(--font-family);
 
     /* Improve text rendering with font-smoothing */
     -webkit-font-smoothing: antialiased;
