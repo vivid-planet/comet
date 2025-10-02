@@ -2,9 +2,10 @@
 
 import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
+import { PlayPauseButton } from "./helpers/PlayPauseButton";
 import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import styles from "./YouTubeVideoBlock.module.scss";
 
@@ -39,6 +40,7 @@ export const YouTubeVideoBlock = withPreview(
         playButtonAriaLabel,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
+        const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const iframeRef = useRef<HTMLIFrameElement>(null);
         const inViewRef = useRef<HTMLDivElement>(null);
@@ -51,15 +53,21 @@ export const YouTubeVideoBlock = withPreview(
             iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
         };
 
-        useIsElementInViewport(inViewRef, (inView: boolean) => {
-            if (autoplay) {
-                if (inView) {
-                    playYouTubeVideo();
-                } else {
-                    pauseYouTubeVideo();
+        const handleInView = useCallback(
+            (inView: boolean) => {
+                if (autoplay) {
+                    if (inView && isHandledManually) {
+                        playYouTubeVideo();
+                        setIsHandledManually(true);
+                    } else {
+                        pauseYouTubeVideo();
+                    }
                 }
-            }
-        });
+            },
+            [autoplay, isHandledManually],
+        );
+
+        useIsElementInViewport(inViewRef, handleInView);
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -72,7 +80,7 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("enablejsapi", "1");
 
         // start playing the video when the preview image has been hidden
-        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
+        if ((hasPreviewImage && !showPreviewImage) || !hasPreviewImage) searchParams.append("autoplay", "1");
 
         if (autoplay) searchParams.append("mute", "1");
 
@@ -115,6 +123,21 @@ export const YouTubeVideoBlock = withPreview(
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.youtubeContainer} allow="autoplay" src={youtubeUrl.toString()} />
+                        {!showControls && (
+                            <PlayPauseButton
+                                className={styles.playPause}
+                                isPlaying={!isHandledManually}
+                                onClick={() => {
+                                    if (isHandledManually) {
+                                        pauseYouTubeVideo();
+                                        setIsHandledManually(false);
+                                    } else {
+                                        playYouTubeVideo();
+                                        setIsHandledManually(true);
+                                    }
+                                }}
+                            />
+                        )}
                     </div>
                 )}
             </>
