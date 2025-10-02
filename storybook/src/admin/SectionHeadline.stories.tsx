@@ -39,7 +39,7 @@ export const InfoTooltipExamples = () => {
                 infoTooltip={{
                     title: "Hello",
                     description: "Lorem ipsum",
-                    variant: "light",
+                    color: "light",
                 }}
             >
                 Using infoTooltip prop, using object for title, description and variant
