@@ -32,7 +32,6 @@
     --functional-success-dark: #488938;
     --functional-success-contrastText: #000;
     --functional-highlight-main: #d817fa;
-    --font-family: Arial, sans-serif;
     --spacing-d400: 72px;
     --spacing-d300: 44px;
     --spacing-d200: 28px;
@@ -85,7 +84,7 @@ html {
 
 body {
     margin: 0;
-    font-family: var(--font-family);
+    font-family: Arial, sans-serif;
 
     /* Improve text rendering with font-smoothing */
     -webkit-font-smoothing: antialiased;
