@@ -152,25 +152,19 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             </FormSection>
                             <FormSection
                                 title={<FormattedMessage id="comet.userPermissions.validityDuration" defaultMessage="Validity duration" />}
-                                slotProps={{
-                                    title: {
-                                        slotProps: {
-                                            infoTooltip: {
-                                                title: (
-                                                    <FormattedMessage
-                                                        id="comet.userPermission.validityDuration.tooltip.title"
-                                                        defaultMessage="Validity duration"
-                                                    />
-                                                ),
-                                                description: (
-                                                    <FormattedMessage
-                                                        id="comet.userPermission.validityDuration.tooltip.content"
-                                                        defaultMessage="Leave empty for unlimited validity"
-                                                    />
-                                                ),
-                                            },
-                                        },
-                                    },
+                                infoTooltip={{
+                                    title: (
+                                        <FormattedMessage
+                                            id="comet.userPermission.validityDuration.tooltip.title"
+                                            defaultMessage="Validity duration"
+                                        />
+                                    ),
+                                    description: (
+                                        <FormattedMessage
+                                            id="comet.userPermission.validityDuration.tooltip.content"
+                                            defaultMessage="Leave empty for unlimited validity"
+                                        />
+                                    ),
                                 }}
                             >
                                 <DatePickerField
