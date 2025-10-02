@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 8.4.0
+
+### Minor Changes
+
+- c8f5d89: Add support for literal arrays to block meta
+
+### Patch Changes
+
+- bdfb64f: Fix file replacement by id
+
 ## 8.3.0
 
 ### Minor Changes
