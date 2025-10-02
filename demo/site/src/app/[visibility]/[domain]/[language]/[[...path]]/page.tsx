@@ -33,15 +33,16 @@ const documentTypeQuery = gql`
 `;
 
 async function fetchPageTreeNode(params: PageProps["params"]) {
-    const siteConfig = getSiteConfigForDomain(params.domain);
+    const { domain, language, path: pathParam } = await params;
+    const siteConfig = getSiteConfigForDomain(domain);
 
     // Redirects are scoped by domain only, not by language.
     // If the language param isn't a valid language, it may still be the first segment of a redirect source.
     // In that case we skip resolving page and only check if the path is a redirect source.
-    const skipPage = !siteConfig.scope.languages.includes(params.language);
+    const skipPage = !siteConfig.scope.languages.includes(language);
 
-    const path = `/${(params.path ?? []).join("/")}`;
-    const { scope } = { scope: { domain: params.domain, language: params.language } };
+    const path = `/${(pathParam ?? []).join("/")}`;
+    const { scope } = { scope: { domain, language } };
     const graphQLFetch = createGraphQLFetch();
 
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
@@ -50,20 +51,23 @@ async function fetchPageTreeNode(params: PageProps["params"]) {
             skipPage,
             path,
             scope,
-            redirectSource: `/${params.language}${path !== "/" ? path : ""}`,
+            redirectSource: `/${language}${path !== "/" ? path : ""}`,
             redirectScope: { domain: scope.domain },
         },
         { method: "GET" }, //for request memoization
     );
 }
 
+type Params = Promise<{ path: string[]; domain: string; language: string; visibility: VisibilityParam }>;
+
 interface PageProps {
-    params: { path: string[]; domain: string; language: string; visibility: VisibilityParam };
+    params: Params;
 }
 
 export default async function Page({ params }: PageProps) {
-    setVisibilityParam(params.visibility);
-    const scope = { domain: params.domain, language: params.language };
+    const { visibility, domain, language } = await params;
+    setVisibilityParam(visibility);
+    const scope = { domain, language };
     const data = await fetchPageTreeNode(params);
 
     if (!data.pageTreeNodeByPath?.documentType) {
@@ -115,7 +119,8 @@ export default async function Page({ params }: PageProps) {
 }
 
 export async function generateMetadata({ params }: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
-    const scope = { domain: params.domain, language: params.language };
+    const { domain, language } = await params;
+    const scope = { domain, language };
     const data = await fetchPageTreeNode(params);
 
     if (!data.pageTreeNodeByPath?.documentType) {
