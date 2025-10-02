@@ -1490,8 +1490,8 @@ importers:
         specifier: workspace:*
         version: link:../admin-rte
       axios:
-        specifier: ^0.30.0
-        version: 0.30.1
+        specifier: ^1.0.0
+        version: 1.11.0
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
@@ -9461,9 +9461,6 @@ packages:
   axe-core@4.10.3:
     resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
     engines: {node: '>=4'}
-
-  axios@0.30.1:
-    resolution: {integrity: sha512-2XabsR1u0/B6OoKy57/xJmPkQiUvdoV93oW4ww+Xjee7C2er/O5U77lvqycDkT2VQDtfjYcjw8ZV8GDaoqwjHQ==}
 
   axios@1.11.0:
     resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
@@ -27492,14 +27489,6 @@ snapshots:
   aws4@1.12.0: {}
 
   axe-core@4.10.3: {}
-
-  axios@0.30.1:
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.3)
-      form-data: 4.0.4
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
 
   axios@1.11.0:
     dependencies:
