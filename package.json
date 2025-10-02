@@ -64,5 +64,27 @@
     "engines": {
         "node": "22",
         "pnpm": "10.17.0"
+    },
+    "pnpm": {
+        "packageExtensions": {
+            "next": {
+                "peerDependencies": {
+                    "@types/react": "^19.0.0",
+                    "@types/react-dom": "^19.0.0"
+                }
+            },
+            "react-intl": {
+                "peerDependencies": {
+                    "@types/react": "*",
+                    "@types/react-dom": "*"
+                }
+            },
+            "styled-components": {
+                "peerDependencies": {
+                    "@types/react": "*",
+                    "@types/react-dom": "*"
+                }
+            }
+        }
     }
 }
