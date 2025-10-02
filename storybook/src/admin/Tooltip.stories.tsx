@@ -24,13 +24,13 @@ export const StatusIndicators = {
     render: () => {
         return (
             <Stack py={5} spacing={5}>
-                <Tooltip title="Success variant" placement="top-start" variant="success">
+                <Tooltip title="Success variant" placement="top-start" color="success">
                     <StatusSuccessSolid color="success" />
                 </Tooltip>
-                <Tooltip title="Warning variant" placement="top-start" variant="warning">
+                <Tooltip title="Warning variant" placement="top-start" color="warning">
                     <StatusWarningSolid color="warning" />
                 </Tooltip>
-                <Tooltip title="Error variant" placement="top-start" variant="error">
+                <Tooltip title="Error variant" placement="top-start" color="error">
                     <StatusErrorSolid color="error" />
                 </Tooltip>
             </Stack>
@@ -59,17 +59,11 @@ export const StackedTooltipsFromDesign = {
 
         return (
             <Stack pb={12} spacing={16} direction="row">
-                <Tooltip title="Title" description="Notification Text" variant="light" placement="bottom-start" open={showTooltips}>
+                <Tooltip title="Title" description="Notification Text" color="light" placement="bottom-start" open={showTooltips}>
                     <Chip label="Light" sx={{ width: 140 }} />
                 </Tooltip>
-                <Tooltip title="Title" description="Notification Text" variant="dark" placement="bottom-start" open={showTooltips}>
+                <Tooltip title="Title" description="Notification Text" color="dark" placement="bottom-start" open={showTooltips}>
                     <Chip label="Dark" sx={{ width: 140 }} />
-                </Tooltip>
-                <Tooltip title="Title" description="Notification Text" variant="neutral" placement="bottom-start" open={showTooltips}>
-                    <Chip label="Neutral (deprecated)" sx={{ width: 140 }} />
-                </Tooltip>
-                <Tooltip title="Title" description="Notification Text" variant="primary" placement="bottom-start" open={showTooltips}>
-                    <Chip label="Primary (deprecated)" sx={{ width: 140 }} />
                 </Tooltip>
             </Stack>
         );
@@ -89,16 +83,16 @@ export const FeedbackTooltipsFromDesign = {
 
         return (
             <Stack pb={8} spacing={12} direction="row">
-                <Tooltip title="Notification text" variant="dark" placement="bottom-start" open={showTooltips}>
+                <Tooltip title="Notification text" color="dark" placement="bottom-start" open={showTooltips}>
                     <Chip label="Dark" sx={{ width: 70 }} />
                 </Tooltip>
-                <Tooltip title="Notification text" variant="success" placement="bottom-start" open={showTooltips}>
+                <Tooltip title="Notification text" color="success" placement="bottom-start" open={showTooltips}>
                     <Chip label="Success" sx={{ width: 70 }} />
                 </Tooltip>
-                <Tooltip title="Notification text" variant="error" placement="bottom-start" open={showTooltips}>
+                <Tooltip title="Notification text" color="error" placement="bottom-start" open={showTooltips}>
                     <Chip label="Error" sx={{ width: 70 }} />
                 </Tooltip>
-                <Tooltip title="Notification text" variant="warning" placement="bottom-start" open={showTooltips}>
+                <Tooltip title="Notification text" color="warning" placement="bottom-start" open={showTooltips}>
                     <Chip label="Warning" sx={{ width: 70 }} />
                 </Tooltip>
             </Stack>
@@ -156,13 +150,13 @@ export const TooltipsWithCustomContent = {
 
         return (
             <Stack pb={32} spacing={24} direction="row">
-                <Tooltip customContent={customElementsContent} variant="light" open={showTooltips}>
+                <Tooltip customContent={customElementsContent} color="light" open={showTooltips}>
                     <Chip label="Custom elements" sx={{ width: 150 }} />
                 </Tooltip>
-                <Tooltip customContent={imageContent} variant="light" open={showTooltips}>
+                <Tooltip customContent={imageContent} color="light" open={showTooltips}>
                     <Chip label="Image" sx={{ width: 150 }} />
                 </Tooltip>
-                <Tooltip customContent={imageWithDescriptionContent} variant="light" open={showTooltips}>
+                <Tooltip customContent={imageWithDescriptionContent} color="light" open={showTooltips}>
                     <Chip label="Image with description" sx={{ width: 150 }} />
                 </Tooltip>
             </Stack>

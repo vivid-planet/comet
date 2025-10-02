@@ -75,14 +75,14 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
     const isUncontrolled = loading === undefined && hasErrors === undefined;
 
-    const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
+    const resolveTooltipColorForDisplayState = (displayState: FeedbackButtonDisplayState) => {
         switch (displayState) {
             case "error":
                 return "error";
             case "success":
                 return "success";
             default:
-                return "neutral";
+                return "light";
         }
     };
 
@@ -143,7 +143,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             title={displayState === "error" ? tooltipErrorMessage : displayState === "success" ? tooltipSuccessMessage : ""}
             open={displayState === "error" || displayState === "success"}
             placement={endIcon && !startIcon ? "top-end" : "top-start"}
-            variant={resolveTooltipForDisplayState(displayState)}
+            color={resolveTooltipColorForDisplayState(displayState)}
             {...slotProps?.tooltip}
         >
             <span>{startIcon || endIcon}</span>
