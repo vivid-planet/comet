@@ -32,6 +32,7 @@ export default {
         "@mui/material/styles/createPalette": "<rootDir>/testing/stub-file.ts",
         "@mui/material/styles/createTypography": "<rootDir>/testing/stub-file.ts",
         "@mui/material/styles/zIndex": "<rootDir>/testing/stub-file.ts",
+        "change-case": "<rootDir>/testing/stub-file.ts",
     },
     transform: {
         "^.+\\.tsx?$": [
