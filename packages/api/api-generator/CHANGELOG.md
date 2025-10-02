@@ -1,5 +1,14 @@
 # @comet/api-generator
 
+## 8.4.0
+
+### Patch Changes
+
+- f865dee: Fix generated query in position-service
+- Updated dependencies [bdfb64f]
+- Updated dependencies [c8f5d89]
+    - @comet/cms-api@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes
