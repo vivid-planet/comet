@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { type GQLKubernetesJobWithLogsQuery, type GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
 
 function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string | null } }) {
@@ -13,7 +14,7 @@ function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string |
     }
 
     return (
-        <Toolbar>
+        <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
             <ToolbarBackButton />
             <ToolbarTitleItem>
                 <FormattedMessage
@@ -64,22 +65,24 @@ export function JobLogs(props: { jobName: string }) {
     const job = data?.kubernetesJob;
 
     return (
-        <MainContent disablePadding>
+        <>
             <JobLogsToolbar kubernetesJob={job} />
-            {logs ? (
-                <Box paddingLeft={4}>
-                    <LogsContainer>{logs}</LogsContainer>
-                </Box>
-            ) : (
-                <Box padding={4}>
-                    <Typography>
-                        <FormattedMessage
-                            id="comet.cronJobs.noLogs"
-                            defaultMessage="No logs available. You may consider checking external logging tools if available."
-                        />
-                    </Typography>
-                </Box>
-            )}
-        </MainContent>
+            <MainContent>
+                {logs ? (
+                    <Box paddingLeft={4}>
+                        <LogsContainer>{logs}</LogsContainer>
+                    </Box>
+                ) : (
+                    <Box padding={4}>
+                        <Typography>
+                            <FormattedMessage
+                                id="comet.cronJobs.noLogs"
+                                defaultMessage="No logs available. You may consider checking external logging tools if available."
+                            />
+                        </Typography>
+                    </Box>
+                )}
+            </MainContent>
+        </>
     );
 }
