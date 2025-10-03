@@ -24,13 +24,13 @@
 
 .contained {
     background-color: var(--brand-primary-main);
-    color: var(--brand-primary-contrastColor);
+    color: var(--brand-primary-contrast);
     border: 1px solid var(--brand-primary-main);
 
     &:hover {
         color: var(--brand-primary-dark);
         border-color: var(--brand-primary-dark);
-        background-color: var(--brand-primary-contrastColor);
+        background-color: var(--brand-primary-contrast);
     }
 
     &:disabled {
@@ -47,7 +47,7 @@
 
     &:hover {
         background-color: var(--brand-primary-dark);
-        color: var(--brand-primary-contrastColor);
+        color: var(--brand-primary-contrast);
         border-color: var(--brand-primary-dark);
     }
 
