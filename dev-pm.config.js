@@ -151,6 +151,11 @@ module.exports = {
             group: ["demo-api", "demo"],
         },
         {
+            name: "demo-oidc-provider",
+            script: "pnpm run start-oidc-provider",
+            group: ["demo-api", "demo"],
+        },
+        {
             name: "demo-api-generator",
             script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
             group: ["demo-api", "demo"],
