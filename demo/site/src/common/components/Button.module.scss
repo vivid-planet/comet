@@ -2,7 +2,7 @@
 
 .button {
     display: inline-flex;
-    padding: var(--spacing-s400) var(--spacing-s500);
+    padding: var(--spacing-s400);
     border-radius: 4px;
     cursor: pointer;
     justify-content: center;
@@ -16,6 +16,7 @@
     font-size: 16px;
     font-weight: 700;
     line-height: 110%;
+    gap: 8px;
 
     &:disabled {
         pointer-events: none;
