@@ -938,3 +938,49 @@ export const GridWithSelectionInDialog = {
         );
     },
 };
+
+export const PageWithHelpInToolbarModal = {
+    render: () => {
+        const { rows, loading } = useData();
+
+        const GridToolbar = () => {
+            console.log("GridToolbar render");
+            return (
+                <DataGridToolbar>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                </DataGridToolbar>
+            );
+        };
+
+        const columns: GridColDef[] = [
+            { field: "title", headerName: "Title", flex: 1 },
+            { field: "description", headerName: "Description", flex: 2 },
+        ];
+
+        return (
+            <>
+                <StackToolbar
+                    help={{
+                        title: "How to use this table",
+                        description: (
+                            <div>
+                                <ul>
+                                    <li>Use the quick filter to search titles or descriptions.</li>
+                                    <li>Click the filter button to refine results.</li>
+                                    <li>Columns can be resized and sorted by clicking the header.</li>
+                                </ul>
+                            </div>
+                        ),
+                    }}
+                >
+                    <ToolbarBackButton />
+                    <ToolbarAutomaticTitleItem />´
+                </StackToolbar>
+                <StackMainContent>
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight />
+                </StackMainContent>
+            </>
+        );
+    },
+};

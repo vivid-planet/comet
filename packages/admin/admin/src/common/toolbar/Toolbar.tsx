@@ -1,13 +1,25 @@
-import { type ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
+import { QuestionMark } from "@comet/admin-icons";
+import { type ComponentsOverrides, DialogContent, IconButton, Paper, Toolbar as MuiToolbar } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode, useContext } from "react";
+import { type ReactNode, useContext, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
+import { Dialog } from "../Dialog";
+import { FillSpace } from "../FillSpace";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
-export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
+export type ToolbarClassKey =
+    | "root"
+    | "topBar"
+    | "bottomBar"
+    | "mainContentContainer"
+    | "breadcrumbs"
+    | "scopeIndicator"
+    | "helpButton"
+    | "helpDialog"
+    | "helpDialogContent";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -17,10 +29,18 @@ export interface ToolbarProps
         topBar: "div";
         breadcrumbs: typeof ToolbarBreadcrumbs;
         scopeIndicator: "div";
+        helpButton: typeof IconButton;
+        helpDialog: typeof Dialog;
+        helpDialogContent: typeof DialogContent;
     }> {
     elevation?: number;
     children?: ReactNode;
     scopeIndicator?: ReactNode;
+    help?: {
+        title?: ReactNode;
+        description?: ReactNode;
+    };
+
     hideTopBar?: boolean;
     /**
      * The height of the header above the toolbar. Default behaviour is to use the height of the headerHeight from the
@@ -121,6 +141,21 @@ const Breadcrumbs = createComponentSlot(ToolbarBreadcrumbs)<ToolbarClassKey>({
     slotName: "breadcrumbs",
 })();
 
+const HelpButton = createComponentSlot(IconButton)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "helpButton",
+})();
+
+const HelpDialog = createComponentSlot(Dialog)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "helpDialog",
+})();
+
+const HelpDialogContent = createComponentSlot(DialogContent)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "helpDialogContent",
+})();
+
 export const Toolbar = (inProps: ToolbarProps) => {
     const {
         children,
@@ -128,9 +163,12 @@ export const Toolbar = (inProps: ToolbarProps) => {
         elevation = 1,
         slotProps,
         scopeIndicator,
+        help,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = useContext(MasterLayoutContext);
+
+    const [showHelp, setShowHelp] = useState(false);
 
     const ownerState: OwnerState = {
         headerHeight: inProps.headerHeight ?? headerHeight,
@@ -141,6 +179,17 @@ export const Toolbar = (inProps: ToolbarProps) => {
                 <TopBar {...slotProps?.topBar}>
                     {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
                     <Breadcrumbs {...slotProps?.breadcrumbs} />
+                    <FillSpace />
+                    {help && (
+                        <HelpButton
+                            onClick={() => {
+                                setShowHelp(!showHelp);
+                            }}
+                            {...slotProps?.helpButton}
+                        >
+                            <QuestionMark />
+                        </HelpButton>
+                    )}
                 </TopBar>
             )}
             {children && (
@@ -148,6 +197,16 @@ export const Toolbar = (inProps: ToolbarProps) => {
                     <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
                 </BottomBar>
             )}
+            <HelpDialog
+                open={showHelp}
+                onClose={() => {
+                    setShowHelp(false);
+                }}
+                title={help?.title}
+                {...slotProps?.helpDialog}
+            >
+                <HelpDialogContent {...slotProps?.helpDialogContent}>{help?.description}</HelpDialogContent>
+            </HelpDialog>
         </Root>
     );
 };
