@@ -1,4 +1,4 @@
-import { Component, type ContextType, type PropsWithChildren, type ReactNode } from "react";
+import { Component, type ContextType, isValidElement, type PropsWithChildren, type ReactNode } from "react";
 
 import { StackSwitchApiContext } from "./Switch";
 
@@ -19,8 +19,15 @@ export class StackPageTitle extends Component<IProps> {
     }
 
     public componentDidUpdate(prevProps: IProps) {
-        if (this.props.title !== prevProps.title) {
-            this.context.updatePageBreadcrumbTitle(this.props.title);
+        const prevTitle = prevProps.title;
+        const currTitle = this.props.title;
+
+        if (isValidElement(prevTitle) && isValidElement(currTitle) && prevTitle.key === currTitle.key) {
+            return;
+        }
+
+        if (prevTitle !== currTitle) {
+            this.context.updatePageBreadcrumbTitle(currTitle);
         }
     }
 }
