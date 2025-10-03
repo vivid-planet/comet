@@ -1,16 +1,16 @@
 services:
     postgres:
-        image: bitnamilegacy/postgresql:16
+        image: postgres:16
         pull_policy: weekly
         tty: true
         volumes:
-            - postgres:/bitnami/postgresql
+            - postgres:/var/lib/postgresql/data
         ports:
             - "127.0.0.1:${POSTGRESQL_PORT}:5432"
         environment:
-            POSTGRESQL_USER: ${POSTGRESQL_USER}
-            POSTGRESQL_PASSWORD: ${POSTGRESQL_PWD_DECODED}
-            POSTGRESQL_DATABASE: ${POSTGRESQL_DB}
+            POSTGRES_USER: ${POSTGRESQL_USER}
+            POSTGRES_PASSWORD: ${POSTGRESQL_PWD_DECODED}
+            POSTGRES_DB: ${POSTGRESQL_DB}
         networks:
             - postgres
 
