@@ -8,9 +8,9 @@
     padding: 5px;
     color: black;
     text-decoration: none;
-    border: 1px solid var(--palette-gray-200);
+    border: 1px solid var(--brand-grey-200);
 
     &:hover {
-        border-color: var(--palette-primary-main);
+        border-color: var(--brand-primary-main);
     }
 }

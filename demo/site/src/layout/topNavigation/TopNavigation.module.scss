@@ -5,7 +5,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    background-color: var(--palette-primary-main);
+    background-color: var(--brand-primary-main);
 }
 
 .subLevelNavigation {
@@ -14,7 +14,7 @@
     min-width: 100px;
     list-style-type: none;
     padding: 5px;
-    background-color: var(--palette-primary-main);
+    background-color: var(--brand-primary-main);
     box-shadow: 0 4px 4px rgb(0 0 0 / 10%);
 }
 
@@ -33,7 +33,7 @@
 .link {
     text-decoration: none;
     padding: 5px 10px;
-    color: var(--palette-text-primary);
+    color: var(--brand-grey-900);
     font-size: 12px;
 
     &:hover {
@@ -41,7 +41,7 @@
     }
 
     &Active {
-        color: var(--palette-text-inverted);
+        color: var(--brand-primary-contrast);
     }
 }
 
