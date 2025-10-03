@@ -34,6 +34,7 @@ import { CallToActionBlockFixtureService } from "./generators/blocks/navigation/
 import { CallToActionListBlockFixtureService } from "./generators/blocks/navigation/call-to-action-list-block.service";
 import { LinkBlockFixtureService } from "./generators/blocks/navigation/link-block-fixture.service";
 import { LinkListBlockFixtureService } from "./generators/blocks/navigation/link-list-block-fixture.service";
+import { PageTreeIndexBlockFixtureService } from "./generators/blocks/navigation/page-tree-index-block.fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./generators/blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { TextLinkBlockFixtureService } from "./generators/blocks/navigation/text-link-block-fixture.service";
 import { SliderBlockFixtureService } from "./generators/blocks/slider-fixture.service";
@@ -94,6 +95,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         MediaGalleryBlockFixtureService,
         MediaBlockFixtureService,
         PageContentBlockFixtureService,
+        PageTreeIndexBlockFixtureService,
         PixelImageBlockFixtureService,
         RedirectsFixtureService,
         ProductsFixtureService,

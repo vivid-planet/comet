@@ -16,6 +16,7 @@ import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-bl
 import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
 import { LinkListBlockFixtureService } from "./blocks/navigation/link-list-block-fixture.service";
+import { PageTreeIndexBlockFixtureService } from "./blocks/navigation/page-tree-index-block.fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { SliderBlockFixtureService } from "./blocks/slider-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./blocks/teaser/billboard-teaser-block-fixture.service";
@@ -51,6 +52,7 @@ export class PageContentBlockFixtureService {
         private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
         private readonly sliderBlockFixtureService: SliderBlockFixtureService,
         private readonly productListBlockFixtureService: ProductListBlockFixtureService,
+        private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -72,6 +74,7 @@ export class PageContentBlockFixtureService {
             mediaGallery: ["media", this.mediaGalleryBlockFixtureService],
             anchor: ["navigation", this.anchorBlockFixtureService],
             callToActionList: ["navigation", this.callToActionListBlockFixtureService],
+            pageTreeIndex: ["navigation", this.pageTreeIndexBlockFixtureService],
             billboardTeaser: ["teaser", this.billboardTeaserBlockFixtureService],
             teaser: ["teaser", this.teaserBlockFixtureService],
             heading: ["textAndContent", this.headingBlockFixtureService],
