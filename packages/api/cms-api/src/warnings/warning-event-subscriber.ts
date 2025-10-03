@@ -1,16 +1,16 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
-import { Injectable, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
 import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
 import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
+import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
 import { WarningService } from "./warning.service";
 
@@ -63,8 +63,15 @@ export class WarningEventSubscriber implements EventSubscriber {
                 const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                 if (scoped) {
-                    const service = this.moduleRef.get(scoped, { strict: false });
-                    const scopedEntityScope = await service.getEntityScope(args.entity);
+                    let scopedEntityScope: ContentScope | ContentScope[];
+
+                    if (isInjectableService(scoped)) {
+                        const service = this.moduleRef.get(scoped, { strict: false });
+                        scopedEntityScope = await service.getEntityScope(args.entity);
+                    } else {
+                        scopedEntityScope = await scoped(args.entity);
+                    }
+
                     if (Array.isArray(scopedEntityScope)) {
                         throw new Error("Multiple scopes are not supported for warnings");
                     } else {
@@ -86,7 +93,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                     const warningsOrWarningsService = await node.block.warnings();
                     let warnings: BlockWarning[] = [];
 
-                    if (this.isBlockWarningService(warningsOrWarningsService)) {
+                    if (isInjectableService(warningsOrWarningsService)) {
                         const warningsService = warningsOrWarningsService;
                         const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
 
@@ -119,7 +126,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                 const row = await repository.findOneOrFail(args.entity.id);
 
                 let warnings: WarningData[] = [];
-                if (this.isService(createWarnings)) {
+                if (isInjectableService(createWarnings)) {
                     const service = this.moduleRef.get(createWarnings, { strict: false });
                     warnings = await service.createWarnings(row);
                 } else {
@@ -139,15 +146,5 @@ export class WarningEventSubscriber implements EventSubscriber {
                 await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
             }
         }
-    }
-
-    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
-        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
-    }
-    private isBlockWarningService(
-        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
-    ): transformResponse is Type<BlockWarningsServiceInterface> {
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 }

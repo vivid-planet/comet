@@ -18,7 +18,7 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import {
     type GQLDeleteProductCategoryMutation,
     type GQLDeleteProductCategoryMutationVariables,
-    type GQLProductCategoriesGridFragment,
+    type GQLProductCategoriesGridHandmadeFragment,
     type GQLProductCategoriesGridQuery,
     type GQLProductCategoriesGridQueryVariables,
     type GQLUpdateProductCategoryPositionMutation,
@@ -26,7 +26,7 @@ import {
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
-    fragment ProductCategoriesGrid on ProductCategory {
+    fragment ProductCategoriesGridHandmade on ProductCategory {
         id
         title
         slug
@@ -38,7 +38,7 @@ const productCategoriesQuery = gql`
     query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
         productCategories(offset: $offset, limit: $limit, sort: $sort) {
             nodes {
-                ...ProductCategoriesGrid
+                ...ProductCategoriesGridHandmade
             }
             totalCount
         }
@@ -86,7 +86,7 @@ export function ProductCategoriesGrid() {
             refetchQueries: [productCategoriesQuery],
         });
     };
-    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = [
+    const columns: GridColDef<GQLProductCategoriesGridHandmadeFragment>[] = [
         {
             field: "title",
             headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),

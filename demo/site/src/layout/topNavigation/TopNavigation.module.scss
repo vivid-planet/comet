@@ -15,7 +15,7 @@
     list-style-type: none;
     padding: 5px;
     background-color: var(--palette-primary-main);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 4px rgb(0 0 0 / 10%);
 }
 
 .topLevelLinkContainer {
@@ -40,7 +40,7 @@
         text-decoration: underline;
     }
 
-    &--active {
+    &Active {
         color: var(--palette-text-inverted);
     }
 }
@@ -63,7 +63,6 @@
         opacity: 1;
         height: auto;
         width: auto;
-        clip: auto;
         clip-path: none;
     }
 }

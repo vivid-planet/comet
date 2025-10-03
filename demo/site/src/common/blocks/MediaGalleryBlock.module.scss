@@ -7,9 +7,11 @@
     @media (min-width: $breakpoint-sm) {
         grid-column: 5 / -5;
     }
+
     @media (min-width: $breakpoint-lg) {
         grid-column: 6 / -6;
     }
+
     @media (min-width: $breakpoint-xl) {
         grid-column: 7 / -7;
     }
@@ -43,6 +45,7 @@
         // Move buttons just below the image height, calculated with aspectRatio. not possible with top: 100% because this moves them down the whole slider height which is variable because of caption text
         padding-top: var(--spacing-s300);
         margin-top: calc(1 / var(--aspect-ratio-numeric) * 100%);
+
         &::after {
             content: "";
             width: inherit;
@@ -53,13 +56,16 @@
             background-color: var(--palette-primary-main);
         }
     }
+
     :global(.swiper-button-prev) {
         right: calc(var(--swiper-button-size) + var(--spacing-s300));
         left: auto;
+
         &::after {
             transform: rotate(180deg);
         }
     }
+
     :global(.swiper-button-next) {
         right: 0;
     }
@@ -68,6 +74,7 @@
         opacity: 0;
         transition: opacity 0.3s linear 0s;
     }
+
     :global(.swiper-slide-active) {
         .mediaCaption {
             opacity: 1;

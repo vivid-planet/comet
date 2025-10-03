@@ -3,7 +3,7 @@
 import { gql } from "@apollo/client";
 export const productHighlightFormFragment = gql`
         fragment ProductHighlightFormDetails on ProductHighlight {
-            description product { category { id title } id title }
+            description product { category { type { id title } id title } id title }
         }
     `;
 export const productHighlightQuery = gql`

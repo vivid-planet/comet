@@ -1,7 +1,6 @@
 @use "@src/styles/variables" as *;
 
 .root {
-    font-family: var(--font-family);
     margin-top: 0;
 }
 
@@ -16,11 +15,13 @@
         line-height: 53px;
         margin-bottom: 24px;
     }
+
     @media (min-width: $breakpoint-md) {
         font-size: 61px;
         line-height: 67px;
         margin-bottom: 32px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 90px;
         line-height: 99px;
@@ -39,11 +40,13 @@
         line-height: 43px;
         margin-bottom: 20px;
     }
+
     @media (min-width: $breakpoint-md) {
         font-size: 48px;
         line-height: 53px;
         margin-bottom: 24px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 67px;
         line-height: 74px;
@@ -62,11 +65,13 @@
         line-height: 36px;
         margin-bottom: 20px;
     }
+
     @media (min-width: $breakpoint-md) {
         font-size: 39px;
         line-height: 43px;
         margin-bottom: 24px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 50px;
         line-height: 55px;
@@ -85,11 +90,13 @@
         line-height: 31px;
         margin-bottom: 18px;
     }
+
     @media (min-width: $breakpoint-md) {
         font-size: 31px;
         line-height: 34px;
         margin-bottom: 20px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 38px;
         line-height: 42px;
@@ -108,11 +115,13 @@
         line-height: 25px;
         margin-bottom: 16px;
     }
+
     @media (min-width: $breakpoint-md) {
         font-size: 25px;
         line-height: 28px;
         margin-bottom: 18px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 28px;
         line-height: 31px;
@@ -131,11 +140,13 @@
         line-height: 22px;
         margin-bottom: 16px;
     }
+
     @media (min-width: $breakpoint-md) {
         font-size: 21px;
         line-height: 23px;
         margin-bottom: 18px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 22px;
         line-height: 24px;
@@ -154,6 +165,7 @@
         line-height: 24px;
         margin-bottom: 17px;
     }
+
     @media (min-width: $breakpoint-lg) {
         font-size: 18px;
         line-height: 26px;
