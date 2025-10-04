@@ -91,7 +91,7 @@
         "sucrase": "^3.35.0",
         "ts-morph": "^25.0.1",
         "ts-node": "^10.9.2",
-        "typescript": "5.8.3",
+        "typescript": "5.9.3",
         "webpack": "^5.100.0"
     },
     "engines": {
