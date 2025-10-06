@@ -199,7 +199,7 @@ export function generateAsyncSelect({
         }
         if (rootQueryHasSearchArg.type.kind !== "SCALAR" || rootQueryHasSearchArg.type.name !== "String") {
             throw new Error(
-                `Field ${String(config.name)}: Autocomplete is enabled but root query "${rootQuery}" has search argument is not a string.`,
+                `Field ${String(config.name)}: Autocomplete is enabled but root query "${rootQuery}" has search argument that is not a string.`,
             );
         }
     }
