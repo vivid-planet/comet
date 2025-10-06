@@ -10,16 +10,16 @@ export const Root = createComponentSlot("div")<HelpDialogActionClassKey>({
 })();
 
 export const HelpButton = createComponentSlot(IconButton)<HelpDialogActionClassKey>({
-    componentName: "Toolbar",
+    componentName: "HelpDialogAction",
     slotName: "button",
 })();
 
 export const HelpDialog = createComponentSlot(Dialog)<HelpDialogActionClassKey>({
-    componentName: "Toolbar",
+    componentName: "HelpDialogAction",
     slotName: "dialog",
 })();
 
 export const HelpDialogContent = createComponentSlot(DialogContent)<HelpDialogActionClassKey>({
-    componentName: "Toolbar",
+    componentName: "HelpDialogAction",
     slotName: "dialogContent",
 })();
