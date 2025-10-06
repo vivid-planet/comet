@@ -246,6 +246,10 @@ const getMuiTooltipTitle = ({ title, description, customContent }: TooltipConten
         );
     }
 
+    if (!title) {
+        return title;
+    }
+
     return (
         <Text variant="body2" {...slotProps.text}>
             {title}
