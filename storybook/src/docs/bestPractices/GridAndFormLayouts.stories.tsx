@@ -9,6 +9,7 @@ import {
     FullHeightContent,
     type GridColDef,
     GridFilterButton,
+    HelpDialogAction,
     Loading,
     RouterTab,
     RouterTabs,
@@ -31,6 +32,7 @@ import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -932,6 +934,66 @@ export const GridWithSelectionInDialog = {
                         onRowSelectionModelChange={setSelectionModel}
                     />
                 </EditDialog>
+            </>
+        );
+    },
+};
+
+export const PageWithHelpInToolbarModal = {
+    render: () => {
+        const { rows, loading } = useData();
+
+        const GridToolbar = () => {
+            console.log("GridToolbar render");
+            return (
+                <DataGridToolbar>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                </DataGridToolbar>
+            );
+        };
+
+        const columns: GridColDef[] = [
+            { field: "title", headerName: "Title", flex: 1 },
+            { field: "description", headerName: "Description", flex: 2 },
+        ];
+
+        return (
+            <>
+                <StackToolbar
+                    topBarActions={
+                        <HelpDialogAction
+                            dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}
+                            dialogDescription={
+                                <div>
+                                    <div
+                                        style={{
+                                            backgroundColor: "teal",
+                                            width: "200px",
+                                            height: "200px",
+                                            float: "right",
+                                            marginLeft: 16,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            display: "flex",
+                                        }}
+                                    >
+                                        Image Placeholder
+                                    </div>
+                                    <p>
+                                        This is some help text. You can put whatever you want in here, for example an image to illustrate your help.
+                                    </p>
+                                </div>
+                            }
+                        />
+                    }
+                >
+                    <ToolbarBackButton />
+                    <ToolbarAutomaticTitleItem />´
+                </StackToolbar>
+                <StackMainContent>
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight />
+                </StackMainContent>
             </>
         );
     },
