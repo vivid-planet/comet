@@ -6,6 +6,7 @@ exports[`AsyncSelect autocomplete generates field with default autocomplete beca
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
@@ -42,6 +43,7 @@ exports[`AsyncSelect autocomplete generates field without autocomplete explicitl
                 required
                 variant="horizontal"
                 fullWidth
+                
                 
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
