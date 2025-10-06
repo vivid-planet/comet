@@ -1,9 +1,10 @@
 "use client";
 import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
+import { PlayPauseButton } from "./helpers/PlayPauseButton";
 import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import styles from "./VimeoVideoBlock.module.scss";
 
@@ -32,6 +33,10 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     playButtonAriaLabel?: string;
 }
 
+function handleVideo(iframe: HTMLIFrameElement | null, method: "play" | "pause") {
+    iframe?.contentWindow?.postMessage(JSON.stringify({ method }), "https://player.vimeo.com");
+}
+
 export const VimeoVideoBlock = withPreview(
     ({
         data: { vimeoIdentifier, autoplay, loop, showControls, previewImage },
@@ -46,13 +51,16 @@ export const VimeoVideoBlock = withPreview(
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef<HTMLDivElement>(null);
         const iframeRef = useRef<HTMLIFrameElement>(null);
+        const [isPlaying, setIsPlaying] = useState(!autoplay);
 
-        const handleVisibilityChange = (isVisible: boolean) => {
-            iframeRef.current?.contentWindow?.postMessage(
-                JSON.stringify({ method: isVisible && autoplay ? "play" : "pause" }),
-                "https://player.vimeo.com",
-            );
-        };
+        const handleVisibilityChange = useCallback(
+            (isVisible: boolean) => {
+                if (!isPlaying) {
+                    handleVideo(iframeRef.current, isVisible && autoplay ? "play" : "pause");
+                }
+            },
+            [autoplay, isPlaying],
+        );
 
         useIsElementInViewport(inViewRef, handleVisibilityChange);
 
@@ -106,6 +114,16 @@ export const VimeoVideoBlock = withPreview(
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                        {!showControls && (
+                            <PlayPauseButton
+                                className={styles.playPause}
+                                isPlaying={isPlaying}
+                                onClick={() => {
+                                    setIsPlaying(!isPlaying);
+                                    handleVideo(iframeRef.current, isPlaying ? "play" : "pause");
+                                }}
+                            />
+                        )}
                     </div>
                 )}
             </>
