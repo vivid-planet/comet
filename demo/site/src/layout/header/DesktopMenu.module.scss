@@ -30,9 +30,9 @@
     list-style-type: none;
     padding: var(--spacing-s100);
     background-color: white;
-    border-left: 1px solid var(--palette-gray-200);
-    border-bottom: 1px solid var(--palette-gray-200);
-    border-right: 1px solid var(--palette-gray-200);
+    border-left: 1px solid var(--brand-grey-200);
+    border-bottom: 1px solid var(--brand-grey-200);
+    border-right: 1px solid var(--brand-grey-200);
 
     &Expanded {
         display: flex;
@@ -67,12 +67,12 @@
 .animatedChevron {
     width: 20px;
     height: 20px;
-    color: var(--palette-text-primary);
+    color: var(--brand-grey-900);
     transform: rotate(0deg);
     transition: transform 0.4s ease;
 
     &Expanded {
-        color: var(--palette-primary-main);
+        color: var(--brand-primary-main);
         transform: rotate(-180deg);
     }
 }
@@ -102,14 +102,14 @@
     text-decoration: none;
     display: inline-block;
     padding: var(--spacing-s100) 0;
-    color: var(--palette-text-primary);
+    color: var(--brand-text-primary);
 
     &:hover {
-        color: var(--palette-primary-main);
+        color: var(--brand-primary-main);
     }
 
     &Active {
-        text-decoration: underline var(--palette-primary-main);
+        text-decoration: underline var(--brand-primary-main);
         text-underline-offset: 8px;
     }
 }
