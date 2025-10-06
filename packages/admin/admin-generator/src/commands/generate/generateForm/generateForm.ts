@@ -60,7 +60,6 @@ export function generateForm(
         { name: "useApolloClient", importPath: "@apollo/client" },
         { name: "useQuery", importPath: "@apollo/client" },
         { name: "gql", importPath: "@apollo/client" },
-        { name: "AsyncSelectField", importPath: "@comet/admin" },
         { name: "CheckboxField", importPath: "@comet/admin" },
         { name: "Field", importPath: "@comet/admin" },
         { name: "filterByFragment", importPath: "@comet/admin" },
