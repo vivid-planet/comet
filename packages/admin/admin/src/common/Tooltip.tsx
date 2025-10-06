@@ -199,27 +199,9 @@ export const Tooltip = (inProps: TooltipProps) => {
 
     const { title: titleSlotProps, text: textSlotProps, ...muiSlotProps } = slotProps;
 
-    const tooltipContent =
-        typeof customContent !== "undefined" ? (
-            customContent
-        ) : description ? (
-            <>
-                <Title variant="subtitle2" {...titleSlotProps}>
-                    {title}
-                </Title>
-                <Text variant="body2" {...textSlotProps}>
-                    {description}
-                </Text>
-            </>
-        ) : (
-            <Text variant="body2" {...textSlotProps}>
-                {title}
-            </Text>
-        );
-
     const commonTooltipProps = {
         ...restProps,
-        title: tooltipContent,
+        title: getMuiTooltipTitle({ title, description, customContent }, { title: titleSlotProps, text: textSlotProps }),
         disableInteractive,
         arrow,
         ownerState,
@@ -240,6 +222,34 @@ export const Tooltip = (inProps: TooltipProps) => {
         <TooltipRoot enterTouchDelay={0} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
+    );
+};
+
+type TooltipContentProps = Pick<TooltipProps, "title" | "description" | "customContent">;
+type TooltipContentSlotProps = Pick<NonNullable<SlotProps>, "title" | "text">;
+
+const getMuiTooltipTitle = ({ title, description, customContent }: TooltipContentProps, slotProps: TooltipContentSlotProps) => {
+    if (typeof customContent !== "undefined") {
+        return customContent;
+    }
+
+    if (description) {
+        return (
+            <>
+                <Title variant="subtitle2" {...slotProps.title}>
+                    {title}
+                </Title>
+                <Text variant="body2" {...slotProps.text}>
+                    {description}
+                </Text>
+            </>
+        );
+    }
+
+    return (
+        <Text variant="body2" {...slotProps.text}>
+            {title}
+        </Text>
     );
 };
 
