@@ -12,14 +12,24 @@ exports[`AsyncSelect filter generates field without filter 1`] = `
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect {
-                            categories {
+                        query: gql\`query CategoriesSelect
+                            
+                            
+                            
+                         {
+                            categories
+                                
+                                
+                             {
                                 nodes {
                                     id
                                     name
                                 }
                             }
                         }\`
+                            
+                            
+                        
                     });
                     return data.categories.nodes;
                 }}
@@ -40,14 +50,24 @@ exports[`AsyncSelect filter generates filter with value dependent on other field
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($title: String) {
-                            categories(title: $title) {
+                        query: gql\`query CategoriesSelect(
+                            $title: String
+                            
+                            
+                        ) {
+                            categories(
+                                title: $title
+                                
+                            ) {
                                 nodes {
                                     id
                                     name
                                 }
                             }
-                        }\`, variables: { title: values.title }
+                        }\`, variables: { 
+                            title: values.title,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -68,7 +88,6 @@ exports[`AsyncSelect filter generates formProp with enum filter as root query ar
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -103,6 +122,7 @@ import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -228,14 +248,24 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($type: CategoryType) {
-                            categories(type: $type) {
+                        query: gql\`query CategoriesSelect(
+                            $type: CategoryType
+                            
+                            
+                        ) {
+                            categories(
+                                type: $type
+                                
+                            ) {
                                 nodes {
                                     id
                                     name
                                 }
                             }
-                        }\`, variables: { type: type }
+                        }\`, variables: { 
+                            type: type,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -258,7 +288,6 @@ exports[`AsyncSelect filter generates formProp with string filter as root query 
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -292,6 +321,7 @@ import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -417,14 +447,24 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($foo: String) {
-                            categories(foo: $foo) {
+                        query: gql\`query CategoriesSelect(
+                            $foo: String
+                            
+                            
+                        ) {
+                            categories(
+                                foo: $foo
+                                
+                            ) {
                                 nodes {
                                     id
                                     name
                                 }
                             }
-                        }\`, variables: { foo: foo }
+                        }\`, variables: { 
+                            foo: foo,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -447,7 +487,6 @@ exports[`AsyncSelect filter with formProp filter with filter arg generates a str
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -481,6 +520,7 @@ import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -606,14 +646,24 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($filter: CategoryFilter) {
-                            categories(filter: $filter) {
+                        query: gql\`query CategoriesSelect(
+                            $filter: CategoryFilter
+                            
+                            
+                        ) {
+                            categories(
+                                filter: $filter
+                                
+                            ) {
                                 nodes {
                                     id
                                     name
                                 }
                             }
-                        }\`, variables: { filter: { foo: { equal: foo } } }
+                        }\`, variables: { 
+                            filter: { foo: { equal: foo } },
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -636,7 +686,6 @@ exports[`AsyncSelect filter with formProp filter with filter arg generates an en
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -671,6 +720,7 @@ import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -796,14 +846,24 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($filter: CategoryFilter) {
-                            categories(filter: $filter) {
+                        query: gql\`query CategoriesSelect(
+                            $filter: CategoryFilter
+                            
+                            
+                        ) {
+                            categories(
+                                filter: $filter
+                                
+                            ) {
                                 nodes {
                                     id
                                     name
                                 }
                             }
-                        }\`, variables: { filter: { type: { equal: categoryType } } }
+                        }\`, variables: { 
+                            filter: { type: { equal: categoryType } },
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
