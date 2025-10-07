@@ -1,6 +1,5 @@
 ---
 "@comet/site-nextjs": major
-"@comet/site-react": major
 ---
 
 Bump React peer dependency to v19
