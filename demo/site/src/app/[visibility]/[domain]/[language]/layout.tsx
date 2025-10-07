@@ -15,12 +15,18 @@ import { type PropsWithChildren } from "react";
 
 import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "./layout.generated";
 
+type Params = Promise<{ domain: string; language: string }>;
+
 interface LayoutProps {
-    params: { domain: string; language: string };
+    params: Params;
 }
 
-export default async function Layout({ children, params: { domain, language } }: PropsWithChildren<LayoutProps>) {
+export default async function Layout({ children, params }: PropsWithChildren<LayoutProps>) {
+    const { domain, language: languageParam } = await params;
     const siteConfig = getSiteConfigForDomain(domain);
+
+    let language = languageParam;
+
     if (!siteConfig.scope.languages.includes(language)) {
         language = "en";
     }
@@ -62,7 +68,8 @@ export default async function Layout({ children, params: { domain, language } }:
 }
 
 export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
-    const siteConfig = getSiteConfigForDomain(params.domain);
+    const { domain } = await params;
+    const siteConfig = getSiteConfigForDomain(domain);
 
     return {
         metadataBase: new URL(siteConfig.url),
