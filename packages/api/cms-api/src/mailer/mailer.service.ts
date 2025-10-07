@@ -13,6 +13,12 @@ import { MailerModuleConfig } from "./mailer.module";
 
 type MailerServiceConfig = Omit<MailerModuleConfig, "transport">;
 
+export type SendMailParams = MailOptions & {
+    mailTypeForLogging?: string;
+    additionalData?: unknown;
+    logMail?: boolean;
+};
+
 @Injectable()
 export class MailerService {
     private readonly logger = new Logger(MailerService.name);
@@ -43,12 +49,7 @@ export class MailerService {
      * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
      * @param logMail When set to false, the email will not be logged to the database.
      */
-    async sendMail({
-        mailTypeForLogging,
-        additionalData,
-        logMail = true,
-        ...originMailOptions
-    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown; logMail?: boolean }): Promise<Mail> {
+    async sendMail({ mailTypeForLogging, additionalData, logMail = true, ...originMailOptions }: SendMailParams): Promise<Mail> {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
 
         let logEntryId: string | undefined;

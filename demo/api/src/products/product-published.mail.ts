@@ -9,6 +9,8 @@ type MailProps = {
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
     async generateMail(props: MailProps) {
         return {
+            mailTypeForLogging: "ProductPublishedMail",
+            logMail: true,
             subject: "All products published",
             to: props.recipient.email,
             text:

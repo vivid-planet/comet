@@ -1,4 +1,4 @@
-import { MailTemplateService, RequiredPermission } from "@comet/cms-api";
+import { MailerService, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Mutation, Resolver } from "@nestjs/graphql";
@@ -11,7 +11,7 @@ import { Product, ProductStatus } from "./entities/product.entity";
 export class CustomProductResolver {
     constructor(
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
-        private readonly mailTemplateService: MailTemplateService,
+        private readonly mailerService: MailerService,
         private readonly productPublishedMail: ProductPublishedMail,
     ) {}
 
@@ -20,9 +20,11 @@ export class CustomProductResolver {
         const countProductPublished = await this.repository.count({ status: { $ne: ProductStatus.Published } });
         await this.repository.nativeUpdate({ status: { $ne: ProductStatus.Published } }, { status: ProductStatus.Published });
 
-        await this.mailTemplateService.sendMail(this.productPublishedMail, {
-            recipient: { name: "Product Manager", email: "product-manager@comet-dxp.com" },
-            countProductPublished: countProductPublished,
+        await this.mailerService.sendMail({
+            ...(await this.productPublishedMail.generateMail({
+                recipient: { name: "Product Manager", email: "product-manager@comet-dxp.com" },
+                countProductPublished: countProductPublished,
+            })),
         });
         return true;
     }

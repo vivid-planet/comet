@@ -1,5 +1,6 @@
 import { type CustomDecorator, SetMetadata } from "@nestjs/common";
-import { type Options as MailOptions } from "nodemailer/lib/mailer";
+
+import { type SendMailParams } from "../mailer/mailer.service";
 
 export type MailTemplateMetadata = object; // placeholder for future metadata
 
@@ -20,7 +21,7 @@ export type PreparedTestProps<T> = {
 };
 
 export type MailTemplateInterface<T> = {
-    generateMail: (props: T) => Promise<MailOptions>;
+    generateMail: (props: T) => Promise<SendMailParams>;
     getPreparedTestProps: () => Promise<PreparedTestProps<T>[]>;
 };
 
