@@ -147,3 +147,25 @@ setVisibilityParam(params.visibility);
 +   const scope = { domain, language };
 }
 ```
+
+### Add `cache: "force-cache"` to GraphQL fetch
+
+Next.js no longer caches `fetch` requests by default.
+Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests) for more information.
+Add `cache: "force-cache"` to `createGraphQLFetch()`:
+
+```diff title="site/src/util/graphQLClient.ts"
+export function createGraphQLFetch() {
+    // ...
+
+    return createGraphQLFetchLibrary(
+        createFetchWithDefaults(createFetchWithDefaultNextRevalidate(fetch, 7.5 * 60), {
++           cache: "force-cache",
+            headers: {
+                // ...
+            },
+        }),
+        `${process.env.API_URL_INTERNAL}/graphql`,
+    );
+}
+```
