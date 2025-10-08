@@ -108,6 +108,7 @@ export default defineConfig(({ mode }) => {
             include: ["@comet/admin", "@comet/admin-rte", "@comet/admin-date-time", "@comet/admin-icons", "@comet/cms-admin"],
         },
         resolve: {
+            conditions: ["import"],
             alias: {
                 "@src": resolve(__dirname, "./src"),
             },
