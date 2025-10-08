@@ -212,7 +212,12 @@ module.exports = {
         {
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
-            group: ["docs"],
+            group: ["docs", "storybook"],
+        },
+        {
+            name: "storybook-admin-generator",
+            script: "pnpm --filter @comet/admin-generator run storybook",
+            group: ["docs", "storybook"],
         },
         {
             name: "docs",
