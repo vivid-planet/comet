@@ -22,7 +22,7 @@ export type HelpDialogButtonProps = ThemedComponentBaseProps<{
 
 export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inProps) => {
     const {
-        dialogTitle = <FormattedMessage id="comet.toolbar.actions.helpDialogButton.title" defaultMessage="Help" />,
+        dialogTitle = <FormattedMessage id="comet.helpDialogButton.title" defaultMessage="Help" />,
         dialogDescription,
         icon = <QuestionMark />,
         slotProps = {},
