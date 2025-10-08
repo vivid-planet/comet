@@ -1,7 +1,7 @@
 import {
     Button,
     FillSpace,
-    HelpDialogAction,
+    HelpDialogButton,
     Stack,
     StackLink,
     StackPage,
@@ -75,7 +75,7 @@ export const ToolbarWithHelp = () => {
         <Toolbar
             scopeIndicator={<ContentScopeIndicator global />}
             topBarActions={
-                <HelpDialogAction
+                <HelpDialogButton
                     dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}
                     dialogDescription={
                         <div>

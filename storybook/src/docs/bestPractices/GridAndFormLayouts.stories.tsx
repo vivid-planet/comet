@@ -9,7 +9,7 @@ import {
     FullHeightContent,
     type GridColDef,
     GridFilterButton,
-    HelpDialogAction,
+    HelpDialogButton,
     Loading,
     RouterTab,
     RouterTabs,
@@ -964,7 +964,7 @@ export const PageWithHelpInToolbarModal = {
             <>
                 <StackToolbar
                     topBarActions={
-                        <HelpDialogAction
+                        <HelpDialogButton
                             dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}
                             dialogDescription={
                                 <div>
