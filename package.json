@@ -34,7 +34,7 @@
         "lint:tsc": "pnpm --recursive run lint:tsc",
         "lint:knip": "pnpm --recursive run api-generator && pnpm --recursive run gql:types && pnpm --recursive run build:preBuild && pnpm --recursive run build-server && knip --exports --files --dependencies --tags=-knipignore --no-gitignore",
         "start-oidc-provider": "dotenv -- dev-oidc-provider",
-        "storybook": "dev-pm start storybook",
+        "storybook": "dev-pm start @storybook",
         "test": "pnpm --recursive run test",
         "prepare": "husky",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
