@@ -25,22 +25,22 @@ export default {
     decorators: [apolloStoryDecorator("/graphql"), storyRouterDecorator()],
 };
 
-const folderChildrenQuery = gql`
-    query FolderChildren($id: ID) {
-        folderChildren(id: $id) {
+const subfolderQuery = gql`
+    query Subfolder($id: ID) {
+        subfolder(id: $id) {
             id
             name
         }
     }
 `;
 
-type GQLFolderChildrenQuery = {
-    folderChildren: Array<{
+type GQLSubfolderQuery = {
+    subfolder: Array<{
         id: string;
         name: string;
     }>;
 };
-type GQLFolderChildrenQueryVariables = {
+type GQLSubfolderQueryVariables = {
     id?: string;
 };
 
@@ -49,7 +49,7 @@ interface PageProps {
 }
 
 const Page = ({ id }: PageProps) => {
-    const { data, loading, error } = useQuery<GQLFolderChildrenQuery, GQLFolderChildrenQueryVariables>(folderChildrenQuery, {
+    const { data, loading, error } = useQuery<GQLSubfolderQuery, GQLSubfolderQueryVariables>(subfolderQuery, {
         variables: {
             id,
         },
@@ -65,10 +65,8 @@ const Page = ({ id }: PageProps) => {
     return (
         <Box display="flex" flexDirection="column" alignItems="left" gap={2} padding={2}>
             <div>Current ID: {id}</div>
-            {data?.folderChildren.length === 0 && (
-                <InlineAlert title="No entries" severity="warning" description="There are no entries in this folder" />
-            )}
-            {data?.folderChildren.map((childId) => {
+            {data?.subfolder.length === 0 && <InlineAlert title="No entries" severity="warning" description="There are no entries in this folder" />}
+            {data?.subfolder.map((childId) => {
                 return (
                     <Button variant="primary" component={StackLink} pageName="id" payload={childId.id}>
                         {childId.name}

@@ -7,7 +7,7 @@ import { http, HttpResponse } from "msw";
 
 import { currentUserHandler } from "./currentUserHandler";
 import { fileUploadsHandler } from "./handler/fileUploads";
-import { folderHandler, foldersHandler } from "./handler/folders";
+import { folderHandler, subfolderHandler } from "./handler/folders";
 
 type StringFilter = {
     contains: string;
@@ -173,7 +173,7 @@ type Query {
     products(manufacturer: ID): [Product!]!
     currentUser: CurrentUser!
     folder(id: ID): Folder
-    folderChildren(id: ID): [Folder!]!
+    subfolder(id: ID): [Folder!]!
 }
 `;
 
@@ -328,7 +328,7 @@ const graphqlHandler = new GraphQLHandler({
             products,
             currentUser: currentUserHandler,
             folder: folderHandler,
-            folderChildren: foldersHandler,
+            subfolder: subfolderHandler,
         },
     },
 

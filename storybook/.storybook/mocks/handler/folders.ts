@@ -110,7 +110,7 @@ export const folderHandler: GraphQLFieldResolver<unknown, unknown, { id?: string
     };
 };
 
-export const foldersHandler: GraphQLFieldResolver<unknown, unknown, { id?: string }> = async (_source, { id }): Promise<Folder[]> => {
+export const subfolderHandler: GraphQLFieldResolver<unknown, unknown, { id?: string }> = async (_source, { id }): Promise<Folder[]> => {
     await sleep(500);
 
     if (!id) {
