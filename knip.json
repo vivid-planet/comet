@@ -2,7 +2,7 @@
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
         ".": {
-            "entry": ["dev-pm.config.js", "site-configs.ts"],
+            "entry": ["dev-pm.config.ts", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
             "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"]
         },
