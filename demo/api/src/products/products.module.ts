@@ -1,4 +1,4 @@
-import { FileUpload } from "@comet/cms-api";
+import { ActionLogsModule, FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 
@@ -41,6 +41,7 @@ import { ProductVariantsService } from "./generated/product-variants.service";
             ManufacturerCountry,
             ProductHighlight,
         ]),
+        ActionLogsModule.forFeature([Product, Manufacturer]),
     ],
     providers: [
         ProductResolver,
