@@ -1,7 +1,6 @@
 import { DiscoveryService } from "@golevelup/nestjs-discovery";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { Options as MailOptions } from "nodemailer/lib/mailer";
 
 import { MailerService } from "../mailer/mailer.service";
 import { isMailTemplate, MAIL_TEMPLATE_METADATA_KEY, MailTemplateInterface, MailTemplateMetadata } from "./mail-template.decorator";
@@ -31,17 +30,8 @@ export class MailTemplateService {
         return ret.instance as MailTemplateInterface<T>;
     }
 
-    /**
-     * Generates a mail from the template and the props, can for example be used to render the template in admin
-     * @param mailTemplate
-     * @param props
-     */
-    async generateMail<T>(mailTemplate: MailTemplateInterface<T>, props: T): Promise<MailOptions> {
-        return mailTemplate.generateMail(props);
-    }
-
     async sendMail<T>(mailTemplate: MailTemplateInterface<T>, props: T) {
-        const mail = await this.generateMail(mailTemplate, props);
+        const mail = await mailTemplate.generateMail(props);
 
         return this.mailerService.sendMail({
             mailTypeForLogging: mailTemplate.constructor.name,
