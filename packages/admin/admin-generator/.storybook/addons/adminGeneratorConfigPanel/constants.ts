@@ -1,3 +1,3 @@
-export const ADDON_ID = 'storybook/comet-admin-generator-config';
-export const PANEL_ID = `${ADDON_ID}/panel`;
+export const addonId = 'storybook/comet-admin-generator-config';
+export const panelId = `${addonId}/panel`;
 

@@ -2,13 +2,13 @@
 import React from 'react';
 import { SyntaxHighlighter } from 'storybook/internal/components';
 
-const EXAMPLE_CONFIG = `export const SampleGrid = {
+const exampleConfig = `export const SampleGrid = {
     type: "grid",
     gqlType: "Sample",
     columns: [{ type: "text", name: "sample" }]
 };`;
 
-const EXAMPLE_STORY = `import type { Meta, StoryFn } from "@storybook/react-webpack5";
+const exampleStory = `import type { Meta, StoryFn } from "@storybook/react-webpack5";
 
 const config = {
     component: YourComponent,
@@ -31,13 +31,13 @@ export const NoConfigHelp: React.FC = () => {
             <h3>1. Create a config file</h3>
             <p>Create a TypeScript file next to your story (e.g., YourComponent.cometGen.ts):</p>
             <SyntaxHighlighter language="typescript" copyable={true}>
-                {EXAMPLE_CONFIG}
+                {exampleConfig}
             </SyntaxHighlighter>
 
             <h3>2. Configure your story</h3>
             <p>Add the adminGeneratorConfig parameter to your story:</p>
             <SyntaxHighlighter language="typescript" copyable={true}>
-                {EXAMPLE_STORY}
+                {exampleStory}
             </SyntaxHighlighter>
 
             <h3>3. View the config</h3>
