@@ -46,12 +46,12 @@ export const ContentContainer = createComponentSlot(Card)<FullPageAlertClassKey>
 export const Title = createComponentSlot(Typography)<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
     slotName: "title",
-})(css``) as typeof Typography;
+})() as typeof Typography;
 
 export const DetailDescription = createComponentSlot(Typography)<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
     slotName: "detailDescription",
-})(css``) as typeof Typography;
+})() as typeof Typography;
 
 export const DividerStyled = createComponentSlot(Divider)<FullPageAlertClassKey>({
     componentName: "FullPageAlert",
