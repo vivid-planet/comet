@@ -17,6 +17,7 @@ export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } fro
 export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardButtonProps } from "./common/buttons/CopyToClipboardButton";
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
 export { FeedbackButton, FeedbackButtonClassKey, FeedbackButtonProps } from "./common/buttons/feedback/FeedbackButton";
+export { HelpDialogButton, HelpDialogButtonClassKey, HelpDialogButtonProps } from "./common/buttons/helpDialogButton/HelpDialogButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
 export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/SaveButton";
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
@@ -33,7 +34,6 @@ export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } 
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
-export { HelpDialogAction, HelpDialogActionClassKey, HelpDialogActionProps } from "./common/toolbar/actions/helpDialogAction/HelpDialogAction";
 export { ToolbarActionButtonClassKey } from "./common/toolbar/actions/ToolbarActionButton";
 export { ToolbarActionButton } from "./common/toolbar/actions/ToolbarActionButton";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";

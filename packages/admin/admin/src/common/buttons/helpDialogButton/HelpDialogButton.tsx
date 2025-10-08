@@ -3,13 +3,13 @@ import { type ComponentsOverrides, type DialogContent, type IconButton, type The
 import { type FunctionComponent, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../../../helpers/ThemedComponentBaseProps";
-import { type Dialog } from "../../../Dialog";
-import { HelpButton, HelpDialog, HelpDialogContent, Root } from "./HelpDialogAction.sc";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type Dialog } from "../../Dialog";
+import { HelpButton, HelpDialog, HelpDialogContent, Root } from "./HelpDialogButton.sc";
 
-export type HelpDialogActionClassKey = "root" | "button" | "dialog" | "dialogContent";
+export type HelpDialogButtonClassKey = "root" | "button" | "dialog" | "dialogContent";
 
-export type HelpDialogActionProps = ThemedComponentBaseProps<{
+export type HelpDialogButtonProps = ThemedComponentBaseProps<{
     root: "div";
     button: typeof IconButton;
     dialog: typeof Dialog;
@@ -20,14 +20,14 @@ export type HelpDialogActionProps = ThemedComponentBaseProps<{
     icon?: ReactNode;
 };
 
-export const HelpDialogAction: FunctionComponent<HelpDialogActionProps> = (inProps) => {
+export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inProps) => {
     const {
-        dialogTitle = <FormattedMessage id="comet.toolbar.actions.helpDialogAction.title" defaultMessage="Help" />,
+        dialogTitle = <FormattedMessage id="comet.toolbar.actions.helpDialogButton.title" defaultMessage="Help" />,
         dialogDescription,
         icon = <QuestionMark />,
         slotProps = {},
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminHelpDialogAction" });
+    } = useThemeProps({ props: inProps, name: "CometAdminHelpDialogButton" });
     const [showHelp, setShowHelp] = useState(false);
 
     return (
@@ -56,17 +56,17 @@ export const HelpDialogAction: FunctionComponent<HelpDialogActionProps> = (inPro
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminHelpDialogAction: HelpDialogActionProps;
+        CometAdminHelpDialogButton: HelpDialogButtonProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminHelpDialogAction: HelpDialogActionClassKey;
+        CometAdminHelpDialogButton: HelpDialogButtonClassKey;
     }
 
     interface Components {
-        CometAdminHelpDialogAction?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminHelpDialogAction"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminHelpDialogAction"];
+        CometAdminHelpDialogButton?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminHelpDialogButton"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminHelpDialogButton"];
         };
     }
 }
