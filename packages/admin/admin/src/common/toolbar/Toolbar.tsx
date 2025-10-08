@@ -24,7 +24,6 @@ export interface ToolbarProps
     children?: ReactNode;
     scopeIndicator?: ReactNode;
     topBarActions?: ReactNode;
-
     hideTopBar?: boolean;
     /**
      * The height of the header above the toolbar. Default behaviour is to use the height of the headerHeight from the
