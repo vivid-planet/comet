@@ -37,7 +37,7 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined, d
  * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
+    input: { checked, value: incomingValue, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
@@ -98,6 +98,7 @@ export const FinalFormSelect = <T,>({
         onBlur,
         required,
     };
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
 
     if (children) {
         return (
