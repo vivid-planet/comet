@@ -1,6 +1,7 @@
 import { generateImageUrl, gql } from "@comet/site-nextjs";
-import { Breadcrumbs } from "@src/common/components/Breadcrumbs";
-import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
+import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
+import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
+import { mobileBreadcrumbsFragment } from "@src/common/components/breadcrumbs/MobileBreadcrumbs.fragment";
 import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
@@ -27,9 +28,11 @@ const pageQuery = gql`
                 }
             }
             ...Breadcrumbs
+            ...MobileBreadcrumbs
         }
     }
     ${breadcrumbsFragment}
+    ${mobileBreadcrumbsFragment}
 `;
 
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
