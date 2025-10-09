@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { DeleteButton } from "../DeleteButton";
 

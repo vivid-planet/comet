@@ -1,23 +1,10 @@
-import type { StorybookConfig } from "@storybook/react-vite";
+import type { StorybookConfig } from "@storybook/react-webpack5";
 
 const config: StorybookConfig = {
     stories: ["../src/**/*.mdx", "../src/**/__stories__/*.stories.@(js|jsx|mjs|ts|tsx)"],
     staticDirs: ["./public"],
 
-    addons: ["@storybook/addon-docs", "storybook-addon-tag-badges"],
-    framework: {
-        name: "@storybook/react-vite",
-        options: {},
-    },
-    async viteFinal(config) {
-        // Merge custom configuration into the default config
-        const { mergeConfig } = await import("vite");
-
-        return mergeConfig(config, {
-            optimizeDeps: {
-                include: ["@comet/admin-icons", "@emotion/react"],
-            },
-        });
-    },
+    addons: ["@storybook/addon-docs", "storybook-addon-tag-badges", "@storybook/addon-webpack5-compiler-babel"],
+    framework: "@storybook/react-webpack5",
 };
 export default config;
