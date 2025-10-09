@@ -21,7 +21,8 @@ type DateFilter = {
 type LaunchesPastFilter = {
     launch_date_local: DateFilter;
     mission_name: StringFilter;
-    or: LaunchesPastFilter[];
+    or?: LaunchesPastFilter[];
+    and?: LaunchesPastFilter[];
 };
 
 type Launch = {
@@ -100,6 +101,7 @@ input LaunchesPastFilter {
     launch_date_local: DateFilter
     mission_name: StringFilter
     or: [LaunchesPastFilter!]
+    and: [LaunchesPastFilter!]
 }
 
 type Manufacturer {
@@ -220,8 +222,25 @@ const launchesPastResult: GraphQLFieldResolver<
                 }
             }
 
-            if (filter.or.length > 0) {
+            if (filter.or != null && filter.or.length > 0) {
                 return filter.or.some((f) => {
+                    if (f.mission_name) {
+                        if (f.mission_name.equal) {
+                            return launch.mission_name === f.mission_name.equal;
+                        }
+                        if (f.mission_name.contains) {
+                            return launch.mission_name.includes(f.mission_name.contains);
+                        }
+                    }
+                    if (f.launch_date_local) {
+                        if (f.launch_date_local.equal) {
+                            return launch.launch_date_local === f.launch_date_local.equal;
+                        }
+                    }
+                });
+            }
+            if (filter.and != null && filter.and.length > 0) {
+                return filter.and.every((f) => {
                     if (f.mission_name) {
                         if (f.mission_name.equal) {
                             return launch.mission_name === f.mission_name.equal;
