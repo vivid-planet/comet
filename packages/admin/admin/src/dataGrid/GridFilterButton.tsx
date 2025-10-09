@@ -21,8 +21,8 @@ export function GridFilterButton(props: ButtonProps) {
             startIcon={<Filter />}
             variant="outlined"
             onClick={handleFilterClick}
-            {...props}
             endIcon={filterCount > 0 ? <Chip label={`${filterCount}`} /> : null}
+            {...props}
         >
             <FormattedMessage {...messages.filter} />
         </Button>
