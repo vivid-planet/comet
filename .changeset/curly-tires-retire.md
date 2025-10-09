@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix: prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
+Prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
