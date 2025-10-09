@@ -28,7 +28,6 @@ import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { DamImageBlock } from "@comet/cms-admin";
-import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { Future_DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
@@ -65,7 +64,7 @@ const rootBlocks = {
 };
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
-    datasheets: GQLFinalFormFileUploadFragment[];
+    datasheets: GQLFinalFormFileUploadDownloadableFragment[];
 };
 type FormValues = Omit<ProductFormDetailsFragment, keyof typeof rootBlocks | "dimensions" | "lastCheckedAt"> & {
     dimensionsEnabled: boolean;
@@ -274,8 +273,8 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.image)}
         </Field>
-        <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304}/>
-        <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304}/>
+        <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304} layout="grid"/>
+        <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304} layout="grid"/>
         <DateTimePickerField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
         </FieldSet>
                         </>
