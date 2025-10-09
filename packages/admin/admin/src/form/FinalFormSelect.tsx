@@ -79,6 +79,8 @@ export const FinalFormSelect = <T,>({
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
@@ -98,7 +100,6 @@ export const FinalFormSelect = <T,>({
         onBlur,
         required,
     };
-    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
 
     if (children) {
         return (
