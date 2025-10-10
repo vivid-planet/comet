@@ -85,7 +85,7 @@ export class WarningEventSubscriber implements EventSubscriber {
 
                 const blockData = args.entity[key];
                 if (blockData) {
-                    const flatBlocks = new FlatBlocks(args.entity[key], {
+                    const flatBlocks = new FlatBlocks(blockData, {
                         name: block.name,
                         visible: true,
                         rootPath: "root",
