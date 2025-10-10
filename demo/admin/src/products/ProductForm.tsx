@@ -13,7 +13,6 @@ import {
     TextAreaField,
     TextField,
     useFormApiRef,
-    useStackSwitchApi,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
 import {
@@ -88,7 +87,6 @@ export function ProductForm({ id, width, onCreateSuccess }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
-    const stackSwitchApi = useStackSwitchApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
