@@ -21,13 +21,13 @@ import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
-import { useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
+import { useContentScope } from "@comet/cms-admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const newsFragment = gql`
@@ -37,15 +37,12 @@ const newsFragment = gql`
         }
     `;
 const newsQuery = gql`
-        query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
-    newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
-                nodes {
-                    ...NewsGrid
-                }
-                totalCount
-            }
+    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
+        newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
+            nodes { ...NewsGrid } totalCount
         }
-        ${newsFragment}
+    }
+    ${newsFragment}
     `;
 const deleteNewsMutation = gql`
                 mutation DeleteNews($id: ID!) {
