@@ -15,7 +15,7 @@ import { generateImportsCode, type Imports } from "../utils/generateImportsCode"
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
-import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
@@ -115,20 +115,27 @@ export function generateForm(
         return acc;
     }, []);
 
-    const gqlArgs: ReturnType<typeof getForwardedGqlArgs>["gqlArgs"] = [];
+    let hasScope = false;
+    const gqlArgs: GqlArg[] = [];
     if (createMutationType) {
-        const {
-            imports: forwardedGqlArgsImports,
-            props: forwardedGqlArgsProps,
-            gqlArgs: forwardedGqlArgs,
-        } = getForwardedGqlArgs({
+        const forwardedArgs = getForwardedGqlArgs({
             fields: formFields,
             gqlOperation: createMutationType,
             gqlIntrospection,
         });
-        imports.push(...forwardedGqlArgsImports);
-        formProps.push(...forwardedGqlArgsProps);
-        gqlArgs.push(...forwardedGqlArgs);
+        for (const forwardedArg of forwardedArgs) {
+            imports.push(...forwardedArg.imports);
+            if (forwardedArg.gqlArg.name === "scope" && !forwardedArg.gqlArg.isInputArgSubfield && !config.scopeAsProp) {
+                hasScope = true;
+            } else {
+                formProps.push(forwardedArg.prop);
+                gqlArgs.push(forwardedArg.gqlArg);
+            }
+        }
+    }
+
+    if (hasScope) {
+        imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
     }
 
     if (editMode) {
@@ -226,6 +233,7 @@ export function generateForm(
                             name: gqlArg.name,
                             type: `${gqlArg.type}!`,
                         })),
+                    ...(hasScope ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
                     {
                         name: "input",
                         type: `${gqlType}Input!`,
@@ -356,6 +364,7 @@ export function generateForm(
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
         ${addMode ? `const stackSwitchApi = useStackSwitchApi();` : ""}
+        ${hasScope ? `const { scope } = useContentScope();` : ""}
 
         ${
             editMode
@@ -442,21 +451,23 @@ export function generateForm(
                         ? `
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
-                    variables: { input: ${
-                        gqlArgs.filter((prop) => prop.isInputArgSubfield).length
-                            ? `{ ...output, ${gqlArgs
-                                  .filter((prop) => prop.isInputArgSubfield)
-                                  .map((prop) => prop.name)
-                                  .join(",")} }`
-                            : "output"
-                    }${
-                        gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
-                            ? `, ${gqlArgs
-                                  .filter((prop) => !prop.isInputArgSubfield)
-                                  .map((arg) => arg.name)
-                                  .join(",")}`
-                            : ""
-                    } },
+                    variables: {
+                        ${hasScope ? `scope,` : ""}
+                        input: ${
+                            gqlArgs.filter((prop) => prop.isInputArgSubfield).length
+                                ? `{ ...output, ${gqlArgs
+                                      .filter((prop) => prop.isInputArgSubfield)
+                                      .map((prop) => prop.name)
+                                      .join(",")} }`
+                                : "output"
+                        }${
+                            gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
+                                ? `, ${gqlArgs
+                                      .filter((prop) => !prop.isInputArgSubfield)
+                                      .map((arg) => arg.name)
+                                      .join(",")}`
+                                : ""
+                        } },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.${createMutationType.name}.id;

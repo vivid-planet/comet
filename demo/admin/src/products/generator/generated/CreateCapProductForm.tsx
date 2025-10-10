@@ -52,7 +52,9 @@ export function CreateCapProductForm({ type }: FormProps) {
         };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
-            variables: { input: { ...output, type } },
+            variables: {
+                input: { ...output, type }
+            },
         });
         if (!event.navigatingBack) {
             const id = mutationResponse?.createProduct.id;

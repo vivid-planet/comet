@@ -84,7 +84,9 @@ export function ProductVariantForm({ id, product }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
                 mutation: createProductVariantMutation,
-                variables: { input: output, product },
+                variables: {
+                    input: output, product
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProductVariant.id;

@@ -75,7 +75,9 @@ export function ProductCategoryForm({ id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProductCategory.id;
