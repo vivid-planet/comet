@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 8.4.0
+
+### Minor Changes
+
+- f14b962: Add logging to mailer-module, can be disabled
+- c8f5d89: Add support for literal arrays to block meta
+
+### Patch Changes
+
+- 93f5d98: Fix DAM not rendering all items and its scrolling behavior when rendered in a Dialog
+- Updated dependencies [a85e7cb]
+- Updated dependencies [ff6d79a]
+- Updated dependencies [ff6d79a]
+    - @comet/admin@8.4.0
+    - @comet/admin-date-time@8.4.0
+    - @comet/admin-icons@8.4.0
+    - @comet/admin-rte@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes

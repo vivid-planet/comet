@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 8.4.0
+
+### Patch Changes
+
+- 576731f: Allow `%` as a string literal in `future/react.js`
+    - @comet/eslint-plugin@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes

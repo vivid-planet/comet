@@ -31,7 +31,7 @@
         "@formatjs/cli": "^6.7.2",
         "@opentelemetry/api": "^1.9.0",
         "fs-extra": "^11.3.0",
-        "graphql": "^15.10.1",
+        "graphql": "^16.0.0",
         "graphql-request": "^3.7.0",
         "next": "^14.2.30",
         "react": "^18.3.1",

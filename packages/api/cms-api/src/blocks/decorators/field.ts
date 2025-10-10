@@ -17,6 +17,7 @@ type BlockFieldOptions =
           type: "enum";
           enum: string[] | Record<string, string>;
           nullable?: boolean;
+          array?: boolean;
       }
     | {
           type: "json" | "string" | "number" | "boolean";
@@ -61,7 +62,7 @@ type BlockFieldData =
           nullable: boolean;
           array?: boolean;
       }
-    | { kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean }
+    | { kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean; array?: boolean }
     | { kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { kind: BlockMetaFieldKind.NestedObject; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
     | { kind: BlockMetaFieldKind.NestedObjectList; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
@@ -88,7 +89,7 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
             ret = { kind: BlockMetaFieldKind.Json, nullable, array };
         } else if (fieldType.type === "enum") {
             const enumValues = Array.isArray(fieldType.enum) ? fieldType.enum : Object.values(fieldType.enum);
-            ret = { kind: BlockMetaFieldKind.Enum, enum: enumValues, nullable };
+            ret = { kind: BlockMetaFieldKind.Enum, enum: enumValues, nullable, array };
         } else if (fieldType.type === "block") {
             ret = { kind: BlockMetaFieldKind.Block, block: fieldType.block, nullable };
         } else {
@@ -166,6 +167,7 @@ export class AnnotationBlockMeta implements BlockMetaInterface {
                     kind: field.kind,
                     enum: field.enum,
                     nullable: field.nullable,
+                    array: field.array,
                 });
             } else if (field.kind === BlockMetaFieldKind.Block) {
                 ret.push({

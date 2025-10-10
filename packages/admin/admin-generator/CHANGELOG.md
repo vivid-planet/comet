@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.4.0
+
+### Minor Changes
+
+- 52f56b9: asyncSelect: add support for autocomplete, defaulting to true if rootQuery has a search argument [breaking]
+
 ## 8.3.0
 
 ### Minor Changes
