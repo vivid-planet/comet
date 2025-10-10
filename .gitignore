@@ -11,3 +11,5 @@ junit.xml
 .env.local
 .env.site-configs
 **/.idea
+
+*storybook.log
