@@ -47,9 +47,10 @@ type FormValues = GQLProductHighlightFormDetailsFragment & {
     };
 };
 interface FormProps {
+    onCreateSuccess?: (id: string) => void;
     id?: string;
 }
-export function ProductHighlightForm({ id }: FormProps) {
+export function ProductHighlightForm({ onCreateSuccess, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -93,13 +94,14 @@ export function ProductHighlightForm({ id }: FormProps) {
                 mutation: createProductHighlightMutation,
                 variables: { input: output },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProductHighlight.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createProductHighlight.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreateSuccess?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };
