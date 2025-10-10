@@ -24,6 +24,7 @@ import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationType } from "../utils/findMutationType";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
+import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { findInputObjectType } from "./findInputObjectType";
@@ -655,31 +656,30 @@ export function generateGrid<T extends { __typename?: string }>(
         }
     \`;
 
-    const ${instanceGqlTypePlural}Query = gql\`
-        query ${gqlTypePlural}Grid(${[
-            ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-            ...[`$offset: Int!`, `$limit: Int!`],
-            ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
-            ...(hasSearch ? [`$search: String`] : []),
-            ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
-            ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-        ].join(", ")}) {
-    ${gridQuery}(${[
-        ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-        ...[`offset: $offset`, `limit: $limit`],
-        ...(hasSort ? [`sort: $sort`] : []),
-        ...(hasSearch ? [`search: $search`] : []),
-        ...(filterArg && (hasFilter || hasFilterProp) ? [`filter: $filter`] : []),
-        ...(hasScope ? [`scope: $scope`] : []),
-    ].join(", ")}) {
-                nodes {
-                    ...${fragmentName}
-                }
-                totalCount
-            }
-        }
-        \${${instanceGqlTypePlural}Fragment}
-    \`;
+    const ${instanceGqlTypePlural}Query = gql\`${generateGqlOperation({
+        type: "query",
+        operationName: `${gqlTypePlural}Grid`,
+        rootOperation: gridQuery,
+        fields: [`nodes...${fragmentName}`, "totalCount"],
+        fragmentVariables: [`\${${instanceGqlTypePlural}Fragment}`],
+        variables: [
+            ...gqlArgs
+                .filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name)
+                .map((gqlArg) => ({ name: gqlArg.name, type: `${gqlArg.type}!` })),
+            {
+                name: "offset",
+                type: "Int!",
+            },
+            {
+                name: "limit",
+                type: "Int!",
+            },
+            ...(hasSort ? [{ name: "sort", type: `[${gqlType}Sort!]` }] : []),
+            ...(hasSearch ? [{ name: "search", type: "String" }] : []),
+            ...(filterArg && (hasFilter || hasFilterProp) ? [{ name: "filter", type: `${gqlType}Filter` }] : []),
+            ...(hasScope ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
+        ],
+    })}\`;
 
     ${
         allowRowReordering

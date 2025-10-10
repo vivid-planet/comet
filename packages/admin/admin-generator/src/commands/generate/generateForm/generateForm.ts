@@ -10,6 +10,7 @@ import {
 } from "../generate-command";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "../utils/findMutationType";
+import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
@@ -193,66 +194,67 @@ export function generateForm(
 
     if (editMode) {
         gqlDocuments[`${instanceGqlType}Query`] = {
-            document: `
-            query ${gqlType}($id: ID!) {
-                ${instanceGqlType}(id: $id) {
-                    id
-                    updatedAt
-                    ...${formFragmentName}
-                }
-            }
-            \${${`${instanceGqlType}FormFragment`}}
-        `,
+            document: generateGqlOperation({
+                type: "query",
+                operationName: gqlType,
+                rootOperation: instanceGqlType,
+                fields: ["id", "updatedAt", `...${formFragmentName}`],
+                variables: [
+                    {
+                        name: "id",
+                        type: "ID!",
+                    },
+                ],
+                fragmentVariables: [`\${${`${instanceGqlType}FormFragment`}}`],
+            }),
             export: true,
         };
     }
 
     if (addMode && createMutationType) {
         gqlDocuments[`create${gqlType}Mutation`] = {
-            document: `
-            mutation Create${gqlType}(${
-                gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
-                    ? `${gqlArgs
-                          .filter((gqlArg) => !gqlArg.isInputArgSubfield)
-                          .map((gqlArg) => {
-                              return `$${gqlArg.name}: ${gqlArg.type}!`;
-                          })
-                          .join(", ")}, `
-                    : ``
-            }$input: ${gqlType}Input!) {
-                ${createMutationType.name}(${
-                    gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
-                        ? `${gqlArgs
-                              .filter((gqlArg) => !gqlArg.isInputArgSubfield)
-                              .map((gqlArg) => {
-                                  return `${gqlArg.name}: $${gqlArg.name}`;
-                              })
-                              .join(", ")}, `
-                        : ``
-                }input: $input) {
-                    id
-                    updatedAt
-                    ...${formFragmentName}
-                }
-            }
-            \${${`${instanceGqlType}FormFragment`}}
-        `,
+            document: generateGqlOperation({
+                type: "mutation",
+                operationName: `Create${gqlType}`,
+                rootOperation: createMutationType.name,
+                fields: ["id", "updatedAt", `...${formFragmentName}`],
+                fragmentVariables: [`\${${`${instanceGqlType}FormFragment`}}`],
+                variables: [
+                    ...gqlArgs
+                        .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                        .map((gqlArg) => ({
+                            name: gqlArg.name,
+                            type: `${gqlArg.type}!`,
+                        })),
+                    {
+                        name: "input",
+                        type: `${gqlType}Input!`,
+                    },
+                ],
+            }),
             export: true,
         };
     }
 
     if (editMode) {
         gqlDocuments[`update${gqlType}Mutation`] = {
-            document: `
-            mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
-                update${gqlType}(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...${formFragmentName}
-                }
-            }
-            \${${`${instanceGqlType}FormFragment`}}
-        `,
+            document: generateGqlOperation({
+                type: "mutation",
+                operationName: `Update${gqlType}`,
+                rootOperation: `update${gqlType}`,
+                fields: ["id", "updatedAt", `...${formFragmentName}`],
+                fragmentVariables: [`\${${`${instanceGqlType}FormFragment`}}`],
+                variables: [
+                    {
+                        name: "id",
+                        type: "ID!",
+                    },
+                    {
+                        name: "input",
+                        type: `${gqlType}UpdateInput!`,
+                    },
+                ],
+            }),
             export: true,
         };
     }

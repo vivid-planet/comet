@@ -37,15 +37,12 @@ const newsFragment = gql`
         }
     `;
 const newsQuery = gql`
-        query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
-    newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
-                nodes {
-                    ...NewsGrid
-                }
-                totalCount
-            }
+    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
+        newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
+            nodes { ...NewsGrid } totalCount
         }
-        ${newsFragment}
+    }
+    ${newsFragment}
     `;
 const deleteNewsMutation = gql`
                 mutation DeleteNews($id: ID!) {
