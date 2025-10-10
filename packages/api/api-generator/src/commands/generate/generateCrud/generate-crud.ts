@@ -1059,8 +1059,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                               .join(",")} }`
                         : ``
                 });
-                if (input.position > lastPosition + 1) {
-                    input.position = lastPosition + 1;
+                if (input.position > lastPosition) {
+                    input.position = lastPosition;
                 }
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${
