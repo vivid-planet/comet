@@ -203,7 +203,6 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "useDataGridRemote", importPath: "@comet/admin" },
         { name: "usePersistentColumnState", importPath: "@comet/admin" },
         { name: "BlockPreviewContent", importPath: "@comet/cms-admin" },
-        { name: "useContentScope", importPath: "@comet/cms-admin" },
         { name: "Alert", importPath: "@mui/material" },
         { name: "Box", importPath: "@mui/material" },
         { name: "IconButton", importPath: "@mui/material" },
@@ -289,9 +288,23 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    const { imports: forwardedGqlArgsImports, props: forwardedGqlArgsProps, gqlArgs } = getForwardedGqlArgs([gridQueryType]);
-    imports.push(...forwardedGqlArgsImports);
-    props.push(...forwardedGqlArgsProps);
+    let hasScope = false;
+    const gqlArgs: GqlArg[] = [];
+    {
+        const forwardedArgs = getForwardedGqlArgs([gridQueryType]);
+        for (const forwardedArg of forwardedArgs) {
+            imports.push(...forwardedArg.imports);
+            if (forwardedArg.gqlArg.name === "scope" && !config.scopeAsProp) {
+                hasScope = true;
+            } else {
+                props.push(forwardedArg.prop);
+                gqlArgs.push(forwardedArg.gqlArg);
+            }
+        }
+    }
+    if (hasScope) {
+        imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
+    }
 
     const renderToolbar = config.toolbar ?? true;
 
@@ -353,7 +366,6 @@ export function generateGrid<T extends { __typename?: string }>(
     }
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search") && !allowRowReordering;
-    const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
