@@ -16,6 +16,8 @@ Executing the following command starts all processes required to run a COMET DXP
 
 `npm run dev`
 
+This will start a [demo application](demo-application) which uses the packages mentioned above.
+
 ## That's it!
 
 Your COMET DXP application is up and running.

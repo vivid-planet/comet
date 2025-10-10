@@ -1,6 +1,6 @@
 ---
 title: Packages/Tools
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 ### COMET DXP Package Overview
