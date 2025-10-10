@@ -60,7 +60,7 @@ import {
 interface FormProps {
     id?: string;
     width?: number;
-    onSaveSuccess?: (id: string) => void;
+    onCreateSuccess?: (id: string) => void;
 }
 
 const rootBlocks = {
@@ -84,7 +84,7 @@ type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
 };
 
-export function ProductForm({ id, width, onSaveSuccess }: FormProps) {
+export function ProductForm({ id, width, onCreateSuccess }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -160,19 +160,12 @@ export function ProductForm({ id, width, onSaveSuccess }: FormProps) {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
-            if (mutationResponse?.createProduct.id) {
-                onSaveSuccess?.(mutationResponse?.createProduct.id);
+            const id = mutationResponse?.createProduct.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreateSuccess?.(id);
+                });
             }
-            /*
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
-            }
-            */
         }
     };
 
