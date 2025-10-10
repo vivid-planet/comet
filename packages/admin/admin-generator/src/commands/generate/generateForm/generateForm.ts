@@ -184,6 +184,12 @@ export function generateForm(
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
 
+    formProps.push({
+        name: "onCreateSuccess",
+        optional: true,
+        type: `(id: string) => void`,
+    });
+
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = {
@@ -456,13 +462,16 @@ export function generateForm(
                             : ""
                     } },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.${createMutationType.name}.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.${createMutationType.name}.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreateSuccess?.(id);
+                        ${
+                            config.navigateOnCreateSuccess === true || config.navigateOnCreateSuccess === undefined
+                                ? `if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);`
+                                : ``
+                        }
+                    });
                 }
                 `
                         : ""

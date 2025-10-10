@@ -180,6 +180,11 @@ export type FormConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     createMutation?: string;
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
+    /**
+     * If true, the form will navigate to the edit page using stackSwitchApi.activatePage of the newly created item after a successful creation.
+     * @default true
+     */
+    navigateOnCreateSuccess?: boolean;
 };
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
