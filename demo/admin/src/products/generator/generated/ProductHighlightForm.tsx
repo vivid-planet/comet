@@ -117,21 +117,14 @@ export function ProductHighlightForm({ id }: FormProps) {
         <TextField required variant="horizontal" fullWidth name="description" label={<FormattedMessage id="productHighlight.description" defaultMessage="Description"/>}/>
         <AsyncAutocompleteField required variant="horizontal" fullWidth name="productCategoryType" label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
-                    query: gql`query ProductCategoryTypesSelect(
-                            
-                            
-                            $search: String
-                        ) {
-                            productCategoryTypes(
-                                
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductCategoryTypesSelect($search: String) {
+        productCategoryTypes(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         search,
                     }
                 });
@@ -139,21 +132,14 @@ export function ProductHighlightForm({ id }: FormProps) {
             }} getOptionLabel={(option) => option.title}/>
         <AsyncAutocompleteField required variant="horizontal" fullWidth name="productCategory" label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect(
-                            $filter: ProductCategoryFilter
-                            ,
-                            $search: String
-                        ) {
-                            productCategories(
-                                filter: $filter,
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductCategoriesSelect($search: String, $filter: ProductCategoryFilter) {
+        productCategories(search: $search, filter: $filter) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         filter: { type: { equal: values.productCategoryType?.id } },
                         search,
                     }
@@ -168,21 +154,14 @@ export function ProductHighlightForm({ id }: FormProps) {
                         </OnChangeField>
         <AsyncAutocompleteField required variant="horizontal" fullWidth name="product" label={<FormattedMessage id="productHighlight.product" defaultMessage="Product"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
-                    query: gql`query ProductsSelect(
-                            $filter: ProductFilter
-                            ,
-                            $search: String
-                        ) {
-                            products(
-                                filter: $filter,
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductsSelect($search: String, $filter: ProductFilter) {
+        products(search: $search, filter: $filter) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         filter: { category: { equal: values.productCategory?.id } },
                         search,
                     }

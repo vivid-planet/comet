@@ -28,15 +28,12 @@ const productsFragment = gql`
         }
     `;
 const productsQuery = gql`
-        query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
-    products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...SelectProductsGridFuture
-                }
-                totalCount
-            }
+    query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
+        products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...SelectProductsGridFuture } totalCount
         }
-        ${productsFragment}
+    }
+    ${productsFragment}
     `;
 function ProductsGridToolbar() {
     return (<DataGridToolbar>
