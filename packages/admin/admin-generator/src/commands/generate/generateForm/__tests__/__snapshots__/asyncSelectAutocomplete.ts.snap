@@ -12,21 +12,14 @@ exports[`AsyncSelect autocomplete generates field with default autocomplete beca
                 
                 loadOptions={async (search?: string) => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            
-                            
-                            $search: String
-                        ) {
-                            categories(
-                                
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($search: String) {
+        categories(search: $search) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             
                             search,
                          }
@@ -50,21 +43,14 @@ exports[`AsyncSelect autocomplete generates field without autocomplete explicitl
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect
-                            
-                            
-                            
-                         {
-                            categories
-                                
-                                
-                             {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query CategoriesSelect {
+        categories {
+            nodes { id name }
+        }
+    }
+    
+    \`
                             
                             
                         

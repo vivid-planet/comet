@@ -281,7 +281,7 @@ export function generateFormField({
         } else {
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
-        formFragmentFields = [`${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`];
+        formFragmentFields = [`${name}....${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"}`];
     } else if (config.type == "staticSelect") {
         const multiple = introspectionFieldType?.kind === "LIST";
         if (introspectionFieldType?.kind === "LIST") {

@@ -39,15 +39,12 @@ const productVariantsFragment = gql`
         }
     `;
 const productVariantsQuery = gql`
-        query ProductVariantsGrid($product: ID!, $offset: Int!, $limit: Int!, $sort: [ProductVariantSort!], $search: String, $filter: ProductVariantFilter) {
-    productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductVariantsGridFuture
-                }
-                totalCount
-            }
+    query ProductVariantsGrid($product: ID!, $offset: Int!, $limit: Int!, $sort: [ProductVariantSort!], $search: String, $filter: ProductVariantFilter) {
+        productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductVariantsGridFuture } totalCount
         }
-        ${productVariantsFragment}
+    }
+    ${productVariantsFragment}
     `;
 const deleteProductVariantMutation = gql`
                 mutation DeleteProductVariant($id: ID!) {

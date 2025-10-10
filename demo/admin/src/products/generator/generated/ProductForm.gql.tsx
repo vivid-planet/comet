@@ -10,32 +10,26 @@ export const productFormFragment = gql`
 ${finalFormFileUploadFragment}
 ${finalFormFileUploadDownloadableFragment}`;
 export const productQuery = gql`
-            query Product($id: ID!) {
-                product(id: $id) {
-                    id
-                    updatedAt
-                    ...ProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    query Product($id: ID!) {
+        product(id: $id) {
+            id updatedAt ...ProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
 export const createProductMutation = gql`
-            mutation CreateProduct($input: ProductInput!) {
-                createProduct(input: $input) {
-                    id
-                    updatedAt
-                    ...ProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation CreateProduct($input: ProductInput!) {
+        createProduct(input: $input) {
+            id updatedAt ...ProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
 export const updateProductMutation = gql`
-            mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
-                updateProduct(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...ProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
+            id updatedAt ...ProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
