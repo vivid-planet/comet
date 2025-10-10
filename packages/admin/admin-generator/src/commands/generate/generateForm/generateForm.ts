@@ -302,11 +302,13 @@ export function generateForm(
                         ("maxFiles" in field && typeof field.maxFiles === "number" && field.maxFiles > 1)
                     ) {
                         return `${String(field.name)}: ${
-                            field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                            field.download || field.layout === "grid"
+                                ? "GQLFinalFormFileUploadDownloadableFragment"
+                                : "GQLFinalFormFileUploadFragment"
                         }[];`;
                     }
                     return `${String(field.name)}: ${
-                        field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                        field.download || field.layout === "grid" ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
                     } | null;`;
                 })
                 .join("\n")}
