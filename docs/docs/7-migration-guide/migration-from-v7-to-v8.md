@@ -2766,10 +2766,10 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 ### Fix runtime errors
 
-1. Start the api with `dpm start admin`
+1. Start the admin with `dpm start admin`
 2. Check the logs with `dpm logs admin`
 3. Fix occurring errors
-4. Once the API runs without problems: Commit **without** `--no-verify`
+4. Once the admin runs without problems: Commit **without** `--no-verify`
 
 ## Site
 
@@ -2860,4 +2860,4 @@ scalars: rootBlocks.reduce(
 2. Check the logs with `dpm logs site`
 3. Fix occurring errors
 4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [COMET Starter](https://github.com/vivid-planet/comet-starter/blob/main/build-and-run-site.sh))
-5. Once the API runs without problems: Commit **without** `--no-verify`
+5. Once the site runs without problems: Commit **without** `--no-verify`

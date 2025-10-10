@@ -1,3 +1,5 @@
+import { defineConfig } from "@comet/dev-process-manager";
+
 const packageFolderMapping = {
     "@comet/admin": "packages/admin/admin",
     "@comet/admin-color-picker": "packages/admin/admin-color-picker",
@@ -10,11 +12,11 @@ const packageFolderMapping = {
     "@comet/site-react": "packages/site/site-react",
 };
 
-const waitOnPackages = (...packages) => {
-    return packages.map((package) => `${packageFolderMapping[package]}/lib/index.d.ts`);
+const waitOnPackages = (...packages: (keyof typeof packageFolderMapping)[]) => {
+    return packages.map((packageName) => `${packageFolderMapping[packageName]}/lib/index.d.ts`);
 };
 
-module.exports = {
+export default defineConfig({
     scripts: [
         // group admin
         {
@@ -226,4 +228,4 @@ module.exports = {
             waitOn: ["tcp:26638"], // storybook
         },
     ],
-};
+});

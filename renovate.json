@@ -45,7 +45,8 @@
         },
         {
             "groupName": "eslint",
-            "matchPackageNames": ["/^eslint/"]
+            "matchPackageNames": ["/^eslint/"],
+            "excludePackagePatterns": ["eslint-config-next"]
         },
         {
             "groupName": "prettier",
@@ -132,6 +133,10 @@
         {
             "groupName": "SWC",
             "matchPackageNames": ["@swc/plugin-emotion", "@vitejs/plugin-react-swc"]
+        },
+        {
+            "groupName": "Next.js",
+            "matchPackageNames": ["next", "@next/bundle-analyzer", "@next/eslint-plugin-next", "eslint-config-next"]
         }
     ],
     "lockFileMaintenance": { "enabled": true },
