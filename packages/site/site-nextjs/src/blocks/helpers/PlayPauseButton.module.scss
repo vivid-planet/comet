@@ -26,15 +26,13 @@
     border-color: transparent transparent transparent white;
     cursor: pointer;
 
-    // play state
     border-style: solid;
     border-width: 6px 0 6px 9px;
     transition:
         border-width 100ms ease,
         border-style 100ms ease;
 
-    // paused state
-    &Pause {
+    &Paused {
         border-style: double;
         border-width: 0 0 0 9px;
     }
