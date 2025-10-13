@@ -114,7 +114,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                     warnings = warningsOrWarningsService;
                                 }
 
-                                this.warningService.saveWarnings({
+                                await this.warningService.saveWarnings({
                                     warnings,
                                     scope,
                                     sourceInfo: {
