@@ -33,10 +33,6 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     playButtonAriaLabel?: string;
 }
 
-function handleVideo(iframe: HTMLIFrameElement | null, method: "play" | "pause") {
-    iframe?.contentWindow?.postMessage(JSON.stringify({ method }), "https://player.vimeo.com");
-}
-
 export const VimeoVideoBlock = withPreview(
     ({
         data: { vimeoIdentifier, autoplay, loop, showControls, previewImage },
@@ -53,10 +49,22 @@ export const VimeoVideoBlock = withPreview(
         const iframeRef = useRef<HTMLIFrameElement>(null);
         const [isHandledManually, setIsHandledManually] = useState(!autoplay);
 
+        const pauseVimeoVideo = (iframe: HTMLIFrameElement | null) => {
+            iframe?.contentWindow?.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
+        };
+
+        const playVimeoVideo = (iframe: HTMLIFrameElement | null) => {
+            iframe?.contentWindow?.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
+        };
+
         const handleVisibilityChange = useCallback(
             (isVisible: boolean) => {
                 if (!isHandledManually) {
-                    handleVideo(iframeRef.current, isVisible && autoplay ? "play" : "pause");
+                    if (isVisible && autoplay) {
+                        playVimeoVideo(iframeRef.current);
+                    } else {
+                        pauseVimeoVideo(iframeRef.current);
+                    }
                 }
             },
             [autoplay, isHandledManually],
@@ -120,7 +128,11 @@ export const VimeoVideoBlock = withPreview(
                                 isPlaying={isHandledManually}
                                 onClick={() => {
                                     setIsHandledManually(!isHandledManually);
-                                    handleVideo(iframeRef.current, isHandledManually ? "play" : "pause");
+                                    if (isHandledManually) {
+                                        playVimeoVideo(iframeRef.current);
+                                    } else {
+                                        pauseVimeoVideo(iframeRef.current);
+                                    }
                                 }}
                             />
                         )}
