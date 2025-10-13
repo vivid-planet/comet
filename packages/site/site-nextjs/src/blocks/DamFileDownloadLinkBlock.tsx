@@ -6,7 +6,7 @@ import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type R
 import { type DamFileDownloadLinkBlockData } from "../blocks.generated";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
-    children: ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "target" | "title">>;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -26,7 +26,11 @@ export const DamFileDownloadLinkBlock = withPreview(
         const target = openFileType === "NewTab" ? "_blank" : undefined;
 
         if (legacyBehavior) {
-            return cloneElement(children, { href, target, title });
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                href,
+                target,
+                title,
+            });
         }
 
         return (

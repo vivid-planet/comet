@@ -8,9 +8,7 @@ import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSi
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
-    children: ReactElement<
-        Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "onClick" | "target" | "title">
-    >;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -32,7 +30,12 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         };
 
         if (legacyBehavior) {
-            return cloneElement(children, { href: "#", onClick, title });
+            return cloneElement(
+                children as ReactElement<
+                    Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "onClick" | "target" | "title">
+                >,
+                { href: "#", onClick, title },
+            );
         }
 
         return (
@@ -53,7 +56,12 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         const target = openInNewWindow ? "_blank" : undefined;
 
         if (legacyBehavior) {
-            return cloneElement(children, { href, target, title });
+            return cloneElement(
+                children as ReactElement<
+                    Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "onClick" | "target" | "title">
+                >,
+                { href, target, title },
+            );
         }
 
         return (

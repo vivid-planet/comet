@@ -4,7 +4,7 @@ import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type R
 import { type PhoneLinkBlockData } from "../blocks.generated";
 
 interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData> {
-    children: ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -22,7 +22,10 @@ export const PhoneLinkBlock = ({ data: { phone }, children, title, className, le
     const href = `tel:${phone}`;
 
     if (legacyBehavior) {
-        return cloneElement(children, { href, title });
+        return cloneElement(
+            children as ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>,
+            { href, title },
+        );
     }
 
     return (
