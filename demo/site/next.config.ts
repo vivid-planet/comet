@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     },
     eslint: {
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
-    },  
+    },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
     },
@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
             ],
         };
     },
-    webpack: (config, { isServer,  }) => {
+    webpack: (config, { isServer }) => {
         if (!isServer) {
             config.module.rules.push({
                 test: /\.[jt]sx?$/,

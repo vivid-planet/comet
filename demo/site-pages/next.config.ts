@@ -2,8 +2,7 @@ import { type NextConfig } from "next";
 
 import cometConfig from "./src/comet-config.json" with { type: "json" };
 
-
-let i18n: NextConfig['i18n'] | undefined = undefined;
+let i18n: NextConfig["i18n"] | undefined = undefined;
 
 if (process.env.SITE_IS_PREVIEW !== "true") {
     if (!process.env.NEXT_PUBLIC_SITE_LANGUAGES) {
@@ -20,7 +19,6 @@ if (process.env.SITE_IS_PREVIEW !== "true") {
         localeDetection: process.env.NODE_ENV === "development" ? false : undefined,
     };
 }
-
 
 const nextConfig: NextConfig = {
     rewrites: async () => {
