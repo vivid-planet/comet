@@ -444,3 +444,46 @@ export const AsyncLoadingDataFromApi: Story = {
         );
     },
 };
+
+export const MultipleWithoutInitialValues: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                multiple
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+                                    return ["value-1", "value-2", "value-3", "value-4"];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
