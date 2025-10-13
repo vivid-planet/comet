@@ -51,15 +51,15 @@ export const VimeoVideoBlock = withPreview(
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef<HTMLDivElement>(null);
         const iframeRef = useRef<HTMLIFrameElement>(null);
-        const [isPlaying, setIsPlaying] = useState(!autoplay);
+        const [isHandledManually, setIsHandledManually] = useState(!autoplay);
 
         const handleVisibilityChange = useCallback(
             (isVisible: boolean) => {
-                if (!isPlaying) {
+                if (!isHandledManually) {
                     handleVideo(iframeRef.current, isVisible && autoplay ? "play" : "pause");
                 }
             },
-            [autoplay, isPlaying],
+            [autoplay, isHandledManually],
         );
 
         useIsElementInViewport(inViewRef, handleVisibilityChange);
@@ -117,10 +117,10 @@ export const VimeoVideoBlock = withPreview(
                         {!showControls && (
                             <PlayPauseButton
                                 className={styles.playPause}
-                                isPlaying={isPlaying}
+                                isPlaying={isHandledManually}
                                 onClick={() => {
-                                    setIsPlaying(!isPlaying);
-                                    handleVideo(iframeRef.current, isPlaying ? "play" : "pause");
+                                    setIsHandledManually(!isHandledManually);
+                                    handleVideo(iframeRef.current, isHandledManually ? "play" : "pause");
                                 }}
                             />
                         )}
