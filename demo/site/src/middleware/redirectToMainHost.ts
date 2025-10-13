@@ -27,7 +27,15 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
         const siteConfig = await getSiteConfigForHost(host);
 
         if (!siteConfig) {
-            // Redirect to Main Host
+            // Redirect to main host (if non-www version of main host is used)
+            const mainSiteConfig = getSiteConfigs().find((siteConfig) => normalizeDomain(siteConfig.domains.main) === normalizeDomain(host));
+            if (mainSiteConfig) {
+                return NextResponse.redirect(`https://${mainSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
+                    status: 301,
+                });
+            }
+
+            // Redirect to main/preliminary host
             const redirectSiteConfig =
                 getSiteConfigs().find((siteConfig) => matchesHostWithAdditionalDomain(siteConfig, host)) ||
                 getSiteConfigs().find((siteConfig) => matchesHostWithPattern(siteConfig, host));
