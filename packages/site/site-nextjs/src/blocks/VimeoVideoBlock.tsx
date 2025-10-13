@@ -62,7 +62,7 @@ export const VimeoVideoBlock = withPreview(
             [autoplay, isHandledManually],
         );
 
-        useIsElementInViewport(inViewRef, handleVisibilityChange);
+        useIsElementInViewport(inViewRef, handleVisibilityChange, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
 
         if (!vimeoIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;

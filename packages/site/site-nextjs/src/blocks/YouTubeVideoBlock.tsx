@@ -67,7 +67,7 @@ export const YouTubeVideoBlock = withPreview(
             [autoplay, isHandledManually],
         );
 
-        useIsElementInViewport(inViewRef, handleInView);
+        useIsElementInViewport(inViewRef, handleInView, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;

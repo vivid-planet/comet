@@ -51,7 +51,7 @@ export const DamVideoBlock = withPreview(
             [autoplay, isHandledManually],
         );
 
-        useIsElementInViewport(videoRef, handleInView);
+        useIsElementInViewport(videoRef, handleInView, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
 
         return (
             <>
