@@ -1,5 +1,19 @@
 # @comet/cms-admin
 
+## 8.4.1
+
+### Patch Changes
+
+- da30d46: Remove "Usages" column from DAM
+
+    The `dependents` field resolver triggers multiple refreshes of the `block_index_dependencies` view, which seems to crash the API.
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-date-time@8.4.1
+    - @comet/admin-rte@8.4.1
+    - @comet/admin-icons@8.4.1
+
 ## 8.4.0
 
 ### Minor Changes
