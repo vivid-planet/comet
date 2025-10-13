@@ -49,8 +49,13 @@ ln -sf ../api/schema.gql ./demo/site-pages/schema.gql
 ln -sf ../api/block-meta.json ./demo/site-pages/block-meta.json
 ln -sf ../../api/src/comet-config.json ./demo/site-pages/src/comet-config.json
 
+
 # Storybook
 ln -sf ../.env.local ./storybook/.env.local
+
+# admin-generator
+ln -sf ../../api/cms-api/block-meta.json ./packages/admin/admin-generator/block-meta.json
+
 
 # Lang install
 sh ./demo/admin/intl-update.sh

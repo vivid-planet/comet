@@ -1,9 +1,14 @@
 {
     "compilerOptions": {
+        "baseUrl": "./",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "jsx": "react-jsx",
         "lib": ["ES2020"],
         "outDir": "lib",
+        "paths": {
+            "@src/*": ["src/*"]
+        },
         "rootDir": "src",
         "strict": true,
         "strictNullChecks": true,

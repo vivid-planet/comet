@@ -61,8 +61,14 @@
             "ignore": ["**/*.generated.ts"]
         },
         "packages/admin/admin-generator": {
-            "entry": ["./src/adminGenerator.ts", "./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
+            "entry": ["./src/adminGenerator.ts", "./src/**/*.stories.tsx", "./src/index.ts", "./src/**/*.cometGen.ts*", "./src/storybook.d.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": [
+                "/.storybook/public/mockServiceWorker.js",
+                "./src/**/*.generated.ts",
+                "./.storybook/addons/adminGeneratorConfigPanel/types.ts",
+                "./.storybook/addons/adminGeneratorConfigPanel/types.d.ts"
+            ]
         },
         "packages/api/cms-api": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./src/**/migrations/*.ts"],
@@ -108,7 +114,14 @@
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
+            "entry": [
+                "./src/app/**",
+                "./cache-handler.ts",
+                "./tracing.ts",
+                "./server.ts",
+                "./opentelemetry-metrics.ts",
+                "./src/webpack/gql-hash-loader.ts"
+            ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
