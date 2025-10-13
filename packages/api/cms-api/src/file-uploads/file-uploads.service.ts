@@ -2,7 +2,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
-import { addHours } from "date-fns";
+import { addHours, addSeconds } from "date-fns";
 import hasha from "hasha";
 import { basename, extname, parse } from "path";
 import { Readable } from "stream";
@@ -26,7 +26,7 @@ export class FileUploadsService {
         private readonly entityManager: EntityManager,
     ) {}
 
-    async upload(file: FileUploadInput): Promise<FileUpload> {
+    async upload(file: FileUploadInput, expiresIn?: number): Promise<FileUpload> {
         const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
         await this.blobStorageBackendService.upload(file, contentHash, this.config.directory);
 
@@ -34,11 +34,13 @@ export class FileUploadsService {
         const filename = basename(file.originalname, extension);
         const name = slugifyFilename(filename, extension);
 
+        const expires = expiresIn || this.config.expiresIn;
         const fileUpload = this.repository.create({
             name,
             size: file.size,
             mimetype: file.mimetype,
             contentHash,
+            expiresAt: expires ? addSeconds(new Date(), expires) : undefined,
         });
 
         this.entityManager.persist(fileUpload);
