@@ -57,7 +57,7 @@ export const VimeoVideoBlock = withPreview(
             iframe?.contentWindow?.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
         };
 
-        const handleVisibilityChange = useCallback(
+        const handleInView = useCallback(
             (isVisible: boolean) => {
                 if (!isHandledManually) {
                     if (isVisible && autoplay) {
@@ -70,7 +70,7 @@ export const VimeoVideoBlock = withPreview(
             [autoplay, isHandledManually],
         );
 
-        useIsElementInViewport(inViewRef, handleVisibilityChange, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
+        useIsElementInViewport(inViewRef, handleInView, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
 
         if (!vimeoIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
