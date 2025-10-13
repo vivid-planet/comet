@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-Improve check-warnings job by adding a missing await which lead to bad performance
+Improve check-warnings job by adding a missing await which led to bad performance
