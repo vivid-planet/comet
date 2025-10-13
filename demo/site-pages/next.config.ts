@@ -1,13 +1,8 @@
-/* eslint-disable */
+import { type NextConfig } from "next";
 
-// @ts-check
+import cometConfig from "./src/comet-config.json" with { type: "json" };
 
-const cometConfig = require("./src/comet-config.json");
-
-/**
- * @type {import('next').NextConfig['i18n'] | undefined}
- **/
-let i18n = undefined;
+let i18n: NextConfig["i18n"] | undefined = undefined;
 
 if (process.env.SITE_IS_PREVIEW !== "true") {
     if (!process.env.NEXT_PUBLIC_SITE_LANGUAGES) {
@@ -25,10 +20,7 @@ if (process.env.SITE_IS_PREVIEW !== "true") {
     };
 }
 
-/**
- * @type {import('next').NextConfig}
- **/
-const nextConfig = {
+const nextConfig: NextConfig = {
     rewrites: async () => {
         if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
         var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
@@ -39,10 +31,8 @@ const nextConfig = {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
         return redirects;
     },
-    images: {
-        deviceSizes: cometConfig.dam.allowedImageSizes,
-    },
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    images: cometConfig.images,
+    webpack: (config) => {
         var path = require("path");
 
         config.resolve.alias["@src"] = path.resolve(__dirname, "src/");
@@ -64,4 +54,4 @@ const nextConfig = {
     },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

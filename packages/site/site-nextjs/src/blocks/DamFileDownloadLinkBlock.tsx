@@ -1,7 +1,7 @@
 "use client";
 
 import { type PropsWithData, withPreview } from "@comet/site-react";
-import { cloneElement, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
 import { type DamFileDownloadLinkBlockData } from "../blocks.generated";
 
@@ -26,7 +26,11 @@ export const DamFileDownloadLinkBlock = withPreview(
         const target = openFileType === "NewTab" ? "_blank" : undefined;
 
         if (legacyBehavior) {
-            return cloneElement(children, { href, target, title });
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                href,
+                target,
+                title,
+            });
         }
 
         return (

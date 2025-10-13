@@ -1,5 +1,5 @@
 import { type PropsWithData } from "@comet/site-react";
-import { cloneElement, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
 import { type EmailLinkBlockData } from "../blocks.generated";
 
@@ -22,7 +22,10 @@ export const EmailLinkBlock = ({ data: { email }, children, title, className, le
     const href = `mailto:${email}`;
 
     if (legacyBehavior) {
-        return cloneElement(children, { href, title });
+        return cloneElement(
+            children as ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>,
+            { href, title },
+        );
     }
 
     return (

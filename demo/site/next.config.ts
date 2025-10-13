@@ -1,19 +1,15 @@
-// @ts-check
-
 import nextBundleAnalyzer from "@next/bundle-analyzer";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import cometConfig from "./src/comet-config.json" with { type: "json" };
+import { type NextConfig } from "next";
 
 const withBundleAnalyzer = nextBundleAnalyzer({
     enabled: process.env.ANALYZE === "true",
 });
 
-/**
- * @type {import('next').NextConfig}
- **/
-const nextConfig = {
+const nextConfig: NextConfig = {
     images: cometConfig.images,
     typescript: {
         ignoreBuildErrors: process.env.NODE_ENV === "production",
@@ -26,7 +22,7 @@ const nextConfig = {
     },
     cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
-    rewrites: () => {
+    rewrites: async () => {
         return {
             afterFiles: [
                 {
@@ -37,7 +33,7 @@ const nextConfig = {
             ],
         };
     },
-    webpack: (config, { isServer, nextRuntime }) => {
+    webpack: (config, { isServer }) => {
         if (!isServer) {
             config.module.rules.push({
                 test: /\.[jt]sx?$/,

@@ -1,5 +1,5 @@
 import { type PropsWithData } from "@comet/site-react";
-import { cloneElement, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
 import { type PhoneLinkBlockData } from "../blocks.generated";
 
@@ -10,7 +10,7 @@ interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData> {
     legacyBehavior?: boolean;
 }
 
-export const PhoneLinkBlock = ({ data: { phone }, children, title, className, legacyBehavior }: PhoneLinkBlockProps) => {
+export const PhoneLinkBlock = ({ data: { phone }, children, title, className, legacyBehavior }: PhoneLinkBlockProps): React.ReactNode => {
     if (!phone) {
         if (legacyBehavior) {
             return children;
@@ -22,7 +22,10 @@ export const PhoneLinkBlock = ({ data: { phone }, children, title, className, le
     const href = `tel:${phone}`;
 
     if (legacyBehavior) {
-        return cloneElement(children, { href, title });
+        return cloneElement(
+            children as ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>,
+            { href, title },
+        );
     }
 
     return (
