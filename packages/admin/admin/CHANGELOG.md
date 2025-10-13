@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 8.4.2
+
+### Patch Changes
+
+- a57d092: Prevent crash in `FinalFormSelect` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.2
+
 ## 8.4.1
 
 ### Patch Changes
