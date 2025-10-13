@@ -35,10 +35,10 @@ type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, keyof typeof root
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
     type: GQLProductType;
 }
-export function CreateCapProductForm({ onCreateSuccess, type }: FormProps) {
+export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
@@ -58,7 +58,7 @@ export function CreateCapProductForm({ onCreateSuccess, type }: FormProps) {
         const id = mutationResponse?.createProduct.id;
         if (id) {
             setTimeout(() => {
-                onCreateSuccess?.(id);
+                onCreate?.(id);
                 if (!event.navigatingBack) {
                     stackSwitchApi.activatePage(`edit`, id);
                 }

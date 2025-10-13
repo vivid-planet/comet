@@ -78,11 +78,11 @@ type FormValues = Omit<ProductFormDetailsFragment, keyof typeof rootBlocks | "di
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
     manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ onCreateSuccess, manufacturerCountry, id }: FormProps) {
+export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -134,7 +134,7 @@ export function ProductForm({ onCreateSuccess, manufacturerCountry, id }: FormPr
             const id = mutationResponse?.createProduct.id;
             if (id) {
                 setTimeout(() => {
-                    onCreateSuccess?.(id);
+                    onCreate?.(id);
                     if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
                     }

@@ -41,12 +41,12 @@ type FormValues = Omit<GQLIdFieldInFormFragment, keyof typeof rootBlocks> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
     id?: string;
     type: GQLProductType;
     slug: string;
 }
-export function IdFieldInForm({ onCreateSuccess, id, type, slug }: FormProps) {
+export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -92,7 +92,7 @@ export function IdFieldInForm({ onCreateSuccess, id, type, slug }: FormProps) {
             const id = mutationResponse?.createProduct.id;
             if (id) {
                 setTimeout(() => {
-                    onCreateSuccess?.(id);
+                    onCreate?.(id);
                     if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
                     }

@@ -185,7 +185,7 @@ export function generateForm(
     formValuesConfig.push(...generatedFields.formValuesConfig);
 
     formProps.push({
-        name: "onCreateSuccess",
+        name: "onCreate",
         optional: true,
         type: `(id: string) => void`,
     });
@@ -465,9 +465,9 @@ export function generateForm(
                 const id = mutationResponse?.${createMutationType.name}.id;
                 if (id) {
                     setTimeout(() => {
-                        onCreateSuccess?.(id);
+                        onCreate?.(id);
                         ${
-                            config.navigateOnCreateSuccess === true || config.navigateOnCreateSuccess === undefined
+                            config.navigateOnCreate === true || config.navigateOnCreate === undefined
                                 ? `if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);`
                                 : ``
                         }

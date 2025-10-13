@@ -184,7 +184,7 @@ export type FormConfig<T extends { __typename?: string }> = {
      * If true, the form will navigate to the edit page using stackSwitchApi.activatePage of the newly created item after a successful creation.
      * @default true
      */
-    navigateOnCreateSuccess?: boolean;
+    navigateOnCreate?: boolean;
 };
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {

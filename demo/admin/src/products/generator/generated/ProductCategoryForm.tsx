@@ -33,10 +33,10 @@ import { GQLUpdateProductCategoryMutationVariables } from "./ProductCategoryForm
 import isEqual from "lodash.isequal";
 type FormValues = GQLProductCategoryFormFragment;
 interface FormProps {
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function ProductCategoryForm({ onCreateSuccess, id }: FormProps) {
+export function ProductCategoryForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -81,7 +81,7 @@ export function ProductCategoryForm({ onCreateSuccess, id }: FormProps) {
             const id = mutationResponse?.createProductCategory.id;
             if (id) {
                 setTimeout(() => {
-                    onCreateSuccess?.(id);
+                    onCreate?.(id);
                     if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
                     }

@@ -29,10 +29,10 @@ import { GQLUpdateProductTagMutationVariables } from "./ProductTagForm.gql.gener
 import isEqual from "lodash.isequal";
 type FormValues = GQLProductTagFormFragment;
 interface FormProps {
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function ProductTagForm({ onCreateSuccess, id }: FormProps) {
+export function ProductTagForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -76,7 +76,7 @@ export function ProductTagForm({ onCreateSuccess, id }: FormProps) {
             const id = mutationResponse?.createProductTag.id;
             if (id) {
                 setTimeout(() => {
-                    onCreateSuccess?.(id);
+                    onCreate?.(id);
                     if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
                     }

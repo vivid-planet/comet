@@ -143,12 +143,12 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            onCreateSuccess?: (id: string) => void;
+            onCreate?: (id: string) => void;
 type: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({onCreateSuccess, type, id}: FormProps) {
+    export function ProductForm({onCreate, type, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -208,7 +208,7 @@ id?: string;
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
-                        onCreateSuccess?.(id);
+                        onCreate?.(id);
                         if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
                     });
                 }
@@ -342,12 +342,12 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            onCreateSuccess?: (id: string) => void;
+            onCreate?: (id: string) => void;
 foo: string;
 id?: string;
         }
 
-    export function ProductForm({onCreateSuccess, foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -407,7 +407,7 @@ id?: string;
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
-                        onCreateSuccess?.(id);
+                        onCreate?.(id);
                         if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
                     });
                 }
@@ -541,12 +541,12 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            onCreateSuccess?: (id: string) => void;
+            onCreate?: (id: string) => void;
 foo: string;
 id?: string;
         }
 
-    export function ProductForm({onCreateSuccess, foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -606,7 +606,7 @@ id?: string;
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
-                        onCreateSuccess?.(id);
+                        onCreate?.(id);
                         if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
                     });
                 }
@@ -741,12 +741,12 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            onCreateSuccess?: (id: string) => void;
+            onCreate?: (id: string) => void;
 categoryType: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({onCreateSuccess, categoryType, id}: FormProps) {
+    export function ProductForm({onCreate, categoryType, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -806,7 +806,7 @@ id?: string;
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
-                        onCreateSuccess?.(id);
+                        onCreate?.(id);
                         if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
                     });
                 }

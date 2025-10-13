@@ -38,11 +38,11 @@ type FormValues = Omit<GQLProductVariantFormFragment, keyof typeof rootBlocks> &
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
     id?: string;
     product: string;
 }
-export function ProductVariantForm({ onCreateSuccess, id, product }: FormProps) {
+export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -90,7 +90,7 @@ export function ProductVariantForm({ onCreateSuccess, id, product }: FormProps) 
             const id = mutationResponse?.createProductVariant.id;
             if (id) {
                 setTimeout(() => {
-                    onCreateSuccess?.(id);
+                    onCreate?.(id);
                     if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
                     }
