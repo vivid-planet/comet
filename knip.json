@@ -96,10 +96,8 @@
                 "./src/content-scope/content-scope.interface.ts",
                 "./src/repl.ts",
                 "./src/db/ormconfig.cli.ts",
-                "./src/db/fixtures/**/*.ts",
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
-                "./src/generator/generate.ts",
                 "./src/auth/permission.interface.ts",
                 "./src/reload.ts"
             ],
