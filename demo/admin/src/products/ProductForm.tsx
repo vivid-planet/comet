@@ -59,7 +59,7 @@ import {
 interface FormProps {
     id?: string;
     width?: number;
-    onCreateSuccess?: (id: string) => void;
+    onCreate?: (id: string) => void;
 }
 
 const rootBlocks = {
@@ -83,7 +83,7 @@ type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
 };
 
-export function ProductForm({ id, width, onCreateSuccess }: FormProps) {
+export function ProductForm({ id, width, onCreate }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -161,7 +161,7 @@ export function ProductForm({ id, width, onCreateSuccess }: FormProps) {
             const id = mutationResponse?.createProduct.id;
             if (id) {
                 setTimeout(() => {
-                    onCreateSuccess?.(id);
+                    onCreate?.(id);
                 });
             }
         }

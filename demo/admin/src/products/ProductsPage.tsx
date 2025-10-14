@@ -142,7 +142,7 @@ const ProductsPage = () => {
                         <StackMainContent>
                             <FieldSet>
                                 <ProductForm
-                                    onCreateSuccess={(id) => {
+                                    onCreate={(id) => {
                                         productsStackSwitchApi.activatePage("edit", id);
                                     }}
                                 />
