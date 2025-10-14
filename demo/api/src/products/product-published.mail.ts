@@ -1,5 +1,5 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
-import { TranslationService } from "@src/config/translation.service";
+import { TranslationService } from "@src/translation/translation.service";
 
 type MailProps = {
     recipient: { name: string; email: string; language: "en" | "de" };
