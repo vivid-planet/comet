@@ -232,7 +232,7 @@ export type BlockMetaField =
           nullable: boolean;
           array?: boolean;
       }
-    | { name: string; kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean }
+    | { name: string; kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean; array?: boolean }
     | { name: string; kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObject; object: BlockMetaInterface; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObjectList; object: BlockMetaInterface; nullable: boolean }

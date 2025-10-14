@@ -1,5 +1,6 @@
 "use client";
 
+import { decodeJwt } from "jose";
 import isEqual from "lodash.isequal";
 import { createContext, type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
@@ -42,6 +43,7 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
+    contentScopeJwt: string;
     graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
@@ -62,6 +64,7 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
+    contentScopeJwt: "",
     graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
@@ -72,6 +75,16 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
     },
 });
 
+function getContentScopeFromJwt(jwt: string): unknown {
+    try {
+        const parsedJwt = decodeJwt(jwt);
+        return parsedJwt.scope;
+    } catch (e) {
+        console.error("Failed to parse content scope JWT", e);
+        return undefined;
+    }
+}
+
 export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [block, setBlock] = useState<unknown | undefined>(undefined);
     const [showOnlyVisible, setShowOnlyVisible] = useState<boolean>(false);
@@ -79,6 +92,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | null>(null);
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
+    const [contentScopeJwt, setContentScopeJwt] = useState<string>("");
     const [graphQLApiUrl, setGraphQLApiUrl] = useState<string>("");
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
@@ -217,7 +231,8 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                     debounceDeactivateOutlines();
                     break;
                 case AdminMessageType.ContentScope:
-                    setContentScope(message.data.contentScope);
+                    setContentScope(getContentScopeFromJwt(message.data.contentScopeJwt));
+                    setContentScopeJwt(message.data.contentScopeJwt);
                     break;
                 case AdminMessageType.GraphQLApiUrl:
                     setGraphQLApiUrl(message.data.graphQLApiUrl);
@@ -285,6 +300,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             },
             sendMessage,
             contentScope,
+            contentScopeJwt,
             graphQLApiUrl,
             previewElementsData,
             addPreviewElement,
@@ -298,6 +314,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             hoveredAdminRoute,
             sendMessage,
             contentScope,
+            contentScopeJwt,
             graphQLApiUrl,
             previewElementsData,
             addPreviewElement,

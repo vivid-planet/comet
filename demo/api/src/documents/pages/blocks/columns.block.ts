@@ -6,6 +6,7 @@ import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
+import { TextImageBlock } from "@src/common/blocks/text-image.block";
 
 export const ColumnsContentBlock = createBlocksBlock(
     {
@@ -18,6 +19,7 @@ export const ColumnsContentBlock = createBlocksBlock(
             callToActionList: StandaloneCallToActionListBlock,
             media: StandaloneMediaBlock,
             mediaGallery: MediaGalleryBlock,
+            textImage: TextImageBlock,
         },
     },
     { name: "ColumnsContent" },
@@ -25,7 +27,7 @@ export const ColumnsContentBlock = createBlocksBlock(
 
 export const ColumnsBlock = ColumnsBlockFactory.create(
     {
-        layouts: [{ name: "2-20-2" }, { name: "4-16-4" }, { name: "9-6-9" }, { name: "9-9" }, { name: "12-6" }, { name: "6-12" }],
+        layouts: [{ name: "2-20-2" }, { name: "4-16-4" }, { name: "6-12-6" }, { name: "9-9" }, { name: "12-6" }, { name: "6-12" }],
         contentBlock: ColumnsContentBlock,
     },
     "Columns",

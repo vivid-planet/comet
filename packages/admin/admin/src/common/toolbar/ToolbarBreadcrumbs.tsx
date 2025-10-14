@@ -113,7 +113,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                     <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
                         <>
                             <BreadcrumbsEllipsisItem variant="body2" {...slotProps?.breadcrumbsEllipsisItem}>
-                                ...
+                                …
                             </BreadcrumbsEllipsisItem>
                             {itemSeparator}
                         </>

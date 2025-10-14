@@ -9,7 +9,7 @@ import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
 import { AbstractAccessControlService } from "./access-control.service";
-import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
@@ -21,6 +21,7 @@ import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER
 import {
     AccessControlServiceInterface,
     AvailableContentScope,
+    Permission,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
@@ -37,8 +38,8 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    private manualPermissions: { userId: string; permission: string }[] | undefined;
-    private availablePermissions: string[] | undefined;
+    private manualPermissions: { userId: string; permission: Permission }[] | undefined;
+    private availablePermissions: Permission[] | undefined;
 
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         let contentScopes: AvailableContentScope[] = [];
@@ -77,15 +78,15 @@ export class UserPermissionsService {
         return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
     }
 
-    async getAvailablePermissions(): Promise<string[]> {
+    async getAvailablePermissions(): Promise<Permission[]> {
         if (this.availablePermissions === undefined) {
             this.availablePermissions = [
                 ...new Set(
                     [
-                        ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                        ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                        ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                        ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
+                        ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
+                        ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
+                        ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>(REQUIRED_PERMISSION_METADATA_KEY)),
                     ]
                         .flatMap((p) => p.meta.requiredPermission)
                         .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
@@ -127,7 +128,7 @@ export class UserPermissionsService {
             .map((p) => ({ userId: p.userId, permission: p.permission }));
     }
 
-    async hasPermission(user: User, permission: string | string[]): Promise<boolean> {
+    async hasPermission(user: User, permission: Permission | Permission[]): Promise<boolean> {
         const permissions = Array.isArray(permission) ? permission : [permission];
         if (this.accessControlService.getPermissionsForUser) {
             const availablePermissions = await this.getAvailablePermissions();

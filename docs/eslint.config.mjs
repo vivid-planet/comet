@@ -1,4 +1,4 @@
-import eslintConfigReact from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/future/react.js";
 
 /** @type {import('eslint')} */
 const config = [
@@ -9,6 +9,7 @@ const config = [
     {
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
+            "react/jsx-no-literals": "off",
         },
     },
 ];

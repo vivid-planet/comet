@@ -31,9 +31,8 @@
         "@formatjs/cli": "^6.7.2",
         "@opentelemetry/api": "^1.9.0",
         "fs-extra": "^11.3.0",
-        "graphql": "^15.10.1",
+        "graphql": "^16.0.0",
         "graphql-request": "^3.7.0",
-        "graphql-tag": "^2.12.6",
         "next": "^14.2.30",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
@@ -60,9 +59,9 @@
         "@types/react-dom": "^18.3.7",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
-        "npm-run-all2": "^5.0.2",
+        "npm-run-all2": "^8.0.0",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
-        "typescript": "^5.7.3"
+        "typescript": "5.8.3"
     }
 }

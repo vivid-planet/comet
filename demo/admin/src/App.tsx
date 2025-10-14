@@ -15,9 +15,10 @@ import {
 import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { LicenseInfo } from "@mui/x-license";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
-import { type ContentScope as BaseContentScope } from "@src/site-configs";
+import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
@@ -31,6 +32,7 @@ import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/M
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
+import { type GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
@@ -54,7 +56,13 @@ const apolloClient = createApolloClient(config.apiUrl);
 declare module "@comet/cms-admin" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface ContentScope extends BaseContentScope {}
+
+    export interface PermissionOverrides {
+        permission: GQLPermission;
+    }
 }
+
+LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
     return (
@@ -66,6 +74,9 @@ export function App() {
                 documentTypes: pageTreeDocumentTypes,
                 additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
                 scopeParts: ["domain", "language"],
+            }}
+            redirects={{
+                scopeParts: ["domain"],
             }}
             dam={{
                 ...config.dam,
@@ -122,7 +133,7 @@ export function App() {
             }}
         >
             <ApolloProvider client={apolloClient}>
-                <IntlProvider locale="en" messages={getMessages()}>
+                <IntlProvider locale="en" messages={getMessages("en")}>
                     <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
                         <MuiThemeProvider theme={theme}>
                             <DndProvider options={HTML5toTouch}>

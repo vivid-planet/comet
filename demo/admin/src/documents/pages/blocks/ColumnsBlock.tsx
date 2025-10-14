@@ -13,6 +13,7 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { FormattedMessage } from "react-intl";
 
 const oneColumnLayouts = [
@@ -41,14 +42,14 @@ const oneColumnLayouts = [
         ),
     },
     {
-        name: "9-6-9",
+        name: "6-12-6",
         columns: 1,
         label: <FormattedMessage id="columnsBlock.center.small" defaultMessage="Center small" />,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewSpacing width={9} />
-                <ColumnsLayoutPreviewContent width={6} />
-                <ColumnsLayoutPreviewSpacing width={9} />
+                <ColumnsLayoutPreviewSpacing width={6} />
+                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewSpacing width={6} />
             </ColumnsLayoutPreview>
         ),
     },
@@ -122,6 +123,7 @@ const ColumnsContentBlock = createBlocksBlock({
         callToActionList: StandaloneCallToActionListBlock,
         media: StandaloneMediaBlock,
         mediaGallery: MediaGalleryBlock,
+        textImage: TextImageBlock,
     },
 });
 

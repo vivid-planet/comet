@@ -86,7 +86,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -123,7 +124,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -151,6 +153,19 @@
                 "name": "openByDefault",
                 "kind": "Boolean",
                 "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -168,6 +183,19 @@
             {
                 "name": "openByDefault",
                 "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
                 "nullable": false
             }
         ]
@@ -534,7 +562,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -575,7 +604,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -2065,7 +2095,8 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
-                                "table": "Table"
+                                "table": "Table",
+                                "productList": "ProductList"
                             },
                             "nullable": false
                         },
@@ -2129,7 +2160,8 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
-                                "table": "Table"
+                                "table": "Table",
+                                "productList": "ProductList"
                             },
                             "nullable": false
                         },
@@ -2389,6 +2421,35 @@
                     ]
                 },
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductList",
+        "fields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
+                "nullable": false,
+                "array": true
             }
         ]
     },
@@ -3316,6 +3377,19 @@
                 "kind": "Block",
                 "block": "TextLink",
                 "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -3340,6 +3414,19 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "TextLink",
+                "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
                 "nullable": false
             }
         ]

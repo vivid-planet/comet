@@ -3,7 +3,7 @@ import { Field, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 export enum TestEnum {
@@ -35,7 +35,7 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.input.ts");
         if (!file) throw new Error("File not found");
@@ -56,7 +56,7 @@ describe("GenerateCrudEnumArray", () => {
         expect(decorators).toContain("Field");
         expect(decorators).toContain("IsEnum");
 
-        orm.close();
+        await orm.close();
     });
     it("should correctly add EnumArrayType in filter type", async () => {
         LazyMetadataStorage.load();
@@ -68,7 +68,7 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
         if (!file) throw new Error("File not found");
@@ -94,6 +94,6 @@ describe("GenerateCrudEnumArray", () => {
             expect(prop.type).toBe("TestEnumEnumsFilter");
         }
 
-        orm.close();
+        await orm.close();
     });
 });

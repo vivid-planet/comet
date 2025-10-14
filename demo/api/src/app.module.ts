@@ -13,6 +13,8 @@ import {
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
+    MailerModule,
+    MailTemplatesModule,
     PageTreeModule,
     RedirectsModule,
     SentryModule,
@@ -24,6 +26,7 @@ import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apoll
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
+import { AppPermission } from "@src/auth/app-permission.enum";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
@@ -74,6 +77,7 @@ export class AppModule {
                         graphiql: config.debug ? { url: "/api/graphql" } : undefined,
                         playground: false,
                         autoSchemaFile: "schema.gql",
+                        sortSchema: true,
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
@@ -112,6 +116,7 @@ export class AppModule {
                     }),
                     inject: [UserService, AccessControlService],
                     imports: [authModule],
+                    AppPermission,
                 }),
                 BlocksModule,
                 DependenciesModule,
@@ -186,6 +191,8 @@ export class AppModule {
                 FooterModule,
                 PredefinedPagesModule,
                 CronJobsModule,
+                MailerModule.register(config.mailer),
+                MailTemplatesModule,
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({

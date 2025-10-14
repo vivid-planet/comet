@@ -35,61 +35,120 @@ type IconObject = Pick<IconProps, "color" | "fontSize"> & {
 type Icon = IconName | IconObject | ComponentType;
 export type Adornment = string | { icon: Icon };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
-    Partial<FinalFormFileUploadProps<false>>,
-    "maxFileSize" | "readOnly" | "layout" | "accept"
->;
-
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number; download?: boolean } & Pick<
-    Partial<FinalFormFileUploadProps<true>>,
-    "maxFileSize" | "readOnly" | "layout" | "accept"
->;
-
 type InputBaseFieldConfig = {
     startAdornment?: Adornment;
     endAdornment?: Adornment;
 };
 
 export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
+function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
+    return arg && arg.type === "component";
+}
+
+export type StaticSelectValue = { value: string; label: string } | string;
+type AsyncSelectFilter =
+    | {
+          /**
+           * Filter by value of field in current form
+           */
+          type: "field";
+          /**
+           * Name of the field in current form, that will be used to filter the query
+           */
+          formFieldName: string;
+          /**
+           * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+           *
+           * Root Argument or filter argument are supported.
+           */
+          rootQueryArg?: string;
+      }
+    | {
+          /**
+           * Filter by a prop passed into the form, this prop will be generated
+           */
+          type: "formProp";
+          /**
+           * Name of the prop generated for this form
+           */
+          propName: string;
+          /**
+           * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+           *
+           * Root Argument or filter argument are supported.
+           */
+          rootQueryArg?: string;
+      };
 
 export type FormFieldConfig<T> = (
-    | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
-    | ({ type: "number"; decimals?: number } & InputBaseFieldConfig)
+    | ({ type: "text"; name: keyof T; multiline?: boolean } & InputBaseFieldConfig)
+    | ({ type: "number"; name: keyof T; decimals?: number } & InputBaseFieldConfig)
     | ({
           type: "numberRange";
+          name: keyof T;
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
       } & InputBaseFieldConfig)
-    | { type: "boolean" }
-    | ({ type: "date" } & InputBaseFieldConfig)
-    | ({ type: "dateTime" } & InputBaseFieldConfig)
+    | { type: "boolean"; name: keyof T }
+    | ({ type: "date"; name: keyof T } & InputBaseFieldConfig)
+    | ({ type: "dateTime"; name: keyof T } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
-          values?: Array<{ value: string; label: string } | string>;
+          name: keyof T;
+          values?: StaticSelectValue[];
           inputType?: "select" | "radio";
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelect";
+          name: keyof T;
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?: AsyncSelectFilter;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
-    | { type: "block"; block: BlockInterface }
-    | SingleFileFormFieldConfig
-    | MultiFileFormFieldConfig
+    | ({
+          type: "asyncSelectFilter";
+          name: string;
+          loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
+          rootQuery: string;
+          labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?: AsyncSelectFilter;
+      } & Omit<InputBaseFieldConfig, "endAdornment">)
+    | { type: "block"; name: keyof T; block: BlockInterface }
+    | ({ type: "fileUpload"; multiple?: false; name: keyof T; maxFiles?: 1; download?: boolean } & Pick<
+          Partial<FinalFormFileUploadProps<false>>,
+          "maxFileSize" | "readOnly" | "layout" | "accept"
+      >)
+    | ({ type: "fileUpload"; multiple: true; name: keyof T; maxFiles?: number; download?: boolean } & Pick<
+          Partial<FinalFormFileUploadProps<true>>,
+          "maxFileSize" | "readOnly" | "layout" | "accept"
+      >)
 ) & {
-    name: keyof T;
     label?: string;
     required?: boolean;
-    virtual?: boolean;
     validate?: FieldValidator<unknown>;
     helperText?: string;
     readOnly?: boolean;
 };
 
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
-    return !isFormLayoutConfig(arg);
+    return !isFormLayoutConfig(arg) && !isComponentFormFieldConfig(arg);
 }
 
 type OptionalNestedFieldsConfig<T> = {
@@ -120,6 +179,11 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
@@ -129,14 +193,20 @@ type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "
     fieldName?: string; // this can be used to overwrite field-prop of column-config
 };
 
-export type StaticSelectLabelCellContent = {
+export type GridColumnStaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
     icon?: Icon;
 };
 
-type StaticSelectValue = string | number | boolean;
-type StaticSelectValueObject = { value: StaticSelectValue; label: string | StaticSelectLabelCellContent };
+export type GridColumnStaticSelectValue =
+    | StaticSelectValue
+    | {
+          value: string | number | boolean;
+          label: string | GridColumnStaticSelectLabelCellContent;
+      }
+    | number
+    | boolean;
 
 export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "text"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
@@ -144,7 +214,7 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "boolean"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "date"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
-    | { type: "staticSelect"; values?: Array<StaticSelectValue | StaticSelectValueObject> }
+    | { type: "staticSelect"; values?: GridColumnStaticSelectValue[] }
     | { type: "block"; block: BlockInterface }
     | { type: "id"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | {
@@ -167,7 +237,11 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
       }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
+export type ActionsGridColumnConfig<T> = {
+    type: "actions";
+    queryFields?: UsableFields<T, true>[];
+    component?: ComponentType<GridCellParams>;
+} & BaseColumnConfig;
 export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     type: "virtual";
     name: string;
@@ -181,13 +255,16 @@ type InitialFilterConfig = {
     linkOperator?: "and" | "or";
 };
 
+// Additional type is necessary to avoid "TS2589: Type instantiation is excessively deep and possibly infinite."
+type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig<T> | VirtualGridColumnConfig<T>;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
+    columns: Array<GridConfigGridColumnDef<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;
@@ -205,6 +282,11 @@ export type GridConfig<T extends { __typename?: string }> = {
         enabled: boolean;
         dragPreviewField?: UsableFields<T>;
     };
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;

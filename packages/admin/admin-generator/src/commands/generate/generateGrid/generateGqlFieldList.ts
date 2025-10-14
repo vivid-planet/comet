@@ -1,6 +1,6 @@
 import objectPath from "object-path";
 
-import { type ActionsGridColumnConfig, type GridColumnConfig, type VirtualGridColumnConfig } from "../generate-command";
+import { type GridConfig } from "../generate-command";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {
@@ -20,14 +20,15 @@ const recursiveStringify = (obj: FieldsObjectType): string => {
     return ret;
 };
 
-export function generateGqlFieldList({
-    columns,
-}: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    columns: Array<GridColumnConfig<any> | ActionsGridColumnConfig | VirtualGridColumnConfig<any>>;
-}) {
+export function generateGqlFieldList<T extends { __typename?: string }>({ columns }: { columns: GridConfig<T>["columns"] }) {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
-        if (field.type !== "actions") {
+        if (field.type === "actions") {
+            field.queryFields?.forEach((queryField) => {
+                objectPath.set(acc, queryField, true);
+            });
+        } else if (field.name === "id") {
+            // exclude id because it's always required
+        } else {
             let hasCustomFields = false;
 
             if ("labelField" in field && field.labelField) {

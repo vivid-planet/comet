@@ -105,4 +105,6 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
         return contents;
     },
+
+    tags: ["YouTube"],
 };

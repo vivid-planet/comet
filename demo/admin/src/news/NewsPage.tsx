@@ -11,7 +11,7 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
 } from "@comet/admin";
-import { ContentScopeIndicator, useContentScope, useContentScopeConfig } from "@comet/cms-admin";
+import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
 import { NewsForm } from "./generated/NewsForm";
@@ -30,7 +30,6 @@ const FormToolbar = () => (
 
 export function NewsPage() {
     const intl = useIntl();
-    const { scope } = useContentScope();
 
     useContentScopeConfig({ redirectPathAfterChange: "/structured-content/news" });
 
@@ -48,7 +47,7 @@ export function NewsPage() {
                         <SaveBoundary>
                             <FormToolbar />
                             <MainContent>
-                                <NewsForm id={selectedNewsId} scope={scope} />
+                                <NewsForm id={selectedNewsId} />
                             </MainContent>
                         </SaveBoundary>
                     )}
@@ -57,7 +56,7 @@ export function NewsPage() {
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <NewsForm scope={scope} />
+                            <NewsForm />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>

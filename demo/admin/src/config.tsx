@@ -22,5 +22,6 @@ export function createConfig() {
         buildDate: environmentVariables.BUILD_DATE,
         buildNumber: environmentVariables.BUILD_NUMBER,
         commitSha: environmentVariables.COMMIT_SHA,
+        muiLicenseKey: environmentVariables.MUI_LICENSE_KEY,
     };
 }

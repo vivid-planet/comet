@@ -1,10 +1,11 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { Product } from "./product.entity";
+import { ProductCategoryType } from "./product-category-type.entity";
 
 @ObjectType()
 @Entity()
@@ -38,6 +39,9 @@ export class ProductCategory extends BaseEntity {
     })
     @OneToMany(() => Product, (products) => products.category)
     products = new Collection<Product>(this);
+
+    @ManyToOne(() => ProductCategoryType, { nullable: true, ref: true })
+    type?: Ref<ProductCategoryType> = undefined;
 
     @Property()
     @Field()

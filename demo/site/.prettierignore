@@ -44,6 +44,7 @@ schema.json
 block-meta.json
 src/**/*.generated.ts
 comet-config.json
+*.scss.d.ts
 
 public/sitemap.xml
 public/robots.txt

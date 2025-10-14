@@ -47,19 +47,16 @@ import { Education as EducationIcon } from "@comet/admin-icons";
 const productsFragment = gql`
         fragment ProductsGridFuture on Product {
             id
-            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name }
+            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name } slug
         }
     `;
 const productsQuery = gql`
-        query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
-    products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductsGridFuture
-                }
-                totalCount
-            }
+    query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
+        products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductsGridFuture } totalCount
         }
-        ${productsFragment}
+    }
+    ${productsFragment}
     `;
 const deleteProductMutation = gql`
                 mutation DeleteProduct($id: ID!) {
@@ -163,7 +160,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         { field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "boolean",
-            valueFormatter: (value, row) => typeof row.inStock === "boolean" ? row.inStock.toString() : "",
             flex: 1,
             visible: theme.breakpoints.up('md'),
             minWidth: 80, },
@@ -195,7 +191,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             width: 170, },
         { field: "manufacturer",
             headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
-            sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
             flex: 1,
@@ -205,12 +200,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
             flex: 1,
+            disableExport: true,
             minWidth: 150, },
         { ...dataGridOneToManyColumn, field: "variants",
             headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
             sortable: false,
             renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
             flex: 1,
+            disableExport: true,
             minWidth: 150, },
         { field: "actions",
             headerName: "",
@@ -247,7 +244,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const exportApi = useDataGridExcelExport<GQLProductsGridQuery["products"]["nodes"][0], GQLProductsGridQuery, Omit<GQLProductsGridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel)
         },
         query: productsQuery,
         resolveQueryNodes: (data) => data.products.nodes,

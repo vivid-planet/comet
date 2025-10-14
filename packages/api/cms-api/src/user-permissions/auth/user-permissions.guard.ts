@@ -2,13 +2,14 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/commo
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
+import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
-import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
-import { AccessControlServiceInterface, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
+import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -22,7 +23,7 @@ export class UserPermissionsGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
+        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, REQUIRED_PERMISSION_METADATA_KEY);
         const skipScopeCheck = requiredPermission?.options?.skipScopeCheck ?? false;
 
         let requiredContentScopes: ContentScope[][] = [];
@@ -35,7 +36,7 @@ export class UserPermissionsGuard implements CanActivate {
             request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
         }
 
-        if (this.getDecorator(context, "disableCometGuards")) return true;
+        if (this.getDecorator(context, DISABLE_COMET_GUARDS_METADATA_KEY)) return true;
 
         const user = this.getUser(context);
         if (!user) return false;
@@ -50,7 +51,9 @@ export class UserPermissionsGuard implements CanActivate {
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
         if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
-            return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
+            return requiredPermissions
+                .filter((permission) => permission !== DisablePermissionCheck)
+                .some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
             if (requiredContentScopes.length === 0)
                 throw new Error(
@@ -61,11 +64,13 @@ export class UserPermissionsGuard implements CanActivate {
             // The first level has to be checked with AND, the second level with OR
             // The first level consists of submitted scopes and affected entities
             // The only case that there is more than one scope in the second level is when the ScopedEntity returns more scopes
-            return requiredPermissions.some((permission) =>
-                requiredContentScopes.every((contentScopes) =>
-                    contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
-                ),
-            );
+            return requiredPermissions
+                .filter((permission): permission is Permission => permission !== DisablePermissionCheck)
+                .some((permission) =>
+                    requiredContentScopes.every((contentScopes) =>
+                        contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+                    ),
+                );
         }
     }
 

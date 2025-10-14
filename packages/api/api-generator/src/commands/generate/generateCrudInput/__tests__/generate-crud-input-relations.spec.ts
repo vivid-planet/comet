@@ -2,7 +2,7 @@ import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneT
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatSource, parseSource } from "../../utils/test-helper";
+import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrudInput } from "../generate-crud-input";
 
 @Entity()
@@ -34,7 +34,7 @@ describe("GenerateCrudInputRelations", () => {
             }),
         );
 
-        const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
+        const out = await generateCrudInput({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("Product"));
         const formattedOut = await formatSource(out[0].content);
         const source = parseSource(formattedOut);
 
@@ -55,7 +55,7 @@ describe("GenerateCrudInputRelations", () => {
             expect(decorators).toContain("IsUUID");
             expect(decorators).toContain("IsNullable");
         }
-        orm.close();
+        await orm.close();
     });
 
     it("1:n input dto should contain relation id", async () => {
@@ -68,7 +68,10 @@ describe("GenerateCrudInputRelations", () => {
             }),
         );
 
-        const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("ProductCategory"));
+        const out = await generateCrudInput(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("ProductCategory"),
+        );
         const formattedOut = await formatSource(out[0].content);
         //console.log(formattedOut);
         const source = parseSource(formattedOut);
@@ -90,6 +93,6 @@ describe("GenerateCrudInputRelations", () => {
             expect(decorators).toContain("IsUUID");
             expect(decorators).toContain("IsArray");
         }
-        orm.close();
+        await orm.close();
     });
 });

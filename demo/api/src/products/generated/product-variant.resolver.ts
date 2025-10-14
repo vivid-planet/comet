@@ -8,7 +8,7 @@ import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-va
 import { PaginatedProductVariants } from "./dto/paginated-product-variants";
 import { ProductVariantsArgs } from "./dto/product-variants.args";
 import { Product } from "../entities/product.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
@@ -39,11 +39,7 @@ export class ProductVariantResolver {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<ProductVariant, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(ProductVariant, where, options);
         return new PaginatedProductVariants(entities, totalCount);

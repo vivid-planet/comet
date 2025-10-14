@@ -1,5 +1,5 @@
 import { Button, SubRoute, useEditDialog } from "@comet/admin";
-import { Add, Edit } from "@comet/admin-icons/lib";
+import { Add, Edit } from "@comet/admin-icons";
 import { Stack, Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

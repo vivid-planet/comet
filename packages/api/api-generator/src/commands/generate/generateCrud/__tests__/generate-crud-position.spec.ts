@@ -6,7 +6,7 @@ import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "../../generateCrudInput/generate-crud-input";
-import { formatSource, parseSource } from "../../utils/test-helper";
+import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -40,7 +40,7 @@ class TestEntityWithPositionFieldAndScope extends BaseEntity {
 }
 
 @Entity()
-@CrudGenerator({ targetDirectory: __dirname, position: { groupByFields: ["country"] } })
+@CrudGenerator({ targetDirectory: __dirname, requiredPermission: testPermission, position: { groupByFields: ["country"] } })
 class TestEntityWithPositionGroup extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
@@ -65,7 +65,10 @@ describe("GenerateCrudPosition", () => {
             }),
         );
 
-        const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionField"));
+        const out = await generateCrudInput(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithPositionField"),
+        );
         const formattedOut = await formatSource(out[0].content);
         const source = parseSource(formattedOut);
 
@@ -92,7 +95,7 @@ describe("GenerateCrudPosition", () => {
             expect(minDecorator?.arguments).toContain("1");
         }
 
-        orm.close();
+        await orm.close();
     });
     it("service should implement position-functions", async () => {
         LazyMetadataStorage.load();
@@ -104,7 +107,10 @@ describe("GenerateCrudPosition", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionField"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithPositionField"),
+        );
         const file = out.find((file) => file.name == "test-entity-with-position-fields.service.ts");
         if (!file) throw new Error("File not found");
 
@@ -128,7 +134,7 @@ describe("GenerateCrudPosition", () => {
             expect(getLastPositionFunction).not.toBeUndefined();
         }
 
-        orm.close();
+        await orm.close();
     });
     it("service should implement getPositionGroupCondition-function if scope existent", async () => {
         LazyMetadataStorage.load();
@@ -140,7 +146,10 @@ describe("GenerateCrudPosition", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionFieldAndScope"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithPositionFieldAndScope"),
+        );
         const file = out.find((file) => file.name == "test-entity-with-position-field-and-scopes.service.ts");
         if (!file) throw new Error("File not found");
 
@@ -158,7 +167,7 @@ describe("GenerateCrudPosition", () => {
             expect(getLastPositionFunction).not.toBeUndefined();
         }
 
-        orm.close();
+        await orm.close();
     });
     it("service should implement getPositionGroupCondition-function if configured", async () => {
         LazyMetadataStorage.load();
@@ -171,7 +180,7 @@ describe("GenerateCrudPosition", () => {
         );
 
         const out = await generateCrud(
-            { targetDirectory: __dirname, position: { groupByFields: ["country"] } },
+            { targetDirectory: __dirname, requiredPermission: testPermission, position: { groupByFields: ["country"] } },
             orm.em.getMetadata().get("TestEntityWithPositionGroup"),
         );
         const file = out.find((file) => file.name == "test-entity-with-position-groups.service.ts");
@@ -191,6 +200,6 @@ describe("GenerateCrudPosition", () => {
             expect(getLastPositionFunction).not.toBeUndefined();
         }
 
-        orm.close();
+        await orm.close();
     });
 });

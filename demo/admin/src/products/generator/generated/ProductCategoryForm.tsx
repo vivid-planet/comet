@@ -3,6 +3,7 @@
 import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { filterByFragment } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
@@ -15,6 +16,9 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { GQLProductCategoryTypesSelectQuery } from "./ProductCategoryForm.generated";
+import { GQLProductCategoryTypesSelectQueryVariables } from "./ProductCategoryForm.generated";
+import { AsyncAutocompleteField } from "@comet/admin";
 import { productCategoryFormFragment } from "./ProductCategoryForm.gql";
 import { GQLProductCategoryFormFragment } from "./ProductCategoryForm.gql.generated";
 import { productCategoryQuery } from "./ProductCategoryForm.gql";
@@ -57,6 +61,7 @@ export function ProductCategoryForm({ id }: FormProps) {
             throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+            type: formValues.type ? formValues.type.id : null,
         };
         if (mode === "edit") {
             if (!id)
@@ -70,7 +75,9 @@ export function ProductCategoryForm({ id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProductCategory.id;
@@ -96,6 +103,21 @@ export function ProductCategoryForm({ id }: FormProps) {
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="productCategory.title" defaultMessage="Title"/>}/>
 
         <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="productCategory.slug" defaultMessage="Slug"/>}/>
+        <AsyncAutocompleteField variant="horizontal" fullWidth name="type" label={<FormattedMessage id="productCategory.type" defaultMessage="Type"/>} loadOptions={async (search?: string) => {
+                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
+                    query: gql`
+    query ProductCategoryTypesSelect($search: String) {
+        productCategoryTypes(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        search,
+                    }
+                });
+                return data.productCategoryTypes.nodes;
+            }} getOptionLabel={(option) => option.title}/>
                         </>
                     </>)}
             </FinalForm>);

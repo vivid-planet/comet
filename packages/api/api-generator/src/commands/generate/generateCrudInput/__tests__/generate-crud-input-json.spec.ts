@@ -3,7 +3,7 @@ import { InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatSource, parseSource } from "../../utils/test-helper";
+import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrudInput } from "../generate-crud-input";
 
 @Entity()
@@ -55,7 +55,10 @@ describe("GenerateCrudInputJson", () => {
                 }),
             );
 
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"),
+            );
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -82,7 +85,7 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
     describe("input class json object", () => {
@@ -96,7 +99,10 @@ describe("GenerateCrudInputJson", () => {
                 }),
             );
 
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonObject"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithJsonObject"),
+            );
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -121,7 +127,7 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -136,7 +142,10 @@ describe("GenerateCrudInputJson", () => {
                 }),
             );
 
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRecord"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithRecord"),
+            );
             const formattedOut = await formatSource(out[0].content);
             const source = parseSource(formattedOut);
 
@@ -161,7 +170,7 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 });

@@ -2,7 +2,7 @@ import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { type GeneratedFile } from "../../utils/write-generated-files";
 import { generateCrud } from "../generate-crud";
 
@@ -29,10 +29,16 @@ describe("filter primary key", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntity"),
+            );
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
             if (!foundFile) throw new Error("File not found");
+        });
+        afterEach(async () => {
+            await orm.close();
         });
 
         it("filter for embedded field should exist", async () => {
@@ -58,8 +64,6 @@ describe("filter primary key", () => {
                 expect(structure.properties?.[3].name).toBe("or");
                 expect(structure.properties?.[3].type).toBe("TestEntityFilter[]");
             }
-
-            orm.close();
         });
     });
 });

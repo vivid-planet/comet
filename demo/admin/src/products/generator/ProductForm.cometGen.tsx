@@ -39,7 +39,9 @@ export default defineConfig<GQLProduct>({
                     inputType: "radio",
                     values: productTypeValues,
                 },
+                { type: "staticSelect", name: "additionalTypes" },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                { type: "asyncSelect", name: "tags", rootQuery: "productTags" },
                 {
                     type: "numberRange",
                     name: "priceRange",
@@ -68,9 +70,10 @@ export default defineConfig<GQLProduct>({
                     type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
-                    filterField: {
-                        name: "type",
-                        gqlName: "addressAsEmbeddable_country",
+                    filter: {
+                        type: "formProp",
+                        propName: "manufacturerCountry",
+                        rootQueryArg: "addressAsEmbeddable_country",
                     },
                     startAdornment: { icon: "Location" },
                 },

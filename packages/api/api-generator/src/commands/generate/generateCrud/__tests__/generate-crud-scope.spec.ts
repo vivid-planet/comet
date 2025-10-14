@@ -3,7 +3,7 @@ import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, Prima
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -29,7 +29,10 @@ describe("GenerateCrud with ScopedEntity", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScopedEntity"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithScopedEntity"),
+        );
         const formattedOut = await formatGeneratedFiles(out);
 
         {
@@ -44,7 +47,7 @@ describe("GenerateCrud with ScopedEntity", () => {
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
 
-        orm.close();
+        await orm.close();
     });
 });
 
@@ -74,7 +77,10 @@ describe("GenerateCrud with Scope", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScope"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithScope"),
+        );
         const formattedOut = await formatGeneratedFiles(out);
 
         {
@@ -89,6 +95,6 @@ describe("GenerateCrud with Scope", () => {
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
 
-        orm.close();
+        await orm.close();
     });
 });

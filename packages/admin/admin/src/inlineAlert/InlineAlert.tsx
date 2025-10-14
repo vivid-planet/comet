@@ -9,7 +9,7 @@ import { ActionsContainer, Description, IconContainer, Root, Title } from "./Inl
 
 export type InlineAlertClassKey = "root" | "iconContainer" | "title" | "description" | "actionsContainer";
 
-type InlineAlertSeverity = "error" | "warning" | "info";
+export type InlineAlertSeverity = "error" | "warning" | "info";
 
 export type InlineAlertProps = ThemedComponentBaseProps<{
     root: "div";

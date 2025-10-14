@@ -37,6 +37,15 @@ sh install.sh
 
 _It is recommended to run `install.sh` every time you switch to the `main` branch._
 
+### MUI X Data Grid Pro License
+
+If you want to use features from `@mui/x-data-grid-pro`, you need to configure your MUI license key. Create a `.env.local` file in your project root and add your license key:
+
+`.env.local`:
+```
+MUI_LICENSE_KEY=your_license_key_here
+```
+
 ### Build packages
 
 Before starting individual development processes, build all Comet packages at least once.
@@ -132,10 +141,11 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 #### Start Docs
 
 ```bash
-pnpm run docs
+npx dev-pm start @docs
 ```
 
-The docs will be available at [http://localhost:3300/](http://localhost:3300/)
+The docs will be available at [http://localhost:3300/](http://localhost:3300/)  
+_This will also start Storybook, due to some docs-pages being generated from storybook stories._
 
 ### Stop processes
 
@@ -156,17 +166,32 @@ However, we recommend directly using dev-process-manager for greater control ove
 
 See [package.json](/package.json) for a list of all available dev scripts.
 
-## Develop in a project
+## Developing in an external project
 
-### additional Requirements
+### Requirements
 
 -   [watchman](https://facebook.github.io/watchman/)
 -   [wml](https://github.com/wix/wml)
 
-###
+### Setup
 
-    ./wml-add.sh ../example
-    wml start
+Configure `wml` to sync the comet `node_modules` to the external project:
+
+```bash
+./wml-add.sh /path/to/my-project
+```
+
+It may be necessary to configure `watchman` to watch your globally installed `wml`:
+
+```bash
+watchman watch $(dirname "$(dirname "$(which node)")")/lib/node_modules/wml/src
+```
+
+Start syncing the comet `node_modules` to the external project:
+
+```bash
+wml start
+```
 
 ## Contributing
 

@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { type GeneratedFile } from "../../utils/write-generated-files";
 import { generateCrud } from "../generate-crud";
 
@@ -63,10 +63,16 @@ describe("GenerateCrudInputEmbedded", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmbedded"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithEmbedded"),
+            );
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity-with-embedded.resolver.ts");
             if (!foundFile) throw new Error("File not found");
+        });
+        afterEach(async () => {
+            await orm.close();
         });
 
         it("filter for embedded field should exist", async () => {
@@ -95,8 +101,6 @@ describe("GenerateCrudInputEmbedded", () => {
                 expect(structure.properties?.[4].name).toBe("or");
                 expect(structure.properties?.[4].type).toBe("TestEntityWithEmbeddedFilter[]");
             }
-
-            orm.close();
         });
 
         it("input for embedded field should exist", async () => {
@@ -125,8 +129,6 @@ describe("GenerateCrudInputEmbedded", () => {
 
                 expect(structure.properties?.length).toBe(0);
             }
-
-            orm.close();
         });
 
         it("sort for embedded field should exist", async () => {
@@ -145,8 +147,6 @@ describe("GenerateCrudInputEmbedded", () => {
                 expect(structure.members?.[0].name).toBe("foo");
                 expect(structure.members?.[1].name).toBe("embedded_test");
             }
-
-            orm.close();
         });
     });
 
@@ -163,10 +163,16 @@ describe("GenerateCrudInputEmbedded", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithoutEmbedded"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithoutEmbedded"),
+            );
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity-without-embedded.resolver.ts");
             if (!foundFile) throw new Error("File not found");
+        });
+        afterEach(async () => {
+            await orm.close();
         });
 
         it("filter for embedded field should not exist", async () => {
@@ -193,8 +199,6 @@ describe("GenerateCrudInputEmbedded", () => {
                 expect(structure.properties?.[3].name).toBe("or");
                 expect(structure.properties?.[3].type).toBe("TestEntityWithoutEmbeddedFilter[]");
             }
-
-            orm.close();
         });
 
         it("input for embedded field should not exist", async () => {
@@ -222,8 +226,6 @@ describe("GenerateCrudInputEmbedded", () => {
 
                 expect(structure.properties?.length).toBe(0);
             }
-
-            orm.close();
         });
 
         it("sort for embedded field should not exist", async () => {
@@ -241,8 +243,6 @@ describe("GenerateCrudInputEmbedded", () => {
                 expect(structure.members?.length).toBe(1);
                 expect(structure.members?.[0].name).toBe("foo");
             }
-
-            orm.close();
         });
     });
 });

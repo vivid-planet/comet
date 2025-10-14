@@ -1,7 +1,7 @@
-import { BlobStorageConfig } from "@comet/cms-api";
+import { BlobStorageConfig, IsUndefinable } from "@comet/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -23,9 +23,8 @@ export class EnvironmentVariables {
     @IsString()
     POSTGRESQL_DB: string;
 
-    @IsOptional()
     @IsString()
-    POSTGRESQL_USER?: string;
+    POSTGRESQL_USER: string;
 
     @IsString()
     POSTGRESQL_PWD: string;
@@ -33,25 +32,16 @@ export class EnvironmentVariables {
     @IsString()
     API_URL: string;
 
-    @IsOptional()
-    @IsBoolean()
-    @Transform(({ value }) => value === "true")
-    USE_AUTHPROXY: boolean;
-
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_CLIENT_ID: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_JWKS_URI: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_END_SESSION_ENDPOINT: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     POST_LOGOUT_REDIRECT_URI: string;
 
     @IsString()
@@ -118,6 +108,25 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    MAILER_HOST: string;
+
+    @Type(() => Number)
+    @IsInt()
+    MAILER_PORT: number;
+
+    @IsUndefinable()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsEmail({}, { each: true })
+    MAILER_SEND_ALL_MAILS_TO?: string[];
+
+    @IsUndefinable()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsEmail({}, { each: true })
+    MAILER_SEND_ALL_MAILS_BCC?: string[];
 
     @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")

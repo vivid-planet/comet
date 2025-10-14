@@ -2,14 +2,20 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import omit from "lodash.omit";
 import { createContext, type PropsWithChildren, useContext } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
+import { type GQLPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
-type CurrentUserContext = {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface PermissionOverrides {} // This interface can be overwritten to add custom permissions
+export type Permission = GQLPermission | PermissionOverrides[keyof PermissionOverrides];
+
+interface CurrentUserContext {
     currentUser: CurrentUserInterface;
-    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => boolean;
-};
+    isAllowed: (user: CurrentUserInterface, permission: Permission, contentScope?: ContentScope) => boolean;
+}
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
 export interface CurrentUserInterface {
@@ -22,7 +28,7 @@ export interface CurrentUserInterface {
         email: string;
     } | null;
     permissions: {
-        permission: string;
+        permission: Permission;
         contentScopes: ContentScope[];
     }[];
     allowedContentScopes: {
@@ -56,7 +62,13 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     `);
 
     if (error) {
-        return <>Cannot load user: {error.message}</>;
+        return (
+            <FormattedMessage
+                id="comet.currentUser.loadError"
+                defaultMessage="Cannot load user: {errorMessage}"
+                values={{ errorMessage: error.message }}
+            />
+        );
     }
 
     if (!data) return <Loading behavior="fillPageHeight" />;
@@ -66,14 +78,17 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
             id: data.currentUser.id,
             name: data.currentUser.name,
             email: data.currentUser.email,
-            permissions: data.currentUser.permissions.map((p) => omit(p, "__typename")),
+            permissions: data.currentUser.permissions.map((p) => ({
+                permission: p.permission as Permission,
+                contentScopes: p.contentScopes,
+            })),
             authenticatedUser: data.currentUser.authenticatedUser && omit(data.currentUser.authenticatedUser, "__typename"),
             allowedContentScopes: data.currentUser.allowedContentScopes.map((acs) => omit(acs, "__typename")),
             impersonated: !!data.currentUser.impersonated,
         },
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
+            ((user: CurrentUserInterface, permission: Permission, contentScope?: ContentScope) => {
                 if (user.email === undefined) return false;
                 return user.permissions.some(
                     (p) =>
@@ -92,9 +107,9 @@ export function useCurrentUser(): CurrentUserInterface {
     return ret.currentUser;
 }
 
-export function useUserPermissionCheck(): (permission: string) => boolean {
+export function useUserPermissionCheck(): (permission: Permission) => boolean {
     const context = useContext(CurrentUserContext);
     if (!context) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
     const contentScope = useContentScope();
-    return (permission: string) => context.isAllowed(context.currentUser, permission, contentScope.scope);
+    return (permission) => context.isAllowed(context.currentUser, permission, contentScope.scope);
 }
