@@ -200,6 +200,7 @@ export const Tooltip = (inProps: TooltipProps) => {
     const { title: titleSlotProps, text: textSlotProps, ...muiSlotProps } = slotProps;
 
     const commonTooltipProps = {
+        tabIndex: 0,
         ...restProps,
         title: getMuiTooltipTitle({ title, description, customContent }, { title: titleSlotProps, text: textSlotProps }),
         disableInteractive,
