@@ -1,0 +1,17 @@
+.pageLayoutContent {
+    grid-column: 3 / -3;
+}
+
+.list {
+    list-style: disc;
+    color: var(--palette-primary-main);
+}
+
+.listElement {
+    line-height: 26px;
+    padding: 12px 0;
+}
+.link {
+    color: var(--palette-primary-main);
+    text-underline-offset: 10px;
+}
