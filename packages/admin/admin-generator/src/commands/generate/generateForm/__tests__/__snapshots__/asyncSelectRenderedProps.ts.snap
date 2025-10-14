@@ -12,21 +12,14 @@ exports[`AsyncSelect rendered props generates readonly async select 1`] = `
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect
-                            
-                            
-                            
-                         {
-                            categories
-                                
-                                
-                             {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query CategoriesSelect {
+        categories {
+            nodes { id name }
+        }
+    }
+    
+    \`
                             
                             
                         
