@@ -10,11 +10,11 @@ const files = [
                   targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages"],
               },
               {
-                  file: ".env.local",
+                  file: "demo/.env.local",
                   targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages", "storybook"],
               },
               {
-                  file: ".env.site-configs",
+                  file: "demo/.env.site-configs",
                   targetDir: ["demo/admin", "demo/api", "demo/site"],
               },
           ]),
