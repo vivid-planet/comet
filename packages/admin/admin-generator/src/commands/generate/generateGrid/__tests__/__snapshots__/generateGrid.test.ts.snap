@@ -77,15 +77,12 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const booksQuery = gql\`
-        query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
-    books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
-                nodes {
-                    ...BooksForm
-                }
-                totalCount
-            }
+    query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
         }
-        \${booksFragment}
+    }
+    \${booksFragment}
     \`;
 
     
@@ -266,15 +263,12 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const booksQuery = gql\`
-        query BooksGrid($authorId: ID!, $offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
-    booksByAuthor(authorId: $authorId, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
-                nodes {
-                    ...BooksForm
-                }
-                totalCount
-            }
+    query BooksGrid($authorId: ID!, $offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        booksByAuthor(authorId: $authorId, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
         }
-        \${booksFragment}
+    }
+    \${booksFragment}
     \`;
 
     
@@ -490,15 +484,12 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const booksQuery = gql\`
-        query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
-    books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
-                nodes {
-                    ...BooksForm
-                }
-                totalCount
-            }
+    query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
         }
-        \${booksFragment}
+    }
+    \${booksFragment}
     \`;
 
     
