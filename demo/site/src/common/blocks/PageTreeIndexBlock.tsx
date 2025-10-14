@@ -3,71 +3,121 @@ import { PageLayout } from "@src/layout/PageLayout";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { useEffect, useState } from "react";
 
-import { pageTreeIndexFragment } from "./PageTreeIndex.fragement";
-import { type GQLPageTreeIndexFragment } from "./PageTreeIndex.fragement.generated";
-import { type GQLMainMenuQuery } from "./PageTreeIndexBlock.generated";
 import styles from "./PageTreeIndexBlock.module.scss";
 
 const pageTreeQuery = gql`
-    query MainMenu($domain: String!, $language: String!) {
-        mainMenu(scope: { domain: $domain, language: $language }) {
-            ...PageTreeIndex
+    query PrebuildPageDataListSitemap($scope: PageTreeNodeScopeInput!, $offset: Int, $limit: Int) {
+        paginatedPageTreeNodes(scope: $scope, offset: $offset, limit: $limit) {
+            nodes {
+                id
+                name
+                path
+                parentId
+                document {
+                    __typename
+                    ... on Page {
+                        updatedAt
+                        seo
+                    }
+                }
+            }
+            totalCount
         }
     }
-    ${pageTreeIndexFragment}
 `;
 
+type PageTreeNode = {
+    id: string;
+    path: string;
+    name: string;
+    parentId: string | null;
+};
+
+type PageTreeNodeWithChildren = PageTreeNode & { children: PageTreeNodeWithChildren[] };
+
+function buildTree(nodes: PageTreeNode[]): PageTreeNodeWithChildren[] {
+    const nodeMap: Record<string, PageTreeNodeWithChildren> = {};
+    const roots: PageTreeNodeWithChildren[] = [];
+    nodes.forEach((node) => {
+        nodeMap[node.id] = { ...node, children: [] };
+    });
+    nodes.forEach((node) => {
+        if (node.parentId && nodeMap[node.parentId]) {
+            nodeMap[node.parentId].children.push(nodeMap[node.id]);
+        } else {
+            roots.push(nodeMap[node.id]);
+        }
+    });
+    return roots;
+}
+
+function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
+    return (
+        <ul className={styles.list}>
+            {nodes.map((node) => (
+                <li key={node.id} className={styles.listElement}>
+                    <a href={node.path} className={styles.link}>
+                        {node.name || node.path}
+                    </a>
+                    {node.children.length > 0 && renderTree(node.children)}
+                </li>
+            ))}
+        </ul>
+    );
+}
+
 export function PageTreeIndexBlock(): JSX.Element {
-    const [pageTree, setPageTree] = useState<GQLPageTreeIndexFragment | null>(null);
+    const [pageTreeNodes, setPageTreeNodes] = useState<PageTreeNode[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const graphQLFetch = createGraphQLFetch();
 
-        async function fetchPageTree() {
+        async function fetchPageTreeNodes() {
             try {
-                const data: GQLMainMenuQuery = await graphQLFetch(pageTreeQuery, {
-                    domain: "main",
-                    language: "en",
-                });
-                setPageTree(data.mainMenu);
+                const scope = { domain: "main", language: "en" };
+                let totalCount = 0;
+                let currentCount = 0;
+                let allNodes: PageTreeNode[] = [];
+                do {
+                    const result = (await graphQLFetch(pageTreeQuery, {
+                        scope,
+                        offset: currentCount,
+                        limit: 50,
+                    })) as {
+                        paginatedPageTreeNodes: {
+                            nodes: PageTreeNode[];
+                            totalCount: number;
+                        };
+                    };
+                    const paginatedPageTreeNodes = result.paginatedPageTreeNodes;
+                    totalCount = paginatedPageTreeNodes.totalCount;
+                    currentCount += paginatedPageTreeNodes.nodes.length;
+                    allNodes = allNodes.concat(
+                        paginatedPageTreeNodes.nodes.map((node) => ({
+                            id: node.id,
+                            path: node.path,
+                            name: node.name,
+                            parentId: node.parentId ?? null,
+                        })),
+                    );
+                } while (totalCount > currentCount);
+                setPageTreeNodes(allNodes);
             } catch (err) {
                 setError(String(err));
             }
         }
-        fetchPageTree();
+        fetchPageTreeNodes();
     }, []);
 
     if (error) return <pre>Error: {error}</pre>;
-    if (!pageTree) return <p>Loading...</p>;
+    if (!pageTreeNodes.length) return <p>Loading...</p>;
+
+    const tree = buildTree(pageTreeNodes);
 
     return (
         <PageLayout grid>
-            <div className={styles.pageLayoutContent}>
-                <ul className={styles.list}>
-                    {pageTree.items.map((item) => {
-                        const hasChildren = item.node.childNodes && item.node.childNodes.length > 0;
-                        return (
-                            <li key={item.id} className={styles.listElement}>
-                                <a href={item.node.path} className={styles.link}>
-                                    {item.node.name}
-                                </a>
-                                {hasChildren && (
-                                    <ul className={styles.list}>
-                                        {item.node.childNodes.map((child) => (
-                                            <li key={child.id} className={styles.listElement}>
-                                                <a href={child.path} className={styles.link}>
-                                                    {child.name}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
+            <div className={styles.pageLayoutContent}>{renderTree(tree)}</div>
         </PageLayout>
     );
 }
