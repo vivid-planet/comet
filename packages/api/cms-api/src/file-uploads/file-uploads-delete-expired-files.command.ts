@@ -1,4 +1,4 @@
-import { CreateRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
@@ -12,7 +12,10 @@ import { FileUpload } from "./entities/file-upload.entity";
     description: "Deletes all expired file uploads",
 })
 export class FileUploadsDeleteExpiredFilesCommand extends CommandRunner {
-    constructor(@InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>) {
+    constructor(
+        @InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>,
+        private readonly orm: MikroORM,
+    ) {
         super();
     }
 
