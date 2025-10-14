@@ -115,7 +115,7 @@ export function generateForm(
         return acc;
     }, []);
 
-    let hasScope = false;
+    let useScopeFromContext = false;
     const gqlArgs: GqlArg[] = [];
     if (createMutationType) {
         const forwardedArgs = getForwardedGqlArgs({
@@ -126,7 +126,7 @@ export function generateForm(
         for (const forwardedArg of forwardedArgs) {
             imports.push(...forwardedArg.imports);
             if (forwardedArg.gqlArg.name === "scope" && !forwardedArg.gqlArg.isInputArgSubfield && !config.scopeAsProp) {
-                hasScope = true;
+                useScopeFromContext = true;
             } else {
                 formProps.push(forwardedArg.prop);
                 gqlArgs.push(forwardedArg.gqlArg);
@@ -134,7 +134,7 @@ export function generateForm(
         }
     }
 
-    if (hasScope) {
+    if (useScopeFromContext) {
         imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
     }
 
@@ -233,7 +233,7 @@ export function generateForm(
                             name: gqlArg.name,
                             type: `${gqlArg.type}!`,
                         })),
-                    ...(hasScope ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
+                    ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
                     {
                         name: "input",
                         type: `${gqlType}Input!`,
@@ -364,7 +364,7 @@ export function generateForm(
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
         ${addMode ? `const stackSwitchApi = useStackSwitchApi();` : ""}
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
 
         ${
             editMode
@@ -452,7 +452,7 @@ export function generateForm(
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: {
-                        ${hasScope ? `scope,` : ""}
+                        ${useScopeFromContext ? `scope,` : ""}
                         input: ${
                             gqlArgs.filter((prop) => prop.isInputArgSubfield).length
                                 ? `{ ...output, ${gqlArgs

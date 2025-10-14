@@ -288,21 +288,21 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    let hasScope = false;
+    let useScopeFromContext = false;
     const gqlArgs: GqlArg[] = [];
     {
         const forwardedArgs = getForwardedGqlArgs([gridQueryType]);
         for (const forwardedArg of forwardedArgs) {
             imports.push(...forwardedArg.imports);
             if (forwardedArg.gqlArg.name === "scope" && !config.scopeAsProp) {
-                hasScope = true;
+                useScopeFromContext = true;
             } else {
                 props.push(forwardedArg.prop);
                 gqlArgs.push(forwardedArg.gqlArg);
             }
         }
     }
-    if (hasScope) {
+    if (useScopeFromContext) {
         imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
     }
 
@@ -689,7 +689,7 @@ export function generateGrid<T extends { __typename?: string }>(
             ...(hasSort ? [{ name: "sort", type: `[${gqlType}Sort!]` }] : []),
             ...(hasSearch ? [{ name: "search", type: "String" }] : []),
             ...(filterArg && (hasFilter || hasFilterProp) ? [{ name: "filter", type: `${gqlType}Filter` }] : []),
-            ...(hasScope ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
+            ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
         ],
     })}\`;
 
@@ -747,7 +747,7 @@ export function generateGrid<T extends { __typename?: string }>(
                   ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
                   : ``
         } };
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
@@ -897,7 +897,7 @@ export function generateGrid<T extends { __typename?: string }>(
             variables: {
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
-                    ...(hasScope ? ["scope"] : []),
+                    ...(useScopeFromContext ? ["scope"] : []),
                     ...(filterArg
                         ? hasFilter && hasFilterProp
                             ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]
