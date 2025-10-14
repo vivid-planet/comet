@@ -119,13 +119,13 @@ visible: boolean;
 :::tip Good
 
 ```ts
-@Property()
+@Property({ default: null })
 visible: boolean = false;
 ```
 
 :::
 
-(if not a GQL Field)
+(if not a GQL field → setting the default to null is necessary; otherwise, MikroORM will create a default value in the migration)
 
 :::info
 If you are using the Upsert-Pattern, you may use DB defaults **additionally**
