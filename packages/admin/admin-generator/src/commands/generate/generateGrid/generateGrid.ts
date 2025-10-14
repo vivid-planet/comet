@@ -203,7 +203,6 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "useDataGridRemote", importPath: "@comet/admin" },
         { name: "usePersistentColumnState", importPath: "@comet/admin" },
         { name: "BlockPreviewContent", importPath: "@comet/cms-admin" },
-        { name: "useContentScope", importPath: "@comet/cms-admin" },
         { name: "Alert", importPath: "@mui/material" },
         { name: "Box", importPath: "@mui/material" },
         { name: "IconButton", importPath: "@mui/material" },
@@ -289,9 +288,23 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    const { imports: forwardedGqlArgsImports, props: forwardedGqlArgsProps, gqlArgs } = getForwardedGqlArgs([gridQueryType]);
-    imports.push(...forwardedGqlArgsImports);
-    props.push(...forwardedGqlArgsProps);
+    let useScopeFromContext = false;
+    const gqlArgs: GqlArg[] = [];
+    {
+        const forwardedArgs = getForwardedGqlArgs([gridQueryType]);
+        for (const forwardedArg of forwardedArgs) {
+            imports.push(...forwardedArg.imports);
+            if (forwardedArg.gqlArg.name === "scope" && !config.scopeAsProp) {
+                useScopeFromContext = true;
+            } else {
+                props.push(forwardedArg.prop);
+                gqlArgs.push(forwardedArg.gqlArg);
+            }
+        }
+    }
+    if (useScopeFromContext) {
+        imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
+    }
 
     const renderToolbar = config.toolbar ?? true;
 
@@ -353,7 +366,6 @@ export function generateGrid<T extends { __typename?: string }>(
     }
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search") && !allowRowReordering;
-    const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
@@ -677,7 +689,7 @@ export function generateGrid<T extends { __typename?: string }>(
             ...(hasSort ? [{ name: "sort", type: `[${gqlType}Sort!]` }] : []),
             ...(hasSearch ? [{ name: "search", type: "String" }] : []),
             ...(filterArg && (hasFilter || hasFilterProp) ? [{ name: "filter", type: `${gqlType}Filter` }] : []),
-            ...(hasScope ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
+            ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
         ],
     })}\`;
 
@@ -735,7 +747,7 @@ export function generateGrid<T extends { __typename?: string }>(
                   ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
                   : ``
         } };
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
@@ -885,7 +897,7 @@ export function generateGrid<T extends { __typename?: string }>(
             variables: {
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
-                    ...(hasScope ? ["scope"] : []),
+                    ...(useScopeFromContext ? ["scope"] : []),
                     ...(filterArg
                         ? hasFilter && hasFilterProp
                             ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]

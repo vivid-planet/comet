@@ -91,7 +91,9 @@ export function ProductHighlightForm({ id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductHighlightMutation, GQLCreateProductHighlightMutationVariables>({
                 mutation: createProductHighlightMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProductHighlight.id;

@@ -19,7 +19,7 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { useContentScope } from "@comet/cms-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { Future_DatePickerField } from "@comet/admin";
@@ -44,13 +44,13 @@ type FormValues = Omit<GQLNewsFormFragment, keyof typeof rootBlocks> & {
 };
 interface FormProps {
     id?: string;
-    scope: GQLNewsContentScopeInput;
 }
-export function NewsForm({ id, scope }: FormProps) {
+export function NewsForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
+    const { scope } = useContentScope();
     const { data, error, loading, refetch } = useQuery<GQLNewsQuery, GQLNewsQueryVariables>(newsQuery, id ? { variables: { id } } : { skip: true });
     const initialValues = useMemo<Partial<FormValues>>(() => data?.news
         ? {
@@ -91,7 +91,10 @@ export function NewsForm({ id, scope }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
-                variables: { input: output, scope },
+                variables: {
+                    scope,
+                    input: output
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createNews.id;

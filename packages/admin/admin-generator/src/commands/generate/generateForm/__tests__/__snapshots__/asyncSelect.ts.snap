@@ -138,6 +138,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -188,7 +189,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.createProduct.id;
@@ -330,6 +333,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -380,7 +384,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.createProduct.id;
@@ -522,6 +528,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -572,7 +579,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.createProduct.id;
@@ -715,6 +724,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -765,7 +775,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.createProduct.id;

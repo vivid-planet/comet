@@ -128,7 +128,9 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProduct.id;
