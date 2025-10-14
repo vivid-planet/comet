@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { getMessages, SupportedLanguage } from "@src/common/lang";
+import { getMessages, SupportedLanguage } from "@src/translation/lang";
 import { createIntl, createIntlCache, IntlCache } from "react-intl";
 
 @Injectable()
