@@ -2,6 +2,7 @@ import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { UserGroup } from "@src/user-groups/user-group";
 
 import { BlockFixture } from "./blocks/block-fixture";
 import { AccordionBlockFixtureService } from "./blocks/layout/accordion-block-fixture.service";
@@ -20,6 +21,7 @@ import { SliderBlockFixtureService } from "./blocks/slider-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./blocks/teaser/billboard-teaser-block-fixture.service";
 import { TeaserBlockFixtureService } from "./blocks/teaser/teaser-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "./blocks/text-and-content/key-facts-block-fixture.service";
+import { ProductListBlockFixtureService } from "./blocks/text-and-content/product-list-block.fixture";
 import { RichTextBlockFixtureService } from "./blocks/text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
@@ -48,6 +50,7 @@ export class PageContentBlockFixtureService {
         private readonly teaserBlockFixtureService: TeaserBlockFixtureService,
         private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
         private readonly sliderBlockFixtureService: SliderBlockFixtureService,
+        private readonly productListBlockFixtureService: ProductListBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -76,6 +79,7 @@ export class PageContentBlockFixtureService {
             keyFacts: ["textAndContent", this.keyFactsBlockFixtureService],
             richtext: ["textAndContent", this.richtextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
+            productList: ["textAndContent", this.productListBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)
@@ -92,6 +96,9 @@ export class PageContentBlockFixtureService {
                 type: type as any,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 props: props as any,
+                // TODO add custom block attributes to BlocksBlock types
+                // @ts-expect-error custom block attributes aren't reflected in types
+                userGroup: UserGroup.all,
             });
         }
 

@@ -15,8 +15,8 @@ import {
     type GeneratorReturn,
     type GQLDocumentConfigMap,
     type GridColumnConfig,
+    type GridColumnStaticSelectLabelCellContent,
     type GridConfig,
-    type StaticSelectLabelCellContent,
     type VirtualGridColumnConfig,
 } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
@@ -29,7 +29,7 @@ import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtime
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
-import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./getPropsForFilterProp";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
@@ -98,7 +98,7 @@ type LabelData = {
     gridCellContent?: ReactNode;
 };
 
-const getValueOptionsLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
+const getValueOptionsLabelData = (messageId: string, label: string | GridColumnStaticSelectLabelCellContent): LabelData => {
     if (typeof label === "string") {
         return {
             textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
@@ -147,17 +147,21 @@ const getValueOptionsLabelData = (messageId: string, label: string | StaticSelec
     };
 };
 
-export function generateGrid(
+export function generateGrid<T extends { __typename?: string }>(
     {
         exportName,
         baseOutputFilename,
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-
-    config: GridConfig<any>,
+    config: GridConfig<T>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
+
+    if (!gqlType) {
+        throw new Error("gqlType is required in grid config");
+    }
+
     const gqlTypePlural = plural(gqlType);
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -222,26 +226,13 @@ export function generateGrid(
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({
-        columns: config.columns.filter((column) => {
-            return (
-                // exclude id because it's always required
-                column.type !== "actions" && column.name !== "id"
-            );
-        }),
-    });
+    const fieldList = generateGqlFieldList({ columns: config.columns });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
-    const rootBlockColumns = config.columns
-        .filter((column) => column.type == "block")
-        .map((column) => {
-            // map is for ts to infer block type correctly
-            if (column.type !== "block") throw new Error("Field is not a block field");
-            return column;
-        });
+    const rootBlockColumns = config.columns.filter((column) => column.type == "block");
 
     rootBlockColumns.forEach((field) => {
         if (rootBlocks[String(field.name)]) {
@@ -261,7 +252,6 @@ export function generateGrid(
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
-    const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
@@ -298,11 +288,7 @@ export function generateGrid(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    const {
-        imports: forwardedGqlArgsImports,
-        props: forwardedGqlArgsProps,
-        gqlArgs,
-    } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
+    const { imports: forwardedGqlArgsImports, props: forwardedGqlArgsProps, gqlArgs } = getForwardedGqlArgs([gridQueryType]);
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
@@ -373,7 +359,7 @@ export function generateGrid(
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
 
-    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
+    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig<any>;
     const {
         component: actionsColumnComponent,
         type: actionsColumnType,
@@ -381,6 +367,8 @@ export function generateGrid(
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = defaultActionsColumnWidth,
         visible: actionsColumnVisible = undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        queryFields: actionsColumnQueryFields = [], // not needed here, but needs to be removed from restActionsColumnConfig because it's directly used in to generate component props in tsCodeRecordToString
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
     if (actionsColumnComponent) {
@@ -401,6 +389,7 @@ export function generateGrid(
         let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
         let valueFormatter: string | undefined = undefined;
+        let valueGetter = name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
@@ -416,8 +405,14 @@ export function generateGrid(
 
         if (type == "dateTime") {
             gridColumnType = "...dataGridDateTimeColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "date") {
             gridColumnType = "...dataGridDateColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "number") {
             gridType = "number";
             const defaultDecimals = column.currency ? 2 : 0;
@@ -428,7 +423,6 @@ export function generateGrid(
             }`;
         } else if (type == "boolean") {
             gridType = "boolean";
-            valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;
         } else if (column.type == "block") {
             renderCell = `(params) => {
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
@@ -558,7 +552,7 @@ export function generateGrid(
             gridType,
             columnType: gridColumnType,
             renderCell,
-            valueGetter: name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined,
+            valueGetter,
             filterOperators: filterOperators,
             valueFormatter,
             width: column.width,
@@ -738,7 +732,7 @@ export function generateGrid(
             config.selectionProps === "multiSelect"
                 ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
                 : config.selectionProps === "singleSelect"
-                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
                   : ``
         } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
@@ -919,7 +913,7 @@ export function generateGrid(
             !allowRowReordering ? `data?.${gridQuery}.nodes` : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
-        ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery)}
+        ${generateGridExportApi(config.excelExport, gqlTypePlural, instanceGqlTypePlural, gridQuery, gqlArgs)}
 
         return (
             <DataGridPro
@@ -996,7 +990,13 @@ const getDataGridSlotProps = (componentName: string, forwardToolbarAction: boole
     }}`;
 };
 
-const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: string, gridQuery: string) => {
+const generateGridExportApi = (
+    excelExport: boolean | undefined,
+    gqlTypePlural: string,
+    instanceGqlTypePlural: string,
+    gridQuery: string,
+    gqlArgs: GqlArg[],
+) => {
     if (!excelExport) {
         return "";
     }
@@ -1004,9 +1004,12 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
     return `const exportApi = useDataGridExcelExport<GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0], GQL${gqlTypePlural}GridQuery, Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ${[
+                ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQuery).map((arg) => arg.name),
+                `...muiGridFilterToGql(columns, dataGridProps.filterModel)`,
+            ].join(", ")}
         },
-        query: ${gridQuery}Query,
+        query: ${instanceGqlTypePlural}Query,
         resolveQueryNodes: (data) => data.${gridQuery}.nodes,
         totalCount: data?.${gridQuery}.totalCount ?? 0,
         exportOptions: {

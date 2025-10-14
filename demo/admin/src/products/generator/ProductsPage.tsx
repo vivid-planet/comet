@@ -1,6 +1,8 @@
 import {
     Button,
+    FieldSet,
     FillSpace,
+    FullHeightContent,
     MainContent,
     RouterTab,
     RouterTabs,
@@ -25,6 +27,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
 import { ProductsGrid } from "./generated/ProductsGrid";
+import { ProductVariantForm } from "./generated/ProductVariantForm";
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -72,7 +75,7 @@ export function ProductsPage() {
                                             path=""
                                             label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                         >
-                                            <ProductForm id={selectedProductId} />
+                                            <ProductForm id={selectedProductId} manufacturerCountry="DE" />
                                         </RouterTab>
                                         <RouterTab
                                             forceRender={true}
@@ -81,33 +84,77 @@ export function ProductsPage() {
                                         >
                                             <ProductPriceForm id={selectedProductId} />
                                         </RouterTab>
+                                        <RouterTab
+                                            path="/variants"
+                                            label={intl.formatMessage({ id: "products.variants", defaultMessage: "Variants" })}
+                                        >
+                                            <StackSwitch initialPage="table">
+                                                <StackPage name="table">
+                                                    <FullHeightContent>
+                                                        <ProductVariantsGrid product={selectedProductId} />
+                                                    </FullHeightContent>
+                                                </StackPage>
+                                                <StackPage
+                                                    name="edit"
+                                                    title={intl.formatMessage({
+                                                        id: "products.editProductVariant",
+                                                        defaultMessage: "Edit Product Variant",
+                                                    })}
+                                                >
+                                                    {(selectedProductVariantId) => (
+                                                        <SaveBoundary>
+                                                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                                                                <ToolbarBackButton />
+                                                                <ToolbarAutomaticTitleItem />
+                                                                <FillSpace />
+                                                                <ToolbarActions>
+                                                                    <SaveBoundarySaveButton />
+                                                                </ToolbarActions>
+                                                            </StackToolbar>
+                                                            <StackMainContent>
+                                                                <FieldSet>
+                                                                    <ProductVariantForm product={selectedProductId} id={selectedProductVariantId} />
+                                                                </FieldSet>
+                                                            </StackMainContent>
+                                                        </SaveBoundary>
+                                                    )}
+                                                </StackPage>
+                                                <StackPage
+                                                    name="add"
+                                                    title={intl.formatMessage({
+                                                        id: "products.addProductVariant",
+                                                        defaultMessage: "Add Product Variant",
+                                                    })}
+                                                >
+                                                    <SaveBoundary>
+                                                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                                                            <ToolbarBackButton />
+                                                            <ToolbarAutomaticTitleItem />
+                                                            <FillSpace />
+                                                            <ToolbarActions>
+                                                                <SaveBoundarySaveButton />
+                                                            </ToolbarActions>
+                                                        </StackToolbar>
+                                                        <StackMainContent>
+                                                            <FieldSet>
+                                                                <ProductVariantForm product={selectedProductId} />
+                                                            </FieldSet>
+                                                        </StackMainContent>
+                                                    </SaveBoundary>
+                                                </StackPage>
+                                            </StackSwitch>
+                                        </RouterTab>
                                     </RouterTabs>
                                 </StackMainContent>
                             </>
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage
-                    name="variants"
-                    title={intl.formatMessage({
-                        id: "products.editProduct",
-                        defaultMessage: "Product variants",
-                    })}
-                >
-                    {(selectedId) => (
-                        <>
-                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                            <MainContent fullHeight>
-                                <ProductVariantsGrid product={selectedId} />
-                            </MainContent>
-                        </>
-                    )}
-                </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <ProductForm />
+                            <ProductForm manufacturerCountry="DE" />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>

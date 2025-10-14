@@ -1,6 +1,8 @@
+import { type Permission } from "../../user-permissions/user-permissions.types";
+
 export interface CrudGeneratorOptions {
     targetDirectory: string;
-    requiredPermission?: string[] | string;
+    requiredPermission: Permission | Permission[];
     create?: boolean;
     update?: boolean;
     delete?: boolean;
@@ -8,6 +10,8 @@ export interface CrudGeneratorOptions {
     single?: boolean;
     position?: { groupByFields: string[] };
 }
+
+export const CRUD_GENERATOR_METADATA_KEY = "data:crudGeneratorOptions";
 
 export function CrudGenerator({
     targetDirectory,
@@ -22,7 +26,7 @@ export function CrudGenerator({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(
-            `data:crudGeneratorOptions`,
+            CRUD_GENERATOR_METADATA_KEY,
             { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position },
             target,
         );
@@ -31,13 +35,15 @@ export function CrudGenerator({
 
 export interface CrudSingleGeneratorOptions {
     targetDirectory: string;
-    requiredPermission?: string[] | string;
+    requiredPermission: Permission | Permission[];
 }
+
+export const CRUD_SINGLE_GENERATOR_METADATA_KEY = "data:crudSingleGeneratorOptions";
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudSingleGeneratorOptions`, options, target);
+        Reflect.defineMetadata(CRUD_SINGLE_GENERATOR_METADATA_KEY, options, target);
     };
 }
 
@@ -50,6 +56,8 @@ export interface CrudFieldOptions {
     input?: boolean;
 }
 
+export const CRUD_FIELD_METADATA_KEY = "data:crudField";
+
 export function CrudField({
     resolveField = true,
     dedicatedResolverArg = false,
@@ -61,7 +69,7 @@ export function CrudField({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
         Reflect.defineMetadata(
-            `data:crudField`,
+            CRUD_FIELD_METADATA_KEY,
             { resolveField, dedicatedResolverArg, search, filter, sort, input },
             target.constructor,
             propertyKey,

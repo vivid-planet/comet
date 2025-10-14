@@ -4,12 +4,14 @@ on:
     pull_request:
         paths:
             - docs/**
+            - storybook/**
         branches:
             - main
             - next
     push:
         paths:
             - docs/**
+            - storybook/**
         branches:
             - main
             - next
@@ -21,14 +23,14 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 22.x
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
@@ -36,5 +38,8 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
+            - name: Setup project for CI run
+              run: pnpm run setup:ci
+
             - name: Build docs
-              run: pnpm run build:docs
+              run: pnpm build:docs

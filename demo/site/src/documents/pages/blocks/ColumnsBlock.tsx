@@ -8,8 +8,11 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { PageLayout } from "@src/layout/PageLayout";
-import styled, { css } from "styled-components";
+import clsx from "clsx";
+
+import styles from "./ColumnsBlock.module.scss";
 
 const supportedBlocks: SupportedBlocks = {
     accordion: (props) => <AccordionBlock data={props} />,
@@ -20,6 +23,7 @@ const supportedBlocks: SupportedBlocks = {
     callToActionList: (props) => <StandaloneCallToActionListBlock data={props} />,
     media: (props) => <StandaloneMediaBlock data={props} />,
     mediaGallery: (props) => <MediaGalleryBlock data={props} />,
+    textImage: (props) => <TextImageBlock data={props} />,
 };
 
 const ColumnsContentBlock = withPreview(
@@ -29,73 +33,23 @@ const ColumnsContentBlock = withPreview(
     { label: "Columns" },
 );
 
+const layoutToStyleMap: { [key: string]: string } = {
+    "6-12-6": styles["layout-6-12-6"],
+    "4-16-4": styles["layout-4-16-4"],
+    "9-9": styles["layout-9-9"],
+    "12-6": styles["layout-12-6"],
+    "6-12": styles["layout-6-12"],
+};
+
 export const ColumnsBlock = withPreview(
     ({ data: { columns, layout } }: PropsWithData<ColumnsBlockData>) => (
         <PageLayout grid>
             {columns.map((column) => (
-                <Column $layout={layout} key={column.key}>
+                <div className={clsx(styles.column, layoutToStyleMap[layout])} key={column.key}>
                     <ColumnsContentBlock data={column.props} />
-                </Column>
+                </div>
             ))}
         </PageLayout>
     ),
     { label: "Columns" },
 );
-
-const Column = styled.div<{ $layout: string }>`
-    grid-column: 3 / -3;
-
-    ${({ $layout, theme }) =>
-        $layout === "9-6-9" &&
-        css`
-            grid-column: 5 / -5;
-
-            ${theme.breakpoints.sm.mediaQuery} {
-                grid-column: 7 / -7;
-            }
-            ${theme.breakpoints.md.mediaQuery} {
-                grid-column: 8 / -8;
-            }
-            ${theme.breakpoints.lg.mediaQuery} {
-                grid-column: 9 / -9;
-            }
-            ${theme.breakpoints.xl.mediaQuery} {
-                grid-column: 10 / -10;
-            }
-        `};
-
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-        ${({ $layout }) =>
-            $layout === "4-16-4" &&
-            css`
-                grid-column: 5 / -5;
-            `};
-        ${({ $layout }) =>
-            $layout === "9-9" &&
-            css`
-                grid-column: 3 / 12;
-
-                &:nth-child(even) {
-                    grid-column: 14 / 23;
-                }
-            `};
-        ${({ $layout }) =>
-            $layout === "12-6" &&
-            css`
-                grid-column: 3 / 15;
-
-                &:nth-child(even) {
-                    grid-column: 17 / 23;
-                }
-            `};
-        ${({ $layout }) =>
-            $layout === "6-12" &&
-            css`
-                grid-column: 3 / 9;
-
-                &:nth-child(even) {
-                    grid-column: 11 / 23;
-                }
-            `};
-    }
-`;

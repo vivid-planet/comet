@@ -2,6 +2,7 @@ import { DiscoveryModule } from "@golevelup/nestjs-discovery";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
+import { registerEnumType } from "@nestjs/graphql";
 
 import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { ContentScopeService } from "./content-scope.service";
@@ -14,6 +15,7 @@ import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER
 import { UserPermissionsPublicService } from "./user-permissions.public.service";
 import { UserPermissionsService } from "./user-permissions.service";
 import {
+    CombinedPermission,
     UserPermissionsAsyncOptions,
     UserPermissionsModuleAsyncOptions,
     UserPermissionsModuleSyncOptions,
@@ -38,7 +40,9 @@ import {
     exports: [ContentScopeService, ACCESS_CONTROL_SERVICE, UserPermissionsService, UserPermissionsPublicService],
 })
 export class UserPermissionsModule {
-    static forRoot(options: UserPermissionsModuleSyncOptions): DynamicModule {
+    static forRoot({ AppPermission, ...options }: UserPermissionsModuleSyncOptions): DynamicModule {
+        this.registerCombinedPermission(AppPermission);
+
         return {
             module: UserPermissionsModule,
             providers: [
@@ -62,7 +66,9 @@ export class UserPermissionsModule {
         };
     }
 
-    static forRootAsync(options: UserPermissionsModuleAsyncOptions): DynamicModule {
+    static forRootAsync({ AppPermission, ...options }: UserPermissionsModuleAsyncOptions): DynamicModule {
+        this.registerCombinedPermission(AppPermission);
+
         return {
             module: UserPermissionsModule,
             imports: options.imports,
@@ -97,5 +103,23 @@ export class UserPermissionsModule {
             useFactory: async (optionsFactory: UserPermissionsOptionsFactory) => optionsFactory.createUserPermissionsOptions(),
             inject: options.useExisting ? [options.useExisting] : options.useClass ? [options.useClass] : [],
         };
+    }
+
+    private static combinedPermissionEnumRegistered = false;
+
+    private static registerCombinedPermission(AppPermission?: Record<string, string>): void {
+        if (this.combinedPermissionEnumRegistered) {
+            throw new Error(
+                "CombinedPermission enum has already been registered. Make sure to register UserPermissionsModule only once in your application.",
+            );
+        }
+
+        if (AppPermission) {
+            Object.entries(AppPermission).forEach(([key, value]) => {
+                CombinedPermission[key] = value;
+            });
+        }
+        registerEnumType(CombinedPermission, { name: "Permission" });
+        this.combinedPermissionEnumRegistered = true;
     }
 }

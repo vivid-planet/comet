@@ -100,8 +100,16 @@ export const AllFieldComponents = {
                                 <AsyncAutocompleteField
                                     name="asyncAutocomplete"
                                     label="Async Autocomplete"
-                                    loadOptions={async () => {
-                                        return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
+                                    loadOptions={async (search) => {
+                                        return new Promise<typeof options>((resolve) =>
+                                            setTimeout(() => {
+                                                return resolve(
+                                                    options.filter((value) => {
+                                                        return value.label.toLowerCase().includes(search?.toLowerCase() ?? "");
+                                                    }),
+                                                );
+                                            }, 1000),
+                                        );
                                     }}
                                     getOptionLabel={(option: Option) => option.label}
                                     isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}

@@ -6,6 +6,7 @@ export default defineConfig<GQLProductVariant>({
     gqlType: "ProductVariant",
     fragmentName: "ProductVariantsGridFuture", // configurable as it must be unique across project
     queryParamsPrefix: "product-variants",
+    excelExport: true,
     columns: [
         { type: "text", name: "name", headerName: "Name" },
         { type: "date", name: "createdAt", headerName: "Created at" },

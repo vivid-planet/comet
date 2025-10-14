@@ -1,7 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
-import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
-import { useFormApiRef } from "@comet/admin/lib/FinalForm";
+import { Field, FinalForm, FinalFormInput, FormSection, SaveButton, useFormApiRef } from "@comet/admin";
 import { type VoidFunctionComponent } from "react";
 
 export default {

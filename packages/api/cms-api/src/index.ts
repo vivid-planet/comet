@@ -37,6 +37,7 @@ export {
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
     BlockWarning,
+    ChildBlockInfo,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
@@ -85,7 +86,7 @@ export {
 } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
-export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
+export { createSeoBlock, type SeoBlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
 export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
@@ -117,6 +118,8 @@ export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export {
+    CRUD_GENERATOR_METADATA_KEY,
+    CRUD_SINGLE_GENERATOR_METADATA_KEY,
     CrudField,
     CrudFieldOptions,
     CrudGenerator,
@@ -127,6 +130,7 @@ export {
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
+export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
 export { ExceptionFilter } from "./common/errors/exception.filter";
@@ -141,7 +145,7 @@ export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { IdFilter } from "./common/filter/id.filter";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
-export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
@@ -214,6 +218,13 @@ export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
+export { MailTemplate, MailTemplateInterface, PreparedTestProps } from "./mail-templates/mail-template.decorator";
+export { MailTemplateService } from "./mail-templates/mail-template.service";
+export { MailTemplatesModule } from "./mail-templates/mail-templates.module";
+export { MailerLog } from "./mailer/entities/mailer-log.entity";
+export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
+export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
+export { MailerService, SendMailParams } from "./mailer/mailer.service";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
@@ -250,9 +261,8 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
-export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
-export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
-export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
+export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
+export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { CurrentUserPermission } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
@@ -260,9 +270,13 @@ export { ContentScope } from "./user-permissions/interfaces/content-scope.interf
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
+export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
+    Permission,
+    PermissionForUser,
+    PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
     UserPermissionsUserServiceInterface,

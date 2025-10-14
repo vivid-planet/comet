@@ -1,6 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-import { verifySitePreviewJwt } from "../SitePreviewUtils";
+import { type SitePreviewJwtPayload, verifyJwt } from "../previewUtils";
 
 async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse) {
     const params = req.query;
@@ -10,9 +10,13 @@ async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: 
         return res.status(400).json({ error: "JWT-Parameter is missing." });
     }
 
-    const data = await verifySitePreviewJwt(jwt);
+    const data = await verifyJwt<SitePreviewJwtPayload>(jwt);
     if (!data) {
         return res.status(400).json({ error: "JWT-validation failed." });
+    }
+
+    if (!data.path.startsWith("/") || data.path.startsWith("//")) {
+        return res.status(400).json({ error: `Redirect to ${data.path} disallowed: only relative paths are valid.` });
     }
 
     res.setPreviewData(data);

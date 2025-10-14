@@ -211,12 +211,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
         const doSave = useCallback(async () => {
             const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
-            if (hasValidationErrors) {
-                return false;
-            }
 
             const submissionErrors = await formRenderProps.form.submit();
-            if (submissionErrors) {
+            if (hasValidationErrors || submissionErrors) {
                 return false;
             }
 

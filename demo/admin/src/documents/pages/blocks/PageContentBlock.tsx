@@ -10,6 +10,7 @@ import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
+import { ProductListBlock } from "@src/products/blocks/ProductListBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
@@ -47,6 +48,7 @@ export const PageContentBlock = createBlocksBlock({
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
         table: TableBlock,
+        productList: ProductListBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

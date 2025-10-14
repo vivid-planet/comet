@@ -2,7 +2,7 @@ import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneT
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -57,7 +57,10 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityProduct"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
             if (!file) throw new Error("File not found");
@@ -74,7 +77,7 @@ describe("GenerateCrudRelations", () => {
             expect(structure.properties?.length).toBe(0);
             expect(structure.methods?.length).toBe(6);
 
-            orm.close();
+            await orm.close();
         });
 
         it("should be a valid generated ts file", async () => {
@@ -87,7 +90,10 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityCategory"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityCategory"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
 
             const file = formattedOut.find((file) => file.name === "test-entity-category.resolver.ts");
@@ -104,7 +110,7 @@ describe("GenerateCrudRelations", () => {
             expect(structure.properties?.length).toBe(0);
             expect(structure.methods?.length).toBe(6);
 
-            orm.close();
+            await orm.close();
         });
 
         it("input type to category relation should be string with uuid validator", async () => {
@@ -117,7 +123,10 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityProduct"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-product.input.ts");
             if (!file) throw new Error("File not found");
@@ -137,7 +146,7 @@ describe("GenerateCrudRelations", () => {
             expect(decorators).not.toContain("IsInt");
             expect(decorators).not.toContain("IsString");
 
-            orm.close();
+            await orm.close();
         });
     });
 });

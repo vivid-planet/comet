@@ -13,6 +13,7 @@ import { findMutationTypeOrThrow } from "../utils/findMutationType";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
+import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
 import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
 
 export type Prop = { type: string; optional: boolean; name: string };
@@ -59,7 +60,6 @@ export function generateForm(
         { name: "useApolloClient", importPath: "@apollo/client" },
         { name: "useQuery", importPath: "@apollo/client" },
         { name: "gql", importPath: "@apollo/client" },
-        { name: "AsyncSelectField", importPath: "@comet/admin" },
         { name: "CheckboxField", importPath: "@comet/admin" },
         { name: "Field", importPath: "@comet/admin" },
         { name: "filterByFragment", importPath: "@comet/admin" },
@@ -91,7 +91,7 @@ export function generateForm(
         { name: "FormApi", importPath: "final-form" },
         { name: "useMemo", importPath: "react" },
     ];
-    const props: Prop[] = [];
+    const formProps: Prop[] = [];
 
     const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
@@ -126,19 +126,17 @@ export function generateForm(
             gqlIntrospection,
         });
         imports.push(...forwardedGqlArgsImports);
-        props.push(...forwardedGqlArgsProps);
+        formProps.push(...forwardedGqlArgsProps);
         gqlArgs.push(...forwardedGqlArgs);
     }
 
     if (editMode) {
         if (mode === "all") {
-            props.push({ name: "id", optional: true, type: "string" });
+            formProps.push({ name: "id", optional: true, type: "string" });
         } else if (mode === "edit") {
-            props.push({ name: "id", optional: false, type: "string" });
+            formProps.push({ name: "id", optional: false, type: "string" });
         }
     }
-
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     const rootBlockFields = formFields
         .filter((field) => field.type == "block")
@@ -158,12 +156,6 @@ export function generateForm(
 
     if (fileFields.length > 0) {
         imports.push({ name: "GQLFinalFormFileUploadFragment", importPath: "@comet/cms-admin" });
-    }
-
-    // Unnecessary field.type == "fileUpload" check to make TypeScript happy
-    const downloadableFileFields = fileFields.filter((field) => field.type == "fileUpload" && field.download);
-
-    if (fileFields.length > 0) {
         imports.push({ name: "GQLFinalFormFileUploadDownloadableFragment", importPath: "@comet/cms-admin" });
     }
 
@@ -186,19 +178,16 @@ export function generateForm(
         };
     }
     imports.push(...generatedFields.imports);
+    formProps.push(...generatedFields.formProps);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
 
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
+
     gqlDocuments[`${instanceGqlType}FormFragment`] = {
-        document: `
-        fragment ${formFragmentName} on ${gqlType} {
-            ${formFragmentFields.join("\n")}
-        }
-        ${fileFields.length > 0 && fileFields.length !== downloadableFileFields.length ? "${finalFormFileUploadFragment}" : ""}
-        ${downloadableFileFields.length > 0 ? "${finalFormFileUploadDownloadableFragment}" : ""}
-    `,
+        document: generateFragmentByFormFragmentFields({ formFragmentName, gqlType, formFragmentFields }),
         export: editMode,
     };
 

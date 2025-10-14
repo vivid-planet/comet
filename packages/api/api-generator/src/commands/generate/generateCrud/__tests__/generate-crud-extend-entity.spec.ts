@@ -3,7 +3,7 @@ import { Field } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity({ abstract: true })
@@ -39,7 +39,10 @@ describe("GenerateCrudInputExtendEntity", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTimestamps"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithTimestamps"),
+        );
         const formattedOut = await formatGeneratedFiles(out);
 
         const file = formattedOut.find((file) => file.name === "dto/test-entity-with-timestamps.filter.ts");
@@ -65,6 +68,6 @@ describe("GenerateCrudInputExtendEntity", () => {
         expect(updatedAtField).toBeDefined();
         expect(updatedAtField?.type).toBe("DateTimeFilter");
 
-        orm.close();
+        await orm.close();
     });
 });

@@ -1,13 +1,6 @@
-import { Tooltip } from "@comet/admin";
+import { Dialog, Tooltip } from "@comet/admin";
 import { View } from "@comet/admin-icons";
-import {
-    // eslint-disable-next-line no-restricted-imports
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Typography,
-} from "@mui/material";
+import { DialogContent, IconButton, Typography } from "@mui/material";
 import { type GridCellParams } from "@mui/x-data-grid-pro";
 import { type GQLProductsGridFutureFragment } from "@src/products/generator/generated/ProductsGrid.generated";
 import { useState } from "react";
@@ -26,13 +19,14 @@ export const ProductsGridPreviewAction = ({ row }: Props) => {
                     <View />
                 </IconButton>
             </Tooltip>
-            <Dialog open={showDetails} onClose={() => setShowDetails(false)}>
-                <DialogTitle>
-                    <FormattedMessage id="productsGrid.detailsDialog.title" defaultMessage="Product Details" />
-                </DialogTitle>
+            <Dialog
+                open={showDetails}
+                onClose={() => setShowDetails(false)}
+                title={<FormattedMessage id="productsGrid.detailsDialog.title" defaultMessage="Product Details" />}
+            >
                 <DialogContent>
                     <Typography variant="h3" gutterBottom>
-                        {row.title}
+                        {row.title}/{row.slug}
                     </Typography>
                     <Typography>{row.description}</Typography>
                 </DialogContent>

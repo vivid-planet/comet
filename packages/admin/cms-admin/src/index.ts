@@ -128,6 +128,7 @@ export { useContentLanguage } from "./contentLanguage/useContentLanguage";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
 export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";
 export { ContentScopeControls } from "./contentScope/Controls";
+export { NoContentScopeFallback } from "./contentScope/noContentScopeFallback/NoContentScopeFallback";
 export type { ContentScope, ContentScopeProviderProps, ContentScopeValues, UseContentScopeApi } from "./contentScope/Provider";
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
@@ -193,7 +194,14 @@ export type { SiteConfig } from "./siteConfigs/siteConfigsConfig";
 export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
-export { CurrentUserInterface, CurrentUserProvider, useCurrentUser, useUserPermissionCheck } from "./userPermissions/hooks/currentUser";
+export {
+    CurrentUserInterface,
+    CurrentUserProvider,
+    Permission,
+    PermissionOverrides,
+    useCurrentUser,
+    useUserPermissionCheck,
+} from "./userPermissions/hooks/currentUser";
 export { UserPermissionsUserPageBasicDataPanel } from "./userPermissions/user/basicData/UserBasicData";
 export { StartImpersonationButton, StopImpersonationButton } from "./userPermissions/user/ImpersonationButtons";
 export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/permissions/PermissionsPanel";
