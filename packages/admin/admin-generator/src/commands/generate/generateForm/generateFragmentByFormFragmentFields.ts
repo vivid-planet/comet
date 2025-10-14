@@ -3,7 +3,7 @@ import { generateGqlQueryTreeFromFields } from "../utils/generateGqlOperation";
 /**
  * Helper function that generates a GraphQL fragment from form fragment fields (array of dot.separated.fields).
  *
- * - Fragments are supported as "foo....FragmentName"
+ * - Fragments are supported as "foo...FragmentName"
  * - for FinalFormFileUpload and FinalFormFileUploadDownloadable the needed variable is added automatically
  */
 export function generateFragmentByFormFragmentFields({
