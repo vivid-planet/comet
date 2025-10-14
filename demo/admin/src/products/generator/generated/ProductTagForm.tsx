@@ -70,7 +70,9 @@ export function ProductTagForm({ id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductTagMutation, GQLCreateProductTagMutationVariables>({
                 mutation: createProductTagMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProductTag.id;

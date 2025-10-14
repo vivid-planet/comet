@@ -52,7 +52,9 @@ export function CreateCapProductForm({ type }: FormProps) {
         };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
-            variables: { input: { ...output, type } },
+            variables: {
+                input: { ...output, type }
+            },
         });
         if (!event.navigatingBack) {
             const id = mutationResponse?.createProduct.id;
@@ -74,21 +76,14 @@ export function CreateCapProductForm({ type }: FormProps) {
         <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
         <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect(
-                            
-                            
-                            $search: String
-                        ) {
-                            productCategories(
-                                
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductCategoriesSelect($search: String) {
+        productCategories(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         search,
                     }
                 });

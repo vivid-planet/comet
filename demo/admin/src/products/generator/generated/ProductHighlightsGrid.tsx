@@ -31,15 +31,12 @@ const productHighlightsFragment = gql`
         }
     `;
 const productHighlightsQuery = gql`
-        query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
-    productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductHighlightsForm
-                }
-                totalCount
-            }
+    query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
+        productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductHighlightsForm } totalCount
         }
-        ${productHighlightsFragment}
+    }
+    ${productHighlightsFragment}
     `;
 const deleteProductHighlightMutation = gql`
                 mutation DeleteProductHighlight($id: ID!) {

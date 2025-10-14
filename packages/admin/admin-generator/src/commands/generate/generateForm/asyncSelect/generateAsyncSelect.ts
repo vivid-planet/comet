@@ -2,6 +2,7 @@ import { type IntrospectionInputValue, type IntrospectionObjectType, type Intros
 
 import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../generate-command";
 import { findQueryTypeOrThrow } from "../../utils/findQueryType";
+import { generateGqlOperation } from "../../utils/generateGqlOperation";
 import { type Imports } from "../../utils/generateImportsCode";
 import { isFieldOptional } from "../../utils/isFieldOptional";
 import { buildFormFieldOptions } from "../formField/options";
@@ -372,25 +373,21 @@ export function generateAsyncSelect({
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
                 loadOptions={async (${useAutocomplete ? `search?: string` : ""}) => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName}${filterConfig || useAutocomplete ? "(" : ""}
-                            ${
+                        query: gql\`${generateGqlOperation({
+                            type: "query",
+                            operationName: queryName,
+                            rootOperation: rootQuery,
+                            fields: ["nodes.id", `nodes.${labelField}`],
+                            variables: [
+                                useAutocomplete ? { name: "search", type: "String" } : undefined,
                                 filterConfig
-                                    ? `$${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``}`
-                                    : ``
-                            }
-                            ${filterConfig && useAutocomplete ? "," : ""}
-                            ${useAutocomplete ? `$search: String` : ``}
-                        ${filterConfig || useAutocomplete ? ")" : ""} {
-                            ${rootQuery}${filterConfig || useAutocomplete ? "(" : ""}
-                                ${filterConfig ? `${filterConfig.filterVarName}: $${filterConfig.filterVarName}` : ``}${filterConfig && useAutocomplete ? "," : ""}
-                                ${useAutocomplete ? `search: $search` : ``}
-                            ${filterConfig || useAutocomplete ? ")" : ""} {
-                                nodes {
-                                    id
-                                    ${labelField}
-                                }
-                            }
-                        }\`${filterConfig || useAutocomplete ? ", variables: { " : ""}
+                                    ? {
+                                          name: filterConfig.filterVarName,
+                                          type: filterConfig.filterType.typeClass + (filterConfig.filterType.required ? `!` : ``),
+                                      }
+                                    : undefined,
+                            ].filter((v) => v !== undefined),
+                        })}\`${filterConfig || useAutocomplete ? ", variables: { " : ""}
                             ${filterConfig ? `${filterConfig.filterVarName}: ${filterConfig.filterVarValue},` : ``}
                             ${useAutocomplete ? `search,` : ``}
                         ${filterConfig || useAutocomplete ? " }" : ""}
