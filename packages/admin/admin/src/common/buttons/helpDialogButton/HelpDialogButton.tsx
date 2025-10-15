@@ -5,9 +5,9 @@ import { FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { type Dialog } from "../../Dialog";
-import { HelpButton, HelpDialog, HelpDialogContent, Root } from "./HelpDialogButton.sc";
+import { HelpButton, HelpDialog, HelpDialogContent } from "./HelpDialogButton.sc";
 
-export type HelpDialogButtonClassKey = "root" | "button" | "dialog" | "dialogContent";
+export type HelpDialogButtonClassKey = "button" | "dialog" | "dialogContent";
 
 export type HelpDialogButtonProps = ThemedComponentBaseProps<{
     root: "div";
@@ -31,12 +31,13 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
     const [showHelp, setShowHelp] = useState(false);
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
+        <>
             <HelpButton
                 onClick={() => {
                     setShowHelp(!showHelp);
                 }}
                 {...slotProps?.button}
+                {...restProps}
             >
                 {icon}
             </HelpButton>
@@ -50,7 +51,7 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
             >
                 <HelpDialogContent {...slotProps?.dialogContent}>{dialogDescription}</HelpDialogContent>
             </HelpDialog>
-        </Root>
+        </>
     );
 };
 
