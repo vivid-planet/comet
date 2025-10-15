@@ -28,6 +28,8 @@ export const generateFiles = async (
      */
     file?: string,
 ) => {
+    console.log("generateFiles");
+
     let orm: MikroORM | null = null;
     try {
         orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });

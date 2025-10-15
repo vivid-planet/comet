@@ -6,8 +6,8 @@
         "experimentalDecorators": true,
         "incremental": true,
         "lib": ["esnext"],
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
         "outDir": "./dist",
         "paths": {
             "@src/*": ["src/*"]
@@ -19,6 +19,6 @@
         "strict": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
-        "target": "es2017"
+        "target": "esnext"
     }
 }

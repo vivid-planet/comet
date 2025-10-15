@@ -8,7 +8,7 @@ import {
 } from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
-import { singular } from "pluralize";
+import pluralize from "pluralize";
 
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input.js";
 import { buildNameVariants } from "../utils/build-name-variants.js";
@@ -543,7 +543,7 @@ function generateInputHandling(
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
             return {
                 name: prop.name,
-                singularName: singular(prop.name),
+                singularName: pluralize.singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
             };
@@ -556,7 +556,7 @@ function generateInputHandling(
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
             return {
                 name: prop.name,
-                singularName: singular(prop.name),
+                singularName: pluralize.singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
                 targetMeta,
@@ -569,7 +569,7 @@ function generateInputHandling(
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
             return {
                 name: prop.name,
-                singularName: singular(prop.name),
+                singularName: pluralize.singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
                 orphanRemoval: prop.orphanRemoval,
