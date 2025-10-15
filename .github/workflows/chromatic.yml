@@ -37,7 +37,7 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            - run: pnpm copy-schema-files
+            - run: pnpm setup:ci
 
             - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
 
