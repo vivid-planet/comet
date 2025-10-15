@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 8.5.0
+
+### Patch Changes
+
+- 942200f: Improve check-warnings job by adding a missing await which led to bad performance
+- b7156bb: Fix crash in WarningModule with nullable blocks
+
 ## 8.4.2
 
 ## 8.4.1
