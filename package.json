@@ -45,7 +45,7 @@
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
         "setup:ci": "pnpm run copy-project-files",
-        "setup:download-oauth2-proxy": "npx tsx oauth2-proxy-get-latest-release.ts"
+        "setup:download-oauth2-proxy": "npx tsx oauth2-proxy-download.ts"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
