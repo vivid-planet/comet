@@ -7,7 +7,7 @@
 **What’s new**
 
 - `Toolbar` now supports a new prop: `topBarActions` (class key & slot name: `"topBarActions"`). Use it to place action controls on the right side of the top bar.
-- New component: `HelpDialogButton` (exported from `@comet/admin`). It renders an icon button that toggles a modal dialog with a title and rich help content.
+- New component: `HelpDialogButton`. It renders an icon button that toggles a modal dialog with a title and rich help content.
 
 **Usage**
 
