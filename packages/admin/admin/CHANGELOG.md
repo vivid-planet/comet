@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 8.5.0
+
+### Minor Changes
+
+- c8359f6: Add Filter Count Chip to DataGrid Filter Button
+
+### Patch Changes
+
+- a2af2c6: `Tooltip` children are now focusable by default for improved accessibility
+    - @comet/admin-icons@8.5.0
+
 ## 8.4.2
 
 ### Patch Changes

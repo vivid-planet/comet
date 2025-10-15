@@ -1,5 +1,16 @@
 # @comet/cms-admin
 
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-date-time@8.5.0
+    - @comet/admin-rte@8.5.0
+    - @comet/admin-icons@8.5.0
+
 ## 8.4.2
 
 ### Patch Changes
