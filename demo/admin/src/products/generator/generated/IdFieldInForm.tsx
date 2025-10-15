@@ -87,7 +87,9 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: { ...output, slug, type } },
+                variables: {
+                    input: { ...output, slug, type }
+                },
             });
             const id = mutationResponse?.createProduct.id;
             if (id) {

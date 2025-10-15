@@ -12,21 +12,14 @@ exports[`AsyncSelect filter generates field without filter 1`] = `
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect
-                            
-                            
-                            
-                         {
-                            categories
-                                
-                                
-                             {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query CategoriesSelect {
+        categories {
+            nodes { id name }
+        }
+    }
+    
+    \`
                             
                             
                         
@@ -50,21 +43,14 @@ exports[`AsyncSelect filter generates filter with value dependent on other field
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $title: String
-                            
-                            
-                        ) {
-                            categories(
-                                title: $title
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($title: String) {
+        categories(title: $title) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             title: values.title,
                             
                          }
@@ -153,6 +139,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -203,7 +190,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
@@ -248,21 +237,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $type: CategoryType
-                            
-                            
-                        ) {
-                            categories(
-                                type: $type
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($type: CategoryType) {
+        categories(type: $type) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             type: type,
                             
                          }
@@ -352,6 +334,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -402,7 +385,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
@@ -447,21 +432,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $foo: String
-                            
-                            
-                        ) {
-                            categories(
-                                foo: $foo
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($foo: String) {
+        categories(foo: $foo) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             foo: foo,
                             
                          }
@@ -551,6 +529,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -601,7 +580,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
@@ -646,21 +627,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $filter: CategoryFilter
-                            
-                            
-                        ) {
-                            categories(
-                                filter: $filter
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             filter: { foo: { equal: foo } },
                             
                          }
@@ -751,6 +725,7 @@ id?: string;
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -801,7 +776,9 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
@@ -846,21 +823,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $filter: CategoryFilter
-                            
-                            
-                        ) {
-                            categories(
-                                filter: $filter
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             filter: { type: { equal: categoryType } },
                             
                          }

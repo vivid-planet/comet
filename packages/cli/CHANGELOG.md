@@ -1,5 +1,15 @@
 # @comet/cli
 
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- c8f5d89: Add support for literal arrays to block meta
+
 ## 8.3.0
 
 ## 8.2.0

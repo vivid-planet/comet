@@ -76,7 +76,9 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
             const id = mutationResponse?.createProductCategory.id;
             if (id) {
@@ -105,21 +107,14 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
         <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="productCategory.slug" defaultMessage="Slug"/>}/>
         <AsyncAutocompleteField variant="horizontal" fullWidth name="type" label={<FormattedMessage id="productCategory.type" defaultMessage="Type"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
-                    query: gql`query ProductCategoryTypesSelect(
-                            
-                            
-                            $search: String
-                        ) {
-                            productCategoryTypes(
-                                
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductCategoryTypesSelect($search: String) {
+        productCategoryTypes(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         search,
                     }
                 });

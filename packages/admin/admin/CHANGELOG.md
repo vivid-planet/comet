@@ -1,5 +1,66 @@
 # @comet/admin
 
+## 8.4.2
+
+### Patch Changes
+
+- a57d092: Prevent crash in `FinalFormSelect` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- 9374018: Prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- ff6d79a: Simplify adding an info-icon with a tooltip in `FormSection` using the new `infoTooltip` prop
+
+    Either set the props value to a string or `FormattedMessage` directly:
+
+    ```tsx
+    <FormSection title="Title of the FormSection" infoTooltip="Title of the info tooltip">
+        {/* ... */}
+    </FormSection>
+    ```
+
+    Or use an object for a more detailed definition:
+
+    ```tsx
+    <FormSection
+        title="FormSection"
+        infoTooltip={{
+            title: "Title of the info tooltip",
+            description: "Description of the info tooltip",
+            variant: "light",
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+### Patch Changes
+
+- a85e7cb: Prevent empty `Tooltip` from rendering when `title` is `null`, `undefined`, or empty string
+- ff6d79a: Allow overriding the `divider` value of the `title` slot of `FormSection` using `slotProps`
+
+    ```tsx
+    <FormSection
+        title="Title of the FormSection"
+        slotProps={{
+            title: { divider: false },
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+    - @comet/admin-icons@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes
