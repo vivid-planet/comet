@@ -19,11 +19,7 @@ import { FormattedMessage } from "react-intl";
     topBarActions={
         <HelpDialogButton
             dialogTitle={<FormattedMessage id="toolbar.help.title" defaultMessage="Help" />}
-            dialogDescription={
-                <div>
-                    <p>Put any explanatory text, images, or markup here.</p>
-                </div>
-            }
+            dialogDescription={<Typography>Put any explanatory text, images, or markup here.</Typography>}
         />
     }
 >
