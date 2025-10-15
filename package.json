@@ -45,7 +45,7 @@
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
         "setup:ci": "pnpm run copy-project-files",
-        "setup:download-oauth2-proxy": "npx tsx oauth2-proxy-download.ts"
+        "setup:download-oauth2-proxy": "dotenv -- sh -c 'npx @comet/cli download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
@@ -54,13 +54,11 @@
         "@comet/dev-process-manager": "^3.0.0",
         "@formatjs/cli": "^6.7.2",
         "@types/node": "^22.16.3",
-        "@types/node-fetch": "^2.6.13",
         "cspell": "^9.0.0",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
         "knip": "^5.61.3",
         "lint-staged": "^16.0.0",
-        "node-fetch": "^3.3.2",
         "npm-run-all2": "^8.0.0",
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
