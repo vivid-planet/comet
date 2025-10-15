@@ -1,0 +1,61 @@
+// TODO: Used for debugging - either remove this or implement properly before merging feature branch
+@use "@src/styles/variables" as *;
+
+.debugData {
+    font-size: 9px;
+    line-height: 1;
+    background-color: lightgrey;
+    padding: 10px;
+}
+
+.table {
+    border-collapse: collapse;
+    border: 1px solid grey;
+}
+
+.tableRow {
+    &:not(:last-child) .cell--rowIsHighlighted {
+        border-bottom: 2px solid black;
+    }
+
+    &:not(:first-child) .cell--rowIsHighlighted {
+        border-top: 2px solid black;
+    }
+}
+
+.cell {
+    border: 1px solid grey;
+
+    &--columnIsHighlighted,
+    &--rowIsHighlighted {
+        font-weight: 700;
+        background-color: lightgrey;
+    }
+
+    &--columnIsHighlighted {
+        &:not(:last-child) {
+            border-right: 2px solid black;
+        }
+
+        &:not(:first-child) {
+            border-left: 2px solid black;
+        }
+    }
+
+    &--rowIsHighlighted {
+        border-bottom: 2px solid black;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 12px;
+        white-space: pre-wrap;
+    }
+
+    &__debugData {
+        font-size: 9px;
+        line-height: 1;
+        background-color: lightgrey;
+        padding: 10px;
+    }
+}
