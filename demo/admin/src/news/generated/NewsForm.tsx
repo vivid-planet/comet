@@ -43,9 +43,10 @@ type FormValues = Omit<GQLNewsFormFragment, keyof typeof rootBlocks> & {
     content: BlockState<typeof rootBlocks.content>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function NewsForm({ id }: FormProps) {
+export function NewsForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -96,13 +97,14 @@ export function NewsForm({ id }: FormProps) {
                     input: output
                 },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createNews.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createNews.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };

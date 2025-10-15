@@ -35,9 +35,10 @@ type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, keyof typeof root
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     type: GQLProductType;
 }
-export function CreateCapProductForm({ type }: FormProps) {
+export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
@@ -56,13 +57,14 @@ export function CreateCapProductForm({ type }: FormProps) {
                 input: { ...output, type }
             },
         });
-        if (!event.navigatingBack) {
-            const id = mutationResponse?.createProduct.id;
-            if (id) {
-                setTimeout(() => {
+        const id = mutationResponse?.createProduct.id;
+        if (id) {
+            setTimeout(() => {
+                onCreate?.(id);
+                if (!event.navigatingBack) {
                     stackSwitchApi.activatePage(`edit`, id);
-                });
-            }
+                }
+            });
         }
     };
     return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode="add" initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
