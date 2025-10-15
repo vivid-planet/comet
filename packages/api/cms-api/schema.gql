@@ -546,6 +546,7 @@ enum RedirectSortField {
   source
   createdAt
   updatedAt
+  comment
 }
 
 input DamScopeInput {

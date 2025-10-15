@@ -91,7 +91,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             field: "comment",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" }),
             renderCell: (params) => <div>{params.value}</div>,
-            sortable: false,
+            sortable: true,
             flex: 2,
             filterable: false,
         },

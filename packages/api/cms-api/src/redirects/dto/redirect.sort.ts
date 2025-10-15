@@ -7,6 +7,7 @@ enum RedirectSortField {
     source = "source",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
+    comment = "comment",
 }
 registerEnumType(RedirectSortField, {
     name: "RedirectSortField",
