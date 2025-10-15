@@ -4,11 +4,6 @@ import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { Dialog } from "../../Dialog";
 import { type HelpDialogButtonClassKey } from "./HelpDialogButton";
 
-export const Root = createComponentSlot("div")<HelpDialogButtonClassKey>({
-    componentName: "HelpDialogButton",
-    slotName: "root",
-})();
-
 export const HelpButton = createComponentSlot(IconButton)<HelpDialogButtonClassKey>({
     componentName: "HelpDialogButton",
     slotName: "button",
