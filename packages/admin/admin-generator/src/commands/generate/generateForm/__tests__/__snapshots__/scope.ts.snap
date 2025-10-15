@@ -57,11 +57,12 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            id?: string;
+            onCreate?: (id: string) => void;
+id?: string;
 scope: GQLProductScope;
         }
 
-    export function ProductForm({id, scope}: FormProps) {
+    export function ProductForm({onCreate, id, scope}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -121,13 +122,12 @@ scope: GQLProductScope;
                         
                         input: output, scope },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -235,10 +235,11 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            id?: string;
+            onCreate?: (id: string) => void;
+id?: string;
         }
 
-    export function ProductForm({id}: FormProps) {
+    export function ProductForm({onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -298,13 +299,12 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
                         scope,
                         input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
