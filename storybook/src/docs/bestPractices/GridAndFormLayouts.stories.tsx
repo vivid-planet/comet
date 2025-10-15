@@ -29,7 +29,7 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { DialogContent, IconButton, Typography } from "@mui/material";
+import { Box, DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -965,25 +965,10 @@ export const PageWithHelpInToolbarModal = {
                         <HelpDialogButton
                             dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}
                             dialogDescription={
-                                <div>
-                                    <div
-                                        style={{
-                                            backgroundColor: "teal",
-                                            width: "200px",
-                                            height: "200px",
-                                            float: "right",
-                                            marginLeft: 16,
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            display: "flex",
-                                        }}
-                                    >
-                                        Image Placeholder
-                                    </div>
-                                    <p>
-                                        This is some help text. You can put whatever you want in here, for example an image to illustrate your help.
-                                    </p>
-                                </div>
+                                <>
+                                    <Box sx={{ width: 150, height: 150 }} component="img" src="https://picsum.photos/id/35/300/300" />
+                                    <Typography>This is some helpful text inside the help dialog.</Typography>
+                                </>
                             }
                         />
                     }
