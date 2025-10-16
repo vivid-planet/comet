@@ -1,15 +1,11 @@
+import * as fs from "fs";
 import { type ResolvedIntlConfig } from "react-intl";
-
-// eslint-disable-next-line @comet/no-other-module-relative-import
-import project_messages_de from "../../lang-compiled/comet-demo-api/de.json";
-// eslint-disable-next-line @comet/no-other-module-relative-import
-import project_messages_en from "../../lang-compiled/comet-demo-api/en.json";
 
 type Messages = ResolvedIntlConfig["messages"];
 
 const projectMessages = {
-    en: project_messages_en,
-    de: project_messages_de,
+    en: JSON.parse(fs.readFileSync("lang-compiled/comet-demo-api/en.json", "utf-8")),
+    de: JSON.parse(fs.readFileSync("lang-compiled/comet-demo-api/de.json", "utf-8")),
 };
 export type SupportedLanguage = keyof typeof projectMessages;
 
