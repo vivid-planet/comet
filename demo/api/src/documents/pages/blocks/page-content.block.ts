@@ -1,4 +1,12 @@
-import { AnchorBlock, BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, DamImageBlock } from "@comet/cms-api";
+import {
+    AnchorBlock,
+    BaseBlocksBlockItemData,
+    BaseBlocksBlockItemInput,
+    BlockField,
+    createBlocksBlock,
+    DamImageBlock,
+    TableBlock,
+} from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
@@ -44,6 +52,7 @@ const supportedBlocks = {
     layout: LayoutBlock,
     textImage: TextImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    table: TableBlock,
     productList: ProductListBlock,
 };
 
