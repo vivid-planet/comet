@@ -104,6 +104,11 @@ export type FormFieldConfig<T> = (
           name: keyof T;
           rootQuery: string;
           labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
           /**
            * filter for query, passed as variable to graphql query
            */
@@ -115,6 +120,11 @@ export type FormFieldConfig<T> = (
           loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
           rootQuery: string;
           labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
           /**
            * filter for query, passed as variable to graphql query
            */
@@ -169,7 +179,17 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
+    /**
+     * If true, the form will navigate to the edit page using stackSwitchApi.activatePage of the newly created item after a successful creation.
+     * @default true
+     */
+    navigateOnCreate?: boolean;
 };
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
@@ -267,6 +287,11 @@ export type GridConfig<T extends { __typename?: string }> = {
         enabled: boolean;
         dragPreviewField?: UsableFields<T>;
     };
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
