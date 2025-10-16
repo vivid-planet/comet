@@ -32,7 +32,7 @@ export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams)
     );
 
     return (
-        <>
+        <Root>
             <EditCellHandle ref={handleRef} />
             <EditPopper open={!!anchorEl} anchorEl={anchorEl} placement="bottom-start">
                 <EditPaper elevation={1}>
@@ -46,9 +46,13 @@ export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams)
                     />
                 </EditPaper>
             </EditPopper>
-        </>
+        </Root>
     );
 };
+
+const Root = styled("div")({
+    position: "relative",
+});
 
 const EditCellHandle = styled("div")({
     position: "absolute",
