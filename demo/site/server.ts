@@ -5,7 +5,7 @@ import { parse } from "url";
 import { withMetrics } from "./opentelemetry-metrics";
 
 const dev = process.env.NODE_ENV !== "production";
-const host = process.env.SERVER_HOST ?? "localhost";
+const host = process.env.SERVER_HOST || "localhost";
 const port = parseInt(process.env.PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 

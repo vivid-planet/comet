@@ -67,14 +67,19 @@ services:
         ports:
             - "127.0.0.1:${AUTHPROXY_PORT}:4180"
         restart: on-failure
-        network_mode: host
         environment:
-            OAUTH2_PROXY_OIDC_ISSUER_URL: $IDP_SSO_URL
+            OAUTH2_PROXY_SKIP_OIDC_DISCOVERY: true
+            OAUTH2_PROXY_OIDC_ISSUER_URL: http://localhost:$IDP_PORT
+            OAUTH2_PROXY_LOGIN_URL: http://localhost:$IDP_PORT/auth
+            OAUTH2_PROXY_OIDC_JWKS_URL: http://host.docker.internal:$IDP_PORT/jwks
+            OAUTH2_PROXY_VALIDATE_URL: http://host.docker.internal:$IDP_PORT/token
+            OAUTH2_PROXY_REDEEM_URL: http://host.docker.internal:$IDP_PORT/token
+            OAUTH2_PROXY_PROFILE_URL: http://host.docker.internal:$IDP_PORT/me
             OAUTH2_PROXY_CLIENT_ID: $IDP_CLIENT_ID
             OAUTH2_PROXY_CLIENT_SECRET: $IDP_CLIENT_SECRET
-            OAUTH2_PROXY_UPSTREAMS: ${ADMIN_URL_INTERNAL},${API_URL_INTERNAL}/
+            OAUTH2_PROXY_UPSTREAMS: http://host.docker.internal:$ADMIN_PORT,http://host.docker.internal:$API_PORT/api/
             OAUTH2_PROXY_REDIRECT_URL: ${ADMIN_URL}/oauth2/callback
-            OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:${AUTHPROXY_PORT}
+            OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
             OAUTH2_PROXY_PROVIDER: oidc
             OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
             OAUTH2_PROXY_EMAIL_DOMAINS: "*"
@@ -85,6 +90,7 @@ services:
             OAUTH2_PROXY_COOKIE_SECURE: false
             OAUTH2_PROXY_SHOW_DEBUG_ON_ERROR: true
             OAUTH2_PROXY_API_ROUTES: /api
+            OAUTH2_PROXY_CODE_CHALLENGE_METHOD: S256
 
 networks:
     postgres:
