@@ -1,11 +1,10 @@
 import { QuestionMark } from "@comet/admin-icons";
-import { type ComponentsOverrides, type DialogContent, type IconButton, type Theme, useThemeProps } from "@mui/material";
+import { type ComponentsOverrides, type IconButton, type Theme, useThemeProps } from "@mui/material";
 import { type FunctionComponent, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
-import { type Dialog } from "../../Dialog";
-import { HelpButton, HelpDialog, HelpDialogContent } from "./HelpDialogButton.sc";
+import { Button, Dialog, DialogContent } from "./HelpDialogButton.sc";
 
 export type HelpDialogButtonClassKey = "button" | "dialog" | "dialogContent";
 
@@ -32,7 +31,7 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
 
     return (
         <>
-            <HelpButton
+            <Button
                 onClick={() => {
                     setShowHelp(!showHelp);
                 }}
@@ -40,8 +39,8 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
                 {...restProps}
             >
                 {icon}
-            </HelpButton>
-            <HelpDialog
+            </Button>
+            <Dialog
                 open={showHelp}
                 onClose={() => {
                     setShowHelp(false);
@@ -49,8 +48,8 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
                 title={dialogTitle}
                 {...slotProps?.dialog}
             >
-                <HelpDialogContent {...slotProps?.dialogContent}>{dialogDescription}</HelpDialogContent>
-            </HelpDialog>
+                <DialogContent {...slotProps?.dialogContent}>{dialogDescription}</DialogContent>
+            </Dialog>
         </>
     );
 };
