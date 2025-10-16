@@ -20,7 +20,10 @@ export interface FinalFormSelectProps<T> {
 
 type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
 
-const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined, disabled: boolean | undefined) => {
+    if (disabled) {
+        return false;
+    }
     if (multiple && Array.isArray(value)) {
         return value.length > 0;
     }
@@ -34,7 +37,7 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined) =
  * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
+    input: { checked, value: incomingValue, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
@@ -66,6 +69,7 @@ export const FinalFormSelect = <T,>({
             <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
     ),
+    disabled,
     children,
     required,
     ...rest
@@ -75,10 +79,12 @@ export const FinalFormSelect = <T,>({
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={getHasClearableContent(value, multiple)}
+            hasClearableContent={getHasClearableContent(value, multiple, disabled)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;
@@ -86,6 +92,7 @@ export const FinalFormSelect = <T,>({
     const selectProps = {
         ...rest,
         multiple,
+        disabled,
         endAdornment,
         name,
         onChange,

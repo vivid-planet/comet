@@ -7,9 +7,10 @@ import { ProductCategoriesService } from "./product-categories.service";
 import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-category.input";
 import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
+import { ProductCategoryType } from "../entities/product-category-type.entity";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
-import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => ProductCategory)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryResolver {
@@ -38,17 +39,16 @@ export class ProductCategoryResolver {
         const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(ProductCategory));
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
+        if (fields.includes("type")) {
+            populate.push("type");
+        }
         if (fields.includes("products")) {
             populate.push("products");
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<ProductCategory, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(ProductCategory, where, options);
         return new PaginatedProductCategories(entities, totalCount);
@@ -65,10 +65,11 @@ export class ProductCategoryResolver {
         else {
             position = lastPosition + 1;
         }
-        const { products: productsInput, ...assignInput } = input;
+        const { products: productsInput, type: typeInput, ...assignInput } = input;
         const productCategory = this.entityManager.create(ProductCategory, {
             ...assignInput,
             position,
+            type: typeInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategoryType, typeInput)) : undefined,
         });
         if (productsInput) {
             const products = await this.entityManager.find(Product, { id: productsInput });
@@ -90,8 +91,8 @@ export class ProductCategoryResolver {
         const productCategory = await this.entityManager.findOneOrFail(ProductCategory, id);
         if (input.position !== undefined) {
             const lastPosition = await this.productCategoriesService.getLastPosition();
-            if (input.position > lastPosition + 1) {
-                input.position = lastPosition + 1;
+            if (input.position > lastPosition) {
+                input.position = lastPosition;
             }
             if (productCategory.position < input.position) {
                 await this.productCategoriesService.decrementPositions(productCategory.position, input.position);
@@ -100,7 +101,7 @@ export class ProductCategoryResolver {
                 await this.productCategoriesService.incrementPositions(input.position, productCategory.position);
             }
         }
-        const { products: productsInput, ...assignInput } = input;
+        const { products: productsInput, type: typeInput, ...assignInput } = input;
         productCategory.assign({
             ...assignInput,
         });
@@ -110,6 +111,12 @@ export class ProductCategoryResolver {
                 throw new Error("Couldn't find all products that were passed as input");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((product) => Reference.create(product)));
+        }
+        if (typeInput !== undefined) {
+            productCategory.type =
+                typeInput ?
+                    Reference.create(await this.entityManager.findOneOrFail(ProductCategoryType, typeInput))
+                    : undefined;
         }
         await this.entityManager.flush();
         return productCategory;
@@ -124,6 +131,12 @@ export class ProductCategoryResolver {
         await this.productCategoriesService.decrementPositions(productCategory.position);
         await this.entityManager.flush();
         return true;
+    }
+    @ResolveField(() => ProductCategoryType, { nullable: true })
+    async type(
+    @Parent()
+    productCategory: ProductCategory): Promise<ProductCategoryType | undefined> {
+        return productCategory.type?.loadOrFail();
     }
     @ResolveField(() => [Product])
     async products(

@@ -51,15 +51,12 @@ const productsFragment = gql`
         }
     `;
 const productsQuery = gql`
-        query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
-    products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductsGridFuture
-                }
-                totalCount
-            }
+    query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
+        products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductsGridFuture } totalCount
         }
-        ${productsFragment}
+    }
+    ${productsFragment}
     `;
 const deleteProductMutation = gql`
                 mutation DeleteProduct($id: ID!) {
@@ -194,7 +191,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             width: 170, },
         { field: "manufacturer",
             headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
-            sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
             flex: 1,

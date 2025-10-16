@@ -3,40 +3,30 @@
 import { gql } from "@apollo/client";
 export const productFormFragment = gql`
         fragment IdFieldInForm on Product {
-            id
-title
-image
+            id title image
         }
-        
-        
     `;
 export const productQuery = gql`
-            query Product($id: ID!) {
-                product(id: $id) {
-                    id
-                    updatedAt
-                    ...IdFieldInForm
-                }
-            }
-            ${productFormFragment}
-        `;
+    query Product($id: ID!) {
+        product(id: $id) {
+            id updatedAt ...IdFieldInForm
+        }
+    }
+    ${productFormFragment}
+    `;
 export const createProductMutation = gql`
-            mutation CreateProduct($input: ProductInput!) {
-                createProduct(input: $input) {
-                    id
-                    updatedAt
-                    ...IdFieldInForm
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation CreateProduct($input: ProductInput!) {
+        createProduct(input: $input) {
+            id updatedAt ...IdFieldInForm
+        }
+    }
+    ${productFormFragment}
+    `;
 export const updateProductMutation = gql`
-            mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
-                updateProduct(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...IdFieldInForm
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
+            id updatedAt ...IdFieldInForm
+        }
+    }
+    ${productFormFragment}
+    `;

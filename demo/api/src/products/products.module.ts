@@ -18,12 +18,14 @@ import { ManufacturerCountryResolver } from "./generated/manufacturer-country.re
 import { ProductResolver } from "./generated/product.resolver";
 import { ProductCategoriesService } from "./generated/product-categories.service";
 import { ProductCategoryResolver } from "./generated/product-category.resolver";
+import { ProductCategoryTypeResolver } from "./generated/product-category-type.resolver";
 import { ProductColorResolver } from "./generated/product-color.resolver";
 import { ProductHighlightResolver } from "./generated/product-highlight.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
+import { ProductPublishedMail } from "./product-published.mail";
 
 @Module({
     imports: [
@@ -54,6 +56,8 @@ import { ProductVariantsService } from "./generated/product-variants.service";
         ProductColorResolver,
         CustomProductResolver,
         ProductHighlightResolver,
+        ProductPublishedMail,
+        ProductCategoryTypeResolver,
     ],
     exports: [],
 })

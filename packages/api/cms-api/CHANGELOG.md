@@ -1,5 +1,44 @@
 # @comet/cms-api
 
+## 8.5.0
+
+### Patch Changes
+
+- 942200f: Improve check-warnings job by adding a missing await which led to bad performance
+- b7156bb: Fix crash in WarningModule with nullable blocks
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- c8f5d89: Add support for literal arrays to block meta
+
+### Patch Changes
+
+- bdfb64f: Fix file replacement by id
+- 8a6244e: Prevent a refresh of `block_index_dependencies` within 5 minutes of the last refresh
+
+    This was already the desired behavior, but the previous implementation was not working correctly.
+
+## 8.3.0
+
+### Minor Changes
+
+- 78b7703: Export additional types for UserPermissions
+    - `ContentScopeWithLabel`
+    - `PermissionForUser` (`PermissionsForUser` is already exported)
+
+- 99950fa: Add new GraphQL to MikroORM helper: `gqlSortToMikroOrmOrderBy`, used by API Generator
+
+### Patch Changes
+
+- 613bc13: Warnings Module: fix `@ScopedEntity()` checks
+- 4a9938a: Warnings Module: make warnings feature truly optional
+
 ## 8.2.0
 
 ### Minor Changes

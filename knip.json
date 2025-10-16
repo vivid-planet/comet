@@ -2,7 +2,7 @@
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
         ".": {
-            "entry": ["dev-pm.config.js", "site-configs.ts"],
+            "entry": ["dev-pm.config.ts", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
             "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"]
         },
@@ -96,10 +96,8 @@
                 "./src/content-scope/content-scope.interface.ts",
                 "./src/repl.ts",
                 "./src/db/ormconfig.cli.ts",
-                "./src/db/fixtures/**/*.ts",
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
-                "./src/generator/generate.ts",
                 "./src/auth/permission.interface.ts",
                 "./src/reload.ts"
             ],
@@ -108,7 +106,7 @@
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]

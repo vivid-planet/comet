@@ -1,5 +1,130 @@
 # @comet/admin
 
+## 8.5.0
+
+### Minor Changes
+
+- c8359f6: Add Filter Count Chip to DataGrid Filter Button
+
+### Patch Changes
+
+- a2af2c6: `Tooltip` children are now focusable by default for improved accessibility
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- a57d092: Prevent crash in `FinalFormSelect` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- 9374018: Prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- ff6d79a: Simplify adding an info-icon with a tooltip in `FormSection` using the new `infoTooltip` prop
+
+    Either set the props value to a string or `FormattedMessage` directly:
+
+    ```tsx
+    <FormSection title="Title of the FormSection" infoTooltip="Title of the info tooltip">
+        {/* ... */}
+    </FormSection>
+    ```
+
+    Or use an object for a more detailed definition:
+
+    ```tsx
+    <FormSection
+        title="FormSection"
+        infoTooltip={{
+            title: "Title of the info tooltip",
+            description: "Description of the info tooltip",
+            variant: "light",
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+### Patch Changes
+
+- a85e7cb: Prevent empty `Tooltip` from rendering when `title` is `null`, `undefined`, or empty string
+- ff6d79a: Allow overriding the `divider` value of the `title` slot of `FormSection` using `slotProps`
+
+    ```tsx
+    <FormSection
+        title="Title of the FormSection"
+        slotProps={{
+            title: { divider: false },
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+    - @comet/admin-icons@8.4.0
+
+## 8.3.0
+
+### Minor Changes
+
+- 422328b: Add backgroundImage to FullPageAlert
+- 1bd73a0: Implement NoContentScopeFallback component according to design specifications
+- ae1dbab: Add `description` and `customContent` props to `Tooltip`
+
+    `description` is intended to be used together with `title` to simplify creating detailed tooltips that match the Comet design:
+
+    ```diff
+     <Tooltip
+    -    title={
+    -        <>
+    -            <Typography variant="subtitle2">Tooltip Title</Typography>
+    -            <Typography variant="body2">This is a detailed description of what's going on.</Typography>
+    -        </>
+    -    }
+    -    sx={{ width: 180 }}
+    +    title="Tooltip Title"
+    +    description="This is a detailed description of what's going on."
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+    `customContent` is an alternative to `title` and `description` for use-cases that require custom elements or styling:
+
+    ```tsx
+    <Tooltip customContent={<SomethingCustom />}>
+        <Info />
+    </Tooltip>
+    ```
+
+### Patch Changes
+
+- ae1dbab: Adjust styling of `Tooltip` to match the Comet design
+- becc06c: The title of `FormSection` now matches the Comet design
+
+    The prop `disableTypography` has been deprecated, use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
+
+- 12e9230: Prevent labels from overlaying and inconsistent spacings of fields
+
+    This affects `CheckboxField`, `CheckboxListField`, `RadioGroupField`, and `SwitchField`.
+
+- 6f30126: SelectField / FinalFormSelect: hide the clear button when the field is disabled
+- d682135: AsyncAutocompleteField: fix inferred option type, commonly used in getOptionLabel
+- becc06c: Deprecate `SectionHeadline`
+
+    The component is only meant to be used internally, inside `FormSection`.
+    Use the `FormSection` component with it's `title` prop to create sections in forms.
+    - @comet/admin-icons@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

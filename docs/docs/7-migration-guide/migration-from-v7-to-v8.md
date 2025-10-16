@@ -1202,6 +1202,10 @@ This section highlights the necessary changes to convert a nestjs-console comman
 
     **Arguments:** Move from `command` field into `arguments` field:
 
+    :::info
+    Optional arguments must be defined in square brackets `[]`, required arguments in angle brackets `<>`.
+    :::
+
     ```diff title="import-redirects.command.ts"
     @Command({
         name: "import-redirects",
@@ -1713,6 +1717,31 @@ npx @comet/upgrade@latest v8/admin/before-install/remove-comet-admin-react-selec
 
 ```diff
 - "@comet/admin-react-select": "^7.x.x",
+```
+
+</details>
+
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/admin/before-install/update-graphql-admin.ts
+```
+
+:::
+
+```diff title=admin/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
 ```
 
 </details>
@@ -2762,10 +2791,10 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 ### Fix runtime errors
 
-1. Start the api with `dpm start admin`
+1. Start the admin with `dpm start admin`
 2. Check the logs with `dpm logs admin`
 3. Fix occurring errors
-4. Once the API runs without problems: Commit **without** `--no-verify`
+4. Once the admin runs without problems: Commit **without** `--no-verify`
 
 ## Site
 
@@ -2773,6 +2802,49 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 Ignore this if you already did it beforehand in [step 3](#step-3-switch-from-cometcms-site-to-cometsite-nextjs-pr-3).
 Otherwise, go back and do it now.
+
+### 🤖 Upgrade peer dependencies
+
+The following upgrade script will update peer dependency versions.
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install
+```
+
+:::
+
+<details>
+
+<summary>Updates handled by this batch upgrade script</summary>
+
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install/update-graphql-site.ts
+```
+
+:::
+
+```diff title=site/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
+</details>
 
 ### Install
 
@@ -2856,4 +2928,4 @@ scalars: rootBlocks.reduce(
 2. Check the logs with `dpm logs site`
 3. Fix occurring errors
 4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [COMET Starter](https://github.com/vivid-planet/comet-starter/blob/main/build-and-run-site.sh))
-5. Once the API runs without problems: Commit **without** `--no-verify`
+5. Once the site runs without problems: Commit **without** `--no-verify`

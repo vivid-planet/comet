@@ -144,7 +144,7 @@ export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { IdFilter } from "./common/filter/id.filter";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
-export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
@@ -217,9 +217,13 @@ export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
+export { MailTemplate, MailTemplateInterface, PreparedTestProps } from "./mail-templates/mail-template.decorator";
+export { MailTemplateService } from "./mail-templates/mail-template.service";
+export { MailTemplatesModule } from "./mail-templates/mail-templates.module";
+export { MailerLog } from "./mailer/entities/mailer-log.entity";
 export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
 export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
-export { MailerService } from "./mailer/mailer.service";
+export { MailerService, SendMailParams } from "./mailer/mailer.service";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
@@ -265,10 +269,12 @@ export { ContentScope } from "./user-permissions/interfaces/content-scope.interf
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
+export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
     Permission,
+    PermissionForUser,
     PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
