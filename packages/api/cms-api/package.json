@@ -49,7 +49,6 @@
         "fast-xml-parser": "^5.2.5",
         "file-type": "^16.5.4",
         "get-image-colors": "^4.0.1",
-        "got": "^11.8.6",
         "graphql-parse-resolve-info": "^4.14.1",
         "graphql-scalars": "^1.24.2",
         "hasha": "^5.2.2",
