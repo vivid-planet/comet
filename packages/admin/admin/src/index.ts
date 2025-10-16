@@ -17,6 +17,7 @@ export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } fro
 export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardButtonProps } from "./common/buttons/CopyToClipboardButton";
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
 export { FeedbackButton, FeedbackButtonClassKey, FeedbackButtonProps } from "./common/buttons/feedback/FeedbackButton";
+export { HelpDialogButton, HelpDialogButtonClassKey, HelpDialogButtonProps } from "./common/buttons/helpDialogButton/HelpDialogButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
 export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/SaveButton";
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
