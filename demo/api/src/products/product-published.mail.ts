@@ -75,6 +75,12 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
                     countProductPublished: 5,
                 },
             },
+            {
+                props: {
+                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "de" as const },
+                    countProductPublished: 5,
+                },
+            },
         ];
     }
 }
