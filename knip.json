@@ -4,7 +4,8 @@
         ".": {
             "entry": ["dev-pm.config.ts", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"]
+            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"],
+            "ignoreBinaries": ["oauth2-proxy"]
         },
         "packages/cli": {
             "entry": ["./src/index.ts"],
