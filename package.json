@@ -45,7 +45,7 @@
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
         "setup:ci": "pnpm run copy-project-files",
-        "setup:download-oauth2-proxy": "dotenv -- sh -c 'npx @comet/cli download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
+        "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm comet download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
