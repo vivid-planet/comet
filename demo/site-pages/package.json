@@ -5,16 +5,16 @@
     "description": "Comet Site Pages Demo Application",
     "type": "commonjs",
     "scripts": {
-        "build": "run-s intl:compile && run-p gql:types generate-block-types && $npm_execpath build:preBuild",
+        "build": "run-s intl:compile && run-p gql:types generate-block-types && pnpm build:preBuild",
         "build:preBuild": "run-s clear:preBuild build:preBuild:tsc",
         "build:preBuild:tsc": "tsc --project tsconfig.preBuild.json",
         "build:publicGenerated": "node preBuild/build/preBuild/src/publicGenerator/generate.js",
         "clear:preBuild": "rimraf preBuild/build",
-        "dev": "run-s intl:compile && run-p gql:types generate-block-types && $npm_execpath build:preBuild && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' node server.js",
+        "dev": "run-s intl:compile && run-p gql:types generate-block-types && pnpm build:preBuild && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' node server.js",
         "export": "next export",
         "extract:publicGenerated": "node preBuild/build/preBuild/src/publicGenerator/extract.js",
         "generate-block-types": "comet generate-block-types",
-        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
+        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
         "gql:types": "graphql-codegen",
         "gql:watch": "graphql-codegen --watch",
         "intl:compile": "formatjs compile-folder --format simple --ast lang/comet-demo-lang/site lang-compiled/",
@@ -23,8 +23,8 @@
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:tsc": "tsc --project .",
         "lint:tscPreBuild": "tsc --project tsconfig.preBuild.json",
-        "next-build": "$npm_execpath build:publicGenerated && next build",
-        "serve": "npm run extract:publicGenerated && NODE_ENV=production node server.js"
+        "next-build": "pnpm build:publicGenerated && next build",
+        "serve": "pnpm run extract:publicGenerated && NODE_ENV=production node server.js"
     },
     "dependencies": {
         "@comet/site-nextjs": "workspace:*",
