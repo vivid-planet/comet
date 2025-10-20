@@ -67,6 +67,8 @@ services:
         ports:
             - "127.0.0.1:${AUTHPROXY_PORT}:4180"
         restart: on-failure
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         environment:
             OAUTH2_PROXY_SKIP_OIDC_DISCOVERY: true
             OAUTH2_PROXY_OIDC_ISSUER_URL: http://localhost:$IDP_PORT
