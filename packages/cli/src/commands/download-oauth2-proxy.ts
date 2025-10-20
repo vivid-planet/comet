@@ -84,26 +84,29 @@ export const downloadOAuth2ProxyCommand = new Command("download-oauth2-proxy")
         if (!asset) {
             throw new Error(`No matching binary found for ${platform}-${architecture} in release ${latest.tag_name}`);
         }
+
+        const baseDir = `${process.cwd()}/node_modules`;
         const dirname = `oauth2-proxy-${version}.${platform}-${architecture}`;
 
         // Delete old versions
-        const existingFiles = fs.readdirSync("./").filter((f) => f.startsWith("oauth2-proxy-v") && f !== dirname);
+        const existingFiles = fs.readdirSync(baseDir).filter((f) => f.startsWith("oauth2-proxy-v") && f !== dirname);
         for (const file of existingFiles) {
             console.log(`Deleting old version: ${file}`);
-            fs.rmSync(file, { recursive: true, force: true });
+            fs.rmSync(`${baseDir}/${file}`, { recursive: true, force: true });
         }
 
         // Download and extract new version if not already present
-        const filename = `./${dirname}/oauth2-proxy`;
+        const filename = `${baseDir}/${dirname}/oauth2-proxy`;
         if (fs.existsSync(filename)) {
             console.log(`OAuth2-Proxy version ${version} already installed.`);
         } else {
             console.log(`Downloading and extracting OAuth2-Proxy version ${version}...`);
-            execSync(`curl -s -L ${asset.browser_download_url} | tar xvfz -`, { stdio: "inherit" });
+            execSync(`curl -s -L ${asset.browser_download_url} | tar xvfz -  -C ${baseDir}`, { stdio: "inherit" });
         }
 
         // Create symlink to have a consistent name
-        console.log("Create symlink to oauth2-proxy binary");
-        execSync(`ln -sf ${filename} ./oauth2-proxy`);
+        console.log(`Create symlink to oauth2-proxy binary on ${baseDir}/.bin/oauth2-proxy`);
+        console.log(`ln -sf ../${dirname}/oauth2-proxy ${baseDir}/.bin/oauth2-proxy`);
+        execSync(`ln -sf ../${dirname}/oauth2-proxy ${baseDir}/.bin/oauth2-proxy`);
         console.log("=== Finished installing OAuth2-Proxy ===");
     });

@@ -26,7 +26,7 @@
         "dev:demo:api": "dev-pm start @demo-api",
         "dev:demo:site": "dev-pm start @demo-site",
         "dev:docs": "dev-pm start @docs",
-        "dev:oauth2-proxy": "dotenv -- ./oauth2-proxy",
+        "dev:oauth2-proxy": "dotenv -- ./node_modules/.bin/oauth2-proxy",
         "dev:oidc-provider": "dotenv -- dev-oidc-provider",
         "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",

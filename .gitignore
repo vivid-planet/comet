@@ -11,5 +11,3 @@ junit.xml
 .env.local
 .env.site-configs
 **/.idea
-oauth2-proxy*/
-oauth2-proxy
