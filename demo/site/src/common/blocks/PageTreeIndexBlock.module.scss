@@ -5,11 +5,13 @@
 .list {
     list-style: disc;
     color: var(--palette-primary-main);
+    padding-left: 0;
 }
 
 .listElement {
     line-height: 26px;
-    padding: 12px 0;
+    padding-top: 12px;
+    margin-left: 24px;
 }
 .link {
     color: var(--palette-primary-main);
