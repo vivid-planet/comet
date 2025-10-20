@@ -34,6 +34,7 @@ import {
     type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
+import { ProductCategoryFilterOperators } from "@src/products/ProductCategoryFilter";
 import { useMemo, useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
@@ -42,8 +43,6 @@ import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     type GQLDeleteProductMutation,
     type GQLDeleteProductMutationVariables,
-    type GQLProductGridRelationsQuery,
-    type GQLProductGridRelationsQueryVariables,
     type GQLProductsListManualFragment,
     type GQLProductsListQuery,
     type GQLProductsListQueryVariables,
@@ -124,7 +123,6 @@ export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
     const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
@@ -239,9 +237,8 @@ export function ProductsGrid() {
                 flex: 1,
                 minWidth: 100,
                 renderCell: (params) => <>{params.row.category?.title}</>,
-                type: "singleSelect",
+                filterOperators: ProductCategoryFilterOperators,
                 visible: theme.breakpoints.up("md"),
-                valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
                 disableExport: true,
             },
             {
@@ -340,7 +337,7 @@ export function ProductsGrid() {
                 disableExport: true,
             },
         ];
-    }, [client, intl, relationsData, theme]);
+    }, [client, intl, theme]);
 
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
@@ -447,23 +444,6 @@ const productsQuery = gql`
         }
     }
     ${productsFragment}
-`;
-
-const productRelationsQuery = gql`
-    query ProductGridRelations {
-        productCategories {
-            nodes {
-                id
-                title
-            }
-        }
-        productTags {
-            nodes {
-                id
-                title
-            }
-        }
-    }
 `;
 
 const deleteProductMutation = gql`
