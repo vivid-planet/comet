@@ -38,5 +38,8 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
+            - name: Setup project for CI run
+              run: pnpm run setup:ci
+
             - name: Build docs
               run: pnpm build:docs

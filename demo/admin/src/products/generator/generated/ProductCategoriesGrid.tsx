@@ -29,15 +29,12 @@ const productCategoriesFragment = gql`
         }
     `;
 const productCategoriesQuery = gql`
-        query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
-    productCategories(offset: $offset, limit: $limit, sort: $sort) {
-                nodes {
-                    ...ProductCategoriesGrid
-                }
-                totalCount
-            }
+    query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
+        productCategories(offset: $offset, limit: $limit, sort: $sort) {
+            nodes { ...ProductCategoriesGrid } totalCount
         }
-        ${productCategoriesFragment}
+    }
+    ${productCategoriesFragment}
     `;
 const updateProductCategoryPositionMutation = gql`
                 mutation UpdateProductCategoryPosition($id: ID!, $input: ProductCategoryUpdateInput!) {

@@ -64,14 +64,16 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
             };
 
     interface FormProps {
-            id?: string;
+            onCreate?: (id: string) => void;
+id?: string;
         }
 
-    export function ProductHighlightForm({id}: FormProps) {
+    export function ProductHighlightForm({onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductHighlightQuery, GQLProductHighlightQueryVariables>(
@@ -122,15 +124,16 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductHighlightMutation, GQLCreateProductHighlightMutationVariables>({
                     mutation: createProductHighlightMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProductHighlight.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProductHighlight.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -168,21 +171,14 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                        query: gql\`query ProductCategoriesSelect
-                            
-                            
-                            
-                         {
-                            productCategories
-                                
-                                
-                             {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query ProductCategoriesSelect {
+        productCategories {
+            nodes { id title }
+        }
+    }
+    
+    \`
                             
                             
                         
@@ -203,21 +199,14 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
-                        query: gql\`query ProductsSelect(
-                            $filter: ProductFilter
-                            
-                            
-                        ) {
-                            products(
-                                filter: $filter
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query ProductsSelect($filter: ProductFilter) {
+        products(filter: $filter) {
+            nodes { id title }
+        }
+    }
+    
+    \`, variables: { 
                             filter: { category: { equal: values.productCategory?.id } },
                             
                          }
@@ -255,21 +244,14 @@ exports[`AsyncSelectFilter generates filter with value dependent on other field 
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $title: String
-                            
-                            
-                        ) {
-                            categories(
-                                title: $title
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($title: String) {
+        categories(title: $title) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             title: values.title,
                             
                          }
@@ -348,15 +330,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            type: GQLCategoryType;
+            onCreate?: (id: string) => void;
+type: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({type, id}: FormProps) {
+    export function ProductForm({onCreate, type, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -407,15 +391,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -453,21 +438,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $type: CategoryType
-                            
-                            
-                        ) {
-                            categories(
-                                type: $type
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($type: CategoryType) {
+        categories(type: $type) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             type: type,
                             
                          }
@@ -547,15 +525,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            foo: string;
+            onCreate?: (id: string) => void;
+foo: string;
 id?: string;
         }
 
-    export function ProductForm({foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -606,15 +586,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -652,21 +633,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $filter: CategoryFilter
-                            
-                            
-                        ) {
-                            categories(
-                                filter: $filter
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             filter: { foo: { equal: foo } },
                             
                          }
@@ -747,15 +721,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            categoryType: GQLCategoryType;
+            onCreate?: (id: string) => void;
+categoryType: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({categoryType, id}: FormProps) {
+    export function ProductForm({onCreate, categoryType, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -806,15 +782,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -852,21 +829,14 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect(
-                            $filter: CategoryFilter
-                            
-                            
-                        ) {
-                            categories(
-                                filter: $filter
-                                
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { 
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
                             filter: { type: { equal: categoryType } },
                             
                          }

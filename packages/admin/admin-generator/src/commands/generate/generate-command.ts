@@ -179,7 +179,17 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
+    /**
+     * If true, the form will navigate to the edit page using stackSwitchApi.activatePage of the newly created item after a successful creation.
+     * @default true
+     */
+    navigateOnCreate?: boolean;
 };
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
@@ -277,6 +287,11 @@ export type GridConfig<T extends { __typename?: string }> = {
         enabled: boolean;
         dragPreviewField?: UsableFields<T>;
     };
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
