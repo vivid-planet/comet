@@ -22,14 +22,14 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && npm run generate-block-types && vite build",
+        "build": "pnpm run clean && pnpm run generate-block-types && vite build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
-        "dev": "$npm_execpath run clean && $npm_execpath generate-block-types && vite build --watch",
+        "dev": "pnpm run clean && pnpm generate-block-types && vite build --watch",
         "generate-block-types": "comet generate-block-types",
-        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
+        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
+        "lint": "pnpm generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
+        "lint:prettier": "pnpm prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
