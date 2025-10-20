@@ -99,7 +99,7 @@ export const downloadOAuth2ProxyCommand = new Command("download-oauth2-proxy")
             console.log(`OAuth2-Proxy version ${version} already installed.`);
         } else {
             console.log(`Downloading and extracting OAuth2-Proxy version ${version}...`);
-            execSync(`curl -s -L ${asset.browser_download_url} | tar xvf -`, { stdio: "inherit" });
+            execSync(`curl -s -L ${asset.browser_download_url} | tar xvfz -`, { stdio: "inherit" });
         }
 
         // Create symlink to have a consistent name
