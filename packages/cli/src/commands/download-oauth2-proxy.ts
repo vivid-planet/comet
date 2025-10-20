@@ -106,7 +106,6 @@ export const downloadOAuth2ProxyCommand = new Command("download-oauth2-proxy")
 
         // Create symlink to have a consistent name
         console.log(`Create symlink to oauth2-proxy binary on ${baseDir}/.bin/oauth2-proxy`);
-        console.log(`ln -sf ../${dirname}/oauth2-proxy ${baseDir}/.bin/oauth2-proxy`);
         execSync(`ln -sf ../${dirname}/oauth2-proxy ${baseDir}/.bin/oauth2-proxy`);
         console.log("=== Finished installing OAuth2-Proxy ===");
     });
