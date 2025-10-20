@@ -886,7 +886,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
         ];
-        },[intl ${gridNeedsTheme ? ", theme" : ""} ${showCrudContextMenuInActionsColumn ? ", client" : ""}]);
+        },[intl${gridNeedsTheme ? ", theme" : ""}${showCrudContextMenuInActionsColumn ? ", client" : ""}]);
 
         ${
             hasFilter || hasSearch

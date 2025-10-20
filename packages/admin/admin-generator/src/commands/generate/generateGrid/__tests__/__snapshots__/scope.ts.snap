@@ -63,6 +63,7 @@ import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { ProductScope } from "@src/graphql.generated";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -115,7 +116,8 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLProductsFormFragment>[] = [
+        const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>{
+            return [
             {field: "title",
 headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
 filterable: false,
@@ -141,6 +143,7 @@ renderCell: (params) => {
                             );
                                 },}
         ];
+        },[intl]);
 
         
 
@@ -236,6 +239,7 @@ import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { ProductScope } from "@src/graphql.generated";
 import { useContentScope } from "@comet/cms-admin";
 import { Add as AddIcon } from "@comet/admin-icons";
@@ -287,7 +291,8 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLProductsFormFragment>[] = [
+        const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>{
+            return [
             {field: "title",
 headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
 filterable: false,
@@ -313,6 +318,7 @@ renderCell: (params) => {
                             );
                                 },}
         ];
+        },[intl]);
 
         
 
