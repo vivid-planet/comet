@@ -22,6 +22,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productHighlightsFragment = gql`
@@ -57,35 +58,37 @@ export function ProductHighlightsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductHighlightsGrid") };
-    const columns: GridColDef<GQLProductHighlightsFormFragment>[] = [
-        { field: "description",
-            headerName: intl.formatMessage({ id: "productHighlight.description", defaultMessage: "Description" }),
-            flex: 1,
-            minWidth: 150, },
-        { field: "actions",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            type: "actions",
-            align: "right",
-            pinned: "right",
-            width: 84,
-            renderCell: (params) => {
-                return (<>
+    const columns: GridColDef<GQLProductHighlightsFormFragment>[] = useMemo(() => {
+        return [
+            { field: "description",
+                headerName: intl.formatMessage({ id: "productHighlight.description", defaultMessage: "Description" }),
+                flex: 1,
+                minWidth: 150, },
+            { field: "actions",
+                headerName: "",
+                sortable: false,
+                filterable: false,
+                type: "actions",
+                align: "right",
+                pinned: "right",
+                width: 84,
+                renderCell: (params) => {
+                    return (<>
                                 
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu onDelete={async () => {
-                        await client.mutate<GQLDeleteProductHighlightMutation, GQLDeleteProductHighlightMutationVariables>({
-                            mutation: deleteProductHighlightMutation,
-                            variables: { id: params.row.id },
-                        });
-                    }} refetchQueries={[productHighlightsQuery]}/>
+                            await client.mutate<GQLDeleteProductHighlightMutation, GQLDeleteProductHighlightMutationVariables>({
+                                mutation: deleteProductHighlightMutation,
+                                variables: { id: params.row.id },
+                            });
+                        }} refetchQueries={[productHighlightsQuery]}/>
                                     
                                 </>);
-            }, }
-    ];
+                }, }
+        ];
+    }, [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery, {
         variables: {

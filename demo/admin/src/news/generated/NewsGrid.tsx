@@ -25,6 +25,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useContentScope } from "@comet/cms-admin";
@@ -64,74 +65,76 @@ export function NewsGrid() {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
-    const columns: GridColDef<GQLNewsGridFragment>[] = [
-        { field: "title",
-            headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }),
-            flex: 1,
-            minWidth: 150, },
-        { ...dataGridDateColumn, field: "date",
-            headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
-            flex: 1,
-            minWidth: 150, },
-        { field: "category",
-            headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
-            type: "singleSelect",
-            valueFormatter: (value, row) => row.category?.toString(),
-            valueOptions: [{
-                    value: "events",
-                    label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }),
-                }, {
-                    value: "company",
-                    label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }),
-                }, {
-                    value: "awards",
-                    label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }),
-                },],
-            renderCell: renderStaticSelectCell,
-            flex: 1,
-            minWidth: 150, },
-        { field: "image",
-            headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
-            filterable: false,
-            sortable: false,
-            renderCell: (params) => {
-                return <BlockPreviewContent block={DamImageBlock} input={params.row.image}/>;
-            },
-            flex: 1,
-            minWidth: 150, },
-        { field: "content",
-            headerName: intl.formatMessage({ id: "news.content", defaultMessage: "Content" }),
-            filterable: false,
-            sortable: false,
-            renderCell: (params) => {
-                return <BlockPreviewContent block={NewsContentBlock} input={params.row.content}/>;
-            },
-            flex: 1,
-            minWidth: 150, },
-        { field: "actions",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            type: "actions",
-            align: "right",
-            pinned: "right",
-            width: 84,
-            renderCell: (params) => {
-                return (<>
+    const columns: GridColDef<GQLNewsGridFragment>[] = useMemo(() => {
+        return [
+            { field: "title",
+                headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }),
+                flex: 1,
+                minWidth: 150, },
+            { ...dataGridDateColumn, field: "date",
+                headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
+                flex: 1,
+                minWidth: 150, },
+            { field: "category",
+                headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
+                type: "singleSelect",
+                valueFormatter: (value, row) => row.category?.toString(),
+                valueOptions: [{
+                        value: "events",
+                        label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }),
+                    }, {
+                        value: "company",
+                        label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }),
+                    }, {
+                        value: "awards",
+                        label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }),
+                    },],
+                renderCell: renderStaticSelectCell,
+                flex: 1,
+                minWidth: 150, },
+            { field: "image",
+                headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
+                filterable: false,
+                sortable: false,
+                renderCell: (params) => {
+                    return <BlockPreviewContent block={DamImageBlock} input={params.row.image}/>;
+                },
+                flex: 1,
+                minWidth: 150, },
+            { field: "content",
+                headerName: intl.formatMessage({ id: "news.content", defaultMessage: "Content" }),
+                filterable: false,
+                sortable: false,
+                renderCell: (params) => {
+                    return <BlockPreviewContent block={NewsContentBlock} input={params.row.content}/>;
+                },
+                flex: 1,
+                minWidth: 150, },
+            { field: "actions",
+                headerName: "",
+                sortable: false,
+                filterable: false,
+                type: "actions",
+                align: "right",
+                pinned: "right",
+                width: 84,
+                renderCell: (params) => {
+                    return (<>
                                 
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu onDelete={async () => {
-                        await client.mutate<GQLDeleteNewsMutation, GQLDeleteNewsMutationVariables>({
-                            mutation: deleteNewsMutation,
-                            variables: { id: params.row.id },
-                        });
-                    }} refetchQueries={[newsQuery]}/>
+                            await client.mutate<GQLDeleteNewsMutation, GQLDeleteNewsMutationVariables>({
+                                mutation: deleteNewsMutation,
+                                variables: { id: params.row.id },
+                            });
+                        }} refetchQueries={[newsQuery]}/>
                                     
                                 </>);
-            }, }
-    ];
+                }, }
+        ];
+    }, [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLNewsGridQuery, GQLNewsGridQueryVariables>(newsQuery, {
         variables: {

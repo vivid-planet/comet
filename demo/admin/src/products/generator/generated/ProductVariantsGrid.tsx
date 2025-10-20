@@ -29,6 +29,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Excel as ExcelIcon } from "@comet/admin-icons";
@@ -85,40 +86,42 @@ export function ProductVariantsGrid({ product }: Props) {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "product-variants",
         }), ...usePersistentColumnState("ProductVariantsGrid") };
-    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
-        { field: "name",
-            headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }),
-            flex: 1,
-            minWidth: 150, },
-        { ...dataGridDateColumn, field: "createdAt",
-            headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-            flex: 1,
-            minWidth: 150, },
-        { field: "actions",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            type: "actions",
-            align: "right",
-            pinned: "right",
-            width: 84,
-            disableExport: true,
-            renderCell: (params) => {
-                return (<>
+    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = useMemo(() => {
+        return [
+            { field: "name",
+                headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }),
+                flex: 1,
+                minWidth: 150, },
+            { ...dataGridDateColumn, field: "createdAt",
+                headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
+                flex: 1,
+                minWidth: 150, },
+            { field: "actions",
+                headerName: "",
+                sortable: false,
+                filterable: false,
+                type: "actions",
+                align: "right",
+                pinned: "right",
+                width: 84,
+                disableExport: true,
+                renderCell: (params) => {
+                    return (<>
                                 
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu onDelete={async () => {
-                        await client.mutate<GQLDeleteProductVariantMutation, GQLDeleteProductVariantMutationVariables>({
-                            mutation: deleteProductVariantMutation,
-                            variables: { id: params.row.id },
-                        });
-                    }} refetchQueries={[productVariantsQuery]}/>
+                            await client.mutate<GQLDeleteProductVariantMutation, GQLDeleteProductVariantMutationVariables>({
+                                mutation: deleteProductVariantMutation,
+                                variables: { id: params.row.id },
+                            });
+                        }} refetchQueries={[productVariantsQuery]}/>
                                     
                                 </>);
-            }, }
-    ];
+                }, }
+        ];
+    }, [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductVariantsGridQuery, GQLProductVariantsGridQueryVariables>(productVariantsQuery, {
         variables: {

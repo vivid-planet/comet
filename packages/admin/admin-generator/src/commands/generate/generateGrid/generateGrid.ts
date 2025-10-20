@@ -221,6 +221,7 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "GridColumnHeaderTitle", importPath: "@mui/x-data-grid-pro" },
         { name: "GridToolbarQuickFilter", importPath: "@mui/x-data-grid-pro" },
         { name: "GridRowOrderChangeParams", importPath: "@mui/x-data-grid-pro" },
+        { name: "useMemo", importPath: "react" },
     ];
 
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
@@ -752,7 +753,8 @@ export function generateGrid<T extends { __typename?: string }>(
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
-        const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
+        const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>{
+            return [
             ${gridColumnFields
                 .map((column) => {
                     const defaultMinWidth = 150;
@@ -884,6 +886,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
         ];
+        },[intl ${gridNeedsTheme ? ", theme" : ""} ${showCrudContextMenuInActionsColumn ? ", client" : ""}]);
 
         ${
             hasFilter || hasSearch

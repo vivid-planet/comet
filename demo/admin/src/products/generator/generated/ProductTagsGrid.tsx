@@ -22,6 +22,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productTagsFragment = gql`
@@ -59,35 +60,37 @@ export function ProductTagsGrid() {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "productTags",
         }), ...usePersistentColumnState("ProductTagsGrid") };
-    const columns: GridColDef<GQLProductTagsGridFragment>[] = [
-        { field: "title",
-            headerName: intl.formatMessage({ id: "productTag.title", defaultMessage: "Title" }),
-            flex: 1,
-            minWidth: 150, },
-        { field: "actions",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            type: "actions",
-            align: "right",
-            pinned: "right",
-            width: 84,
-            renderCell: (params) => {
-                return (<>
+    const columns: GridColDef<GQLProductTagsGridFragment>[] = useMemo(() => {
+        return [
+            { field: "title",
+                headerName: intl.formatMessage({ id: "productTag.title", defaultMessage: "Title" }),
+                flex: 1,
+                minWidth: 150, },
+            { field: "actions",
+                headerName: "",
+                sortable: false,
+                filterable: false,
+                type: "actions",
+                align: "right",
+                pinned: "right",
+                width: 84,
+                renderCell: (params) => {
+                    return (<>
                                 
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu onDelete={async () => {
-                        await client.mutate<GQLDeleteProductTagMutation, GQLDeleteProductTagMutationVariables>({
-                            mutation: deleteProductTagMutation,
-                            variables: { id: params.row.id },
-                        });
-                    }} refetchQueries={[productTagsQuery]}/>
+                            await client.mutate<GQLDeleteProductTagMutation, GQLDeleteProductTagMutationVariables>({
+                                mutation: deleteProductTagMutation,
+                                variables: { id: params.row.id },
+                            });
+                        }} refetchQueries={[productTagsQuery]}/>
                                     
                                 </>);
-            }, }
-    ];
+                }, }
+        ];
+    }, [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductTagsGridQuery, GQLProductTagsGridQueryVariables>(productTagsQuery, {
         variables: {

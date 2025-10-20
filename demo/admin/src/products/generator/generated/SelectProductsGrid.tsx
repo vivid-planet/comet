@@ -20,6 +20,7 @@ import { usePersistentColumnState } from "@comet/admin";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { DataGridProProps } from "@mui/x-data-grid-pro";
 const productsFragment = gql`
         fragment SelectProductsGridFuture on Product {
@@ -49,50 +50,52 @@ type Props = {
 export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: Props) {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid"), rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true };
-    const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = [
-        { field: "title",
-            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
-            flex: 1,
-            minWidth: 200,
-            maxWidth: 250, },
-        { field: "description",
-            headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
-            flex: 1,
-            minWidth: 150, },
-        { field: "price",
-            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
-            type: "number",
-            renderCell: ({ value }) => {
-                return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
-            },
-            flex: 1,
-            minWidth: 150,
-            maxWidth: 150, },
-        { field: "type",
-            headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
-            type: "singleSelect",
-            valueFormatter: (value, row) => row.type?.toString(),
-            valueOptions: [{
-                    value: "cap",
-                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
-                }, {
-                    value: "shirt",
-                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
-                }, {
-                    value: "tie",
-                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
-                },],
-            renderCell: renderStaticSelectCell,
-            flex: 1,
-            minWidth: 150,
-            maxWidth: 150, },
-        { ...dataGridDateColumn, field: "availableSince",
-            headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-            width: 140, },
-        { ...dataGridDateTimeColumn, field: "createdAt",
-            headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
-            width: 170, },
-    ];
+    const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = useMemo(() => {
+        return [
+            { field: "title",
+                headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
+                flex: 1,
+                minWidth: 200,
+                maxWidth: 250, },
+            { field: "description",
+                headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
+                flex: 1,
+                minWidth: 150, },
+            { field: "price",
+                headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+                type: "number",
+                renderCell: ({ value }) => {
+                    return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
+                },
+                flex: 1,
+                minWidth: 150,
+                maxWidth: 150, },
+            { field: "type",
+                headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
+                type: "singleSelect",
+                valueFormatter: (value, row) => row.type?.toString(),
+                valueOptions: [{
+                        value: "cap",
+                        label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                    }, {
+                        value: "shirt",
+                        label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    }, {
+                        value: "tie",
+                        label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                    },],
+                renderCell: renderStaticSelectCell,
+                flex: 1,
+                minWidth: 150,
+                maxWidth: 150, },
+            { ...dataGridDateColumn, field: "availableSince",
+                headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+                width: 140, },
+            { ...dataGridDateTimeColumn, field: "createdAt",
+                headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
+                width: 170, },
+        ];
+    }, [intl]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
