@@ -1,5 +1,13 @@
 # @comet/admin-generator
 
+## 8.5.0
+
+### Minor Changes
+
+- 7806dd1: Add scopeAsProp to grid and form to generate a scope prop that needs to be passed into the generated grid/form
+- c96e920: Add FormConfig.navigateOnCreate (defaults to true) to allow disabling the navigation to edit page after successful create mutation
+- 7806dd1: form: add scope to create mutation (if any), defaulting to using the current scope from context (as grid does it) [breaking]
+
 ## 8.4.2
 
 ## 8.4.1

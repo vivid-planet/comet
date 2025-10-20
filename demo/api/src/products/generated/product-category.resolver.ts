@@ -91,8 +91,8 @@ export class ProductCategoryResolver {
         const productCategory = await this.entityManager.findOneOrFail(ProductCategory, id);
         if (input.position !== undefined) {
             const lastPosition = await this.productCategoriesService.getLastPosition();
-            if (input.position > lastPosition + 1) {
-                input.position = lastPosition + 1;
+            if (input.position > lastPosition) {
+                input.position = lastPosition;
             }
             if (productCategory.position < input.position) {
                 await this.productCategoriesService.decrementPositions(productCategory.position, input.position);
