@@ -233,7 +233,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                 </>);
                 }, }
         ];
-    }, [intl, theme, client]);
+    }, [intl, theme, client, rowAction, actionsColumnWidth]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
