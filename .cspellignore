@@ -53,3 +53,8 @@ graphiql
 retryable
 mjml
 autonumber
+colorpicker
+datetimerangepickerfield
+datetimerangepicker
+inlinealert
+numberfield

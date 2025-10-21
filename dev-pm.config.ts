@@ -153,11 +153,6 @@ export default defineConfig({
             group: ["demo-api", "demo"],
         },
         {
-            name: "demo-oidc-provider",
-            script: "pnpm run start-oidc-provider",
-            group: ["demo-api", "demo"],
-        },
-        {
             name: "demo-api-generator",
             script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
             group: ["demo-api", "demo"],
@@ -168,6 +163,19 @@ export default defineConfig({
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+        },
+
+        // group demo login
+        {
+            name: "demo-oidc-provider",
+            script: "pnpm run dev:oidc-provider",
+            group: ["demo-login", "demo"],
+        },
+        {
+            name: "demo-oauth2-proxy",
+            script: "pnpm run dev:oauth2-proxy",
+            group: ["demo-login", "demo"],
+            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
         },
 
         //group demo site
