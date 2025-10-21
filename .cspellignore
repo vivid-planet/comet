@@ -52,6 +52,7 @@ usehooks
 graphiql
 retryable
 mjml
+autonumber
 colorpicker
 datetimerangepickerfield
 datetimerangepicker
