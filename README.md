@@ -70,7 +70,7 @@ Here are a few examples:
     Start the development process for `@comet/admin`:
 
     ```bash
-    pnpm dev-pm start @comet-admin
+    pnpm exec dev-pm start @comet-admin
     ```
 
     Create a development story in Storybook:
@@ -84,13 +84,13 @@ Here are a few examples:
     Start the development process for `@comet/cms-api`:
 
     ```bash
-    pnpm dev-pm start @cms-api
+    pnpm exec dev-pm start @cms-api
     ```
 
     Start Demo API:
 
     ```bash
-    pnpm dev-pm start @demo-api
+    pnpm exec dev-pm start @demo-api
     ```
 
     The Demo API will be available at [http://localhost:4000/](http://localhost:4000/)
@@ -100,13 +100,13 @@ Here are a few examples:
     Start the development process for `@comet/cms-admin`:
 
     ```bash
-    pnpm dev-pm start @cms-admin
+    pnpm exec dev-pm start @cms-admin
     ```
 
     Start Demo API and Admin:
 
     ```bash
-    pnpm dev-pm start @demo-api @demo-admin
+    pnpm exec dev-pm start @demo-api @demo-admin
     ```
 
     The Demo Admin will be available at [http://localhost:8000/](http://localhost:8000/)
@@ -116,7 +116,7 @@ See [dev-pm.config.js](/dev-pm.config.js) for a list of all available processes 
 #### Start Demo
 
 ```bash
-pnpm dev-pm start @demo
+pnpm exec dev-pm start @demo
 ```
 
 Demo will be available at
@@ -128,7 +128,7 @@ Demo will be available at
 It is also possible to start specific microservices
 
 ```bash
-pnpm dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
+pnpm exec dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
 ```
 
 #### Start Storybook
@@ -142,7 +142,7 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 #### Start Docs
 
 ```bash
-pnpm dev-pm start @docs
+pnpm exec dev-pm start @docs
 ```
 
 The docs will be available at [http://localhost:3300/](http://localhost:3300/)  
@@ -151,7 +151,7 @@ _This will also start Storybook, due to some docs-pages being generated from sto
 ### Stop processes
 
 ```bash
-pnpm dev-pm shutdown
+pnpm exec dev-pm shutdown
 ```
 
 ### Dev scripts

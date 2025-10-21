@@ -19,4 +19,4 @@ ln -sf ../.env.site-configs ./
 echo ""
 
 echo "[2/2] Start site..."
-pnpm dotenv -e .env.secrets -e .env.site-configs -- pnpm run serve
+pnpm exec dotenv -e .env.secrets -e .env.site-configs -- pnpm run serve

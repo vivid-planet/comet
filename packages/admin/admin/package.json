@@ -16,15 +16,15 @@
     ],
     "scripts": {
         "build": "pnpm run clean && run-p build:babel build:types",
-        "build:babel": "pnpm babel ./src -x \".ts,.tsx\" -d lib",
+        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "pnpm prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
-        "start:babel": "pnpm babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "test": "jest",
         "test:watch": "jest --watch"
