@@ -16,7 +16,7 @@ import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-bl
 import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
 import { LinkListBlockFixtureService } from "./blocks/navigation/link-list-block-fixture.service";
-import { PageTreeIndexBlockFixtureService } from "./blocks/navigation/page-tree-index-block.fixture.service";
+import { PageTreeIndexBlockFixtureService } from "./blocks/navigation/page-tree-index-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { SliderBlockFixtureService } from "./blocks/slider-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./blocks/teaser/billboard-teaser-block-fixture.service";
