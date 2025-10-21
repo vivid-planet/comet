@@ -47,7 +47,7 @@ const supportedBlocks: SupportedBlocks = {
     textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     productList: (props) => <ProductListBlock data={props} />,
-    pageTreeIndex: (props) => <PageTreeIndexBlock />,
+    pageTreeIndex: (props) => <PageTreeIndexBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

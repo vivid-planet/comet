@@ -1,30 +1,9 @@
-import { gql } from "@comet/site-nextjs";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { useEffect, useState } from "react";
 
+import { type LoadedData } from "./PageTreeIndexBlock.loader";
 import styles from "./PageTreeIndexBlock.module.scss";
-
-const pageTreeQuery = gql`
-    query PrebuildPageDataListSitemap($scope: PageTreeNodeScopeInput!, $offset: Int, $limit: Int) {
-        paginatedPageTreeNodes(scope: $scope, offset: $offset, limit: $limit) {
-            nodes {
-                id
-                name
-                path
-                parentId
-                document {
-                    __typename
-                    ... on Page {
-                        updatedAt
-                        seo
-                    }
-                }
-            }
-            totalCount
-        }
-    }
-`;
 
 type PageTreeNode = {
     id: string;
@@ -66,58 +45,18 @@ function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
     );
 }
 
-export function PageTreeIndexBlock(): JSX.Element {
-    const [pageTreeNodes, setPageTreeNodes] = useState<PageTreeNode[]>([]);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const graphQLFetch = createGraphQLFetch();
-
-        async function fetchPageTreeNodes() {
-            try {
-                const scope = { domain: "main", language: "en" };
-                let totalCount = 0;
-                let currentCount = 0;
-                let allNodes: PageTreeNode[] = [];
-                do {
-                    const result = (await graphQLFetch(pageTreeQuery, {
-                        scope,
-                        offset: currentCount,
-                        limit: 50,
-                    })) as {
-                        paginatedPageTreeNodes: {
-                            nodes: PageTreeNode[];
-                            totalCount: number;
-                        };
-                    };
-                    const paginatedPageTreeNodes = result.paginatedPageTreeNodes;
-                    totalCount = paginatedPageTreeNodes.totalCount;
-                    currentCount += paginatedPageTreeNodes.nodes.length;
-                    allNodes = allNodes.concat(
-                        paginatedPageTreeNodes.nodes.map((node) => ({
-                            id: node.id,
-                            path: node.path,
-                            name: node.name,
-                            parentId: node.parentId ?? null,
-                        })),
-                    );
-                } while (totalCount > currentCount);
-                setPageTreeNodes(allNodes);
-            } catch (err) {
-                setError(String(err));
-            }
+export const PageTreeIndexBlock = withPreview(
+    ({ data: { loaded: allNodes } }: PropsWithData<PageTreeIndexBlockData & { loaded: LoadedData }>) => {
+        if (allNodes.length === 0) {
+            return null;
         }
-        fetchPageTreeNodes();
-    }, []);
 
-    if (error) return <pre>Error: {error}</pre>;
-    if (!pageTreeNodes.length) return <p>Loading...</p>;
-
-    const tree = buildTree(pageTreeNodes);
-
-    return (
-        <PageLayout grid>
-            <div className={styles.pageLayoutContent}>{renderTree(tree)}</div>
-        </PageLayout>
-    );
-}
+        const tree = buildTree(allNodes);
+        return (
+            <PageLayout grid>
+                <div className={styles.pageLayoutContent}>{renderTree(tree)}</div>
+            </PageLayout>
+        );
+    },
+    { label: "Page Tree Index" },
+);
