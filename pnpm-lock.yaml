@@ -2071,6 +2071,9 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      semver:
+        specifier: ^7.7.3
+        version: 7.7.3
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.3)(@types/node@22.18.10)(typescript@5.8.3)
@@ -16490,6 +16493,7 @@ packages:
   sitemap@8.0.0:
     resolution: {integrity: sha512-+AbdxhM9kJsHtruUF39bwS/B0Fytw6Fr1o4ZAIAEqA6cke2xcoO2GleBw9Zw7nRzILVEgz7zBM5GiTJjie1G9A==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    deprecated: 'SECURITY: Multiple vulnerabilities fixed in 8.0.1 (XML injection, path traversal, command injection, protocol injection). Upgrade immediately: npm install sitemap@8.0.1'
     hasBin: true
 
   skin-tone@2.0.0:
