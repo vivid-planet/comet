@@ -46,14 +46,7 @@ export const loader: BlockLoader<PageTreeIndexBlockData> = async ({ graphQLFetch
 
         totalCount = paginatedPageTreeNodes.totalCount;
         currentCount += paginatedPageTreeNodes.nodes.length;
-        for (const node of paginatedPageTreeNodes.nodes) {
-            allNodes.push({
-                id: node.id,
-                path: node.path,
-                name: node.name,
-                parentId: node.parentId ?? null,
-            });
-        }
+        allNodes.push(...paginatedPageTreeNodes.nodes);
     } while (totalCount > currentCount);
 
     return allNodes;
