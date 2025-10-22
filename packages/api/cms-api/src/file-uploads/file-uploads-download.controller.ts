@@ -132,6 +132,96 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             stream.pipe(res);
         }
 
+        @Get("preview/:hash/:id/:timeout")
+        async preview(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            await this.downloadFile({ hash, ...params }, res, range, true);
+        }
+
+        private async downloadFile({ hash, ...params }: HashDownloadParams, res: Response, range?: string, forceInline = false) {
+            if (!this.isValidHash(hash, params)) {
+                throw new BadRequestException("Invalid hash");
+            }
+
+            if (Date.now() > params.timeout) {
+                throw new GoneException();
+            }
+
+            const file = await this.fileUploadsRepository.findOne(params.id);
+
+            if (!file) {
+                throw new NotFoundException();
+            }
+
+            const filePath = createHashedPath(file.contentHash);
+            const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
+
+            if (!fileExists) {
+                throw new NotFoundException();
+            }
+
+            const dispositionType = forceInline ? "inline" : "attachment";
+            const headers = {
+                "content-disposition": `${dispositionType}; filename="${file.name}"`,
+                "content-type": file.mimetype,
+                "last-modified": file.updatedAt?.toUTCString(),
+                "content-length": file.size,
+                "cache-control": "no-store",
+            };
+
+            // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
+            let stream: Readable;
+
+            if (range) {
+                const { start, end, contentLength } = calculatePartialRanges(file.size, range);
+
+                if (start >= file.size || end >= file.size) {
+                    res.writeHead(416, {
+                        "content-range": `bytes */${file.size}`,
+                    });
+                    res.end();
+                    return;
+                }
+
+                stream = await this.blobStorageBackendService.getPartialFile(
+                    this.config.directory,
+                    createHashedPath(file.contentHash),
+                    start,
+                    contentLength,
+                );
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
+
+                res.writeHead(206, {
+                    ...headers,
+                    "accept-ranges": "bytes",
+                    "content-range": `bytes ${start}-${end}/${file.size}`,
+                    "content-length": contentLength,
+                });
+            } else {
+                stream = await this.blobStorageBackendService.getFile(this.config.directory, createHashedPath(file.contentHash));
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
+
+                res.writeHead(200, headers);
+            }
+
+            stream.pipe(res);
+        }
+
         @Get(":hash/:id/:timeout/:resizeWidth/:filename")
         async image(@Param() { hash, ...params }: HashImageParams, @Res() res: Response, @Headers("Accept") accept: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
