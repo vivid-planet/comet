@@ -944,7 +944,6 @@ export const PageWithHelpInToolbarModal = {
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
-            console.log("GridToolbar render");
             return (
                 <DataGridToolbar>
                     <GridToolbarQuickFilter />
