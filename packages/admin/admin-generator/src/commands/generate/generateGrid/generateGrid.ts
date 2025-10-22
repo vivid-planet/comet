@@ -592,7 +592,7 @@ export function generateGrid<T extends { __typename?: string }>(
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
-            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => ReactNode`,
+            type: `(params: GridRenderCellParams<GQL${fragmentName}Fragment>) => ReactNode`,
             optional: true,
         });
         props.push({

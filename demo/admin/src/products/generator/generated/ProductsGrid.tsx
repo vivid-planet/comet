@@ -90,8 +90,7 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarTo
 type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
+    rowAction?: (params: GridRenderCellParams<GQLProductsGridFutureFragment>) => ReactNode;
     actionsColumnWidth?: number;
 };
 export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
