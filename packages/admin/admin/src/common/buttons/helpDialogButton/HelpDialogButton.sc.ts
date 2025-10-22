@@ -14,7 +14,7 @@ export const Dialog = createComponentSlot(CometDialog)<HelpDialogButtonClassKey>
     slotName: "dialog",
 })();
 
-export const DialogContent = createComponentSlot(MUIDialogContent)<HelpDialogButtonClassKey>({
+export const DialogContent = createComponentSlot(MuiDialogContent)<HelpDialogButtonClassKey>({
     componentName: "HelpDialogButton",
     slotName: "dialogContent",
 })();
