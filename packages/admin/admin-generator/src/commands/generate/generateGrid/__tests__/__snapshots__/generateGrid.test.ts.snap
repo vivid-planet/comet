@@ -118,8 +118,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>{
-            return [
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
 flex: 1,
@@ -154,8 +153,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
-        },[intl, client]);
+        ],[intl, client]);
 
         const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
@@ -327,8 +325,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>{
-            return [
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
 flex: 1,
@@ -364,8 +361,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
-        },[intl, client]);
+        ],[intl, client]);
 
         const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
@@ -548,8 +544,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>{
-            return [
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
 flex: 1,
@@ -592,8 +587,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
-        },[intl, client]);
+        ],[intl, client]);
 
         const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 

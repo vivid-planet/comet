@@ -116,8 +116,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>{
-            return [
+        const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
 filterable: false,
@@ -142,8 +141,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
-        },[intl]);
+        ],[intl]);
 
         
 
@@ -291,8 +289,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>{
-            return [
+        const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
 filterable: false,
@@ -317,8 +314,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
-        },[intl]);
+        ],[intl]);
 
         
 

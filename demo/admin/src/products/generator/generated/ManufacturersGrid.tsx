@@ -65,148 +65,146 @@ export function ManufacturersGrid() {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "manufacturers",
         }), ...usePersistentColumnState("ManufacturersGrid") };
-    const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(() => {
-        return [
-            { ...dataGridIdColumn, field: "id",
-                headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
-                sortable: false,
-                flex: 1,
-                minWidth: 150, },
-            { field: "name",
-                headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }),
-                flex: 1,
-                minWidth: 150, },
-            { field: "address_street",
-                headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.address?.street,
-                flex: 1,
-                minWidth: 150, },
-            { field: "address_streetNumber",
-                headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" }),
-                type: "number",
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.address?.streetNumber,
-                renderCell: ({ value }) => {
-                    return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
-                },
-                flex: 1,
-                minWidth: 150, },
-            { field: "address_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Zip" }),
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.address?.zip,
-                flex: 1,
-                minWidth: 150, },
-            { field: "address_alternativeAddress_street",
-                renderHeader: () => (<>
+    const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(() => [
+        { ...dataGridIdColumn, field: "id",
+            headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
+            sortable: false,
+            flex: 1,
+            minWidth: 150, },
+        { field: "name",
+            headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }),
+            flex: 1,
+            minWidth: 150, },
+        { field: "address_street",
+            headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.street,
+            flex: 1,
+            minWidth: 150, },
+        { field: "address_streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" }),
+            type: "number",
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.streetNumber,
+            renderCell: ({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
+            },
+            flex: 1,
+            minWidth: 150, },
+        { field: "address_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Zip" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.zip,
+            flex: 1,
+            minWidth: 150, },
+        { field: "address_alternativeAddress_street",
+            renderHeader: () => (<>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })} columnWidth={150}/>
                                         <Tooltip title={<FormattedMessage id="manufacturer.address.alternativeAddress.street.tooltip" defaultMessage="Street of alternative address"/>}>
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" }),
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.address?.alternativeAddress?.street,
-                flex: 1,
-                minWidth: 150, },
-            { field: "address_alternativeAddress_streetNumber",
-                renderHeader: () => (<>
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.street,
+            flex: 1,
+            minWidth: 150, },
+        { field: "address_alternativeAddress_streetNumber",
+            renderHeader: () => (<>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" })} columnWidth={150}/>
                                         <Tooltip title={<FormattedMessage id="manufacturer.address.alternativeAddress.streetNumber.tooltip" defaultMessage="Street number of alternative address"/>}>
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
-                type: "number",
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.address?.alternativeAddress?.streetNumber,
-                renderCell: ({ value }) => {
-                    return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
-                },
-                flex: 1,
-                minWidth: 150, },
-            { field: "address_alternativeAddress_zip",
-                renderHeader: () => (<>
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
+            type: "number",
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.streetNumber,
+            renderCell: ({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
+            },
+            flex: 1,
+            minWidth: 150, },
+        { field: "address_alternativeAddress_zip",
+            renderHeader: () => (<>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" })} columnWidth={150}/>
                                         <Tooltip title={<FormattedMessage id="manufacturer.address.alternativeAddress.zip.tooltip" defaultMessage="Zip of alternative address"/>}>
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" }),
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
-                flex: 1,
-                minWidth: 150, },
-            { field: "addressAsEmbeddable_street",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
-                valueGetter: (params, row) => row.addressAsEmbeddable?.street,
-                flex: 1,
-                minWidth: 150, },
-            { field: "addressAsEmbeddable_streetNumber",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
-                type: "number",
-                valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
-                renderCell: ({ value }) => {
-                    return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
-                },
-                flex: 1,
-                minWidth: 150, },
-            { field: "addressAsEmbeddable_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.zip", defaultMessage: "Zip 2" }),
-                valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
-                flex: 1,
-                minWidth: 150, },
-            { field: "addressAsEmbeddable_alternativeAddress_street",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" }),
-                valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.street,
-                flex: 1,
-                minWidth: 150, },
-            { field: "addressAsEmbeddable_alternativeAddress_streetNumber",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number 2" }),
-                type: "number",
-                valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
-                renderCell: ({ value }) => {
-                    return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
-                },
-                flex: 1,
-                minWidth: 150, },
-            { field: "addressAsEmbeddable_alternativeAddress_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip", defaultMessage: "Alt-Zip 2" }),
-                valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
-                flex: 1,
-                minWidth: 150, },
-            { field: "actions",
-                headerName: "",
-                sortable: false,
-                filterable: false,
-                type: "actions",
-                align: "right",
-                pinned: "right",
-                width: 84,
-                renderCell: (params) => {
-                    return (<>
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
+            flex: 1,
+            minWidth: 150, },
+        { field: "addressAsEmbeddable_street",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.street,
+            flex: 1,
+            minWidth: 150, },
+        { field: "addressAsEmbeddable_streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
+            type: "number",
+            valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
+            renderCell: ({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
+            },
+            flex: 1,
+            minWidth: 150, },
+        { field: "addressAsEmbeddable_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.zip", defaultMessage: "Zip 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
+            flex: 1,
+            minWidth: 150, },
+        { field: "addressAsEmbeddable_alternativeAddress_street",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.street,
+            flex: 1,
+            minWidth: 150, },
+        { field: "addressAsEmbeddable_alternativeAddress_streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number 2" }),
+            type: "number",
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
+            renderCell: ({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
+            },
+            flex: 1,
+            minWidth: 150, },
+        { field: "addressAsEmbeddable_alternativeAddress_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip", defaultMessage: "Alt-Zip 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
+            flex: 1,
+            minWidth: 150, },
+        { field: "actions",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 84,
+            renderCell: (params) => {
+                return (<>
                                 
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu onDelete={async () => {
-                            await client.mutate<GQLDeleteManufacturerMutation, GQLDeleteManufacturerMutationVariables>({
-                                mutation: deleteManufacturerMutation,
-                                variables: { id: params.row.id },
-                            });
-                        }} refetchQueries={[manufacturersQuery]}/>
+                        await client.mutate<GQLDeleteManufacturerMutation, GQLDeleteManufacturerMutationVariables>({
+                            mutation: deleteManufacturerMutation,
+                            variables: { id: params.row.id },
+                        });
+                    }} refetchQueries={[manufacturersQuery]}/>
                                     
                                 </>);
-                }, }
-        ];
-    }, [intl, client]);
+            }, }
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLManufacturersGridQuery, GQLManufacturersGridQueryVariables>(manufacturersQuery, {
         variables: {

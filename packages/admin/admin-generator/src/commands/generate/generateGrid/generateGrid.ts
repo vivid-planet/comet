@@ -753,8 +753,7 @@ export function generateGrid<T extends { __typename?: string }>(
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
-        const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>{
-            return [
+        const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>[
             ${gridColumnFields
                 .map((column) => {
                     const defaultMinWidth = 150;
@@ -885,8 +884,7 @@ export function generateGrid<T extends { __typename?: string }>(
                           })
                         : ""
                 }
-        ];
-        },[intl${gridNeedsTheme ? ", theme" : ""}${showCrudContextMenuInActionsColumn ? ", client" : ""}${forwardRowAction ? ", rowAction, actionsColumnWidth" : ""}]);
+        ],[intl${gridNeedsTheme ? ", theme" : ""}${showCrudContextMenuInActionsColumn ? ", client" : ""}${forwardRowAction ? ", rowAction, actionsColumnWidth" : ""}]);
 
         ${
             hasFilter || hasSearch

@@ -73,62 +73,60 @@ export function ProductCategoriesGrid() {
             refetchQueries: [productCategoriesQuery]
         });
     };
-    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = useMemo(() => {
-        return [
-            { field: "title",
-                headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
-                filterable: false,
-                sortable: false,
-                flex: 1,
-                minWidth: 150, },
-            { field: "slug",
-                headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
-                filterable: false,
-                sortable: false,
-                flex: 1,
-                minWidth: 150, },
-            { field: "type_title",
-                headerName: intl.formatMessage({ id: "productCategory.type.title", defaultMessage: "Type" }),
-                filterable: false,
-                sortable: false,
-                valueGetter: (params, row) => row.type?.title,
-                flex: 1,
-                minWidth: 150, },
-            { field: "position",
-                headerName: intl.formatMessage({ id: "productCategory.position", defaultMessage: "Position" }),
-                type: "number",
-                filterable: false,
-                sortable: false,
-                renderCell: ({ value }) => {
-                    return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
-                },
-                flex: 1,
-                minWidth: 150, },
-            { field: "actions",
-                headerName: "",
-                sortable: false,
-                filterable: false,
-                type: "actions",
-                align: "right",
-                pinned: "right",
-                width: 84,
-                renderCell: (params) => {
-                    return (<>
+    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = useMemo(() => [
+        { field: "title",
+            headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
+            filterable: false,
+            sortable: false,
+            flex: 1,
+            minWidth: 150, },
+        { field: "slug",
+            headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
+            filterable: false,
+            sortable: false,
+            flex: 1,
+            minWidth: 150, },
+        { field: "type_title",
+            headerName: intl.formatMessage({ id: "productCategory.type.title", defaultMessage: "Type" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.type?.title,
+            flex: 1,
+            minWidth: 150, },
+        { field: "position",
+            headerName: intl.formatMessage({ id: "productCategory.position", defaultMessage: "Position" }),
+            type: "number",
+            filterable: false,
+            sortable: false,
+            renderCell: ({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0}/> : "";
+            },
+            flex: 1,
+            minWidth: 150, },
+        { field: "actions",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 84,
+            renderCell: (params) => {
+                return (<>
                                 
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu onDelete={async () => {
-                            await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
-                                mutation: deleteProductCategoryMutation,
-                                variables: { id: params.row.id },
-                            });
-                        }} refetchQueries={[productCategoriesQuery]}/>
+                        await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
+                            mutation: deleteProductCategoryMutation,
+                            variables: { id: params.row.id },
+                        });
+                    }} refetchQueries={[productCategoriesQuery]}/>
                                     
                                 </>);
-                }, }
-        ];
-    }, [intl, client]);
+            }, }
+    ], [intl, client]);
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
             offset: 0, limit: 100, sort: { field: "position", direction: "ASC" }

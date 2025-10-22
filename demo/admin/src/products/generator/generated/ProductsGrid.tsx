@@ -106,134 +106,132 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             queryParamsPrefix: "products",
         }), ...usePersistentColumnState("ProductsGrid") };
     const theme = useTheme();
-    const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => {
-        return [
-            { field: "overview",
-                headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
-                filterable: false,
-                renderCell: ({ row }) => {
-                    const typeLabels: Record<string, ReactNode> = {
-                        Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap"/>,
-                        Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt"/>,
-                        Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie"/>,
-                    };
-                    const inStockLabels: Record<string, ReactNode> = {
-                        true: <FormattedMessage id="product.overview.secondaryText.inStock" defaultMessage="In stock"/>,
-                        false: <FormattedMessage id="product.overview.secondaryText.outOfStock" defaultMessage="Out of stock"/>,
-                    };
-                    return (<GridCellContent primaryText={row.title ?? "-"} secondaryText={<FormattedMessage id="product.overview.secondaryText" defaultMessage="{price} • {type} • {category} • {inStock}" values={{
-                                price: typeof row.price === "undefined" || row.price === null ? (<FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price"/>) : (<FormattedNumber value={row.price} minimumFractionDigits={2} maximumFractionDigits={2} style="currency" currency="EUR"/>),
-                                type: row.type == null ? (<FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type"/>) : ((typeLabels[`${row.type}`] ?? row.type)),
-                                category: row.category?.title ?? (<FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category"/>),
-                                inStock: row.inStock == null ? "-" : (inStockLabels[`${row.inStock}`] ?? row.inStock),
-                            }}/>}/>);
-                },
-                flex: 1,
-                visible: theme.breakpoints.down('md'),
-                disableExport: true,
-                sortBy: ["title", "price", "type", "category", "inStock"],
-                minWidth: 200, },
-            { field: "title",
-                headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
-                renderCell: ({ value, row }) => <ProductTitle title={value}/>,
-                flex: 1,
-                visible: theme.breakpoints.down('md'),
-                minWidth: 200, },
-            { field: "description",
-                headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
-                flex: 1,
-                minWidth: 150, },
-            { field: "price",
-                renderHeader: () => (<>
+    const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => [
+        { field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            renderCell: ({ row }) => {
+                const typeLabels: Record<string, ReactNode> = {
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap"/>,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt"/>,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie"/>,
+                };
+                const inStockLabels: Record<string, ReactNode> = {
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock" defaultMessage="In stock"/>,
+                    false: <FormattedMessage id="product.overview.secondaryText.outOfStock" defaultMessage="Out of stock"/>,
+                };
+                return (<GridCellContent primaryText={row.title ?? "-"} secondaryText={<FormattedMessage id="product.overview.secondaryText" defaultMessage="{price} • {type} • {category} • {inStock}" values={{
+                            price: typeof row.price === "undefined" || row.price === null ? (<FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price"/>) : (<FormattedNumber value={row.price} minimumFractionDigits={2} maximumFractionDigits={2} style="currency" currency="EUR"/>),
+                            type: row.type == null ? (<FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type"/>) : ((typeLabels[`${row.type}`] ?? row.type)),
+                            category: row.category?.title ?? (<FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category"/>),
+                            inStock: row.inStock == null ? "-" : (inStockLabels[`${row.inStock}`] ?? row.inStock),
+                        }}/>}/>);
+            },
+            flex: 1,
+            visible: theme.breakpoints.down('md'),
+            disableExport: true,
+            sortBy: ["title", "price", "type", "category", "inStock"],
+            minWidth: 200, },
+        { field: "title",
+            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
+            renderCell: ({ value, row }) => <ProductTitle title={value}/>,
+            flex: 1,
+            visible: theme.breakpoints.down('md'),
+            minWidth: 200, },
+        { field: "description",
+            headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
+            flex: 1,
+            minWidth: 150, },
+        { field: "price",
+            renderHeader: () => (<>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150}/>
                                         <Tooltip title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR"/>}>
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
-                headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
-                type: "number",
-                renderCell: ({ value }) => {
-                    return (typeof value === "number") ? <FormattedNumber value={value} style="currency" currency="EUR" minimumFractionDigits={2} maximumFractionDigits={2}/> : "";
-                },
-                flex: 1,
-                visible: theme.breakpoints.up('md'),
-                minWidth: 150,
-                maxWidth: 150, },
-            { field: "inStock",
-                headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
-                type: "boolean",
-                flex: 1,
-                visible: theme.breakpoints.up('md'),
-                minWidth: 80, },
-            { field: "type",
-                headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
-                type: "singleSelect",
-                valueFormatter: (value, row) => row.type?.toString(),
-                valueOptions: [{
-                        value: "Cap",
-                        label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
-                        cellContent: <GridCellContent primaryText={<FormattedMessage id="product.type.cap.primary" defaultMessage="Great cap"/>} icon={<EducationIcon color="primary"/>}/>,
-                    }, {
-                        value: "Shirt",
-                        label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
-                    }, {
-                        value: "Tie",
-                        label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
-                    },],
-                renderCell: renderStaticSelectCell,
-                flex: 1,
-                visible: theme.breakpoints.up('md'),
-                minWidth: 150,
-                maxWidth: 150, },
-            { ...dataGridDateColumn, field: "availableSince",
-                headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-                width: 140, },
-            { ...dataGridDateTimeColumn, field: "createdAt",
-                headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
-                width: 170, },
-            { field: "manufacturer",
-                headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
-                valueGetter: (params, row) => row.manufacturer?.name,
-                filterOperators: ManufacturerFilterOperators,
-                flex: 1,
-                minWidth: 150, },
-            { ...dataGridManyToManyColumn, field: "tags",
-                headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
-                sortable: false,
-                renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
-                flex: 1,
-                disableExport: true,
-                minWidth: 150, },
-            { ...dataGridOneToManyColumn, field: "variants",
-                headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
-                sortable: false,
-                renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
-                flex: 1,
-                disableExport: true,
-                minWidth: 150, },
-            { field: "actions",
-                headerName: "",
-                sortable: false,
-                filterable: false,
-                type: "actions",
-                align: "right",
-                pinned: "right",
-                width: actionsColumnWidth,
-                disableExport: true,
-                renderCell: (params) => {
-                    return (<>
+            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            type: "number",
+            renderCell: ({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} style="currency" currency="EUR" minimumFractionDigits={2} maximumFractionDigits={2}/> : "";
+            },
+            flex: 1,
+            visible: theme.breakpoints.up('md'),
+            minWidth: 150,
+            maxWidth: 150, },
+        { field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
+            type: "boolean",
+            flex: 1,
+            visible: theme.breakpoints.up('md'),
+            minWidth: 80, },
+        { field: "type",
+            headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
+            type: "singleSelect",
+            valueFormatter: (value, row) => row.type?.toString(),
+            valueOptions: [{
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
+                    cellContent: <GridCellContent primaryText={<FormattedMessage id="product.type.cap.primary" defaultMessage="Great cap"/>} icon={<EducationIcon color="primary"/>}/>,
+                }, {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                }, {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },],
+            renderCell: renderStaticSelectCell,
+            flex: 1,
+            visible: theme.breakpoints.up('md'),
+            minWidth: 150,
+            maxWidth: 150, },
+        { ...dataGridDateColumn, field: "availableSince",
+            headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+            width: 140, },
+        { ...dataGridDateTimeColumn, field: "createdAt",
+            headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
+            width: 170, },
+        { field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            valueGetter: (params, row) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150, },
+        { ...dataGridManyToManyColumn, field: "tags",
+            headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
+            sortable: false,
+            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+            flex: 1,
+            disableExport: true,
+            minWidth: 150, },
+        { ...dataGridOneToManyColumn, field: "variants",
+            headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
+            sortable: false,
+            renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
+            flex: 1,
+            disableExport: true,
+            minWidth: 150, },
+        { field: "actions",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: actionsColumnWidth,
+            disableExport: true,
+            renderCell: (params) => {
+                return (<>
                                 <ProductsGridPreviewAction {...params}/>{rowAction && rowAction(params)}
                                         <CrudContextMenu onDelete={async () => {
-                            await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                mutation: deleteProductMutation,
-                                variables: { id: params.row.id },
-                            });
-                        }} refetchQueries={[productsQuery]}/>
+                        await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                            mutation: deleteProductMutation,
+                            variables: { id: params.row.id },
+                        });
+                    }} refetchQueries={[productsQuery]}/>
                                     
                                 </>);
-                }, }
-        ];
-    }, [intl, theme, client, rowAction, actionsColumnWidth]);
+            }, }
+    ], [intl, theme, client, rowAction, actionsColumnWidth]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
