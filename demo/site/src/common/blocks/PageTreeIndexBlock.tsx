@@ -2,15 +2,8 @@ import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 
-import { type LoadedData } from "./PageTreeIndexBlock.loader";
+import { type LoadedData, type PageTreeNode } from "./PageTreeIndexBlock.loader";
 import styles from "./PageTreeIndexBlock.module.scss";
-
-type PageTreeNode = {
-    id: string;
-    path: string;
-    name: string;
-    parentId: string | null;
-};
 
 type PageTreeNodeWithChildren = PageTreeNode & { children: PageTreeNodeWithChildren[] };
 

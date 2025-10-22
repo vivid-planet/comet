@@ -2,7 +2,7 @@ import { type BlockLoader, gql } from "@comet/site-nextjs";
 
 import { type GQLPrebuildPageDataListSitemapQuery, type GQLPrebuildPageDataListSitemapQueryVariables } from "./PageTreeIndexBlock.loader.generated";
 
-type PageTreeNode = {
+export type PageTreeNode = {
     id: string;
     path: string;
     name: string;
