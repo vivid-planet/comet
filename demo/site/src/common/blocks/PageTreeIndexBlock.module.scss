@@ -1,5 +1,5 @@
-.page-tree-index-block {
-    &__layout-content {
+.pageTreeIndexBlock {
+    &__layoutContent {
         grid-column: 3 / -3;
     }
 
@@ -9,7 +9,7 @@
         padding-left: 0;
     }
 
-    &__list-item {
+    &__listItem {
         line-height: 26px;
         padding-top: var(--spacing-s300);
         margin-left: var(--spacing-s500);

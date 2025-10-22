@@ -25,10 +25,10 @@ function buildTree(nodes: PageTreeNode[]): PageTreeNodeWithChildren[] {
 
 function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
     return (
-        <ul className={styles["page-tree-index-block__list"]}>
+        <ul className={styles.pageTreeIndexBlock__list}>
             {nodes.map((node) => (
-                <li key={node.id} className={styles["page-tree-index-block__list-item"]}>
-                    <a href={node.path} className={styles["page-tree-index-block__link"]}>
+                <li key={node.id} className={styles.pageTreeIndexBlock__listItem}>
+                    <a href={node.path} className={styles.pageTreeIndexBlock__link}>
                         {node.name || node.path}
                     </a>
                     {node.children.length > 0 && renderTree(node.children)}
@@ -47,7 +47,7 @@ export const PageTreeIndexBlock = withPreview(
         const tree = buildTree(allNodes);
         return (
             <PageLayout grid>
-                <div className={styles["page-tree-index-block__layout-content"]}>{renderTree(tree)}</div>
+                <div className={styles.pageTreeIndexBlock__layoutContent}>{renderTree(tree)}</div>
             </PageLayout>
         );
     },
