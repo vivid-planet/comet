@@ -1,4 +1,4 @@
-import { DialogContent as MUIDialogContent, IconButton } from "@mui/material";
+import { DialogContent as MuiDialogContent, IconButton } from "@mui/material";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { Dialog as CometDialog } from "../../Dialog";
