@@ -94,22 +94,22 @@ You can skip this step if your project already uses typescript v5 **everywhere**
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
