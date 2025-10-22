@@ -1,4 +1,5 @@
 import { type BlockLoader, gql } from "@comet/site-nextjs";
+import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 
 import { type GQLPrebuildPageDataListSitemapQuery, type GQLPrebuildPageDataListSitemapQueryVariables } from "./PageTreeIndexBlock.loader.generated";
 
@@ -11,7 +12,7 @@ export type PageTreeNode = {
 
 export type LoadedData = PageTreeNode[];
 
-export const loader: BlockLoader<unknown> = async ({ graphQLFetch, scope }) => {
+export const loader: BlockLoader<PageTreeIndexBlockData> = async ({ graphQLFetch, scope }): Promise<LoadedData> => {
     if (!scope) {
         return [];
     }
