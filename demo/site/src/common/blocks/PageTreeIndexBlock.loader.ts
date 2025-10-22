@@ -31,13 +31,6 @@ export const loader: BlockLoader<unknown> = async ({ graphQLFetch, scope }) => {
                             name
                             path
                             parentId
-                            document {
-                                __typename
-                                ... on Page {
-                                    updatedAt
-                                    seo
-                                }
-                            }
                         }
                         totalCount
                     }
