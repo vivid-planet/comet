@@ -25,6 +25,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useContentScope } from "@comet/cms-admin";
@@ -64,7 +65,7 @@ export function NewsGrid() {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
-    const columns: GridColDef<GQLNewsGridFragment>[] = [
+    const columns: GridColDef<GQLNewsGridFragment>[] = useMemo(() => [
         { field: "title",
             headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }),
             flex: 1,
@@ -131,7 +132,7 @@ export function NewsGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLNewsGridQuery, GQLNewsGridQueryVariables>(newsQuery, {
         variables: {

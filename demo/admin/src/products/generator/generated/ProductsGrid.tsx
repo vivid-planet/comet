@@ -37,6 +37,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ProductTitle } from "../ProductTitle";
@@ -104,7 +105,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             queryParamsPrefix: "products",
         }), ...usePersistentColumnState("ProductsGrid") };
     const theme = useTheme();
-    const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => [
         { field: "overview",
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
             filterable: false,
@@ -229,7 +230,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, theme, client, rowAction, actionsColumnWidth]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
