@@ -45,7 +45,6 @@ import { useDataGridExcelExport } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
-import { useContentScope } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
 import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
@@ -64,6 +63,7 @@ import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -77,15 +77,12 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const booksQuery = gql\`
-        query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
-    books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
-                nodes {
-                    ...BooksForm
-                }
-                totalCount
-            }
+    query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
         }
-        \${booksFragment}
+    }
+    \${booksFragment}
     \`;
 
     
@@ -121,7 +118,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLBooksFormFragment>[] = [
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
 flex: 1,
@@ -156,7 +153,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
+        ],[intl, client]);
 
         const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
@@ -234,7 +231,6 @@ import { useDataGridExcelExport } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
-import { useContentScope } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
 import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
@@ -253,6 +249,7 @@ import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -266,15 +263,12 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const booksQuery = gql\`
-        query BooksGrid($authorId: ID!, $offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
-    booksByAuthor(authorId: $authorId, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
-                nodes {
-                    ...BooksForm
-                }
-                totalCount
-            }
+    query BooksGrid($authorId: ID!, $offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        booksByAuthor(authorId: $authorId, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
         }
-        \${booksFragment}
+    }
+    \${booksFragment}
     \`;
 
     
@@ -331,7 +325,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLBooksFormFragment>[] = [
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
 flex: 1,
@@ -367,7 +361,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
+        ],[intl, client]);
 
         const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
@@ -458,7 +452,6 @@ import { useDataGridExcelExport } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
-import { useContentScope } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
 import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
@@ -477,6 +470,7 @@ import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -490,15 +484,12 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const booksQuery = gql\`
-        query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
-    books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
-                nodes {
-                    ...BooksForm
-                }
-                totalCount
-            }
+    query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
         }
-        \${booksFragment}
+    }
+    \${booksFragment}
     \`;
 
     
@@ -553,7 +544,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
 
         
 
-        const columns: GridColDef<GQLBooksFormFragment>[] = [
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
 flex: 1,
@@ -596,7 +587,7 @@ renderCell: (params) => {
                                 </>
                             );
                                 },}
-        ];
+        ],[intl, client]);
 
         const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 

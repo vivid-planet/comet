@@ -6,6 +6,7 @@ export default defineConfig<GQLProductVariant>({
     type: "form",
     gqlType: "ProductVariant",
     fragmentName: "ProductVariantForm",
+    navigateOnCreate: false,
     fields: [
         { type: "text", name: "name" },
         { type: "block", name: "image", label: "Image", block: DamImageBlock },

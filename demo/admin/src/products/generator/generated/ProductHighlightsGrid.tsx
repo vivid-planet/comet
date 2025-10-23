@@ -22,6 +22,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productHighlightsFragment = gql`
@@ -31,15 +32,12 @@ const productHighlightsFragment = gql`
         }
     `;
 const productHighlightsQuery = gql`
-        query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
-    productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductHighlightsForm
-                }
-                totalCount
-            }
+    query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
+        productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductHighlightsForm } totalCount
         }
-        ${productHighlightsFragment}
+    }
+    ${productHighlightsFragment}
     `;
 const deleteProductHighlightMutation = gql`
                 mutation DeleteProductHighlight($id: ID!) {
@@ -60,7 +58,7 @@ export function ProductHighlightsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductHighlightsGrid") };
-    const columns: GridColDef<GQLProductHighlightsFormFragment>[] = [
+    const columns: GridColDef<GQLProductHighlightsFormFragment>[] = useMemo(() => [
         { field: "description",
             headerName: intl.formatMessage({ id: "productHighlight.description", defaultMessage: "Description" }),
             flex: 1,
@@ -88,7 +86,7 @@ export function ProductHighlightsGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery, {
         variables: {

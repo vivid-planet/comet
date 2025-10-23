@@ -29,6 +29,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Excel as ExcelIcon } from "@comet/admin-icons";
@@ -39,15 +40,12 @@ const productVariantsFragment = gql`
         }
     `;
 const productVariantsQuery = gql`
-        query ProductVariantsGrid($product: ID!, $offset: Int!, $limit: Int!, $sort: [ProductVariantSort!], $search: String, $filter: ProductVariantFilter) {
-    productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductVariantsGridFuture
-                }
-                totalCount
-            }
+    query ProductVariantsGrid($product: ID!, $offset: Int!, $limit: Int!, $sort: [ProductVariantSort!], $search: String, $filter: ProductVariantFilter) {
+        productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductVariantsGridFuture } totalCount
         }
-        ${productVariantsFragment}
+    }
+    ${productVariantsFragment}
     `;
 const deleteProductVariantMutation = gql`
                 mutation DeleteProductVariant($id: ID!) {
@@ -88,7 +86,7 @@ export function ProductVariantsGrid({ product }: Props) {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "product-variants",
         }), ...usePersistentColumnState("ProductVariantsGrid") };
-    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = useMemo(() => [
         { field: "name",
             headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }),
             flex: 1,
@@ -121,7 +119,7 @@ export function ProductVariantsGrid({ product }: Props) {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductVariantsGridQuery, GQLProductVariantsGridQueryVariables>(productVariantsQuery, {
         variables: {
