@@ -77,14 +77,15 @@ scope: GQLProductScope;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -102,9 +103,10 @@ scope: GQLProductScope;
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
-                ...formValues,
-                title: formValues.title ?? null,
-            };
+        ...formValues,
+        title: formValues.title ?? null,
+    };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -254,14 +256,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -279,9 +282,10 @@ id?: string;
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
-                ...formValues,
-                title: formValues.title ?? null,
-            };
+        ...formValues,
+        title: formValues.title ?? null,
+    };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
