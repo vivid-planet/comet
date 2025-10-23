@@ -17,12 +17,19 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     const { crudFilterProps } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
+    imports.push({ name: "IsOptional", importPath: "class-validator" });
+    imports.push({ name: "ValidateNested", importPath: "class-validator" });
+    imports.push({ name: "Type", importPath: "class-transformer" });
+    imports.push({ name: "Field", importPath: "@nestjs/graphql" });
+    imports.push({ name: "InputType", importPath: "@nestjs/graphql" });
+
     let enumFiltersOut = "";
 
     const generatedEnumNames = new Set<string>();
     const generatedEnumsNames = new Set<string>();
     crudFilterProps.map((prop) => {
         if (prop.type == "EnumArrayType") {
+            imports.push({ name: "createEnumsFilter", importPath: "@comet/cms-api" });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumNames.has(enumName)) {
@@ -33,6 +40,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                 imports.push({ name: enumName, importPath });
             }
         } else if (prop.enum) {
+            imports.push({ name: "createEnumFilter", importPath: "@comet/cms-api" });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumsNames.has(enumName)) {
@@ -45,12 +53,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, IdFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
-    import { Field, InputType } from "@nestjs/graphql";
-    import { Type } from "class-transformer";
-    import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-    ${generateImportsCode(imports)}
-
+    const filterOut = `
     ${enumFiltersOut}
 
     @InputType()
@@ -74,6 +77,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
                 } else if (prop.type === "string" || prop.type === "text") {
+                    imports.push({ name: "StringFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -81,6 +85,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: StringFilter;
                     `;
                 } else if (prop.type === "DecimalType" || prop.type == "number" || integerTypes.includes(prop.type)) {
+                    imports.push({ name: "NumberFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -88,6 +93,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: NumberFilter;
                     `;
                 } else if (prop.type === "boolean" || prop.type === "BooleanType") {
+                    imports.push({ name: "BooleanFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => BooleanFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -96,6 +102,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     `;
                 } else if (prop.type === "DateType") {
                     // ISO Date without time
+                    imports.push({ name: "DateFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => DateFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -104,6 +111,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     `;
                 } else if (prop.type === "Date") {
                     // DateTime
+                    imports.push({ name: "DateTimeFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => DateTimeFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -111,6 +119,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: DateTimeFilter;
                     `;
                 } else if (prop.kind === "m:1") {
+                    imports.push({ name: "ManyToOneFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => ManyToOneFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -118,6 +127,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: ManyToOneFilter;
                     `;
                 } else if (prop.kind === "1:m") {
+                    imports.push({ name: "OneToManyFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => OneToManyFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -125,6 +135,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: OneToManyFilter;
                     `;
                 } else if (prop.kind === "m:n") {
+                    imports.push({ name: "ManyToManyFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => ManyToManyFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -132,6 +143,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: ManyToManyFilter;
                     `;
                 } else if (prop.type == "uuid") {
+                    imports.push({ name: "IdFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => IdFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -159,7 +171,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     }
     `;
 
-    return filterOut;
+    return generateImportsCode(imports) + filterOut;
 }
 
 export function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
@@ -1047,8 +1059,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                               .join(",")} }`
                         : ``
                 });
-                if (input.position > lastPosition + 1) {
-                    input.position = lastPosition + 1;
+                if (input.position > lastPosition) {
+                    input.position = lastPosition;
                 }
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${

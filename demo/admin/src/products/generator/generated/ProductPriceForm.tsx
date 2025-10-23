@@ -27,9 +27,10 @@ type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
     price?: string;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id: string;
 }
-export function ProductPriceForm({ id }: FormProps) {
+export function ProductPriceForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id } });

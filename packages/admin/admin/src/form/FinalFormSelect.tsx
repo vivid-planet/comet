@@ -37,7 +37,7 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined, d
  * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
+    input: { checked, value: incomingValue, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
@@ -78,6 +78,8 @@ export const FinalFormSelect = <T,>({
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
+
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
 
     const endAdornment = !required ? (
         <ClearInputAdornment
