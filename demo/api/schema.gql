@@ -349,6 +349,7 @@ type FileUpload {
   imageUrl(resizeWidth: Int!): String
   mimetype: String!
   name: String!
+  previewUrl: String!
   size: Int!
   updatedAt: DateTime!
 }

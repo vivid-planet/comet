@@ -49,6 +49,15 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
         @Get(":hash/:id/:timeout")
         async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            await this.downloadFile({ hash, ...params }, res, range, false);
+        }
+
+        @Get("preview/:hash/:id/:timeout")
+        async preview(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            await this.downloadFile({ hash, ...params }, res, range, true);
+        }
+
+        private async downloadFile({ hash, ...params }: HashDownloadParams, res: Response, range?: string, forceInline = false) {
             if (!this.isValidHash(hash, params)) {
                 throw new BadRequestException("Invalid hash");
             }
@@ -70,8 +79,9 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 throw new NotFoundException();
             }
 
+            const dispositionType = forceInline ? "inline" : "attachment";
             const headers = {
-                "content-disposition": `attachment; filename="${file.name}"`,
+                "content-disposition": `${dispositionType}; filename="${file.name}"`,
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
                 "content-length": file.size,
