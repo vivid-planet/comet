@@ -22,6 +22,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productTagsFragment = gql`
@@ -31,15 +32,12 @@ const productTagsFragment = gql`
         }
     `;
 const productTagsQuery = gql`
-        query ProductTagsGrid($offset: Int!, $limit: Int!, $sort: [ProductTagSort!], $search: String, $filter: ProductTagFilter) {
-    productTags(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductTagsGrid
-                }
-                totalCount
-            }
+    query ProductTagsGrid($offset: Int!, $limit: Int!, $sort: [ProductTagSort!], $search: String, $filter: ProductTagFilter) {
+        productTags(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductTagsGrid } totalCount
         }
-        ${productTagsFragment}
+    }
+    ${productTagsFragment}
     `;
 const deleteProductTagMutation = gql`
                 mutation DeleteProductTag($id: ID!) {
@@ -62,7 +60,7 @@ export function ProductTagsGrid() {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "productTags",
         }), ...usePersistentColumnState("ProductTagsGrid") };
-    const columns: GridColDef<GQLProductTagsGridFragment>[] = [
+    const columns: GridColDef<GQLProductTagsGridFragment>[] = useMemo(() => [
         { field: "title",
             headerName: intl.formatMessage({ id: "productTag.title", defaultMessage: "Title" }),
             flex: 1,
@@ -90,7 +88,7 @@ export function ProductTagsGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductTagsGridQuery, GQLProductTagsGridQueryVariables>(productTagsQuery, {
         variables: {

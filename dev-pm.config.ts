@@ -1,3 +1,5 @@
+import { defineConfig } from "@comet/dev-process-manager";
+
 const packageFolderMapping = {
     "@comet/admin": "packages/admin/admin",
     "@comet/admin-color-picker": "packages/admin/admin-color-picker",
@@ -10,11 +12,11 @@ const packageFolderMapping = {
     "@comet/site-react": "packages/site/site-react",
 };
 
-const waitOnPackages = (...packages) => {
-    return packages.map((package) => `${packageFolderMapping[package]}/lib/index.d.ts`);
+const waitOnPackages = (...packages: (keyof typeof packageFolderMapping)[]) => {
+    return packages.map((packageName) => `${packageFolderMapping[packageName]}/lib/index.d.ts`);
 };
 
-module.exports = {
+export default defineConfig({
     scripts: [
         // group admin
         {
@@ -163,6 +165,19 @@ module.exports = {
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
 
+        // group demo login
+        {
+            name: "demo-oidc-provider",
+            script: "pnpm run dev:oidc-provider",
+            group: ["demo-login", "demo"],
+        },
+        {
+            name: "demo-oauth2-proxy",
+            script: "pnpm run dev:oauth2-proxy",
+            group: ["demo-login", "demo"],
+            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
+        },
+
         //group demo site
         {
             name: "demo-site",
@@ -221,4 +236,4 @@ module.exports = {
             waitOn: ["tcp:26638"], // storybook
         },
     ],
-};
+});

@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "8.3.0",
+    "version": "8.5.0",
     "description": "A set of ESLint configurations for Comet projects",
     "repository": {
         "directory": "packages/eslint-config",
@@ -29,7 +29,7 @@
     "scripts": {
         "lint": "run-p lint:prettier lint:eslint",
         "lint:eslint": "eslint --max-warnings 0 *.json ",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'"
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'"
     },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",

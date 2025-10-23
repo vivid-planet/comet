@@ -3,7 +3,6 @@
 import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
@@ -21,6 +20,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { validateTitle } from "../validateTitle";
 import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
+import { AsyncAutocompleteField } from "@comet/admin";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { Future_DatePickerField } from "@comet/admin";
 import { GQLCreateCapProductFormDetailsFragment } from "./CreateCapProductForm.gql.generated";
@@ -35,9 +35,10 @@ type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, keyof typeof root
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     type: GQLProductType;
 }
-export function CreateCapProductForm({ type }: FormProps) {
+export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
@@ -52,15 +53,18 @@ export function CreateCapProductForm({ type }: FormProps) {
         };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
-            variables: { input: { ...output, type } },
+            variables: {
+                input: { ...output, type }
+            },
         });
-        if (!event.navigatingBack) {
-            const id = mutationResponse?.createProduct.id;
-            if (id) {
-                setTimeout(() => {
+        const id = mutationResponse?.createProduct.id;
+        if (id) {
+            setTimeout(() => {
+                onCreate?.(id);
+                if (!event.navigatingBack) {
                     stackSwitchApi.activatePage(`edit`, id);
-                });
-            }
+                }
+            });
         }
     };
     return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode="add" initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
@@ -72,16 +76,18 @@ export function CreateCapProductForm({ type }: FormProps) {
         <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>}/>
 
         <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
-        <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {
+        <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect {
-                            productCategories {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`
+                    query: gql`
+    query ProductCategoriesSelect($search: String) {
+        productCategories(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        search,
+                    }
                 });
                 return data.productCategories.nodes;
             }} getOptionLabel={(option) => option.title}/>

@@ -20,9 +20,9 @@ export const createErrorDialogApolloLink = (config?: { signInUrl?: string }) => 
         let httpStatus: string | undefined;
 
         if (graphQLErrors) {
-            if (graphQLErrors.some((e) => e.message === "UNAUTHENTICATED")) {
+            if (graphQLErrors.some((e) => e.extensions?.code === "FORBIDDEN")) {
                 errorType = "unauthenticated"; // Error is triggered by Comet Guard
-            } else if (graphQLErrors.some((e) => e.extensions?.response?.statusCode === StatusCodes.UNAUTHORIZED)) {
+            } else if (graphQLErrors.some((e) => e.extensions?.code === "UNAUTHENTICATED")) {
                 errorType = "unauthorized"; // Error is triggered by UnauthorizedException
             } else {
                 errorType = "graphql";

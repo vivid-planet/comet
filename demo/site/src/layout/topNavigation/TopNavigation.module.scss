@@ -59,7 +59,7 @@
     white-space: nowrap;
     clip-path: inset(50%);
 
-    &:focus {
+    &:focus-visible {
         opacity: 1;
         height: auto;
         width: auto;

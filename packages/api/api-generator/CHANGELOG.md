@@ -1,5 +1,36 @@
 # @comet/api-generator
 
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [942200f]
+- Updated dependencies [b7156bb]
+    - @comet/cms-api@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/cms-api@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/cms-api@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- f865dee: Fix generated query in position-service
+- 2f73e74: Fix possibly duplicated imports in generated filter dto
+- Updated dependencies [bdfb64f]
+- Updated dependencies [8a6244e]
+- Updated dependencies [c8f5d89]
+    - @comet/cms-api@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes

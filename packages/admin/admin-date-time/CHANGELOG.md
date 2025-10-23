@@ -1,5 +1,40 @@
 # @comet/admin-date-time
 
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- Updated dependencies [a85e7cb]
+- Updated dependencies [ff6d79a]
+- Updated dependencies [ff6d79a]
+    - @comet/admin@8.4.0
+    - @comet/admin-icons@8.4.0
+
 ## 8.3.0
 
 ### Patch Changes
