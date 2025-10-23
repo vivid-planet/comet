@@ -83,14 +83,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
-        ? {
-            ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategory: data.productHighlight.product?.category
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
+                productCategory: data.productHighlight.product?.category
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -108,9 +109,10 @@ id?: string;
         const handleSubmit = async ({ productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
-                ...formValues,
-                product: formValues.product ? formValues.product.id : null,
-            };
+        ...formValues,
+        product: formValues.product ? formValues.product.id : null,
+    };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -350,14 +352,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -375,9 +378,10 @@ id?: string;
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+        ...formValues,
+        category: formValues.category?.id,
+    };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -545,14 +549,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -570,9 +575,10 @@ id?: string;
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+        ...formValues,
+        category: formValues.category?.id,
+    };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -741,14 +747,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -766,9 +773,10 @@ id?: string;
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+        ...formValues,
+        category: formValues.category?.id,
+    };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
