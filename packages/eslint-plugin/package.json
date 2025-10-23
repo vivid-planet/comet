@@ -5,12 +5,12 @@
     "type": "commonjs",
     "main": "lib/index.js",
     "scripts": {
-        "build": "$npm_execpath run clean && tsc",
+        "build": "pnpm run clean && tsc",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "jest",
         "test:watch": "jest --watch"

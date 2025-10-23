@@ -16,16 +16,16 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
+        "build": "pnpm run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
-        "generate-block-meta:watch": "chokidar \"src/\" -c \"$npm_execpath generate-block-meta\"",
+        "generate-block-meta:watch": "chokidar \"src/\" -c \"pnpm generate-block-meta\"",
         "generate-schema": "ts-node generate-schema.ts",
-        "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
+        "generate-schema:watch": "chokidar \"src/\" -c \"pnpm generate-schema\"",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest",
         "test:watch": "jest --watch"
