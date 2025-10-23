@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 8.5.1
+
+### Patch Changes
+
+- dcb9712: Disable `@next/next/no-img-element` rule
+    - @comet/eslint-plugin@8.5.1
+
 ## 8.5.0
 
 ### Patch Changes
