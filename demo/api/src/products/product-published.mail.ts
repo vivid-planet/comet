@@ -2,7 +2,7 @@ import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
 import { TranslationService } from "@src/translation/translation.service";
 
 type MailProps = {
-    recipient: { name: string; email: string; language: "en" | "de" };
+    recipient: { name: string; email: string; language: string };
     countProductPublished: "all" | number;
 };
 
@@ -11,7 +11,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
     constructor(private readonly translationService: TranslationService) {}
 
     async generateMail(props: MailProps) {
-        const intl = this.translationService.getIntl(props.recipient.language);
+        const intl = await this.translationService.getIntl(props.recipient.language);
         return {
             mailTypeForLogging: "ProductPublishedMail",
             subject: intl.formatMessage({ id: "product-published-mail.subject", defaultMessage: "Products published" }),
