@@ -10,7 +10,7 @@ const config = [
             "react/jsx-no-literals": [
                 "error",
                 {
-                    allowedStrings: ["…", "€", "$", "?", "–", "—", "/", "(", ")"],
+                    allowedStrings: ["…", "€", "$", "?", "–", "—", "/", "(", ")", "%"],
                 },
             ],
         },

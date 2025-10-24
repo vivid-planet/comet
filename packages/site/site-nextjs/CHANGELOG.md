@@ -1,5 +1,39 @@
 # @comet/site-nextjs
 
+## 8.5.0
+
+### Patch Changes
+
+- @comet/site-react@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/site-react@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/site-react@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- @comet/site-react@8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- c6ee74e: Remove unnecessary `rimraf` dependency
+- 22ee3de: Add SEO `title` property to PixelImageBlock and SvgImageBlock
+- Updated dependencies [c6ee74e]
+- Updated dependencies [22ee3de]
+    - @comet/site-react@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

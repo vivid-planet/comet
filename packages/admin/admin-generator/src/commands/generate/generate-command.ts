@@ -46,6 +46,39 @@ function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
 }
 
 export type StaticSelectValue = { value: string; label: string } | string;
+type AsyncSelectFilter =
+    | {
+          /**
+           * Filter by value of field in current form
+           */
+          type: "field";
+          /**
+           * Name of the field in current form, that will be used to filter the query
+           */
+          formFieldName: string;
+          /**
+           * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+           *
+           * Root Argument or filter argument are supported.
+           */
+          rootQueryArg?: string;
+      }
+    | {
+          /**
+           * Filter by a prop passed into the form, this prop will be generated
+           */
+          type: "formProp";
+          /**
+           * Name of the prop generated for this form
+           */
+          propName: string;
+          /**
+           * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+           *
+           * Root Argument or filter argument are supported.
+           */
+          rootQueryArg?: string;
+      };
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; name: keyof T; multiline?: boolean } & InputBaseFieldConfig)
@@ -71,42 +104,15 @@ export type FormFieldConfig<T> = (
           name: keyof T;
           rootQuery: string;
           labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
           /**
            * filter for query, passed as variable to graphql query
            */
-          filter?:
-              | {
-                    /**
-                     * Filter by value of field in current form
-                     */
-                    type: "field";
-                    /**
-                     * Name of the field in current form, that will be used to filter the query
-                     */
-                    formFieldName: string;
-                    /**
-                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
-                     *
-                     * Root Argument or filter argument are supported.
-                     */
-                    rootQueryArg?: string;
-                }
-              | {
-                    /**
-                     * Filter by a prop passed into the form, this prop will be generated
-                     */
-                    type: "formProp";
-                    /**
-                     * Name of the prop generated for this form
-                     */
-                    propName: string;
-                    /**
-                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
-                     *
-                     * Root Argument or filter argument are supported.
-                     */
-                    rootQueryArg?: string;
-                };
+          filter?: AsyncSelectFilter;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelectFilter";
@@ -114,6 +120,15 @@ export type FormFieldConfig<T> = (
           loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
           rootQuery: string;
           labelField?: string;
+          /** Whether Autocomplete or Select should be used.
+           *
+           * defaults to true if rootQuery has a search argument
+           */
+          autocomplete?: boolean;
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?: AsyncSelectFilter;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; name: keyof T; block: BlockInterface }
     | ({ type: "fileUpload"; multiple?: false; name: keyof T; maxFiles?: 1; download?: boolean } & Pick<
@@ -164,7 +179,17 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
+    /**
+     * If true, the form will navigate to the edit page using stackSwitchApi.activatePage of the newly created item after a successful creation.
+     * @default true
+     */
+    navigateOnCreate?: boolean;
 };
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
@@ -262,6 +287,11 @@ export type GridConfig<T extends { __typename?: string }> = {
         enabled: boolean;
         dragPreviewField?: UsableFields<T>;
     };
+    /**
+     * If true, scope will be passed as prop, if false scope will be fetched from ContentScopeContext
+     * @default false
+     */
+    scopeAsProp?: boolean;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;

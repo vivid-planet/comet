@@ -39,12 +39,13 @@ export function generateFormField({
         name,
         formattedMessageRootId,
         fieldLabel,
-        introspectionFieldType,
         startAdornment,
         endAdornment,
         imports: optionsImports,
     } = buildFormFieldOptions({ config, formConfig, gqlType, gqlIntrospection });
     imports.push(...optionsImports);
+
+    let { introspectionFieldType } = buildFormFieldOptions({ config, formConfig, gqlType, gqlIntrospection });
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
 
@@ -218,7 +219,11 @@ export function generateFormField({
             formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
         }
     } else if (config.type == "dateTime") {
-        code = `<DateTimeField
+        imports.push({
+            name: "Future_DateTimePickerField as DateTimePickerField",
+            importPath: "@comet/admin",
+        });
+        code = `<DateTimePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
@@ -276,8 +281,14 @@ export function generateFormField({
         } else {
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
-        formFragmentFields = [`${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`];
+        formFragmentFields = [`${name}...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"}`];
     } else if (config.type == "staticSelect") {
+        const multiple = introspectionFieldType?.kind === "LIST";
+        if (introspectionFieldType?.kind === "LIST") {
+            introspectionFieldType =
+                introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
+        }
+
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
@@ -294,7 +305,29 @@ export function generateFormField({
             }
         });
 
-        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+        let inputType = config.inputType;
+        if (!inputType) {
+            if (!required || multiple) {
+                // radio is not clearable, render always as select if not required
+                // radio doesn't support multiple
+                inputType = "select";
+            } else {
+                // auto select/radio based on number of values
+                if (values.length <= 5) {
+                    inputType = "radio";
+                } else {
+                    inputType = "select";
+                }
+            }
+        }
+        if (inputType === "radio" && multiple) {
+            throw new Error(`${name}: inputType=radio doesn't support multiple`);
+        }
+        if (inputType === "radio" && !required) {
+            throw new Error(`${name}: inputType=radio must be required as it doesn't support clearable`);
+        }
+
+        const renderAsRadio = inputType === "radio";
         if (renderAsRadio) {
             code = `<RadioGroupField
              ${required ? "required" : ""}
@@ -335,6 +368,7 @@ export function generateFormField({
                                 }
                                 ${validateCode}
                                 ${config.readOnly ? readOnlyPropsWithLock : ""}
+                                ${multiple ? "multiple" : ""}
                                 options={[${values.map((value) => {
                                     const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
 

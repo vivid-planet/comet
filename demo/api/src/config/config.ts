@@ -34,7 +34,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
         auth: {
-            useAuthProxy: envVars.USE_AUTHPROXY,
             systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
             idpClientId: envVars.IDP_CLIENT_ID,
             idpJwksUri: envVars.IDP_JWKS_URI,
@@ -87,6 +86,8 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
             sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
             sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
+
+            daysToKeepMailLog: 90,
 
             transport: {
                 host: envVars.MAILER_HOST,

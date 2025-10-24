@@ -6,19 +6,23 @@ exports[`AsyncSelect filter generates field without filter 1`] = `
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect {
-                            categories {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query CategoriesSelect {
+        categories {
+            nodes { id name }
+        }
+    }
+    
+    \`
+                            
+                            
+                        
                     });
                     return data.categories.nodes;
                 }}
@@ -33,19 +37,23 @@ exports[`AsyncSelect filter generates filter with value dependent on other field
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($title: String) {
-                            categories(title: $title) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { title: values.title }
+                        query: gql\`
+    query CategoriesSelect($title: String) {
+        categories(title: $title) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            title: values.title,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -66,7 +74,6 @@ exports[`AsyncSelect filter generates formProp with enum filter as root query ar
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -101,6 +108,7 @@ import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -121,15 +129,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            type: GQLCategoryType;
+            onCreate?: (id: string) => void;
+type: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({type, id}: FormProps) {
+    export function ProductForm({onCreate, type, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -180,15 +190,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -220,19 +231,23 @@ id?: string;
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($type: CategoryType) {
-                            categories(type: $type) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { type: type }
+                        query: gql\`
+    query CategoriesSelect($type: CategoryType) {
+        categories(type: $type) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            type: type,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -255,7 +270,6 @@ exports[`AsyncSelect filter generates formProp with string filter as root query 
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -289,6 +303,7 @@ import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -309,15 +324,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            foo: string;
+            onCreate?: (id: string) => void;
+foo: string;
 id?: string;
         }
 
-    export function ProductForm({foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -368,15 +385,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -408,19 +426,23 @@ id?: string;
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($foo: String) {
-                            categories(foo: $foo) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { foo: foo }
+                        query: gql\`
+    query CategoriesSelect($foo: String) {
+        categories(foo: $foo) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            foo: foo,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -443,7 +465,6 @@ exports[`AsyncSelect filter with formProp filter with filter arg generates a str
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -477,6 +498,7 @@ import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -497,15 +519,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            foo: string;
+            onCreate?: (id: string) => void;
+foo: string;
 id?: string;
         }
 
-    export function ProductForm({foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -556,15 +580,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -596,19 +621,23 @@ id?: string;
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($filter: CategoryFilter) {
-                            categories(filter: $filter) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { filter: { foo: { equal: foo } } }
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            filter: { foo: { equal: foo } },
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -631,7 +660,6 @@ exports[`AsyncSelect filter with formProp filter with filter arg generates an en
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -666,6 +694,7 @@ import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -686,15 +715,17 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
     type FormValues = GQLProductFormFragment ;
 
     interface FormProps {
-            categoryType: GQLCategoryType;
+            onCreate?: (id: string) => void;
+categoryType: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({categoryType, id}: FormProps) {
+    export function ProductForm({onCreate, categoryType, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -745,15 +776,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -785,19 +817,23 @@ id?: string;
                 variant="horizontal"
                 fullWidth
                 
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($filter: CategoryFilter) {
-                            categories(filter: $filter) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { filter: { type: { equal: categoryType } } }
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            filter: { type: { equal: categoryType } },
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}

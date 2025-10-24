@@ -18,7 +18,7 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
                   token: ${{ secrets.GITHUB_TOKEN }}
@@ -27,28 +27,28 @@ jobs:
                   git config user.email github-actions@github.com
 
             - name: "Library: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
             - name: "Demo Admin: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
 
             - name: "Demo Site: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/site/lang/comet-demo-lang"
 
             - name: "Demo Site Pages: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
@@ -57,7 +57,7 @@ jobs:
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 22.x
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
@@ -65,8 +65,8 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            - name: Copy schema files
-              run: pnpm run copy-schema-files
+            - name: Setup project for CI run
+              run: pnpm run setup:ci
 
             - name: Build
               run: pnpm run build:packages

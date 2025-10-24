@@ -1,5 +1,51 @@
 # @comet/api-generator
 
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [942200f]
+- Updated dependencies [b7156bb]
+    - @comet/cms-api@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/cms-api@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/cms-api@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- f865dee: Fix generated query in position-service
+- 2f73e74: Fix possibly duplicated imports in generated filter dto
+- Updated dependencies [bdfb64f]
+- Updated dependencies [8a6244e]
+- Updated dependencies [c8f5d89]
+    - @comet/cms-api@8.4.0
+
+## 8.3.0
+
+### Minor Changes
+
+- 99950fa: Add support for sorting by ManyToOne and OneToOne relation fields
+
+### Patch Changes
+
+- 881827a: input-dto: generate import for typed (using type not class) json property
+- Updated dependencies [613bc13]
+- Updated dependencies [78b7703]
+- Updated dependencies [4a9938a]
+- Updated dependencies [99950fa]
+    - @comet/cms-api@8.3.0
+
 ## 8.2.0
 
 ### Patch Changes

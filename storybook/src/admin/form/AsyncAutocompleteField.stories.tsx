@@ -82,9 +82,6 @@ export const WithObjectOptions: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -143,9 +140,61 @@ export const MultipleSelect: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
+                                    return option.label;
+                                }}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const MultipleAutocompleteNoInitialValues: Story = {
+    render: () => {
+        interface FormValues {
+            departments: {
+                label: string;
+                value: string;
+            }[];
+        }
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncAutocompleteField
+                                multiple
+                                loadOptions={async (search?: string) => {
+                                    // Simulate network delay
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+
+                                    if (!search) {
+                                        return allOptions;
                                     }
+
+                                    const searchLower = search.toLowerCase();
+                                    return allOptions.filter(
+                                        (option) =>
+                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
+                                    );
+                                }}
+                                name="departments"
+                                label="Department"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
                                     return option.label;
                                 }}
                             />
@@ -203,9 +252,6 @@ export const LongLoading: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -273,9 +319,6 @@ export const AsyncAutocompleteLoadingDataFromApi: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -324,9 +367,6 @@ export const ErrorLoadingOptions: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                             />
@@ -375,9 +415,6 @@ export const ErrorLoadingOptionsWithCustomErrorText: Story = {
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
-                                    if (typeof option === "string") {
-                                        return option;
-                                    }
                                     return option.label;
                                 }}
                                 errorText={

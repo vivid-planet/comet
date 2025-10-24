@@ -10,6 +10,7 @@ export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
+    navigateOnCreate: false,
     fields: [
         {
             type: "fieldSet",
@@ -39,7 +40,9 @@ export default defineConfig<GQLProduct>({
                     inputType: "radio",
                     values: productTypeValues,
                 },
+                { type: "staticSelect", name: "additionalTypes" },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                { type: "asyncSelect", name: "tags", rootQuery: "productTags" },
                 {
                     type: "numberRange",
                     name: "priceRange",

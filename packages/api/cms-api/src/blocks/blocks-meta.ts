@@ -11,6 +11,7 @@ type BlockMetaField =
           kind: "Enum";
           nullable: boolean;
           enum: string[];
+          array?: boolean;
       }
     | {
           name: string;
@@ -62,6 +63,7 @@ function extractFromBlockMeta(blockMeta: BlockMetaInterface): BlockMetaField[] {
                 kind: field.kind,
                 enum: field.enum,
                 nullable: field.nullable,
+                array: field.array,
             };
         } else if (field.kind === BlockMetaFieldKind.Block) {
             return {

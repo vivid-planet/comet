@@ -6,19 +6,23 @@ exports[`AsyncSelect rendered props generates readonly async select 1`] = `
                 variant="horizontal"
                 fullWidth
                 readOnly disabled
+                
                 name="category"
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect {
-                            categories {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query CategoriesSelect {
+        categories {
+            nodes { id name }
+        }
+    }
+    
+    \`
+                            
+                            
+                        
                     });
                     return data.categories.nodes;
                 }}

@@ -1,5 +1,41 @@
 # @comet/admin-generator
 
+## 8.5.0
+
+### Minor Changes
+
+- 7806dd1: Add scopeAsProp to grid and form to generate a scope prop that needs to be passed into the generated grid/form
+- c96e920: Add FormConfig.navigateOnCreate (defaults to true) to allow disabling the navigation to edit page after successful create mutation
+- 7806dd1: form: add scope to create mutation (if any), defaulting to using the current scope from context (as grid does it) [breaking]
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- 52f56b9: asyncSelect: add support for autocomplete, defaulting to true if rootQuery has a search argument [breaking]
+
+## 8.3.0
+
+### Minor Changes
+
+- 3f832dd: Remove virtual setting from form config
+- 00dd172: Support filtering asyncSelectFilter to allow multiple levels of filtered selects
+- dbd83d6: Use `Future_DatePickerField` instead of `FinalFormDatePicker`
+- 5ba61ab: Add form field type asyncSelectFilter that can be used to filter an asyncSelect
+- f49b3c3: Use `Future_DateTimePickerField` instead of `DateTimePickerField`
+- 4a65444: staticSelect/asyncSelect: add support for multiple (array) values, autodetects LIST fields in GraphQL schema
+
+### Patch Changes
+
+- ba0c023: Fix generating column for nested date field
+- ebc6fff: Form Generation: `StaticSelect` with `inputType: "select"` now generates `SelectField` instead of `Field` + `FinalFormSelect`.
+- fb9b950: Fix sending null for date field
+- 512bd43: Fix selection for `selectionProps` `"singleSelect"`: set `disableRowSelectionOnClick` to `false`
+
 ## 8.2.0
 
 ### Minor Changes
