@@ -3,11 +3,18 @@ import { type ResolvedIntlConfig } from "react-intl";
 
 type Messages = ResolvedIntlConfig["messages"];
 
-const projectMessages = {
-    en: JSON.parse(fs.readFileSync("lang-compiled/comet-demo-api/en.json", "utf-8")),
-    de: JSON.parse(fs.readFileSync("lang-compiled/comet-demo-api/de.json", "utf-8")),
+const projectMessages: Record<string, Messages> = {
+    en: {},
+    de: {},
 };
 export type SupportedLanguage = keyof typeof projectMessages;
+
+Object.keys(projectMessages).forEach((key) => {
+    fs.readFile(`lang-compiled/comet-demo-api/${key}.json`, "utf-8", (err, data) => {
+        if (err) throw err;
+        projectMessages[key] = JSON.parse(data);
+    });
+});
 
 export const getMessages = (language: keyof typeof projectMessages): Messages => {
     return projectMessages[language];
