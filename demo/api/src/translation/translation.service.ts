@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { getMessages, SupportedLanguage } from "@src/translation/lang";
+import { loadMessages } from "@src/translation/loadMessages";
 import { createIntl, createIntlCache, IntlCache } from "react-intl";
 
 @Injectable()
@@ -9,14 +9,14 @@ export class TranslationService {
         this.intlCache = createIntlCache();
     }
 
-    getIntl(language: SupportedLanguage) {
+    async getIntl(language: string) {
         return createIntl(
             {
                 // Locale of the application
                 locale: language,
                 // Locale of the fallback defaultMessage
                 defaultLocale: language,
-                messages: getMessages(language),
+                messages: await loadMessages(language),
             },
             this.intlCache,
         );
