@@ -326,7 +326,7 @@ export function generateForm(
 
     ${customFilterByFragment}
 
-    ${generateFormValuesType({ config, formValuesConfig, filterByFragmentType })}
+    ${generateFormValuesType({ formValuesConfig, filterByFragmentType })}
 
     ${formPropsTypeCode}
 
@@ -370,7 +370,7 @@ export function generateForm(
 
         const handleSubmit = async (${generateDestructFormValueForInput({ formValuesConfig })}: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
-            ${generateFormValuesToGqlInput({ generatedFields })}
+            ${generateFormValuesToGqlInput({ formValuesConfig })}
 
             ${mode == "all" ? `if (mode === "edit") {` : ""}
                 ${

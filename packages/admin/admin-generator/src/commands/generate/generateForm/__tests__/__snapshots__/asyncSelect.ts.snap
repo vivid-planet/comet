@@ -126,7 +126,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -176,7 +176,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {
@@ -323,7 +323,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -373,7 +373,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {
@@ -520,7 +520,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -570,7 +570,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {
@@ -718,7 +718,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -768,7 +768,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {
