@@ -34,7 +34,7 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock
 };
-type FormValues = Omit<GQLProductVariantFormFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
@@ -51,10 +51,10 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.productVariant
         ? {
             ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
-            image: rootBlocks.image.input2State(data.productVariant.image)
+            image: rootBlocks.image.input2State(data.productVariant.image),
         }
         : {
-            image: rootBlocks.image.defaultValues()
+            image: rootBlocks.image.defaultValues(),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {

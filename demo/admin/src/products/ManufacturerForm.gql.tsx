@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const manufacturerFormFragment = gql`
-    fragment ManufacturerFormDetails on Manufacturer {
+    fragment ManufacturerFormDetailsHandmade on Manufacturer {
         name
         address {
             street
@@ -34,7 +34,7 @@ export const manufacturerQuery = gql`
         manufacturer(id: $id) {
             id
             updatedAt
-            ...ManufacturerFormDetails
+            ...ManufacturerFormDetailsHandmade
         }
     }
     ${manufacturerFormFragment}
@@ -44,7 +44,7 @@ export const createManufacturerMutation = gql`
         createManufacturer(input: $input) {
             id
             updatedAt
-            ...ManufacturerFormDetails
+            ...ManufacturerFormDetailsHandmade
         }
     }
     ${manufacturerFormFragment}
@@ -54,7 +54,7 @@ export const updateManufacturerMutation = gql`
         updateManufacturer(id: $id, input: $input) {
             id
             updatedAt
-            ...ManufacturerFormDetails
+            ...ManufacturerFormDetailsHandmade
         }
     }
     ${manufacturerFormFragment}

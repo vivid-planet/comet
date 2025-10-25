@@ -15,7 +15,6 @@ export function generateComponentFormField({ config }: { config: ComponentFormFi
         formProps: [],
         hooksCode: "",
         formFragmentFields: [],
-        formValueToGqlInputCode: "",
         formValuesConfig: [],
         finalFormConfig: undefined,
         code,

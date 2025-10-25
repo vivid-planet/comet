@@ -31,7 +31,6 @@ export function generateFormLayout({
 
     let code = "";
     let hooksCode = "";
-    let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
     const gqlDocuments: GQLDocumentConfigMap = {};
     const imports: Imports = [];
@@ -53,7 +52,6 @@ export function generateFormLayout({
         });
 
         hooksCode += generatedFields.hooksCode;
-        formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
         formFragmentFields.push(...generatedFields.formFragmentFields);
         for (const name in generatedFields.gqlDocuments) {
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
@@ -123,44 +121,31 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        formValuesConfig.push(...generatedFields.formValuesConfig);
 
-        const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
-            omitFromFragmentType: name,
+        // first field is the "enabled" checkbox
+        formValuesConfig.push({
+            fieldName: `${name}Enabled`,
+            omitFromFragmentType: false,
             destructFromFormValues: `${name}Enabled`,
-            typeCode: `${name}Enabled: boolean;`,
-            initializationCode: `${name}Enabled: !!data.${dataRootName}.${name}`,
-        };
-        const subfieldsFormValuesTypeCode = generatedFields.formValuesConfig
-            .filter((config) => !!config.omitFromFragmentType)
-            .map((config) => `"${config.omitFromFragmentType}"`);
-        if (subfieldsFormValuesTypeCode.length) {
-            wrappingFormValuesConfig.typeCode = `${wrappingFormValuesConfig.typeCode}
-                ${name}: Omit<NonNullable<GQL${formFragmentName}Fragment["${name}"]>, ${subfieldsFormValuesTypeCode.join(" | ")}> & {
-                    ${generatedFields.formValuesConfig.map((config) => config.typeCode).join("\n")}
-                };`;
-        }
-        const subfieldsFormValuesInitCode = generatedFields.formValuesConfig
-            .filter((config) => !!config.initializationCode)
-            .map((config) => config.initializationCode);
-        if (subfieldsFormValuesInitCode.length) {
-            wrappingFormValuesConfig.initializationCode = `${wrappingFormValuesConfig.initializationCode},
-                ${name}: data.${dataRootName}.${name} ? { ${subfieldsFormValuesInitCode.join(", ")}} : undefined    `;
-        }
-        const subfieldsFormValuesDefaultInitCode = generatedFields.formValuesConfig
-            .filter((config) => !!config.defaultInitializationCode)
-            .map((config) => config.defaultInitializationCode);
-        if (subfieldsFormValuesDefaultInitCode.length) {
-            wrappingFormValuesConfig.defaultInitializationCode = `${name}: { ${subfieldsFormValuesDefaultInitCode.join(", ")}}`;
-        }
-        formValuesConfig.push(wrappingFormValuesConfig);
+            typeCode: {
+                nullable: false,
+                type: "boolean",
+            },
+            initializationCode: `!!data.${dataRootName}.${name}`,
+        });
+
+        // second field is the nested object, which is not a final-form field itself
+        formValuesConfig.push({
+            fieldName: `${name}`,
+            wrapInitializationCode: `data.${dataRootName}.${name} ? $inner : undefined`,
+            wrapFormValueToGqlInputCode: `${name}Enabled && formValues.${name} ? $inner : null`,
+        });
 
         imports.push({ name: "FinalFormSwitch", importPath: "@comet/admin" });
         imports.push({ name: "messages", importPath: "@comet/admin" });
         imports.push({ name: "FormControlLabel", importPath: "@mui/material" });
 
-        formValueToGqlInputCode += `${String(config.name)}: ${String(config.name)}Enabled && formValues.${String(config.name)} ? {${
-            generatedFields.formValueToGqlInputCode
-        }} : null,`;
         code = `<Field
                     fullWidth
                     name="${String(config.name)}Enabled"
@@ -191,7 +176,6 @@ export function generateFormLayout({
     return {
         code,
         hooksCode,
-        formValueToGqlInputCode,
         formFragmentFields,
         gqlDocuments,
         imports,
