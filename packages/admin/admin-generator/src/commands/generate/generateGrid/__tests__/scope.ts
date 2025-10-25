@@ -1,7 +1,6 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 
 import { type GridConfig } from "../../generate-command";
-import { parseSource } from "../../utils/test-helper";
 import { generateGrid } from "../generateGrid";
 
 describe("Grid Scope", () => {
@@ -105,15 +104,10 @@ describe("Grid Scope", () => {
             gridConfig,
         );
 
-        const source = parseSource(formOutput.code);
-        const importDeclarations = source.getImportDeclarations();
-
-        const graphqlImportDeclaration = importDeclarations.find(
-            (getImportDeclaration) => getImportDeclaration.getModuleSpecifierValue() === "@src/graphql.generated",
-        );
-        expect(graphqlImportDeclaration).toBeDefined();
-
-        const gqlScopeImport = graphqlImportDeclaration?.getNamedImports().find((namedImport) => namedImport.getName() === "GQLProductScope");
-        expect(gqlScopeImport).toBeDefined();
+        const match = formOutput.code.match(/import {(.*?)} from "@src\/graphql.generated";/);
+        if (!match) throw new Error("GQL import not found");
+        const imports = match[1].split(",").map((imp) => imp.trim());
+        expect(imports).not.toContain("ProductScope");
+        expect(imports).toContain("GQLProductScope");
     });
 });
