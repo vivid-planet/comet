@@ -164,6 +164,12 @@ export default defineConfig({
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
+        {
+            name: "demo-api-mitmproxy",
+            script: "pnpm run dev:demo-api-mitmproxy",
+            group: ["demo-api", "demo"],
+            waitOn: ["tcp:$API_PORT"],
+        },
 
         // group demo login
         {

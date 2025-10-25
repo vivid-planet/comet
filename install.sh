@@ -24,5 +24,5 @@ pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 # create site-config-envs
 pnpm run create-site-configs-env
 
-# Download OAuth2-Proxy binary and create symlink to start
 pnpm run setup:download-oauth2-proxy
+pnpm run setup:download-mitmproxy
