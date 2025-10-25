@@ -2,10 +2,11 @@
 
 import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import styles from "./DamVideoBlock.module.scss";
+import { PlayPauseButton } from "./helpers/PlayPauseButton";
 import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
@@ -32,19 +33,25 @@ export const DamVideoBlock = withPreview(
         }
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
+        const [isHandledManually, setIsHandledManually] = useState(!autoplay);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
         const videoRef = useRef<HTMLVideoElement>(null);
 
-        useIsElementInViewport(videoRef, (inView) => {
-            if (autoplay && videoRef.current) {
-                if (inView) {
-                    videoRef.current.play();
-                } else {
-                    videoRef.current.pause();
+        const handleInView = useCallback(
+            (inView: boolean) => {
+                if (autoplay && videoRef.current && !isHandledManually) {
+                    if (inView) {
+                        videoRef.current.play();
+                    } else {
+                        videoRef.current.pause();
+                    }
                 }
-            }
-        });
+            },
+            [autoplay, isHandledManually],
+        );
+
+        useIsElementInViewport(videoRef, handleInView, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
 
         return (
             <>
@@ -70,21 +77,39 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <video
-                        autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
-                        controls={showControls}
-                        loop={loop}
-                        playsInline
-                        muted={autoplay}
-                        ref={videoRef}
-                        className={clsx(styles.video, fill && styles.fill)}
-                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
-                    >
-                        {damFile.captions.map((caption) => {
-                            return <track key={caption.id} src={caption.fileUrl} kind="captions" srcLang={caption.language} />;
-                        })}
-                        <source src={damFile.fileUrl} type={damFile.mimetype} />
-                    </video>
+                    <div className={styles.root}>
+                        <video
+                            autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
+                            controls={showControls}
+                            loop={loop}
+                            playsInline
+                            muted={autoplay}
+                            ref={videoRef}
+                            className={clsx(styles.video, fill && styles.fill)}
+                            style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
+                        >
+                            {damFile.captions.map((caption) => {
+                                return <track key={caption.id} src={caption.fileUrl} kind="captions" srcLang={caption.language} />;
+                            })}
+                            <source src={damFile.fileUrl} type={damFile.mimetype} />
+                        </video>
+                        {!showControls && (
+                            <PlayPauseButton
+                                className={styles.playPause}
+                                isPlaying={isHandledManually}
+                                onClick={() => {
+                                    setIsHandledManually(!isHandledManually);
+                                    if (videoRef.current) {
+                                        if (videoRef.current.paused) {
+                                            videoRef.current.play();
+                                        } else {
+                                            videoRef.current.pause();
+                                        }
+                                    }
+                                }}
+                            />
+                        )}
+                    </div>
                 )}
             </>
         );
