@@ -19,12 +19,12 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
+        "build": "pnpm run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests",
         "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules jest --updateSnapshot",

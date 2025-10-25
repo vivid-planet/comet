@@ -29,6 +29,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Excel as ExcelIcon } from "@comet/admin-icons";
@@ -85,7 +86,7 @@ export function ProductVariantsGrid({ product }: Props) {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "product-variants",
         }), ...usePersistentColumnState("ProductVariantsGrid") };
-    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = useMemo(() => [
         { field: "name",
             headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }),
             flex: 1,
@@ -118,7 +119,7 @@ export function ProductVariantsGrid({ product }: Props) {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductVariantsGridQuery, GQLProductVariantsGridQueryVariables>(productVariantsQuery, {
         variables: {

@@ -6,28 +6,26 @@ import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
-import { type GQLManufacturersFilterQuery, type GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
+import { type GQLProductCategoryFilterQuery, type GQLProductCategoryFilterQueryVariables } from "./ProductCategoryFilter.generated";
 
-const manufacturersQuery = gql`
-    query ManufacturersFilter($offset: Int!, $limit: Int!, $search: String) {
-        manufacturers(offset: $offset, limit: $limit, search: $search) {
+const productCategoryQuery = gql`
+    query ProductCategoryFilter($offset: Int!, $limit: Int!, $search: String) {
+        productCategories(offset: $offset, limit: $limit, search: $search) {
             nodes {
                 id
-                name
+                title
             }
-            totalCount
         }
     }
 `;
 
-// Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
-function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValueProps) {
+function ProductCategoryFilter({ item, applyValue, apiRef }: GridFilterInputValueProps) {
     const intl = useIntl();
     const [search, setSearch] = useState<string | undefined>(undefined);
     const [debouncedSearch] = useDebounce(search, 500);
     const rootProps = useGridRootProps();
 
-    const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
+    const { data } = useQuery<GQLProductCategoryFilterQuery, GQLProductCategoryFilterQueryVariables>(productCategoryQuery, {
         variables: {
             offset: 0,
             limit: 10,
@@ -37,7 +35,6 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
 
     const handleApplyValue = useCallback(
         (value: string | undefined) => {
-            // value can't be "{ id: value.id, name: value.name }" because value is sent to api
             applyValue({
                 ...item,
                 id: item.id,
@@ -48,22 +45,25 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
         [applyValue, item],
     );
 
-    // source https://mui.com/material-ui/react-autocomplete/
     return (
         <Autocomplete
             size="small"
-            options={data?.manufacturers.nodes ?? []}
+            options={data?.productCategories.nodes ?? []}
             autoHighlight
-            disableClearable
             value={item.value ? item.value : null}
             filterOptions={(x) => x} // disable local filtering
+            disableClearable
             isOptionEqualToValue={(option, value) => {
-                // does only highlight the selected value in options-list but does not trigger getOptionLabel-Call
                 return option.id == value;
             }}
             getOptionLabel={(option) => {
-                // option.name is not set if loaded from filters-model, small delay replacing id with name because of loading
-                return option.name ?? data?.manufacturers.nodes.find((item) => item.id === option)?.name ?? option;
+                return (
+                    option.title ??
+                    data?.productCategories.nodes.find((item) => {
+                        return item.id === option;
+                    })?.title ??
+                    option
+                );
             }}
             onChange={(event, value, reason) => {
                 handleApplyValue(value ? value.id : undefined);
@@ -71,7 +71,8 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
             renderInput={(params) => (
                 <rootProps.slots.baseTextField
                     {...params}
-                    placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
+                    autoComplete="off"
+                    placeholder={intl.formatMessage({ id: "productCategory.placeholder", defaultMessage: "Choose a Product Category" })}
                     value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
@@ -101,10 +102,12 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
     );
 }
 
-export const ManufacturerFilterOperator: GridFilterOperator = {
-    value: "equals",
-    getApplyFilterFn: (filterItem) => {
-        throw new Error("not implemented, we filter server side");
+export const ProductCategoryFilterOperators: GridFilterOperator[] = [
+    {
+        value: "equals",
+        getApplyFilterFn: (filterItem) => {
+            throw new Error("not implemented, we filter server side");
+        },
+        InputComponent: ProductCategoryFilter,
     },
-    InputComponent: ManufacturerFilter,
-};
+];

@@ -19,17 +19,18 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc",
+        "build": "pnpm run clean && tsc",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc"
     },
     "dependencies": {
         "commander": "^9.5.0",
         "prettier": "^3.6.2",
+        "semver": "^7.7.3",
         "ts-node": "^10.9.2"
     },
     "devDependencies": {

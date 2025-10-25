@@ -20,6 +20,7 @@ import { usePersistentColumnState } from "@comet/admin";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { DataGridProProps } from "@mui/x-data-grid-pro";
 const productsFragment = gql`
         fragment SelectProductsGridFuture on Product {
@@ -49,7 +50,7 @@ type Props = {
 export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: Props) {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid"), rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true };
-    const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = useMemo(() => [
         { field: "title",
             headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
             flex: 1,
@@ -92,7 +93,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
         { ...dataGridDateTimeColumn, field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             width: 170, },
-    ];
+    ], [intl]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
