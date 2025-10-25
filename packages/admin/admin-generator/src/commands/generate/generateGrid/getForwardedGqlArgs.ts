@@ -27,8 +27,8 @@ export function getForwardedGqlArgs(gqlFields: IntrospectionField[]) {
         } else if (arg.type === "JSONObject") {
             prop = { name: arg.name, optional: false, type: "unknown" };
         } else {
-            prop = { name: arg.name, optional: false, type: arg.type };
-            imports.push({ name: arg.type, importPath: "@src/graphql.generated" });
+            prop = { name: arg.name, optional: false, type: `GQL${arg.type}` }; // generated types contain GQL prefix
+            imports.push({ name: `GQL${arg.type}`, importPath: "@src/graphql.generated" });
         }
 
         ret.push({ gqlArg: { name: arg.name, type: arg.type, queryOrMutationName: arg.gqlField.name }, prop, imports });

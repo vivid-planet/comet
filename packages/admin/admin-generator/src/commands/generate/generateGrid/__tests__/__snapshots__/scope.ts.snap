@@ -64,7 +64,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
-import { ProductScope } from "@src/graphql.generated";
+import { GQLProductScope } from "@src/graphql.generated";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -104,7 +104,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     }
 
     type Props = {
-            scope: ProductScope;
+            scope: GQLProductScope;
         };
 
     export function ProductsGrid({scope }: Props) {
@@ -238,7 +238,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
-import { ProductScope } from "@src/graphql.generated";
+import { GQLProductScope } from "@src/graphql.generated";
 import { useContentScope } from "@comet/cms-admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
