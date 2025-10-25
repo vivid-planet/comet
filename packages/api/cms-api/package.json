@@ -16,7 +16,7 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && tsc -p tsconfig.build.json",
+        "build": "tsdown",
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
@@ -115,6 +115,7 @@
         "rxjs": "^7.8.2",
         "ts-jest": "^29.4.0",
         "ts-node": "^10.9.2",
+        "tsdown": "^0.15.9",
         "typescript": "5.8.3"
     },
     "peerDependencies": {
