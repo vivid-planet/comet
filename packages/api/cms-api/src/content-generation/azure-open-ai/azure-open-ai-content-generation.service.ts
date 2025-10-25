@@ -5,7 +5,7 @@ import { AzureOpenAI } from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 import { FilesService } from "../../dam/files/files.service";
-import { ContentGenerationServiceInterface, SeoTags } from "../content-generation-service.interface";
+import { type ContentGenerationServiceInterface, SeoTags } from "../content-generation-service.interface";
 import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./azure-open-ai.constants";
 
 export type AzureOpenAiContentGenerationServiceConfig = AzureOpenAiConfig | ConfigByMethod;

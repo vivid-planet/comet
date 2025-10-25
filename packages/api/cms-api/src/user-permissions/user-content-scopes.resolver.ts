@@ -9,7 +9,7 @@ import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
+import { type ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @Resolver()

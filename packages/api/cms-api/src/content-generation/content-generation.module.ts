@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module, ModuleMetadata, Type } from "@nestjs/common";
 
 import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
-import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
+import { type ContentGenerationServiceInterface } from "./content-generation-service.interface";
 import { GenerateAltTextResolver } from "./generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./generate-image-title.resolver";
 import { GenerateSeoTagsResolver } from "./generate-seo-tags.resolver";

@@ -3,7 +3,7 @@ import { ArgsType, Field, Int } from "@nestjs/graphql";
 import { Type as TransformerType } from "class-transformer";
 import { IsInt, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 
-import { RedirectScopeInterface } from "../types";
+import { type RedirectScopeInterface } from "../types";
 import { EmptyRedirectScope } from "./empty-redirect-scope";
 import { RedirectSort } from "./redirect.sort";
 import { RedirectFilter } from "./redirects.filter";

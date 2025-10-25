@@ -4,7 +4,7 @@ import { Injectable, Type } from "@nestjs/common";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeService } from "./page-tree.service";
-import { PageTreeNodeInterface } from "./types";
+import { type PageTreeNodeInterface } from "./types";
 
 export class DocumentSubscriberFactory {
     static create({ Documents }: { Documents: Type<DocumentInterface>[] }): Type<EventSubscriber> {

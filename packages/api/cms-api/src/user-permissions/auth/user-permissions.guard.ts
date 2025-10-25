@@ -7,9 +7,9 @@ import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
-import { ContentScope } from "../interfaces/content-scope.interface";
+import { type ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
-import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
+import { type AccessControlServiceInterface, type Permission, SystemUser, type UserPermissionsOptions } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {

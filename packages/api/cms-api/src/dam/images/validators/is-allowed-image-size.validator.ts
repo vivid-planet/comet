@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 import { ValidationArguments } from "class-validator/types/validation/ValidationArguments";
 
-import { DamConfig } from "../../dam.config";
+import { type DamConfig } from "../../dam.config";
 import { DAM_CONFIG } from "../../dam.constants";
 
 export const IsAllowedImageSize = (validationOptions?: ValidationOptions) => {

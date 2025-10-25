@@ -4,10 +4,10 @@ import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
 import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { KubernetesJobStatus } from "./job-status.enum";
 import { KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants";
-import { KubernetesConfig } from "./kubernetes.module";
+import { type KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
 export class KubernetesService {

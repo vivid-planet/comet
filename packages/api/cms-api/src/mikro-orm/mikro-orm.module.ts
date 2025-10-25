@@ -1,4 +1,4 @@
-import { MikroOrmModule as MikroOrmNestjsModule, MikroOrmModuleOptions as MikroOrmNestjsOptions } from "@mikro-orm/nestjs";
+import { MikroOrmModule as MikroOrmNestjsModule, type MikroOrmModuleOptions as MikroOrmNestjsOptions } from "@mikro-orm/nestjs";
 import { EntityCaseNamingStrategy, MigrationObject, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { DynamicModule, Module } from "@nestjs/common";
 import fs from "fs";

@@ -1,10 +1,10 @@
 import { Injectable, Scope } from "@nestjs/common";
 
-import { ExtractBlockData } from "../blocks/block";
+import { type ExtractBlockData } from "../blocks/block";
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
 import { InternalLinkBlock } from "../page-tree/blocks/internal-link.block";
 import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service";
-import { RedirectsLinkBlock } from "./redirects.module";
+import { type RedirectsLinkBlock } from "./redirects.module";
 
 export type RedirectTargetUrlServiceInterface = {
     resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined>;

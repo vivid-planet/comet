@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { DocumentInterface } from "../document/dto/document-interface";
 import { EntityScopeServiceInterface } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { PageTreeService } from "./page-tree.service";
 
 @Injectable()

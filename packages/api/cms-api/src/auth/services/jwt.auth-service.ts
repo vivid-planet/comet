@@ -5,8 +5,8 @@ import { Request } from "express";
 import JwksRsa, { JwksClient } from "jwks-rsa";
 
 import { isInjectableService } from "../../common/helper/is-injectable-service.helper";
-import { User } from "../../user-permissions/interfaces/user";
-import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
+import { type User } from "../../user-permissions/interfaces/user";
+import { AuthenticateUserResult, type AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type JwtPayload = { [key: string]: any };

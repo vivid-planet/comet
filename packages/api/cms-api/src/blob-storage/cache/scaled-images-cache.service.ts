@@ -3,7 +3,7 @@ import hasha from "hasha";
 import { sep } from "path";
 
 import { BlobStorageBackendService } from "../backends/blob-storage-backend.service";
-import { BlobStorageConfig } from "../blob-storage.config";
+import { type BlobStorageConfig } from "../blob-storage.config";
 import { BLOB_STORAGE_CONFIG } from "../blob-storage.constants";
 import { createHashedPath } from "../utils/create-hashed-path.util";
 import { FileCache } from "./dto/file-cache.interface";

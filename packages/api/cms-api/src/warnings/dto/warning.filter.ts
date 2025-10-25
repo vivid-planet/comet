@@ -2,7 +2,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { ContentScope } from "src/user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "src/user-permissions/interfaces/content-scope.interface";
 
 import { DateTimeFilter } from "../../common/filter/date-time.filter";
 import { createEnumFilter } from "../../common/filter/enum.filter.factory";

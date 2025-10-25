@@ -4,7 +4,7 @@ import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ImageCropArea } from "../../images/entities/image-crop-area.entity";
-import { FileInterface } from "./file.entity";
+import { type FileInterface } from "./file.entity";
 
 @Entity({ tableName: "DamFileImage" })
 @ObjectType("DamFileImage")

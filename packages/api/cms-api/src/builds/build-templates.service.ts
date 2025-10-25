@@ -5,7 +5,7 @@ import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
+import { type AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BUILDER_LABEL } from "./builds.constants";
 
 @Injectable()

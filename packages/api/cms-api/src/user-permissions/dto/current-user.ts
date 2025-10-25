@@ -1,8 +1,8 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
-import { ContentScope } from "../interfaces/content-scope.interface";
-import { CombinedPermission, Permission } from "../user-permissions.types";
+import { type ContentScope } from "../interfaces/content-scope.interface";
+import { CombinedPermission, type Permission } from "../user-permissions.types";
 import { UserPermissionsUser } from "./user";
 
 @ObjectType()

@@ -5,7 +5,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { Observable } from "rxjs";
 
 import { ContentScopeService } from "../user-permissions/content-scope.service";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildsService } from "./builds.service";
 import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
 

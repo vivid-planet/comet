@@ -2,7 +2,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { v5 } from "uuid";
 
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { WarningData } from "./dto/warning-data";
 import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";

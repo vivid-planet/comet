@@ -4,12 +4,12 @@ import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
 
-import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
+import { type Block, BlockData, type BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { DiscoverService } from "../dependencies/discover.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { SCOPED_ENTITY_METADATA_KEY, type ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsFunction, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";

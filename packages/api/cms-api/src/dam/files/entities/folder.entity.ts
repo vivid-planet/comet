@@ -15,8 +15,8 @@ import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { DamScopeInterface } from "../../types";
-import { FileInterface } from "./file.entity";
+import { type DamScopeInterface } from "../../types";
+import { type FileInterface } from "./file.entity";
 
 export interface FolderInterface extends BaseEntity {
     [OptionalProps]?:

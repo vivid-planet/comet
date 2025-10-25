@@ -3,7 +3,7 @@ import { Inject, Logger } from "@nestjs/common";
 import { Command, CommandRunner, Option } from "nest-commander";
 
 import { MAILER_SERVICE_CONFIG } from "./mailer.constants";
-import { MailerModuleConfig } from "./mailer.module";
+import { type MailerModuleConfig } from "./mailer.module";
 import { MailerService } from "./mailer.service";
 
 @Command({

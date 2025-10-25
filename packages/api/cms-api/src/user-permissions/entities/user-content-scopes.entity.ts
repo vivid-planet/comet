@@ -1,6 +1,6 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/postgresql";
 
-import { ContentScope } from "../interfaces/content-scope.interface";
+import { type ContentScope } from "../interfaces/content-scope.interface";
 
 @Entity({ tableName: "CometUserContentScopes" })
 export class UserContentScopes {

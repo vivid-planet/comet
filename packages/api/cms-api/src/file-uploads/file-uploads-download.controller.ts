@@ -30,7 +30,7 @@ import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { DownloadParams, HashDownloadParams, HashImageParams, ImageParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
-import { FileUploadsConfig } from "./file-uploads.config";
+import { type FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 import { FileUploadsService } from "./file-uploads.service";
 

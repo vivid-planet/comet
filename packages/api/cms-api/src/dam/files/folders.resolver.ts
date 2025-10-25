@@ -5,11 +5,16 @@ import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args";
+import {
+    createFolderArgs,
+    createFolderByNameAndParentIdArgs,
+    type FolderArgsInterface,
+    type FolderByNameAndParentIdArgsInterface,
+} from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
-import { FolderInterface } from "./entities/folder.entity";
+import { type FolderInterface } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
 
 export function createFoldersResolver({

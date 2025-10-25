@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { BlockTransformerServiceInterface } from "../../blocks/block";
+import { type BlockTransformerServiceInterface } from "../../blocks/block";
 import { PageTreeReadApiService } from "../page-tree-read-api.service";
 import type { InternalLinkBlockData } from "./internal-link.block";
 

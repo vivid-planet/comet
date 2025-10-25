@@ -3,7 +3,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
-import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
+import { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))

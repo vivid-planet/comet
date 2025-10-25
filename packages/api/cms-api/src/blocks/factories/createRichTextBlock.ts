@@ -3,14 +3,14 @@ import { registerDecorator, validate, ValidationArguments, ValidationOptions } f
 import type { DraftBlockType, DraftEntityMutability, DraftInlineStyleType, RawDraftContentState, RawDraftEntityRange } from "draft-js";
 
 import {
-    Block,
+    type Block,
     BlockData,
-    BlockDataFactory,
-    BlockDataInterface,
-    BlockInputFactory,
-    BlockInputInterface,
-    ChildBlockInfo,
-    ExtractBlockInput,
+    type BlockDataFactory,
+    type BlockDataInterface,
+    type BlockInputFactory,
+    type BlockInputInterface,
+    type ChildBlockInfo,
+    type ExtractBlockInput,
     registerBlock,
 } from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
@@ -18,7 +18,7 @@ import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFacto
 import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
-import { SearchText } from "../search/get-search-text";
+import { type SearchText } from "../search/get-search-text";
 import { BlockFactoryNameOrOptions } from "./types";
 
 interface CreateRichTextBlockOptions {

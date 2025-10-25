@@ -2,7 +2,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Command, CommandRunner } from "nest-commander";
 
-import { FileInterface } from "../files/entities/file.entity";
+import { type FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
 
 @Command({

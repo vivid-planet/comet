@@ -19,16 +19,16 @@ import {
 import { PaginatedPageTreeNodesArgsFactory } from "./dto/paginated-page-tree-nodes-args.factory";
 import { SlugAvailability } from "./dto/slug-availability.enum";
 import { PAGE_TREE_CONFIG } from "./page-tree.constants";
-import { PageTreeConfig } from "./page-tree.module";
+import { type PageTreeConfig } from "./page-tree.module";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import {
-    PageTreeNodeCategory,
-    PageTreeNodeCreateInputInterface,
-    PageTreeNodeInterface,
-    PageTreeNodeUpdateInputInterface,
+    type PageTreeNodeCategory,
+    type PageTreeNodeCreateInputInterface,
+    type PageTreeNodeInterface,
+    type PageTreeNodeUpdateInputInterface,
     PageTreeNodeVisibility as Visibility,
-    ScopeInterface,
+    type ScopeInterface,
 } from "./types";
 
 export function createPageTreeResolver({

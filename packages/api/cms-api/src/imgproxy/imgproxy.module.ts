@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module, ValueProvider } from "@nestjs/common";
 
 import { IMGPROXY_CONFIG } from "./imgproxy.constants";
-import { ImgproxyConfig, ImgproxyService } from "./imgproxy.service";
+import { type ImgproxyConfig, ImgproxyService } from "./imgproxy.service";
 
 @Global()
 @Module({})

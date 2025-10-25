@@ -2,12 +2,12 @@ import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import {
-    BlockContext,
+    type BlockContext,
     BlockData,
-    BlockIndexData,
+    type BlockIndexData,
     BlockInput,
     blockInputToData,
-    BlockMetaField,
+    type BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
 } from "../../blocks/block";

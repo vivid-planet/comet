@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../base-video-block";
-import { BlockDataInterface, blockInputToData, createBlock } from "../block";
+import { type BlockDataInterface, blockInputToData, createBlock } from "../block";
 import { BlockField } from "../decorators/field";
 import { typeSafeBlockMigrationPipe } from "../migrations/typeSafeBlockMigrationPipe";
 import { IsValidYouTubeIdentifier } from "../validator/is-valid-you-tube-identifier";

@@ -6,9 +6,9 @@ import isEqual from "lodash.isequal";
 
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, type ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { AFFECTED_ENTITY_METADATA_KEY, type AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()

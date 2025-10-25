@@ -13,17 +13,17 @@ import { AffectedEntity } from "../user-permissions/decorators/affected-entity.d
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
-import { RedirectInputInterface } from "./dto/redirect-input.factory";
+import { type RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
 import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
-import { RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
+import { type RedirectInterface } from "./entities/redirect-entity.factory";
+import { type RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
 import { REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
 import { RedirectSourceTypeValues } from "./redirects.enum";
-import { RedirectsLinkBlock } from "./redirects.module";
+import { type RedirectsLinkBlock } from "./redirects.module";
 import { RedirectsService } from "./redirects.service";
 import { isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
-import { RedirectScopeInterface } from "./types";
+import { type RedirectScopeInterface } from "./types";
 
 export function createRedirectsResolver({
     Redirect,

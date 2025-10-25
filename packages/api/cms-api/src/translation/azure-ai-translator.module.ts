@@ -1,6 +1,6 @@
 import { DynamicModule, Module, ValueProvider } from "@nestjs/common";
 
-import { AzureAiTranslatorConfig } from "./azure-ai-translator.config";
+import { type AzureAiTranslatorConfig } from "./azure-ai-translator.config";
 import { AZURE_AI_TRANSLATOR_CONFIG } from "./azure-ai-translator.constants";
 import { AzureAiTranslatorResolver } from "./azure-ai-translator.resolver";
 

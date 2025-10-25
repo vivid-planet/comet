@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 
-import { DamConfig } from "../../dam.config";
+import { type DamConfig } from "../../dam.config";
 import { DAM_CONFIG } from "../../dam.constants";
 
 export const IsAllowedImageAspectRatio = (validationOptions?: ValidationOptions) => {

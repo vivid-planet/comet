@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { DiscoverService } from "./discover.service";
-import { BaseDependencyInterface } from "./dto/base-dependency.interface";
+import { type BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";

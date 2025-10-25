@@ -6,7 +6,7 @@ import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-v
 import { SortArgs } from "../../common/sorting/sort.args";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { RedirectGenerationType } from "../redirects.enum";
-import { RedirectScopeInterface } from "../types";
+import { type RedirectScopeInterface } from "../types";
 import { EmptyRedirectScope } from "./empty-redirect-scope";
 
 interface RedirectsArgsInterface {

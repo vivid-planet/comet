@@ -1,6 +1,14 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
+import {
+    BlockData,
+    type BlockIndexData,
+    BlockInput,
+    blockInputToData,
+    type BlockMetaField,
+    BlockMetaFieldKind,
+    createBlock,
+} from "../../blocks/block";
 import { AnnotationBlockMeta } from "../../blocks/decorators/field";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { SvgImageBlockTransformerService } from "./svg-image-block-transformer.service";

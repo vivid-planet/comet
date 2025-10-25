@@ -1,4 +1,12 @@
-import { BlockData, BlockDataInterface, BlockInput, blockInputToData, createBlock, ExtractBlockData, ExtractBlockInput } from "../block";
+import {
+    BlockData,
+    type BlockDataInterface,
+    BlockInput,
+    blockInputToData,
+    createBlock,
+    type ExtractBlockData,
+    type ExtractBlockInput,
+} from "../block";
 import { ExternalLinkBlock } from "../ExternalLinkBlock";
 import { createRichTextBlock } from "../factories/createRichTextBlock";
 import { ChildBlock } from "./child-block";

@@ -1,10 +1,10 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-import { BlockData, BlockInput, blockInputToData, createBlock, ExtractBlockData, ExtractBlockInput } from "../../../../block";
+import { BlockData, BlockInput, blockInputToData, createBlock, type ExtractBlockData, type ExtractBlockInput } from "../../../../block";
 import { ChildBlock } from "../../../../decorators/child-block";
 import { ChildBlockInput } from "../../../../decorators/child-block-input";
 import { BlockField } from "../../../../decorators/field";
-import { SearchText } from "../../../get-search-text";
+import { type SearchText } from "../../../get-search-text";
 import { BBlock } from "./BBlock";
 import { CBlock } from "./CBlock";
 

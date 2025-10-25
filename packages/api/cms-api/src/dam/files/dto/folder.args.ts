@@ -5,7 +5,7 @@ import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-v
 
 import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
-import { DamScopeInterface } from "../../types";
+import { type DamScopeInterface } from "../../types";
 import { EmptyDamScope } from "./empty-dam-scope";
 
 @InputType()

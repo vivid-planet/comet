@@ -7,7 +7,7 @@ import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs, PermissionFilter } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
-import { User } from "./interfaces/user";
+import { type User } from "./interfaces/user";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ObjectType()

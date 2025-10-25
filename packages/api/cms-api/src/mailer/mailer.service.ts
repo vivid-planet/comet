@@ -9,7 +9,7 @@ import Mail, { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 import { MailerLog } from "./entities/mailer-log.entity";
 import { MailerLogStatus } from "./entities/mailer-log-status.enum";
 import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
-import { MailerModuleConfig } from "./mailer.module";
+import { type MailerModuleConfig } from "./mailer.module";
 
 type MailerServiceConfig = Omit<MailerModuleConfig, "transport">;
 

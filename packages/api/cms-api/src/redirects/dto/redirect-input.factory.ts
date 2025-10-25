@@ -4,7 +4,7 @@ import { Transform } from "class-transformer";
 import { IsEnum, IsOptional, ValidateNested, ValidationArguments } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
 
-import { Block, BlockInputInterface, ExtractBlockInput } from "../../blocks/block";
+import { type Block, type BlockInputInterface, type ExtractBlockInput } from "../../blocks/block";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { IsValidRedirectSource } from "../validators/isValidRedirectSource";
 

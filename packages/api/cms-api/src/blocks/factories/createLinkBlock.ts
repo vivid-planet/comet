@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { Block, BlockDataInterface, BlockInputInterface } from "../block";
+import { type Block, type BlockDataInterface, type BlockInputInterface } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from ".//types";
 import {
@@ -9,7 +9,7 @@ import {
     BaseOneOfBlockItemData,
     BaseOneOfBlockItemInput,
     createOneOfBlock,
-    CreateOneOfBlockOptions,
+    type CreateOneOfBlockOptions,
 } from "./createOneOfBlock";
 
 function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterface, BlockInputInterface>>>(
