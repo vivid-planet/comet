@@ -20,6 +20,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productCategoriesFragment = gql`
@@ -72,7 +73,7 @@ export function ProductCategoriesGrid() {
             refetchQueries: [productCategoriesQuery]
         });
     };
-    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = [
+    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = useMemo(() => [
         { field: "title",
             headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
             filterable: false,
@@ -125,7 +126,7 @@ export function ProductCategoriesGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
             offset: 0, limit: 100, sort: { field: "position", direction: "ASC" }
