@@ -54,7 +54,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -104,7 +104,7 @@ scope: GQLProductScope;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        title: formValues.title ?? null,
+        title: formValues.title ?? null, 
     };
 
             if (mode === "edit") {
@@ -234,7 +234,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -283,7 +283,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        title: formValues.title ?? null,
+        title: formValues.title ?? null, 
     };
 
             if (mode === "edit") {

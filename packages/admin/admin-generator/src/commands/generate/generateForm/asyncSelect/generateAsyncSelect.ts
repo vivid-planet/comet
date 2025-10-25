@@ -143,12 +143,12 @@ export function generateAsyncSelect({
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     const formValueConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
+        fieldName: name,
         destructFromFormValues: config.type == "asyncSelectFilter" ? name : undefined,
     };
 
     let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
     let code = "";
-    let formValueToGqlInputCode = "";
 
     const { objectType, multiple } = findIntrospectionObjectType({
         config,
@@ -331,12 +331,12 @@ export function generateAsyncSelect({
     if (config.type != "asyncSelectFilter") {
         if (!multiple) {
             if (!required) {
-                formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+                formValueConfig.formValueToGqlInputCode = `formValues.${name} ? formValues.${name}.id : null`;
             } else {
-                formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+                formValueConfig.formValueToGqlInputCode = `formValues.${name}?.id`;
             }
         } else {
-            formValueToGqlInputCode = `${name}: formValues.${name}.map((item) => item.id),`;
+            formValueConfig.formValueToGqlInputCode = `formValues.${name}.map((item) => item.id)`;
         }
     }
 
@@ -358,8 +358,8 @@ export function generateAsyncSelect({
 
     if (config.type == "asyncSelectFilter") {
         // add (in the gql schema) non existing value for virtual filter field
-        formValueConfig.typeCode = `${name}?: { id: string; ${labelField}: string };`;
-        formValueConfig.initializationCode = `${name}: data.${instanceGqlType}.${config.loadValueQueryField.replace(/\./g, "?.")}`;
+        formValueConfig.typeCode = { nullable: true, type: `{ id: string; ${labelField}: string }` };
+        formValueConfig.initializationCode = `data.${instanceGqlType}.${config.loadValueQueryField.replace(/\./g, "?.")}`;
     }
 
     code = `<${useAutocomplete ? "AsyncAutocompleteField" : "AsyncSelectField"}
@@ -411,7 +411,6 @@ export function generateAsyncSelect({
     return {
         code,
         hooksCode: "",
-        formValueToGqlInputCode,
         formFragmentFields,
         gqlDocuments: {},
         imports,

@@ -37,7 +37,7 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
             ...filterByFragment<GQLProductPriceFormDetailsFragment>(productFormFragment, data.product),
-            price: data.product.price ? String(data.product.price) : undefined
+            price: data.product.price ? String(data.product.price) : undefined,
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
