@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 
-import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
+import { type BlockContext, type BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { ImageCropArea } from "../images/entities/image-crop-area.entity";
 import { ImagesService } from "../images/images.service";
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { PixelImageBlockData } from "./pixel-image.block";
 
 type TransformResponse = {

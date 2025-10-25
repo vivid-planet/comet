@@ -15,16 +15,16 @@ import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
-import { User } from "./interfaces/user";
+import { type ContentScope } from "./interfaces/content-scope.interface";
+import { type User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
-    AccessControlServiceInterface,
+    type AccessControlServiceInterface,
     AvailableContentScope,
-    Permission,
+    type Permission,
     UserPermissions,
-    UserPermissionsOptions,
-    UserPermissionsUserServiceInterface,
+    type UserPermissionsOptions,
+    type UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
 
 @Injectable()

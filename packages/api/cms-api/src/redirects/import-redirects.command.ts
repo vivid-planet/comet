@@ -8,11 +8,11 @@ import { Command, CommandRunner } from "nest-commander";
 
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { PageTreeReadApiOptions } from "../page-tree/page-tree-read-api";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { type RedirectInterface } from "./entities/redirect-entity.factory";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
-import { RedirectsLinkBlock } from "./redirects.module";
-import { RedirectScopeInterface } from "./types";
+import { type RedirectsLinkBlock } from "./redirects.module";
+import { type RedirectScopeInterface } from "./types";
 
 interface Row {
     target: string;

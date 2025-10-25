@@ -3,7 +3,7 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Observable, tap } from "rxjs";
 
 import { SENTRY_CONFIG } from "./sentry.constants";
-import { SentryConfig } from "./sentry.module";
+import { type SentryConfig } from "./sentry.module";
 
 @Injectable()
 export class SentryInterceptor implements NestInterceptor {

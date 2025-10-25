@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, blockInputToData, createBlock } from "../../../block";
+import { BlockData, type BlockIndexData, BlockInput, blockInputToData, createBlock } from "../../../block";
 import { BlockField } from "../../../decorators/field";
 
 class ImageBlockData extends BlockData {

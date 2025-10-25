@@ -4,12 +4,12 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
-import { Block, BlockDataInterface } from "../../blocks/block";
+import { type Block, type BlockDataInterface } from "../../blocks/block";
 import { RootBlock } from "../../blocks/decorators/root-block";
 import { RootBlockEntity } from "../../blocks/decorators/root-block-entity";
 import { RootBlockType } from "../../blocks/root-block-type";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
-import { RedirectScopeInterface } from "../types";
+import { type RedirectScopeInterface } from "../types";
 
 export interface RedirectInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "active";

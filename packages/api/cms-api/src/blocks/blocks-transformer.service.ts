@@ -3,7 +3,7 @@ import { ContextIdFactory, ModuleRef } from "@nestjs/core";
 import { CONTEXT } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
-import { BlockContext, BlockDataInterface } from "./block";
+import { type BlockContext, type BlockDataInterface } from "./block";
 import { transformToPlain } from "./blocks-transformer";
 
 @Injectable()

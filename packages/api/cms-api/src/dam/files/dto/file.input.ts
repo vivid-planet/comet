@@ -18,7 +18,7 @@ import {
 import { IsNullable } from "../../../common/validators/is-nullable";
 import { IsUndefinable } from "../../../common/validators/is-undefinable";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
-import { DamScopeInterface } from "../../types";
+import { type DamScopeInterface } from "../../types";
 import { LicenseType } from "../entities/license.embeddable";
 
 export class ImageFileInput {

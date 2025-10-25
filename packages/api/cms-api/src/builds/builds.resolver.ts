@@ -9,7 +9,7 @@ import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocat
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
+import { type AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BuildsService } from "./builds.service";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";

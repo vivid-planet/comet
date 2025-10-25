@@ -3,21 +3,21 @@ import { plainToInstance, Transform } from "class-transformer";
 import { Allow, IsBoolean, IsString, ValidateNested } from "class-validator";
 
 import {
-    Block,
-    BlockContext,
+    type Block,
+    type BlockContext,
     BlockData,
-    BlockDataInterface,
+    type BlockDataInterface,
     BlockInput,
-    BlockInputInterface,
+    type BlockInputInterface,
     blockInputToData,
-    ChildBlockInfo,
+    type ChildBlockInfo,
     createBlock,
-    ExtractBlockInput,
-    ExtractBlockInputFactoryProps,
+    type ExtractBlockInput,
+    type ExtractBlockInputFactoryProps,
     isBlockDataInterface,
     isBlockInputInterface,
-    SimpleBlockInputInterface,
-    TraversableTransformBlockResponse,
+    type SimpleBlockInputInterface,
+    type TraversableTransformBlockResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";

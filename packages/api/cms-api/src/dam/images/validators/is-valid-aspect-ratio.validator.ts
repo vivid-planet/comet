@@ -3,7 +3,7 @@ import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorCon
 import { ValidationArguments } from "class-validator/types/validation/ValidationArguments";
 
 import { calculateInheritAspectRatio } from "../../../file-utils/images.util";
-import { DamConfig } from "../../dam.config";
+import { type DamConfig } from "../../dam.config";
 import { DAM_CONFIG } from "../../dam.constants";
 import { FilesService } from "../../files/files.service";
 import { ImageParams } from "../dto/image.params";

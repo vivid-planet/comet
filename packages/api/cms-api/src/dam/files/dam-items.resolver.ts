@@ -2,12 +2,12 @@ import { Type } from "@nestjs/common";
 import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { DamItemsService } from "./dam-items.service";
-import { createDamItemArgs, createDamItemPositionArgs, DamItemPositionArgsInterface, DamItemsArgsInterface } from "./dto/dam-items.args";
+import { createDamItemArgs, createDamItemPositionArgs, type DamItemPositionArgsInterface, type DamItemsArgsInterface } from "./dto/dam-items.args";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { FileInterface } from "./entities/file.entity";
-import { FolderInterface } from "./entities/folder.entity";
+import { type FileInterface } from "./entities/file.entity";
+import { type FolderInterface } from "./entities/folder.entity";
 
 export type DamItemInterface = FileInterface | FolderInterface;
 

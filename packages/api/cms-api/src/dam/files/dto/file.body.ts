@@ -3,7 +3,7 @@ import { plainToInstance, Transform, Type as ClassTransformerType } from "class-
 import { IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from "class-validator";
 
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
-import { DamScopeInterface } from "../../types";
+import { type DamScopeInterface } from "../../types";
 import { LicenseInput } from "./file.input";
 
 export interface UploadFileBodyInterface {

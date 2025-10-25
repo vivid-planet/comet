@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { DamItemInterface } from "./dam-items.resolver";
-import { DamItemPositionArgsInterface, DamItemsArgsInterface, DamItemType } from "./dto/dam-items.args";
+import { type DamItemPositionArgsInterface, type DamItemsArgsInterface, DamItemType } from "./dto/dam-items.args";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
 

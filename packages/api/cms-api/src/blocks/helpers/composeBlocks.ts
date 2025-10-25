@@ -1,18 +1,18 @@
 import { Allow, ValidateNested } from "class-validator";
 
 import {
-    Block,
+    type Block,
     BlockData,
-    BlockDataFactory,
-    BlockDataInterface,
-    BlockInputFactory,
-    BlockInputInterface,
+    type BlockDataFactory,
+    type BlockDataInterface,
+    type BlockInputFactory,
+    type BlockInputInterface,
     BlockMetaFieldKind,
-    ChildBlockInfo,
-    ExtractBlockInputFactoryProps,
+    type ChildBlockInfo,
+    type ExtractBlockInputFactoryProps,
     MigrateOptions,
     registerBlock,
-    TransformBlockResponse,
+    type TransformBlockResponse,
 } from "../block";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";

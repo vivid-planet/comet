@@ -6,52 +6,56 @@ export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { CometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createBasicAuthService } from "./auth/services/basic.auth-service";
-export { createJwtAuthService, JwtPayload, JwtToUserServiceInterface } from "./auth/services/jwt.auth-service";
+export { createJwtAuthService, type JwtPayload, type JwtToUserServiceInterface } from "./auth/services/jwt.auth-service";
 export { createSitePreviewAuthService } from "./auth/services/site-preview.auth-service";
 export { createStaticUserAuthService } from "./auth/services/static-authed-user.auth-service";
 export { createAuthGuardProviders } from "./auth/util/auth-guard.providers";
-export { AuthServiceInterface } from "./auth/util/auth-service.interface";
-export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
+export { type AuthServiceInterface } from "./auth/util/auth-service.interface";
+export { type BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
-export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
+export {
+    type BlobStorageBackendInterface,
+    type CreateFileOptions,
+    type StorageMetaData,
+} from "./blob-storage/backends/blob-storage-backend.interface";
 export { BlobStorageBackendService } from "./blob-storage/backends/blob-storage-backend.service";
-export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage-file.config";
+export { type BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage-file.config";
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
-export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
+export { type BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
 export { ScaledImagesCacheService } from "./blob-storage/cache/scaled-images-cache.service";
 export {
-    Block,
-    BlockContext,
+    type Block,
+    type BlockContext,
     BlockData,
-    BlockDataFactory,
-    BlockDataInterface,
-    BlockIndexData,
+    type BlockDataFactory,
+    type BlockDataInterface,
+    type BlockIndexData,
     BlockInput,
-    BlockInputFactory,
-    BlockInputInterface,
+    type BlockInputFactory,
+    type BlockInputInterface,
     blockInputToData,
-    BlockMetaField,
+    type BlockMetaField,
     BlockMetaFieldKind,
-    BlockMetaInterface,
-    BlockMetaLiteralFieldKind,
-    BlockTransformerServiceInterface,
-    BlockWarning,
-    ChildBlockInfo,
+    type BlockMetaInterface,
+    type BlockMetaLiteralFieldKind,
+    type BlockTransformerServiceInterface,
+    type BlockWarning,
+    type ChildBlockInfo,
     createBlock,
-    ExtractBlockData,
-    ExtractBlockInput,
-    ExtractBlockInputFactoryProps,
+    type ExtractBlockData,
+    type ExtractBlockInput,
+    type ExtractBlockInputFactoryProps,
     getRegisteredBlocks,
     isBlockDataInterface,
     isBlockInputInterface,
     registerBlock,
-    SimpleBlockInputInterface,
-    TransformBlockResponse,
-    TransformBlockResponseArray,
+    type SimpleBlockInputInterface,
+    type TransformBlockResponse,
+    type TransformBlockResponseArray,
     transformToBlockSave,
-    TraversableTransformBlockResponse,
-    TraversableTransformBlockResponseArray,
+    type TraversableTransformBlockResponse,
+    type TraversableTransformBlockResponseArray,
 } from "./blocks/block";
 export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";
@@ -68,8 +72,8 @@ export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
 export {
     BaseBlocksBlockItemData,
     BaseBlocksBlockItemInput,
-    BlocksBlockFixturesGeneratorMap,
-    BlocksBlockInputInterface,
+    type BlocksBlockFixturesGeneratorMap,
+    type BlocksBlockInputInterface,
     createBlocksBlock,
 } from "./blocks/factories/createBlocksBlock";
 export { createImageLinkBlock } from "./blocks/factories/createImageLinkBlock";
@@ -81,10 +85,10 @@ export {
     BaseOneOfBlockItemData,
     BaseOneOfBlockItemInput,
     createOneOfBlock,
-    CreateOneOfBlockOptions,
-    OneOfBlock,
+    type CreateOneOfBlockOptions,
+    type OneOfBlock,
 } from "./blocks/factories/createOneOfBlock";
-export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
+export { createOptionalBlock, type OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
 export { createSeoBlock, type SeoBlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
 export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
@@ -98,13 +102,13 @@ export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDat
 export { strictBlockInputFactoryDecorator } from "./blocks/helpers/strictBlockInputFactoryDecorator";
 export { BlockMigration } from "./blocks/migrations/BlockMigration";
 export { BlockDataMigrationVersion } from "./blocks/migrations/decorators/BlockDataMigrationVersion";
-export { BlockMigrationInterface } from "./blocks/migrations/types";
+export { type BlockMigrationInterface } from "./blocks/migrations/types";
 export { typeSafeBlockMigrationPipe } from "./blocks/migrations/typeSafeBlockMigrationPipe";
 export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
+export { getSearchTextFromBlock, type SearchText, type WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
@@ -120,15 +124,15 @@ export {
     CRUD_GENERATOR_METADATA_KEY,
     CRUD_SINGLE_GENERATOR_METADATA_KEY,
     CrudField,
-    CrudFieldOptions,
+    type CrudFieldOptions,
     CrudGenerator,
-    CrudGeneratorOptions,
+    type CrudGeneratorOptions,
     CrudSingleGenerator,
-    CrudSingleGeneratorOptions,
+    type CrudSingleGeneratorOptions,
 } from "./common/decorators/crud-generator.decorator";
-export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
+export { getRequestContextHeadersFromRequest, RequestContext, type RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
-export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
+export { EntityInfo, type EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
 export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
@@ -162,12 +166,12 @@ export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
 export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
 export {
-    AzureOpenAiConfig,
+    type AzureOpenAiConfig,
     AzureOpenAiContentGenerationService,
-    AzureOpenAiContentGenerationServiceConfig,
+    type AzureOpenAiContentGenerationServiceConfig,
 } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
 export { ContentGenerationModule } from "./content-generation/content-generation.module";
-export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
+export { type ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
@@ -176,18 +180,18 @@ export { SvgImageBlock } from "./dam/blocks/svg-image.block";
 export { DamVideoBlock } from "./dam/blocks/video/dam-video.block";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
 export { damDefaultAcceptedMimetypes } from "./dam/common/mimeTypes/dam-default-accepted-mimetypes";
-export { DamConfig } from "./dam/dam.config";
+export { type DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
-export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
+export { createFileEntity, type FileInterface } from "./dam/files/entities/file.entity";
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
-export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
+export { createFolderEntity, type FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
 export { FilesService } from "./dam/files/files.service";
 export { FoldersService } from "./dam/files/folders.service";
-export { ImageInterface } from "./dam/images/dto/image.interface";
+export { type ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";
 export { ImageCropArea } from "./dam/images/entities/image-crop-area.entity";
@@ -199,32 +203,32 @@ export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
-export { BaseDependencyInterface } from "./dependencies/dto/base-dependency.interface";
+export { type BaseDependencyInterface } from "./dependencies/dto/base-dependency.interface";
 export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
-export { SaveDocument } from "./document/dto/save-document";
+export { type SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";
-export { FileUploadInput, FileUploadInterface } from "./file-utils/file-upload.input";
+export { type FileUploadInput, type FileUploadInterface } from "./file-utils/file-upload.input";
 export { createFileUploadInputFromUrl, slugifyFilename } from "./file-utils/files.utils";
 export { FocalPoint } from "./file-utils/focal-point.enum";
-export { getCenteredPosition, getMaxDimensionsFromArea, ImageDimensionsAndCoordinates } from "./file-utils/images.util";
+export { getCenteredPosition, getMaxDimensionsFromArea, type ImageDimensionsAndCoordinates } from "./file-utils/images.util";
 export { IMGPROXY_CONFIG } from "./imgproxy/imgproxy.constants";
 export { Extension, Gravity, ResizingType } from "./imgproxy/imgproxy.enum";
 export { ImgproxyModule } from "./imgproxy/imgproxy.module";
-export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
+export { type ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
-export { MailTemplate, MailTemplateInterface, PreparedTestProps } from "./mail-templates/mail-template.decorator";
+export { MailTemplate, type MailTemplateInterface, type PreparedTestProps } from "./mail-templates/mail-template.decorator";
 export { MailTemplateService } from "./mail-templates/mail-template.service";
 export { MailTemplatesModule } from "./mail-templates/mail-templates.module";
 export { MailerLog } from "./mailer/entities/mailer-log.entity";
 export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
-export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
-export { MailerService, SendMailParams } from "./mailer/mailer.service";
-export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
+export { MailerModule, type MailerModuleConfig } from "./mailer/mailer.module";
+export { MailerService, type SendMailParams } from "./mailer/mailer.service";
+export { createMigrationsList, createOrmConfig, MikroOrmModule, type MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
@@ -242,44 +246,44 @@ export { AttachedDocument } from "./page-tree/entities/attached-document.entity"
 export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entity";
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
-export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { type PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
 export { PageTreeNodeDocumentEntityInfoService } from "./page-tree/page-tree-node-document-entity-info.service";
 export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-node-document-entity-scope.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
-export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
+export { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility, type ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
-export { RedirectInterface } from "./redirects/entities/redirect-entity.factory";
-export { RedirectTargetUrlServiceInterface } from "./redirects/redirect-target-url.service";
+export { type RedirectInterface } from "./redirects/entities/redirect-entity.factory";
+export { type RedirectTargetUrlServiceInterface } from "./redirects/redirect-target-url.service";
 export { REDIRECTS_LINK_BLOCK } from "./redirects/redirects.constants";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
-export { RedirectsLinkBlock, RedirectsModule } from "./redirects/redirects.module";
+export { type RedirectsLinkBlock, RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
 export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
-export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
+export { AffectedEntity, type AffectedEntityMeta, type AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
 export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
-export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
+export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, type ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { CurrentUserPermission } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
-export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
-export { User } from "./user-permissions/interfaces/user";
+export { type ContentScope } from "./user-permissions/interfaces/content-scope.interface";
+export { type User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
 export {
-    AccessControlServiceInterface,
-    ContentScopesForUser,
-    Permission,
-    PermissionForUser,
-    PermissionOverrides,
-    PermissionsForUser,
+    type AccessControlServiceInterface,
+    type ContentScopesForUser,
+    type Permission,
+    type PermissionForUser,
+    type PermissionOverrides,
+    type PermissionsForUser,
     UserPermissions,
-    UserPermissionsUserServiceInterface,
-    Users,
+    type UserPermissionsUserServiceInterface,
+    type Users,
 } from "./user-permissions/user-permissions.types";
 export { CreateWarnings } from "./warnings/decorators/create-warnings.decorator";
 export { WarningsModule } from "./warnings/warning.module";

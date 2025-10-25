@@ -8,18 +8,18 @@ import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
 import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
-import { PageTreeConfig } from "./page-tree.module";
-import { createReadApi, PageTreeReadApi } from "./page-tree-read-api";
+import { type PageTreeConfig } from "./page-tree.module";
+import { createReadApi, type PageTreeReadApi } from "./page-tree-read-api";
 import {
-    PageTreeNodeCategory,
-    PageTreeNodeInterface,
-    PageTreeNodeUpdateInputInterface,
+    type PageTreeNodeCategory,
+    type PageTreeNodeInterface,
+    type PageTreeNodeUpdateInputInterface,
     PageTreeNodeVisibility,
     PageTreeNodeVisibility as Visibility,
-    ScopeInterface,
+    type ScopeInterface,
 } from "./types";
 
-export { PageTreeReadApi } from "./page-tree-read-api";
+export { type PageTreeReadApi } from "./page-tree-read-api";
 
 @Injectable()
 export class PageTreeService {

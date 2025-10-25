@@ -3,7 +3,7 @@ import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { AzureAiTranslatorConfig } from "./azure-ai-translator.config";
+import { type AzureAiTranslatorConfig } from "./azure-ai-translator.config";
 import { AZURE_AI_TRANSLATOR_CONFIG } from "./azure-ai-translator.constants";
 import { AzureAiTranslationInput } from "./dto/azure-ai-translation.input";
 

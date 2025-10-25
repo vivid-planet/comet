@@ -4,11 +4,11 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
 
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { User } from "../../user-permissions/interfaces/user";
+import { type User } from "../../user-permissions/interfaces/user";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
 import { SystemUser } from "../../user-permissions/user-permissions.types";
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../decorators/disable-comet-guards.decorator";
-import { AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
+import { type AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
 @Injectable()
 export class CometAuthGuard implements CanActivate {

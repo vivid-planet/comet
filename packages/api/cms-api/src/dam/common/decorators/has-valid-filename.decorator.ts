@@ -7,7 +7,7 @@ import { basename, extname } from "path";
 import { slugifyFilename } from "../../../file-utils/files.utils";
 import { UpdateFileInput } from "../../files/dto/file.input";
 import { UpdateDamFileArgs } from "../../files/dto/update-dam-file.args";
-import { FILE_ENTITY, FileInterface } from "../../files/entities/file.entity";
+import { FILE_ENTITY, type FileInterface } from "../../files/entities/file.entity";
 
 export const HasValidFilename = () => {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types

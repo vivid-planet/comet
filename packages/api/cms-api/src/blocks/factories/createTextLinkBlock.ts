@@ -1,20 +1,20 @@
 import { IsOptional, IsString } from "class-validator";
 
 import {
-    Block,
+    type Block,
     BlockData,
-    BlockDataInterface,
+    type BlockDataInterface,
     BlockInput,
-    BlockInputInterface,
+    type BlockInputInterface,
     blockInputToData,
     createBlock,
-    ExtractBlockInput,
-    SimpleBlockInputInterface,
+    type ExtractBlockInput,
+    type SimpleBlockInputInterface,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
 import { BlockField } from "../decorators/field";
-import { SearchText } from "../search/get-search-text";
+import { type SearchText } from "../search/get-search-text";
 import { BlockFactoryNameOrOptions } from "./types";
 
 interface CreateTextLinkBlockOptions<LinkBlock extends Block> {

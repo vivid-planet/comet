@@ -3,9 +3,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { WarningData } from "src/warnings/dto/warning-data";
 
 import { CreateWarningsServiceInterface } from "../../warnings/decorators/create-warnings.decorator";
-import { DamConfig } from "../dam.config";
+import { type DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
-import { FileInterface } from "./entities/file.entity";
+import { type FileInterface } from "./entities/file.entity";
 
 @Injectable()
 export class FileWarningService implements CreateWarningsServiceInterface<FileInterface> {

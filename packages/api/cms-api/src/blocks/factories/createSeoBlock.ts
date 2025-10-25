@@ -3,24 +3,24 @@ import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested 
 
 import { PixelImageBlock } from "../../dam/blocks/pixel-image.block";
 import {
-    Block,
+    type Block,
     BlockData,
-    BlockDataInterface,
+    type BlockDataInterface,
     BlockInput,
-    BlockInputInterface,
+    type BlockInputInterface,
     blockInputToData,
-    BlockMetaField,
+    type BlockMetaField,
     BlockMetaFieldKind,
-    BlockWarning,
+    type BlockWarning,
     createBlock,
-    ExtractBlockInput,
-    SimpleBlockInputInterface,
-    TraversableTransformBlockResponse,
+    type ExtractBlockInput,
+    type SimpleBlockInputInterface,
+    type TraversableTransformBlockResponse,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
-import { createOptionalBlock, OptionalBlockInputInterface } from "./createOptionalBlock";
+import { createOptionalBlock, type OptionalBlockInputInterface } from "./createOptionalBlock";
 
 export enum SitemapPagePriority {
     _0_0 = "0_0",

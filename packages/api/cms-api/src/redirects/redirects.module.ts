@@ -1,19 +1,19 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ClassProvider, DynamicModule, Global, Module, ModuleMetadata, Type, ValueProvider } from "@nestjs/common";
 
-import { Block } from "../blocks/block";
+import { type Block } from "../blocks/block";
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
-import { createOneOfBlock, OneOfBlock } from "../blocks/factories/createOneOfBlock";
+import { createOneOfBlock, type OneOfBlock } from "../blocks/factories/createOneOfBlock";
 import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
 import { ImportRedirectsCommand } from "./import-redirects.command";
-import { DefaultRedirectTargetUrlService, RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
+import { DefaultRedirectTargetUrlService, type RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
 import { REDIRECTS_LINK_BLOCK, REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
 import { createRedirectsResolver } from "./redirects.resolver";
 import { RedirectsService } from "./redirects.service";
-import { RedirectScopeInterface } from "./types";
+import { type RedirectScopeInterface } from "./types";
 
 type CustomTargets = Record<string, Block>;
 

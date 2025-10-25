@@ -1,6 +1,6 @@
 import { IsEnum } from "class-validator";
 
-import { Block, BlockData, BlockDataInterface, BlockInput, blockInputToData, createBlock, SimpleBlockInputInterface } from "../block";
+import { type Block, BlockData, type BlockDataInterface, BlockInput, blockInputToData, createBlock, type SimpleBlockInputInterface } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
 

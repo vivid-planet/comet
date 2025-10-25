@@ -15,17 +15,17 @@ import { AffectedEntity } from "../../user-permissions/decorators/affected-entit
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
+import { createFileArgs, type FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
-import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
+import { createFindCopiesOfFileInScopeArgs, type FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
 import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
-import { FileInterface } from "./entities/file.entity";
-import { FolderInterface } from "./entities/folder.entity";
+import { type FileInterface } from "./entities/file.entity";
+import { type FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
 export function createFilesResolver({

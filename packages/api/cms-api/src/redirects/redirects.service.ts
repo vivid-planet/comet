@@ -4,13 +4,13 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
 import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeNodeInterface } from "../page-tree/types";
+import { type PageTreeNodeInterface } from "../page-tree/types";
 import { RedirectFilter } from "./dto/redirects.filter";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { type RedirectInterface } from "./entities/redirect-entity.factory";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
-import { RedirectsLinkBlock } from "./redirects.module";
-import { RedirectScopeInterface } from "./types";
+import { type RedirectsLinkBlock } from "./redirects.module";
+import { type RedirectScopeInterface } from "./types";
 
 @Injectable()
 export class RedirectsService {

@@ -10,15 +10,15 @@ import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-tr
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
-import { DamConfig } from "./dam.config";
+import { type DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createDamMediaAlternativeResolver } from "./files/dam-media-alternatives/dam-media-alternative.resolver";
 import { DamMediaAlternative } from "./files/dam-media-alternatives/entities/dam-media-alternative.entity";
-import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
+import { createFileEntity, FILE_ENTITY, type FileInterface } from "./files/entities/file.entity";
 import { DamFileImage } from "./files/entities/file-image.entity";
-import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
+import { createFolderEntity, type FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { FileWarningService } from "./files/file-warning.service";
@@ -36,7 +36,7 @@ import { ImagesService } from "./images/images.service";
 import { IsAllowedImageAspectRatioConstraint } from "./images/validators/is-allowed-aspect-ratio.validator";
 import { IsAllowedImageSizeConstraint } from "./images/validators/is-allowed-image-size.validator";
 import { IsValidImageAspectRatioConstraint } from "./images/validators/is-valid-aspect-ratio.validator";
-import { DamScopeInterface } from "./types";
+import { type DamScopeInterface } from "./types";
 
 interface DamModuleOptions {
     damConfig: Omit<DamConfig, "basePath"> & { basePath?: string };
