@@ -245,7 +245,7 @@ export const EditPage = ({ id }: Props) => {
                                     <DependencyList
                                         query={pageTreeNodeDependentsQuery}
                                         variables={{
-                                            id: pageState?.id ?? "",
+                                            id,
                                         }}
                                     />
                                 ),
