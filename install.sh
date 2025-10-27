@@ -15,6 +15,7 @@ pnpm run copy-project-files
 
 # Lang install
 sh ./demo/admin/intl-update.sh
+sh ./demo/api/intl-update.sh
 sh ./demo/site/intl-update.sh
 sh ./demo/site-pages/intl-update.sh
 
