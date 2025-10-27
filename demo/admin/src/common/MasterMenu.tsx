@@ -45,6 +45,7 @@ import { EditPageNode } from "./EditPageNode";
 export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
     Page,
     Link,
+    PredefinedPage
 };
 
 export const masterMenuData: MasterMenuData = [
