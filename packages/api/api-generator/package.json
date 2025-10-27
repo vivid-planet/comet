@@ -19,9 +19,8 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && tsc -p tsconfig.build.json",
-        "clean": "rimraf lib",
-        "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
+        "build": "tsdown",
+        "dev": "tsdown --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
@@ -55,6 +54,7 @@
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.0.1",
         "ts-jest": "^29.4.0",
+        "tsdown": "^0.15.10",
         "typescript": "5.8.3",
         "uuid": "^11.1.0"
     },
