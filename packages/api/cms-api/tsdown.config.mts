@@ -2,13 +2,14 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
     entry: [
-        "src/**/*.ts",          // match all .ts files to ensure a .d.ts file is generated for each file
-        "!src/**/*.test.*",     // ignore test files
-        "!src/**/*.spec.*",
-        "!src/**/__tests__/**",
-        "!src/**/__mocks__/**"
+        "src/index.ts", // match all .ts files to ensure a .d.ts file is generated for each file
+        // "src/**/*.ts", // match all .ts files to ensure a .d.ts file is generated for each file
+        // "!src/**/*.test.*", // ignore test files
+        // "!src/**/*.spec.*",
+        // "!src/**/__tests__/**",
+        // "!src/**/__mocks__/**",
     ],
-    unbundle: true,             // preserve folder structure
+    unbundle: true, // preserve folder structure
     outDir: "lib",
     format: ["cjs"], // CommonJS for now, TODO: Switch to esm in v9
     platform: "node",
@@ -16,5 +17,8 @@ export default defineConfig({
     dts: true,
     sourcemap: true,
     clean: true,
-    tsconfig: "./tsconfig.build.json"
+    tsconfig: "./tsconfig.build.json",
+    outputOptions: {
+        keepNames: true, // don't change class names during build, necessary for entity discovery in MikroORM
+    }
 });
