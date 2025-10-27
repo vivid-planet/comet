@@ -2,7 +2,8 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { BlobStorageModule } from "../blob-storage/blob-storage.module";
+import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
@@ -10,6 +11,7 @@ import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-tr
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
+import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
 import { type DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
