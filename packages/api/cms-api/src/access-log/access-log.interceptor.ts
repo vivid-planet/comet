@@ -4,12 +4,12 @@ import { Request } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
-import { DamConfig } from "../dam/dam.config";
+import { type DamConfig } from "../dam/dam.config";
 import { DAM_CONFIG } from "../dam/dam.constants";
 import { CurrentUser } from "../user-permissions/dto/current-user";
-import { User } from "../user-permissions/interfaces/user";
+import { type User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
-import { AccessLogConfig } from "./access-log.module";
+import { type AccessLogConfig } from "./access-log.module";
 
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {

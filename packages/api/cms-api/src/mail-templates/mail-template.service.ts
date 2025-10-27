@@ -3,7 +3,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
 import { MailerService } from "../mailer/mailer.service";
-import { isMailTemplate, MAIL_TEMPLATE_METADATA_KEY, MailTemplateInterface, MailTemplateMetadata } from "./mail-template.decorator";
+import { isMailTemplate, MAIL_TEMPLATE_METADATA_KEY, type MailTemplateInterface, MailTemplateMetadata } from "./mail-template.decorator";
 
 @Injectable()
 export class MailTemplateService {

@@ -3,10 +3,10 @@ import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@
 import { rimraf } from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
-import { FileUploadInput } from "../file-utils/file-upload.input";
+import { type FileUploadInput } from "../file-utils/file-upload.input";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
-import { FileUploadsConfig } from "./file-uploads.config";
+import { type FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 import { FileUploadsService } from "./file-uploads.service";
 import { FileUploadsFileInterceptor } from "./file-uploads-file.interceptor";

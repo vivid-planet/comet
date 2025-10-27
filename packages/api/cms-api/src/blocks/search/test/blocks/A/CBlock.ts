@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 
 import { BlockData, BlockInput, blockInputToData, createBlock } from "../../../../block";
 import { BlockField } from "../../../../decorators/field";
-import { SearchText } from "../../../get-search-text";
+import { type SearchText } from "../../../get-search-text";
 
 class CBlockData extends BlockData {
     @BlockField()

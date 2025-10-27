@@ -4,7 +4,7 @@ import { Injectable, Scope } from "@nestjs/common";
 import DataLoader from "dataloader";
 
 import { AttachedDocument } from "./entities/attached-document.entity";
-import { PageTreeNodeInterface } from "./types";
+import { type PageTreeNodeInterface } from "./types";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AttachedDocumentLoaderService {

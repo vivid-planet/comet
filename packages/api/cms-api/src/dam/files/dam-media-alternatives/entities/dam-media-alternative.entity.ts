@@ -3,7 +3,7 @@ import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { ScopedEntity } from "../../../../user-permissions/decorators/scoped-entity.decorator";
-import { FILE_ENTITY, FileInterface } from "../../entities/file.entity";
+import { FILE_ENTITY, type FileInterface } from "../../entities/file.entity";
 
 export enum DamMediaAlternativeType {
     captions = "captions",

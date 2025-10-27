@@ -1,7 +1,7 @@
 import { IsOptional, IsString, Matches } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "./base-video-block";
-import { BlockDataInterface, blockInputToData, createBlock } from "./block";
+import { type BlockDataInterface, blockInputToData, createBlock } from "./block";
 import { BlockField } from "./decorators/field";
 
 class VimeoVideoBlockData extends BaseVideoBlockData {

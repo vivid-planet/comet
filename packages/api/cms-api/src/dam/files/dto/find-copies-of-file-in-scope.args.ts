@@ -4,7 +4,7 @@ import { IsString, ValidateNested } from "class-validator";
 
 import { IsUndefinable } from "../../../common/validators/is-undefinable";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
-import { DamScopeInterface } from "../../types";
+import { type DamScopeInterface } from "../../types";
 
 export interface FindCopiesOfFileInScopeArgsInterface {
     id: string;

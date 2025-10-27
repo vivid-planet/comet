@@ -28,21 +28,21 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometValidationException } from "../../common/errors/validation.exception";
-import { FileUploadInput } from "../../file-utils/file-upload.input";
+import { type FileUploadInput } from "../../file-utils/file-upload.input";
 import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { DamConfig } from "../dam.config";
+import { type AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { type DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createUploadFileBody, ReplaceFileByIdBody, UploadFileBodyInterface } from "./dto/file.body";
+import { createUploadFileBody, ReplaceFileByIdBody, type UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
-import { FileInterface } from "./entities/file.entity";
+import { type FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
 

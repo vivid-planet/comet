@@ -8,10 +8,10 @@ import { SkipBuild } from "../../builds/skip-build.decorator";
 import { DisablePermissionCheck, RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "../../user-permissions/dto/content-scope";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { type AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
 interface AuthResolverConfig {

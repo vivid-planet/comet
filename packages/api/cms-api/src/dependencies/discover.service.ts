@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 import { ObjectTypeMetadata } from "@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata";
 
-import { Block } from "../blocks/block";
+import { type Block } from "../blocks/block";
 import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
 import { ROOT_BLOCK_ENTITY_METADATA_KEY, RootBlockEntityOptions } from "../blocks/decorators/root-block-entity";
 

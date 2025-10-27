@@ -1,7 +1,14 @@
 import { IsOptional, IsUUID } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-video-block";
-import { BlockDataInterface, BlockIndexData, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../../blocks/block";
+import {
+    type BlockDataInterface,
+    type BlockIndexData,
+    blockInputToData,
+    type BlockMetaField,
+    BlockMetaFieldKind,
+    createBlock,
+} from "../../../blocks/block";
 import { AnnotationBlockMeta, BlockField } from "../../../blocks/decorators/field";
 import { typeSafeBlockMigrationPipe } from "../../../blocks/migrations/typeSafeBlockMigrationPipe";
 import { FILE_ENTITY } from "../../files/entities/file.entity";

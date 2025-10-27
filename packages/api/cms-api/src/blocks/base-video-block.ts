@@ -1,7 +1,7 @@
 import { IsBoolean, IsOptional } from "class-validator";
 
 import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
-import { BlockData, BlockDataInterface, BlockInput, blockInputToData, ExtractBlockInput } from "./block";
+import { BlockData, type BlockDataInterface, BlockInput, blockInputToData, type ExtractBlockInput } from "./block";
 import { ChildBlock } from "./decorators/child-block";
 import { ChildBlockInput } from "./decorators/child-block-input";
 import { BlockField } from "./decorators/field";

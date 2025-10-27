@@ -5,7 +5,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { type AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FoldersService } from "./folders.service";
 
 export const createFoldersController = ({ damBasePath }: { damBasePath: string }): Type<unknown> => {

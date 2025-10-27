@@ -6,11 +6,11 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
-import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "../decorators/affected-entity.decorator";
+import { AFFECTED_ENTITY_METADATA_KEY, type AffectedEntityMeta } from "../decorators/affected-entity.decorator";
 import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, type ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
 import { CurrentUser } from "../dto/current-user";
-import { Permission } from "../user-permissions.types";
+import { type Permission } from "../user-permissions.types";
 import { UserPermissionsGuard } from "./user-permissions.guard";
 
 const permissions = {

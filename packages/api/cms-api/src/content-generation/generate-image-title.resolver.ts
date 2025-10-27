@@ -5,7 +5,7 @@ import { IsLocale, IsUUID } from "class-validator";
 import { IsUndefinable } from "../common/validators/is-undefinable";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
-import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
+import { type ContentGenerationServiceInterface } from "./content-generation-service.interface";
 
 @ArgsType()
 class GenerateImageTitleArgs {

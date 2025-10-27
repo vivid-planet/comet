@@ -4,15 +4,15 @@ import { IsEnum, IsString } from "class-validator";
 import { PixelImageBlock } from "../../dam/blocks/pixel-image.block";
 import { IsAllowedImageAspectRatio } from "../../dam/images/validators/is-allowed-aspect-ratio.validator";
 import {
-    Block,
+    type Block,
     BlockData,
-    BlockDataInterface,
+    type BlockDataInterface,
     BlockInput,
-    BlockInputInterface,
+    type BlockInputInterface,
     blockInputToData,
     createBlock,
-    ExtractBlockInput,
-    SimpleBlockInputInterface,
+    type ExtractBlockInput,
+    type SimpleBlockInputInterface,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";

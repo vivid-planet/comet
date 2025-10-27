@@ -2,7 +2,7 @@ import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
 import { Command, CommandRunner } from "nest-commander";
 
-import { MailTemplateInterface } from "./mail-template.decorator";
+import { type MailTemplateInterface } from "./mail-template.decorator";
 import { MailTemplateService } from "./mail-template.service";
 
 @Command({

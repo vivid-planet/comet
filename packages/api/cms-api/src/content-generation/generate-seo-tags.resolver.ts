@@ -4,7 +4,7 @@ import { IsLocale, IsString } from "class-validator";
 
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
-import { ContentGenerationServiceInterface, SeoTags } from "./content-generation-service.interface";
+import { type ContentGenerationServiceInterface, SeoTags } from "./content-generation-service.interface";
 
 @ArgsType()
 class GenerateSeoTagsArgs {

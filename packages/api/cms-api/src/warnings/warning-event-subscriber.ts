@@ -2,14 +2,14 @@ import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
-import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
+import { type BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
 import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
 import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { SCOPED_ENTITY_METADATA_KEY, type ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
 import { WarningService } from "./warning.service";

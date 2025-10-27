@@ -8,12 +8,12 @@ import { BlobStorageBackendService } from "../../blob-storage/backends/blob-stor
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { DamConfig } from "../dam.config";
+import { type DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
-import { DamScopeInterface } from "../types";
-import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
+import { type DamScopeInterface } from "../types";
+import { DamFolderListPositionArgs, type FolderArgsInterface } from "./dto/folder.args";
 import { UpdateFolderInput } from "./dto/folder.input";
-import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
+import { FOLDER_TABLE_NAME, type FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
 const withFoldersSelect = (

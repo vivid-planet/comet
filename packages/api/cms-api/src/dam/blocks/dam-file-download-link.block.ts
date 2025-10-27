@@ -1,6 +1,14 @@
 import { IsEnum, IsUUID } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
+import {
+    BlockData,
+    type BlockIndexData,
+    BlockInput,
+    blockInputToData,
+    type BlockMetaField,
+    BlockMetaFieldKind,
+    createBlock,
+} from "../../blocks/block";
 import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { FILE_ENTITY } from "../files/entities/file.entity";

@@ -11,7 +11,7 @@ import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";

@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Readable } from "stream";
 
-import { BlobStorageConfig } from "../blob-storage.config";
+import { type BlobStorageConfig } from "../blob-storage.config";
 import { BLOB_STORAGE_CONFIG } from "../blob-storage.constants";
 import { BlobStorageFileUploadInterface } from "../dto/blob-storage-file-upload.interface";
 import { createHashedPath } from "../utils/create-hashed-path.util";
 import { BlobStorageAzureStorage } from "./azure/blob-storage-azure.storage";
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage-backend.interface";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "./blob-storage-backend.interface";
 import { BlobStorageFileStorage } from "./file/blob-storage-file.storage";
 import { BlobStorageS3Storage } from "./s3/blob-storage-s3.storage";
 

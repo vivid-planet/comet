@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
-import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
+import { type BlockContext, type BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
-import { DamScopeInterface } from "../types";
+import { type DamScopeInterface } from "../types";
 import { DamFileDownloadLinkBlockData, OpenFileTypeMethod } from "./dam-file-download-link.block";
 
 type File = {
