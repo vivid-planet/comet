@@ -106,7 +106,7 @@ export class FilesService {
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
         @InjectRepository(DamMediaAlternative) private readonly damMediaAlternativesRepository: EntityRepository<DamMediaAlternative>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
-        private readonly foldersService: FoldersService,
+        @Inject(forwardRef(() => FoldersService)) private readonly foldersService: FoldersService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,

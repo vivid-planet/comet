@@ -26,7 +26,7 @@ export class PaginatedPageTreeNodesArgsFactory {
             @ValidateNested()
             scope: ScopeInterface;
 
-            @Field({ nullable: true })
+            @Field(() => String, { nullable: true })
             @IsOptional()
             category?: PageTreeNodeCategory;
 

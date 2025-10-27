@@ -27,7 +27,7 @@ export class PageTreeService {
         @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
         @InjectRepository(AttachedDocument) public readonly attachedDocumentsRepository: EntityRepository<AttachedDocument>,
         private readonly entityManager: EntityManager,
-        private readonly redirectsService: RedirectsService,
+        @Inject(forwardRef(() => RedirectsService)) private readonly redirectsService: RedirectsService,
         @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
     ) {}
 
