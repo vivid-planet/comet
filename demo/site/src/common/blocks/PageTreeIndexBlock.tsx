@@ -1,6 +1,7 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import NextLink from "next/link";
 
 import { type LoadedData, type PageTreeNode } from "./PageTreeIndexBlock.loader";
 import styles from "./PageTreeIndexBlock.module.scss";
@@ -28,9 +29,9 @@ function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
         <ul className={styles.pageTreeIndexBlock__list}>
             {nodes.map((node) => (
                 <li key={node.id} className={styles.pageTreeIndexBlock__listItem}>
-                    <a href={node.path} className={styles.pageTreeIndexBlock__link}>
+                    <NextLink href={node.path} className={styles.pageTreeIndexBlock__link}>
                         {node.name}
-                    </a>
+                    </NextLink>
                     {node.children.length > 0 && renderTree(node.children)}
                 </li>
             ))}
