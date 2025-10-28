@@ -46,8 +46,8 @@ jobs:
             - name: Install Dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Copy schema files
-              run: pnpm run copy-schema-files
+            - name: Setup project for CI run
+              run: pnpm run setup:ci
 
             - name: Get version to be published
               run: |

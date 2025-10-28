@@ -144,8 +144,7 @@ export function RouterConfirmationDialog(inProps: RouterConfirmationDialogProps)
             <DialogActions>
                 <DiscardButton
                     startIcon={<Delete />}
-                    color="error"
-                    variant="outlined"
+                    variant="destructive"
                     onClick={() => handleClose(PromptAction.Discard)}
                     {...slotProps?.discardButton}
                 >

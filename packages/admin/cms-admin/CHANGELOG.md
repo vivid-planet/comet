@@ -1,5 +1,68 @@
 # @comet/cms-admin
 
+## 8.5.1
+
+### Patch Changes
+
+- 32592f9: Fix a rerendering bug in `BlocksFinalForm` caused by automatic batching in React 18
+    - @comet/admin@8.5.1
+    - @comet/admin-date-time@8.5.1
+    - @comet/admin-icons@8.5.1
+    - @comet/admin-rte@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-date-time@8.5.0
+    - @comet/admin-rte@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-date-time@8.4.2
+    - @comet/admin-rte@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- da30d46: Remove "Usages" column from DAM
+
+    The `dependents` field resolver triggers multiple refreshes of the `block_index_dependencies` view, which seems to crash the API.
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-date-time@8.4.1
+    - @comet/admin-rte@8.4.1
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- f14b962: Add logging to mailer-module, can be disabled
+- c8f5d89: Add support for literal arrays to block meta
+
+### Patch Changes
+
+- 93f5d98: Fix DAM not rendering all items and its scrolling behavior when rendered in a Dialog
+- Updated dependencies [a85e7cb]
+- Updated dependencies [ff6d79a]
+- Updated dependencies [ff6d79a]
+    - @comet/admin@8.4.0
+    - @comet/admin-date-time@8.4.0
+    - @comet/admin-icons@8.4.0
+    - @comet/admin-rte@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes

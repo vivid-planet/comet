@@ -10,6 +10,7 @@ export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
+    navigateOnCreate: false,
     fields: [
         {
             type: "fieldSet",

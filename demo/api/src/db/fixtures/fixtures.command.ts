@@ -32,15 +32,6 @@ import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
-export interface PageTreeNodesFixtures {
-    home?: PageTreeNodeInterface;
-    sub?: PageTreeNodeInterface;
-    test2?: PageTreeNodeInterface;
-    test3?: PageTreeNodeInterface;
-    link1?: PageTreeNodeInterface;
-    testSiteVisibility?: PageTreeNodeInterface;
-}
-
 const getDefaultPageInput = (): PageInput => {
     const pageInput = new PageInput();
     pageInput.seo = generateSeoBlock();

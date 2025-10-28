@@ -9,6 +9,7 @@ import {
     ContentGenerationConfigProvider,
     ContentScopeIndicator,
     createUsePage,
+    DependencyList,
     openSitePreviewWindow,
     PageName,
     useBlockContext,
@@ -33,6 +34,25 @@ import {
 interface Props {
     id: string;
 }
+
+const pageTreeNodeDependentsQuery = gql`
+    query PageTreeNodeDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+        item: pageTreeNode(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                }
+                totalCount
+            }
+        }
+    }
+`;
 
 const usePage = createUsePage({
     rootBlocks: {
@@ -213,6 +233,22 @@ export const EditPage = ({ id }: Props) => {
                                     </BlockAdminTabLabel>
                                 ),
                                 content: rootBlocksApi.seo.adminUI,
+                            },
+                            {
+                                key: "dependents",
+                                label: (
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                        <FormattedMessage id="pages.pages.page.edit.dependents" defaultMessage="Dependents" />
+                                    </BlockAdminTabLabel>
+                                ),
+                                content: (
+                                    <DependencyList
+                                        query={pageTreeNodeDependentsQuery}
+                                        variables={{
+                                            id,
+                                        }}
+                                    />
+                                ),
                             },
                         ]}
                     </BlockPreviewWithTabs>

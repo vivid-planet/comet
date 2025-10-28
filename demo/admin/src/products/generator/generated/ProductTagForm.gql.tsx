@@ -7,32 +7,26 @@ export const productTagFormFragment = gql`
         }
     `;
 export const productTagQuery = gql`
-            query ProductTag($id: ID!) {
-                productTag(id: $id) {
-                    id
-                    updatedAt
-                    ...ProductTagForm
-                }
-            }
-            ${productTagFormFragment}
-        `;
+    query ProductTag($id: ID!) {
+        productTag(id: $id) {
+            id updatedAt ...ProductTagForm
+        }
+    }
+    ${productTagFormFragment}
+    `;
 export const createProductTagMutation = gql`
-            mutation CreateProductTag($input: ProductTagInput!) {
-                createProductTag(input: $input) {
-                    id
-                    updatedAt
-                    ...ProductTagForm
-                }
-            }
-            ${productTagFormFragment}
-        `;
+    mutation CreateProductTag($input: ProductTagInput!) {
+        createProductTag(input: $input) {
+            id updatedAt ...ProductTagForm
+        }
+    }
+    ${productTagFormFragment}
+    `;
 export const updateProductTagMutation = gql`
-            mutation UpdateProductTag($id: ID!, $input: ProductTagUpdateInput!) {
-                updateProductTag(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...ProductTagForm
-                }
-            }
-            ${productTagFormFragment}
-        `;
+    mutation UpdateProductTag($id: ID!, $input: ProductTagUpdateInput!) {
+        updateProductTag(id: $id, input: $input) {
+            id updatedAt ...ProductTagForm
+        }
+    }
+    ${productTagFormFragment}
+    `;
