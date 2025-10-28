@@ -29,7 +29,7 @@ function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
             {nodes.map((node) => (
                 <li key={node.id} className={styles.pageTreeIndexBlock__listItem}>
                     <a href={node.path} className={styles.pageTreeIndexBlock__link}>
-                        {node.name || node.path}
+                        {node.name}
                     </a>
                     {node.children.length > 0 && renderTree(node.children)}
                 </li>
