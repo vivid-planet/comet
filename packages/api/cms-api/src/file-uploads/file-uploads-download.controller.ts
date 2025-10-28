@@ -49,12 +49,14 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
         @Get(":hash/:id/:timeout")
         async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
-            await this.streamFile({ hash, ...params }, res, range, false);
+            res.setHeader("Content-Disposition", "attachment");
+            await this.streamFile({ hash, ...params }, res, range);
         }
 
         @Get("preview/:hash/:id/:timeout")
         async preview(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
-            await this.streamFile({ hash, ...params }, res, range, true);
+            res.setHeader("Content-Disposition", "inline");
+            await this.streamFile({ hash, ...params }, res, range);
         }
 
         private async streamFile({ hash, ...params }: HashDownloadParams, res: Response, range?: string, forceInline = false) {
@@ -79,9 +81,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 throw new NotFoundException();
             }
 
-            const dispositionType = forceInline ? "inline" : "attachment";
             const headers = {
-                "content-disposition": `${dispositionType}; filename="${file.name}"`,
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
                 "content-length": file.size,
