@@ -1,7 +1,7 @@
 import { type BlockLoader, gql } from "@comet/site-nextjs";
 import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 
-import { type GQLPrebuildPageDataListSitemapQuery, type GQLPrebuildPageDataListSitemapQueryVariables } from "./PageTreeIndexBlock.loader.generated";
+import { type GQLPageTreeIndexDataQuery, type GQLPageTreeIndexDataQueryVariables } from "./PageTreeIndexBlock.loader.generated";
 
 export type PageTreeNode = {
     id: string;
@@ -19,9 +19,9 @@ export const loader: BlockLoader<PageTreeIndexBlockData> = async ({ graphQLFetch
     const allNodes: PageTreeNode[] = [];
 
     do {
-        const { paginatedPageTreeNodes } = await graphQLFetch<GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables>(
+        const { paginatedPageTreeNodes } = await graphQLFetch<GQLPageTreeIndexDataQuery, GQLPageTreeIndexDataQueryVariables>(
             gql`
-                query PrebuildPageDataListSitemap($scope: PageTreeNodeScopeInput!, $offset: Int, $limit: Int) {
+                query PageTreeIndexData($scope: PageTreeNodeScopeInput!, $offset: Int, $limit: Int) {
                     paginatedPageTreeNodes(scope: $scope, offset: $offset, limit: $limit) {
                         nodes {
                             id
