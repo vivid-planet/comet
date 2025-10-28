@@ -17,6 +17,7 @@ import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
 import { FullWidthImageBlock } from "@src/documents/pages/blocks/FullWidthImageBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
+import { ProductListBlock } from "@src/documents/pages/blocks/ProductListBlock";
 import { SliderBlock } from "@src/documents/pages/blocks/SliderBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
@@ -44,6 +45,7 @@ const supportedBlocks: SupportedBlocks = {
     layout: (props) => <LayoutBlock data={props} />,
     textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
+    productList: (props) => <ProductListBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

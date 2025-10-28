@@ -14,6 +14,7 @@ import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
 import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
 import { NewsListBlock } from "@src/news/blocks/news-list.block";
+import { ProductListBlock } from "@src/products/blocks/product-list.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
@@ -43,6 +44,7 @@ const supportedBlocks = {
     layout: LayoutBlock,
     textImage: TextImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    productList: ProductListBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

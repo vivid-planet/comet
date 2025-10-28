@@ -34,7 +34,12 @@ export type ButtonProps<C extends ElementType = "button"> = Omit<MuiButtonProps<
     };
 
 interface ButtonTypeMap<C extends ElementType = "button"> extends OverridableTypeMap {
-    props: ButtonProps<C>;
+    props: ButtonProps<C> & {
+        /**
+         * @deprecated Use variant instead. The button's color is controlled by the variant prop.
+         */
+        color?: string;
+    };
     defaultComponent: C;
 }
 
