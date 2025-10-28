@@ -13,10 +13,6 @@ export type PageTreeNode = {
 export type LoadedData = PageTreeNode[];
 
 export const loader: BlockLoader<PageTreeIndexBlockData> = async ({ graphQLFetch, scope }): Promise<LoadedData> => {
-    if (!scope) {
-        return [];
-    }
-
     let totalCount = 0;
     let currentCount = 0;
     const pageSize = 100;
