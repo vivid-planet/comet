@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Add API endpoint for file preview
+File Uploads: add preview endpoint for files
