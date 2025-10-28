@@ -1,4 +1,4 @@
-import { BlocksBlock, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
+import { BlocksBlock, PreviewSkeleton, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
 import { type AccordionContentBlockData, type AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
@@ -53,7 +53,9 @@ export const AccordionItemBlock = withPreview(
                     className={clsx(styles.contentWrapper, isExpanded && styles.contentWrapperExpanded)}
                 >
                     <div className={styles.contentWrapperInner}>
-                        <AccordionContentBlock data={content} />
+                        <PreviewSkeleton hasContent={isExpanded}>
+                            <AccordionContentBlock data={content} />
+                        </PreviewSkeleton>
                     </div>
                 </section>
             </>
