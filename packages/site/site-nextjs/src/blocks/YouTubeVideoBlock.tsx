@@ -42,16 +42,19 @@ export const YouTubeVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
-        const iframeRef = useRef<HTMLIFrameElement>(null);
+        const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
+        const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
+            setIframeElement(node);
+        }, []);
         const inViewRef = useRef<HTMLDivElement>(null);
 
-        const pauseYouTubeVideo = () => {
-            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
-        };
+        const pauseYouTubeVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
+        }, [iframeElement]);
 
-        const playYouTubeVideo = () => {
-            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
-        };
+        const playYouTubeVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
+        }, [iframeElement]);
 
         const handleInView = useCallback(
             (inView: boolean) => {
@@ -64,10 +67,10 @@ export const YouTubeVideoBlock = withPreview(
                     }
                 }
             },
-            [autoplay, isHandledManually],
+            [autoplay, isHandledManually, playYouTubeVideo, pauseYouTubeVideo],
         );
 
-        useIsElementInViewport(inViewRef, handleInView, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
+        useIsElementInViewport(inViewRef, handleInView);
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
