@@ -1,9 +1,10 @@
 "use client";
 import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
+import { PlayPauseButton } from "./helpers/PlayPauseButton";
 import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import styles from "./VimeoVideoBlock.module.scss";
 
@@ -45,16 +46,34 @@ export const VimeoVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef<HTMLDivElement>(null);
-        const iframeRef = useRef<HTMLIFrameElement>(null);
+        const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
+        const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
+            setIframeElement(node);
+        }, []);
+        const [isHandledManually, setIsHandledManually] = useState(!autoplay);
 
-        const handleVisibilityChange = (isVisible: boolean) => {
-            iframeRef.current?.contentWindow?.postMessage(
-                JSON.stringify({ method: isVisible && autoplay ? "play" : "pause" }),
-                "https://player.vimeo.com",
-            );
-        };
+        const pauseVimeoVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
+        }, [iframeElement]);
 
-        useIsElementInViewport(inViewRef, handleVisibilityChange);
+        const playVimeoVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
+        }, [iframeElement]);
+
+        const handleInView = useCallback(
+            (isVisible: boolean) => {
+                if (!isHandledManually) {
+                    if (isVisible && autoplay) {
+                        playVimeoVideo();
+                    } else {
+                        pauseVimeoVideo();
+                    }
+                }
+            },
+            [autoplay, isHandledManually, playVimeoVideo, pauseVimeoVideo],
+        );
+
+        useIsElementInViewport(inViewRef, handleInView);
 
         if (!vimeoIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -106,6 +125,22 @@ export const VimeoVideoBlock = withPreview(
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                        {!showControls && (
+                            <PlayPauseButton
+                                className={styles.playPause}
+                                isPlaying={isHandledManually}
+                                onClick={() => {
+                                    setIsHandledManually(!isHandledManually);
+                                    if (iframeElement) {
+                                        if (isHandledManually) {
+                                            playVimeoVideo();
+                                        } else {
+                                            pauseVimeoVideo();
+                                        }
+                                    }
+                                }}
+                            />
+                        )}
                     </div>
                 )}
             </>
