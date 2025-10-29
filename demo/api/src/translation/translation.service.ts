@@ -15,7 +15,7 @@ export class TranslationService {
                 // Locale of the application
                 locale: language,
                 // Locale of the fallback defaultMessage
-                defaultLocale: language,
+                defaultLocale: "en",
                 messages: await loadMessages(language),
             },
             this.intlCache,
