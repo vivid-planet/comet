@@ -2,7 +2,7 @@
 
 import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useState } from "react";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import styles from "./DamVideoBlock.module.scss";
@@ -36,22 +36,25 @@ export const DamVideoBlock = withPreview(
         const [isHandledManually, setIsHandledManually] = useState(!autoplay);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
-        const videoRef = useRef<HTMLVideoElement>(null);
+        const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
+        const videoRef = useCallback((node: HTMLVideoElement | null) => {
+            setVideoElement(node);
+        }, []);
 
         const handleInView = useCallback(
             (inView: boolean) => {
-                if (autoplay && videoRef.current && !isHandledManually) {
+                if (autoplay && videoElement && !isHandledManually) {
                     if (inView) {
-                        videoRef.current.play();
+                        videoElement.play();
                     } else {
-                        videoRef.current.pause();
+                        videoElement.pause();
                     }
                 }
             },
-            [autoplay, isHandledManually],
+            [autoplay, isHandledManually, videoElement],
         );
 
-        useIsElementInViewport(videoRef, handleInView, (hasPreviewImage && !showPreviewImage) || !hasPreviewImage);
+        useIsElementInViewport({ current: videoElement }, handleInView);
 
         return (
             <>
@@ -99,11 +102,11 @@ export const DamVideoBlock = withPreview(
                                 isPlaying={isHandledManually}
                                 onClick={() => {
                                     setIsHandledManually(!isHandledManually);
-                                    if (videoRef.current) {
-                                        if (videoRef.current.paused) {
-                                            videoRef.current.play();
+                                    if (videoElement) {
+                                        if (videoElement.paused) {
+                                            videoElement.play();
                                         } else {
-                                            videoRef.current.pause();
+                                            videoElement.pause();
                                         }
                                     }
                                 }}

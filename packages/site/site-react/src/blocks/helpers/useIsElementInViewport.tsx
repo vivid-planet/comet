@@ -2,9 +2,9 @@
 
 import { type RefObject, useEffect } from "react";
 
-export const useIsElementInViewport = (ref: RefObject<Element>, callback: (inView: boolean) => void, enabled = true) => {
+export const useIsElementInViewport = (ref: RefObject<Element>, callback: (inView: boolean) => void) => {
     useEffect(() => {
-        if (!enabled || !ref.current) return;
+        if (!ref.current) return;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -18,5 +18,5 @@ export const useIsElementInViewport = (ref: RefObject<Element>, callback: (inVie
         return () => {
             observer.disconnect();
         };
-    }, [ref, callback, enabled]);
+    }, [ref, callback]);
 };
