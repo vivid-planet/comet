@@ -59,9 +59,7 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
 
     
 
-    type FormValues = GQLProductHighlightFormFragment & {
-                productCategory?: { id: string; title: string };
-            };
+    type FormValues = GQLProductHighlightFormFragment & { productCategory?: { id: string; title: string };  };
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -85,7 +83,7 @@ id?: string;
         const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
             ? {
                 ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
-                productCategory: data.productHighlight.product?.category
+                productCategory: data.productHighlight.product?.category, 
             }
             : {
                 
@@ -110,7 +108,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        product: formValues.product ? formValues.product.id : null,
+        product: formValues.product ? formValues.product.id : null, 
     };
 
             if (mode === "edit") {
@@ -329,7 +327,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -379,7 +377,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {
@@ -526,7 +524,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -576,7 +574,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {
@@ -724,7 +722,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -774,7 +772,7 @@ id?: string;
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
         ...formValues,
-        category: formValues.category?.id,
+        category: formValues.category?.id, 
     };
 
             if (mode === "edit") {

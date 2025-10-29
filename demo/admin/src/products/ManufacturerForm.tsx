@@ -24,29 +24,32 @@ import { createManufacturerMutation, manufacturerFormFragment, manufacturerQuery
 import {
     type GQLCreateManufacturerMutation,
     type GQLCreateManufacturerMutationVariables,
-    type GQLManufacturerFormDetailsFragment,
+    type GQLManufacturerFormDetailsHandmadeFragment,
     type GQLManufacturerQuery,
     type GQLManufacturerQueryVariables,
     type GQLUpdateManufacturerMutation,
     type GQLUpdateManufacturerMutationVariables,
 } from "./ManufacturerForm.gql.generated";
 
-type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressAsEmbeddable"> & {
+type FormValues = Omit<GQLManufacturerFormDetailsHandmadeFragment, "address" | "addressAsEmbeddable"> & {
     useAlternativeAddress: boolean;
     address:
-        | (Omit<NonNullable<GQLManufacturerFormDetailsFragment["address"]>, "streetNumber" | "alternativeAddress"> & {
+        | (Omit<NonNullable<GQLManufacturerFormDetailsHandmadeFragment["address"]>, "streetNumber" | "alternativeAddress"> & {
               streetNumber: string | null;
               alternativeAddress:
-                  | (Omit<NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["address"]>["alternativeAddress"]>, "streetNumber"> & {
+                  | (Omit<NonNullable<NonNullable<GQLManufacturerFormDetailsHandmadeFragment["address"]>["alternativeAddress"]>, "streetNumber"> & {
                         streetNumber: string | null;
                     })
                   | null;
           })
         | null;
-    addressAsEmbeddable: Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "alternativeAddress"> & {
+    addressAsEmbeddable: Omit<
+        NonNullable<GQLManufacturerFormDetailsHandmadeFragment["addressAsEmbeddable"]>,
+        "streetNumber" | "alternativeAddress"
+    > & {
         streetNumber: string | null;
         alternativeAddress: Omit<
-            NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
+            NonNullable<NonNullable<GQLManufacturerFormDetailsHandmadeFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
             "streetNumber"
         > & {
             streetNumber: string | null;
@@ -70,7 +73,9 @@ export function ManufacturerForm({ id }: FormProps) {
     );
 
     const initialValues = useMemo<Partial<FormValues>>(() => {
-        const filteredData = data ? filterByFragment<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
+        const filteredData = data
+            ? filterByFragment<GQLManufacturerFormDetailsHandmadeFragment>(manufacturerFormFragment, data.manufacturer)
+            : undefined;
         if (!filteredData) return {};
         return {
             ...filteredData,
