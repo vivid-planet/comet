@@ -59,7 +59,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             await this.streamFile({ hash, ...params }, res, range);
         }
 
-        private async streamFile({ hash, ...params }: HashDownloadParams, res: Response, range?: string, forceInline = false) {
+        private async streamFile({ hash, ...params }: HashDownloadParams, res: Response, range?: string) {
             if (!this.isValidHash(hash, params)) {
                 throw new BadRequestException("Invalid hash");
             }
