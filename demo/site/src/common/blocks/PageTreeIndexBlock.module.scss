@@ -1,22 +1,20 @@
-.pageTreeIndexBlock {
-    &__layoutContent {
-        grid-column: 3 / -3;
-    }
+.root {
+    grid-column: 3 / -3;
+}
 
-    &__list {
-        list-style: disc;
-        color: var(--palette-primary-main);
-        padding-left: 0;
-    }
+.list {
+    list-style: disc;
+    color: var(--palette-primary-main);
+    padding-left: 0;
+}
 
-    &__listItem {
-        line-height: 26px;
-        padding-top: var(--spacing-s300);
-        margin-left: var(--spacing-s500);
-    }
+.listItem {
+    line-height: 26px;
+    padding-top: var(--spacing-s300);
+    margin-left: var(--spacing-s500);
+}
 
-    &__link {
-        color: var(--palette-primary-main);
-        text-underline-offset: 10px;
-    }
+.link {
+    color: var(--palette-primary-main);
+    text-underline-offset: 10px;
 }
