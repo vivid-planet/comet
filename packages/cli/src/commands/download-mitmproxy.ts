@@ -93,7 +93,7 @@ export const downloadMitmproxyCommand = new Command("download-mitmproxy")
         }
 
         // Download and extract new version if not already present
-        const filename = `${baseDir}/${dirname}/mitmproxy`;
+        const filename = `${baseDir}/${dirname}`;
         if (fs.existsSync(filename)) {
             console.log(`Mitmproxy version ${version} already installed.`);
         } else {
@@ -104,6 +104,10 @@ export const downloadMitmproxyCommand = new Command("download-mitmproxy")
 
         // Create symlink to have a consistent name
         console.log(`Create symlink to mitmweb binary on ${baseDir}/.bin/mitmweb`);
-        execSync(`ln -sf ../${dirname}/mitmweb ${baseDir}/.bin/mitmweb`);
+        if (os.platform() === "darwin") {
+            execSync(`ln -sf ../${dirname}/mitmproxy.app/Contents/MacOS/mitmweb ${baseDir}/.bin/mitmweb`);
+        } else {
+            execSync(`ln -sf ../${dirname}/mitmweb ${baseDir}/.bin/mitmweb`);
+        }
         console.log("=== Finished installing Mitmproxy ===");
     });
