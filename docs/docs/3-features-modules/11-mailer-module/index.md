@@ -24,7 +24,7 @@ MAILER_SEND_ALL_MAILS_TO?: string[];
 @IsArray()
 @Transform(({ value }) => value.split(","))
 @IsEmail({}, { each: true })
-MAILER_SEND_ALL_MAILS_BCC?: string;
+MAILER_SEND_ALL_MAILS_BCC?: string[];
 ```
 
 #### /api/src/config/config.ts

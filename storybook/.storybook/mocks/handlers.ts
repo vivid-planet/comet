@@ -7,6 +7,7 @@ import { http, HttpResponse } from "msw";
 
 import { currentUserHandler } from "./currentUserHandler";
 import { fileUploadsHandler } from "./handler/fileUploads";
+import { folderHandler, subfolderHandler } from "./handler/folders";
 
 type StringFilter = {
     contains: string;
@@ -20,7 +21,8 @@ type DateFilter = {
 type LaunchesPastFilter = {
     launch_date_local: DateFilter;
     mission_name: StringFilter;
-    or: LaunchesPastFilter[];
+    or?: LaunchesPastFilter[];
+    and?: LaunchesPastFilter[];
 };
 
 type Launch = {
@@ -99,6 +101,7 @@ input LaunchesPastFilter {
     launch_date_local: DateFilter
     mission_name: StringFilter
     or: [LaunchesPastFilter!]
+    and: [LaunchesPastFilter!]
 }
 
 type Manufacturer {
@@ -160,12 +163,19 @@ type ContentScopeWithLabel {
   label: JSONObject!
 }
 
+type Folder {
+  id: ID!
+  name: String!
+}
+
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
     manufacturers(search: String): [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
     currentUser: CurrentUser!
+    folder(id: ID): Folder
+    subfolder(id: ID): [Folder!]!
 }
 `;
 
@@ -212,8 +222,25 @@ const launchesPastResult: GraphQLFieldResolver<
                 }
             }
 
-            if (filter.or.length > 0) {
+            if (filter.or != null && filter.or.length > 0) {
                 return filter.or.some((f) => {
+                    if (f.mission_name) {
+                        if (f.mission_name.equal) {
+                            return launch.mission_name === f.mission_name.equal;
+                        }
+                        if (f.mission_name.contains) {
+                            return launch.mission_name.includes(f.mission_name.contains);
+                        }
+                    }
+                    if (f.launch_date_local) {
+                        if (f.launch_date_local.equal) {
+                            return launch.launch_date_local === f.launch_date_local.equal;
+                        }
+                    }
+                });
+            }
+            if (filter.and != null && filter.and.length > 0) {
+                return filter.and.every((f) => {
                     if (f.mission_name) {
                         if (f.mission_name.equal) {
                             return launch.mission_name === f.mission_name.equal;
@@ -319,6 +346,8 @@ const graphqlHandler = new GraphQLHandler({
             manufacturers,
             products,
             currentUser: currentUserHandler,
+            folder: folderHandler,
+            subfolder: subfolderHandler,
         },
     },
 

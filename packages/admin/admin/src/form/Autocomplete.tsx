@@ -39,7 +39,7 @@ export const FinalFormAutocomplete = <
     DisableClearable extends boolean | undefined = false,
     FreeSolo extends boolean | undefined = false,
 >({
-    input: { onChange, value, multiple, ...restInput },
+    input: { onChange, value: incomingValue, multiple, ...restInput },
     loading = false,
     loadingError,
     isAsync = false,
@@ -50,6 +50,7 @@ export const FinalFormAutocomplete = <
     errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
     return (
         <Autocomplete
             popupIcon={popupIcon}
