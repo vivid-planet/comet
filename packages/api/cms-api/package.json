@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.4.0",
+    "version": "8.5.1",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -16,16 +16,16 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
+        "build": "pnpm run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
-        "generate-block-meta:watch": "chokidar \"src/\" -c \"$npm_execpath generate-block-meta\"",
+        "generate-block-meta:watch": "chokidar \"src/\" -c \"pnpm generate-block-meta\"",
         "generate-schema": "ts-node generate-schema.ts",
-        "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
+        "generate-schema:watch": "chokidar \"src/\" -c \"pnpm generate-schema\"",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest",
         "test:watch": "jest --watch"
@@ -49,7 +49,6 @@
         "fast-xml-parser": "^5.2.5",
         "file-type": "^16.5.4",
         "get-image-colors": "^4.0.1",
-        "got": "^11.8.6",
         "graphql-parse-resolve-info": "^4.14.1",
         "graphql-scalars": "^1.24.2",
         "hasha": "^5.2.2",

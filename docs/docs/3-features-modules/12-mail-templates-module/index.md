@@ -81,12 +81,14 @@ import { MyCustomMail } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 @Injectable()
 export class MyService {
     constructor(
-        private readonly mailTemplateService: MailTemplateService,
+        private readonly mailerService: MailerService,
         private readonly myCustomMail: MyCustomMail,
     ) {}
 
     async sendMail() {
-        await this.mailTemplateService.sendMail(this.myCustomMail, { ... }); // MailProps
+        await this.mailerService.sendMail({
+            ...(await this.myCustomMail.generateMail({ ... })), // MailProps
+        });
     }
 }
 ```

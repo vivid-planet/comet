@@ -86,6 +86,9 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
+
+Please pin typescript to `5.8.3` due to some ESLint plugins not working with
+higher versions.
 :::
 
 **Create a branch `typescript-5`.**
@@ -94,22 +97,22 @@ You can skip this step if your project already uses typescript v5 **everywhere**
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
@@ -1721,6 +1724,31 @@ npx @comet/upgrade@latest v8/admin/before-install/remove-comet-admin-react-selec
 
 </details>
 
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/admin/before-install/update-graphql-admin.ts
+```
+
+:::
+
+```diff title=admin/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
 #### ✅ Remove ignore-restricted-imports comments
 
 Removes the comments we added in [step 4](#step-4-update-eslint-and-prettier-pr-4).
@@ -2777,6 +2805,49 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 Ignore this if you already did it beforehand in [step 3](#step-3-switch-from-cometcms-site-to-cometsite-nextjs-pr-3).
 Otherwise, go back and do it now.
+
+### 🤖 Upgrade peer dependencies
+
+The following upgrade script will update peer dependency versions.
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install
+```
+
+:::
+
+<details>
+
+<summary>Updates handled by this batch upgrade script</summary>
+
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install/update-graphql-site.ts
+```
+
+:::
+
+```diff title=site/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
+</details>
 
 ### Install
 

@@ -165,6 +165,19 @@ export default defineConfig({
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
 
+        // group demo login
+        {
+            name: "demo-oidc-provider",
+            script: "pnpm run dev:oidc-provider",
+            group: ["demo-login", "demo"],
+        },
+        {
+            name: "demo-oauth2-proxy",
+            script: "pnpm run dev:oauth2-proxy",
+            group: ["demo-login", "demo"],
+            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
+        },
+
         //group demo site
         {
             name: "demo-site",

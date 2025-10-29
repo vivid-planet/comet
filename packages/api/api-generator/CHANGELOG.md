@@ -1,5 +1,32 @@
 # @comet/api-generator
 
+## 8.5.1
+
+### Patch Changes
+
+- f292b68: Fix position update when trying to move entry to position higher than total item count
+    - @comet/cms-api@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [942200f]
+- Updated dependencies [b7156bb]
+    - @comet/cms-api@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/cms-api@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/cms-api@8.4.1
+
 ## 8.4.0
 
 ### Patch Changes

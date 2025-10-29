@@ -78,10 +78,11 @@ type FormValues = Omit<ProductFormDetailsFragment, keyof typeof rootBlocks | "di
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ manufacturerCountry, id }: FormProps) {
+export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -128,15 +129,15 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+            const id = mutationResponse?.createProduct.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                });
             }
         }
     };
@@ -184,21 +185,14 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
                 }]}/>
         <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect(
-                            
-                            
-                            $search: String
-                        ) {
-                            productCategories(
-                                
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductCategoriesSelect($search: String) {
+        productCategories(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         search,
                     }
                 });
@@ -206,21 +200,14 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
             }} getOptionLabel={(option) => option.title}/>
         <AsyncAutocompleteField required variant="horizontal" fullWidth multiple name="tags" label={<FormattedMessage id="product.tags" defaultMessage="Tags"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
-                    query: gql`query ProductTagsSelect(
-                            
-                            
-                            $search: String
-                        ) {
-                            productTags(
-                                
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ProductTagsSelect($search: String) {
+        productTags(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
                         search,
                     }
                 });
@@ -246,21 +233,14 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data"/>}>
             <AsyncAutocompleteField variant="horizontal" fullWidth name="manufacturer" label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer"/>} startAdornment={<InputAdornment position="start"><LocationIcon /></InputAdornment>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
-                    query: gql`query ManufacturersSelect(
-                            $filter: ManufacturerFilter
-                            ,
-                            $search: String
-                        ) {
-                            manufacturers(
-                                filter: $filter,
-                                search: $search
-                            ) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }`, variables: {
+                    query: gql`
+    query ManufacturersSelect($search: String, $filter: ManufacturerFilter) {
+        manufacturers(search: $search, filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    `, variables: {
                         filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } },
                         search,
                     }

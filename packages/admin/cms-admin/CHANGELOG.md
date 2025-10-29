@@ -1,5 +1,50 @@
 # @comet/cms-admin
 
+## 8.5.1
+
+### Patch Changes
+
+- 32592f9: Fix a rerendering bug in `BlocksFinalForm` caused by automatic batching in React 18
+    - @comet/admin@8.5.1
+    - @comet/admin-date-time@8.5.1
+    - @comet/admin-icons@8.5.1
+    - @comet/admin-rte@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-date-time@8.5.0
+    - @comet/admin-rte@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-date-time@8.4.2
+    - @comet/admin-rte@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- da30d46: Remove "Usages" column from DAM
+
+    The `dependents` field resolver triggers multiple refreshes of the `block_index_dependencies` view, which seems to crash the API.
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-date-time@8.4.1
+    - @comet/admin-rte@8.4.1
+    - @comet/admin-icons@8.4.1
+
 ## 8.4.0
 
 ### Minor Changes
