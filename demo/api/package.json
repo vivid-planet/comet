@@ -60,7 +60,7 @@
         "express": "^5.1.0",
         "graphql": "^16.11.0",
         "graphql-scalars": "^1.24.2",
-        "helmet": "^4.6.0",
+        "helmet": "^7.2.0",
         "nest-commander": "^3.17.0",
         "reflect-metadata": "^0.2.2",
         "response-time": "^2.3.3",

@@ -1,6 +1,7 @@
+import { withContentSecurityPolicyHeadersMiddleware } from "@src/middleware/contentSecurityPolicyHeaders";
+
 import { withAdminRedirectMiddleware } from "./middleware/adminRedirect";
 import { chain } from "./middleware/chain";
-import { withCspHeadersMiddleware } from "./middleware/cspHeaders";
 import { withDamRewriteMiddleware } from "./middleware/damRewrite";
 import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
@@ -15,7 +16,7 @@ export default chain([
     withAdminRedirectMiddleware,
     withSkipRewriteMiddleware,
     withDamRewriteMiddleware,
-    withCspHeadersMiddleware,
+    withContentSecurityPolicyHeadersMiddleware,
     withPreviewMiddleware,
     withRedirectToMainHostMiddleware,
     withRobotsMiddleware, // for robots.txt, the middleware may only be skipped after the main host redirect
