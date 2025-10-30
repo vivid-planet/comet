@@ -34,9 +34,12 @@ async function bootstrap(): Promise<void> {
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
     app.setGlobalPrefix("api");
+
     app.enableCors({
-        credentials: true,
-        origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
+        origin: config.corsAllowedOrigin,
+        methods: ["GET", "POST"],
+        credentials: false,
+        maxAge: 600,
     });
 
     app.useGlobalFilters(new ExceptionFilter(config.debug));
@@ -49,15 +52,33 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
+    app.disable("x-powered-by");
+
     app.use(
         helmet({
             contentSecurityPolicy: {
-                useDefaults: false,
                 directives: {
-                    "default-src": helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc,
-                    // locally: allow localhost in frame-ancestors to enable including files from the API in iframes in admin
-                    "frame-ancestors": `'self' ${process.env.NODE_ENV === "development" ? config.adminUrl : ""}`,
+                    "default-src": ["'none'"],
                 },
+                useDefaults: false, // Disable default directives
+            },
+            xFrameOptions: false, // Disable non-standard header
+            strictTransportSecurity: {
+                // Enable HSTS
+                maxAge: 63072000, // 2 years (recommended when subdomains are included)
+                includeSubDomains: true,
+                preload: true,
+            },
+            referrerPolicy: {
+                policy: "no-referrer", // No referrer information is sent along with requests
+            },
+            xContentTypeOptions: true, // value="nosniff" (prevent MIME sniffing)
+            xDnsPrefetchControl: false, // Disable non-standard header
+            xDownloadOptions: true, // value="noopen" (prevent IE from executing downloads in the context of the site)
+            xPermittedCrossDomainPolicies: true, // value="none" (prevent the browser from MIME sniffing)
+            originAgentCluster: true, // value=?1
+            crossOriginResourcePolicy: {
+                policy: "same-site", // This allows the resource to be shared with the same site (all subdomains/ports are included)
             },
         }),
     );
