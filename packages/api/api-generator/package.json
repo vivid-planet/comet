@@ -36,7 +36,8 @@
         "commander": "^9.5.0",
         "pluralize": "^8.0.0",
         "ts-morph": "^25.0.1",
-        "ts-node": "^10.9.2"
+        "ts-node": "^10.9.2",
+        "typescript": "5.8.3"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
@@ -55,11 +56,12 @@
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.0.1",
         "ts-jest": "^29.4.0",
-        "typescript": "5.8.3",
         "uuid": "^11.1.0"
     },
     "peerDependencies": {
         "@mikro-orm/cli": "^6.0.0",
+        "@mikro-orm/core": "^6.0.0",
+        "@mikro-orm/postgresql": "^6.0.0",
         "@nestjs/graphql": "^13.0.0",
         "class-validator": "^0.14.0"
     },
