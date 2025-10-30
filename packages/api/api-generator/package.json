@@ -9,8 +9,8 @@
     },
     "license": "BSD-2-Clause",
     "type": "commonjs",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts",
+    "main": "lib/apiGenerator.js",
+    "typings": "lib/apiGenerator.d.ts",
     "bin": {
         "comet-api-generator": "bin/api-generator.js"
     },
