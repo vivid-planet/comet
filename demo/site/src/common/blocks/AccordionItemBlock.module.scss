@@ -5,23 +5,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--palette-primary-light);
+    color: var(--brand-primary-light);
 }
 
 .titleWrapper {
     text-align: left;
     display: flex;
     align-items: center;
-    border-top: 1px solid var(--palette-gray-300);
+    border-top: 1px solid var(--brand-grey-300);
     padding: var(--spacing-s500) 0;
     gap: 8px;
 
     &:hover {
-        color: var(--palette-primary-light);
+        color: var(--brand-primary-light);
 
         .iconWrapper {
-            background-color: var(--palette-primary-light);
-            color: var(--palette-primary-contrastText);
+            background-color: var(--brand-primary-light);
+            color: var(--brand-primary-contrast);
         }
     }
 }
