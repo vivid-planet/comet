@@ -44,7 +44,6 @@ export interface IFrameBridgeContext {
     showOutlines: boolean;
     contentScope: unknown;
     contentScopeJwt: string;
-    graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
     removePreviewElement: (element: PreviewElement) => void;
@@ -65,7 +64,6 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
     },
     contentScope: undefined,
     contentScopeJwt: "",
-    graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
         // empty
@@ -93,7 +91,6 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
     const [contentScopeJwt, setContentScopeJwt] = useState<string>("");
-    const [graphQLApiUrl, setGraphQLApiUrl] = useState<string>("");
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
 
@@ -234,9 +231,6 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                     setContentScope(getContentScopeFromJwt(message.data.contentScopeJwt));
                     setContentScopeJwt(message.data.contentScopeJwt);
                     break;
-                case AdminMessageType.GraphQLApiUrl:
-                    setGraphQLApiUrl(message.data.graphQLApiUrl);
-                    break;
             }
         },
         [debounceDeactivateOutlines],
@@ -301,7 +295,6 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             sendMessage,
             contentScope,
             contentScopeJwt,
-            graphQLApiUrl,
             previewElementsData,
             addPreviewElement,
             removePreviewElement,
@@ -315,7 +308,6 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             sendMessage,
             contentScope,
             contentScopeJwt,
-            graphQLApiUrl,
             previewElementsData,
             addPreviewElement,
             removePreviewElement,

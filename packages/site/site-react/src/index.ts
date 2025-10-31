@@ -15,7 +15,6 @@ export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
 export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
 export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
-export { createFetchInMemoryCache } from "./graphQLFetch/fetchInMemoryCache";
 export {
     convertPreviewDataToHeaders,
     createFetchWithDefaults,
@@ -29,7 +28,6 @@ export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export {
     AdminMessageType,
     type IAdminContentScopeMessage,
-    type IAdminGraphQLApiUrlMessage,
     type IAdminHoverComponentMessage,
     type IAdminShowOnlyVisibleMessage,
     type IFrameHoverComponentMessage,
@@ -41,7 +39,6 @@ export {
     type IReadyIFrameMessage,
 } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
-export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { isWithPreviewPropsData, withPreview, type WithPreviewProps } from "./iframebridge/withPreview";
 export { Image } from "./image/Image";
