@@ -47,9 +47,8 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
         if (iFrameBridge.iFrameReady && data?.blockPreviewJwt) {
             iFrameBridge.sendBlockState(previewState);
             iFrameBridge.sendContentScopeJwt(data.blockPreviewJwt);
-            iFrameBridge.sendGraphQLApiUrl(graphQLApiUrl);
         }
-    }, [iFrameBridge, previewState, graphQLApiUrl, data?.blockPreviewJwt]);
+    }, [iFrameBridge, previewState, data?.blockPreviewJwt]);
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);

@@ -72,14 +72,13 @@ export async function recursivelyLoadBlockData({
     blockType,
     blockData,
     blocksMeta,
-    loaders,
-    ...dependencies
+    load,
 }: {
     blockType: string;
     blockData: unknown;
     blocksMeta: BlockMeta[];
-    loaders: Record<string, BlockLoader>;
-} & BlockLoaderDependencies) {
+    load: (blockType: string, blockData: unknown) => Promise<unknown> | null;
+}) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
         const blockData = { ...passedBlockData };
@@ -117,8 +116,9 @@ export async function recursivelyLoadBlockData({
         if (!block) throw new Error("invalid blockType");
 
         const newBlockData = iterateField(block, blockData);
-        if (loaders[blockType]) {
-            newBlockData.loaded = loaders[blockType]({ blockData, ...dependencies }); // return unresolved promise
+        const loaded = load(blockType, blockData); // return unresolved promise
+        if (loaded !== null) {
+            newBlockData.loaded = loaded;
             loadedBlockData.push(newBlockData);
         }
         return newBlockData;

@@ -132,20 +132,9 @@ export interface IAdminContentScopeMessage {
     };
 }
 
-/**
- * The `IAdminGraphQLApiUrlMessage` is sent from the admin to the site.
- */
-export interface IAdminGraphQLApiUrlMessage {
-    cometType: AdminMessageType.GraphQLApiUrl;
-    data: {
-        graphQLApiUrl: string;
-    };
-}
-
 export type AdminMessage =
     | IAdminBlockMessage
     | IAdminSelectComponentMessage
     | IAdminHoverComponentMessage
     | IAdminContentScopeMessage
-    | IAdminShowOnlyVisibleMessage
-    | IAdminGraphQLApiUrlMessage;
+    | IAdminShowOnlyVisibleMessage;

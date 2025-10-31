@@ -6,7 +6,6 @@ import {
     AdminMessageType,
     type IAdminBlockMessage,
     type IAdminContentScopeMessage,
-    type IAdminGraphQLApiUrlMessage,
     type IAdminHoverComponentMessage,
     type IAdminSelectComponentMessage,
     type IAdminShowOnlyVisibleMessage,
@@ -19,7 +18,6 @@ export interface IFrameBridgeContext {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
     sendContentScopeJwt(contentScopeJwt: string): void;
-    sendGraphQLApiUrl(apiUrl: string): void;
     sendShowOnlyVisible: (showOnlyVisible: boolean) => void;
     iFrameReady: boolean;
     hoveredSiteRoute: string | null;
@@ -44,9 +42,6 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         // empty
     },
     sendContentScopeJwt: () => {
-        // empty
-    },
-    sendGraphQLApiUrl: () => {
         // empty
     },
 });
@@ -157,13 +152,6 @@ export const IFrameBridgeProvider = ({ children, onReceiveMessage }: PropsWithCh
                                 const message: IAdminContentScopeMessage = {
                                     cometType: AdminMessageType.ContentScope,
                                     data: { contentScopeJwt },
-                                };
-                                sendMessage(message);
-                            },
-                            sendGraphQLApiUrl: (graphQLApiUrl) => {
-                                const message: IAdminGraphQLApiUrlMessage = {
-                                    cometType: AdminMessageType.GraphQLApiUrl,
-                                    data: { graphQLApiUrl },
                                 };
                                 sendMessage(message);
                             },
