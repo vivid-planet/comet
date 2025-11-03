@@ -2,11 +2,12 @@
 
 .button {
     display: inline-flex;
-    padding: var(--spacing-s400) var(--spacing-s500);
+    padding: var(--spacing-s400);
     border-radius: 4px;
     cursor: pointer;
     justify-content: center;
     align-items: center;
+    gap: 8px;
     transition:
         background-color 0.2s ease-out,
         color 0.2s ease-out,
