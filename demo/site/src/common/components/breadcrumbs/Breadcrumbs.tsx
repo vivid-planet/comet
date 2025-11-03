@@ -49,7 +49,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                             </button>
                         </li>
                         <li className={clsx(styles.mobileNavigationListElements, styles.linkContainer)}>
-                            <NextLink className={styles.link} href="/">
+                            <NextLink className={styles.link} href={createSitePath({ path: "/", scope: scope })}>
                                 <FormattedMessage id="header.breadcrumbs.home" defaultMessage="Home" />
                             </NextLink>
                         </li>
