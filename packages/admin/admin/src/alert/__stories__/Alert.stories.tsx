@@ -1,10 +1,14 @@
-import { Alert, Button, OkayButton, SaveButton } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 
+import { Button } from "../../common/buttons/Button";
+import { OkayButton } from "../../common/buttons/okay/OkayButton";
+import { SaveButton } from "../../common/buttons/SaveButton";
+import { Alert } from "../Alert";
+
 export default {
-    title: "@comet/admin/alert/Alert",
+    title: "components/alert/Alert",
 };
 
 export const Alerts = () => {
