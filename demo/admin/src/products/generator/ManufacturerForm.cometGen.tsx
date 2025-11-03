@@ -8,11 +8,11 @@ export default defineConfig<GQLManufacturer>({
         { type: "text", name: "name" },
         { type: "text", name: "addressAsEmbeddable.country" },
         { type: "text", name: "addressAsEmbeddable.street" },
-        { type: "text", name: "addressAsEmbeddable.streetNumber" },
+        { type: "number", name: "addressAsEmbeddable.streetNumber" },
         { type: "text", name: "addressAsEmbeddable.zip" },
         { type: "text", name: "addressAsEmbeddable.alternativeAddress.country" },
         { type: "text", name: "addressAsEmbeddable.alternativeAddress.street" },
-        { type: "text", name: "addressAsEmbeddable.alternativeAddress.streetNumber" },
+        { type: "number", name: "addressAsEmbeddable.alternativeAddress.streetNumber" },
         { type: "text", name: "addressAsEmbeddable.alternativeAddress.zip" },
     ],
 });

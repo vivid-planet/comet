@@ -7,6 +7,7 @@ import { filterByFragment } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
 import { Loading } from "@comet/admin";
+import { NumberField } from "@comet/admin";
 import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
@@ -27,7 +28,14 @@ import { updateManufacturerMutation } from "./ManufacturerForm.gql";
 import { GQLUpdateManufacturerMutation } from "./ManufacturerForm.gql.generated";
 import { GQLUpdateManufacturerMutationVariables } from "./ManufacturerForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = GQLManufacturerFormFragment;
+type FormValues = Omit<GQLManufacturerFormFragment, "addressAsEmbeddable"> & {
+    addressAsEmbeddable: Omit<GQLManufacturerFormFragment["addressAsEmbeddable"], "streetNumber" | "alternativeAddress"> & {
+        streetNumber: string;
+        alternativeAddress: Omit<GQLManufacturerFormFragment["addressAsEmbeddable"]["alternativeAddress"], "streetNumber"> & {
+            streetNumber: string;
+        };
+    };
+};
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -41,6 +49,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.manufacturer
         ? {
             ...filterByFragment<GQLManufacturerFormFragment>(manufacturerFormFragment, data.manufacturer),
+            addressAsEmbeddable: { ...data.manufacturer.addressAsEmbeddable, streetNumber: String(data.manufacturer.addressAsEmbeddable.streetNumber), alternativeAddress: { ...data.manufacturer.addressAsEmbeddable.alternativeAddress, streetNumber: String(data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber), }, },
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
@@ -58,6 +67,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
             throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+            addressAsEmbeddable: { ...formValues.addressAsEmbeddable, streetNumber: parseFloat(formValues.addressAsEmbeddable.streetNumber), alternativeAddress: { ...formValues.addressAsEmbeddable.alternativeAddress, streetNumber: parseFloat(formValues.addressAsEmbeddable.alternativeAddress.streetNumber), }, },
         };
         if (mode === "edit") {
             if (!id)
@@ -103,7 +113,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.street" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.street" defaultMessage="Address As Embeddable Street"/>}/>
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.streetNumber" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.streetNumber" defaultMessage="Address As Embeddable Street Number"/>}/>
+            <NumberField required variant="horizontal" fullWidth name="addressAsEmbeddable.streetNumber" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.streetNumber" defaultMessage="Address As Embeddable Street Number"/>}/>
 
         <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.zip" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.zip" defaultMessage="Address As Embeddable Zip"/>}/>
 
@@ -111,7 +121,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.street" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.street" defaultMessage="Address As Embeddable Alternative Address Street"/>}/>
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.streetNumber" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber" defaultMessage="Address As Embeddable Alternative Address Street Number"/>}/>
+            <NumberField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.streetNumber" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber" defaultMessage="Address As Embeddable Alternative Address Street Number"/>}/>
 
         <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.zip" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.zip" defaultMessage="Address As Embeddable Alternative Address Zip"/>}/>
                         </>
