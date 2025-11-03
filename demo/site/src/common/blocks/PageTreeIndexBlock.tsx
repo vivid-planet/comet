@@ -9,10 +9,8 @@ import styles from "./PageTreeIndexBlock.module.scss";
 
 type PageTreeNodeWithChildren = PageTreeNode & { children: PageTreeNodeWithChildren[] };
 
-class TreeMap<T extends PageTreeNode> extends Map<string, Array<T>> {}
-
-const arrayToTreeMap = <T extends PageTreeNode>(nodes: T[]): TreeMap<T> => {
-    const nodeMap = new TreeMap<T>();
+const arrayToTreeMap = (nodes: PageTreeNode[]): Map<string, PageTreeNode[]> => {
+    const nodeMap = new Map<string, PageTreeNode[]>();
     nodes.forEach((node) => {
         const parentId = node.parentId || "root";
         const children = nodeMap.get(parentId) || [];
@@ -21,7 +19,7 @@ const arrayToTreeMap = <T extends PageTreeNode>(nodes: T[]): TreeMap<T> => {
     return nodeMap;
 };
 
-function buildTree<T extends PageTreeNode>(treeMap: TreeMap<T>, parentId = "root"): PageTreeNodeWithChildren[] {
+function buildTree(treeMap: Map<string, PageTreeNode[]>, parentId = "root"): PageTreeNodeWithChildren[] {
     const nodes = treeMap.get(parentId) || [];
     return nodes.map((node) => ({
         ...node,
