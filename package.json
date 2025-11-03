@@ -71,12 +71,8 @@
         "pnpm": "10.17.0"
     },
     "pnpm": {
-        "packageExtensions": {
-            "@apollo/server-plugin-landing-page-graphql-playground": {
-                "peerDependencies": {
-                    "@apollo/server": "^5.0.0"
-                }
-            }
+        "overrides": {
+            "@apollo/server-plugin-landing-page-graphql-playground>@apollo/server": "^5.1.0"
         }
     }
 }
