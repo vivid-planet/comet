@@ -1,5 +1,7 @@
 # @comet/site-react
 
+## 7.25.12
+
 ## 7.25.11
 
 ### Patch Changes
