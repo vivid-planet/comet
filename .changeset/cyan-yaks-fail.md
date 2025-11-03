@@ -2,4 +2,4 @@
 "@comet/api-generator": patch
 ---
 
-Fix import path for relations targeting entitiy from cms-api
+Fix import path for relations targeting entity from `@comet/cms-api`
