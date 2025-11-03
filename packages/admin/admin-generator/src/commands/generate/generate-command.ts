@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { type ApolloClient } from "@apollo/client";
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
 import { type BlockInterface, type FinalFormFileUploadProps } from "@comet/cms-admin";
@@ -14,7 +15,7 @@ import {
     type GridValidRowModel,
 } from "@mui/x-data-grid";
 import { Command } from "commander";
-import { type FieldValidator } from "final-form";
+import { type FieldValidator, type FormApi } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -191,6 +192,13 @@ export type FormConfig<T extends { __typename?: string }> = {
      */
     navigateOnCreate?: boolean;
 };
+
+export function injectFormVariables<T>(
+    fn: (injectedVariables: { id?: string; mode?: "edit" | "add"; client: ApolloClient<object>; formApi: FormApi<unknown, Partial<unknown>> }) => T,
+): T {
+    // this function is only used in config but never called at runtime
+    return fn({} as any);
+}
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
