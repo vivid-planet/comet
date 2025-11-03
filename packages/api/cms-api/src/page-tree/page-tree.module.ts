@@ -1,10 +1,10 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
-import { ContentScope } from "src/user-permissions/interfaces/content-scope.interface";
 
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { InternalLinkBlockTransformerService } from "./blocks/internal-link-block-transformer.service";
 import { InternalLinkBlockWarningsService } from "./blocks/internal-link-block-warnings.service";
