@@ -103,7 +103,7 @@
                 "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"],
+            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit", "@as-integrations/express5"],
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
