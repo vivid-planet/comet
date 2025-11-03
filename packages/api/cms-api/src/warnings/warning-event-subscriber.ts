@@ -83,39 +83,42 @@ export class WarningEventSubscriber implements EventSubscriber {
             for (const key of keys) {
                 const block = Reflect.getMetadata(ROOT_BLOCK_METADATA_KEY, entity.prototype, key);
 
-                const flatBlocks = new FlatBlocks(args.entity[key], {
-                    name: block.name,
-                    visible: true,
-                    rootPath: "root",
-                });
-                for (const node of flatBlocks.depthFirst()) {
-                    const startDate = new Date();
-                    const warningsOrWarningsService = await node.block.warnings();
-                    let warnings: BlockWarning[] = [];
-
-                    if (isInjectableService(warningsOrWarningsService)) {
-                        const warningsService = warningsOrWarningsService;
-                        const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
-
-                        warnings = await service.warnings(node.block);
-                    } else {
-                        warnings = warningsOrWarningsService;
-                    }
-
-                    const sourceInfo = {
-                        rootEntityName: entity.name,
-                        rootColumnName: key,
-                        targetId: args.entity.id,
-                        rootPrimaryKey: args.meta.primaryKeys[0],
-                        jsonPath: node.pathToString(),
-                    };
-
-                    await this.warningService.saveWarnings({
-                        warnings,
-                        sourceInfo,
-                        scope,
+                const blockData = args.entity[key];
+                if (blockData) {
+                    const flatBlocks = new FlatBlocks(blockData, {
+                        name: block.name,
+                        visible: true,
+                        rootPath: "root",
                     });
-                    await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
+                    for (const node of flatBlocks.depthFirst()) {
+                        const startDate = new Date();
+                        const warningsOrWarningsService = await node.block.warnings();
+                        let warnings: BlockWarning[] = [];
+
+                        if (isInjectableService(warningsOrWarningsService)) {
+                            const warningsService = warningsOrWarningsService;
+                            const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
+
+                            warnings = await service.warnings(node.block);
+                        } else {
+                            warnings = warningsOrWarningsService;
+                        }
+
+                        const sourceInfo = {
+                            rootEntityName: entity.name,
+                            rootColumnName: key,
+                            targetId: args.entity.id,
+                            rootPrimaryKey: args.meta.primaryKeys[0],
+                            jsonPath: node.pathToString(),
+                        };
+
+                        await this.warningService.saveWarnings({
+                            warnings,
+                            sourceInfo,
+                            scope,
+                        });
+                        await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
+                    }
                 }
             }
 

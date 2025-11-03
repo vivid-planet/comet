@@ -1,5 +1,35 @@
 # @comet/site-nextjs
 
+## 8.5.1
+
+### Patch Changes
+
+- @comet/site-react@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- @comet/site-react@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/site-react@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/site-react@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- @comet/site-react@8.4.0
+
 ## 8.3.0
 
 ### Patch Changes

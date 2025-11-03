@@ -4,7 +4,6 @@ import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
@@ -19,6 +18,7 @@ import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { GQLProductCategoryTypesSelectQuery } from "./ProductHighlightForm.generated";
 import { GQLProductCategoryTypesSelectQueryVariables } from "./ProductHighlightForm.generated";
+import { AsyncAutocompleteField } from "@comet/admin";
 import { OnChangeField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductHighlightForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductHighlightForm.generated";
@@ -47,9 +47,10 @@ type FormValues = GQLProductHighlightFormDetailsFragment & {
     };
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function ProductHighlightForm({ id }: FormProps) {
+export function ProductHighlightForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -91,15 +92,18 @@ export function ProductHighlightForm({ id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductHighlightMutation, GQLCreateProductHighlightMutationVariables>({
                 mutation: createProductHighlightMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProductHighlight.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createProductHighlight.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };
@@ -115,29 +119,34 @@ export function ProductHighlightForm({ id }: FormProps) {
                         <>
                             
         <TextField required variant="horizontal" fullWidth name="description" label={<FormattedMessage id="productHighlight.description" defaultMessage="Description"/>}/>
-        <AsyncSelectField required variant="horizontal" fullWidth name="productCategoryType" label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type"/>} loadOptions={async () => {
+        <AsyncAutocompleteField required variant="horizontal" fullWidth name="productCategoryType" label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
-                    query: gql`query ProductCategoryTypesSelect {
-                            productCategoryTypes {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`
+                    query: gql`
+    query ProductCategoryTypesSelect($search: String) {
+        productCategoryTypes(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        search,
+                    }
                 });
                 return data.productCategoryTypes.nodes;
             }} getOptionLabel={(option) => option.title}/>
-        <AsyncSelectField required variant="horizontal" fullWidth name="productCategory" label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category"/>} loadOptions={async () => {
+        <AsyncAutocompleteField required variant="horizontal" fullWidth name="productCategory" label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect($filter: ProductCategoryFilter) {
-                            productCategories(filter: $filter) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: { filter: { type: { equal: values.productCategoryType?.id } } }
+                    query: gql`
+    query ProductCategoriesSelect($search: String, $filter: ProductCategoryFilter) {
+        productCategories(search: $search, filter: $filter) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        filter: { type: { equal: values.productCategoryType?.id } },
+                        search,
+                    }
                 });
                 return data.productCategories.nodes;
             }} getOptionLabel={(option) => option.title} disabled={!values?.productCategoryType}/><OnChangeField name="productCategoryType">
@@ -147,16 +156,19 @@ export function ProductHighlightForm({ id }: FormProps) {
                 }
             }}
                         </OnChangeField>
-        <AsyncSelectField required variant="horizontal" fullWidth name="product" label={<FormattedMessage id="productHighlight.product" defaultMessage="Product"/>} loadOptions={async () => {
+        <AsyncAutocompleteField required variant="horizontal" fullWidth name="product" label={<FormattedMessage id="productHighlight.product" defaultMessage="Product"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
-                    query: gql`query ProductsSelect($filter: ProductFilter) {
-                            products(filter: $filter) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`, variables: { filter: { category: { equal: values.productCategory?.id } } }
+                    query: gql`
+    query ProductsSelect($search: String, $filter: ProductFilter) {
+        products(search: $search, filter: $filter) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        filter: { category: { equal: values.productCategory?.id } },
+                        search,
+                    }
                 });
                 return data.products.nodes;
             }} getOptionLabel={(option) => option.title} disabled={!values?.productCategory}/><OnChangeField name="productCategory">

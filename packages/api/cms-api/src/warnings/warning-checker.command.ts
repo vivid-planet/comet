@@ -95,35 +95,37 @@ export class WarningCheckerCommand extends CommandRunner {
                             }
                         }
 
-                        const flatBlocks = new FlatBlocks(blockData, {
-                            name: block.name,
-                            visible: true,
-                            rootPath: "root",
-                        });
-                        for (const node of flatBlocks.depthFirst()) {
-                            const warningsOrWarningsService = await node.block.warnings();
-                            let warnings: BlockWarning[] = [];
-
-                            if (isInjectableService(warningsOrWarningsService)) {
-                                const warningsService = warningsOrWarningsService;
-                                const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
-
-                                warnings = await service.warnings(node.block);
-                            } else {
-                                warnings = warningsOrWarningsService;
-                            }
-
-                            this.warningService.saveWarnings({
-                                warnings,
-                                scope,
-                                sourceInfo: {
-                                    rootEntityName: tableName,
-                                    rootColumnName: column,
-                                    rootPrimaryKey: data.primaryKey,
-                                    targetId: rootBlock.id,
-                                    jsonPath: node.pathToString(),
-                                },
+                        if (blockData) {
+                            const flatBlocks = new FlatBlocks(blockData, {
+                                name: block.name,
+                                visible: true,
+                                rootPath: "root",
                             });
+                            for (const node of flatBlocks.depthFirst()) {
+                                const warningsOrWarningsService = await node.block.warnings();
+                                let warnings: BlockWarning[] = [];
+
+                                if (isInjectableService(warningsOrWarningsService)) {
+                                    const warningsService = warningsOrWarningsService;
+                                    const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
+
+                                    warnings = await service.warnings(node.block);
+                                } else {
+                                    warnings = warningsOrWarningsService;
+                                }
+
+                                await this.warningService.saveWarnings({
+                                    warnings,
+                                    scope,
+                                    sourceInfo: {
+                                        rootEntityName: tableName,
+                                        rootColumnName: column,
+                                        rootPrimaryKey: data.primaryKey,
+                                        targetId: rootBlock.id,
+                                        jsonPath: node.pathToString(),
+                                    },
+                                });
+                            }
                         }
                     }
                 }

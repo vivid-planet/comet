@@ -7,12 +7,10 @@ const productFormFragment = gql`
         }
     `;
 export const createProductMutation = gql`
-            mutation CreateProduct($input: ProductInput!) {
-                createProduct(input: $input) {
-                    id
-                    updatedAt
-                    ...CreateCapProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation CreateProduct($input: ProductInput!) {
+        createProduct(input: $input) {
+            id updatedAt ...CreateCapProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
