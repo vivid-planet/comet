@@ -16,8 +16,8 @@
     ],
     "scripts": {
         "build": "pnpm run clean && run-p build:babel build:types",
-        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build-storybook": "storybook build",
+        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
