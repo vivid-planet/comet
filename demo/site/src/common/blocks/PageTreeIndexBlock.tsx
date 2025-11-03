@@ -9,22 +9,13 @@ import styles from "./PageTreeIndexBlock.module.scss";
 
 type PageTreeNodeWithChildren = PageTreeNode & { children: PageTreeNodeWithChildren[] };
 
-const arrayToTreeMap = (nodes: PageTreeNode[]): Map<string, PageTreeNode[]> => {
-    const nodeMap = new Map<string, PageTreeNode[]>();
-    nodes.forEach((node) => {
-        const parentId = node.parentId || "root";
-        const children = nodeMap.get(parentId) || [];
-        nodeMap.set(parentId, [...children, node]);
-    });
-    return nodeMap;
-};
-
-function buildTree(treeMap: Map<string, PageTreeNode[]>, parentId = "root"): PageTreeNodeWithChildren[] {
-    const nodes = treeMap.get(parentId) || [];
-    return nodes.map((node) => ({
-        ...node,
-        children: buildTree(treeMap, node.id),
-    }));
+function buildTree(nodes: PageTreeNode[], parentId = "root"): PageTreeNodeWithChildren[] {
+    return nodes
+        .filter((node) => (node.parentId || "root") === parentId)
+        .map((node) => ({
+            ...node,
+            children: buildTree(nodes, node.id),
+        }));
 }
 
 function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
@@ -48,8 +39,7 @@ export const PageTreeIndexBlock = withPreview(
             return null;
         }
 
-        const treeMap = arrayToTreeMap(allNodes);
-        const tree = buildTree(treeMap);
+        const tree = buildTree(allNodes);
         return (
             <PageLayout grid>
                 <div className={styles.root}>{renderTree(tree)}</div>
