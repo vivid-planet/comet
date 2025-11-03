@@ -26,7 +26,6 @@ subpage
 Traefik
 typesafe
 Undeprecate
-mailhog
 leaddev
 blocklist
 cbdf
@@ -59,3 +58,5 @@ datetimerangepicker
 inlinealert
 numberfield
 Referer
+mailpit
+axllent
