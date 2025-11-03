@@ -239,7 +239,7 @@ export default defineConfig({
             name: "storybook-comet-admin",
             script: "pnpm --filter @comet/admin run storybook",
             group: ["storybook"],
-            waitOn: waitOnPackages("@comet/admin-icons"),
+            waitOn: waitOnPackages("@comet/admin"),
         },
     ],
 });
