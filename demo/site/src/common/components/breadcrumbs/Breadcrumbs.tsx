@@ -49,7 +49,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                             </button>
                         </li>
                         <li className={clsx(styles.mobileNavigationListElements, styles.linkContainer)}>
-                            <NextLink className={styles.link} href={createSitePath({ path: "/", scope: scope })}>
+                            <NextLink className={styles.link} href={createSitePath({ path: "/", scope })}>
                                 <FormattedMessage id="header.breadcrumbs.home" defaultMessage="Home" />
                             </NextLink>
                         </li>
@@ -65,7 +65,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                                     className={styles.link}
                                     href={createSitePath({
                                         path: parentNode.path,
-                                        scope: scope,
+                                        scope,
                                     })}
                                 >
                                     {parentNode.name}
@@ -84,7 +84,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                                 className={clsx(styles.link, styles.linkActive)}
                                 href={createSitePath({
                                     path: path,
-                                    scope: scope,
+                                    scope,
                                 })}
                             >
                                 {name}
