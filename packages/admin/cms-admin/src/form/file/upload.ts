@@ -24,13 +24,13 @@ interface UploadFileParams {
 export function upload<ResponseData>(uploadFileParams: UploadFileParams) {
     const controller = new AbortController();
     const promise = uploadOrReplaceByFilenameAndFolder<ResponseData>(uploadFileParams, controller.signal);
-    return { promise, abort: () => controller.abort() };
+    return { promise };
 }
 
 export function replaceByFilenameAndFolder<ResponseData>(uploadFileParams: UploadFileParams) {
     const controller = new AbortController();
     const promise = uploadOrReplaceByFilenameAndFolder<ResponseData>({ ...uploadFileParams, replace: true }, controller.signal);
-    return { promise, abort: () => controller.abort() };
+    return { promise };
 }
 
 async function uploadOrReplaceByFilenameAndFolder<ResponseData>(
@@ -103,5 +103,5 @@ export function replaceById({ apiUrl, data, damBasePath }: Omit<UploadFileParams
         const dataJson = await response.json();
         return { data: dataJson };
     })();
-    return { promise, abort: () => controller.abort() };
+    return { promise };
 }
