@@ -1,5 +1,24 @@
 # @comet/cms-admin
 
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin@8.5.2
+- @comet/admin-date-time@8.5.2
+- @comet/admin-icons@8.5.2
+- @comet/admin-rte@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- 32592f9: Fix a rerendering bug in `BlocksFinalForm` caused by automatic batching in React 18
+    - @comet/admin@8.5.1
+    - @comet/admin-date-time@8.5.1
+    - @comet/admin-icons@8.5.1
+    - @comet/admin-rte@8.5.1
+
 ## 8.5.0
 
 ### Patch Changes
