@@ -16,15 +16,15 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
         return <span className={className}>{children}</span>;
     }
 
-    let href = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+    const pathWithAnchor = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+
+    let href: string;
+
     if (targetPage.scope) {
         const scope = targetPage.scope as GQLPageTreeNodeScope;
-        if (scope.language) {
-            href = createSitePath({ path: targetPage.path, scope });
-            if (targetPageAnchor !== undefined) {
-                href = `${href}#${targetPageAnchor}`;
-            }
-        }
+        href = createSitePath({ path: pathWithAnchor, scope });
+    } else {
+        href = pathWithAnchor;
     }
 
     return (
