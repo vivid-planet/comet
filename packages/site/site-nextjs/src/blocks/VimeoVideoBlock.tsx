@@ -47,9 +47,7 @@ export const VimeoVideoBlock = withPreview(
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef<HTMLDivElement>(null);
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
-        const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
-            setIframeElement(node);
-        }, []);
+        const iframeRef = setIframeElement;
         const [isHandledManually, setIsHandledManually] = useState(!autoplay);
 
         const pauseVimeoVideo = useCallback(() => {

@@ -37,9 +37,7 @@ export const DamVideoBlock = withPreview(
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
         const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
-        const videoRef = useCallback((node: HTMLVideoElement | null) => {
-            setVideoElement(node);
-        }, []);
+        const videoRef = setVideoElement;
 
         const handleInView = useCallback(
             (inView: boolean) => {

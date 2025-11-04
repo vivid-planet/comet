@@ -43,9 +43,7 @@ export const YouTubeVideoBlock = withPreview(
         const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
-        const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
-            setIframeElement(node);
-        }, []);
+        const iframeRef = setIframeElement;
         const inViewRef = useRef<HTMLDivElement>(null);
 
         const pauseYouTubeVideo = useCallback(() => {
