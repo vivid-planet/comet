@@ -1,5 +1,19 @@
 # @comet/api-generator
 
+## 8.5.2
+
+### Patch Changes
+
+- dd351bf: Fix import path for relations targeting entity from `@comet/cms-api`
+    - @comet/cms-api@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- f292b68: Fix position update when trying to move entry to position higher than total item count
+    - @comet/cms-api@8.5.1
+
 ## 8.5.0
 
 ### Patch Changes
