@@ -1,5 +1,14 @@
 # @comet/site-nextjs
 
+## 8.5.2
+
+### Patch Changes
+
+- a5500b1: Set `referrerPolicy="strict-origin-when-cross-origin"` in the `YouTubeVideoBlock`
+
+    Apparently, YouTube recently started requiring a `Referer` header for embedded videos. If no `Referer` is present, the video fails to load ("Error 153").
+    - @comet/site-react@8.5.2
+
 ## 8.5.1
 
 ### Patch Changes

@@ -54,12 +54,12 @@ services:
         networks:
             - redis
 
-    mailhog:
-        image: mailhog/mailhog
+    mailpit:
+        image: axllent/mailpit
         pull_policy: weekly
         ports:
-            - "127.0.0.1:1025:1025"
-            - "127.0.0.1:8025:8025"
+            - "127.0.0.1:1025:1025" # SMTP server
+            - "127.0.0.1:8025:8025" # Web UI
 
 networks:
     postgres:

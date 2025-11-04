@@ -140,7 +140,13 @@ export const YouTubeVideoBlock = withPreview(
                                 }}
                             />
                         )}
-                        <iframe ref={iframeRef} className={styles.youtubeContainer} allow="autoplay" src={youtubeUrl.toString()} />
+                        <iframe
+                            ref={iframeRef}
+                            className={styles.youtubeContainer}
+                            allow="autoplay"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            src={youtubeUrl.toString()}
+                        />
                     </div>
                 )}
             </>
