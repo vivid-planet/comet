@@ -2,6 +2,7 @@
 import { type PropsWithData } from "@comet/site-nextjs";
 import { type InternalLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
+import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";
 
@@ -17,9 +18,12 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
 
     let href = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
     if (targetPage.scope) {
-        const language = (targetPage.scope as GQLPageTreeNodeScope).language;
-        if (language) {
-            href = `/${language}${href}`;
+        const scope = targetPage.scope as GQLPageTreeNodeScope;
+        if (scope.language) {
+            href = createSitePath({ path: targetPage.path, scope });
+            if (targetPageAnchor !== undefined) {
+                href = `${href}#${targetPageAnchor}`;
+            }
         }
     }
 
