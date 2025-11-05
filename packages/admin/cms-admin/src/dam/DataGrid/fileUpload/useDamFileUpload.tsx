@@ -439,12 +439,11 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
                     errorOccurred = true;
-                    const typedErr = err as { response?: { data?: unknown }; request?: unknown };
 
-                    if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
+                    if (hasObjectErrorData(err) && err.response?.data.error === "CometImageResolutionException") {
                         addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
-                    } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
-                        const message = typedErr.response.data.message;
+                    } else if (hasObjectErrorData(err) && err.response?.data.error === "CometValidationException") {
+                        const message = err.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
                         if (message.includes("Unsupported mime type")) {
                             addValidationError(file, <UnsupportedTypeError extension={extension} />);
@@ -457,9 +456,9 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (hasStringErrorData(typedErr) && typedErr.response.data.includes("SVG contains forbidden content")) {
+                    } else if (hasStringErrorData(err) && err.response.data.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
-                    } else if (hasRequestData(typedErr)) {
+                    } else if (hasRequestData(err)) {
                         addValidationError(file, <NetworkError />);
                     } else {
                         addValidationError(file, <UnknownError />);
