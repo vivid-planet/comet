@@ -1,0 +1,13 @@
+node_modules
+dist
+lang
+lang-extracted
+lang-compiled
+src/comet-config.json
+.env
+schema.gql
+schema.json
+block-meta.json
+src/**/*.generated.ts
+src/site-configs.d.ts
+src/**/*.scss.d.ts

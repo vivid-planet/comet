@@ -11,7 +11,7 @@ export default defineConfig({
     build: {
         outDir: "lib",
         lib: {
-            entry: "./src/index.ts",
+            entry: ["./src/index.ts", "./src/persistedQueries/persistedQueryRoute.ts", "./src/persistedQueries/webpackPersistedQueriesLoader.ts"],
             fileName: () => "index.js",
             formats: ["es"],
         },
