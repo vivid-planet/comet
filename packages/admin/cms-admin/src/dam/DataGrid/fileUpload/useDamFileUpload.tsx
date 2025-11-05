@@ -444,7 +444,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
                         addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
                     } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
-                        const message = typedErr.response.data.message as string;
+                        const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
                         if (message.includes("Unsupported mime type")) {
                             addValidationError(file, <UnsupportedTypeError extension={extension} />);
