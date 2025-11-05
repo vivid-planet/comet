@@ -287,19 +287,19 @@ importers:
         version: 1.3.0
       '@mikro-orm/cli':
         specifier: ^6.4.16
-        version: 6.5.3
+        version: 6.5.9
       '@mikro-orm/core':
         specifier: ^6.4.16
-        version: 6.5.3
+        version: 6.5.9
       '@mikro-orm/migrations':
         specifier: ^6.4.16
-        version: 6.5.3(@mikro-orm/core@6.5.3)(@types/node@24.10.0)
+        version: 6.5.9(@mikro-orm/core@6.5.9)(@types/node@24.10.0)
       '@mikro-orm/nestjs':
         specifier: ^6.1.1
-        version: 6.1.1(@mikro-orm/core@6.5.3)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)
+        version: 6.1.1(@mikro-orm/core@6.5.9)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)
       '@mikro-orm/postgresql':
         specifier: ^6.4.16
-        version: 6.5.3(@mikro-orm/core@6.5.3)
+        version: 6.5.9(@mikro-orm/core@6.5.9)
       '@nestjs/apollo':
         specifier: ^13.1.0
         version: 13.1.0(@apollo/server@4.12.2(graphql@16.11.0))(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(@nestjs/graphql@13.1.0(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(class-transformer@0.5.1)(class-validator@0.14.2)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1))(graphql@16.11.0)
@@ -1787,13 +1787,13 @@ importers:
         version: link:../../eslint-config
       '@mikro-orm/cli':
         specifier: ^6.4.16
-        version: 6.5.3
+        version: 6.5.9
       '@mikro-orm/core':
         specifier: ^6.4.16
-        version: 6.5.3
+        version: 6.5.9
       '@mikro-orm/postgresql':
         specifier: ^6.4.16
-        version: 6.5.3(@mikro-orm/core@6.5.3)
+        version: 6.5.9(@mikro-orm/core@6.5.9)
       '@nestjs/graphql':
         specifier: ^13.1.0
         version: 13.1.0(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(class-transformer@0.5.1)(class-validator@0.14.2)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1)
@@ -1968,16 +1968,16 @@ importers:
         version: 1.3.0
       '@mikro-orm/core':
         specifier: ^6.4.16
-        version: 6.5.3
+        version: 6.5.9
       '@mikro-orm/migrations':
         specifier: ^6.4.16
-        version: 6.5.3(@mikro-orm/core@6.5.3)(@types/node@24.10.0)
+        version: 6.5.9(@mikro-orm/core@6.5.9)(@types/node@24.10.0)
       '@mikro-orm/nestjs':
         specifier: ^6.1.1
-        version: 6.1.1(@mikro-orm/core@6.5.3)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)
+        version: 6.1.1(@mikro-orm/core@6.5.9)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)
       '@mikro-orm/postgresql':
         specifier: ^6.4.16
-        version: 6.5.3(@mikro-orm/core@6.5.3)
+        version: 6.5.9(@mikro-orm/core@6.5.9)
       '@nestjs/common':
         specifier: ^11.1.3
         version: 11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -6094,17 +6094,17 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@mikro-orm/cli@6.5.3':
-    resolution: {integrity: sha512-bCplOMx3F5Y6eqbj8hS++YkmUmR3TV9xTgh4gLGvMl5C1Zk9fKwYbA1lzvqEvSUAwG9tYVNuD4CUFNYHnIVOcg==}
+  '@mikro-orm/cli@6.5.9':
+    resolution: {integrity: sha512-Jihukq7STU5ZfRdjOBSR7mzOClqkhkic7t8GF/OAoMBeHgpUc93Ug2GvSMrJaNWGg4AKtgch/cP/KGv/3QtSsQ==}
     engines: {node: '>= 18.12.0'}
     hasBin: true
 
-  '@mikro-orm/core@6.5.3':
-    resolution: {integrity: sha512-NhJvYsS8E+cyXuLbij4znQLP534DdeChh1ZiJiwI+btYOWHSTPiag00yCjKyXRn/izI2eXauTgRFgKRaclgufg==}
+  '@mikro-orm/core@6.5.9':
+    resolution: {integrity: sha512-BDfMW35pKVfSBBK0TiIpjh+IX62UwD0V22x4O6psMfiwbFoAJN/gEpEg1FuLx41dYf/ExHe9Cin6U6hwRdELaQ==}
     engines: {node: '>= 18.12.0'}
 
-  '@mikro-orm/knex@6.5.3':
-    resolution: {integrity: sha512-FcD5+zZ/2wObbeNqX7Erqb21I/FzkK+1zB6O0KRfr0F9MLhgy5eclI9/hTPIJgD9pvOsKzTMWmu4vkVxWdKcDQ==}
+  '@mikro-orm/knex@6.5.9':
+    resolution: {integrity: sha512-VtBPIcNYyWeQ+M+ha5DD+961gc6jtJDX0JLkBfMatTgHl78R1IuiTPaPfen4X9ezEDsR6N8XqJtuRmOXRFl6lA==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@mikro-orm/core': ^6.0.0
@@ -6119,8 +6119,8 @@ packages:
       mariadb:
         optional: true
 
-  '@mikro-orm/migrations@6.5.3':
-    resolution: {integrity: sha512-W5+wXXJs7tIqq0GtOghXrrtnNrr+e0Si41rQ5WM7iJFqJXISCGCbIe+7lodmbfpTjt/jK19LjIo0Mfry/mQbuQ==}
+  '@mikro-orm/migrations@6.5.9':
+    resolution: {integrity: sha512-gDIcmG1ix9PmFCXwQFmrzpttG7AEqV64irSzzPLZqaRQGzahbhYz56vY/q4in7Nf5gpMCgzEuNtpMmCcoEfjfw==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@mikro-orm/core': ^6.0.0
@@ -6133,8 +6133,8 @@ packages:
       '@nestjs/common': ^10.0.0 || ^11.0.5
       '@nestjs/core': ^10.0.0 || ^11.0.5
 
-  '@mikro-orm/postgresql@6.5.3':
-    resolution: {integrity: sha512-NdaWvPMip9vJMBiKZIQNBNGbl78ti2Brh0vCequEncz/lcxS6xgQTSgdUK3Z1BgEx2MRWOb22Q4f6+i+592W8w==}
+  '@mikro-orm/postgresql@6.5.9':
+    resolution: {integrity: sha512-0pIWgHolYzAHa2/0fXjDNzGYK833XNHCuH079c65gScCl1s+YuByXPW7rJIYMqVXsgWtWpuS43G0VJ+jglXPQg==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@mikro-orm/core': ^6.0.0
@@ -10485,6 +10485,10 @@ packages:
     resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
     engines: {node: '>=20'}
 
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+    engines: {node: '>=20'}
+
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
 
@@ -11445,6 +11449,10 @@ packages:
     resolution: {integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==}
     engines: {node: '>=12'}
 
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
+
   draft-js-export-html@1.4.1:
     resolution: {integrity: sha512-G4VGBSalPowktIE4wp3rFbhjs+Ln9IZ2FhXeHjsZDSw0a2+h+BjKu5Enq+mcsyVb51RW740GBK8Xbf7Iic51tw==}
     peerDependencies:
@@ -12367,10 +12375,6 @@ packages:
   fs-extra@10.1.0:
     resolution: {integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==}
     engines: {node: '>=12'}
-
-  fs-extra@11.3.1:
-    resolution: {integrity: sha512-eXvGGwZ5CL17ZSwHWd3bbgk7UUpF6IFHtP57NYYakPvHOs8GDgDe5KJI36jIJzDkJ6eJjuzRA8eBQb6SkKue0g==}
-    engines: {node: '>=14.14'}
 
   fs-extra@11.3.2:
     resolution: {integrity: sha512-Xr9F6z6up6Ws+NjzMCZc6WXg2YFRlrLP9NQDO3VQrWrfiojdhS56TzueT88ze0uBdCTwEIhQ3ptnmKeWGFAe0A==}
@@ -14457,8 +14461,8 @@ packages:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
-  mikro-orm@6.5.3:
-    resolution: {integrity: sha512-KZDMqsu25dN9pOg525i+rYJgh+yqT3SuzwbdzAoCZLKS84YS2aB3HMRtN0QmFjeeguofuk5UvRUJFpOj2drTng==}
+  mikro-orm@6.5.9:
+    resolution: {integrity: sha512-qbEZsQG8HbGfBHeeSpmWGD+bcaZmYEE8TU3Mi9iXRoJ1yPBd6GXbUjBejMVUAkqzBL+LMZjE9sRyIG+Fg+kTvw==}
     engines: {node: '>= 18.12.0'}
 
   mime-db@1.33.0:
@@ -16388,6 +16392,11 @@ packages:
 
   resolve@1.22.10:
     resolution: {integrity: sha512-NPRy+/ncIMeDlTAsuqwKIiferiawhefFJtkNSW0qZJEqMEb+qBt/77B/jGeeek+F0uOeN05CDa6HXbbIgtVX4w==}
+    engines: {node: '>= 0.4'}
+    hasBin: true
+
+  resolve@1.22.11:
+    resolution: {integrity: sha512-RfqAvLnMl313r7c9oclB1HhUEAezcpLjz95wFH4LVuhk9JF/r22qmVP9AMmOU4vMX7Q8pN8jwNg/CSpdFnMjTQ==}
     engines: {node: '>= 0.4'}
     hasBin: true
 
@@ -23813,12 +23822,12 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@mikro-orm/cli@6.5.3':
+  '@mikro-orm/cli@6.5.9':
     dependencies:
       '@jercle/yargonaut': 1.1.5
-      '@mikro-orm/core': 6.5.3
-      '@mikro-orm/knex': 6.5.3(@mikro-orm/core@6.5.3)(pg@8.16.3)
-      fs-extra: 11.3.1
+      '@mikro-orm/core': 6.5.9
+      '@mikro-orm/knex': 6.5.9(@mikro-orm/core@6.5.9)(pg@8.16.3)
+      fs-extra: 11.3.2
       tsconfig-paths: 4.2.0
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -23833,20 +23842,20 @@ snapshots:
       - supports-color
       - tedious
 
-  '@mikro-orm/core@6.5.3':
+  '@mikro-orm/core@6.5.9':
     dependencies:
       dataloader: 2.2.3
-      dotenv: 17.2.2
+      dotenv: 17.2.3
       esprima: 4.0.1
-      fs-extra: 11.3.1
+      fs-extra: 11.3.2
       globby: 11.1.0
-      mikro-orm: 6.5.3
+      mikro-orm: 6.5.9
       reflect-metadata: 0.2.2
 
-  '@mikro-orm/knex@6.5.3(@mikro-orm/core@6.5.3)(pg@8.16.3)':
+  '@mikro-orm/knex@6.5.9(@mikro-orm/core@6.5.9)(pg@8.16.3)':
     dependencies:
-      '@mikro-orm/core': 6.5.3
-      fs-extra: 11.3.1
+      '@mikro-orm/core': 6.5.9
+      fs-extra: 11.3.2
       knex: 3.1.0(pg@8.16.3)
       sqlstring: 2.3.3
     transitivePeerDependencies:
@@ -23858,11 +23867,11 @@ snapshots:
       - supports-color
       - tedious
 
-  '@mikro-orm/migrations@6.5.3(@mikro-orm/core@6.5.3)(@types/node@24.10.0)':
+  '@mikro-orm/migrations@6.5.9(@mikro-orm/core@6.5.9)(@types/node@24.10.0)':
     dependencies:
-      '@mikro-orm/core': 6.5.3
-      '@mikro-orm/knex': 6.5.3(@mikro-orm/core@6.5.3)(pg@8.16.3)
-      fs-extra: 11.3.1
+      '@mikro-orm/core': 6.5.9
+      '@mikro-orm/knex': 6.5.9(@mikro-orm/core@6.5.9)(pg@8.16.3)
+      fs-extra: 11.3.2
       umzug: 3.8.2(@types/node@24.10.0)
     transitivePeerDependencies:
       - '@types/node'
@@ -23877,16 +23886,16 @@ snapshots:
       - supports-color
       - tedious
 
-  '@mikro-orm/nestjs@6.1.1(@mikro-orm/core@6.5.3)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)':
+  '@mikro-orm/nestjs@6.1.1(@mikro-orm/core@6.5.9)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)':
     dependencies:
-      '@mikro-orm/core': 6.5.3
+      '@mikro-orm/core': 6.5.9
       '@nestjs/common': 11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.6)(reflect-metadata@0.2.2)(rxjs@7.8.2)
 
-  '@mikro-orm/postgresql@6.5.3(@mikro-orm/core@6.5.3)':
+  '@mikro-orm/postgresql@6.5.9(@mikro-orm/core@6.5.9)':
     dependencies:
-      '@mikro-orm/core': 6.5.3
-      '@mikro-orm/knex': 6.5.3(@mikro-orm/core@6.5.3)(pg@8.16.3)
+      '@mikro-orm/core': 6.5.9
+      '@mikro-orm/knex': 6.5.9(@mikro-orm/core@6.5.9)(pg@8.16.3)
       pg: 8.16.3
       postgres-array: 3.0.4
       postgres-date: 2.1.0
@@ -25584,7 +25593,7 @@ snapshots:
       fs-extra: 11.3.2
       import-lazy: 4.0.0
       jju: 1.4.0
-      resolve: 1.22.10
+      resolve: 1.22.11
       semver: 7.5.4
     optionalDependencies:
       '@types/node': 24.10.0
@@ -29164,6 +29173,8 @@ snapshots:
 
   commander@14.0.1: {}
 
+  commander@14.0.2: {}
+
   commander@2.20.3: {}
 
   commander@4.1.1: {}
@@ -30190,6 +30201,8 @@ snapshots:
 
   dotenv@17.2.2: {}
 
+  dotenv@17.2.3: {}
+
   draft-js-export-html@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -31173,7 +31186,7 @@ snapshots:
 
   figlet@1.9.3:
     dependencies:
-      commander: 14.0.1
+      commander: 14.0.2
 
   figures@3.2.0:
     dependencies:
@@ -31459,12 +31472,6 @@ snapshots:
   fs-constants@1.0.0: {}
 
   fs-extra@10.1.0:
-    dependencies:
-      graceful-fs: 4.2.11
-      jsonfile: 6.2.0
-      universalify: 2.0.1
-
-  fs-extra@11.3.1:
     dependencies:
       graceful-fs: 4.2.11
       jsonfile: 6.2.0
@@ -34228,7 +34235,7 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.1
 
-  mikro-orm@6.5.3: {}
+  mikro-orm@6.5.9: {}
 
   mime-db@1.33.0: {}
 
@@ -36053,7 +36060,7 @@ snapshots:
 
   rechoir@0.8.0:
     dependencies:
-      resolve: 1.22.10
+      resolve: 1.22.11
 
   recma-build-jsx@1.0.0:
     dependencies:
@@ -36363,6 +36370,12 @@ snapshots:
   resolve.exports@2.0.2: {}
 
   resolve@1.22.10:
+    dependencies:
+      is-core-module: 2.16.1
+      path-parse: 1.0.7
+      supports-preserve-symlinks-flag: 1.0.0
+
+  resolve@1.22.11:
     dependencies:
       is-core-module: 2.16.1
       path-parse: 1.0.7
