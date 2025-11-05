@@ -1,0 +1,41 @@
+.titleWrapper {
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--palette-gray-300);
+    padding: var(--spacing-s300) 0;
+}
+
+.animatedChevron {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    transform: rotate(0deg);
+    transition: transform 0.4s ease;
+}
+
+.animatedChevronExpanded {
+    transform: rotate(-180deg);
+}
+
+.contentWrapper {
+    position: relative;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+        grid-template-rows 0.5s ease-out,
+        visibility 0s linear 0.5s;
+    visibility: hidden;
+}
+
+.contentWrapperExpanded {
+    grid-template-rows: 1fr;
+    padding-bottom: var(--spacing-s300);
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.contentWrapperInner {
+    overflow: hidden;
+}
