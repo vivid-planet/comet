@@ -17,7 +17,15 @@
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
         },
-        "./css": "./lib/style.css",
+        "./css": "./lib/site-react.css",
+        "./persistedQueryRoute": {
+            "types": "./lib/persistedQueries/persistedQueryRoute.d.ts",
+            "import": "./lib/persistedQueries/persistedQueryRoute.js"
+        },
+        "./vitePersistedQueries": {
+            "types": "./lib/persistedQueries/vitePersistedQueries.d.ts",
+            "import": "./lib/persistedQueries/vitePersistedQueries.js"
+        },
         "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "files": [
@@ -53,7 +61,7 @@
         "@types/draft-js": "^0.11.20",
         "@types/lodash.isequal": "^4.5.8",
         "@types/react": "^19.2.10",
-        "@vitejs/plugin-react": "^4.7.0",
+        "@vitejs/plugin-react": "^5.1.1",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.2",
         "jsdom": "^28.0.0",
@@ -63,9 +71,10 @@
         "rimraf": "^6.1.2",
         "rollup": "^4.44.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
-        "sass": "^1.89.2",
-        "typescript": "^5.9.3",
-        "vite": "^5.4.21",
+        "sass": "^1.94.2",
+        "ts-jest": "^29.4.0",
+        "typescript": "5.9.3",
+        "vite": "^7.2.4",
         "vite-plugin-dts": "^4.5.4",
         "vitest": "^4.0.16",
         "webpack": "^5.102.1"

@@ -80,7 +80,7 @@ export {
     useOneTrustCookieApi,
     usePreview,
     type VideoPreviewImageProps,
-    webpackPersistedQueriesLoader,
     withPreview,
     type WithPreviewProps,
 } from "@comet/site-react";
+export { persistedQueryRoute } from "@comet/site-react/persistedQueryRoute";

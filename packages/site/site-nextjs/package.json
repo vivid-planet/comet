@@ -50,7 +50,7 @@
         "@comet/eslint-config": "workspace:*",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^4.7.0",
+        "@vitejs/plugin-react": "^5.1.1",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.2",
         "jsdom": "^28.0.0",
@@ -64,9 +64,9 @@
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass": "^1.89.2",
         "typescript": "^5.9.3",
-        "vite": "^5.4.21",
-        "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.0.16"
+        "vitest": "^4.0.16",
+        "vite": "^7.2.4",
+        "vite-plugin-dts": "^4.5.4"
     },
     "peerDependencies": {
         "next": "^16.0.0",

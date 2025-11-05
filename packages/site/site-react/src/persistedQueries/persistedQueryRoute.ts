@@ -80,7 +80,14 @@ export async function persistedQueryRoute(
 
     let query = queryMap[hash];
     if (!query) {
-        return Response.json({ error: "PersistedQueryNotFound", hash }, { status: 400 });
+        if (process.env.NODE_ENV === "development") {
+            // In development, reload persisted queries to allow adding new ones without restarting the server
+            await loadPersistedQueries(persistedQueriesPath);
+            query = queryMap[hash];
+        }
+        if (!query) {
+            return Response.json({ error: "PersistedQueryNotFound", hash }, { status: 400 });
+        }
     }
     query = injectFragments(query);
 
