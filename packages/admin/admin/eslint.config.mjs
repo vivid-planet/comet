@@ -34,7 +34,6 @@ const config = [
     ...storybook.configs["flat/recommended"],
     {
         files: ["**/*.stories.ts", "**/*.stories.tsx"],
-
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
             "@typescript-eslint/no-empty-function": "off",
