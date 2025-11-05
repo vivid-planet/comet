@@ -1,5 +1,5 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 import { addHours, addSeconds } from "date-fns";
@@ -20,11 +20,23 @@ import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 @Injectable()
 export class FileUploadsService {
     constructor(
+        private readonly orm: MikroORM,
         @InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
         private readonly entityManager: EntityManager,
-    ) {}
+    ) {
+        // Delete expired files every minute
+        // TODO: check if that isn't triggered multiple times locally or in production
+        setInterval(async () => {
+            try {
+                await this.deleteExpiredFiles();
+            } catch (error) {
+                // TODO: what to do here? will only log the error and continue
+                console.error("Error deleting expired files", error);
+            }
+        }, 60000);
+    }
 
     async upload(file: FileUploadInput, expiresIn?: number): Promise<FileUpload> {
         const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
@@ -131,5 +143,27 @@ export class FileUploadsService {
         }
 
         this.entityManager.remove(fileUpload);
+    }
+
+    @CreateRequestContext()
+    async deleteExpiredFiles(): Promise<void> {
+        let hasMore = false;
+        const limit = 100;
+        do {
+            const files = await this.repository.find(
+                {
+                    expiresAt: { $lt: new Date() },
+                },
+                {
+                    limit,
+                    offset: 0,
+                },
+            );
+
+            for (const file of files) {
+                await this.delete(file);
+            }
+            hasMore = files.length === limit;
+        } while (hasMore);
     }
 }
