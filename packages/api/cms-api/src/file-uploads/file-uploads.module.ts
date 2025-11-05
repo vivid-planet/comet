@@ -10,7 +10,6 @@ import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG, FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
 import { FileUploadsResolver } from "./file-uploads.resolver";
 import { FileUploadsService } from "./file-uploads.service";
-import { FileUploadsDeleteExpiredFilesCommand } from "./file-uploads-delete-expired-files.command";
 import { createFileUploadsDownloadController } from "./file-uploads-download.controller";
 import { createFileUploadsUploadController } from "./file-uploads-upload.controller";
 
@@ -37,7 +36,6 @@ export class FileUploadsModule {
             FileUploadsService,
             fileUploadsFileValidatorProvider,
             FileUploadExpirationSubscriber,
-            FileUploadsDeleteExpiredFilesCommand,
         ];
 
         if (options.download) {
