@@ -459,7 +459,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         }
                     } else if (hasStringErrorData(typedErr) && typedErr.response.data.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
-                    } else if (typedErr.response === undefined && "request" in typedErr && typedErr.request) {
+                    } else if (hasRequestData(typedErr)) {
                         addValidationError(file, <NetworkError />);
                     } else {
                         addValidationError(file, <UnknownError />);
@@ -509,6 +509,16 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         newlyUploadedItems,
     };
 };
+
+function hasRequestData(err: unknown): err is { request: unknown; response?: undefined } {
+    return (
+        typeof err === "object" &&
+        err !== null &&
+        "request" in err &&
+        (err as { request?: unknown }).request !== undefined &&
+        (!("response" in err) || (err as { response?: unknown }).response === undefined)
+    );
+}
 
 function hasObjectErrorData(err: unknown): err is { response: { data: { error: string; message: string; statusCode: number } } } {
     if (typeof err === "object" && err !== null && "response" in err) {
