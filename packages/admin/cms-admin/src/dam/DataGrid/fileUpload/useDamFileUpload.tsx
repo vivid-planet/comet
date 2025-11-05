@@ -434,7 +434,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                             ? await replaceByFilenameAndFolder<{ id: string }>(uploadParams)
                             : await upload<{ id: string }>(uploadParams);
 
-                    const response = await uploadResult.promise;
+                    const response = await uploadResult;
 
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {

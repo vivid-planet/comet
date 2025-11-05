@@ -52,12 +52,11 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 }
                 const abortController = new AbortController();
                 abortControllerRef.current = abortController;
-                const { promise } = replaceById({
+                const response = await replaceById({
                     apiUrl,
                     data: { file: acceptedFiles[0], fileId: file.id },
                     damBasePath,
                 });
-                const response = await promise;
                 if (response.data) {
                     const fileUrl = (response.data as { fileUrl?: string })?.fileUrl;
                     if (fileUrl) {
