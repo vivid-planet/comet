@@ -8,7 +8,7 @@ import { FileUploadsService } from "./file-uploads.service";
 @Injectable()
 export class FileUploadExpirationSubscriber implements EventSubscriber {
     constructor(
-        entityManager: EntityManager,
+        private readonly entityManager: EntityManager,
         private readonly fileUploadsService: FileUploadsService,
     ) {
         entityManager.getEventManager().registerSubscriber(this);
@@ -21,6 +21,7 @@ export class FileUploadExpirationSubscriber implements EventSubscriber {
     async onLoad(args: EventArgs<FileUpload>): Promise<void> {
         if (args.entity.expiresAt && args.entity.expiresAt < new Date()) {
             await this.fileUploadsService.delete(args.entity);
+            await this.entityManager.flush();
         }
     }
 }

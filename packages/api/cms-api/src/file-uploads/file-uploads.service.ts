@@ -153,6 +153,7 @@ export class FileUploadsService {
                 await this.delete(file);
             }
             hasMore = files.length === limit;
+            await this.entityManager.flush();
         } while (hasMore);
     }
 }
