@@ -1,5 +1,5 @@
 import { getRepositoryToken } from "@mikro-orm/nestjs";
-import { EntityManager, type EventArgs } from "@mikro-orm/postgresql";
+import { EntityManager, type EventArgs, MikroORM } from "@mikro-orm/postgresql";
 import { Test, type TestingModule } from "@nestjs/testing";
 import { addSeconds } from "date-fns";
 import { Readable } from "stream";
@@ -24,7 +24,10 @@ const mockEntityManager = {
         registerSubscriber: jest.fn(),
     }),
     remove: jest.fn(),
+    flush: jest.fn(),
 };
+
+const mockOrm = {};
 
 const mockRepository = {
     create: jest.fn(),
@@ -69,6 +72,7 @@ describe("FileUploadsService", () => {
                 { provide: BlobStorageBackendService, useValue: mockBlobStorageBackendService },
                 { provide: FILE_UPLOADS_CONFIG, useValue: mockConfig },
                 { provide: EntityManager, useValue: mockEntityManager },
+                { provide: MikroORM, useValue: mockOrm },
                 FileUploadExpirationSubscriber,
             ],
         }).compile();
