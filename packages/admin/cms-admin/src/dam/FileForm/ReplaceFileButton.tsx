@@ -1,14 +1,12 @@
 import { useApolloClient } from "@apollo/client";
 import { Button, useErrorDialog } from "@comet/admin";
 import { ThreeDotSaving, Upload } from "@comet/admin-icons";
-import axios, { type CancelTokenSource } from "axios";
 import { useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
-import { createHttpClient } from "../../http/createHttpClient";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import { type DamFileDetails } from "./EditFile";
@@ -23,10 +21,10 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const damConfig = useDamConfig();
     const damBasePath = useDamBasePath();
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
-    const cancelUpload = useRef<CancelTokenSource>(axios.CancelToken.source());
     const errorDialog = useErrorDialog();
     const [replaceLoading, setReplaceLoading] = useState(false);
 
@@ -49,14 +47,17 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
 
             try {
                 setReplaceLoading(true);
+                if (abortControllerRef.current) {
+                    abortControllerRef.current.abort();
+                }
+                const abortController = new AbortController();
+                abortControllerRef.current = abortController;
                 const response = await replaceById({
-                    apiClient: createHttpClient(apiUrl),
+                    apiUrl,
                     data: { file: acceptedFiles[0], fileId: file.id },
-                    cancelToken: cancelUpload.current.token,
                     damBasePath,
                 });
-
-                if (response.status === 201 && response.data) {
+                if (response.data) {
                     const fileUrl = (response.data as { fileUrl?: string })?.fileUrl;
                     if (fileUrl) {
                         apolloClient.cache.evict({ id: `DamFile:${file.id}` });
@@ -64,17 +65,19 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 }
                 setReplaceLoading(false);
             } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    errorDialog?.showError({
-                        userMessage: (
-                            <FormattedMessage
-                                id="comet.dam.file.replace.error"
-                                defaultMessage="An error occurred while replacing the file. Please try again later."
-                            />
-                        ),
-                        error: error.response?.data,
-                    });
+                if (error instanceof DOMException && error.name === "AbortError") {
+                    setReplaceLoading(false);
+                    return;
                 }
+                errorDialog?.showError({
+                    userMessage: (
+                        <FormattedMessage
+                            id="comet.dam.file.replace.error"
+                            defaultMessage="An error occurred while replacing the file. Please try again later."
+                        />
+                    ),
+                    error: error instanceof Error ? error.message : String(error),
+                });
             }
         },
     });

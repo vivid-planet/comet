@@ -412,6 +412,14 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 }
 
 function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: string): Imports[0] {
+    const libMatch = targetMetadata.path.match(/(packages\/api|@comet)\/cms-api\/lib\/(.*)/);
+    if (libMatch) {
+        // Import from cms-api package
+        return {
+            name: targetMetadata.className,
+            importPath: "@comet/cms-api",
+        };
+    }
     return {
         name: targetMetadata.className,
         importPath: path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, ""),
