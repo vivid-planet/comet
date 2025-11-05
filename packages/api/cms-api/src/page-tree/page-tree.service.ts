@@ -189,14 +189,11 @@ export class PageTreeService {
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
-        if (input.parentId && input.parentId === id) {
-            throw new CometValidationException("A page cannot be its own parent");
-        }
         if (input.parentId) {
             let currentParentId: string | null = input.parentId;
             while (currentParentId !== null) {
                 if (currentParentId === id) {
-                    throw new CometValidationException("A page cannot be moved under one of its descendants");
+                    throw new CometValidationException("A page cannot be its own parent or be moved under one of its descendants");
                 }
                 const parentNode = await readApi.getNode(currentParentId);
                 if (!parentNode) break;
