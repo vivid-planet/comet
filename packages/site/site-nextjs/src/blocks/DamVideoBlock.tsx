@@ -2,7 +2,7 @@
 
 import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useCallback, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import styles from "./DamVideoBlock.module.scss";
@@ -38,6 +38,7 @@ export const DamVideoBlock = withPreview(
 
         const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
         const videoRef = setVideoElement;
+        const inViewRef = useRef<HTMLDivElement>(null);
 
         const handleInView = useCallback(
             (inView: boolean) => {
@@ -52,7 +53,7 @@ export const DamVideoBlock = withPreview(
             [autoplay, isHandledManually, videoElement],
         );
 
-        useIsElementInViewport({ current: videoElement }, handleInView);
+        useIsElementInViewport(inViewRef, handleInView);
 
         return (
             <>
@@ -78,7 +79,7 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <div className={styles.root}>
+                    <div className={styles.root} ref={inViewRef}>
                         <video
                             autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
                             controls={showControls}
