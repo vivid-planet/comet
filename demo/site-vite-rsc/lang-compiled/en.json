@@ -1,0 +1,110 @@
+{
+  "header.back": [
+    {
+      "type": 0,
+      "value": "Back"
+    }
+  ],
+  "header.backButton.arialLabel": [
+    {
+      "type": 0,
+      "value": "Go back"
+    }
+  ],
+  "header.closeButton.arialLabel": [
+    {
+      "type": 0,
+      "value": "Close Menu"
+    }
+  ],
+  "header.closeMenu": [
+    {
+      "type": 0,
+      "value": "Close Menu"
+    }
+  ],
+  "header.logo.title": [
+    {
+      "type": 0,
+      "value": "Comet DXP Logo"
+    }
+  ],
+  "header.menu.arialLabel": [
+    {
+      "type": 0,
+      "value": "Menu"
+    }
+  ],
+  "header.overview": [
+    {
+      "type": 0,
+      "value": "Overview"
+    }
+  ],
+  "header.subMenu.arialLabel": [
+    {
+      "type": 0,
+      "value": "Submenu of "
+    },
+    {
+      "type": 1,
+      "value": "name"
+    }
+  ],
+  "header.subMenu.closeButton": [
+    {
+      "type": 0,
+      "value": "Close submenu of "
+    },
+    {
+      "type": 1,
+      "value": "name"
+    }
+  ],
+  "skipLink.skipToFooter": [
+    {
+      "type": 0,
+      "value": "Skip to footer"
+    }
+  ],
+  "skipLink.skipToMainContent": [
+    {
+      "type": 0,
+      "value": "Skip to main content"
+    }
+  ],
+  "swiper.nextButton.ariaLabel": [
+    {
+      "type": 0,
+      "value": "Next slide"
+    }
+  ],
+  "swiper.nextButton.lastSlide.ariaLabel": [
+    {
+      "type": 0,
+      "value": "This is the last slide"
+    }
+  ],
+  "swiper.paginationBullet.ariaLabel": [
+    {
+      "type": 0,
+      "value": "Go to slide "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    }
+  ],
+  "swiper.prevButton.ariaLabel": [
+    {
+      "type": 0,
+      "value": "Previous slide"
+    }
+  ],
+  "swiper.prevButton.firstSlide.ariaLabel": [
+    {
+      "type": 0,
+      "value": "This is the first slide"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.root {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+}
