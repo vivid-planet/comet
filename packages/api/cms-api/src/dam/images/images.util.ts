@@ -1,25 +1,14 @@
-interface ImageDimensions {
-    width: number;
-    height: number;
-}
+import { type DamFileImage } from "../files/entities/file-image.entity";
+import { type ImageCropArea } from "./entities/image-crop-area.entity";
 
-export function calculateInheritAspectRatio(
-    imageDimensions: ImageDimensions,
-    cropArea: {
-        focalPoint: "SMART" | "CENTER" | "NORTHWEST" | "NORTHEAST" | "SOUTHWEST" | "SOUTHEAST";
-        width?: number;
-        height?: number;
-        x?: number;
-        y?: number;
-    },
-): number {
+export function calculateInheritAspectRatio(image: DamFileImage, cropArea: ImageCropArea): number {
     if (cropArea.focalPoint === "SMART") {
-        return imageDimensions.width / imageDimensions.height;
+        return image.width / image.height;
     } else {
         if (cropArea.width === undefined || cropArea.height === undefined) {
             throw new Error("Missing crop dimensions");
         }
 
-        return (cropArea.width * imageDimensions.width) / 100 / ((cropArea.height * imageDimensions.height) / 100);
+        return (cropArea.width * image.width) / 100 / ((cropArea.height * image.height) / 100);
     }
 }
