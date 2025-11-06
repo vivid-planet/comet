@@ -1,6 +1,8 @@
 import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@src/config/config.module";
+import { TranslationModule } from "@src/translation/translation.module";
 
 import { CustomProductResolver } from "./custom-product.resolver";
 import { Manufacturer } from "./entities/manufacturer.entity";
@@ -42,6 +44,8 @@ import { ProductPublishedMail } from "./product-published.mail";
             ManufacturerCountry,
             ProductHighlight,
         ]),
+        ConfigModule,
+        TranslationModule,
     ],
     providers: [
         ProductResolver,
