@@ -9,7 +9,6 @@ import {
     DialogTitle,
 } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { type ContentScope } from "../../../contentScope/Provider";
@@ -147,9 +146,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                     toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}
                                                 initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
-                                                isRowSelectable={(params) => {
-                                                    return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
-                                                }}
                                             />
                                         );
                                     }}
