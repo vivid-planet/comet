@@ -76,7 +76,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                     overrideContentScopes
                     contentScopes
                 }
-                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
         `,
         {
