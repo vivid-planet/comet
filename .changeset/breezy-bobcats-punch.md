@@ -2,4 +2,6 @@
 "@comet/eslint-config": minor
 ---
 
-Enable `formatjs/enforce-default-message` rule for literal messages.
+Format.JS: enforce literal default messages
+
+Prevent function calls or variables in `defaultMessage` which are not supported in our internationalization workflow.
