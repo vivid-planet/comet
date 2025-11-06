@@ -6,14 +6,13 @@ import clsx from "clsx";
 import NextLink from "next/link";
 import { useId, useState } from "react";
 import ReactFocusLock from "react-focus-lock";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { type GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import styles from "./Breadcrumbs.module.scss";
 
 export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFragment) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const intl = useIntl();
     const contentId = useId();
 
     return (
@@ -36,14 +35,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                 <ReactFocusLock className={clsx(styles.listContainer, isExpanded && styles.listContainerExpanded)} disabled={!isExpanded}>
                     <ol className={styles.list} id={contentId}>
                         <li className={styles.mobileNavigationListElements}>
-                            <button
-                                className={styles.mobileBackButton}
-                                aria-label={intl.formatMessage({
-                                    id: "header.closeButton.arialLabel",
-                                    defaultMessage: "Close Breadcrumbs",
-                                })}
-                                onClick={() => setIsExpanded(false)}
-                            >
+                            <button className={styles.mobileBackButton} onClick={() => setIsExpanded(false)}>
                                 <SvgUse href="/assets/icons/arrow-left.svg#root" width={16} height={16} color="inherit" />
                                 <FormattedMessage id="header.closeBreadcrumbs" defaultMessage="Close Breadcrumbs" />
                             </button>
