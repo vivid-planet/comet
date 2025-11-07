@@ -4,7 +4,8 @@
         ".": {
             "entry": ["dev-pm.config.ts", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"]
+            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"],
+            "ignoreBinaries": ["oauth2-proxy"]
         },
         "packages/cli": {
             "entry": ["./src/index.ts"],
@@ -41,7 +42,7 @@
         "packages/admin/admin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"]
         },
         "packages/admin/admin-color-picker": {
             "entry": ["./src/index.ts"],

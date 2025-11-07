@@ -1,5 +1,25 @@
 # @comet/admin-generator
 
+## 8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- 2be11c4: Fix incorrect `GridRenderCellParams` generic usage in `rowAction`
+- ad9b20e: Grid: Fix type for forwarded prop, GQL prefix was missing for objects
+- 1383c89: Restore persisted column state of generated DataGrid.
+
+    **What changed**
+    - Wrapped the DataGrid's column definitions in `useMemo` to ensure the `columns` prop keeps a stable reference between renders.
+
+    **Why**
+    - According to the MUI DataGrid documentation, the `columns` prop must keep the same reference across renders for persisted column state (width, order, visibility) to work correctly.
+    - Previously, column definitions were re-created on every render, which caused loss of the persisted state.
+
+    **Result**
+    - Column width and order are now properly restored across all admin-generated DataGrids.
+
 ## 8.5.0
 
 ### Minor Changes

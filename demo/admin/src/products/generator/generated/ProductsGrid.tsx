@@ -37,6 +37,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ProductTitle } from "../ProductTitle";
@@ -90,8 +91,7 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarTo
 type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
+    rowAction?: (params: GridRenderCellParams<GQLProductsGridFutureFragment>) => ReactNode;
     actionsColumnWidth?: number;
 };
 export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
@@ -105,7 +105,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             queryParamsPrefix: "products",
         }), ...usePersistentColumnState("ProductsGrid") };
     const theme = useTheme();
-    const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => [
         { field: "overview",
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
             filterable: false,
@@ -230,7 +230,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, theme, client, rowAction, actionsColumnWidth]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
