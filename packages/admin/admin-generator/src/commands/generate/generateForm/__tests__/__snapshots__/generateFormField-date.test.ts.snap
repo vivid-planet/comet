@@ -20,7 +20,7 @@ exports[`generateFormField - datePicker should generate simple date field with L
 [
   {
     "fieldName": "availableSince",
-    "formValueToGqlInputCode": "formValues.availableSince ?? null",
+    "formValueToGqlInputCode": "$fieldName ?? null",
   },
 ]
 `;

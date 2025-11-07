@@ -3,6 +3,7 @@ import { buildSchema, introspectionFromSchema } from "graphql";
 import { type FormConfig } from "../../generate-command";
 import { generateFields } from "../generateFields";
 import {
+    formValuesConfigToTree,
     generateDestructFormValueForInput,
     generateFormValuesToGqlInput,
     generateFormValuesType,
@@ -61,23 +62,35 @@ describe("generateFormValues", () => {
         const formValuesType = generateFormValuesType({
             formValuesConfig: generatedFields.formValuesConfig,
             filterByFragmentType: "GQLProductFormFragment",
+            gqlIntrospection: introspection,
+            gqlType: "Product",
         });
         expect(formValuesType).toEqual("type FormValues = GQLProductFormFragment;");
 
         const initialValues = generateInitialValues({
-            config,
+            mode: "all",
             formValuesConfig: generatedFields.formValuesConfig,
             filterByFragmentType: "GQLProductFormFragment",
+            gqlIntrospection: introspection,
+            gqlType: "Product",
         });
         expect(initialValues.replace(/\s+/g, " ")).toEqual(
             `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { } , [data]);`,
         );
 
-        const destructFormValue = generateDestructFormValueForInput({ formValuesConfig: generatedFields.formValuesConfig });
+        const destructFormValue = generateDestructFormValueForInput({
+            formValuesConfig: generatedFields.formValuesConfig,
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
         expect(destructFormValue).toEqual("formValues");
 
-        const formValuesToGqlInput = generateFormValuesToGqlInput({ formValuesConfig: generatedFields.formValuesConfig });
-        expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(`const output = { ...formValues, };`);
+        const formValuesToGqlInput = generateFormValuesToGqlInput({
+            formValuesConfig: generatedFields.formValuesConfig,
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
+        expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(`const output = formValues;`);
     });
 
     it("generates output null required text input", async () => {
@@ -128,7 +141,11 @@ describe("generateFormValues", () => {
             formConfig: config,
             gqlType: "Product",
         });
-        const formValuesToGqlInput = generateFormValuesToGqlInput({ formValuesConfig: generatedFields.formValuesConfig });
+        const formValuesToGqlInput = generateFormValuesToGqlInput({
+            formValuesConfig: generatedFields.formValuesConfig,
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
         expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(`const output = { ...formValues, name: formValues.name ?? null, };`);
     });
 
@@ -183,22 +200,34 @@ describe("generateFormValues", () => {
         const formValuesType = generateFormValuesType({
             formValuesConfig: generatedFields.formValuesConfig,
             filterByFragmentType: "GQLProductFormFragment",
+            gqlIntrospection: introspection,
+            gqlType: "Product",
         });
         expect(formValuesType.replace(/\s+/g, " ")).toEqual('type FormValues = Omit<GQLProductFormFragment, "price"> & { price: string; };');
 
         const initialValues = generateInitialValues({
-            config,
+            mode: "all",
             formValuesConfig: generatedFields.formValuesConfig,
             filterByFragmentType: "GQLProductFormFragment",
+            gqlIntrospection: introspection,
+            gqlType: "Product",
         });
         expect(initialValues.replace(/\s+/g, " ")).toEqual(
             `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), price: String(data.product.price), } : { } , [data]);`,
         );
 
-        const destructFormValue = generateDestructFormValueForInput({ formValuesConfig: generatedFields.formValuesConfig });
+        const destructFormValue = generateDestructFormValueForInput({
+            formValuesConfig: generatedFields.formValuesConfig,
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
         expect(destructFormValue).toEqual("formValues");
 
-        const formValuesToGqlInput = generateFormValuesToGqlInput({ formValuesConfig: generatedFields.formValuesConfig });
+        const formValuesToGqlInput = generateFormValuesToGqlInput({
+            formValuesConfig: generatedFields.formValuesConfig,
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
         expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(`const output = { ...formValues, price: parseFloat(formValues.price), };`);
     });
 
@@ -271,23 +300,35 @@ describe("generateFormValues", () => {
             const formValuesType = generateFormValuesType({
                 formValuesConfig: generatedFields.formValuesConfig,
                 filterByFragmentType: "GQLProductFormFragment",
+                gqlIntrospection: introspection,
+                gqlType: "Product",
             });
             expect(formValuesType.replace(/\s+/g, " ")).toEqual("type FormValues = GQLProductFormFragment;");
 
             const initialValues = generateInitialValues({
-                config,
+                mode: "all",
                 formValuesConfig: generatedFields.formValuesConfig,
                 filterByFragmentType: "GQLProductFormFragment",
+                gqlIntrospection: introspection,
+                gqlType: "Product",
             });
             expect(initialValues.replace(/\s+/g, " ")).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { } , [data]);`,
             );
 
-            const destructFormValue = generateDestructFormValueForInput({ formValuesConfig: generatedFields.formValuesConfig });
+            const destructFormValue = generateDestructFormValueForInput({
+                formValuesConfig: generatedFields.formValuesConfig,
+                gqlIntrospection: introspection,
+                gqlType: "Product",
+            });
             expect(destructFormValue).toEqual("formValues");
 
-            const formValuesToGqlInput = generateFormValuesToGqlInput({ formValuesConfig: generatedFields.formValuesConfig });
-            expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(`const output = { ...formValues, };`);
+            const formValuesToGqlInput = generateFormValuesToGqlInput({
+                formValuesConfig: generatedFields.formValuesConfig,
+                gqlIntrospection: introspection,
+                gqlType: "Product",
+            });
+            expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(`const output = formValues;`);
         });
 
         it("generates nested number input", async () => {
@@ -317,31 +358,125 @@ describe("generateFormValues", () => {
             const formValuesType = generateFormValuesType({
                 formValuesConfig: generatedFields.formValuesConfig,
                 filterByFragmentType: "GQLProductFormFragment",
+                gqlIntrospection: introspection,
+                gqlType: "Product",
             });
             expect(formValuesType.replace(/\s+/g, " ")).toEqual(
                 'type FormValues = Omit<GQLProductFormFragment, "address"> & { address: Omit<GQLProductFormFragment["address"], "zip"> & { zip: string; } };',
             );
 
             const initialValues = generateInitialValues({
-                config,
+                mode: "all",
                 formValuesConfig: generatedFields.formValuesConfig,
                 filterByFragmentType: "GQLProductFormFragment",
+                gqlIntrospection: introspection,
+                gqlType: "Product",
             });
             expect(initialValues.replace(/\s+/g, " ")).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), address: { ...data.product.address, zip: String(data.product.address.zip), }, } : { } , [data]);`,
             );
 
-            const destructFormValue = generateDestructFormValueForInput({ formValuesConfig: generatedFields.formValuesConfig });
+            const destructFormValue = generateDestructFormValueForInput({
+                formValuesConfig: generatedFields.formValuesConfig,
+                gqlIntrospection: introspection,
+                gqlType: "Product",
+            });
             expect(destructFormValue).toEqual("formValues");
 
-            const formValuesToGqlInput = generateFormValuesToGqlInput({ formValuesConfig: generatedFields.formValuesConfig });
+            const formValuesToGqlInput = generateFormValuesToGqlInput({
+                formValuesConfig: generatedFields.formValuesConfig,
+                gqlIntrospection: introspection,
+                gqlType: "Product",
+            });
             expect(formValuesToGqlInput.replace(/\s+/g, " ")).toEqual(
                 `const output = { ...formValues, address: { ...formValues.address, zip: parseFloat(formValues.address.zip), }, };`,
             );
         });
     });
 
+    describe("formValuesConfigToTree unit tests", () => {
+        const schema = buildSchema(`
+            type Query { product: Product}
+            type Product {
+                id: ID!
+                foo: String!
+                address: Address!
+                nullableAddress: Address
+            }
+            type Address {
+                street: String
+                city: String!
+                zip: Int!
+            } 
+        `);
+        const introspection = introspectionFromSchema(schema);
+
+        it("creates simple tree", () => {
+            expect(
+                formValuesConfigToTree({
+                    formValuesConfig: [
+                        {
+                            fieldName: "foo",
+                        },
+                    ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
+                }),
+            ).toEqual({ foo: { children: {}, config: { fieldName: "foo" }, nullable: false } });
+        });
+        it("creates nested tree", () => {
+            expect(
+                formValuesConfigToTree({
+                    formValuesConfig: [
+                        {
+                            fieldName: "address.city",
+                        },
+                    ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
+                }),
+            ).toEqual({
+                address: {
+                    children: { city: { children: {}, config: { fieldName: "address.city" }, nullable: false } },
+                    nullable: false,
+                },
+            });
+        });
+
+        it("creates nullable nested tree", () => {
+            expect(
+                formValuesConfigToTree({
+                    formValuesConfig: [
+                        {
+                            fieldName: "nullableAddress.city",
+                        },
+                    ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
+                }),
+            ).toEqual({
+                nullableAddress: {
+                    children: { city: { children: {}, config: { fieldName: "nullableAddress.city" }, nullable: false } },
+                    nullable: true,
+                },
+            });
+        });
+    });
+
     describe("generateFormValuesType unit tests", () => {
+        const schema = buildSchema(`
+            type Query { product: Product}
+            type Product {
+                id: ID!
+                foo: String!
+                bar: Bar!
+            }
+            type Bar {
+                foo: String!
+            } 
+        `);
+        const introspection = introspectionFromSchema(schema);
+
         it("generates type with only fragment", () => {
             expect(
                 generateFormValuesType({
@@ -351,6 +486,8 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(`type FormValues = GQLProductFormFragment;`);
         });
@@ -364,6 +501,8 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(`type FormValues = GQLProductFormFragment & { foo: string;  };`);
         });
@@ -377,6 +516,8 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(`type FormValues = GQLProductFormFragment & { foo?: string;  };`);
         });
@@ -390,6 +531,8 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(`type FormValues = Omit<GQLProductFormFragment, "foo">;`);
         });
@@ -404,6 +547,8 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(`type FormValues = Omit<GQLProductFormFragment, "foo"> & { foo: string;  };`);
         });
@@ -412,41 +557,47 @@ describe("generateFormValues", () => {
                 generateFormValuesType({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
+                            fieldName: "bar.foo",
                             typeCode: { nullable: false, type: "string" },
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
-            ).toEqual(`type FormValues = Omit<GQLProductFormFragment, "foo"> & { foo: GQLProductFormFragment["foo"] & { bar: string;  } };`);
+            ).toEqual(`type FormValues = Omit<GQLProductFormFragment, "bar"> & { bar: GQLProductFormFragment["bar"] & { foo: string;  } };`);
         });
         it("generates type with nested omitted field", () => {
             expect(
                 generateFormValuesType({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
+                            fieldName: "bar.foo",
                             omitFromFragmentType: true,
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
-            ).toEqual(`type FormValues = Omit<GQLProductFormFragment, "foo"> & { foo: Omit<GQLProductFormFragment["foo"], "bar"> };`);
+            ).toEqual(`type FormValues = Omit<GQLProductFormFragment, "bar"> & { bar: Omit<GQLProductFormFragment["bar"], "foo"> };`);
         });
         it("generates type with nested omitted and added field", () => {
             expect(
                 generateFormValuesType({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
+                            fieldName: "bar.foo",
                             omitFromFragmentType: true,
                             typeCode: { nullable: false, type: "string" },
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(
-                `type FormValues = Omit<GQLProductFormFragment, "foo"> & { foo: Omit<GQLProductFormFragment["foo"], "bar"> & { bar: string;  } };`,
+                `type FormValues = Omit<GQLProductFormFragment, "bar"> & { bar: Omit<GQLProductFormFragment["bar"], "foo"> & { foo: string;  } };`,
             );
         });
         it("generates type with nested but not omitted or added field", () => {
@@ -454,16 +605,65 @@ describe("generateFormValues", () => {
                 generateFormValuesType({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
+                            fieldName: "bar.foo",
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }),
             ).toEqual(`type FormValues = GQLProductFormFragment;`);
+        });
+
+        it("generates type nullable two level nested fields", () => {
+            const schema = buildSchema(`
+                type Query { product: Product}
+                type Product {
+                    address: Address
+                }
+                type Address {
+                    foo: Int!
+                    alternativeAddress: AlternativeAddress
+                } 
+                type AlternativeAddress {
+                    foo: Int!
+                }
+            `);
+            const introspection = introspectionFromSchema(schema);
+
+            expect(
+                generateFormValuesType({
+                    formValuesConfig: [
+                        {
+                            fieldName: "address.alternativeAddress.foo",
+                            omitFromFragmentType: true,
+                            typeCode: { nullable: false, type: "string" },
+                        },
+                    ],
+                    filterByFragmentType: "GQLProductFormFragment",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
+                }),
+            ).toEqual(
+                `type FormValues = Omit<GQLProductFormFragment, "address"> & { address: Omit<NonNullable<GQLProductFormFragment["address"]>, "alternativeAddress"> & { alternativeAddress: Omit<NonNullable<NonNullable<GQLProductFormFragment["address"]>["alternativeAddress"]>, "foo"> & { foo: string;  } } };`,
+            );
         });
     });
 
     describe("generateInitialValues code unit tests", () => {
+        const schema = buildSchema(`
+            type Query { product: Product}
+            type Product {
+                id: ID!
+                foo: String!
+                bar: Bar!
+            }
+            type Bar {
+                foo: String!
+            } 
+        `);
+        const introspection = introspectionFromSchema(schema);
+
         it("generates code with no special fields", () => {
             expect(
                 generateInitialValues({
@@ -473,7 +673,9 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { } , [data]);`,
@@ -488,7 +690,9 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "add" },
+                    mode: "add",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(`const initialValues = { };`);
         });
@@ -502,7 +706,9 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), foo: String(data.product.foo), } : { } , [data]);`,
@@ -518,7 +724,9 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { foo: true, } , [data]);`,
@@ -534,7 +742,9 @@ describe("generateFormValues", () => {
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "add" },
+                    mode: "add",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(`const initialValues = { foo: true, };`);
         });
@@ -543,15 +753,17 @@ describe("generateFormValues", () => {
                 generateInitialValues({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
+                            fieldName: "bar.foo",
                             defaultInitializationCode: "true",
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
-                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { foo: { bar: true, }, } , [data]);`,
+                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { bar: { foo: true, }, } , [data]);`,
             );
         });
         it("generates code string conversion for nested field", () => {
@@ -559,38 +771,64 @@ describe("generateFormValues", () => {
                 generateInitialValues({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
-                            initializationCode: "String(data.product.foo.bar)",
+                            fieldName: "bar.foo",
+                            initializationCode: "String(data.product.bar.foo)",
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
-                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), foo: { ...data.product.foo, bar: String(data.product.foo.bar), }, } : { } , [data]);`,
+                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), bar: { ...data.product.bar, foo: String(data.product.bar.foo), }, } : { } , [data]);`,
             );
         });
-        it("generates code with wrapInitializationCode for field", () => {
+        it("generates code with nullable nested field", () => {
+            const schema = buildSchema(`
+                type Query { product: Product}
+                type Product {
+                    id: ID!
+                    bar: Bar
+                }
+                type Bar {
+                    foo: String!
+                } 
+            `);
+            const introspection = introspectionFromSchema(schema);
+
             expect(
                 generateInitialValues({
                     formValuesConfig: [
                         {
-                            fieldName: "foo",
-                            wrapInitializationCode: "data.product.foo ? $inner : undefined",
+                            fieldName: "bar",
                         },
                         {
-                            fieldName: "foo.bar",
-                            initializationCode: "String(data.product.foo.bar)",
+                            fieldName: "bar.foo",
+                            initializationCode: "String(data.product.bar.foo)",
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
-                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), foo: data.product.foo ? { ...data.product.foo, bar: String(data.product.foo.bar), } : undefined, } : { } , [data]);`,
+                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), bar: data.product.bar ? { ...data.product.bar, foo: String(data.product.bar.foo), } : undefined, } : { } , [data]);`,
             );
         });
-        it("generates code with wrapInitializationCode for dimensions field", () => {
+        it("generates code with nullable field for dimensions field", () => {
+            const schema = buildSchema(`
+                type Query { product: Product}
+                type Product {
+                    dimensions: Dimensions
+                }
+                type Dimensions {
+                    width: Int!
+                } 
+            `);
+            const introspection = introspectionFromSchema(schema);
+
             expect(
                 generateInitialValues({
                     formValuesConfig: [
@@ -604,11 +842,12 @@ describe("generateFormValues", () => {
                         },
                         {
                             fieldName: "dimensions",
-                            wrapInitializationCode: "data.product.dimensions ? $inner : undefined",
                         },
                     ],
                     filterByFragmentType: "GQLProductFormFragment",
-                    config: { gqlType: "Product", mode: "all" },
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ?
@@ -621,6 +860,20 @@ describe("generateFormValues", () => {
     });
 
     describe("generateFormValuesToGqlInput code unit tests", () => {
+        const schema = buildSchema(`
+            type Query { product: Product}
+            type Product {
+                id: ID!
+                foo: String!
+                foo2: String!
+                bar: Bar!
+            }
+            type Bar {
+                foo: String!
+            } 
+        `);
+        const introspection = introspectionFromSchema(schema);
+
         it("generates code with no special fields", () => {
             expect(
                 generateFormValuesToGqlInput({
@@ -629,8 +882,10 @@ describe("generateFormValues", () => {
                             fieldName: "foo",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
-            ).toEqual(`const output = { ...formValues, };`);
+            ).toEqual(`const output = formValues;`);
         });
         it("generates code with float conversion for field", () => {
             expect(
@@ -638,11 +893,13 @@ describe("generateFormValues", () => {
                     formValuesConfig: [
                         {
                             fieldName: "foo",
-                            formValueToGqlInputCode: "parseFloat(data.product.foo)",
+                            formValueToGqlInputCode: "parseFloat($fieldName)",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
-            ).toEqual(`const output = { ...formValues, foo: parseFloat(data.product.foo), };`);
+            ).toEqual(`const output = { ...formValues, foo: parseFloat(formValues.foo), };`);
         });
         it("generates code with float conversion for two fields", () => {
             expect(
@@ -650,64 +907,84 @@ describe("generateFormValues", () => {
                     formValuesConfig: [
                         {
                             fieldName: "foo",
-                            formValueToGqlInputCode: "parseFloat(data.product.foo)",
+                            formValueToGqlInputCode: "parseFloat($fieldName)",
                         },
                         {
-                            fieldName: "bar",
-                            formValueToGqlInputCode: "parseFloat(data.product.bar)",
+                            fieldName: "foo2",
+                            formValueToGqlInputCode: "parseFloat($fieldName)",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
-            ).toEqual(`const output = { ...formValues, foo: parseFloat(data.product.foo), bar: parseFloat(data.product.bar), };`);
+            ).toEqual(`const output = { ...formValues, foo: parseFloat(formValues.foo), foo2: parseFloat(formValues.foo2), };`);
         });
         it("generates code with float conversion for nested field", () => {
             expect(
                 generateFormValuesToGqlInput({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
-                            formValueToGqlInputCode: "parseFloat(formValues.foo.bar)",
+                            fieldName: "bar.foo",
+                            formValueToGqlInputCode: "parseFloat($fieldName)",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
-            ).toEqual(`const output = { ...formValues, foo: { ...formValues.foo, bar: parseFloat(formValues.foo.bar), }, };`);
+            ).toEqual(`const output = { ...formValues, bar: { ...formValues.bar, foo: parseFloat(formValues.bar.foo), }, };`);
         });
         it("generates code with no conversion for nested field", () => {
             expect(
                 generateFormValuesToGqlInput({
                     formValuesConfig: [
                         {
-                            fieldName: "foo.bar",
+                            fieldName: "bar.foo",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
-            ).toEqual(`const output = { ...formValues, };`);
+            ).toEqual(`const output = formValues;`);
         });
         it("generates code with wrapFormValueToGqlInputCode for field", () => {
             expect(
                 generateFormValuesToGqlInput({
                     formValuesConfig: [
                         {
-                            fieldName: "foo",
-                            wrapFormValueToGqlInputCode: "formValues.fooEnabled && formValues.foo ? $inner : null",
+                            fieldName: "bar",
+                            wrapFormValueToGqlInputCode: "formValues.barEnabled && formValues.bar ? $inner : null",
                         },
                         {
-                            fieldName: "foo.bar",
-                            formValueToGqlInputCode: "parseFloat(formValues.foo.bar)",
+                            fieldName: "bar.foo",
+                            formValueToGqlInputCode: "parseFloat($fieldName)",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
-                `const output = { ...formValues, foo: formValues.fooEnabled && formValues.foo ? { ...formValues.foo, bar: parseFloat(formValues.foo.bar), } : null, };`,
+                `const output = { ...formValues, bar: formValues.barEnabled && formValues.bar ? { ...formValues.bar, foo: parseFloat(formValues.bar.foo), } : null, };`,
             );
         });
         it("generates code for issue with wrapFormValueToGqlInputCode", () => {
+            const schema = buildSchema(`
+                type Query { product: Product}
+                type Product {
+                    dimensions: Dimensions
+                    availableSince: String
+                }
+                type Dimensions {
+                    width: Int!
+                } 
+            `);
+            const introspection = introspectionFromSchema(schema);
+
             expect(
                 generateFormValuesToGqlInput({
                     formValuesConfig: [
                         {
                             fieldName: "dimensions.width",
-                            formValueToGqlInputCode: "parseFloat(formValues.dimensions.width)",
+                            formValueToGqlInputCode: "parseFloat($fieldName)",
                         },
                         {
                             fieldName: "dimensionsEnabled",
@@ -718,12 +995,184 @@ describe("generateFormValues", () => {
                         },
                         {
                             fieldName: "availableSince",
-                            formValueToGqlInputCode: "formValues.availableSince ?? null",
+                            formValueToGqlInputCode: "$fieldName ?? null",
                         },
                     ],
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const output = { ...formValues, dimensions: formValues.dimensionsEnabled && formValues.dimensions ? { ...formValues.dimensions, width: parseFloat(formValues.dimensions.width), } : null, availableSince: formValues.availableSince ?? null, };`,
+            );
+        });
+    });
+    describe("generateDestructFormValueForInput and generateFormValuesToGqlInput code unit tests", () => {
+        const schema = buildSchema(`
+            type Query { product: Product}
+            type Product {
+                id: ID!
+                foo: String!
+                foo2: String!
+                bar: Bar!
+            }
+            type Bar {
+                foo: String!
+                foo2: String!
+            } 
+        `);
+        const introspection = introspectionFromSchema(schema);
+
+        it("generates code with no destructed field", () => {
+            const formValuesConfig = [
+                {
+                    fieldName: "foo",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`formValues`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`const output = formValues;`);
+        });
+
+        it("generates code with no destructed nested field", () => {
+            const formValuesConfig = [
+                {
+                    fieldName: "bar.foo",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`formValues`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`const output = formValues;`);
+        });
+
+        it("generates code with nested field and conversion and destruct for another nested field", () => {
+            const schema = buildSchema(`
+                type Query { product: Product}
+                type Product {
+                    id: ID!
+                    bar: Bar!
+                    baz: Baz!
+                }
+                type Bar {
+                    foo: String!
+                } 
+                type Baz {
+                    foo: String!
+                }
+            `);
+            const introspection = introspectionFromSchema(schema);
+
+            const formValuesConfig = [
+                {
+                    fieldName: "baz.foo",
+                    destructFromFormValues: true,
+                },
+                {
+                    fieldName: "bar.foo",
+                    formValueToGqlInputCode: "parseFloat($fieldName)",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`{ baz: { foo, ...formValuesBazRest }, ...formValuesRest }`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(
+                `const output = { ...formValuesRest, baz: { ...formValuesBazRest, }, bar: { ...formValuesRest.bar, foo: parseFloat(formValuesRest.bar.foo), }, };`,
+            );
+        });
+        it("generates code with destructed field", () => {
+            const formValuesConfig = [
+                {
+                    fieldName: "foo",
+                    destructFromFormValues: true,
+                },
+                {
+                    fieldName: "foo2",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`{ foo, ...formValuesRest }`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`const output = formValuesRest;`);
+        });
+        it("generates code with destructed nested field", () => {
+            const formValuesConfig = [
+                {
+                    fieldName: "bar.foo",
+                    destructFromFormValues: true,
+                },
+                {
+                    fieldName: "bar.foo2",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`{ bar: { foo, ...formValuesBarRest }, ...formValuesRest }`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`const output = { ...formValuesRest, bar: { ...formValuesBarRest, }, };`);
+        });
+
+        it("generates code with destructed nested field and conversion", () => {
+            const formValuesConfig = [
+                {
+                    fieldName: "bar.foo",
+                    destructFromFormValues: true,
+                },
+                {
+                    fieldName: "bar.foo2",
+                    formValueToGqlInputCode: "parseFloat($fieldName)",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`{ bar: { foo, ...formValuesBarRest }, ...formValuesRest }`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`const output = { ...formValuesRest, bar: { ...formValuesBarRest, foo2: parseFloat(formValuesBarRest.foo2), }, };`);
+        });
+
+        it("generates code with destructed nested field and conversion three levels deep", () => {
+            const schema = buildSchema(`
+                type Query { product: Product}
+                type Product {
+                    id: ID!
+                    foo: Foo!
+                }
+                type Foo {
+                    bar: Bar!
+                } 
+                type Bar {
+                    baz: String!
+                    bum: String!
+                }
+            `);
+            const introspection = introspectionFromSchema(schema);
+            const formValuesConfig = [
+                {
+                    fieldName: "foo.bar.baz",
+                    destructFromFormValues: true,
+                },
+                {
+                    fieldName: "foo.bar.bum",
+                    formValueToGqlInputCode: "parseFloat($fieldName)",
+                },
+            ];
+            expect(
+                generateDestructFormValueForInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(`{ foo: { bar: { baz, ...formValuesFooBarRest }, ...formValuesFooRest }, ...formValuesRest }`);
+            expect(
+                generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection: introspection, gqlType: "Product" }).replace(/\s+/g, " "),
+            ).toEqual(
+                `const output = { ...formValuesRest, foo: { ...formValuesFooRest, bar: { ...formValuesFooBarRest, bum: parseFloat(formValuesFooBarRest.bum), }, }, };`,
             );
         });
     });

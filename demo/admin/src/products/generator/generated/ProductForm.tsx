@@ -68,7 +68,7 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "lastCheckedAt"> & {
-    dimensions: Omit<ProductFormDetailsFragment["dimensions"], "width" | "height" | "depth"> & {
+    dimensions: Omit<NonNullable<ProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
@@ -106,13 +106,10 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ dimensionsEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, tags: formValues.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValues.dimensions ? { ...formValues.dimensions, width: parseFloat(formValues.dimensions.width), height: parseFloat(formValues.dimensions.height), depth: parseFloat(formValues.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), priceList: formValues.priceList ? formValues.priceList.id : null, datasheets: formValues.datasheets?.map(({ id }) => id), lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
-        };
+        const output = { ...formValuesRest, description: formValuesRest.description ?? null, category: formValues.category ? formValues.category.id : null, tags: formValues.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();

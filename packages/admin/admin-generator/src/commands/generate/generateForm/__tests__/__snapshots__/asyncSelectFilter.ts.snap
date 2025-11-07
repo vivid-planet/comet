@@ -104,12 +104,9 @@ id?: string;
         });
         
 
-        const handleSubmit = async ({ productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        const handleSubmit = async ({ productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        product: formValues.product ? formValues.product.id : null, 
-    };
+            const output = { ...formValuesRest, product: formValuesRest.product ? formValuesRest.product.id : null,  };
 
             if (mode === "edit") {
                 
@@ -375,10 +372,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        category: formValues.category?.id, 
-    };
+            const output = { ...formValues, category: formValues.category?.id,  };
 
             if (mode === "edit") {
                 
@@ -572,10 +566,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        category: formValues.category?.id, 
-    };
+            const output = { ...formValues, category: formValues.category?.id,  };
 
             if (mode === "edit") {
                 
@@ -770,10 +761,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        category: formValues.category?.id, 
-    };
+            const output = { ...formValues, category: formValues.category?.id,  };
 
             if (mode === "edit") {
                 

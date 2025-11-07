@@ -326,7 +326,7 @@ export function generateForm(
 
     ${customFilterByFragment}
 
-    ${generateFormValuesType({ formValuesConfig, filterByFragmentType })}
+    ${generateFormValuesType({ formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
 
     ${formPropsTypeCode}
 
@@ -348,7 +348,7 @@ export function generateForm(
                 : ""
         }
 
-        ${generateInitialValues({ config, formValuesConfig, filterByFragmentType })}
+        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
 
 
         ${
@@ -368,9 +368,13 @@ export function generateForm(
                 : ""
         }
 
-        const handleSubmit = async (${generateDestructFormValueForInput({ formValuesConfig })}: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+        const handleSubmit = async (${generateDestructFormValueForInput({
+            formValuesConfig,
+            gqlIntrospection,
+            gqlType,
+        })}: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
-            ${generateFormValuesToGqlInput({ formValuesConfig })}
+            ${generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection, gqlType })}
 
             ${mode == "all" ? `if (mode === "edit") {` : ""}
                 ${

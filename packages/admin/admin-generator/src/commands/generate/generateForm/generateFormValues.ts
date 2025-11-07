@@ -1,8 +1,10 @@
-import { type FormConfig } from "../generate-command";
+import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+
 import { type GenerateFieldsReturn } from "./generateFields";
 
 type FormValuesConfigTreeNode = {
     config?: GenerateFieldsReturn["formValuesConfig"][0];
+    nullable?: boolean;
     children: FormValuesConfigTree;
 };
 type FormValuesConfigTree = {
@@ -10,15 +12,43 @@ type FormValuesConfigTree = {
 };
 
 // internal represenstation of formValuesConfig as tree to allow recursive processing
-function formValuesConfigToTree(formValuesConfig: GenerateFieldsReturn["formValuesConfig"]): FormValuesConfigTree {
+export function formValuesConfigToTree({
+    formValuesConfig,
+    gqlIntrospection,
+    gqlType,
+}: {
+    formValuesConfig: GenerateFieldsReturn["formValuesConfig"];
+    gqlIntrospection: IntrospectionQuery;
+    gqlType: string;
+}): FormValuesConfigTree {
     const treeRoot: FormValuesConfigTreeNode = { children: {} };
     for (const formValueConfig of formValuesConfig) {
         const fieldName = formValueConfig.fieldName;
         let currentTreeNode: FormValuesConfigTreeNode = treeRoot;
+        let currentGqlType = gqlType;
         for (const part of fieldName.split(".")) {
+            const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === currentGqlType) as
+                | IntrospectionObjectType
+                | undefined;
+            if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
+
+            const introspectionField = (introspectionObject as IntrospectionObjectType).fields.find((field) => field.name === part);
+
+            const introspectionFieldType = introspectionField
+                ? introspectionField.type.kind === "NON_NULL"
+                    ? introspectionField.type.ofType
+                    : introspectionField.type
+                : undefined;
+            if (introspectionFieldType?.kind === "OBJECT") {
+                // for next loop iteration (nested fields)
+                currentGqlType = introspectionFieldType.name;
+            }
+
             if (!currentTreeNode.children[part]) {
                 currentTreeNode.children[part] = { children: {} };
             }
+
+            currentTreeNode.children[part].nullable = introspectionField?.type.kind !== "NON_NULL";
             currentTreeNode = currentTreeNode.children[part];
         }
         currentTreeNode.config = formValueConfig;
@@ -26,13 +56,17 @@ function formValuesConfigToTree(formValuesConfig: GenerateFieldsReturn["formValu
     return treeRoot.children;
 }
 
-function generateFormValuesTypeFromTree(tree: FormValuesConfigTree, rootType: string): string {
+function generateFormValuesTypeFromTree(tree: FormValuesConfigTree, currentTypeName: string, currentIsNullable: boolean): string {
     const omitKeys: string[] = [];
     let appendCode = "";
     for (const [key, value] of Object.entries(tree)) {
         if (Object.keys(value.children).length > 0) {
-            const childOmit = generateFormValuesTypeFromTree(value.children, `${rootType}["${key}"]`);
-            if (childOmit !== `${rootType}["${key}"]`) {
+            let childRootType = `${currentTypeName}["${key}"]`;
+            if (currentIsNullable) {
+                childRootType = `NonNullable<${currentTypeName}>["${key}"]`;
+            }
+            const childOmit = generateFormValuesTypeFromTree(value.children, childRootType, value.nullable ?? false);
+            if (childOmit !== childRootType) {
                 appendCode += `${key}: ${childOmit}`;
                 omitKeys.push(key);
             }
@@ -52,7 +86,9 @@ function generateFormValuesTypeFromTree(tree: FormValuesConfigTree, rootType: st
         }
     }
 
-    let code = omitKeys.length ? `Omit<${rootType}, ${omitKeys.map((k) => `"${k}"`).join(" | ")}>` : rootType;
+    let code = omitKeys.length
+        ? `Omit<${currentIsNullable ? `NonNullable<` : ""}${currentTypeName}${currentIsNullable ? `>` : ""}, ${omitKeys.map((k) => `"${k}"`).join(" | ")}>`
+        : currentTypeName;
     if (appendCode.length) {
         code += ` & { ${appendCode} }`;
     }
@@ -62,12 +98,16 @@ function generateFormValuesTypeFromTree(tree: FormValuesConfigTree, rootType: st
 export function generateFormValuesType({
     formValuesConfig,
     filterByFragmentType,
+    gqlIntrospection,
+    gqlType,
 }: {
     formValuesConfig: GenerateFieldsReturn["formValuesConfig"];
     filterByFragmentType: string;
+    gqlIntrospection: IntrospectionQuery;
+    gqlType: string;
 }) {
-    const tree = formValuesConfigToTree(formValuesConfig);
-    return `type FormValues = ${generateFormValuesTypeFromTree(tree, filterByFragmentType)};`;
+    const tree = formValuesConfigToTree({ formValuesConfig, gqlIntrospection, gqlType });
+    return `type FormValues = ${generateFormValuesTypeFromTree(tree, filterByFragmentType, false)};`;
 }
 
 function generateInitialValuesFromTree(
@@ -82,10 +122,11 @@ function generateInitialValuesFromTree(
             if (childCode.length) {
                 if (generationType == "initializationCode") {
                     childCode = `{ ...${dataObject}.${key}, ${childCode} }`;
-                    if (value.config?.wrapInitializationCode) {
-                        childCode = value.config.wrapInitializationCode.replace("$inner", childCode);
+                    if (value.nullable) {
+                        code += `${key}: ${dataObject}.${key} ? ${childCode} : undefined, `;
+                    } else {
+                        code += `${key}: ${childCode}, `;
                     }
-                    code += `${key}: ${childCode}, `;
                 } else {
                     code += `${key}: { ${childCode} }, `;
                 }
@@ -103,22 +144,23 @@ function generateInitialValuesFromTree(
 }
 
 export function generateInitialValues({
-    config,
+    mode,
     formValuesConfig,
     filterByFragmentType,
+    gqlIntrospection,
+    gqlType,
 }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: Pick<FormConfig<any>, "gqlType" | "mode">;
+    mode: "all" | "edit" | "add";
     formValuesConfig: GenerateFieldsReturn["formValuesConfig"];
     filterByFragmentType: string;
+    gqlIntrospection: IntrospectionQuery;
+    gqlType: string;
 }) {
-    const gqlType = config.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
-    const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
 
-    const tree = formValuesConfigToTree(formValuesConfig);
+    const tree = formValuesConfigToTree({ formValuesConfig, gqlIntrospection, gqlType });
     if (editMode) {
         return `const initialValues = useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
             ? {
@@ -136,30 +178,62 @@ export function generateInitialValues({
     }
 }
 
-// TODO this doesn't work for nested fields yet
-export function generateDestructFormValueForInput({ formValuesConfig }: { formValuesConfig: GenerateFieldsReturn["formValuesConfig"] }) {
-    return formValuesConfig.filter((config) => !!config.destructFromFormValues).length
-        ? `{ ${formValuesConfig
-              .filter((config) => !!config.destructFromFormValues)
-              .map((config) => {
-                  if (config.fieldName.includes(".")) {
-                      throw new Error("Destructuring from nested form values is not supported yet.");
-                  }
-                  return config.destructFromFormValues;
-              })
-              .join(", ")}, ...formValues }`
-        : `formValues`;
-}
-
-function generateFormValuesToGqlInputFromTree(tree: FormValuesConfigTree, dataObject: string): string {
+function generateDestructFormValueForInputFromTree(tree: FormValuesConfigTree, restObject: string): string {
     let code = "";
     for (const [key, value] of Object.entries(tree)) {
         if (Object.keys(value.children).length > 0) {
-            let childCode = generateFormValuesToGqlInputFromTree(value.children, `${dataObject}.${key}`);
+            const childCode = generateDestructFormValueForInputFromTree(
+                value.children,
+                `${restObject}${key.substring(0, 1).toUpperCase()}${key.substring(1)}`,
+            );
             if (childCode.length) {
-                childCode = `{ ...${dataObject}.${key}, ${childCode} }`;
+                code += `${key}: { ${childCode} }, `;
+            }
+        } else if (value.config) {
+            if (value.config.destructFromFormValues) {
+                code += `${key}, `;
+            }
+        }
+    }
+    if (code.length) {
+        code += `...${restObject}Rest`;
+        return code;
+    } else {
+        return "";
+    }
+}
+
+export function generateDestructFormValueForInput({
+    formValuesConfig,
+    gqlIntrospection,
+    gqlType,
+}: {
+    formValuesConfig: GenerateFieldsReturn["formValuesConfig"];
+    gqlIntrospection: IntrospectionQuery;
+    gqlType: string;
+}) {
+    const tree = formValuesConfigToTree({ formValuesConfig, gqlIntrospection, gqlType });
+    const code = generateDestructFormValueForInputFromTree(tree, "formValues");
+    return code.length ? `{ ${code} }` : "formValues";
+}
+
+function generateFormValuesToGqlInputFromTree(tree: FormValuesConfigTree, dataObject: string, restObject: string): string {
+    let code = "";
+    for (const [key, value] of Object.entries(tree)) {
+        if (Object.keys(value.children).length > 0) {
+            const childRestObject = `${restObject.replace(/Rest$/, "")}${key.substring(0, 1).toUpperCase()}${key.substring(1)}Rest`;
+            const hasChildDestruct = hasChildDestructTree(value.children);
+            let childCode = generateFormValuesToGqlInputFromTree(
+                value.children,
+                hasChildDestruct ? childRestObject : `${dataObject}.${key}`,
+                childRestObject,
+            );
+            if (childCode.length || hasChildDestruct) {
+                childCode = `{ ...${hasChildDestruct ? childRestObject : `${dataObject}.${key}`}, ${childCode} }`;
                 if (value.config?.wrapFormValueToGqlInputCode) {
-                    childCode = value.config.wrapFormValueToGqlInputCode.replace("$inner", childCode);
+                    childCode = value.config.wrapFormValueToGqlInputCode
+                        .replaceAll("$fieldName", `${dataObject}.${key}`)
+                        .replaceAll("$inner", childCode);
                 }
                 code += `${key}: ${childCode}, `;
             }
@@ -168,17 +242,46 @@ function generateFormValuesToGqlInputFromTree(tree: FormValuesConfigTree, dataOb
             }
         } else if (value.config) {
             if (value.config.formValueToGqlInputCode) {
-                code += `${key}: ${value.config.formValueToGqlInputCode}, `;
+                code += `${key}: ${value.config.formValueToGqlInputCode.replaceAll("$fieldName", `${dataObject}.${key}`)}, `;
             }
         }
     }
     return code;
 }
 
-export function generateFormValuesToGqlInput({ formValuesConfig }: { formValuesConfig: GenerateFieldsReturn["formValuesConfig"] }) {
-    const tree = formValuesConfigToTree(formValuesConfig);
-    return `const output = {
-        ...formValues,
-        ${generateFormValuesToGqlInputFromTree(tree, "formValues")}
-    };`;
+function hasChildDestructTree(tree: FormValuesConfigTree): boolean {
+    return Object.values(tree).some((childValue) => {
+        if (childValue.config?.destructFromFormValues) {
+            return true;
+        }
+        if (Object.keys(childValue.children).length > 0) {
+            return hasChildDestructTree(childValue.children);
+        }
+        return false;
+    });
+}
+
+export function generateFormValuesToGqlInput({
+    formValuesConfig,
+    gqlIntrospection,
+    gqlType,
+}: {
+    formValuesConfig: GenerateFieldsReturn["formValuesConfig"];
+    gqlIntrospection: IntrospectionQuery;
+    gqlType: string;
+}) {
+    const tree = formValuesConfigToTree({ formValuesConfig, gqlIntrospection, gqlType });
+    const hasChildDestruct = hasChildDestructTree(tree);
+    const code = generateFormValuesToGqlInputFromTree(
+        tree,
+        hasChildDestruct ? "formValuesRest" : "formValues",
+        hasChildDestruct ? "formValuesRest" : "formValues",
+    );
+    if (code.length) {
+        return `const output = { ...${hasChildDestruct ? "formValuesRest" : "formValues"}, ${code} };`;
+    } else if (hasChildDestruct) {
+        return `const output = formValuesRest;`;
+    } else {
+        return `const output = formValues;`;
+    }
 }

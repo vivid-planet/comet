@@ -153,7 +153,7 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 
 type OptionalNestedFieldsConfig<T> = {
     type: "optionalNestedFields";
-    name: keyof T; // object name containing fields
+    name: UsableFormFields<T>; // object name containing fields
     checkboxLabel?: string;
     fields: FormFieldConfig<any>[];
 };

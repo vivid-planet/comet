@@ -74,10 +74,7 @@ export function NewsForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content), };
         if (mode === "edit") {
             if (!id)
                 throw new Error();

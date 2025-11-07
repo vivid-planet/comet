@@ -69,10 +69,7 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
         if (mode === "edit") {
             if (!id)
                 throw new Error();

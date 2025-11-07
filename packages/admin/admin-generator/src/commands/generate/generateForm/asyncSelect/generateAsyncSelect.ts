@@ -135,7 +135,7 @@ export function generateAsyncSelect({
         startAdornment,
         //endAdornment,
         imports: optionsImports,
-    } = buildFormFieldOptions({ config, formConfig, gqlIntrospection, gqlType });
+    } = buildFormFieldOptions({ config, formConfig });
     imports.push(...optionsImports);
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
@@ -144,7 +144,7 @@ export function generateAsyncSelect({
 
     const formValueConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         fieldName: name,
-        destructFromFormValues: config.type == "asyncSelectFilter" ? name : undefined,
+        destructFromFormValues: config.type == "asyncSelectFilter",
     };
 
     let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
@@ -331,12 +331,12 @@ export function generateAsyncSelect({
     if (config.type != "asyncSelectFilter") {
         if (!multiple) {
             if (!required) {
-                formValueConfig.formValueToGqlInputCode = `formValues.${name} ? formValues.${name}.id : null`;
+                formValueConfig.formValueToGqlInputCode = `$fieldName ? $fieldName.id : null`;
             } else {
-                formValueConfig.formValueToGqlInputCode = `formValues.${name}?.id`;
+                formValueConfig.formValueToGqlInputCode = `$fieldName?.id`;
             }
         } else {
-            formValueConfig.formValueToGqlInputCode = `formValues.${name}.map((item) => item.id)`;
+            formValueConfig.formValueToGqlInputCode = `$fieldName.map((item) => item.id)`;
         }
     }
 

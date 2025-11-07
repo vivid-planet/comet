@@ -3,7 +3,7 @@
 import { gql } from "@apollo/client";
 export const manufacturerFormFragment = gql`
         fragment ManufacturerForm on Manufacturer {
-            name addressAsEmbeddable { country street streetNumber zip alternativeAddress { country street streetNumber zip } }
+            name address { street streetNumber zip country alternativeAddress { street streetNumber zip country } } addressAsEmbeddable { street streetNumber zip country alternativeAddress { street streetNumber zip country } }
         }
     `;
 export const manufacturerQuery = gql`

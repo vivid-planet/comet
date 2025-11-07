@@ -1,8 +1,9 @@
-import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+import { type IntrospectionQuery } from "graphql";
 
 import { type FormConfig, type FormLayoutConfig, type GQLDocumentConfigMap } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { type Imports } from "../utils/generateImportsCode";
+import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 import { type Prop } from "./generateForm";
 
@@ -92,17 +93,9 @@ export function generateFormLayout({
     } else if (config.type === "optionalNestedFields") {
         const name = String(config.name);
 
-        const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
-            | IntrospectionObjectType
-            | undefined;
-        if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
-
-        const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-        if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-        if (introspectionField.type.kind === "NON_NULL") {
-            throw new Error(`field ${name} in gql introspection type ${gqlType} must not be required to be usable with optionalNestedFields`);
-        }
-        if (introspectionField.type.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
+        const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
+        if (!introspectionFieldType) throw new Error(`field ${name} in gql introspection type ${gqlType} not found`);
+        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
 
         const checkboxLabel = config.checkboxLabel ?? `Enable ${camelCaseToHumanReadable(String(config.name))}`;
 
@@ -112,7 +105,7 @@ export function generateFormLayout({
             fields: config.fields,
             formFragmentName,
             formConfig,
-            gqlType: introspectionField.type.name,
+            gqlType: introspectionFieldType.name,
             namePrefix: name,
         });
         hooksCode += generatedFields.hooksCode;
@@ -127,7 +120,7 @@ export function generateFormLayout({
         formValuesConfig.push({
             fieldName: `${name}Enabled`,
             omitFromFragmentType: false,
-            destructFromFormValues: `${name}Enabled`,
+            destructFromFormValues: true,
             typeCode: {
                 nullable: false,
                 type: "boolean",
@@ -138,8 +131,7 @@ export function generateFormLayout({
         // second field is the nested object, which is not a final-form field itself
         formValuesConfig.push({
             fieldName: `${name}`,
-            wrapInitializationCode: `data.${dataRootName}.${name} ? $inner : undefined`,
-            wrapFormValueToGqlInputCode: `${name}Enabled && formValues.${name} ? $inner : null`,
+            wrapFormValueToGqlInputCode: `${name.split(".").pop()}Enabled && $fieldName ? $inner : null`,
         });
 
         imports.push({ name: "FinalFormSwitch", importPath: "@comet/admin" });

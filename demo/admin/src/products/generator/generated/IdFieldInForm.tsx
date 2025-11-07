@@ -73,10 +73,7 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({

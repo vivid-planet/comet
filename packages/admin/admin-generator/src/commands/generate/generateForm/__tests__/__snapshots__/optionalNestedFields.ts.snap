@@ -56,7 +56,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = Omit<GQLProductFormFragment, "address"> & { address: Omit<GQLProductFormFragment["address"], "zip"> & { zip: string;  }addressEnabled: boolean;  };
+    type FormValues = Omit<GQLProductFormFragment, "address"> & { address: Omit<NonNullable<GQLProductFormFragment["address"]>, "zip"> & { zip: string;  }addressEnabled: boolean;  };
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -102,12 +102,9 @@ title: string;
         });
         
 
-        const handleSubmit = async ({ addressEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        const handleSubmit = async ({ addressEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        address: addressEnabled && formValues.address ? { ...formValues.address, zip: parseFloat(formValues.address.zip),  } : null, 
-    };
+            const output = { ...formValuesRest, address: addressEnabled && formValuesRest.address ? { ...formValuesRest.address, zip: parseFloat(formValuesRest.address.zip),  } : null,  };
 
             if (mode === "edit") {
                 

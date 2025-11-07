@@ -102,10 +102,7 @@ scope: GQLProductScope;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        title: formValues.title ?? null, 
-    };
+            const output = { ...formValues, title: formValues.title ?? null,  };
 
             if (mode === "edit") {
                 
@@ -281,10 +278,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        title: formValues.title ?? null, 
-    };
+            const output = { ...formValues, title: formValues.title ?? null,  };
 
             if (mode === "edit") {
                 

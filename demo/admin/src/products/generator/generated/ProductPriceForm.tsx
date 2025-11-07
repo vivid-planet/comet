@@ -53,10 +53,7 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            price: formValues.price ? parseFloat(formValues.price) : null,
-        };
+        const output = { ...formValues, price: formValues.price ? parseFloat(formValues.price) : null, };
         if (!id)
             throw new Error();
         const { ...updateInput } = output;
