@@ -192,16 +192,14 @@ export type FormConfig<T extends { __typename?: string }> = {
      */
     navigateOnCreate?: boolean;
 };
-
-export function injectFormVariables<T>(
-    fn: (injectedVariables: {
-        id?: string;
-        mode?: "edit" | "add";
-        client: ApolloClient<object>;
-        formApi: FormApi<unknown, Partial<unknown>>;
-        scope: ContentScope;
-    }) => T,
-): T {
+export type InjectedFormVariables = {
+    id?: string;
+    mode?: "edit" | "add";
+    client: ApolloClient<object>;
+    formApi: FormApi<unknown, Partial<unknown>>;
+    scope: ContentScope;
+};
+export function injectFormVariables<T>(fn: (injectedVariables: InjectedFormVariables) => T): T {
     // this function is only used in config but never called at runtime
     return fn({} as any);
 }

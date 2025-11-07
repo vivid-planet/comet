@@ -1,4 +1,4 @@
-import { defineConfig, injectFormVariables } from "@comet/admin-generator";
+import { defineConfig, type InjectedFormVariables, injectFormVariables } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
@@ -33,9 +33,13 @@ export default defineConfig<GQLProduct>({
                 {
                     type: "text",
                     name: "slug",
-                    validate: injectFormVariables(({ id, client }) => (value: string) => {
-                        return validateProductSlug({ value, id, client });
-                    }),
+                    validate: injectFormVariables(
+                        ({ id, client, manufacturerCountry }: InjectedFormVariables & { manufacturerCountry: string }) =>
+                            (value: string) => {
+                                console.log(manufacturerCountry);
+                                return validateProductSlug({ value, id, client });
+                            },
+                    ),
                 },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
