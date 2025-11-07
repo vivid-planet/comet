@@ -54,6 +54,13 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/site-pages/lang/comet-demo-lang"
 
+            - name: "Demo Api: Clone translations"
+              uses: actions/checkout@v4
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/api/lang/comet-demo-lang"
+
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 24.x

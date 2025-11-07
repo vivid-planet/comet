@@ -1,13 +1,11 @@
 import { useApolloClient } from "@apollo/client";
-import axios, { type AxiosError, type CancelTokenSource } from "axios";
-import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { type Accept, type FileRejection } from "react-dropzone";
 
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
 import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import { type GQLLicenseInput } from "../../../graphql.generated";
-import { createHttpClient } from "../../../http/createHttpClient";
 import { useDamBasePath, useDamConfig } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
@@ -158,7 +156,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
     const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
-    const cancelUpload = useRef<CancelTokenSource>();
 
     const addValidationError = (file: FileWithFolderPath, newError: ReactNode) => {
         setValidationErrors((prevErrors) => {
@@ -399,7 +396,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
             const { filesToUpload, duplicateAction } = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
 
-            cancelUpload.current = axios.CancelToken.source();
             for (const file of filesToUpload) {
                 const { folderIdMap: newFolderIdMap, newlyCreatedFolderIds } = await createFoldersIfNecessary(folderIdMap, file, folderId);
                 folderIdMap = newFolderIdMap;
@@ -427,27 +423,28 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     };
 
                     const uploadParams = {
-                        apiClient: createHttpClient(apiUrl),
+                        apiUrl,
                         data: uploadConfig,
-                        cancelToken: cancelUpload.current.token,
                         options: { onUploadProgress },
                         damBasePath,
                     };
 
-                    const response: { data: { id: string } } =
-                        duplicateAction === "replace" ? await replaceByFilenameAndFolder(uploadParams) : await upload(uploadParams);
+                    const uploadResult =
+                        duplicateAction === "replace"
+                            ? await replaceByFilenameAndFolder<{ id: string }>(uploadParams)
+                            : await upload<{ id: string }>(uploadParams);
+
+                    const response = await uploadResult;
 
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
                     errorOccurred = true;
-                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number } | string>;
 
-                    if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
+                    if (hasObjectErrorData(err) && err.response?.data.error === "CometImageResolutionException") {
                         addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
-                    } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
-                        const message = typedErr.response.data.message;
+                    } else if (hasObjectErrorData(err) && err.response?.data.error === "CometValidationException") {
+                        const message = err.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
-
                         if (message.includes("Unsupported mime type")) {
                             addValidationError(file, <UnsupportedTypeError extension={extension} />);
                         } else if (message.includes("Missing file extension")) {
@@ -459,14 +456,13 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (hasStringErrorData(typedErr) && typedErr.response?.data.includes("SVG contains forbidden content")) {
+                    } else if (hasStringErrorData(err) && err.response.data.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
-                    } else if (typedErr.response === undefined && typedErr.request) {
+                    } else if (hasRequestData(err)) {
                         addValidationError(file, <NetworkError />);
                     } else {
                         addValidationError(file, <UnknownError />);
                     }
-
                     rejectedFiles.push({ file });
                 }
             }
@@ -513,12 +509,35 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     };
 };
 
-const hasObjectErrorData = (
-    err: AxiosError<{ error: string; message: string; statusCode: number } | string>,
-): err is AxiosError<{ error: string; message: string; statusCode: number }> => {
-    return typeof err.response?.data === "object" && err.response?.data.error !== undefined;
-};
+function hasRequestData(err: unknown): err is { request: unknown; response?: undefined } {
+    return (
+        typeof err === "object" &&
+        err !== null &&
+        "request" in err &&
+        (err as { request?: unknown }).request !== undefined &&
+        (!("response" in err) || (err as { response?: unknown }).response === undefined)
+    );
+}
 
-const hasStringErrorData = (err: AxiosError<{ error: string; message: string; statusCode: number } | string>): err is AxiosError<string> => {
-    return typeof err.response?.data === "string";
-};
+function hasObjectErrorData(err: unknown): err is { response: { data: { error: string; message: string; statusCode: number } } } {
+    if (typeof err === "object" && err !== null && "response" in err) {
+        const response = (err as { response?: unknown }).response;
+        if (typeof response === "object" && response !== null && "data" in response) {
+            const data = (response as { data?: unknown }).data;
+            if (typeof data === "object" && data !== null && "error" in data && typeof (data as { error?: unknown }).error === "string") {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function hasStringErrorData(err: unknown): err is { response: { data: string } } {
+    if (typeof err === "object" && err !== null && "response" in err) {
+        const response = (err as { response?: unknown }).response;
+        if (typeof response === "object" && response !== null && "data" in response && typeof (response as { data?: unknown }).data === "string") {
+            return true;
+        }
+    }
+    return false;
+}
