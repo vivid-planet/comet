@@ -2,7 +2,7 @@
 import { type ApolloClient } from "@apollo/client";
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
-import { type BlockInterface, type FinalFormFileUploadProps } from "@comet/cms-admin";
+import { type BlockInterface, type ContentScope, type FinalFormFileUploadProps } from "@comet/cms-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { type IconProps } from "@mui/material";
@@ -194,7 +194,13 @@ export type FormConfig<T extends { __typename?: string }> = {
 };
 
 export function injectFormVariables<T>(
-    fn: (injectedVariables: { id?: string; mode?: "edit" | "add"; client: ApolloClient<object>; formApi: FormApi<unknown, Partial<unknown>> }) => T,
+    fn: (injectedVariables: {
+        id?: string;
+        mode?: "edit" | "add";
+        client: ApolloClient<object>;
+        formApi: FormApi<unknown, Partial<unknown>>;
+        scope: ContentScope;
+    }) => T,
 ): T {
     // this function is only used in config but never called at runtime
     return fn({} as any);
