@@ -5,7 +5,6 @@ export type {
     GridColumnConfig,
     GridColumnStaticSelectValue,
     GridConfig,
-    injectFormVariables,
     StaticSelectValue,
 } from "./commands/generate/generate-command";
-export { defineConfig } from "./commands/generate/generate-command";
+export { defineConfig, injectFormVariables } from "./commands/generate/generate-command";

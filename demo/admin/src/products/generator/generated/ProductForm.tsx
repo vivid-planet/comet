@@ -30,7 +30,7 @@ import { useMemo } from "react";
 import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
-import debounce from "p-debounce";
+import { validateProductSlug } from "../validateProductSlug";
 import { Future_DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
@@ -157,22 +157,8 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Titel"/>} validate={(value: string) => value.length < 3 ? (<FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long"/>) : undefined}/>
 
-        <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>} validate={async (value: string) => {
-                debounce(async () => {
-                    const slugQuery = await client.query({
-                        query: gql`
-                                    query CheckProductSlug($slug: String!) {
-                                        productBySlug(slug: $slug) {
-                                            id
-                                        }
-                                    }
-                                `,
-                        variables: { slug: value },
-                    });
-                    if (slugQuery.data.productBySlug && slugQuery.data.productBySlug.id !== id) {
-                        return (<FormattedMessage id="product.validate.slugMustBeUnique" defaultMessage="Slug must be unique. A product with this slug already exists."/>);
-                    }
-                }, 500);
+        <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>} validate={(value: string) => {
+                return validateProductSlug({ value, id, client });
             }}/>
 
             <Future_DatePickerField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>

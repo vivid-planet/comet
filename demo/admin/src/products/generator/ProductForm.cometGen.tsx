@@ -1,13 +1,11 @@
-import { gql } from "@apollo/client";
-import { defineConfig } from "@comet/admin-generator";
-import { injectFormVariables } from "@comet/admin-generator/lib/commands/generate/generate-command";
+import { defineConfig, injectFormVariables } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
-import debounce from "p-debounce";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
 import { productTypeValues } from "./productTypeValues";
+import { validateProductSlug } from "./validateProductSlug";
 
 export default defineConfig<GQLProduct>({
     type: "form",
@@ -35,27 +33,8 @@ export default defineConfig<GQLProduct>({
                 {
                     type: "text",
                     name: "slug",
-                    validate: injectFormVariables(({ id, client }) => async (value: string) => {
-                        debounce(async () => {
-                            const slugQuery = await client.query({
-                                query: gql`
-                                    query CheckProductSlug($slug: String!) {
-                                        productBySlug(slug: $slug) {
-                                            id
-                                        }
-                                    }
-                                `,
-                                variables: { slug: value },
-                            });
-                            if (slugQuery.data.productBySlug && slugQuery.data.productBySlug.id !== id) {
-                                return (
-                                    <FormattedMessage
-                                        id="product.validate.slugMustBeUnique"
-                                        defaultMessage="Slug must be unique. A product with this slug already exists."
-                                    />
-                                );
-                            }
-                        }, 500);
+                    validate: injectFormVariables(({ id, client }) => (value: string) => {
+                        return validateProductSlug({ value, id, client });
                     }),
                 },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
