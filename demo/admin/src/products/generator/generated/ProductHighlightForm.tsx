@@ -75,7 +75,7 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
     const handleSubmit = async ({ productCategoryType, productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, product: formValues.product?.id, };
+        const output = { ...formValuesRest, product: formValuesRest.product?.id, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
