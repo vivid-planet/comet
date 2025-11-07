@@ -20,9 +20,9 @@ function buildTree(nodes: PageTreeNode[], parentId = "root"): PageTreeNodeWithCh
 
 function renderTree(nodes: PageTreeNodeWithChildren[]): JSX.Element {
     return (
-        <ul className={styles.listItem}>
+        <ul className={styles.list}>
             {nodes.map((node) => (
-                <li key={node.id} className={styles.list}>
+                <li key={node.id} className={styles.listItem}>
                     <NextLink href={createSitePath({ path: node.path, scope: node.scope })} className={styles.link}>
                         {node.name}
                     </NextLink>
