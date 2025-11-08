@@ -2,19 +2,20 @@ import { createHash } from "crypto";
 import * as fs from "fs";
 import type { LoaderContext } from "webpack";
 
-// Path to store the mapping of hashes to queries
-const HASH_MAP_PATH = ".next/persisted-queries.json";
+interface GqlHashLoaderOptions {
+    persistedQueriesPath?: string;
+}
 
 // Load or initialize the hash map
-function loadHashMap(): Record<string, string> {
-    if (fs.existsSync(HASH_MAP_PATH)) {
-        return JSON.parse(fs.readFileSync(HASH_MAP_PATH, "utf-8"));
+function loadHashMap(path: string): Record<string, string> {
+    if (fs.existsSync(path)) {
+        return JSON.parse(fs.readFileSync(path, "utf-8"));
     }
     return {};
 }
 
-function saveHashMap(hashMap: Record<string, string>) {
-    fs.writeFileSync(HASH_MAP_PATH, JSON.stringify(hashMap, null, 2));
+function saveHashMap(path: string, hashMap: Record<string, string>) {
+    fs.writeFileSync(path, JSON.stringify(hashMap, null, 2));
 }
 
 function hashQuery(query: string): string {
@@ -24,8 +25,11 @@ function hashQuery(query: string): string {
 // This regex matches gql`...` template literals, including multiline queries
 const gqlTagRegex = /gql`([\s\S]*?)`/gm;
 
-const gqlHashLoader = function (this: LoaderContext<unknown>, source: string) {
-    const hashMap = loadHashMap();
+const webpackGqlHashLoader = function (this: LoaderContext<GqlHashLoaderOptions>, source: string) {
+    const options = this.getOptions() || {};
+    const persistedQueriesPath = options.persistedQueriesPath || ".persisted-queries.json";
+
+    const hashMap = loadHashMap(persistedQueriesPath);
     const replacements: { start: number; end: number; replacement: string }[] = [];
     let match;
     while ((match = gqlTagRegex.exec(source)) !== null) {
@@ -56,8 +60,8 @@ const gqlHashLoader = function (this: LoaderContext<unknown>, source: string) {
         const { start, end, replacement } = replacements[i];
         modifiedSource = modifiedSource.slice(0, start) + replacement + modifiedSource.slice(end);
     }
-    saveHashMap(hashMap);
+    saveHashMap(persistedQueriesPath, hashMap);
     return modifiedSource;
 };
 
-export default gqlHashLoader;
+export default webpackGqlHashLoader;

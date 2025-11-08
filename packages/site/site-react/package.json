@@ -17,7 +17,8 @@
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
         },
-        "./css": "./lib/style.css"
+        "./css": "./lib/style.css",
+        "./webpackGqlHashLoader": "./lib/persistedQueries/webpackGqlHashLoader.js"
     },
     "module": "./lib/index.js",
     "types": "lib/index.d.ts",
@@ -67,7 +68,8 @@
         "ts-jest": "^29.4.0",
         "typescript": "5.8.3",
         "vite": "^5.4.19",
-        "vite-plugin-dts": "^4.5.4"
+        "vite-plugin-dts": "^4.5.4",
+        "webpack": "^5.102.1"
     },
     "peerDependencies": {
         "react": "^18.0.0"
