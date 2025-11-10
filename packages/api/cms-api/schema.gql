@@ -28,6 +28,8 @@ enum Permission {
   fileUploads
   dependencies
   warnings
+  sitePreview
+  blockPreview
 }
 
 """

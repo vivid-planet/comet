@@ -1012,6 +1012,7 @@ type PaginatedWarnings {
 }
 
 enum Permission {
+  blockPreview
   builds
   cronJobs
   dam
@@ -1023,6 +1024,7 @@ enum Permission {
   pageTree
   prelogin
   products
+  sitePreview
   translation
   userPermissions
   warnings
