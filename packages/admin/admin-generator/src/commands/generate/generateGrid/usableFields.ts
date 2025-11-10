@@ -25,6 +25,6 @@ export type UsableFields<T, FollowArrays extends boolean = false> = IfExplicitAn
 
 // UsableFormFields steps into objects containing __typename and does include those objects themselves
 type FormFieldNames<T> = {
-    [K in keyof T]: `${Exclude<K, symbol>}` | (FieldNames<T[K]> extends never ? never : `${Exclude<K, symbol>}.${FieldNames<T[K]>}`);
+    [K in keyof T]: `${Exclude<K, symbol>}` | (FormFieldNames<T[K]> extends never ? never : `${Exclude<K, symbol>}.${FormFieldNames<T[K]>}`);
 }[keyof T];
 export type UsableFormFields<T> = IfExplicitAny<T, any, FormFieldNames<GqlLeaves<T, false>>>;
