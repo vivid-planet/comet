@@ -43,7 +43,7 @@ importers:
         version: 5.63.1(@types/node@24.10.0)(typescript@5.8.3)
       lint-staged:
         specifier: ^16.0.0
-        version: 16.2.4
+        version: 16.2.6
       npm-run-all2:
         specifier: ^8.0.0
         version: 8.0.4
@@ -9726,8 +9726,8 @@ packages:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
     engines: {node: '>=8'}
 
-  ansi-escapes@7.1.1:
-    resolution: {integrity: sha512-Zhl0ErHcSRUaVfGUeUdDuLgpkEo8KIFjB4Y9uAc46ScOpdDiU1Dbyplh7qWJeJ/ZHpbyMSM26+X3BySgnIz40Q==}
+  ansi-escapes@7.2.0:
+    resolution: {integrity: sha512-g6LhBsl+GBPRWGWsBtutpzBYuIIdBkLEvad5C/va/74Db018+5TZiyA26cZJAr3Rft5lprVqOIPxf5Vid6tqAw==}
     engines: {node: '>=18'}
 
   ansi-html-community@0.0.8:
@@ -9743,8 +9743,8 @@ packages:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
 
-  ansi-regex@6.1.0:
-    resolution: {integrity: sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA==}
+  ansi-regex@6.2.2:
+    resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
     engines: {node: '>=12'}
 
   ansi-styles@3.2.1:
@@ -10431,8 +10431,8 @@ packages:
     resolution: {integrity: sha512-n8fOixwDD6b/ObinzTrp1ZKFzbgvKZvuz/TvejnLn1aQfC6r52XEx85FmuC+3HI+JM7coBRXUvNqEU2PHVrHpg==}
     engines: {node: '>=8'}
 
-  cli-truncate@5.1.0:
-    resolution: {integrity: sha512-7JDGG+4Zp0CsknDCedl0DYdaeOhc46QNpXi3NLQblkZpXXgA6LncLDUUyvrjSvZeF3VRQa+KiMGomazQrC1V8g==}
+  cli-truncate@5.1.1:
+    resolution: {integrity: sha512-SroPvNHxUnk+vIW/dOSfNqdy1sPEFkrTk6TUtqLCnBlo3N7TNYYkzzN7uSD6+jVjrdO4+p8nH7JzH6cIvUem6A==}
     engines: {node: '>=20'}
 
   cli-width@3.0.0:
@@ -11608,8 +11608,8 @@ packages:
   emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
 
-  emoji-regex@10.5.0:
-    resolution: {integrity: sha512-lb49vf1Xzfx080OKA0o6l8DQQpV+6Vg95zyCJX9VB/BqKYlhG7N4wgROUUHRA+ZPUefLnteQOad7z1kT2bV7bg==}
+  emoji-regex@10.6.0:
+    resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
 
   emoji-regex@7.0.3:
     resolution: {integrity: sha512-CwBLREIQ7LvYFB0WyRvwhq5N5qPhc6PMjD6bYggFlI5YyDgl+0vxq5VHbMOFqLg7hfWzmu8T5Z1QofhmTIhItA==}
@@ -12507,8 +12507,8 @@ packages:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
     engines: {node: 6.* || 8.* || >= 10.*}
 
-  get-east-asian-width@1.3.0:
-    resolution: {integrity: sha512-vpeMIQKxczTD/0s2CdEWHcb0eeJe6TFjxb+J5xgX7hScxqrGuyjmv4c1D4A/gelKfyox0gJJwIHF+fLjeaM8kQ==}
+  get-east-asian-width@1.4.0:
+    resolution: {integrity: sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q==}
     engines: {node: '>=18'}
 
   get-image-colors@4.0.1:
@@ -13248,8 +13248,8 @@ packages:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
 
-  is-fullwidth-code-point@5.0.0:
-    resolution: {integrity: sha512-OVa3u9kkBbw7b8Xw5F9P+D/T9X+Z4+JruYVNapTjPYZYUznQ5YfWeFkOj606XYYW8yugTfC8Pj0hYqvi4ryAhA==}
+  is-fullwidth-code-point@5.1.0:
+    resolution: {integrity: sha512-5XHYaSyiqADb4RnZ1Bdad6cPp8Toise4TzEjcOYDHZkTCbKgiUl7WTUCpNWHuxmDt91wnsZBc9xinNzopv3JMQ==}
     engines: {node: '>=18'}
 
   is-generator-fn@2.1.0:
@@ -13972,8 +13972,8 @@ packages:
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  lint-staged@16.2.4:
-    resolution: {integrity: sha512-Pkyr/wd90oAyXk98i/2KwfkIhoYQUMtss769FIT9hFM5ogYZwrk+GRE46yKXSg2ZGhcJ1p38Gf5gmI5Ohjg2yg==}
+  lint-staged@16.2.6:
+    resolution: {integrity: sha512-s1gphtDbV4bmW1eylXpVMk2u7is7YsrLl8hzrtvC70h4ByhcMLZFY01Fx05ZUDNuv1H8HO4E+e2zgejV1jVwNw==}
     engines: {node: '>=20.17'}
     hasBin: true
 
@@ -13989,8 +13989,8 @@ packages:
       enquirer:
         optional: true
 
-  listr2@9.0.4:
-    resolution: {integrity: sha512-1wd/kpAdKRLwv7/3OKC8zZ5U8e/fajCfWMxacUvB79S5nLrYGPtUI/8chMQhn3LQjsRVErTb9i1ECAwW0ZIHnQ==}
+  listr2@9.0.5:
+    resolution: {integrity: sha512-ME4Fb83LgEgwNw96RKNvKV4VTLuXfoKudAmm2lP8Kk87KaMK0/Xrx/aAkMWmT8mDb+3MlFDspfbCs7adjRxA2g==}
     engines: {node: '>=20.0.0'}
 
   load-esm@1.0.2:
@@ -28313,7 +28313,7 @@ snapshots:
     dependencies:
       type-fest: 0.21.3
 
-  ansi-escapes@7.1.1:
+  ansi-escapes@7.2.0:
     dependencies:
       environment: 1.1.0
 
@@ -28323,7 +28323,7 @@ snapshots:
 
   ansi-regex@5.0.1: {}
 
-  ansi-regex@6.1.0: {}
+  ansi-regex@6.2.2: {}
 
   ansi-styles@3.2.1:
     dependencies:
@@ -29212,7 +29212,7 @@ snapshots:
       slice-ansi: 3.0.0
       string-width: 4.2.3
 
-  cli-truncate@5.1.0:
+  cli-truncate@5.1.1:
     dependencies:
       slice-ansi: 7.1.2
       string-width: 8.1.0
@@ -30437,7 +30437,7 @@ snapshots:
 
   emoji-regex@10.3.0: {}
 
-  emoji-regex@10.5.0: {}
+  emoji-regex@10.6.0: {}
 
   emoji-regex@7.0.3: {}
 
@@ -31699,7 +31699,7 @@ snapshots:
 
   get-caller-file@2.0.5: {}
 
-  get-east-asian-width@1.3.0: {}
+  get-east-asian-width@1.4.0: {}
 
   get-image-colors@4.0.1:
     dependencies:
@@ -32597,9 +32597,9 @@ snapshots:
 
   is-fullwidth-code-point@3.0.0: {}
 
-  is-fullwidth-code-point@5.0.0:
+  is-fullwidth-code-point@5.1.0:
     dependencies:
-      get-east-asian-width: 1.3.0
+      get-east-asian-width: 1.4.0
 
   is-generator-fn@2.1.0: {}
 
@@ -33550,10 +33550,10 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
-  lint-staged@16.2.4:
+  lint-staged@16.2.6:
     dependencies:
-      commander: 14.0.1
-      listr2: 9.0.4
+      commander: 14.0.2
+      listr2: 9.0.5
       micromatch: 4.0.8
       nano-spawn: 2.0.0
       pidtree: 0.6.0
@@ -33575,9 +33575,9 @@ snapshots:
     optionalDependencies:
       enquirer: 2.4.1
 
-  listr2@9.0.4:
+  listr2@9.0.5:
     dependencies:
-      cli-truncate: 5.1.0
+      cli-truncate: 5.1.1
       colorette: 2.0.20
       eventemitter3: 5.0.1
       log-update: 6.1.0
@@ -33727,7 +33727,7 @@ snapshots:
 
   log-update@6.1.0:
     dependencies:
-      ansi-escapes: 7.1.1
+      ansi-escapes: 7.2.0
       cli-cursor: 5.0.0
       slice-ansi: 7.1.2
       strip-ansi: 7.1.2
@@ -36993,7 +36993,7 @@ snapshots:
   slice-ansi@7.1.2:
     dependencies:
       ansi-styles: 6.2.3
-      is-fullwidth-code-point: 5.0.0
+      is-fullwidth-code-point: 5.1.0
 
   slugify@1.6.6: {}
 
@@ -37265,13 +37265,13 @@ snapshots:
 
   string-width@7.2.0:
     dependencies:
-      emoji-regex: 10.5.0
-      get-east-asian-width: 1.3.0
+      emoji-regex: 10.6.0
+      get-east-asian-width: 1.4.0
       strip-ansi: 7.1.2
 
   string-width@8.1.0:
     dependencies:
-      get-east-asian-width: 1.3.0
+      get-east-asian-width: 1.4.0
       strip-ansi: 7.1.2
 
   string.prototype.includes@2.0.1:
@@ -37353,7 +37353,7 @@ snapshots:
 
   strip-ansi@7.1.2:
     dependencies:
-      ansi-regex: 6.1.0
+      ansi-regex: 6.2.2
 
   strip-bom-string@1.0.0: {}
 
