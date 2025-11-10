@@ -2223,8 +2223,16 @@ The React dependency has been bumped to v18.
 
 Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
 
+#### Update to client rendering API
+
+```diff title="admin/src/loader.ts"
+- ReactDOM.render(createElement(App), rootElement);
++ const root = createRoot(rootElement);
++ root.render(createElement(App));
+```
+
 :::info
-Probably, there's not much to do here.
+Otherwise, there's probably not much to do here.
 You can also fix potential errors later during the lint step.
 :::
 
