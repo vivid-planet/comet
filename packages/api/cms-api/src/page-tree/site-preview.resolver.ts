@@ -18,7 +18,7 @@ export class SitePreviewResolver {
     constructor(@Inject(SITE_PREVIEW_CONFIG) private readonly config: SitePreviewConfig) {}
 
     @Query(() => String)
-    @RequiredPermission("pageTree")
+    @RequiredPermission(["pageTree", "sitePreview"])
     async sitePreviewJwt(
         @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
         @Args("path") path: string,
@@ -40,7 +40,7 @@ export class SitePreviewResolver {
     }
 
     @Query(() => String)
-    @RequiredPermission("pageTree")
+    @RequiredPermission(["pageTree", "blockPreview"])
     async blockPreviewJwt(
         @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
         @Args("url") url: string,
