@@ -79,7 +79,7 @@ function createPersistedQueryGraphQLFetch(fetch: Fetch, url: string): GraphQLFet
     };
 }
 
-export function createGraphQLFetch() {
+export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {}): GraphQLFetch {
     if (process.env.NEXT_RUNTIME === "edge") {
         throw new Error("createGraphQLFetch: cannot use in edge runtime, use createGraphQLFetchMiddleware instead.");
     }
@@ -92,7 +92,7 @@ export function createGraphQLFetch() {
     if (typeof window !== "undefined") {
         // Client-side rendering
         return createPersistedQueryGraphQLFetch(
-            createFetchWithDefaults(fetch, {
+            createFetchWithDefaults(passedFetch || fetch, {
                 headers: {
                     ...convertPreviewDataToHeaders(previewData),
                 },
@@ -107,7 +107,7 @@ export function createGraphQLFetch() {
         return createGraphQLFetchLibrary(
             // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled
             // see cache-handler.ts for maximum cache duration (24 hours)
-            createFetchWithDefaults(createFetchWithDefaultNextRevalidate(fetch, 7.5 * 60), {
+            createFetchWithDefaults(createFetchWithDefaultNextRevalidate(passedFetch || fetch, 7.5 * 60), {
                 headers: {
                     authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
                     ...convertPreviewDataToHeaders(previewData),
