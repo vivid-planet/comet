@@ -27,13 +27,11 @@ export class FileUploadsService {
         private readonly entityManager: EntityManager,
     ) {
         // Delete expired files every minute
-        // TODO: check if that isn't triggered multiple times locally or in production
         setInterval(async () => {
             try {
                 await this.deleteExpiredFiles();
             } catch (error) {
-                // TODO: what to do here? will only log the error and continue
-                console.error("Error deleting expired files", error);
+                console.error("Error while deleting expired files", error);
             }
         }, 60000);
     }

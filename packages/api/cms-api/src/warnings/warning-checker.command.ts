@@ -134,6 +134,11 @@ export class WarningCheckerCommand extends CommandRunner {
                 this.entityManager.clear();
 
                 offset += queryBuilderLimit;
+
+                // Flush every 10000 root blocks to reduce memory usage for large entities
+                if (offset % 10000 === 0) {
+                    await this.entityManager.flush();
+                }
             } while (rootBlocks.length > 0);
         }
 
@@ -183,6 +188,7 @@ export class WarningCheckerCommand extends CommandRunner {
                 }
             }
         }
+        await this.entityManager.flush();
 
         // remove all warnings that are not present anymore
         await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: startDate } });
