@@ -1,5 +1,12 @@
 # @comet/api-generator
 
+## 8.5.2
+
+### Patch Changes
+
+- dd351bf: Fix import path for relations targeting entity from `@comet/cms-api`
+    - @comet/cms-api@8.5.2
+
 ## 8.5.1
 
 ### Patch Changes

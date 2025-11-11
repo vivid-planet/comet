@@ -164,6 +164,12 @@ export default defineConfig({
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
+        {
+            name: "demo-api-mitmproxy",
+            script: "pnpm run dev:demo-api-mitmproxy",
+            group: ["demo-api", "demo"],
+            waitOn: ["tcp:$API_PORT"],
+        },
 
         // group demo login
         {
@@ -227,13 +233,19 @@ export default defineConfig({
         {
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
-            group: ["docs"],
+            group: ["storybook", "docs"],
         },
         {
             name: "docs",
             script: "pnpm --filter comet-docs start",
             group: ["docs"],
             waitOn: ["tcp:26638"], // storybook
+        },
+        {
+            name: "storybook-comet-admin",
+            script: "pnpm --filter @comet/admin run storybook",
+            group: ["storybook"],
+            waitOn: waitOnPackages("@comet/admin"),
         },
     ],
 });
