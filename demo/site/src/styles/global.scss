@@ -1,6 +1,9 @@
+@use "./theme.scss" as *;
 @use "./variables" as *;
 
 :root {
+    @include global-theme-default;
+
     --spacing-d400: 72px;
     --spacing-d300: 44px;
     --spacing-d200: 28px;
