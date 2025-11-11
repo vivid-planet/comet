@@ -1,5 +1,11 @@
 # @comet/cli
 
+## 8.6.0
+
+### Minor Changes
+
+- 4c452a1: Add download-mitmproxy command
+
 ## 8.5.2
 
 ## 8.5.1

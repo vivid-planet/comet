@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 8.6.0
+
+### Patch Changes
+
+- 6c5578a: Remove the delay before closing the EditDialog after successful save
+    - @comet/admin-icons@8.6.0
+
 ## 8.5.2
 
 ### Patch Changes
