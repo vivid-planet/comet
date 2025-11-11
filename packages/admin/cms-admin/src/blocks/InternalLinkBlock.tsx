@@ -38,7 +38,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         };
     },
 
-    output2State: async (output, { apolloClient }) => {
+    output2State: async (output, { apolloClient, pageTreeScope }) => {
         if (output.targetPageId === undefined) {
             return {};
         }
@@ -57,8 +57,10 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
             variables: { id: output.targetPageId },
         });
 
+        const targetPage = data.pageTreeNode ? { ...data.pageTreeNode, scope: pageTreeScope } : undefined;
+
         // TODO consider throwing an error
-        return { targetPage: data.pageTreeNode ?? undefined, targetPageAnchor: output.targetPageAnchor };
+        return { targetPage, targetPageAnchor: output.targetPageAnchor };
     },
 
     isValid: () => {
