@@ -1,4 +1,3 @@
-"use client";
 import { type PropsWithData } from "@comet/site-nextjs";
 import { type InternalLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
@@ -16,19 +15,21 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
         return <span className={className}>{children}</span>;
     }
 
-    const pathWithAnchor = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
-
-    let href: string;
-
-    if (targetPage.scope) {
-        const scope = targetPage.scope as GQLPageTreeNodeScope;
-        href = createSitePath({ path: pathWithAnchor, scope });
-    } else {
-        href = pathWithAnchor;
+    if (targetPage.scope == null) {
+        throw new Error("InternalLinkBlock: targetPage.scope is required");
     }
 
+    const pathWithAnchor = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+
     return (
-        <Link href={href} title={title} className={className}>
+        <Link
+            href={createSitePath({
+                scope: targetPage.scope as GQLPageTreeNodeScope,
+                path: pathWithAnchor,
+            })}
+            title={title}
+            className={className}
+        >
             {children}
         </Link>
     );
