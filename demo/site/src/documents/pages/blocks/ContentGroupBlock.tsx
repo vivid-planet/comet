@@ -37,10 +37,12 @@ const ContentGroupContentBlock = withPreview(
 );
 
 export const ContentGroupBlock = withPreview(
-    ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => (
-        <PageLayout className={backgroundColor !== "default" ? styles[backgroundColor] : undefined}>
-            <ContentGroupContentBlock data={content} />
-        </PageLayout>
-    ),
+    ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => {
+        return (
+            <PageLayout className={backgroundColor !== "default" ? styles[`root--${backgroundColor}`] : undefined}>
+                <ContentGroupContentBlock data={content} />
+            </PageLayout>
+        );
+    },
     { label: "ContentGroup" },
 );
