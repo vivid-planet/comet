@@ -1,6 +1,7 @@
 import {
     Button,
     FillSpace,
+    HelpDialogButton,
     Stack,
     StackLink,
     StackPage,
@@ -12,8 +13,10 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { ArrowRight, Save } from "@comet/admin-icons";
-import { Chip } from "@mui/material";
+import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Box, Chip, Typography } from "@mui/material";
 import { type ReactNode } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -66,3 +69,24 @@ export const _Toolbar = () => (
         <Story />
     </StackWrapper>
 );
+
+export const ToolbarWithHelp = () => {
+    return (
+        <Toolbar
+            scopeIndicator={<ContentScopeIndicator global />}
+            topBarActions={
+                <HelpDialogButton
+                    dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}
+                    dialogDescription={
+                        <>
+                            <Box sx={{ width: 150, height: 150 }} component="img" src="https://picsum.photos/id/35/300/300" />
+                            <Typography>This is some helpful text inside the help dialog.</Typography>
+                        </>
+                    }
+                />
+            }
+        >
+            <ToolbarItem>Some title</ToolbarItem>
+        </Toolbar>
+    );
+};
