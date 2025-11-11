@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem, Tooltip } from "@comet/admin";
 import { List } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -134,9 +134,11 @@ export function JobsGrid(props: JobsGridProps) {
                             type: "actions",
                             headerName: "",
                             renderCell: ({ row }) => (
-                                <IconButton component={StackLink} pageName="logs" payload={row.name}>
-                                    <List color="primary" />
-                                </IconButton>
+                                <Tooltip title={<FormattedMessage id="comet.pages.jobs.showLogs" defaultMessage="Show logs" />}>
+                                    <IconButton component={StackLink} pageName="logs" payload={row.name}>
+                                        <List color="primary" />
+                                    </IconButton>
+                                </Tooltip>
                             ),
                             ...disableFieldOptions,
                         },

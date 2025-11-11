@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Button, CancelButton, StackLink, useStackSwitchApi } from "@comet/admin";
+import { Button, CancelButton, StackLink, Tooltip, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
@@ -128,17 +128,21 @@ export function CronJobsGrid() {
                         headerName: "",
                         renderCell: ({ row }) => (
                             <>
-                                <IconButton component={StackLink} pageName="jobs" payload={row.name}>
-                                    <Time color="primary" />
-                                </IconButton>
-                                <IconButton>
-                                    <Play
-                                        color="primary"
-                                        onClick={() => {
-                                            setCronJobToStart(row.name);
-                                        }}
-                                    />
-                                </IconButton>
+                                <Tooltip title={<FormattedMessage id="comet.pages.cronJobs.showRuns" defaultMessage="Show runs" />}>
+                                    <IconButton component={StackLink} pageName="jobs" payload={row.name}>
+                                        <Time color="primary" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={<FormattedMessage id="comet.pages.cronJobs.runJobNow" defaultMessage="Run job now" />}>
+                                    <IconButton>
+                                        <Play
+                                            color="primary"
+                                            onClick={() => {
+                                                setCronJobToStart(row.name);
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
                             </>
                         ),
                         ...disableFieldOptions,
