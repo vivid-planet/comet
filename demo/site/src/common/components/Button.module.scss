@@ -24,53 +24,53 @@
 }
 
 .contained {
-    background-color: var(--brand-primary-main);
-    color: var(--brand-primary-contrast);
-    border: 1px solid var(--brand-primary-main);
+    background-color: var(--cta-contained-default-bg);
+    color: var(--cta-contained-default-text);
+    border: 1px solid var(--cta-contained-default-border);
 
     &:hover {
-        color: var(--brand-primary-dark);
-        border-color: var(--brand-primary-dark);
-        background-color: var(--brand-primary-contrast);
+        color: var(--cta-contained-hover-text);
+        border-color: var(--cta-contained-hover-border);
+        background-color: var(--cta-contained-hover-bg);
     }
 
     &:disabled {
-        background-color: var(--brand-grey-050);
-        color: var(--brand-grey-400);
-        border-color: var(--brand-grey-200);
+        background-color: var(--cta-contained-disabled-bg);
+        color: var(--cta-contained-disabled-text);
+        border-color: var(--cta-contained-disabled-border);
     }
 }
 
 .outlined {
     background-color: transparent;
-    color: var(--brand-primary-main);
-    border: 1px solid var(--brand-primary-main);
+    color: var(--cta-outlined-default-text);
+    border: 1px solid var(--cta-outlined-default-border);
 
     &:hover {
-        background-color: var(--brand-primary-dark);
-        color: var(--brand-primary-contrast);
-        border-color: var(--brand-primary-dark);
+        background-color: var(--cta-outlined-hover-bg);
+        color: var(--cta-outlined-hover-text);
+        border-color: var(--cta-outlined-hover-border);
     }
 
     &:disabled {
-        color: var(--brand-grey-300);
-        border-color: var(--brand-grey-200);
+        color: var(--cta-outlined-disabled-text);
+        border-color: var(--cta-outlined-disabled-border);
     }
 }
 
 .text {
     background-color: transparent;
-    color: var(--brand-primary-main);
+    color: var(--cta-text-default);
     border: 1px solid transparent;
     text-decoration: underline;
     text-underline-offset: 3px;
 
     &:hover {
-        color: var(--brand-primary-dark);
+        color: var(--cta-text-hover);
         text-decoration-thickness: 2px;
     }
 
     &:disabled {
-        color: var(--brand-grey-300);
+        color: var(--cta-text-disabled);
     }
 }
