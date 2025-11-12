@@ -50,7 +50,8 @@ export async function persistedQueryRoute(
         graphqlTarget,
         headers: headersInit,
         persistedQueriesPath = ".persisted-queries.json",
-    }: { graphqlTarget: string; headers?: HeadersInit; persistedQueriesPath: string },
+        cacheMaxAge,
+    }: { graphqlTarget: string; headers?: HeadersInit; persistedQueriesPath: string; cacheMaxAge: number | undefined },
 ) {
     if (!queryMap) {
         await loadPersistedQueries(persistedQueriesPath);
@@ -111,9 +112,8 @@ export async function persistedQueryRoute(
     const responseHeaders: Record<string, string> = {
         "Content-Type": "application/json",
     };
-    if (req.method === "GET") {
-        // Cache for 7.5 minutes (450 seconds) in CDNs and browsers
-        responseHeaders["Cache-Control"] = "public, max-age=450";
+    if (req.method === "GET" && upstreamRes.ok && cacheMaxAge !== undefined) {
+        responseHeaders["Cache-Control"] = `public, max-age=${cacheMaxAge}`;
     }
 
     return new Response(upstreamRes.body, {
