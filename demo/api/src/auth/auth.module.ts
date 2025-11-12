@@ -47,6 +47,12 @@ export class AuthModule {
                             jwksOptions: {
                                 jwksUri: config.auth.idpJwksUri,
                             },
+                            convertJwtToUser: (jwt) => ({
+                                id: jwt.sub,
+                                name: jwt.name,
+                                email: jwt.email,
+                                isAdmin: jwt.isAdmin,
+                            }),
                         }),
                     ],
                 ),
