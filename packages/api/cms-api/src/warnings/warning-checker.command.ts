@@ -130,10 +130,12 @@ export class WarningCheckerCommand extends CommandRunner {
                     }
                 }
 
+                await this.entityManager.flush();
+                this.entityManager.clear();
+
                 offset += queryBuilderLimit;
             } while (rootBlocks.length > 0);
         }
-        await this.entityManager.flush();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entities = this.orm.config.get("entities") as EntityClass<any>[];
