@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-react",
-    "version": "8.5.1",
+    "version": "8.6.0",
     "description": "Comet Site React package",
     "repository": {
         "type": "git",
@@ -8,6 +8,9 @@
         "directory": "packages/site/site-react"
     },
     "license": "BSD-2-Clause",
+    "sideEffects": [
+        "**/*.css"
+    ],
     "type": "module",
     "exports": {
         ".": {

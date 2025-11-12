@@ -42,7 +42,7 @@
         "packages/admin/admin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"]
         },
         "packages/admin/admin-color-picker": {
             "entry": ["./src/index.ts"],
@@ -103,7 +103,7 @@
                 "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"],
+            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit", "@as-integrations/express5"],
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {

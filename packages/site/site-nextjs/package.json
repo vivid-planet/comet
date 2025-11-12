@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-nextjs",
-    "version": "8.5.1",
+    "version": "8.6.0",
     "description": "Comet Site Next.js package",
     "repository": {
         "type": "git",
@@ -8,6 +8,9 @@
         "directory": "packages/site/site-nextjs"
     },
     "license": "BSD-2-Clause",
+    "sideEffects": [
+        "**/*.css"
+    ],
     "type": "module",
     "exports": {
         ".": {

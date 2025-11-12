@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "8.5.1",
+    "version": "8.6.0",
     "description": "A collection of icons for Comet Admin",
     "repository": {
         "directory": "packages/admin/admin-icons",
@@ -35,7 +35,7 @@
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.2.0",
         "@types/cli-progress": "^3.11.6",
-        "@types/node": "^22.16.3",
+        "@types/node": "^24.9.1",
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "change-case": "^4.1.2",

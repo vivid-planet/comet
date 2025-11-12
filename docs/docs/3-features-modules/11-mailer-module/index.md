@@ -48,11 +48,12 @@ mailer: {
 #### /docker-compose.yml
 
 ```
-mailhog:
-  image: mailhog/mailhog
-  ports:
-    - 1025:1025
-    - 8025:8025
+mailpit:
+    image: axllent/mailpit
+    pull_policy: weekly
+    ports:
+        - "127.0.0.1:1025:1025" # SMTP server
+        - "127.0.0.1:8025:8025" # Web UI
 ```
 
 #### /.env

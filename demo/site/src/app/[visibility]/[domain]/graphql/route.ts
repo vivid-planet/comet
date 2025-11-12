@@ -78,9 +78,20 @@ async function handler(req: Request) {
     }
 
     // Forward to actual GraphQL server
+    const forwardHeaders: Record<string, string> = {};
+    for (const header of ["x-include-invisible-content", "x-preview-dam-urls"]) {
+        const value = req.headers.get(header);
+        if (value !== null) {
+            forwardHeaders[header] = value;
+        }
+    }
     const upstreamRes = await fetch(GRAPHQL_TARGET, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+            ...forwardHeaders,
+        },
         body: JSON.stringify({ query: query, variables }),
     });
 

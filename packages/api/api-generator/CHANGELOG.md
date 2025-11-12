@@ -1,5 +1,30 @@
 # @comet/api-generator
 
+## 8.6.0
+
+### Patch Changes
+
+- e81b1ef: Cleanup dependencies
+    - Make `@mikro-orm/core` and `@mikro-orm/postgresql` peer dependencies
+    - Make `typescript` a dependency
+    - Exclude `test-helper.ts` from build and leave `prettier` as dev dependency
+
+    This shouldn't have any noticeable effect.
+
+- Updated dependencies [206b352]
+- Updated dependencies [fda9262]
+- Updated dependencies [30b671e]
+- Updated dependencies [fbae3ae]
+- Updated dependencies [6326641]
+    - @comet/cms-api@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- dd351bf: Fix import path for relations targeting entity from `@comet/cms-api`
+    - @comet/cms-api@8.5.2
+
 ## 8.5.1
 
 ### Patch Changes

@@ -22,7 +22,7 @@ app.use(
         contentSecurityPolicy: {
             directives: {
                 "script-src": ["'self'", "'unsafe-inline'"],
-                "img-src": ["'self'", "https:", "data:"],
+                "img-src": ["'self'", "https:", "data:", "blob:"],
                 "default-src": ["'self'", "https:"],
                 "media-src": ["'self'", "https:"],
                 "style-src": ["'self'", "https:", "'unsafe-inline'"],

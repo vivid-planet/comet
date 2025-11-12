@@ -35,7 +35,7 @@ const gqlHashLoader = function (this: LoaderContext<unknown>, source: string) {
         const fragmentVariables = Array.from(query.matchAll(/\${.*?}/g) ?? [])
             .map((m) => m[0])
             .join(" ");
-        if (query.match(/^\s*fragment\s+(\w+)\s+on\s+\w+/m)) {
+        if (query.match(/^\s*fragment\s+(\w+)\s+on\s+\w+/)) {
             // fragment
             replacements.push({
                 start: match.index,
