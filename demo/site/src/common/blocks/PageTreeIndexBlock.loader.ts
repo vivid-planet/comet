@@ -4,7 +4,7 @@ import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeIndexDataQuery, type GQLPageTreeIndexDataQueryVariables } from "./PageTreeIndexBlock.loader.generated";
 
 export type PageTreeNode = GQLPageTreeIndexDataQuery["paginatedPageTreeNodes"]["nodes"][number];
-export type LoadedData = PageTreeNode[];
+export type LoadedData = ReturnType<typeof loader>;
 
 export const loader: BlockLoader<PageTreeIndexBlockData> = async ({ graphQLFetch, scope }): Promise<LoadedData> => {
     let totalCount = 0;
