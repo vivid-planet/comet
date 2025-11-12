@@ -158,6 +158,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Titel"/>} validate={(value: string) => value.length < 3 ? (<FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long"/>) : undefined}/>
 
         <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>} validate={(value: string) => {
+                console.log(manufacturerCountry);
                 return validateProductSlug({ value, id, client });
             }}/>
 
