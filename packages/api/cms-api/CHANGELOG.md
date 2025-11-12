@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 7.25.14
+
+### Patch Changes
+
+-   09a62afc0: API Generator: fix generated query in position-service
+    -   @comet/blocks-api@7.25.14
+
 ## 7.25.13
 
 ### Patch Changes
