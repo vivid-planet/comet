@@ -46,7 +46,7 @@ export class ProductVariantsService {
 
     getPositionGroupCondition(group: { product: string }): FilterQuery<ProductVariant> {
         return {
-            product: { $eq: group.product },
+            product: group.product,
         };
     }
 }
