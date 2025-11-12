@@ -36,6 +36,7 @@ export default defineConfig<GQLProduct>({
                     validate: injectFormVariables(
                         ({ id, client, manufacturerCountry }: InjectedFormVariables & { manufacturerCountry: string }) =>
                             (value: string) => {
+                                // eslint-disable-next-line no-console
                                 console.log(manufacturerCountry);
                                 return validateProductSlug({ value, id, client });
                             },
