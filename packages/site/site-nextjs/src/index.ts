@@ -31,6 +31,7 @@ export {
     type CookieApi,
     CookieApiProvider,
     CookieSafe,
+    createFetchInMemoryCache,
     createFetchWithPreviewHeaders,
     createGraphQLFetch,
     ErrorHandlerBoundary,
