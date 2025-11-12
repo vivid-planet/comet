@@ -18,7 +18,7 @@
             "import": "./lib/index.js"
         },
         "./css": "./lib/style.css",
-        "./webpackGqlHashLoader": "./lib/site-react/lib/persistedQueries/webpackGqlHashLoader.js"
+        "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "module": "./lib/index.js",
     "types": "lib/index.d.ts",

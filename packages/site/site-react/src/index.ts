@@ -48,7 +48,7 @@ export { Image } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, type ImageDimensions, parseAspectRatio } from "./image/image.utils";
 export { createPersistedQueryGraphQLFetch } from "./persistedQueries/createPersistedQueryGraphQLFetch";
 export { persistedQueryRoute } from "./persistedQueries/persistedQueryRoute";
-export { default as webpackGqlHashLoader } from "./persistedQueries/webpackGqlHashLoader";
+export { default as webpackPersistedQueriesLoader } from "./persistedQueries/webpackPersistedQueriesLoader";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { PreviewContext } from "./preview/PreviewContext";
 export { usePreview } from "./preview/usePreview";

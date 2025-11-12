@@ -44,7 +44,7 @@ const nextConfig = {
                 include: [dirname(fileURLToPath(import.meta.url)) + "/src"],
                 use: [
                     {
-                        loader: "@comet/site-nextjs/webpackGqlHashLoader",
+                        loader: "@comet/site-nextjs/webpackPersistedQueriesLoader",
                         options: {
                             persistedQueriesPath: ".next/persisted-queries.json",
                         },

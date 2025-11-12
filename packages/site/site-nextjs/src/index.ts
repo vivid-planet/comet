@@ -78,7 +78,7 @@ export {
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
     usePreview,
-    webpackGqlHashLoader,
+    webpackPersistedQueriesLoader,
     withPreview,
     type WithPreviewProps,
 } from "@comet/site-react";

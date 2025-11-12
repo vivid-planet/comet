@@ -25,7 +25,7 @@ function hashQuery(query: string): string {
 // This regex matches gql`...` template literals, including multiline queries
 const gqlTagRegex = /gql`([\s\S]*?)`/gm;
 
-const webpackGqlHashLoader = function (this: LoaderContext<GqlHashLoaderOptions>, source: string) {
+const webpackPersistedQueriesLoader = function (this: LoaderContext<GqlHashLoaderOptions>, source: string) {
     const options = this.getOptions() || {};
     const persistedQueriesPath = options.persistedQueriesPath || ".persisted-queries.json";
 
@@ -64,4 +64,4 @@ const webpackGqlHashLoader = function (this: LoaderContext<GqlHashLoaderOptions>
     return modifiedSource;
 };
 
-export default webpackGqlHashLoader;
+export default webpackPersistedQueriesLoader;
