@@ -234,7 +234,7 @@ describe("transformConfig", () => {
         it("collects default imports", () => {
             const sourceFile = parseString(`import debounce from "p-debounce";`);
             const importedIdentifiers = collectImports(sourceFile);
-            expect(importedIdentifiers).toEqual(new Map([["debounce", { name: "debounce", import: "p-debounce" }]]));
+            expect(importedIdentifiers).toEqual(new Map([["debounce", { defaultImport: true, name: "debounce", import: "p-debounce" }]]));
         });
     });
 });
