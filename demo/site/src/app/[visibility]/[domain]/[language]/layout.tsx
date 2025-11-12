@@ -52,16 +52,14 @@ export default async function Layout({ children, params: { domain, language } }:
 
     const messages = await loadMessages(language);
 
-    if (!footer?.content) {
-        return null;
+    if (footer) {
+        footer.content = await recursivelyLoadBlockData({
+            blockData: footer.content,
+            blockType: "FooterContent",
+            graphQLFetch,
+            fetch,
+        });
     }
-
-    footer.content = await recursivelyLoadBlockData({
-        blockData: footer.content,
-        blockType: "FooterContent",
-        graphQLFetch,
-        fetch,
-    });
 
     return (
         <IntlProvider locale={language} messages={messages}>
