@@ -141,12 +141,14 @@ export class FixturesCommand extends CommandRunner {
 
                 for (let i = 0; i < faker.number.int({ min: 100, max: 200 }); i++) {
                     const name = faker.lorem.sentence();
+                    const pageId = faker.string.uuid();
+
                     const page = await this.pageTreeService.createNode(
                         {
                             name: name,
                             slug: slugify(name),
                             parentId: level > 0 ? faker.helpers.arrayElement(pages[level - 1]).id : undefined,
-                            attachedDocument: { type: "Page" },
+                            attachedDocument: { id: pageId, type: "Page" },
                             userGroup: UserGroup.all,
                         } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                         PageTreeNodeCategory.mainNavigation,
@@ -160,8 +162,6 @@ export class FixturesCommand extends CommandRunner {
 
                     const pageInput = getDefaultPageInput();
 
-                    const pageId = faker.string.uuid();
-
                     await this.entityManager.persistAndFlush(
                         this.pagesRepository.create({
                             id: pageId,
@@ -170,7 +170,6 @@ export class FixturesCommand extends CommandRunner {
                             stage: pageInput.stage.transformToBlockData(),
                         }),
                     );
-                    await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
 
                     await this.pageTreeService.updateNodeVisibility(
                         page.id,
