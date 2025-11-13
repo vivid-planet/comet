@@ -1,8 +1,8 @@
 {
-    "name": "comet-demo-api",
+    "name": "comet-demo-saas-api",
     "version": "1.0.0",
     "private": true,
-    "description": "Comet API Demo Application",
+    "description": "Comet API Demo SaaS Application",
     "type": "commonjs",
     "scripts": {
         "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",

@@ -1,8 +1,8 @@
 {
-    "name": "comet-demo-admin",
+    "name": "comet-demo-saas-admin",
     "version": "1.0.0",
     "private": true,
-    "description": "Comet Admin Demo Application",
+    "description": "Comet Admin Demo SaaS Application",
     "type": "commonjs",
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",
