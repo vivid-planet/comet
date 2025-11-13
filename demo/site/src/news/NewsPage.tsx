@@ -46,6 +46,7 @@ export function NewsPage({ initialData, scope }: { initialData: GQLNewsIndexPage
                                 setIsLoading(false);
                                 setNewsList([...newsList, ...response.nodes]);
                             } catch (e) {
+                                console.error("Error loading more news:", e);
                                 setError(e instanceof Error ? e.message : String(e));
                             }
                         }}

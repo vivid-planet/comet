@@ -1,6 +1,9 @@
 import { createContext, useContext } from "react";
 
 export interface CloseDialogOptions {
+    /**
+     * @deprecated A delay isn't wanted anymore
+     */
     delay?: boolean | number;
 }
 

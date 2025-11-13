@@ -30,11 +30,11 @@
         "@formatjs/cli": "^6.7.2",
         "@next/bundle-analyzer": "^14.2.30",
         "@opentelemetry/api": "^1.9.0",
-        "@opentelemetry/auto-instrumentations-node": "^0.65.0",
-        "@opentelemetry/exporter-prometheus": "^0.206.0",
-        "@opentelemetry/exporter-trace-otlp-http": "^0.206.0",
-        "@opentelemetry/instrumentation-runtime-node": "^0.20.0",
-        "@opentelemetry/sdk-node": "^0.206.0",
+        "@opentelemetry/auto-instrumentations-node": "^0.66.0",
+        "@opentelemetry/exporter-prometheus": "^0.207.0",
+        "@opentelemetry/exporter-trace-otlp-http": "^0.207.0",
+        "@opentelemetry/instrumentation-runtime-node": "^0.21.0",
+        "@opentelemetry/sdk-node": "^0.207.0",
         "cache-manager": "^5.7.6",
         "clsx": "^2.1.1",
         "filesize": "^10.1.6",
@@ -73,8 +73,7 @@
         "stylelint": "^16.24.0",
         "stylelint-config-standard-scss": "^16.0.0",
         "typed-scss-modules": "^8.1.1",
-        "typescript": "5.8.3",
-        "webpack": "^5.101.3"
+        "typescript": "5.8.3"
     },
     "engines": {
         "node": "24"
