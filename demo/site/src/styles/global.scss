@@ -4,36 +4,37 @@
 :root {
     @include global-theme-default;
 
-    --spacing-d400: 72px;
-    --spacing-d300: 44px;
-    --spacing-d200: 28px;
-    --spacing-d100: 20px;
-    --spacing-s600: 32px;
-    --spacing-s500: 24px;
-    --spacing-s400: 16px;
-    --spacing-s300: 12px;
-    --spacing-s200: 8px;
     --spacing-s100: 4px;
+    --spacing-s200: 8px;
+    --spacing-s300: 12px;
+    --spacing-s400: 16px;
+    --spacing-s500: 24px;
+    --spacing-s600: 32px;
+
+    --spacing-d100: 20px;
+    --spacing-d200: 28px;
+    --spacing-d300: 44px;
+    --spacing-d400: 72px;
 
     @media (min-width: $breakpoint-sm) {
-        --spacing-d400: 96px;
-        --spacing-d300: 68px;
-        --spacing-d200: 52px;
         --spacing-d100: 24px;
+        --spacing-d200: 52px;
+        --spacing-d300: 68px;
+        --spacing-d400: 96px;
     }
 
     @media (min-width: $breakpoint-md) {
-        --spacing-d400: 120px;
-        --spacing-d300: 84px;
-        --spacing-d200: 64px;
         --spacing-d100: 32px;
+        --spacing-d200: 64px;
+        --spacing-d300: 84px;
+        --spacing-d400: 120px;
     }
 
     @media (min-width: $breakpoint-lg) {
-        --spacing-d400: 172px;
-        --spacing-d300: 100px;
-        --spacing-d200: 72px;
         --spacing-d100: 48px;
+        --spacing-d200: 72px;
+        --spacing-d300: 100px;
+        --spacing-d400: 172px;
     }
 }
 
