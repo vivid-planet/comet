@@ -40,7 +40,7 @@ const ContentGroupContentBlock = withPreview(
 export const ContentGroupBlock = withPreview(
     ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => {
         return (
-            <PageLayout className={clsx(styles.root && backgroundColor !== "default" ? styles[`root--${backgroundColor}`] : undefined)}>
+            <PageLayout className={clsx(styles.root, backgroundColor !== "default" ? styles[`root--${backgroundColor}`] : undefined)}>
                 <ContentGroupContentBlock data={content} />
             </PageLayout>
         );
