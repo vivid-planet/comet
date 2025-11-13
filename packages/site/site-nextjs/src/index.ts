@@ -28,6 +28,7 @@ export {
     createFetchInMemoryCache,
     createFetchWithPreviewHeaders,
     createGraphQLFetch,
+    createPersistedQueryGraphQLFetch,
     DamFileDownloadLinkBlock,
     EmailLinkBlock,
     ErrorHandlerBoundary,
@@ -56,6 +57,7 @@ export {
     OneOfBlock,
     OptionalBlock,
     parseAspectRatio,
+    persistedQueryRoute,
     PhoneLinkBlock,
     Preview,
     type PreviewData,
@@ -76,6 +78,7 @@ export {
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
     usePreview,
+    webpackPersistedQueriesLoader,
     withPreview,
     type WithPreviewProps,
 } from "@comet/site-react";

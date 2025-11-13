@@ -17,7 +17,8 @@
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
         },
-        "./css": "./lib/style.css"
+        "./css": "./lib/style.css",
+        "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "module": "./lib/index.js",
     "types": "lib/index.d.ts",
