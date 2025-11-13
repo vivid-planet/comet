@@ -13,16 +13,11 @@ import styles from "./Breadcrumbs.module.scss";
 
 export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFragment) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const contentId = useId();
+    const listId = useId();
 
     return (
         <PageLayout grid className={styles.root}>
-            <button
-                className={styles.mobileHomeButton}
-                onClick={() => setIsExpanded(!isExpanded)}
-                aria-expanded={isExpanded}
-                aria-controls={contentId}
-            >
+            <button className={styles.mobileHomeButton} onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded} aria-controls={listId}>
                 {name}
                 <SvgUse
                     className={clsx(styles.mobileChevron, isExpanded && styles.mobileChevronExpanded)}
@@ -33,7 +28,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
             </button>
             {parentNodes.length > 0 && (
                 <ReactFocusLock className={clsx(styles.listContainer, isExpanded && styles.listContainerExpanded)} disabled={!isExpanded}>
-                    <ol className={styles.list} id={contentId}>
+                    <ol className={styles.list} id={listId}>
                         <li className={styles.mobileNavigationListElements}>
                             <button className={styles.mobileBackButton} onClick={() => setIsExpanded(false)}>
                                 <SvgUse href="/assets/icons/arrow-left.svg#root" width={16} height={16} color="inherit" />
