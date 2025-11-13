@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 8.7.0
+
+### Patch Changes
+
+- b2da6c9: Add `calculateInheritAspectRatio` to public API (for real)
+- b305d5b: Add EntityInfo to RedirectEntity to provide additional entity information, particularly useful when displaying warnings.
+
 ## 8.6.0
 
 ### Minor Changes

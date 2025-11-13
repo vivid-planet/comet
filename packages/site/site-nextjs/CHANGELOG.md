@@ -1,5 +1,25 @@
 # @comet/site-nextjs
 
+## 8.7.0
+
+### Minor Changes
+
+- 559c536: Move `DamFileDownloadLinkBlock`, `EmailLinkBlock`, `ExternalLinkBlock` and `PhoneLinkBlock` to `@comet/site-react`
+
+    The blocks have no dependency on Next.js and can therefore be in the generic React package.
+
+- db4b750: Add functionality for persisted queries on client side
+    - `createPersistedQueryGraphQLFetch`: GraphQLFetch implementation that calls the BFF Route Handler with an operation ID (hash)
+    - `persistedQueryRoute`: BFF Route Handler that gets called by the above fetch and forwards the query to the API
+    - `webpackPersistedQueriesLoader`: webpack loader that turns client-side queries into an operation ID (hash)
+
+### Patch Changes
+
+- Updated dependencies [559c536]
+- Updated dependencies [a68d4c0]
+- Updated dependencies [db4b750]
+    - @comet/site-react@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes
