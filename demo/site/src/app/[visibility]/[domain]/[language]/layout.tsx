@@ -58,6 +58,7 @@ export default async function Layout({ children, params: { domain, language } }:
             blockType: "FooterContent",
             graphQLFetch,
             fetch,
+            scope: { domain, language },
         });
     }
 
