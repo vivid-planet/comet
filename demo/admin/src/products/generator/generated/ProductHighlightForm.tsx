@@ -59,8 +59,7 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
         ? {
             ...filterByFragment<GQLProductHighlightFormDetailsFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategoryType: data.productHighlight.product?.category?.type,
-            productCategory: data.productHighlight.product?.category
+            productCategoryType: data.productHighlight.product?.category?.type, productCategory: data.productHighlight.product?.category,
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
@@ -73,13 +72,10 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ productCategoryType, productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ productCategoryType, productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            product: formValues.product?.id,
-        };
+        const output = { ...formValuesRest, product: formValuesRest.product?.id, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();

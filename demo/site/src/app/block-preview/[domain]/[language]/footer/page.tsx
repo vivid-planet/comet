@@ -3,6 +3,7 @@
 import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
 import { type FooterContentBlockData } from "@src/blocks.generated";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
+import { type ContentScope } from "@src/site-configs";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
@@ -26,11 +27,12 @@ export default withBlockPreview(() => {
                 blockData: iFrameBridge.block,
                 graphQLFetch,
                 fetch: cachingFetch,
+                scope: iFrameBridge.contentScope as ContentScope,
             });
             setBlockData(newData);
         }
         load();
-    }, [iFrameBridge.block]);
+    }, [iFrameBridge.block, iFrameBridge.contentScope]);
 
     return <div>{blockData && <FooterContentBlock data={blockData} />}</div>;
 });

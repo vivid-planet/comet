@@ -25,7 +25,7 @@ import { type ComponentType } from "react";
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
-import { type UsableFields } from "./generateGrid/usableFields";
+import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
@@ -82,27 +82,27 @@ type AsyncSelectFilter =
       };
 
 export type FormFieldConfig<T> = (
-    | ({ type: "text"; name: keyof T; multiline?: boolean } & InputBaseFieldConfig)
-    | ({ type: "number"; name: keyof T; decimals?: number } & InputBaseFieldConfig)
+    | ({ type: "text"; name: UsableFormFields<T>; multiline?: boolean } & InputBaseFieldConfig)
+    | ({ type: "number"; name: UsableFormFields<T>; decimals?: number } & InputBaseFieldConfig)
     | ({
           type: "numberRange";
-          name: keyof T;
+          name: UsableFormFields<T>;
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: keyof T }
-    | ({ type: "date"; name: keyof T } & InputBaseFieldConfig)
-    | ({ type: "dateTime"; name: keyof T } & InputBaseFieldConfig)
+    | { type: "boolean"; name: UsableFormFields<T> }
+    | ({ type: "date"; name: UsableFormFields<T> } & InputBaseFieldConfig)
+    | ({ type: "dateTime"; name: UsableFormFields<T> } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
-          name: keyof T;
+          name: UsableFormFields<T>;
           values?: StaticSelectValue[];
           inputType?: "select" | "radio";
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelect";
-          name: keyof T;
+          name: UsableFormFields<T>;
           rootQuery: string;
           labelField?: string;
           /** Whether Autocomplete or Select should be used.
@@ -118,7 +118,7 @@ export type FormFieldConfig<T> = (
     | ({
           type: "asyncSelectFilter";
           name: string;
-          loadValueQueryField: string; //TODO improve typing, use something similar to UsableFields<T>;
+          loadValueQueryField: string; //TODO improve typing, use something similar to UsableFormFields<T>;
           rootQuery: string;
           labelField?: string;
           /** Whether Autocomplete or Select should be used.
@@ -131,12 +131,12 @@ export type FormFieldConfig<T> = (
            */
           filter?: AsyncSelectFilter;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
-    | { type: "block"; name: keyof T; block: BlockInterface }
-    | ({ type: "fileUpload"; multiple?: false; name: keyof T; maxFiles?: 1; download?: boolean } & Pick<
+    | { type: "block"; name: UsableFormFields<T>; block: BlockInterface }
+    | ({ type: "fileUpload"; multiple?: false; name: UsableFormFields<T>; maxFiles?: 1; download?: boolean } & Pick<
           Partial<FinalFormFileUploadProps<false>>,
           "maxFileSize" | "readOnly" | "layout" | "accept"
       >)
-    | ({ type: "fileUpload"; multiple: true; name: keyof T; maxFiles?: number; download?: boolean } & Pick<
+    | ({ type: "fileUpload"; multiple: true; name: UsableFormFields<T>; maxFiles?: number; download?: boolean } & Pick<
           Partial<FinalFormFileUploadProps<true>>,
           "maxFileSize" | "readOnly" | "layout" | "accept"
       >)
@@ -154,7 +154,7 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 
 type OptionalNestedFieldsConfig<T> = {
     type: "optionalNestedFields";
-    name: keyof T; // object name containing fields
+    name: UsableFormFields<T>; // object name containing fields
     checkboxLabel?: string;
     fields: FormFieldConfig<any>[];
 };
