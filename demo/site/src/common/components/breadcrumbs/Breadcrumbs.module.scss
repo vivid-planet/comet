@@ -26,34 +26,31 @@
 }
 
 .listContainer {
-    display: none;
-    transform: translateX(100%);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100vw;
+    box-sizing: border-box;
+    z-index: 1;
+    background-color: white;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100px);
     transition:
-        transform 0.2s ease-out,
-        visibility 0s linear 0.2s;
+        opacity 0.2s ease-out,
+        transform 0.2s ease-out;
 
     &Expanded {
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 100%;
-        width: 100vw;
-        box-sizing: border-box;
-        z-index: 1;
-        overflow: hidden;
-        background-color: white;
-        height: auto;
-        transform: translateX(0);
-        visibility: visible;
-        transition:
-            transform 0.2s ease-in,
-            visibility 0s linear 0s;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
     }
 
     @media (min-width: $breakpoint-sm) {
-        display: block;
-        grid-column: 2 / -2;
         position: static;
+        opacity: 1;
+        pointer-events: auto;
+        grid-column: 2 / -2;
         width: auto;
         transform: none;
         transition: none;
