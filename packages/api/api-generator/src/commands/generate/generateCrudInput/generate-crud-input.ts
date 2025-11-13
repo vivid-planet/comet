@@ -146,7 +146,13 @@ export async function generateCrudInput(
             }
             decorators.push(`@Field(${fieldOptions})`);
             type = "string";
-        } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
+        } else if (
+            prop.type === "DecimalType" ||
+            prop.type == "BigIntType" ||
+            prop.type === "number" ||
+            prop.type === "integer" ||
+            prop.type === "float"
+        ) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
