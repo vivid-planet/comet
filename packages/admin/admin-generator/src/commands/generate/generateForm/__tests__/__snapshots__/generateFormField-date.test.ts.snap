@@ -16,4 +16,11 @@ exports[`generateFormField - datePicker should generate simple date field with L
             />"
 `;
 
-exports[`generateFormField - datePicker should generate simple date field with LocalType scalar 2`] = `"availableSince: formValues.availableSince ?? null,"`;
+exports[`generateFormField - datePicker should generate simple date field with LocalType scalar 2`] = `
+[
+  {
+    "fieldName": "availableSince",
+    "formValueToGqlInputCode": "$fieldName ?? null",
+  },
+]
+`;
