@@ -3,7 +3,7 @@
 .root {
     margin-top: auto;
     background-color: var(--brand-grey-900);
-    color: var(--brand-grey-050);
+    color: var(--text-primary);
 }
 
 .pageLayoutContent {
@@ -64,7 +64,7 @@
 }
 
 .linkText {
-    color: var(--brand-primary-main);
+    color: var(--text-secondary);
     text-decoration: underline;
 }
 

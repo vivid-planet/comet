@@ -28,7 +28,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: var(--brand-primary-contrast);
+    color: var(--text-primary);
     grid-column: 3 / -3;
 
     @media (min-width: $breakpoint-sm) {

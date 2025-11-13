@@ -67,7 +67,7 @@
 .animatedChevron {
     width: 20px;
     height: 20px;
-    color: var(--brand-grey-900);
+    color: var(--brand-grey-800);
     transform: rotate(0deg);
     transition: transform 0.4s ease;
 
@@ -102,7 +102,7 @@
     text-decoration: none;
     display: inline-block;
     padding: var(--spacing-s100) 0;
-    color: var(--brand-text-primary);
+    color: var(--brand-grey-800);
 
     &:hover {
         color: var(--brand-primary-main);
