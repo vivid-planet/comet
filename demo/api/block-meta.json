@@ -689,7 +689,7 @@
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
                                 "mediaGallery": "MediaGallery",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
                             },
@@ -733,7 +733,7 @@
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
                                 "mediaGallery": "MediaGallery",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
                             },

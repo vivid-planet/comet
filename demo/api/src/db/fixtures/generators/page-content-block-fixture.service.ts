@@ -24,7 +24,6 @@ import { BillboardTeaserBlockFixtureService } from "./blocks/teaser/billboard-te
 import { TeaserBlockFixtureService } from "./blocks/teaser/teaser-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "./blocks/text-and-content/key-facts-block-fixture.service";
 import { ProductListBlockFixtureService } from "./blocks/text-and-content/product-list-block.fixture";
-import { RichTextBlockFixtureService } from "./blocks/text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
 
@@ -46,7 +45,6 @@ export class PageContentBlockFixtureService {
         private readonly layoutBlockFixtureService: LayoutBlockFixtureService,
         private readonly linkListBlockFixtureService: LinkListBlockFixtureService,
         private readonly mediaGalleryBlockFixtureService: MediaGalleryBlockFixtureService,
-        private readonly richtextBlockFixtureService: RichTextBlockFixtureService,
         private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
         private readonly mediaBlockFixtureService: StandaloneMediaBlockFixtureService,
         private readonly teaserBlockFixtureService: TeaserBlockFixtureService,

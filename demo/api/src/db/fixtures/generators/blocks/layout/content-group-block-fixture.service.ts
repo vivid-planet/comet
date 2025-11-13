@@ -1,6 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
+import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { BackgroundColor as ContentGroupBackgroundColor, ContentBlock, ContentGroupBlock } from "@src/documents/pages/blocks/content-group.block";
 
 import { BlockFixture } from "../block-fixture";
@@ -10,7 +11,6 @@ import { AnchorBlockFixtureService } from "../navigation/anchor-block-fixture.se
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
 import { TeaserBlockFixtureService } from "../teaser/teaser-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "../text-and-content/key-facts-block-fixture.service";
-import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standalone-heading-block-fixture.service";
 import { AccordionBlockFixtureService } from "./accordion-block-fixture.service";
 import { ColumnsBlockFixtureService } from "./columns-block-fixture.service";
@@ -24,11 +24,11 @@ export class ContentGroupBlockFixtureService {
         private readonly columnsBlockFixtureService: ColumnsBlockFixtureService,
         private readonly keyFactsBlockFixtureService: KeyFactsBlockFixtureService,
         private readonly mediaGalleryBlockFixtureService: MediaGalleryBlockFixtureService,
-        private readonly richTextBlockFixtureService: RichTextBlockFixtureService,
         private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
         private readonly standaloneMediaBlockFixtureService: StandaloneMediaBlockFixtureService,
         private readonly standaloneHeadingBlockFixtureService: StandaloneHeadingBlockFixtureService,
         private readonly standaloneCallToActionListBlockFixtureService: StandaloneCallToActionListBlockFixtureService,
+        private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
         private readonly teaserBlockFixtureService: TeaserBlockFixtureService,
     ) {}
 
@@ -44,7 +44,7 @@ export class ContentGroupBlockFixtureService {
             keyFacts: this.keyFactsBlockFixtureService,
             media: this.standaloneMediaBlockFixtureService,
             mediaGallery: this.mediaGalleryBlockFixtureService,
-            richtext: this.richTextBlockFixtureService,
+            richtext: this.standaloneRichTextBlockFixtureService,
             space: this.spaceBlockFixtureService,
             teaser: this.teaserBlockFixtureService,
         };
