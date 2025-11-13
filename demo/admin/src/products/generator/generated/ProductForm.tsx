@@ -4,7 +4,6 @@ import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -35,6 +34,7 @@ import { Future_DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncAutocompleteField } from "@comet/admin";
 import { GQLProductTagsSelectQuery } from "./ProductForm.generated";
 import { GQLProductTagsSelectQueryVariables } from "./ProductForm.generated";
 import { FinalFormSwitch } from "@comet/admin";
@@ -67,21 +67,22 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
-type FormValues = Omit<ProductFormDetailsFragment, keyof typeof rootBlocks | "dimensions" | "lastCheckedAt"> & {
-    dimensionsEnabled: boolean;
-    dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "lastCheckedAt"> & {
+    dimensions: Omit<NonNullable<ProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
     };
+    dimensionsEnabled: boolean;
     image: BlockState<typeof rootBlocks.image>;
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ manufacturerCountry, id }: FormProps) {
+export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -90,14 +91,10 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
             ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
-            dimensionsEnabled: !!data.product.dimensions,
-            dimensions: data.product.dimensions ? { width: String(data.product.dimensions.width), height: String(data.product.dimensions.height), depth: String(data.product.dimensions.depth) } : undefined,
-            image: rootBlocks.image.input2State(data.product.image),
-            lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined
+            dimensions: data.product.dimensions ? { ...data.product.dimensions, width: String(data.product.dimensions.width), height: String(data.product.dimensions.height), depth: String(data.product.dimensions.depth), } : undefined, dimensionsEnabled: !!data.product.dimensions, image: rootBlocks.image.input2State(data.product.image), lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
         }
         : {
-            inStock: false,
-            image: rootBlocks.image.defaultValues()
+            inStock: false, image: rootBlocks.image.defaultValues(),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -109,13 +106,10 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ dimensionsEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, tags: formValues.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValues.dimensions ? { width: parseFloat(formValues.dimensions.width), height: parseFloat(formValues.dimensions.height), depth: parseFloat(formValues.dimensions.depth), } : null, manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), priceList: formValues.priceList ? formValues.priceList.id : null, datasheets: formValues.datasheets?.map(({ id }) => id), lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
-        };
+        const output = { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -128,15 +122,15 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+            const id = mutationResponse?.createProduct.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                });
             }
         }
     };
@@ -182,29 +176,33 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
                     value: "tie",
                     label: <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie"/>
                 }]}/>
-        <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {
+        <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`query ProductCategoriesSelect {
-                            productCategories {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`
+                    query: gql`
+    query ProductCategoriesSelect($search: String) {
+        productCategories(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        search,
+                    }
                 });
                 return data.productCategories.nodes;
             }} getOptionLabel={(option) => option.title}/>
-        <AsyncSelectField required variant="horizontal" fullWidth multiple name="tags" label={<FormattedMessage id="product.tags" defaultMessage="Tags"/>} loadOptions={async () => {
+        <AsyncAutocompleteField required variant="horizontal" fullWidth multiple name="tags" label={<FormattedMessage id="product.tags" defaultMessage="Tags"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
-                    query: gql`query ProductTagsSelect {
-                            productTags {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`
+                    query: gql`
+    query ProductTagsSelect($search: String) {
+        productTags(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        search,
+                    }
                 });
                 return data.productTags.nodes;
             }} getOptionLabel={(option) => option.title}/>
@@ -226,16 +224,19 @@ export function ProductForm({ manufacturerCountry, id }: FormProps) {
         </FieldSet>
 
         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data"/>}>
-            <AsyncSelectField variant="horizontal" fullWidth name="manufacturer" label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer"/>} startAdornment={<InputAdornment position="start"><LocationIcon /></InputAdornment>} loadOptions={async () => {
+            <AsyncAutocompleteField variant="horizontal" fullWidth name="manufacturer" label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer"/>} startAdornment={<InputAdornment position="start"><LocationIcon /></InputAdornment>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
-                    query: gql`query ManufacturersSelect($filter: ManufacturerFilter) {
-                            manufacturers(filter: $filter) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }`, variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } }
+                    query: gql`
+    query ManufacturersSelect($search: String, $filter: ManufacturerFilter) {
+        manufacturers(search: $search, filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    `, variables: {
+                        filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } },
+                        search,
+                    }
                 });
                 return data.manufacturers.nodes;
             }} getOptionLabel={(option) => option.name}/>

@@ -15,8 +15,16 @@ type GqlLeaves<T, FollowArrays extends boolean = false, Depth extends number = 5
               }
             : never
       : never;
+type IfExplicitAny<T, Y, N> = T extends never ? Y : N;
 
+// UsableFields steps into objects containing __typename but does not include those objects themselves
 type FieldNames<T> = {
     [K in keyof T]: `${Exclude<K, symbol>}${FieldNames<T[K]> extends never ? "" : `.${FieldNames<T[K]>}`}`;
 }[keyof T];
-export type UsableFields<T, FollowArrays extends boolean = false> = FieldNames<GqlLeaves<T, FollowArrays>>;
+export type UsableFields<T, FollowArrays extends boolean = false> = IfExplicitAny<T, any, FieldNames<GqlLeaves<T, FollowArrays>>>;
+
+// UsableFormFields steps into objects containing __typename and does include those objects themselves
+type FormFieldNames<T> = {
+    [K in keyof T]: `${Exclude<K, symbol>}` | (FormFieldNames<T[K]> extends never ? never : `${Exclude<K, symbol>}.${FormFieldNames<T[K]>}`);
+}[keyof T];
+export type UsableFormFields<T> = IfExplicitAny<T, any, FormFieldNames<GqlLeaves<T, false>>>;

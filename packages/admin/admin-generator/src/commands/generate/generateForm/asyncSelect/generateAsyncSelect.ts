@@ -2,6 +2,7 @@ import { type IntrospectionInputValue, type IntrospectionObjectType, type Intros
 
 import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../generate-command";
 import { findQueryTypeOrThrow } from "../../utils/findQueryType";
+import { generateGqlOperation } from "../../utils/generateGqlOperation";
 import { type Imports } from "../../utils/generateImportsCode";
 import { isFieldOptional } from "../../utils/isFieldOptional";
 import { buildFormFieldOptions } from "../formField/options";
@@ -134,7 +135,7 @@ export function generateAsyncSelect({
         startAdornment,
         //endAdornment,
         imports: optionsImports,
-    } = buildFormFieldOptions({ config, formConfig, gqlIntrospection, gqlType });
+    } = buildFormFieldOptions({ config, formConfig });
     imports.push(...optionsImports);
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
@@ -142,12 +143,12 @@ export function generateAsyncSelect({
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     const formValueConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
-        destructFromFormValues: config.type == "asyncSelectFilter" ? name : undefined,
+        fieldName: name,
+        destructFromFormValues: config.type == "asyncSelectFilter",
     };
 
     let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
     let code = "";
-    let formValueToGqlInputCode = "";
 
     const { objectType, multiple } = findIntrospectionObjectType({
         config,
@@ -189,6 +190,19 @@ export function generateAsyncSelect({
         formFragmentFields = [`${config.loadValueQueryField}.id`, `${config.loadValueQueryField}.${labelField}`];
     } else {
         formFragmentFields = [`${name}.id`, `${name}.${labelField}`];
+    }
+
+    const rootQueryHasSearchArg = rootQueryType.args.find((arg) => arg.name === "search");
+    const useAutocomplete = config.autocomplete ?? !!rootQueryHasSearchArg;
+    if (useAutocomplete) {
+        if (!rootQueryHasSearchArg) {
+            throw new Error(`Field ${String(config.name)}: Autocomplete is enabled but root query "${rootQuery}" has no search argument.`);
+        }
+        if (rootQueryHasSearchArg.type.kind !== "SCALAR" || rootQueryHasSearchArg.type.name !== "String") {
+            throw new Error(
+                `Field ${String(config.name)}: Autocomplete is enabled but root query "${rootQuery}" has search argument that is not a string.`,
+            );
+        }
     }
 
     const filterConfig = config.filter
@@ -317,12 +331,12 @@ export function generateAsyncSelect({
     if (config.type != "asyncSelectFilter") {
         if (!multiple) {
             if (!required) {
-                formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+                formValueConfig.formValueToGqlInputCode = `$fieldName ? $fieldName.id : null`;
             } else {
-                formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+                formValueConfig.formValueToGqlInputCode = `$fieldName?.id`;
             }
         } else {
-            formValueToGqlInputCode = `${name}: formValues.${name}.map((item) => item.id),`;
+            formValueConfig.formValueToGqlInputCode = `$fieldName.map((item) => item.id)`;
         }
     }
 
@@ -334,16 +348,21 @@ export function generateAsyncSelect({
         name: `GQL${queryName}QueryVariables`,
         importPath: `./${baseOutputFilename}.generated`,
     });
+    if (useAutocomplete) {
+        imports.push({ name: "AsyncAutocompleteField", importPath: "@comet/admin" });
+    } else {
+        imports.push({ name: "AsyncSelectField", importPath: "@comet/admin" });
+    }
 
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
     if (config.type == "asyncSelectFilter") {
         // add (in the gql schema) non existing value for virtual filter field
-        formValueConfig.typeCode = `${name}?: { id: string; ${labelField}: string };`;
-        formValueConfig.initializationCode = `${name}: data.${instanceGqlType}.${config.loadValueQueryField.replace(/\./g, "?.")}`;
+        formValueConfig.typeCode = { nullable: true, type: `{ id: string; ${labelField}: string }` };
+        formValueConfig.initializationCode = `data.${instanceGqlType}.${config.loadValueQueryField.replace(/\./g, "?.")}`;
     }
 
-    code = `<AsyncSelectField
+    code = `<${useAutocomplete ? "AsyncAutocompleteField" : "AsyncSelectField"}
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
@@ -352,20 +371,26 @@ export function generateAsyncSelect({
                 name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
-                loadOptions={async () => {
+                loadOptions={async (${useAutocomplete ? `search?: string` : ""}) => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName}${
-                            filterConfig
-                                ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})`
-                                : ``
-                        } {
-                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
-                                nodes {
-                                    id
-                                    ${labelField}
-                                }
-                            }
-                        }\`${filterConfig ? `, variables: { ${filterConfig.filterVarName}: ${filterConfig.filterVarValue} }` : ``}
+                        query: gql\`${generateGqlOperation({
+                            type: "query",
+                            operationName: queryName,
+                            rootOperation: rootQuery,
+                            fields: ["nodes.id", `nodes.${labelField}`],
+                            variables: [
+                                useAutocomplete ? { name: "search", type: "String" } : undefined,
+                                filterConfig
+                                    ? {
+                                          name: filterConfig.filterVarName,
+                                          type: filterConfig.filterType.typeClass + (filterConfig.filterType.required ? `!` : ``),
+                                      }
+                                    : undefined,
+                            ].filter((v) => v !== undefined),
+                        })}\`${filterConfig || useAutocomplete ? ", variables: { " : ""}
+                            ${filterConfig ? `${filterConfig.filterVarName}: ${filterConfig.filterVarValue},` : ``}
+                            ${useAutocomplete ? `search,` : ``}
+                        ${filterConfig || useAutocomplete ? " }" : ""}
                     });
                     return data.${rootQuery}.nodes;
                 }}
@@ -386,7 +411,6 @@ export function generateAsyncSelect({
     return {
         code,
         hooksCode: "",
-        formValueToGqlInputCode,
         formFragmentFields,
         gqlDocuments: {},
         imports,
