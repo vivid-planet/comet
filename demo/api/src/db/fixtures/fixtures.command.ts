@@ -184,6 +184,7 @@ export class FixturesCommand extends CommandRunner {
                 pages.push(pagesForLevel);
             }
             this.logger.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
+            this.entityManager.clear();
         }
 
         this.logger.log("Generate File Uploads...");
