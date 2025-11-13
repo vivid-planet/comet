@@ -6,7 +6,6 @@ exports[`AsyncSelectFilter generates field with filter 1`] = `
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -39,6 +38,7 @@ import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { GQLProductCategoriesSelectQuery } from "./ProductHighlightForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductHighlightForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { OnChangeField } from "@comet/admin";
 import { GQLProductsSelectQuery } from "./ProductHighlightForm.generated";
 import { GQLProductsSelectQueryVariables } from "./ProductHighlightForm.generated";
@@ -59,19 +59,19 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
 
     
 
-    type FormValues = GQLProductHighlightFormFragment & {
-                productCategory?: { id: string; title: string };
-            };
+    type FormValues = GQLProductHighlightFormFragment & { productCategory?: { id: string; title: string };  };
 
     interface FormProps {
-            id?: string;
+            onCreate?: (id: string) => void;
+id?: string;
         }
 
-    export function ProductHighlightForm({id}: FormProps) {
+    export function ProductHighlightForm({onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductHighlightQuery, GQLProductHighlightQueryVariables>(
@@ -81,14 +81,15 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
-        ? {
-            ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategory: data.productHighlight.product?.category
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
+                productCategory: data.productHighlight.product?.category, 
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -103,12 +104,10 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
         });
         
 
-        const handleSubmit = async ({ productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        const handleSubmit = async ({ productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                product: formValues.product ? formValues.product.id : null,
-            };
+            const output = { ...formValuesRest, product: formValuesRest.product ? formValuesRest.product.id : null,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -122,15 +121,16 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductHighlightMutation, GQLCreateProductHighlightMutationVariables>({
                     mutation: createProductHighlightMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProductHighlight.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProductHighlight.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -168,14 +168,17 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                        query: gql\`query ProductCategoriesSelect {
-                            productCategories {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }\`
+                        query: gql\`
+    query ProductCategoriesSelect {
+        productCategories {
+            nodes { id title }
+        }
+    }
+    
+    \`
+                            
+                            
+                        
                     });
                     return data.productCategories.nodes;
                 }}
@@ -193,14 +196,17 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
-                        query: gql\`query ProductsSelect($filter: ProductFilter) {
-                            products(filter: $filter) {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }\`, variables: { filter: { category: { equal: values.productCategory?.id } } }
+                        query: gql\`
+    query ProductsSelect($filter: ProductFilter) {
+        products(filter: $filter) {
+            nodes { id title }
+        }
+    }
+    
+    \`, variables: { 
+                            filter: { category: { equal: values.productCategory?.id } },
+                            
+                         }
                     });
                     return data.products.nodes;
                 }}
@@ -235,14 +241,17 @@ exports[`AsyncSelectFilter generates filter with value dependent on other field 
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($title: String) {
-                            categories(title: $title) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { title: values.title }
+                        query: gql\`
+    query CategoriesSelect($title: String) {
+        categories(title: $title) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            title: values.title,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -263,7 +272,6 @@ exports[`AsyncSelectFilter generates formProp with enum filter as root query arg
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -298,6 +306,7 @@ import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -315,18 +324,20 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            type: GQLCategoryType;
+            onCreate?: (id: string) => void;
+type: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({type, id}: FormProps) {
+    export function ProductForm({onCreate, type, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -336,14 +347,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -360,10 +372,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -377,15 +387,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -423,14 +434,17 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($type: CategoryType) {
-                            categories(type: $type) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { type: type }
+                        query: gql\`
+    query CategoriesSelect($type: CategoryType) {
+        categories(type: $type) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            type: type,
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -453,7 +467,6 @@ exports[`AsyncSelectFilter with formProp filter with filter arg generates a stri
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -487,6 +500,7 @@ import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -504,18 +518,20 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            foo: string;
+            onCreate?: (id: string) => void;
+foo: string;
 id?: string;
         }
 
-    export function ProductForm({foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -525,14 +541,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -549,10 +566,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -566,15 +581,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -612,14 +628,17 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($filter: CategoryFilter) {
-                            categories(filter: $filter) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { filter: { foo: { equal: foo } } }
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            filter: { foo: { equal: foo } },
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}
@@ -642,7 +661,6 @@ exports[`AsyncSelectFilter with formProp filter with filter arg generates an enu
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { CheckboxField } from "@comet/admin";
 import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
@@ -677,6 +695,7 @@ import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
 import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -694,18 +713,20 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            categoryType: GQLCategoryType;
+            onCreate?: (id: string) => void;
+categoryType: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({categoryType, id}: FormProps) {
+    export function ProductForm({onCreate, categoryType, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
+        
 
         
         const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -715,14 +736,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -739,10 +761,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -756,15 +776,16 @@ id?: string;
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
-                    variables: { input: output },
+                    variables: {
+                        
+                        input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -802,14 +823,17 @@ id?: string;
                 
                 loadOptions={async () => {
                     const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
-                        query: gql\`query CategoriesSelect($filter: CategoryFilter) {
-                            categories(filter: $filter) {
-                                nodes {
-                                    id
-                                    name
-                                }
-                            }
-                        }\`, variables: { filter: { type: { equal: categoryType } } }
+                        query: gql\`
+    query CategoriesSelect($filter: CategoryFilter) {
+        categories(filter: $filter) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            filter: { type: { equal: categoryType } },
+                            
+                         }
                     });
                     return data.categories.nodes;
                 }}

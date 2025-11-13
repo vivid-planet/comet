@@ -1,5 +1,96 @@
 # @comet/admin
 
+## 8.6.0
+
+### Patch Changes
+
+- 6c5578a: Remove the delay before closing the EditDialog after successful save
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin-icons@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.5.1
+
+## 8.5.0
+
+### Minor Changes
+
+- c8359f6: Add Filter Count Chip to DataGrid Filter Button
+
+### Patch Changes
+
+- a2af2c6: `Tooltip` children are now focusable by default for improved accessibility
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- a57d092: Prevent crash in `FinalFormSelect` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- 9374018: Prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- ff6d79a: Simplify adding an info-icon with a tooltip in `FormSection` using the new `infoTooltip` prop
+
+    Either set the props value to a string or `FormattedMessage` directly:
+
+    ```tsx
+    <FormSection title="Title of the FormSection" infoTooltip="Title of the info tooltip">
+        {/* ... */}
+    </FormSection>
+    ```
+
+    Or use an object for a more detailed definition:
+
+    ```tsx
+    <FormSection
+        title="FormSection"
+        infoTooltip={{
+            title: "Title of the info tooltip",
+            description: "Description of the info tooltip",
+            variant: "light",
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+### Patch Changes
+
+- a85e7cb: Prevent empty `Tooltip` from rendering when `title` is `null`, `undefined`, or empty string
+- ff6d79a: Allow overriding the `divider` value of the `title` slot of `FormSection` using `slotProps`
+
+    ```tsx
+    <FormSection
+        title="Title of the FormSection"
+        slotProps={{
+            title: { divider: false },
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+    - @comet/admin-icons@8.4.0
+
 ## 8.3.0
 
 ### Minor Changes

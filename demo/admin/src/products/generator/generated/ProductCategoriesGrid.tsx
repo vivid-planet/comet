@@ -20,6 +20,7 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productCategoriesFragment = gql`
@@ -29,15 +30,12 @@ const productCategoriesFragment = gql`
         }
     `;
 const productCategoriesQuery = gql`
-        query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
-    productCategories(offset: $offset, limit: $limit, sort: $sort) {
-                nodes {
-                    ...ProductCategoriesGrid
-                }
-                totalCount
-            }
+    query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
+        productCategories(offset: $offset, limit: $limit, sort: $sort) {
+            nodes { ...ProductCategoriesGrid } totalCount
         }
-        ${productCategoriesFragment}
+    }
+    ${productCategoriesFragment}
     `;
 const updateProductCategoryPositionMutation = gql`
                 mutation UpdateProductCategoryPosition($id: ID!, $input: ProductCategoryUpdateInput!) {
@@ -75,7 +73,7 @@ export function ProductCategoriesGrid() {
             refetchQueries: [productCategoriesQuery]
         });
     };
-    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = [
+    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = useMemo(() => [
         { field: "title",
             headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
             filterable: false,
@@ -128,7 +126,7 @@ export function ProductCategoriesGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
             offset: 0, limit: 100, sort: { field: "position", direction: "ASC" }
