@@ -345,6 +345,11 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   downloadUrl: String!
+
+  """
+  The date and time the file will be deleted. If undefined, the file will never be deleted.
+  """
+  expiresAt: DateTime
   id: ID!
   imageUrl(resizeWidth: Int!): String
   mimetype: String!
@@ -1367,6 +1372,7 @@ enum ProductSortField {
   priceList
   priceList_contentHash
   priceList_createdAt
+  priceList_expiresAt
   priceList_id
   priceList_mimetype
   priceList_name
