@@ -3,11 +3,11 @@ import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
-import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
@@ -32,7 +32,7 @@ export const PageContentBlock = createBlocksBlock({
         billboardTeaser: BillboardTeaserBlock,
         space: SpaceBlock,
         teaser: TeaserBlock,
-        richtext: RichTextBlock,
+        richtext: StandaloneRichTextBlock,
         heading: StandaloneHeadingBlock,
         columns: ColumnsBlock,
         callToActionList: StandaloneCallToActionListBlock,

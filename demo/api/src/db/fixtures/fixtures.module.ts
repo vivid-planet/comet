@@ -4,6 +4,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
 import { DamFile } from "@src/dam/entities/dam-file.entity";
 import { FixturesCommand } from "@src/db/fixtures/fixtures.command";
+import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { Link } from "@src/documents/links/entities/link.entity";
 import { LinksModule } from "@src/documents/links/links.module";
 import { Page } from "@src/documents/pages/entities/page.entity";
@@ -110,6 +111,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         StandaloneCallToActionListBlockFixtureService,
         StandaloneHeadingBlockFixtureService,
         StandaloneMediaBlockFixtureService,
+        StandaloneRichTextBlockFixtureService,
         TeaserBlockFixtureService,
         TextImageBlockFixtureService,
         TextLinkBlockFixtureService,
