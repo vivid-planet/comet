@@ -1,9 +1,4 @@
-<<<<<<< HEAD:packages/site/site-nextjs/src/blocks/EmailLinkBlock.tsx
-import { type PropsWithData } from "@comet/site-react";
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
-=======
-import { cloneElement, type ReactElement } from "react";
->>>>>>> main:packages/site/site-react/src/blocks/EmailLinkBlock.tsx
 
 import { type EmailLinkBlockData } from "../blocks.generated";
 import { type PropsWithData } from "./PropsWithData";

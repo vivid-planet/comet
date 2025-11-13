@@ -1,11 +1,6 @@
 "use client";
 
-<<<<<<< HEAD:packages/site/site-nextjs/src/blocks/DamFileDownloadLinkBlock.tsx
-import { type PropsWithData, withPreview } from "@comet/site-react";
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
-=======
-import { cloneElement, type ReactElement } from "react";
->>>>>>> main:packages/site/site-react/src/blocks/DamFileDownloadLinkBlock.tsx
 
 import { type DamFileDownloadLinkBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";

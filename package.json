@@ -74,7 +74,6 @@
         "pnpm": "10.17.0"
     },
     "pnpm": {
-<<<<<<< HEAD
         "packageExtensions": {
             "next": {
                 "peerDependencies": {
@@ -94,10 +93,9 @@
                     "@types/react-dom": "*"
                 }
             }
-=======
+        },
         "overrides": {
             "@apollo/server-plugin-landing-page-graphql-playground>@apollo/server": "^5.1.0"
->>>>>>> main
         }
     }
 }

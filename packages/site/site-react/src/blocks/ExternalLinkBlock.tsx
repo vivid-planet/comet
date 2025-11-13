@@ -1,11 +1,6 @@
 "use client";
 
-<<<<<<< HEAD:packages/site/site-nextjs/src/blocks/ExternalLinkBlock.tsx
-import { type PropsWithData, usePreview } from "@comet/site-react";
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type MouseEventHandler, type ReactElement } from "react";
-=======
-import { cloneElement, type MouseEventHandler, type ReactElement } from "react";
->>>>>>> main:packages/site/site-react/src/blocks/ExternalLinkBlock.tsx
 
 import { type ExternalLinkBlockData } from "../blocks.generated";
 import { usePreview } from "../preview/usePreview";
