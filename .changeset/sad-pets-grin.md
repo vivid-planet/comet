@@ -4,6 +4,6 @@
 
 Add functionality for persisted queries on client side
 
-- createPersistedQueryGraphQLFetch: GraphQLFetch implementation that calls BFF api route with hash
-- persistedQueryRoute: BFF api route that get called by above fetch and forwards query to api
-- @comet/site-next/webpackPersistedQueriesLoader: webpack loader that turns client side queries into hash
+- `createPersistedQueryGraphQLFetch`: GraphQLFetch implementation that calls the BFF Route Handler with an operation ID (hash)
+- `persistedQueryRoute`: BFF Route Handler that gets called by the above fetch and forwards the query to the API
+- `@comet/site-nextjs/webpackPersistedQueriesLoader`: webpack loader that turns client-side queries into an operation ID (hash)
