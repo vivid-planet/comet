@@ -15,7 +15,7 @@ describe("generateFragmentByFormFragmentFields", () => {
         expect(normalize(result)).toBe(expected);
     });
     it("should generate the correct fragment for a input with upload fragment for file upload", () => {
-        const input = ["id", "name", "upload { ...FinalFormFileUploadDownloadable }"];
+        const input = ["id", "name", "upload...FinalFormFileUploadDownloadable"];
         const expected = `fragment FooFormFragment on Foo { id name upload { ...FinalFormFileUploadDownloadable } } \${finalFormFileUploadDownloadableFragment}`;
         const result = generateFragmentByFormFragmentFields({ formFragmentName: "FooFormFragment", gqlType: "Foo", formFragmentFields: input });
         expect(normalize(result)).toBe(expected);

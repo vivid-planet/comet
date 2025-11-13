@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AsyncSelect autocomplete generates field with default autocomplete because of search arg 1`] = `
+"<AsyncAutocompleteField
+                required
+                variant="horizontal"
+                fullWidth
+                
+                
+                name="category"
+                label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                
+                loadOptions={async (search?: string) => {
+                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                        query: gql\`
+    query CategoriesSelect($search: String) {
+        categories(search: $search) {
+            nodes { id name }
+        }
+    }
+    
+    \`, variables: { 
+                            
+                            search,
+                         }
+                    });
+                    return data.categories.nodes;
+                }}
+                getOptionLabel={(option) => option.name}
+                
+            />"
+`;
+
+exports[`AsyncSelect autocomplete generates field without autocomplete explicitly set 1`] = `
+"<AsyncSelectField
+                required
+                variant="horizontal"
+                fullWidth
+                
+                
+                name="category"
+                label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                
+                loadOptions={async () => {
+                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                        query: gql\`
+    query CategoriesSelect {
+        categories {
+            nodes { id name }
+        }
+    }
+    
+    \`
+                            
+                            
+                        
+                    });
+                    return data.categories.nodes;
+                }}
+                getOptionLabel={(option) => option.name}
+                
+            />"
+`;

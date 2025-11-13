@@ -6,6 +6,7 @@ import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
+import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
 import { PageContentRichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { PageContentStandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
@@ -17,6 +18,7 @@ import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
 import { FullWidthImageBlock } from "@src/documents/pages/blocks/FullWidthImageBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
+import { ProductListBlock } from "@src/documents/pages/blocks/ProductListBlock";
 import { SliderBlock } from "@src/documents/pages/blocks/SliderBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
@@ -44,6 +46,8 @@ const supportedBlocks: SupportedBlocks = {
     layout: (props) => <LayoutBlock data={props} />,
     textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
+    productList: (props) => <ProductListBlock data={props} />,
+    pageTreeIndex: (props) => <PageTreeIndexBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

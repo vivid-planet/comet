@@ -79,8 +79,8 @@ export class ProductVariantResolver {
         const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
         if (input.position !== undefined) {
             const lastPosition = await this.productVariantsService.getLastPosition({ product: productVariant.product.id });
-            if (input.position > lastPosition + 1) {
-                input.position = lastPosition + 1;
+            if (input.position > lastPosition) {
+                input.position = lastPosition;
             }
             if (productVariant.position < input.position) {
                 await this.productVariantsService.decrementPositions({ product: productVariant.product.id }, productVariant.position, input.position);
