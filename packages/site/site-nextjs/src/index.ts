@@ -1,22 +1,16 @@
 import "@comet/site-react/css";
 
-export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
-export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
-export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
-export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { createFetchWithDefaultNextRevalidate, createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
 export { Image } from "./image/Image";
 export { sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
-export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
-export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
 export { legacyPagesRouterPreviewParams, previewParams, type SitePreviewParams } from "./sitePreview/previewUtils";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
@@ -35,8 +29,11 @@ export {
     createFetchWithPreviewHeaders,
     createGraphQLFetch,
     createPersistedQueryGraphQLFetch,
+    DamFileDownloadLinkBlock,
+    EmailLinkBlock,
     ErrorHandlerBoundary,
     ErrorHandlerProvider,
+    ExternalLinkBlock,
     generateImageUrl,
     getMaxDimensionsFromArea,
     gql,
@@ -61,13 +58,16 @@ export {
     OptionalBlock,
     parseAspectRatio,
     persistedQueryRoute,
+    PhoneLinkBlock,
     Preview,
     type PreviewData,
     PreviewSkeleton,
     type PropsWithData,
     recursivelyLoadBlockData,
+    sendSitePreviewIFrameMessage,
     /** @deprecated Use PreviewData instead. */
     type PreviewData as SitePreviewData,
+    SitePreviewIFrameMessageType,
     type SupportedBlocks,
     SvgImageBlock,
     useBlockPreviewFetch,
