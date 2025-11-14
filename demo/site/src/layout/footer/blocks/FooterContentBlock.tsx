@@ -17,7 +17,7 @@ export const FooterContentBlock = withPreview(
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <div className={styles.topContainer}>
-                            <div className={styles.imageCaptionColumn}>
+                            <div className={styles.imageCaptionWrapper}>
                                 <div className={styles.imageWrapper}>
                                     <DamImageBlock
                                         data={image}
@@ -33,7 +33,7 @@ export const FooterContentBlock = withPreview(
                                 )}
                             </div>
 
-                            <div className={styles.richTextColumn}>
+                            <div className={styles.richTextWrapper}>
                                 <RichTextBlock data={text} disableLastBottomSpacing />
                             </div>
                         </div>
