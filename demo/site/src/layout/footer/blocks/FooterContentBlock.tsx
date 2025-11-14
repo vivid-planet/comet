@@ -26,6 +26,11 @@ export const FooterContentBlock = withPreview(
                                         sizes={createImageSizes({ default: "20vw" })}
                                     />
                                 </div>
+                                {caption && (
+                                    <Typography variant="p200" className={styles.caption}>
+                                        {caption}
+                                    </Typography>
+                                )}
                             </div>
 
                             <div className={styles.richTextColumn}>

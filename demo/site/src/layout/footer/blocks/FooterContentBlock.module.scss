@@ -31,6 +31,12 @@
     flex-direction: column;
 }
 
+.caption {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-top: var(--spacing-s300);
+}
+
 .richTextColumn {
     grid-column: 3;
 }
