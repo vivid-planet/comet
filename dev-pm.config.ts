@@ -153,11 +153,6 @@ export default defineConfig({
             group: ["demo-api", "demo"],
         },
         {
-            name: "demo-oidc-provider",
-            script: "pnpm run start-oidc-provider",
-            group: ["demo-api", "demo"],
-        },
-        {
             name: "demo-api-generator",
             script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
             group: ["demo-api", "demo"],
@@ -168,6 +163,25 @@ export default defineConfig({
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+        },
+        {
+            name: "demo-api-mitmproxy",
+            script: "pnpm run dev:demo-api-mitmproxy",
+            group: ["demo-api", "demo"],
+            waitOn: ["tcp:$API_PORT"],
+        },
+
+        // group demo login
+        {
+            name: "demo-oidc-provider",
+            script: "pnpm run dev:oidc-provider",
+            group: ["demo-login", "demo"],
+        },
+        {
+            name: "demo-oauth2-proxy",
+            script: "pnpm run dev:oauth2-proxy",
+            group: ["demo-login", "demo"],
+            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
         },
 
         //group demo site
@@ -219,13 +233,19 @@ export default defineConfig({
         {
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
-            group: ["docs"],
+            group: ["storybook", "docs"],
         },
         {
             name: "docs",
             script: "pnpm --filter comet-docs start",
             group: ["docs"],
             waitOn: ["tcp:26638"], // storybook
+        },
+        {
+            name: "storybook-comet-admin",
+            script: "pnpm --filter @comet/admin run storybook",
+            group: ["storybook"],
+            waitOn: waitOnPackages("@comet/admin"),
         },
     ],
 });

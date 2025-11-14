@@ -119,18 +119,21 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             blockData: document.content,
             graphQLFetch,
             fetch,
+            scope,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
             blockData: document.seo,
             graphQLFetch,
             fetch,
+            scope,
         }),
         recursivelyLoadBlockData({
             blockType: "Stage",
             blockData: document.stage,
             graphQLFetch,
             fetch,
+            scope,
         }),
     ]);
 

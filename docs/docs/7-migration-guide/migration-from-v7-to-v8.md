@@ -86,6 +86,9 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
+
+Please pin typescript to `5.8.3` due to some ESLint plugins not working with
+higher versions.
 :::
 
 **Create a branch `typescript-5`.**
@@ -94,22 +97,22 @@ You can skip this step if your project already uses typescript v5 **everywhere**
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
@@ -794,7 +797,7 @@ Now it's time to run npm install:
 
 1. Enter the /api folder: `cd api`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -1853,7 +1856,7 @@ Now it's time to run npm install:
 
 1. Enter the /admin folder: `cd admin`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -2220,8 +2223,16 @@ The React dependency has been bumped to v18.
 
 Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
 
+#### Update to client rendering API
+
+```diff title="admin/src/loader.ts"
+- ReactDOM.render(createElement(App), rootElement);
++ const root = createRoot(rootElement);
++ root.render(createElement(App));
+```
+
 :::info
-Probably, there's not much to do here.
+Otherwise, there's probably not much to do here.
 You can also fix potential errors later during the lint step.
 :::
 
@@ -2852,7 +2863,7 @@ Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 5. Once the install passed, commit your changes with `--no-verify`
 

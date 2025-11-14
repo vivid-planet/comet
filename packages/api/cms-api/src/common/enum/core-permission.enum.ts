@@ -10,4 +10,6 @@ export enum CorePermission {
     fileUploads = "fileUploads",
     dependencies = "dependencies",
     warnings = "warnings",
+    sitePreview = "sitePreview",
+    blockPreview = "blockPreview",
 }

@@ -349,6 +349,7 @@ type FileUpload {
   imageUrl(resizeWidth: Int!): String
   mimetype: String!
   name: String!
+  previewUrl: String!
   size: Int!
   updatedAt: DateTime!
 }
@@ -1011,6 +1012,7 @@ type PaginatedWarnings {
 }
 
 enum Permission {
+  blockPreview
   builds
   cronJobs
   dam
@@ -1022,6 +1024,7 @@ enum Permission {
   pageTree
   prelogin
   products
+  sitePreview
   translation
   userPermissions
   warnings

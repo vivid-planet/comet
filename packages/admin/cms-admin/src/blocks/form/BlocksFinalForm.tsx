@@ -1,4 +1,5 @@
 import { FinalFormContextProvider, type FinalFormContextProviderProps, renderFinalFormChildren } from "@comet/admin";
+import { flushSync } from "react-dom";
 import { type AnyObject, Form, type FormProps, type FormRenderProps, FormSpy } from "react-final-form";
 
 interface AutoSaveSpyProps<FormValues> {
@@ -11,8 +12,10 @@ function AutosaveSpy<FormValues>({ onSubmit }: AutoSaveSpyProps<FormValues>) {
                 if (dirty) {
                     // works around endless loop when using setState from inside render
                     setTimeout(() => {
-                        form.submit(); // to show validation errors, form.submit does not update anything
-                        onSubmit(form.getState().values, form); // call passed onSubmit manually, also when validation errors are present
+                        flushSync(() => {
+                            form.submit(); // to show validation errors, form.submit does not update anything
+                            onSubmit(form.getState().values, form); // call passed onSubmit manually, also when validation errors are present
+                        });
                     }, 1);
                 }
                 return null;

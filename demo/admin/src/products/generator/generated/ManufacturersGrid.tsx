@@ -26,6 +26,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -64,7 +65,7 @@ export function ManufacturersGrid() {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "manufacturers",
         }), ...usePersistentColumnState("ManufacturersGrid") };
-    const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
+    const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(() => [
         { ...dataGridIdColumn, field: "id",
             headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
             sortable: false,
@@ -203,7 +204,7 @@ export function ManufacturersGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLManufacturersGridQuery, GQLManufacturersGridQueryVariables>(manufacturersQuery, {
         variables: {

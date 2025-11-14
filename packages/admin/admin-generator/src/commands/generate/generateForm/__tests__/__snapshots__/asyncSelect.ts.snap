@@ -126,14 +126,15 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            type: GQLCategoryType;
+            onCreate?: (id: string) => void;
+type: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({type, id}: FormProps) {
+    export function ProductForm({onCreate, type, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -148,14 +149,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -172,10 +174,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -193,13 +193,12 @@ id?: string;
                         
                         input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -321,14 +320,15 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            foo: string;
+            onCreate?: (id: string) => void;
+foo: string;
 id?: string;
         }
 
-    export function ProductForm({foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -343,14 +343,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -367,10 +368,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -388,13 +387,12 @@ id?: string;
                         
                         input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -516,14 +514,15 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            foo: string;
+            onCreate?: (id: string) => void;
+foo: string;
 id?: string;
         }
 
-    export function ProductForm({foo, id}: FormProps) {
+    export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -538,14 +537,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -562,10 +562,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -583,13 +581,12 @@ id?: string;
                         
                         input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
@@ -712,14 +709,15 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            categoryType: GQLCategoryType;
+            onCreate?: (id: string) => void;
+categoryType: GQLCategoryType;
 id?: string;
         }
 
-    export function ProductForm({categoryType, id}: FormProps) {
+    export function ProductForm({onCreate, categoryType, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -734,14 +732,15 @@ id?: string;
         
 
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-            
-        }
-        : {
-            
-        }
-    , [data]);
+            ? {
+                ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                
+            }
+            : {
+                
+            }
+        , [data]);
+
 
         
         const saveConflict = useFormSaveConflict({
@@ -758,10 +757,8 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                category: formValues.category?.id,
-            };
+            const output = { ...formValues, category: formValues.category?.id,  };
+
             if (mode === "edit") {
                 
                 if (!id) throw new Error();
@@ -779,13 +776,12 @@ id?: string;
                         
                         input: output },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.createProduct.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);
+                    });
                 }
                 
             }
