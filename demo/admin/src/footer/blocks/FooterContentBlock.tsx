@@ -19,7 +19,7 @@ export const FooterContentBlock = createCompositeBlock({
         },
         caption: {
             block: createCompositeBlockTextField({
-                label: <FormattedMessage id="footers.blocks.content.caption" defaultMessage="Caption" />,
+                label: <FormattedMessage id="footers.blocks.caption" defaultMessage="Caption" />,
             }),
             hiddenInSubroute: true,
         },
