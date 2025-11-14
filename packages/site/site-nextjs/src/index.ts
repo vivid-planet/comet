@@ -2,7 +2,6 @@ import "@comet/site-react/css";
 
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
-export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
@@ -78,6 +77,7 @@ export {
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
     usePreview,
+    type VideoPreviewImageProps,
     webpackPersistedQueriesLoader,
     withPreview,
     type WithPreviewProps,
