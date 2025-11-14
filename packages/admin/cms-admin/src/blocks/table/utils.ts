@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
@@ -48,5 +49,24 @@ export const getInitialTableData = (): {
                 highlighted: false,
             },
         ],
+    };
+};
+
+const recentlyPastedDurationMs = 5_000;
+
+export const useRecentlyPastedIds = () => {
+    const [recentlyPastedIds, setRecentlyPastedIds] = useState<string[]>([]);
+
+    const addToRecentlyPastedIds = useCallback((id: string) => {
+        setRecentlyPastedIds((prev) => [...prev, id]);
+
+        setTimeout(() => {
+            setRecentlyPastedIds((prev) => prev.filter((id) => id !== id));
+        }, recentlyPastedDurationMs);
+    }, []);
+
+    return {
+        recentlyPastedIds,
+        addToRecentlyPastedIds,
     };
 };

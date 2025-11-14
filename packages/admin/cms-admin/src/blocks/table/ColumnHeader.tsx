@@ -16,6 +16,7 @@ type Props = GridColumnHeaderParams & {
     highlighted: boolean;
     updateState: Dispatch<SetStateAction<TableBlockData>>;
     columnIndex: number;
+    addToRecentlyPastedIds: (id: string) => void;
 };
 
 const columnSizes: Record<ColumnSize, ReactNode> = {
@@ -26,7 +27,7 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
     extraLarge: <FormattedMessage id="comet.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
 };
 
-export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex, field: columnId }: Props) => {
+export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
 
     const insertColumn = (newColumnIndex: number) => {
@@ -91,8 +92,8 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                 );
                 return state;
             }
-
             const duplicatedColumn = { ...columnToDuplicate, id: uuid() };
+            addToRecentlyPastedIds(duplicatedColumn.id);
 
             return {
                 ...state,
@@ -171,6 +172,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                         disabled
                         onClick={() => {
                             // TODO: Implement this
+                            // TODO: Add to recently pasted ids
                         }}
                     >
                         <FormattedMessage id="comet.tableBlock.pasteColumn" defaultMessage="Paste" />

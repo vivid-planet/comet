@@ -17,6 +17,7 @@ import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
+import { useRecentlyPastedIds } from "./utils";
 
 export type ColumnSize = "extraSmall" | "small" | "standard" | "large" | "extraLarge";
 
@@ -43,6 +44,8 @@ type Props = {
 
 export const TableBlockGrid = ({ state, updateState }: Props) => {
     const apiRef = useGridApiRef();
+    const { recentlyPastedIds: recentlyPastedRowIds, addToRecentlyPastedIds: addToRecentlyPastedRowIds } = useRecentlyPastedIds();
+    const { recentlyPastedIds: recentlyPastedColumnIds, addToRecentlyPastedIds: addToRecentlyPastedColumnIds } = useRecentlyPastedIds();
 
     const setRowData: Dispatch<SetStateAction<TableBlockData["rows"]>> = (newRows) => {
         updateState((state) => {
@@ -120,7 +123,14 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             flex: flexForColumnSize[size],
             minWidth: widthForColumnSize[size],
             renderHeader: (params: GridColumnHeaderParams) => (
-                <ColumnHeader {...params} columnSize={size} highlighted={highlighted} updateState={updateState} columnIndex={index} />
+                <ColumnHeader
+                    {...params}
+                    columnSize={size}
+                    highlighted={highlighted}
+                    updateState={updateState}
+                    columnIndex={index}
+                    addToRecentlyPastedIds={addToRecentlyPastedColumnIds}
+                />
             ),
             renderCell: ({ value, row }: GridRenderCellParams) => {
                 const rowFromState = state.rows.find((rowInState) => rowInState.id === row.id);
@@ -135,7 +145,9 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             minWidth: 36,
             maxWidth: 36,
             disableReorder: true,
-            renderCell: ({ row }) => <ActionsCell row={row} updateState={updateState} state={state} />,
+            renderCell: ({ row }) => (
+                <ActionsCell row={row} updateState={updateState} state={state} addToRecentlyPastedIds={addToRecentlyPastedRowIds} />
+            ),
         },
     ];
 
@@ -167,6 +179,18 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             }}
             slots={{
                 rowReorderIcon: DragIndicator,
+            }}
+            getRowClassName={({ row }) => {
+                if (recentlyPastedRowIds.includes(row.id)) {
+                    return "CometDataGridRow--recentlyPasted";
+                }
+                return "";
+            }}
+            getCellClassName={({ field }) => {
+                if (recentlyPastedColumnIds.includes(field)) {
+                    return "CometDataGridCell--recentlyPasted";
+                }
+                return "";
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {
