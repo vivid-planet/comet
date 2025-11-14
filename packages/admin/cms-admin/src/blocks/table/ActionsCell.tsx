@@ -20,9 +20,10 @@ type Props = {
     row: Record<string, unknown> & { id: string };
     updateState: Dispatch<SetStateAction<TableBlockData>>;
     state: TableBlockData;
+    addToRecentlyPastedIds: (id: string) => void;
 };
 
-export const ActionsCell = ({ row, updateState, state }: Props) => {
+export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
 
@@ -79,6 +80,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
 
         updateState((state) => {
             const duplicatedRow = { ...rowToDuplicate, id: uuid() };
+            addToRecentlyPastedIds(duplicatedRow.id);
             return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), duplicatedRow, ...state.rows.slice(currentRowIndex + 1)] };
         });
     };
@@ -167,6 +169,8 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                     };
                 }),
             };
+
+            addToRecentlyPastedIds(newRowToPaste.id);
 
             return {
                 ...state,
