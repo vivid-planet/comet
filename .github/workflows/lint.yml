@@ -61,6 +61,27 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/api/lang/comet-demo-lang"
 
+            - name: "Demo SaaS Admin: Clone translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo-saas/admin/lang/comet-lang"
+
+            - name: "Demo SaaS Admin: Clone demo translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo-saas/admin/lang/comet-demo-lang"
+
+            - name: "Demo SaaS Api: Clone translations"
+              uses: actions/checkout@v4
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo-saas/api/lang/comet-demo-lang"
+
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 24.x
