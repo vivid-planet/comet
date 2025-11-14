@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "inlineSources": true,
+        "sourceRoot": "/dist"
+    },
+    "extends": "./tsconfig.json"
+}

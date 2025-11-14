@@ -175,12 +175,12 @@ export default defineConfig({
         {
             name: "demo-oidc-provider",
             script: "pnpm run dev:oidc-provider",
-            group: ["demo-login", "demo"],
+            group: ["demo-login", "demo", "demo-saas"],
         },
         {
             name: "demo-oauth2-proxy",
             script: "pnpm run dev:oauth2-proxy",
-            group: ["demo-login", "demo"],
+            group: ["demo-login", "demo", "demo-saas"],
             waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
         },
 
@@ -246,6 +246,51 @@ export default defineConfig({
             script: "pnpm --filter @comet/admin run storybook",
             group: ["storybook"],
             waitOn: waitOnPackages("@comet/admin"),
+        },
+
+        // group demo-saas admin
+        {
+            name: "demo-saas-admin",
+            script: "pnpm --filter comet-demo-saas-admin run start",
+            group: ["demo-saas-admin", "demo-saas"],
+            waitOn: [...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin"), "tcp:$API_PORT"],
+        },
+        {
+            name: "demo-saas-admin-codegen",
+            script: "pnpm --filter comet-demo-saas-admin run gql:watch",
+            group: ["demo-saas-admin", "demo-saas"],
+            waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "demo-saas-admin-block-codegen",
+            script: "pnpm --filter comet-demo-saas-admin run generate-block-types:watch",
+            group: ["demo-saas-admin", "demo-saas"],
+            waitOn: ["tcp:$API_PORT"],
+        },
+
+        //group demo-saas api
+        {
+            name: "demo-saas-docker",
+            script: "docker compose up",
+            group: ["demo-saas-api", "demo-saas"],
+        },
+        {
+            name: "demo-saas-api-generator",
+            script: "pnpm --filter comet-demo-saas-api exec comet-api-generator generate --watch",
+            group: ["demo-saas-api", "demo-saas"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "packages/api/api-generator/lib/apiGenerator.js"],
+        },
+        {
+            name: "demo-saas-api",
+            script: "pnpm --filter comet-demo-saas-api run start:dev",
+            group: ["demo-saas-api", "demo-saas"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+        },
+        {
+            name: "demo-saas-api-mitmproxy",
+            script: "pnpm run dev:demo-api-mitmproxy",
+            group: ["demo-saas-api", "demo-saas"],
+            waitOn: ["tcp:$API_PORT"],
         },
     ],
 });

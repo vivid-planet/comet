@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "incremental": false,
+        "noEmit": true
+    },
+    "extends": "./tsconfig.json"
+}
