@@ -10,7 +10,7 @@ import { createImageSizes } from "@src/util/createImageSizes";
 import styles from "./FooterContentBlock.module.scss";
 
 export const FooterContentBlock = withPreview(
-    ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
+    ({ data: { text, image, caption, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
         return (
             // ID is used for skip link
             <footer className={styles.root} id="footer">
