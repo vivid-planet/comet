@@ -1,6 +1,9 @@
 @use "../../../styles/variables" as *;
+@use "@src/styles/theme.scss" as *;
 
 .root {
+    @include global-theme-inverted;
+
     margin-top: auto;
     background-color: var(--brand-grey-900);
     color: var(--text-primary);
