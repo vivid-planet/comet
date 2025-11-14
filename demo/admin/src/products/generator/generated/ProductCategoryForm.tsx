@@ -33,9 +33,10 @@ import { GQLUpdateProductCategoryMutationVariables } from "./ProductCategoryForm
 import isEqual from "lodash.isequal";
 type FormValues = GQLProductCategoryFormFragment;
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function ProductCategoryForm({ id }: FormProps) {
+export function ProductCategoryForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -59,10 +60,7 @@ export function ProductCategoryForm({ id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            type: formValues.type ? formValues.type.id : null,
-        };
+        const output = { ...formValues, type: formValues.type ? formValues.type.id : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -79,13 +77,14 @@ export function ProductCategoryForm({ id }: FormProps) {
                     input: output
                 },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProductCategory.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createProductCategory.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };

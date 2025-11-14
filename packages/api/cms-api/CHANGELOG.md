@@ -1,5 +1,36 @@
 # @comet/cms-api
 
+## 8.6.0
+
+### Minor Changes
+
+- 206b352: Add `calculateInheritAspectRatio` to the public API
+- fda9262: Add support for scope-specific site preview secrets
+
+    The `sitePreviewSecret` in `PageTreeModule` now accepts a function `(scope: ContentScope) => string` to use different secrets based on the current content scope.
+
+- 30b671e: File Uploads: add preview endpoint for files
+- fbae3ae: Add new permissions `sitePreview` and `blockPreview` to `SitePreviewResolver`
+
+    These permissions can be assigned to users who can't access the page tree, but some other parts of the CMS where site or block previews are needed.
+
+    Users with the `pageTree` permission can still automatically access both previews.
+
+### Patch Changes
+
+- 6326641: Add validation of parentId to PageTreeNode to avoid setting a page as its own parent
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- 942200f: Improve check-warnings job by adding a missing await which led to bad performance
+- b7156bb: Fix crash in WarningModule with nullable blocks
+
 ## 8.4.2
 
 ## 8.4.1

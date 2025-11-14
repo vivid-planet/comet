@@ -1,19 +1,14 @@
 import { type IntrospectionQuery } from "graphql";
 
-import {
-    type FormConfig,
-    type FormFieldConfig,
-    type GeneratorReturn,
-    type GQLDocumentConfigMap,
-    isFormFieldConfig,
-    isFormLayoutConfig,
-} from "../generate-command";
+import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "../utils/findMutationType";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { flatFormFieldsFromFormConfig } from "./flatFormFieldsFromFormConfig";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
+import { generateDestructFormValueForInput, generateFormValuesToGqlInput, generateFormValuesType, generateInitialValues } from "./generateFormValues";
 import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
 import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 
@@ -100,20 +95,7 @@ export function generateForm(
 
     const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
-        if (isFormLayoutConfig(field)) {
-            // using forEach instead of acc.push(...field.fields.filter(isFormFieldConfig)) because typescript can't handle mixed typing
-            field.fields.forEach((nestedFieldConfig) => {
-                if (isFormFieldConfig(nestedFieldConfig)) {
-                    acc.push(nestedFieldConfig);
-                }
-            });
-        } else if (isFormFieldConfig(field)) {
-            acc.push(field);
-        }
-        return acc;
-    }, []);
+    const formFields = flatFormFieldsFromFormConfig(config);
 
     let useScopeFromContext = false;
     const gqlArgs: GqlArg[] = [];
@@ -168,10 +150,9 @@ export function generateForm(
     }
 
     let hooksCode = "";
-    let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
-    const { code: fieldsCode, ...generatedFields } = generateFields({
+    const generatedFields = generateFields({
         gqlIntrospection,
         baseOutputFilename,
         fields: config.fields,
@@ -179,6 +160,7 @@ export function generateForm(
         formConfig: config,
         gqlType: config.gqlType,
     });
+    const fieldsCode = generatedFields.code;
     for (const name in generatedFields.gqlDocuments) {
         gqlDocuments[name] = {
             document: generatedFields.gqlDocuments[name].document,
@@ -188,9 +170,14 @@ export function generateForm(
     imports.push(...generatedFields.imports);
     formProps.push(...generatedFields.formProps);
     hooksCode += generatedFields.hooksCode;
-    formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    formProps.push({
+        name: "onCreate",
+        optional: true,
+        type: `(id: string) => void`,
+    });
 
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
@@ -339,23 +326,7 @@ export function generateForm(
 
     ${customFilterByFragment}
 
-    type FormValues = ${
-        formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0 || rootBlockFields.length > 0
-            ? `Omit<${filterByFragmentType}, ${[
-                  ...(rootBlockFields.length > 0 ? ["keyof typeof rootBlocks"] : []),
-                  ...formValuesConfig.filter((config) => !!config.omitFromFragmentType).map((config) => `"${config.omitFromFragmentType}"`),
-              ].join(" | ")}>`
-            : `${filterByFragmentType}`
-    } ${
-        formValuesConfig.filter((config) => !!config.typeCode).length > 0
-            ? `& {
-                ${formValuesConfig
-                    .filter((config) => !!config.typeCode)
-                    .map((config) => config.typeCode)
-                    .join("\n")}
-            }`
-            : ""
-    };
+    ${generateFormValuesType({ formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
 
     ${formPropsTypeCode}
 
@@ -377,30 +348,8 @@ export function generateForm(
                 : ""
         }
 
-        ${
-            editMode
-                ? `const initialValues = useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
-        ? {
-            ...filterByFragment<${filterByFragmentType}>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${formValuesConfig
-                .filter((config) => !!config.initializationCode)
-                .map((config) => config.initializationCode)
-                .join(",\n")}
-        }
-        : {
-            ${formValuesConfig
-                .filter((config) => !!config.defaultInitializationCode)
-                .map((config) => config.defaultInitializationCode)
-                .join(",\n")}
-        }
-    , [data]);`
-                : `const initialValues = {
-                ${formValuesConfig
-                    .filter((config) => !!config.defaultInitializationCode)
-                    .map((config) => config.defaultInitializationCode)
-                    .join(",\n")}
-            };`
-        }
+        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
+
 
         ${
             editMode
@@ -419,19 +368,14 @@ export function generateForm(
                 : ""
         }
 
-        const handleSubmit = async (${
-            formValuesConfig.filter((config) => !!config.destructFromFormValues).length
-                ? `{ ${formValuesConfig
-                      .filter((config) => !!config.destructFromFormValues)
-                      .map((config) => config.destructFromFormValues)
-                      .join(", ")}, ...formValues }`
-                : `formValues`
-        }: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+        const handleSubmit = async (${generateDestructFormValueForInput({
+            formValuesConfig,
+            gqlIntrospection,
+            gqlType,
+        })}: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
-            const output = {
-                ...formValues,
-                ${formValueToGqlInputCode}
-            };
+            ${generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection, gqlType })}
+
             ${mode == "all" ? `if (mode === "edit") {` : ""}
                 ${
                     editMode
@@ -469,13 +413,16 @@ export function generateForm(
                                 : ""
                         } },
                 });
-                if (!event.navigatingBack) {
-                    const id = mutationResponse?.${createMutationType.name}.id;
-                    if (id) {
-                        setTimeout(() => {
-                            stackSwitchApi.activatePage(\`edit\`, id);
-                        });
-                    }
+                const id = mutationResponse?.${createMutationType.name}.id;
+                if (id) {
+                    setTimeout(() => {
+                        onCreate?.(id);
+                        ${
+                            config.navigateOnCreate === true || config.navigateOnCreate === undefined
+                                ? `if (!event.navigatingBack) { stackSwitchApi.activatePage(\`edit\`, id);`
+                                : ``
+                        }
+                    });
                 }
                 `
                         : ""

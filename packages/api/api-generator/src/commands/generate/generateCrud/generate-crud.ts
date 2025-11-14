@@ -412,6 +412,14 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 }
 
 function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: string): Imports[0] {
+    const libMatch = targetMetadata.path.match(/(packages\/api|@comet)\/cms-api\/lib\/(.*)/);
+    if (libMatch) {
+        // Import from cms-api package
+        return {
+            name: targetMetadata.className,
+            importPath: "@comet/cms-api",
+        };
+    }
     return {
         name: targetMetadata.className,
         importPath: path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, ""),
@@ -1059,8 +1067,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                               .join(",")} }`
                         : ``
                 });
-                if (input.position > lastPosition + 1) {
-                    input.position = lastPosition + 1;
+                if (input.position > lastPosition) {
+                    input.position = lastPosition;
                 }
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${

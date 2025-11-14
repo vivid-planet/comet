@@ -221,6 +221,7 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "GridColumnHeaderTitle", importPath: "@mui/x-data-grid-pro" },
         { name: "GridToolbarQuickFilter", importPath: "@mui/x-data-grid-pro" },
         { name: "GridRowOrderChangeParams", importPath: "@mui/x-data-grid-pro" },
+        { name: "useMemo", importPath: "react" },
     ];
 
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
@@ -592,7 +593,7 @@ export function generateGrid<T extends { __typename?: string }>(
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
-            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => ReactNode`,
+            type: `(params: GridRenderCellParams<GQL${fragmentName}Fragment>) => ReactNode`,
             optional: true,
         });
         props.push({
@@ -752,7 +753,7 @@ export function generateGrid<T extends { __typename?: string }>(
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
-        const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
+        const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>[
             ${gridColumnFields
                 .map((column) => {
                     const defaultMinWidth = 150;
@@ -883,7 +884,7 @@ export function generateGrid<T extends { __typename?: string }>(
                           })
                         : ""
                 }
-        ];
+        ],[intl${gridNeedsTheme ? ", theme" : ""}${showCrudContextMenuInActionsColumn ? ", client" : ""}${forwardRowAction ? ", rowAction, actionsColumnWidth" : ""}]);
 
         ${
             hasFilter || hasSearch

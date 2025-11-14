@@ -38,14 +38,15 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock, content: NewsContentBlock
 };
-type FormValues = Omit<GQLNewsFormFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLNewsFormFragment, "image" | "content"> & {
     image: BlockState<typeof rootBlocks.image>;
     content: BlockState<typeof rootBlocks.content>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function NewsForm({ id }: FormProps) {
+export function NewsForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -55,12 +56,10 @@ export function NewsForm({ id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.news
         ? {
             ...filterByFragment<GQLNewsFormFragment>(newsFormFragment, data.news),
-            image: rootBlocks.image.input2State(data.news.image),
-            content: rootBlocks.content.input2State(data.news.content)
+            image: rootBlocks.image.input2State(data.news.image), content: rootBlocks.content.input2State(data.news.content),
         }
         : {
-            image: rootBlocks.image.defaultValues(),
-            content: rootBlocks.content.defaultValues()
+            image: rootBlocks.image.defaultValues(), content: rootBlocks.content.defaultValues(),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -75,10 +74,7 @@ export function NewsForm({ id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content), };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -96,13 +92,14 @@ export function NewsForm({ id }: FormProps) {
                     input: output
                 },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createNews.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createNews.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };

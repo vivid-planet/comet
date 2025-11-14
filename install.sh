@@ -15,6 +15,7 @@ pnpm run copy-project-files
 
 # Lang install
 sh ./demo/admin/intl-update.sh
+sh ./demo/api/intl-update.sh
 sh ./demo/site/intl-update.sh
 sh ./demo/site-pages/intl-update.sh
 
@@ -23,3 +24,6 @@ pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 
 # create site-config-envs
 pnpm run create-site-configs-env
+
+pnpm run setup:download-oauth2-proxy
+pnpm run setup:download-mitmproxy

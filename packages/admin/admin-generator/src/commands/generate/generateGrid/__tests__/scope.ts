@@ -80,4 +80,34 @@ describe("Grid Scope", () => {
         );
         expect(formOutput.code).toMatchSnapshot();
     });
+
+    it("generates correct gql import for scope", async () => {
+        const gridConfig: GridConfig<GQLProduct> = {
+            type: "grid",
+            gqlType: "Product",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+            scopeAsProp: true,
+        };
+
+        const formOutput = generateGrid(
+            {
+                gqlIntrospection: introspection,
+                baseOutputFilename: "ProductsGrid",
+                exportName: "ProductsGrid",
+                targetDirectory: "/test",
+            },
+            gridConfig,
+        );
+
+        const match = formOutput.code.match(/import {(.*?)} from "@src\/graphql.generated";/);
+        if (!match) throw new Error("GQL import not found");
+        const imports = match[1].split(",").map((imp) => imp.trim());
+        expect(imports).not.toContain("ProductScope");
+        expect(imports).toContain("GQLProductScope");
+    });
 });

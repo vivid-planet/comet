@@ -988,7 +988,7 @@
                                     }
                                 ]
                             },
-                            "nullable": false
+                            "nullable": true
                         }
                     ]
                 },
@@ -2096,7 +2096,8 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
-                                "productList": "ProductList"
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2161,7 +2162,8 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
-                                "productList": "ProductList"
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2180,6 +2182,11 @@
                 "nullable": false
             }
         ]
+    },
+    {
+        "name": "PageTreeIndex",
+        "fields": [],
+        "inputFields": []
     },
     {
         "name": "PhoneLink",

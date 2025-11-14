@@ -2,6 +2,7 @@ import { AnchorBlock, createBlocksBlock, DamImageBlock, TableBlock } from "@come
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
+import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
@@ -49,6 +50,7 @@ export const PageContentBlock = createBlocksBlock({
         fullWidthImage: FullWidthImageBlock,
         table: TableBlock,
         productList: ProductListBlock,
+        pageTreeIndex: PageTreeIndexBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

@@ -1,5 +1,3 @@
-import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
-
 import { type Adornment, type FormConfig, type FormFieldConfig } from "../../generate-command";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../../utils/convertConfigImport";
@@ -52,33 +50,17 @@ const buildAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ad
 export function buildFormFieldOptions({
     config,
     formConfig,
-    gqlIntrospection,
-    gqlType,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormFieldConfig<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
-    gqlIntrospection: IntrospectionQuery;
-    gqlType: string;
 }) {
     const rootGqlType = formConfig.gqlType;
     const name = String(config.name);
     const label = config.label ?? camelCaseToHumanReadable(name);
     const formattedMessageRootId = rootGqlType[0].toLowerCase() + rootGqlType.substring(1);
     const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;
-
-    const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
-        | IntrospectionObjectType
-        | undefined;
-    if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
-
-    const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-    const introspectionFieldType = introspectionField
-        ? introspectionField.type.kind === "NON_NULL"
-            ? introspectionField.type.ofType
-            : introspectionField.type
-        : undefined;
 
     const imports: Imports = [];
     let startAdornment: AdornmentData = { adornmentString: "" };
@@ -102,5 +84,5 @@ export function buildFormFieldOptions({
         }
     }
 
-    return { name, formattedMessageRootId, fieldLabel, startAdornment, endAdornment, imports, introspectionFieldType };
+    return { name, formattedMessageRootId, fieldLabel, startAdornment, endAdornment, imports };
 }
