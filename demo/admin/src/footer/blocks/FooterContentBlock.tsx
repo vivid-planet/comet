@@ -17,6 +17,12 @@ export const FooterContentBlock = createCompositeBlock({
             title: <FormattedMessage id="footers.blocks.image" defaultMessage="Image" />,
             hiddenInSubroute: true,
         },
+        caption: {
+            block: createCompositeBlockTextField({
+                label: <FormattedMessage id="footers.blocks.caption" defaultMessage="Caption" />,
+            }),
+            hiddenInSubroute: true,
+        },
         linkList: {
             block: LinkListBlock,
             title: <FormattedMessage id="footers.blocks.content.links" defaultMessage="Links" />,
