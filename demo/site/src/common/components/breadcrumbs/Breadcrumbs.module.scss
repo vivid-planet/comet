@@ -147,15 +147,10 @@
     display: flex;
     padding-bottom: var(--spacing-s400);
     margin-right: 16px;
+    margin-left: calc(32px + var(--breadcrumb-level, 0) * 16px);
 
     &:nth-child(2) {
         margin-top: var(--spacing-s600);
-    }
-
-    @for $i from 2 through 10 {
-        &:nth-child(#{$i}) {
-            margin-left: 32px * ($i - 1);
-        }
     }
 }
 

@@ -35,13 +35,17 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                                 <FormattedMessage id="header.closeBreadcrumbs" defaultMessage="Close Breadcrumbs" />
                             </button>
                         </li>
-                        <li className={clsx(styles.mobileNavigationListElements, styles.linkContainer)}>
+                        <li className={clsx(styles.mobileNavigationListElements, styles.linkContainer)} style={{ "--breadcrumb-level": 0 }}>
                             <NextLink className={styles.link} href={createSitePath({ path: "/", scope })}>
                                 <FormattedMessage id="header.breadcrumbs.home" defaultMessage="Home" />
                             </NextLink>
                         </li>
-                        {parentNodes.map((parentNode) => (
-                            <li key={parentNode.path} className={clsx(styles.listElement, isExpanded && styles.linkContainer)}>
+                        {parentNodes.map((parentNode, index) => (
+                            <li
+                                key={parentNode.path}
+                                className={clsx(styles.listElement, isExpanded && styles.linkContainer)}
+                                style={{ "--breadcrumb-level": index + 1 }}
+                            >
                                 <SvgUse
                                     href="/assets/icons/corner-down-right.svg#root"
                                     className={clsx(styles.mobileCornerDownRightIcon, styles.linkActive)}
@@ -60,7 +64,10 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
                                 <SvgUse href="/assets/icons/chevron-down.svg#root" className={styles.chevron} width={16} height={16} />
                             </li>
                         ))}
-                        <li className={clsx(styles.listElement, isExpanded && styles.linkContainer)}>
+                        <li
+                            className={clsx(styles.listElement, isExpanded && styles.linkContainer)}
+                            style={{ "--breadcrumb-level": parentNodes.length + 1 }}
+                        >
                             <SvgUse
                                 href="/assets/icons/corner-down-right.svg#root"
                                 className={clsx(styles.mobileCornerDownRightIcon, styles.linkActive)}
