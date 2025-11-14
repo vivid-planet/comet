@@ -17,15 +17,18 @@ export const FooterContentBlock = withPreview(
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <div className={styles.topContainer}>
-                            <div className={styles.imageWrapper}>
-                                <DamImageBlock
-                                    data={image}
-                                    aspectRatio="inherit"
-                                    style={{ objectFit: "contain" }}
-                                    sizes={createImageSizes({ default: "20vw" })}
-                                />
+                            <div className={styles.imageCaptionColumn}>
+                                <div className={styles.imageWrapper}>
+                                    <DamImageBlock
+                                        data={image}
+                                        aspectRatio="inherit"
+                                        style={{ objectFit: "contain" }}
+                                        sizes={createImageSizes({ default: "20vw" })}
+                                    />
+                                </div>
                             </div>
-                            <div className={styles.richTextWrapper}>
+
+                            <div className={styles.richTextColumn}>
                                 <RichTextBlock data={text} disableLastBottomSpacing />
                             </div>
                         </div>
