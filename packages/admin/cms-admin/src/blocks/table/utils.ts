@@ -7,10 +7,6 @@ export const getNewColumn = (): TableBlockData["columns"][number] => {
     return { id: uuid(), highlighted: false, size: "standard" };
 };
 
-export const getNewRow = (cellValues: TableBlockData["rows"][number]["cellValues"]): TableBlockData["rows"][number] => {
-    return { id: uuid(), highlighted: false, cellValues };
-};
-
 export const getInitialTableData = (): {
     rows: TableBlockData["rows"];
     columns: TableBlockData["columns"];

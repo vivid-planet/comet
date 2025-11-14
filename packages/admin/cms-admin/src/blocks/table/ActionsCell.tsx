@@ -7,7 +7,8 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { getNewColumn, getNewRow } from "./utils";
+import { getNewColumn } from "./utils";
+import { insertRow } from "./utils/insertRow";
 
 const clipboardRowSchema = z.object({
     highlighted: z.boolean(),
@@ -26,22 +27,6 @@ type Props = {
 export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
-
-    const insertRow = (where: "above" | "below") => {
-        updateState((state) => {
-            const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
-            const newRowIndex = where === "above" ? currentRowIndex : currentRowIndex + 1;
-
-            return {
-                ...state,
-                rows: [
-                    ...state.rows.slice(0, newRowIndex),
-                    getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" }))),
-                    ...state.rows.slice(newRowIndex),
-                ],
-            };
-        });
-    };
 
     const deleteRow = () => {
         updateState((state) => {
@@ -199,7 +184,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
                 <RowActionsItem
                     icon={<ArrowUp />}
                     onClick={() => {
-                        insertRow("above");
+                        updateState((state) => insertRow(state, row.id, "above"));
                     }}
                 >
                     <FormattedMessage id="comet.tableBlock.addRowAbove" defaultMessage="Add row above" />
@@ -207,7 +192,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
                 <RowActionsItem
                     icon={<ArrowDown />}
                     onClick={() => {
-                        insertRow("below");
+                        updateState((state) => insertRow(state, row.id, "below"));
                     }}
                 >
                     <FormattedMessage id="comet.tableBlock.addRowBelow" defaultMessage="Add row below" />
