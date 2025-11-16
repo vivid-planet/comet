@@ -82,9 +82,7 @@ export class BuildsService {
      * Should only be used internally
      */
     async createBuildsForAllScopes(trigger: string): Promise<boolean> {
-        const builderCronJobs = await this.kubernetesService.getAllCronJobs(
-            `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
-        );
+        const builderCronJobs = await this.buildTemplatesService.getAllBuilderCronJobs();
         return this.createBuilds(trigger, builderCronJobs);
     }
 
