@@ -93,6 +93,17 @@ export class FileUploadsService {
         return ["/file-uploads", hash, file.id, timeout, resizeWidth, filename].join("/");
     }
 
+    createPreviewUrl(file: FileUpload): string {
+        const timeout = addHours(new Date(), 1).getTime();
+
+        const hash = this.createHash({
+            id: file.id,
+            timeout,
+        });
+
+        return ["/file-uploads", "preview", hash, file.id, timeout].join("/");
+    }
+
     async getFileContent(file: FileUpload): Promise<Buffer> {
         const filePath = createHashedPath(file.contentHash);
         const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);

@@ -1,22 +1,29 @@
+.iconWrapper {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accordion-default-icon);
+}
+
 .titleWrapper {
     text-align: left;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--palette-gray-300);
-    padding: var(--spacing-s300) 0;
-}
+    border-top: 1px solid var(--accordion-border);
+    padding: var(--spacing-s500) 0;
+    gap: 8px;
 
-.animatedChevron {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    transform: rotate(0deg);
-    transition: transform 0.4s ease;
-}
+    &:hover {
+        color: var(--accordion-hover-text);
 
-.animatedChevronExpanded {
-    transform: rotate(-180deg);
+        .iconWrapper {
+            background-color: var(--accordion-hover-iconBg);
+            color: var(--accordion-hover-icon);
+        }
+    }
 }
 
 .contentWrapper {
@@ -38,4 +45,5 @@
 
 .contentWrapperInner {
     overflow: hidden;
+    padding-left: 32px;
 }

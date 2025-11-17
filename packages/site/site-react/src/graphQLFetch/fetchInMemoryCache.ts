@@ -15,7 +15,7 @@ export function createFetchInMemoryCache(fetch: Fetch): Fetch {
             if (bodyString.startsWith("{")) {
                 try {
                     const body = JSON.parse(init.body.toString());
-                    if (body.query && body.variables) {
+                    if ((body.query || body.extensions?.persistedQuery) && body.variables) {
                         //looks like a gql query, cache any method
                         cacheKey = `${input.toString()}#${init.body.toString()}`;
                     }

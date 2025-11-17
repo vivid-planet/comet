@@ -4,13 +4,13 @@
 }
 
 .link {
-    color: var(--palette-primary-main);
+    color: var(--brand-primary-main);
     text-decoration: none;
     font-size: 14px;
 
     &:last-child {
         font-weight: 700;
-        color: var(--palette-text-primary);
+        color: var(--brand-grey-900);
     }
 
     &:hover {
@@ -23,5 +23,5 @@
     width: 15px;
     height: 1px;
     margin: 0 10px 5px 10px;
-    background-color: var(--palette-primary-light);
+    background-color: var(--brand-primary-light);
 }

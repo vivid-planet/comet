@@ -1,10 +1,7 @@
 "use client";
-import { PreviewContext } from "@comet/site-react";
+import { PreviewContext, sendSitePreviewIFrameMessage, type SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "@comet/site-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { type PropsWithChildren, useEffect } from "react";
-
-import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
-import { type SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 const SitePreview = ({ children }: PropsWithChildren) => {
     const pathname = usePathname();

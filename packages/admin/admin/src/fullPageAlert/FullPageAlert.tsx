@@ -15,13 +15,11 @@ import {
     InlineAlertStyled,
     LogoContainer,
     Root,
-    Title,
 } from "./FullPageAlert.styles";
 import { type FullPageAlertBackground } from "./FullPageAlertBackground";
 
 export type FullPageAlertClassKey =
     | "root"
-    | "title"
     | "background"
     | "detailDescription"
     | "contentContainer"
@@ -38,7 +36,6 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
     iconContainer: "div";
     background: typeof FullPageAlertBackground;
     divider: typeof Divider;
-    title: typeof Typography;
     inlineAlert: typeof InlineAlert;
     detailDescription: typeof Typography;
     logoContainer: "div";
@@ -121,17 +118,18 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
             <BackgroundStyled {...slotProps.background} />
             <ContentContainer {...slotProps.contentContainer}>
                 <InlineAlertStyled
-                    title={
-                        <Title variant="h3" {...slotProps.title}>
-                            {title}
-                        </Title>
-                    }
+                    title={title}
                     titleMapping={titleMapping}
                     description={description}
                     descriptionMapping={descriptionMapping}
                     iconMapping={iconMapping}
                     icon={icon}
                     severity={severity}
+                    slotProps={{
+                        title: {
+                            variant: "h3",
+                        },
+                    }}
                     {...slotProps.inlineAlert}
                 />
 

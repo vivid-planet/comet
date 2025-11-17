@@ -86,6 +86,9 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
+
+Please pin typescript to `5.8.3` due to some ESLint plugins not working with
+higher versions.
 :::
 
 **Create a branch `typescript-5`.**
@@ -94,22 +97,22 @@ You can skip this step if your project already uses typescript v5 **everywhere**
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
@@ -794,7 +797,7 @@ Now it's time to run npm install:
 
 1. Enter the /api folder: `cd api`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -1721,6 +1724,31 @@ npx @comet/upgrade@latest v8/admin/before-install/remove-comet-admin-react-selec
 
 </details>
 
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/admin/before-install/update-graphql-admin.ts
+```
+
+:::
+
+```diff title=admin/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
 #### ✅ Remove ignore-restricted-imports comments
 
 Removes the comments we added in [step 4](#step-4-update-eslint-and-prettier-pr-4).
@@ -1828,7 +1856,7 @@ Now it's time to run npm install:
 
 1. Enter the /admin folder: `cd admin`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -2195,8 +2223,16 @@ The React dependency has been bumped to v18.
 
 Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
 
+#### Update to client rendering API
+
+```diff title="admin/src/loader.ts"
+- ReactDOM.render(createElement(App), rootElement);
++ const root = createRoot(rootElement);
++ root.render(createElement(App));
+```
+
 :::info
-Probably, there's not much to do here.
+Otherwise, there's probably not much to do here.
 You can also fix potential errors later during the lint step.
 :::
 
@@ -2766,10 +2802,10 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 ### Fix runtime errors
 
-1. Start the api with `dpm start admin`
+1. Start the admin with `dpm start admin`
 2. Check the logs with `dpm logs admin`
 3. Fix occurring errors
-4. Once the API runs without problems: Commit **without** `--no-verify`
+4. Once the admin runs without problems: Commit **without** `--no-verify`
 
 ## Site
 
@@ -2778,13 +2814,56 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 Ignore this if you already did it beforehand in [step 3](#step-3-switch-from-cometcms-site-to-cometsite-nextjs-pr-3).
 Otherwise, go back and do it now.
 
+### 🤖 Upgrade peer dependencies
+
+The following upgrade script will update peer dependency versions.
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install
+```
+
+:::
+
+<details>
+
+<summary>Updates handled by this batch upgrade script</summary>
+
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install/update-graphql-site.ts
+```
+
+:::
+
+```diff title=site/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
+</details>
+
 ### Install
 
 Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 5. Once the install passed, commit your changes with `--no-verify`
 
@@ -2860,4 +2939,4 @@ scalars: rootBlocks.reduce(
 2. Check the logs with `dpm logs site`
 3. Fix occurring errors
 4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [COMET Starter](https://github.com/vivid-planet/comet-starter/blob/main/build-and-run-site.sh))
-5. Once the API runs without problems: Commit **without** `--no-verify`
+5. Once the site runs without problems: Commit **without** `--no-verify`
