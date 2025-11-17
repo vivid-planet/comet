@@ -117,7 +117,7 @@
             ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts", "next-env.d.ts"]
+            "ignore": ["**/*.generated.ts"]
         },
         "demo/site-pages": {
             "entry": [
@@ -129,7 +129,7 @@
             ],
             "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
             "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts", "next-env.d.ts"]
+            "ignore": ["**/*.generated.ts"]
         },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
