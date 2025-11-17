@@ -5,7 +5,7 @@
     "description": "Comet Site Demo Application",
     "type": "commonjs",
     "scripts": {
-        "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build",
+        "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build --webpack",
         "build-server": "tsc --project tsconfig.server.json",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "css:types": "typed-scss-modules src --nameFormat none --exportType default --aliasPrefixes.@src src",

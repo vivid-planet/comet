@@ -23,7 +23,7 @@
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:tsc": "tsc --project .",
         "lint:tscPreBuild": "tsc --project tsconfig.preBuild.json",
-        "next-build": "pnpm build:publicGenerated && next build",
+        "next-build": "pnpm build:publicGenerated && next build --webpack",
         "serve": "pnpm run extract:publicGenerated && NODE_ENV=production node server.js"
     },
     "dependencies": {

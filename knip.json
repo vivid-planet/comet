@@ -110,7 +110,7 @@
             "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts"]
+            "ignore": ["**/*.generated.ts", "next-env.d.ts"]
         },
         "demo/site-pages": {
             "entry": [
@@ -122,7 +122,7 @@
             ],
             "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
             "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts"]
+            "ignore": ["**/*.generated.ts", "next-env.d.ts"]
         },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
