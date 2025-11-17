@@ -1,5 +1,132 @@
 # @comet/cms-admin
 
+## 8.6.0
+
+### Patch Changes
+
+- 97be4a0: Make all scopes selectable / de-selectable in the "Permission-specific Content-Scopes" dialog
+
+    **Following scenario:**
+
+    A user has the following scopes by rule:
+
+    ```ts
+    [
+        { domain: "main", language: "en" },
+        { domain: "main", language: "de" },
+    ];
+    ```
+
+    I want to manually assign them the permission `products` but only for the scope `{ domain: "main", language: "de" }`.
+
+    Previously, this wasn't possible because when assigning specific scopes for a permission, the scopes a user already had couldn’t be deselected. (In our scenario, I couldn’t deselect `{ domain: "main", language: "en" }`. So I had no other choice but giving the user the `products` permission for both scopes.)
+
+    Now, all scopes are selectable / de-selectable in the dialog. So in our scenario, I can now assign the `products` permission only for `{ domain: "main", language: "de" }`.
+
+- Updated dependencies [6c5578a]
+    - @comet/admin@8.6.0
+    - @comet/admin-date-time@8.6.0
+    - @comet/admin-rte@8.6.0
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin@8.5.2
+- @comet/admin-date-time@8.5.2
+- @comet/admin-icons@8.5.2
+- @comet/admin-rte@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- 32592f9: Fix a rerendering bug in `BlocksFinalForm` caused by automatic batching in React 18
+    - @comet/admin@8.5.1
+    - @comet/admin-date-time@8.5.1
+    - @comet/admin-icons@8.5.1
+    - @comet/admin-rte@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-date-time@8.5.0
+    - @comet/admin-rte@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-date-time@8.4.2
+    - @comet/admin-rte@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- da30d46: Remove "Usages" column from DAM
+
+    The `dependents` field resolver triggers multiple refreshes of the `block_index_dependencies` view, which seems to crash the API.
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-date-time@8.4.1
+    - @comet/admin-rte@8.4.1
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- f14b962: Add logging to mailer-module, can be disabled
+- c8f5d89: Add support for literal arrays to block meta
+
+### Patch Changes
+
+- 93f5d98: Fix DAM not rendering all items and its scrolling behavior when rendered in a Dialog
+- Updated dependencies [a85e7cb]
+- Updated dependencies [ff6d79a]
+- Updated dependencies [ff6d79a]
+    - @comet/admin@8.4.0
+    - @comet/admin-date-time@8.4.0
+    - @comet/admin-icons@8.4.0
+    - @comet/admin-rte@8.4.0
+
+## 8.3.0
+
+### Minor Changes
+
+- 270d836: Add support for `string[]` and `number[]` value types in createCompositeBlockSelectField
+
+### Patch Changes
+
+- 678b319: The most recently visited scope is no longer stored in local storage in development mode
+- a121bdf: Style `PermissionDialog` to align with Comet DXP design
+- 19322b8: Fix icon of "Unpublish" action in `PagesPageActionToolbar`
+- 5aa462f: Fix pagination of `UserPermissionsUserGrid`
+- Updated dependencies [422328b]
+- Updated dependencies [ae1dbab]
+- Updated dependencies [becc06c]
+- Updated dependencies [12e9230]
+- Updated dependencies [6f30126]
+- Updated dependencies [1bd73a0]
+- Updated dependencies [d682135]
+- Updated dependencies [ae1dbab]
+- Updated dependencies [becc06c]
+    - @comet/admin@8.3.0
+    - @comet/admin-date-time@8.3.0
+    - @comet/admin-rte@8.3.0
+    - @comet/admin-icons@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

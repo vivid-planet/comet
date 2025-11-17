@@ -3,3 +3,7 @@ packages:
     - "demo/**"
     - "docs"
     - "storybook"
+
+autoInstallPeers: false
+dedupePeerDependents: true
+strictPeerDependencies: true

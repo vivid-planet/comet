@@ -44,7 +44,10 @@ const nextConfig = {
                 include: [dirname(fileURLToPath(import.meta.url)) + "/src"],
                 use: [
                     {
-                        loader: dirname(fileURLToPath(import.meta.url)) + "/dist/src/webpack/gql-hash-loader.js",
+                        loader: "@comet/site-nextjs/webpackPersistedQueriesLoader",
+                        options: {
+                            persistedQueriesPath: ".next/persisted-queries.json",
+                        },
                     },
                 ],
             });

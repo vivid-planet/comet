@@ -5,37 +5,6 @@
     "internalChecksFilter": "strict",
     "packageRules": [
         {
-            "groupName": "Low-Risk Patches and Minors",
-            "matchUpdateTypes": ["patch", "minor"],
-            "excludePackagePatterns": [
-                "^next$",
-                "^react",
-                "^@nestjs/",
-                "^@apollo/",
-                "^@mui/",
-                "^@emotion/",
-                "draft-js",
-                "golevelup/ts-jest",
-                "types/draft-js",
-                "rollup-plugin-preserve-directives",
-                "types/pluralize",
-                "class-validator",
-                "apollo-link-rest",
-                "reflect-metadata",
-                "axios",
-                "graphql-mocks",
-                "eslint-plugin-package-json",
-                "opentelemetry/auto-instrumentations-node",
-                "opentelemetry/exporter-prometheus",
-                "opentelemetry/exporter-trace-otlp-http",
-                "opentelemetry/instrumentation-runtime-node",
-                "opentelemetry/sdk-node",
-                "redraft",
-                "msw",
-                "knip"
-            ]
-        },
-        {
             "groupName": "babel",
             "matchPackageNames": ["/@babel/*/"]
         },
@@ -45,7 +14,8 @@
         },
         {
             "groupName": "eslint",
-            "matchPackageNames": ["/^eslint/"]
+            "matchPackageNames": ["/^eslint/"],
+            "excludePackagePatterns": ["eslint-config-next"]
         },
         {
             "groupName": "prettier",
@@ -132,8 +102,13 @@
         {
             "groupName": "SWC",
             "matchPackageNames": ["@swc/plugin-emotion", "@vitejs/plugin-react-swc"]
+        },
+        {
+            "groupName": "Next.js",
+            "matchPackageNames": ["next", "@next/bundle-analyzer", "@next/eslint-plugin-next", "eslint-config-next"]
         }
     ],
+    "lockFileMaintenance": { "enabled": true },
     "labels": ["dependencies"],
     "baseBranches": ["main"]
 }

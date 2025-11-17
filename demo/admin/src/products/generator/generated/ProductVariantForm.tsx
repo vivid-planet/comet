@@ -34,14 +34,15 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock
 };
-type FormValues = Omit<GQLProductVariantFormFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
     product: string;
 }
-export function ProductVariantForm({ id, product }: FormProps) {
+export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -50,10 +51,10 @@ export function ProductVariantForm({ id, product }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.productVariant
         ? {
             ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
-            image: rootBlocks.image.input2State(data.productVariant.image)
+            image: rootBlocks.image.input2State(data.productVariant.image),
         }
         : {
-            image: rootBlocks.image.defaultValues()
+            image: rootBlocks.image.defaultValues(),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -68,10 +69,7 @@ export function ProductVariantForm({ id, product }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -84,15 +82,15 @@ export function ProductVariantForm({ id, product }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
                 mutation: createProductVariantMutation,
-                variables: { input: output, product },
+                variables: {
+                    input: output, product
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProductVariant.id;
-                if (id) {
-                    setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+            const id = mutationResponse?.createProductVariant.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                });
             }
         }
     };
