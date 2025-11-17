@@ -5,7 +5,7 @@ import { SyntaxKind } from "ts-morph";
 
 import { buildOptions } from "../generateCrud/build-options";
 import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
+import { integerTypes, numberTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import {
     findBlockImportPath,
@@ -146,13 +146,7 @@ export async function generateCrudInput(
             }
             decorators.push(`@Field(${fieldOptions})`);
             type = "string";
-        } else if (
-            prop.type === "DecimalType" ||
-            prop.type == "BigIntType" ||
-            prop.type === "number" ||
-            prop.type === "integer" ||
-            prop.type === "float"
-        ) {
+        } else if (numberTypes.includes(prop.type)) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
