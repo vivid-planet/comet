@@ -4,7 +4,6 @@ import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
-import getColors from "get-image-colors";
 import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
@@ -24,6 +23,7 @@ import { CometImageResolutionException } from "../common/errors/image-resolution
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
+import { getDominantColor } from "../images/images.util";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
@@ -557,13 +557,7 @@ export class FilesService {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const imageBuffer = Buffer.from(arrayBuffer);
 
-            // @TODO: make pull request to fix overloads https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/get-image-colors/index.d.ts#L15
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const getColorOptions: any = { type: "image/jpg", count: 1 };
-
-            const colors = (await getColors(imageBuffer, getColorOptions)).map((color) => color.hex());
-
-            return colors.length > 0 ? colors[0] : undefined;
+            return getDominantColor(imageBuffer);
         } catch (e) {
             // When imageproxy is not available it is ok.
             console.error(e);
