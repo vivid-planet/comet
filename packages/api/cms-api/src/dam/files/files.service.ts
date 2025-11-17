@@ -8,6 +8,7 @@ import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
+import sharp from "sharp";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
@@ -23,7 +24,7 @@ import { CometImageResolutionException } from "../common/errors/image-resolution
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
-import { getDominantColor } from "../images/images.util";
+import { rgbToHex } from "../images/images.util";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
@@ -545,7 +546,7 @@ export class FilesService {
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
         const path = this.imgproxyService
             .builder()
-            .resize(ResizingType.AUTO, 128)
+            .resize(ResizingType.AUTO, 1)
             .format(Extension.JPG)
             .generateUrl(
                 `${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.filesDirectory}/${createHashedPath(contentHash)}`,
@@ -557,7 +558,12 @@ export class FilesService {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const imageBuffer = Buffer.from(arrayBuffer);
 
-            return getDominantColor(imageBuffer);
+            const data = await sharp(imageBuffer).removeAlpha().raw().toBuffer();
+
+            // since we scale the image to 1px with imgproxy, data only contains the colors for this one pixel
+            const [r, g, b] = data;
+
+            return rgbToHex(r, g, b);
         } catch (e) {
             // When imageproxy is not available it is ok.
             console.error(e);
