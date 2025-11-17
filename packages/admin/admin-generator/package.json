@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "8.5.2",
+    "version": "8.6.0",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -42,6 +42,7 @@
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
+        "@apollo/client": "^3.7.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",

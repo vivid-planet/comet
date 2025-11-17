@@ -1,7 +1,8 @@
 // Same file in admin and site
 
-// Messages sent from iFrame -> Admin
 import { type ExternalLinkBlockData } from "../../blocks.generated";
+
+// Messages sent from iFrame -> Admin
 
 export enum SitePreviewIFrameMessageType {
     OpenLink = "OpenLink",

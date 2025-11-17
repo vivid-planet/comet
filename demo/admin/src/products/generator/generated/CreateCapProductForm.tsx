@@ -31,7 +31,7 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock
 };
-type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
@@ -43,14 +43,10 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
     const initialValues = {
-        inStock: false,
-        image: rootBlocks.image.defaultValues()
+        inStock: false, image: rootBlocks.image.defaultValues(),
     };
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        const output = {
-            ...formValues,
-            description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image),
-        };
+        const output = { ...formValues, description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
             variables: {

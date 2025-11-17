@@ -502,7 +502,8 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 ```diff title=api/package.json
 {
     "dependencies": {
-+       "@apollo/server": "^4.0.0",
++       "@apollo/server": "^5.1.0",
++       "@as-integrations/express5": "^1.1.2",
 -       "@nestjs/apollo": "^10.0.0",
 -       "@nestjs/common": "^9.0.0",
 -       "@nestjs/config": "^2.0.0",
@@ -510,7 +511,7 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 -       "@nestjs/graphql": "^10.0.0",
 -       "@nestjs/passport": "^9.0.0",
 -       "@nestjs/platform-express": "^9.0.0",
-+       "@nestjs/apollo": "^13.0.0",
++       "@nestjs/apollo": "^13.2.1",
 +       "@nestjs/common": "^11.0.0",
 +       "@nestjs/core": "^11.0.0",
 +       "@nestjs/graphql": "^13.0.0",
@@ -534,6 +535,40 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 +       "@types/express": "^5.0.0",
     }
 }
+```
+
+</details>
+
+#### ✅ Fix peer dependency conflict and knip problems caused by `@apollo/server`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/api/before-install/add-apollo-server-override.ts
+```
+
+:::
+
+```diff title="api/package.json"
++    "overrides": {
++        "@apollo/server-plugin-landing-page-graphql-playground": {
++            "@apollo/server": "^5.0.0"
++        }
++    },
+```
+
+If you are using knip:
+
+```diff title="api/knip.json"
+    "ignoreDependencies": [
+        "@mikro-orm/cli",
+        "jest-junit",
++       "@as-integrations/express5"
+    ],
 ```
 
 </details>
@@ -797,7 +832,7 @@ Now it's time to run npm install:
 
 1. Enter the /api folder: `cd api`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -1856,7 +1891,7 @@ Now it's time to run npm install:
 
 1. Enter the /admin folder: `cd admin`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -2863,7 +2898,7 @@ Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 5. Once the install passed, commit your changes with `--no-verify`
 

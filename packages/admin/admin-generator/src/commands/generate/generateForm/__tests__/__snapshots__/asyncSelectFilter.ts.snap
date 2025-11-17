@@ -59,9 +59,7 @@ import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightFo
 
     
 
-    type FormValues = GQLProductHighlightFormFragment & {
-                productCategory?: { id: string; title: string };
-            };
+    type FormValues = GQLProductHighlightFormFragment & { productCategory?: { id: string; title: string };  };
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -85,7 +83,7 @@ id?: string;
         const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
             ? {
                 ...filterByFragment<GQLProductHighlightFormFragment>(productHighlightFormFragment, data.productHighlight),
-                productCategory: data.productHighlight.product?.category
+                productCategory: data.productHighlight.product?.category, 
             }
             : {
                 
@@ -106,12 +104,9 @@ id?: string;
         });
         
 
-        const handleSubmit = async ({ productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        const handleSubmit = async ({ productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        product: formValues.product ? formValues.product.id : null,
-    };
+            const output = { ...formValuesRest, product: formValuesRest.product ? formValuesRest.product.id : null,  };
 
             if (mode === "edit") {
                 
@@ -329,7 +324,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -377,10 +372,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        category: formValues.category?.id,
-    };
+            const output = { ...formValues, category: formValues.category?.id,  };
 
             if (mode === "edit") {
                 
@@ -526,7 +518,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -574,10 +566,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        category: formValues.category?.id,
-    };
+            const output = { ...formValues, category: formValues.category?.id,  };
 
             if (mode === "edit") {
                 
@@ -724,7 +713,7 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment ;
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
             onCreate?: (id: string) => void;
@@ -772,10 +761,7 @@ id?: string;
 
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-        ...formValues,
-        category: formValues.category?.id,
-    };
+            const output = { ...formValues, category: formValues.category?.id,  };
 
             if (mode === "edit") {
                 
