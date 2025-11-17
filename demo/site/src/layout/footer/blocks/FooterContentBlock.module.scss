@@ -1,5 +1,5 @@
 @use "../../../styles/variables" as *;
-@use "@src/styles/theme.scss" as *;
+@use "../../../styles/theme.scss" as *;
 
 .root {
     @include global-theme-inverted;
@@ -94,4 +94,8 @@
     background-color: var(--brand-grey-600);
     color: var(--brand-grey-600);
     margin: var(--spacing-d200) 0;
+}
+
+.test5 {
+    color: orange;
 }
