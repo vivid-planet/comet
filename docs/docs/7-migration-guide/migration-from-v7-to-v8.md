@@ -502,7 +502,8 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 ```diff title=api/package.json
 {
     "dependencies": {
-+       "@apollo/server": "^4.0.0",
++       "@apollo/server": "^5.1.0",
++       "@as-integrations/express5": "^1.1.2",
 -       "@nestjs/apollo": "^10.0.0",
 -       "@nestjs/common": "^9.0.0",
 -       "@nestjs/config": "^2.0.0",
@@ -510,7 +511,7 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 -       "@nestjs/graphql": "^10.0.0",
 -       "@nestjs/passport": "^9.0.0",
 -       "@nestjs/platform-express": "^9.0.0",
-+       "@nestjs/apollo": "^13.0.0",
++       "@nestjs/apollo": "^13.2.1",
 +       "@nestjs/common": "^11.0.0",
 +       "@nestjs/core": "^11.0.0",
 +       "@nestjs/graphql": "^13.0.0",
@@ -537,6 +538,26 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 ```
 
 </details>
+
+#### ✅ Fix peer dependency conflict and knip problems caused by `@apollo/server`
+
+```diff title="api/package.json"
++    "overrides": {
++        "@apollo/server-plugin-landing-page-graphql-playground": {
++            "@apollo/server": "^5.0.0"
++        }
++    },
+```
+
+If you are using knip:
+
+```diff title="api/knip.json"
+    "ignoreDependencies": [
+        "@mikro-orm/cli",
+        "jest-junit",
++       "@as-integrations/express5"
+    ],
+```
 
 #### ✅ Add NestJS peer dependencies
 
