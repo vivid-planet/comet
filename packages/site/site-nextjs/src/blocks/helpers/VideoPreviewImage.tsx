@@ -2,7 +2,7 @@ import { VideoPreviewImage as SiteReactVideoPreviewImage, type VideoPreviewImage
 
 import { PixelImageBlock } from "../PixelImageBlock";
 
-type Props = Omit<SiteReactVideoPreviewImageProps, "renderImage">;
+type Props = SiteReactVideoPreviewImageProps;
 export function VideoPreviewImage(props: Props) {
     return <SiteReactVideoPreviewImage {...props} renderImage={(props) => <PixelImageBlock {...props} />} />;
 }
