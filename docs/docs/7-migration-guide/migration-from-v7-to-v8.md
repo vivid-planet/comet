@@ -541,6 +541,18 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 
 #### ✅ Fix peer dependency conflict and knip problems caused by `@apollo/server`
 
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/api/before-install/add-apollo-server-override.ts
+```
+
+:::
+
 ```diff title="api/package.json"
 +    "overrides": {
 +        "@apollo/server-plugin-landing-page-graphql-playground": {
@@ -558,6 +570,8 @@ If you are using knip:
 +       "@as-integrations/express5"
     ],
 ```
+
+</details>
 
 #### ✅ Add NestJS peer dependencies
 
