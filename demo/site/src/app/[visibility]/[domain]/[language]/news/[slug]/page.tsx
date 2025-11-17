@@ -11,11 +11,9 @@ import { Content } from "./content";
 import { fragment } from "./fragment";
 import { type GQLNewsDetailPageQuery, type GQLNewsDetailPageQueryVariables } from "./page.generated";
 
-type Params = Promise<{ domain: string; language: string; slug: string; visibility: VisibilityParam }>;
-
-export default async function NewsDetailPage({ params }: { params: Params }) {
+export default async function NewsDetailPage({ params }: PageProps<"/[visibility]/[domain]/[language]/news/[slug]">) {
     const { domain, language, slug, visibility } = await params;
-    setVisibilityParam(visibility);
+    setVisibilityParam(visibility as VisibilityParam);
     const graphqlFetch = createGraphQLFetch();
 
     const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(

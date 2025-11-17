@@ -5,14 +5,8 @@ import { NewsPage } from "@src/news/NewsPage";
 import { fetchNewsList } from "@src/news/NewsPage.loader";
 import { setVisibilityParam } from "@src/util/ServerContext";
 
-type Params = Promise<{
-    domain: string;
-    language: string;
-    visibility: VisibilityParam;
-}>;
-
-export default async function NewsIndexPage({ params }: { params: Params }) {
+export default async function NewsIndexPage({ params }: PageProps<"/[visibility]/[domain]/[language]/news">) {
     const { visibility, domain, language } = await params;
-    setVisibilityParam(visibility);
+    setVisibilityParam(visibility as VisibilityParam);
     return <NewsPage scope={{ domain, language }} initialData={await fetchNewsList({ scope: { domain, language }, limit: 2 })} />;
 }
