@@ -71,16 +71,16 @@ jobs:
             - name: "Demo SaaS Admin: Clone demo translations"
               uses: actions/checkout@v5
               with:
-                  repository: vivid-planet/comet-demo-lang
+                  repository: vivid-planet/comet-demo-saas-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  path: "demo-saas/admin/lang/comet-demo-lang"
+                  path: "demo-saas/admin/lang/comet-demo-saas-lang"
 
             - name: "Demo SaaS Api: Clone translations"
               uses: actions/checkout@v4
               with:
-                  repository: vivid-planet/comet-demo-lang
+                  repository: vivid-planet/comet-demo-saas-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  path: "demo-saas/api/lang/comet-demo-lang"
+                  path: "demo-saas/api/lang/comet-demo-saas-lang"
 
             - uses: pnpm/action-setup@v4
 
