@@ -5,14 +5,13 @@ import { type DynamicModule, type Type } from "@nestjs/common";
 import { ActionLogsResolverFactory } from "./action-logs.resolver.factory";
 import { ActionLogsSubscriber } from "./action-logs.subscriber";
 import { ActionLogsCommonModule } from "./action-logs-common.module";
-import { ActionLogsContextModule } from "./action-logs-context.module";
 import { ActionLog } from "./entities/action-log.entity";
 
 export class ActionLogsModule {
     static forRoot(): DynamicModule {
         return {
             module: ActionLogsModule,
-            imports: [MikroOrmModule.forFeature([ActionLog]), ActionLogsContextModule, ActionLogsCommonModule],
+            imports: [MikroOrmModule.forFeature([ActionLog]), ActionLogsCommonModule],
             providers: [ActionLogsSubscriber],
         };
     }

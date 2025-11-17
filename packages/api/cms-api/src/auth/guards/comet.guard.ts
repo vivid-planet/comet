@@ -3,6 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
 
+import { AsyncLocalStorageService } from "../../async-local-storage/async-local-storage.service";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { User } from "../../user-permissions/interfaces/user";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
@@ -16,6 +17,7 @@ export class CometAuthGuard implements CanActivate {
         private reflector: Reflector,
         private readonly service: UserPermissionsService,
         @Inject("COMET_AUTH_SERVICES") private readonly authServices: AuthServiceInterface[],
+        private readonly asyncLocalStorageService: AsyncLocalStorageService,
     ) {}
 
     private getRequest(context: ExecutionContext): Request & { user: CurrentUser | SystemUser } {
@@ -63,6 +65,8 @@ export class CometAuthGuard implements CanActivate {
             }
             request["user"] = await this.service.createCurrentUser(user, request);
         }
+
+        this.asyncLocalStorageService.set("userId", typeof request.user === "string" ? request.user : request.user.id);
 
         return true;
     }

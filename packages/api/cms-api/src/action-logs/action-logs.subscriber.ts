@@ -1,9 +1,9 @@
 import { AnyEntity, ChangeSet, ChangeSetType, EntityManager, EventSubscriber, FlushEventArgs, PostgreSqlDriver, raw } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
+import { AsyncLocalStorageService } from "../async-local-storage/async-local-storage.service";
 import { ACTION_LOGS_METADATA_KEY, ActionLogMetadata } from "./action-logs.decorator";
 import { ActionLogsService } from "./action-logs.service";
-import { ActionLogsContextService } from "./action-logs-context.service";
 import { ActionLog } from "./entities/action-log.entity";
 
 @Injectable()
@@ -11,7 +11,7 @@ export class ActionLogsSubscriber implements EventSubscriber {
     constructor(
         private readonly entityManager: EntityManager<PostgreSqlDriver>,
         private readonly service: ActionLogsService,
-        private readonly contextService: ActionLogsContextService,
+        private readonly asyncLocalStorageService: AsyncLocalStorageService,
     ) {
         entityManager.getEventManager().registerSubscriber(this);
     }
@@ -43,8 +43,9 @@ export class ActionLogsSubscriber implements EventSubscriber {
             console.error(`entity '${entityMetadata}' doesn't have a single primary key`);
             return null;
         }
+        const userId = this.asyncLocalStorageService.get("userId");
         const entityId = changeSet.entity[entityMetadata.primaryKeys[0]];
-        const [userId, scope] = await Promise.all([this.contextService.getUserId(), this.service.getScopeFromEntity(changeSet.entity)]);
+        const scope = await this.service.getScopeFromEntity(changeSet.entity);
 
         let snapshot: AnyEntity | undefined = undefined;
         if (changeSet.type !== ChangeSetType.DELETE) {
