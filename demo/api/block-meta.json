@@ -988,7 +988,7 @@
                                     }
                                 ]
                             },
-                            "nullable": false
+                            "nullable": true
                         }
                     ]
                 },
@@ -2094,7 +2094,9 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2157,7 +2159,9 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2176,6 +2180,11 @@
                 "nullable": false
             }
         ]
+    },
+    {
+        "name": "PageTreeIndex",
+        "fields": [],
+        "inputFields": []
     },
     {
         "name": "PhoneLink",
@@ -2417,6 +2426,35 @@
                     ]
                 },
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductList",
+        "fields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
+                "nullable": false,
+                "array": true
             }
         ]
     },

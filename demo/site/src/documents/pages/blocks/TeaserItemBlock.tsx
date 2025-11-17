@@ -4,6 +4,7 @@ import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
+import { isValidLink } from "@src/common/helpers/HiddenIfInvalidLink";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { type Renderers } from "redraft";
 
@@ -29,12 +30,14 @@ export const TeaserItemBlock = withPreview(
                 <Typography variant="p200">
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
                 </Typography>
-                <div className={styles.textLinkContainer}>
-                    <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
-                    <Typography as="span" className={styles.linkText}>
-                        {link.text}
-                    </Typography>
-                </div>
+                {link.text && isValidLink(link.link) && (
+                    <div className={styles.textLinkContainer}>
+                        <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
+                        <Typography as="span" className={styles.linkText}>
+                            {link.text}
+                        </Typography>
+                    </div>
+                )}
             </div>
         </LinkBlock>
     ),

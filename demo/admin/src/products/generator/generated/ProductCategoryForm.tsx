@@ -4,7 +4,6 @@ import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { AsyncSelectField } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
@@ -19,6 +18,7 @@ import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { GQLProductCategoryTypesSelectQuery } from "./ProductCategoryForm.generated";
 import { GQLProductCategoryTypesSelectQueryVariables } from "./ProductCategoryForm.generated";
+import { AsyncAutocompleteField } from "@comet/admin";
 import { productCategoryFormFragment } from "./ProductCategoryForm.gql";
 import { GQLProductCategoryFormFragment } from "./ProductCategoryForm.gql.generated";
 import { productCategoryQuery } from "./ProductCategoryForm.gql";
@@ -33,9 +33,10 @@ import { GQLUpdateProductCategoryMutationVariables } from "./ProductCategoryForm
 import isEqual from "lodash.isequal";
 type FormValues = GQLProductCategoryFormFragment;
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
 }
-export function ProductCategoryForm({ id }: FormProps) {
+export function ProductCategoryForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -59,10 +60,7 @@ export function ProductCategoryForm({ id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            type: formValues.type ? formValues.type.id : null,
-        };
+        const output = { ...formValues, type: formValues.type ? formValues.type.id : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -75,15 +73,18 @@ export function ProductCategoryForm({ id }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
-                variables: { input: output },
+                variables: {
+                    input: output
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProductCategory.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createProductCategory.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };
@@ -101,16 +102,18 @@ export function ProductCategoryForm({ id }: FormProps) {
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="productCategory.title" defaultMessage="Title"/>}/>
 
         <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="productCategory.slug" defaultMessage="Slug"/>}/>
-        <AsyncSelectField variant="horizontal" fullWidth name="type" label={<FormattedMessage id="productCategory.type" defaultMessage="Type"/>} loadOptions={async () => {
+        <AsyncAutocompleteField variant="horizontal" fullWidth name="type" label={<FormattedMessage id="productCategory.type" defaultMessage="Type"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
-                    query: gql`query ProductCategoryTypesSelect {
-                            productCategoryTypes {
-                                nodes {
-                                    id
-                                    title
-                                }
-                            }
-                        }`
+                    query: gql`
+    query ProductCategoryTypesSelect($search: String) {
+        productCategoryTypes(search: $search) {
+            nodes { id title }
+        }
+    }
+    
+    `, variables: {
+                        search,
+                    }
                 });
                 return data.productCategoryTypes.nodes;
             }} getOptionLabel={(option) => option.title}/>

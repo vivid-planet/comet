@@ -1,5 +1,60 @@
 # @comet/site-nextjs
 
+## 8.6.0
+
+### Patch Changes
+
+- @comet/site-react@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- a5500b1: Set `referrerPolicy="strict-origin-when-cross-origin"` in the `YouTubeVideoBlock`
+
+    Apparently, YouTube recently started requiring a `Referer` header for embedded videos. If no `Referer` is present, the video fails to load ("Error 153").
+    - @comet/site-react@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/site-react@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- @comet/site-react@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/site-react@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/site-react@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- @comet/site-react@8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- c6ee74e: Remove unnecessary `rimraf` dependency
+- 22ee3de: Add SEO `title` property to PixelImageBlock and SvgImageBlock
+- Updated dependencies [c6ee74e]
+- Updated dependencies [22ee3de]
+    - @comet/site-react@8.3.0
+
 ## 8.2.0
 
 ### Minor Changes

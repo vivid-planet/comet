@@ -28,7 +28,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: var(--palette-text-inverted);
+    color: var(--text-primary);
     grid-column: 3 / -3;
 
     @media (min-width: $breakpoint-sm) {

@@ -3,7 +3,7 @@ import { type ComponentProps, type ElementType, type PropsWithChildren } from "r
 
 import styles from "./Typography.module.scss";
 
-type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "p300" | "p200";
+type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "e600" | "e550" | "e500" | "e450" | "p300" | "p200";
 
 const variantToElementMap: Record<TypographyVariant, ElementType> = {
     h600: "h1",
@@ -12,6 +12,10 @@ const variantToElementMap: Record<TypographyVariant, ElementType> = {
     h450: "h4",
     h400: "h5",
     h350: "h6",
+    e600: "p",
+    e550: "p",
+    e500: "p",
+    e450: "p",
     p300: "p",
     p200: "p",
 };
@@ -20,7 +24,7 @@ export type TypographyProps<T extends ElementType> = {
     as?: T;
     variant?: TypographyVariant;
     bottomSpacing?: boolean;
-} & ComponentProps<T>;
+} & Omit<ComponentProps<T>, "variant">;
 
 export const Typography = <T extends ElementType = "p">(props: PropsWithChildren<TypographyProps<T>>) => {
     const { as, variant = "p300", bottomSpacing = false, className, children, ...restProps } = props;

@@ -16,9 +16,9 @@ export type AsyncAutocompleteFieldProps<
 
 export function AsyncAutocompleteField<
     T extends Record<string, any>,
-    Multiple extends boolean | undefined,
-    DisableClearable extends boolean | undefined,
-    FreeSolo extends boolean | undefined,
+    Multiple extends boolean | undefined = false,
+    DisableClearable extends boolean | undefined = false,
+    FreeSolo extends boolean | undefined = false,
 >(props: AsyncAutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
     return <Field component={FinalFormAsyncAutocomplete} {...props} />;
 }
