@@ -39,7 +39,10 @@ export class UserPermissionsGuard implements CanActivate {
         if (this.getDecorator(context, DISABLE_COMET_GUARDS_METADATA_KEY)) return true;
 
         const user = this.getUser(context);
-        if (!user) return false;
+        if (!user) {
+            console.log("UserPermissionsGuard: Could not get authenticated user. Maybe CometAuthGuard is missing?");
+            return false;
+        }
 
         // System user authenticated via basic auth
         if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
@@ -51,9 +54,13 @@ export class UserPermissionsGuard implements CanActivate {
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
         if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
-            return requiredPermissions
-                .filter((permission) => permission !== DisablePermissionCheck)
-                .some((permission) => this.accessControlService.isAllowed(user, permission));
+            if (
+                requiredPermissions
+                    .filter((permission) => permission !== DisablePermissionCheck)
+                    .some((permission) => this.accessControlService.isAllowed(user, permission))
+            ) {
+                return true;
+            }
         } else {
             if (requiredContentScopes.length === 0)
                 throw new Error(
@@ -64,14 +71,23 @@ export class UserPermissionsGuard implements CanActivate {
             // The first level has to be checked with AND, the second level with OR
             // The first level consists of submitted scopes and affected entities
             // The only case that there is more than one scope in the second level is when the ScopedEntity returns more scopes
-            return requiredPermissions
-                .filter((permission): permission is Permission => permission !== DisablePermissionCheck)
-                .some((permission) =>
-                    requiredContentScopes.every((contentScopes) =>
-                        contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
-                    ),
-                );
+            if (
+                requiredPermissions
+                    .filter((permission): permission is Permission => permission !== DisablePermissionCheck)
+                    .some((permission) =>
+                        requiredContentScopes.every((contentScopes) =>
+                            contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+                        ),
+                    )
+            ) {
+                return true;
+            }
         }
+
+        console.log(
+            `UserPermissionsGuard: User ${(typeof user === "string" ? user : user.id) ?? "unknown"} does not have required permissions for ${location}`,
+        );
+        return false;
     }
 
     private getUser(context: ExecutionContext): CurrentUser | SystemUser | undefined {

@@ -30,6 +30,11 @@ export class CdnGuard implements CanActivate {
             return true;
         }
 
-        return request.header(this.headerName) === this.headerValue;
+        if (request.header(this.headerName) === this.headerValue) {
+            return true;
+        }
+
+        console.log(`CdnGuard: Header "${this.headerName}" either missing or invalid.`);
+        return false;
     }
 }
