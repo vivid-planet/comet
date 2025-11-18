@@ -106,17 +106,55 @@ npx @comet/upgrade@latest v9/site/before-install/update-next-dependencies.ts
 
 </details>
 
-### Add `next-env.d.ts` to `eslint.config.mjs`
+### Add `next-env.d.ts` to `.gitignore`
 
-```diff title="site/eslint.config.mjs"
-/** @type {import('eslint')} */
-const config = [
-    {
--       ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**"],
-+       ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**", "next-env.d.ts"],
-    },
-    ...eslintConfigNextJs,
-];
+```sh
+git rm site/next-env.d.ts
+
+echo "next-env.d.ts" >> site/.gitignore
+```
+
+### Add `next typegen` to `lint:tsc` script
+
+This is necessary for the lint to work during CI.
+
+```diff title="site/package.json"
+{
+    "scripts": {
+-       "lint:tsc": "tsc --project ."
++       "lint:tsc": "npx next typegen && tsc --project ."
+    }
+}
+```
+
+### Remove `eslint` from the Next.js config file
+
+```diff title="site/next.config.(js|mjs|ts)"
+const nextConfig: NextConfig = {
+    /* ... */,
+-   eslint: {
+-       ignoreDuringBuilds: process.env.NODE_ENV === "production",
+-   },
+};
+```
+
+### Disable Turbopack
+
+Our site packages currently aren't compatible with Turbopack.
+Disable Turbopack until this is resolved:
+
+```diff title="site/server.(js|ts)"
+- const app = next({ dev, hostname: host, port });
++ const app = next({ dev, hostname: host, port, webpack: true });
+```
+
+```diff title="site/package.json"
+{
+    "scripts": {
+-       "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build"
++       "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build --webpack"
+    }
+}
 ```
 
 ### Fix TypeScript errors caused by React 19 upgrade
@@ -128,25 +166,48 @@ Review the [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-
 
 Multiple Next.js APIs (e.g., `headers()`) are now asynchronous.
 Update your usages to support the asynchronous APIs.
-Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-15#async-request-apis-breaking-change) for more information.
+You can use the new props helper types.
+Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-16#async-request-apis-breaking-change) for more information.
 
 ```diff title="site/src/app/[visibility]/[domain]/[language]/[[...path]]/page.tsx"
-+ type Params = Promise<{ path: string[]; domain: string; language: string; visibility: VisibilityParam; }>;
-
-type PageProps = {
+- type PageProps = {
 -   params: { path: string[]; domain: string; language: string; visibility: VisibilityParam };
-+   params: Params;
-};
+- };
 
-export default async function Page({ params }: PageProps) {
-setVisibilityParam(params.visibility);
+- export default async function Page({ params }: PageProps) {
++ export default async function Page({ params }: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">) {
 -   setVisibilityParam(params.visibility);
 -   const scope = { domain: params.domain, language: params.language };
 +   const { visibility, domain, language } = await params;
-+   setVisibilityParam(visibility);
++   setVisibilityParam(visibility as VisibilityParam);
 +   const scope = { domain, language };
 }
 ```
+
+### Rename `middleware.ts` to `proxy.ts`
+
+```sh
+mv site/src/middleware.ts site/src/proxy.ts
+```
+
+:::note
+
+If you're using Knip, you may need to add `proxy.ts` as entry point:
+
+```diff title="site/knip.json"
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "entry": [
+        "./src/app/**",
+        "./cache-handler.ts",
+        "./tracing.ts",
++       "./src/proxy.ts"
+    ],
+    "project": ["./src/**/*.{ts,tsx}"]
+}
+```
+
+:::
 
 ### Add `cache: "force-cache"` to GraphQL fetch
 
