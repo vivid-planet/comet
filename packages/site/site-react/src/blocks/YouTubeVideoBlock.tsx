@@ -1,11 +1,12 @@
 "use client";
 
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { PlayPauseButton } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -42,27 +43,35 @@ export const YouTubeVideoBlock = withPreview(
         playButtonAriaLabel,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
+        const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
-        const iframeRef = useRef<HTMLIFrameElement>(null);
+        const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
+        const iframeRef = setIframeElement;
         const inViewRef = useRef<HTMLDivElement>(null);
 
-        const pauseYouTubeVideo = () => {
-            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
-        };
+        const pauseYouTubeVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
+        }, [iframeElement]);
 
-        const playYouTubeVideo = () => {
-            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
-        };
+        const playYouTubeVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
+        }, [iframeElement]);
 
-        useIsElementInViewport(inViewRef, (inView: boolean) => {
-            if (autoplay) {
-                if (inView) {
-                    playYouTubeVideo();
-                } else {
-                    pauseYouTubeVideo();
+        const handleInView = useCallback(
+            (inView: boolean) => {
+                if (autoplay) {
+                    if (inView && isHandledManually) {
+                        playYouTubeVideo();
+                        setIsHandledManually(true);
+                    } else {
+                        pauseYouTubeVideo();
+                    }
                 }
-            }
-        });
+            },
+            [autoplay, isHandledManually, playYouTubeVideo, pauseYouTubeVideo],
+        );
+
+        useIsElementInViewport(inViewRef, handleInView);
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -75,7 +84,7 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("enablejsapi", "1");
 
         // start playing the video when the preview image has been hidden
-        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
+        if ((hasPreviewImage && !showPreviewImage) || !hasPreviewImage) searchParams.append("autoplay", "1");
 
         if (autoplay) searchParams.append("mute", "1");
 
@@ -106,6 +115,21 @@ export const YouTubeVideoBlock = withPreview(
                         className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
+                        {!showControls && (
+                            <PlayPauseButton
+                                className={styles.playPause}
+                                isPlaying={!isHandledManually}
+                                onClick={() => {
+                                    if (isHandledManually) {
+                                        pauseYouTubeVideo();
+                                        setIsHandledManually(false);
+                                    } else {
+                                        playYouTubeVideo();
+                                        setIsHandledManually(true);
+                                    }
+                                }}
+                            />
+                        )}
                         <iframe
                             ref={iframeRef}
                             className={styles.youtubeContainer}
