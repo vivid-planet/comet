@@ -86,6 +86,9 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
+
+Please pin typescript to `5.8.3` due to some ESLint plugins not working with
+higher versions.
 :::
 
 **Create a branch `typescript-5`.**
@@ -94,22 +97,22 @@ You can skip this step if your project already uses typescript v5 **everywhere**
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "^5.8.3",
+    +        "typescript": "5.8.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
@@ -499,7 +502,8 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 ```diff title=api/package.json
 {
     "dependencies": {
-+       "@apollo/server": "^4.0.0",
++       "@apollo/server": "^5.1.0",
++       "@as-integrations/express5": "^1.1.2",
 -       "@nestjs/apollo": "^10.0.0",
 -       "@nestjs/common": "^9.0.0",
 -       "@nestjs/config": "^2.0.0",
@@ -507,7 +511,7 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 -       "@nestjs/graphql": "^10.0.0",
 -       "@nestjs/passport": "^9.0.0",
 -       "@nestjs/platform-express": "^9.0.0",
-+       "@nestjs/apollo": "^13.0.0",
++       "@nestjs/apollo": "^13.2.1",
 +       "@nestjs/common": "^11.0.0",
 +       "@nestjs/core": "^11.0.0",
 +       "@nestjs/graphql": "^13.0.0",
@@ -531,6 +535,40 @@ npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 +       "@types/express": "^5.0.0",
     }
 }
+```
+
+</details>
+
+#### ✅ Fix peer dependency conflict and knip problems caused by `@apollo/server`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/api/before-install/add-apollo-server-override.ts
+```
+
+:::
+
+```diff title="api/package.json"
++    "overrides": {
++        "@apollo/server-plugin-landing-page-graphql-playground": {
++            "@apollo/server": "^5.0.0"
++        }
++    },
+```
+
+If you are using knip:
+
+```diff title="api/knip.json"
+    "ignoreDependencies": [
+        "@mikro-orm/cli",
+        "jest-junit",
++       "@as-integrations/express5"
+    ],
 ```
 
 </details>
@@ -794,7 +832,7 @@ Now it's time to run npm install:
 
 1. Enter the /api folder: `cd api`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -1202,6 +1240,10 @@ This section highlights the necessary changes to convert a nestjs-console comman
 
     **Arguments:** Move from `command` field into `arguments` field:
 
+    :::info
+    Optional arguments must be defined in square brackets `[]`, required arguments in angle brackets `<>`.
+    :::
+
     ```diff title="import-redirects.command.ts"
     @Command({
         name: "import-redirects",
@@ -1323,6 +1365,13 @@ If you're unsure about how to structure the AuthModule, look at the [COMET Start
     ```
 
 ### Use strings for date-only columns
+
+:::warning
+This change only applies to **date-only** columns, meaning columns where we only want to save the date **without a time**.
+
+It does not apply to timestamps, where we save the date and time (e.g., `createdAt` or `updatedAt`).
+For these cases, you don't have to change anything.
+:::
 
 Starting with v6 MikroORM maps date-only columns to `string` instead of `Date`.
 Perform the following changes:
@@ -1449,7 +1498,7 @@ You can remove previously generated files and generate them on demand:
     }
     ```
 
-2. `lint:generated-files-not-modified` script can be removed:
+2. Remove `lint:generated-files-not-modified` and execute `npm run api-generator` before lint:
 
     ```diff title="api/package.json"
     scripts: {
@@ -1710,6 +1759,31 @@ npx @comet/upgrade@latest v8/admin/before-install/remove-comet-admin-react-selec
 
 </details>
 
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/admin/before-install/update-graphql-admin.ts
+```
+
+:::
+
+```diff title=admin/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
 #### ✅ Remove ignore-restricted-imports comments
 
 Removes the comments we added in [step 4](#step-4-update-eslint-and-prettier-pr-4).
@@ -1817,7 +1891,7 @@ Now it's time to run npm install:
 
 1. Enter the /admin folder: `cd admin`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -1920,6 +1994,7 @@ Add the proxy to your vite config:
 //...
 server: {
     // ...
+    cors: false,
     proxy: process.env.API_URL_INTERNAL
     ? {
          "/api": {
@@ -2183,8 +2258,16 @@ The React dependency has been bumped to v18.
 
 Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
 
+#### Update to client rendering API
+
+```diff title="admin/src/loader.ts"
+- ReactDOM.render(createElement(App), rootElement);
++ const root = createRoot(rootElement);
++ root.render(createElement(App));
+```
+
 :::info
-Probably, there's not much to do here.
+Otherwise, there's probably not much to do here.
 You can also fix potential errors later during the lint step.
 :::
 
@@ -2432,6 +2515,11 @@ The `MenuContext` has been removed, use the new `useMainNavigation` hook instead
 ### Dialog-related changes
 
 #### 🤖 Import `Dialog` from `@comet/admin` package
+
+:::warning
+`Dialog` now supports a `title` prop that automatically adds a `DialogTitle` component.
+So if you have a `Dialog` with a `DialogTitle` as a child, you should remove the `DialogTitle` and pass its children as `title` prop to `Dialog`.
+:::
 
 :::note Execute the following upgrade script:
 
@@ -2749,10 +2837,10 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 ### Fix runtime errors
 
-1. Start the api with `dpm start admin`
+1. Start the admin with `dpm start admin`
 2. Check the logs with `dpm logs admin`
 3. Fix occurring errors
-4. Once the API runs without problems: Commit **without** `--no-verify`
+4. Once the admin runs without problems: Commit **without** `--no-verify`
 
 ## Site
 
@@ -2761,13 +2849,56 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 Ignore this if you already did it beforehand in [step 3](#step-3-switch-from-cometcms-site-to-cometsite-nextjs-pr-3).
 Otherwise, go back and do it now.
 
+### 🤖 Upgrade peer dependencies
+
+The following upgrade script will update peer dependency versions.
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install
+```
+
+:::
+
+<details>
+
+<summary>Updates handled by this batch upgrade script</summary>
+
+#### ✅ GraphQL
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/site/before-install/update-graphql-site.ts
+```
+
+:::
+
+```diff title=site/package.json
+{
+    "dependencies": {
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+}
+```
+
+</details>
+
+</details>
+
 ### Install
 
 Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to v8
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
 4. `npm install`
 5. Once the install passed, commit your changes with `--no-verify`
 
@@ -2843,4 +2974,4 @@ scalars: rootBlocks.reduce(
 2. Check the logs with `dpm logs site`
 3. Fix occurring errors
 4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [COMET Starter](https://github.com/vivid-planet/comet-starter/blob/main/build-and-run-site.sh))
-5. Once the API runs without problems: Commit **without** `--no-verify`
+5. Once the site runs without problems: Commit **without** `--no-verify`

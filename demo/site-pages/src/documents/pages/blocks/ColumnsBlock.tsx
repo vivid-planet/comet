@@ -46,7 +46,7 @@ const Column = styled.div<{ $layout: string }>`
     grid-column: 3 / -3;
 
     ${({ $layout, theme }) =>
-        $layout === "9-6-9" &&
+        $layout === "6-12-6" &&
         css`
             grid-column: 5 / -5;
 

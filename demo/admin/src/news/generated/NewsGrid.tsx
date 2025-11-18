@@ -21,13 +21,14 @@ import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
-import { useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { DamImageBlock } from "@comet/cms-admin";
+import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
+import { DamImageBlock } from "@comet/cms-admin";
+import { useContentScope } from "@comet/cms-admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const newsFragment = gql`
@@ -37,15 +38,12 @@ const newsFragment = gql`
         }
     `;
 const newsQuery = gql`
-        query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
-    newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
-                nodes {
-                    ...NewsGrid
-                }
-                totalCount
-            }
+    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
+        newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
+            nodes { ...NewsGrid } totalCount
         }
-        ${newsFragment}
+    }
+    ${newsFragment}
     `;
 const deleteNewsMutation = gql`
                 mutation DeleteNews($id: ID!) {
@@ -67,7 +65,7 @@ export function NewsGrid() {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
-    const columns: GridColDef<GQLNewsGridFragment>[] = [
+    const columns: GridColDef<GQLNewsGridFragment>[] = useMemo(() => [
         { field: "title",
             headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }),
             flex: 1,
@@ -134,7 +132,7 @@ export function NewsGrid() {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLNewsGridQuery, GQLNewsGridQueryVariables>(newsQuery, {
         variables: {

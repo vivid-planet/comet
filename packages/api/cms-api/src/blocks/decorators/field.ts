@@ -17,6 +17,7 @@ type BlockFieldOptions =
           type: "enum";
           enum: string[] | Record<string, string>;
           nullable?: boolean;
+          array?: boolean;
       }
     | {
           type: "json" | "string" | "number" | "boolean";
@@ -32,6 +33,9 @@ type BlockFieldOptions =
           block: Block;
       };
 
+const BLOCK_FIELD_METADATA_KEY = "data:fieldType";
+const BLOCK_FIELD_KEYS_METADATA_KEY = "keys:field";
+
 export function BlockField(
     type?:
         | Block
@@ -42,11 +46,13 @@ export function BlockField(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (ctorPrototype: any, propertyKey: string | symbol): void {
         if (type) {
-            Reflect.defineMetadata(`data:fieldType`, type, ctorPrototype, propertyKey);
+            Reflect.defineMetadata(BLOCK_FIELD_METADATA_KEY, type, ctorPrototype, propertyKey);
         }
-        const propertyKeys = Reflect.getOwnMetadata(`keys:field`, ctorPrototype) || (Reflect.getMetadata(`keys:field`, ctorPrototype) || []).slice(0);
+        const propertyKeys =
+            Reflect.getOwnMetadata(BLOCK_FIELD_KEYS_METADATA_KEY, ctorPrototype) ||
+            (Reflect.getMetadata(BLOCK_FIELD_KEYS_METADATA_KEY, ctorPrototype) || []).slice(0);
         propertyKeys.push(propertyKey);
-        Reflect.defineMetadata(`keys:field`, propertyKeys, ctorPrototype);
+        Reflect.defineMetadata(BLOCK_FIELD_KEYS_METADATA_KEY, propertyKeys, ctorPrototype);
     };
 }
 
@@ -56,7 +62,7 @@ type BlockFieldData =
           nullable: boolean;
           array?: boolean;
       }
-    | { kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean }
+    | { kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean; array?: boolean }
     | { kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { kind: BlockMetaFieldKind.NestedObject; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
     | { kind: BlockMetaFieldKind.NestedObjectList; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
@@ -67,7 +73,7 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
     const designType = Reflect.getMetadata(`design:type`, ctor.prototype, propertyKey);
     let ret: BlockFieldData | undefined = undefined;
 
-    const fieldType = Reflect.getMetadata(`data:fieldType`, ctor.prototype, propertyKey);
+    const fieldType = Reflect.getMetadata(BLOCK_FIELD_METADATA_KEY, ctor.prototype, propertyKey);
 
     const nullable = !!(fieldType && fieldType.nullable);
     const array: boolean | undefined = fieldType?.array ?? undefined;
@@ -83,7 +89,7 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
             ret = { kind: BlockMetaFieldKind.Json, nullable, array };
         } else if (fieldType.type === "enum") {
             const enumValues = Array.isArray(fieldType.enum) ? fieldType.enum : Object.values(fieldType.enum);
-            ret = { kind: BlockMetaFieldKind.Enum, enum: enumValues, nullable };
+            ret = { kind: BlockMetaFieldKind.Enum, enum: enumValues, nullable, array };
         } else if (fieldType.type === "block") {
             ret = { kind: BlockMetaFieldKind.Block, block: fieldType.block, nullable };
         } else {
@@ -133,7 +139,7 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getFieldKeys(ctor: { prototype: any }): string[] {
-    return (Reflect.getMetadata(`keys:field`, ctor.prototype) || []) as string[];
+    return (Reflect.getMetadata(BLOCK_FIELD_KEYS_METADATA_KEY, ctor.prototype) || []) as string[];
 }
 
 export class AnnotationBlockMeta implements BlockMetaInterface {
@@ -161,6 +167,7 @@ export class AnnotationBlockMeta implements BlockMetaInterface {
                     kind: field.kind,
                     enum: field.enum,
                     nullable: field.nullable,
+                    array: field.array,
                 });
             } else if (field.kind === BlockMetaFieldKind.Block) {
                 ret.push({

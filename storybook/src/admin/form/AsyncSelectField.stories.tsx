@@ -232,9 +232,9 @@ export const NoOptions: Story = {
 };
 
 /**
- * If no options are available, the noOptionsLabel function can be used to customize the label.
+ * If no options are available, the noOptionsText function can be used to customize the label.
  */
-export const NoOptionsWithCustomNoOptionsLabel: Story = {
+export const NoOptionsWithCustomNoOptionsText: Story = {
     render: () => {
         interface FormValues {
             type: string;
@@ -261,7 +261,7 @@ export const NoOptionsWithCustomNoOptionsLabel: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
-                                noOptionsLabel={
+                                noOptionsText={
                                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                         <Info color="info" />
                                         No options available at this point in time
@@ -331,7 +331,7 @@ export const ErrorLoadingOptions: Story = {
     },
 };
 
-export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
+export const ErrorLoadingOptionsWithCustomErrorText: Story = {
     render: () => {
         interface FormValues {
             type: string;
@@ -358,7 +358,7 @@ export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
-                                errorLabel={
+                                errorText={
                                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                         <WarningSolid color="error" />
                                         Error loading options
@@ -427,6 +427,49 @@ export const AsyncLoadingDataFromApi: Story = {
                                 }}
                                 getOptionLabel={(option) => {
                                     return option.name;
+                                }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const MultipleWithoutInitialValues: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                multiple
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+                                    return ["value-1", "value-2", "value-3", "value-4"];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
                                 }}
                                 name="type"
                                 label="AsyncSelectField"

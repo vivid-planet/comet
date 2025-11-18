@@ -1,7 +1,9 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
+import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { UserGroup } from "@src/user-groups/user-group";
 
 import { BlockFixture } from "./blocks/block-fixture";
 import { AccordionBlockFixtureService } from "./blocks/layout/accordion-block-fixture.service";
@@ -15,12 +17,13 @@ import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-bl
 import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
 import { LinkListBlockFixtureService } from "./blocks/navigation/link-list-block-fixture.service";
+import { PageTreeIndexBlockFixtureService } from "./blocks/navigation/page-tree-index-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { SliderBlockFixtureService } from "./blocks/slider-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./blocks/teaser/billboard-teaser-block-fixture.service";
 import { TeaserBlockFixtureService } from "./blocks/teaser/teaser-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "./blocks/text-and-content/key-facts-block-fixture.service";
-import { RichTextBlockFixtureService } from "./blocks/text-and-content/rich-text-block-fixture.service";
+import { ProductListBlockFixtureService } from "./blocks/text-and-content/product-list-block.fixture";
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
 
@@ -42,12 +45,14 @@ export class PageContentBlockFixtureService {
         private readonly layoutBlockFixtureService: LayoutBlockFixtureService,
         private readonly linkListBlockFixtureService: LinkListBlockFixtureService,
         private readonly mediaGalleryBlockFixtureService: MediaGalleryBlockFixtureService,
-        private readonly richtextBlockFixtureService: RichTextBlockFixtureService,
         private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
         private readonly mediaBlockFixtureService: StandaloneMediaBlockFixtureService,
         private readonly teaserBlockFixtureService: TeaserBlockFixtureService,
         private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
         private readonly sliderBlockFixtureService: SliderBlockFixtureService,
+        private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
+        private readonly productListBlockFixtureService: ProductListBlockFixtureService,
+        private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -69,12 +74,14 @@ export class PageContentBlockFixtureService {
             mediaGallery: ["media", this.mediaGalleryBlockFixtureService],
             anchor: ["navigation", this.anchorBlockFixtureService],
             callToActionList: ["navigation", this.callToActionListBlockFixtureService],
+            pageTreeIndex: ["navigation", this.pageTreeIndexBlockFixtureService],
             billboardTeaser: ["teaser", this.billboardTeaserBlockFixtureService],
             teaser: ["teaser", this.teaserBlockFixtureService],
             heading: ["textAndContent", this.headingBlockFixtureService],
             keyFacts: ["textAndContent", this.keyFactsBlockFixtureService],
-            richtext: ["textAndContent", this.richtextBlockFixtureService],
+            richtext: ["textAndContent", this.standaloneRichTextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
+            productList: ["textAndContent", this.productListBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)
@@ -91,6 +98,9 @@ export class PageContentBlockFixtureService {
                 type: type as any,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 props: props as any,
+                // TODO add custom block attributes to BlocksBlock types
+                // @ts-expect-error custom block attributes aren't reflected in types
+                userGroup: UserGroup.all,
             });
         }
 

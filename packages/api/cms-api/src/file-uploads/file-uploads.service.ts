@@ -93,6 +93,17 @@ export class FileUploadsService {
         return ["/file-uploads", hash, file.id, timeout, resizeWidth, filename].join("/");
     }
 
+    createPreviewUrl(file: FileUpload): string {
+        const timeout = addHours(new Date(), 1).getTime();
+
+        const hash = this.createHash({
+            id: file.id,
+            timeout,
+        });
+
+        return ["/file-uploads", "preview", hash, file.id, timeout].join("/");
+    }
+
     async getFileContent(file: FileUpload): Promise<Buffer> {
         const filePath = createHashedPath(file.contentHash);
         const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
@@ -109,5 +120,14 @@ export class FileUploadsService {
         }
         const buffer = Buffer.concat(chunks);
         return buffer;
+    }
+
+    async delete(fileUpload: FileUpload): Promise<void> {
+        const filePath = createHashedPath(fileUpload.contentHash);
+        if (await this.blobStorageBackendService.fileExists(this.config.directory, filePath)) {
+            await this.blobStorageBackendService.removeFile(this.config.directory, filePath);
+        }
+
+        this.entityManager.remove(fileUpload);
     }
 }

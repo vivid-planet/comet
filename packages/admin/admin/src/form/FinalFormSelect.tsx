@@ -8,9 +8,9 @@ import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
-export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
-    noOptionsLabel?: ReactNode;
-    errorLabel?: ReactNode;
+export interface FinalFormSelectProps<T> {
+    noOptionsText?: ReactNode;
+    errorText?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -18,7 +18,12 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     loadingError?: Error | null;
 }
 
-const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
+
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined, disabled: boolean | undefined) => {
+    if (disabled) {
+        return false;
+    }
     if (multiple && Array.isArray(value)) {
         return value.length > 0;
     }
@@ -32,7 +37,7 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined) =
  * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
+    input: { checked, value: incomingValue, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
@@ -54,29 +59,32 @@ export const FinalFormSelect = <T,>({
         }
     },
 
-    noOptionsLabel = (
+    noOptionsText = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
         </Typography>
     ),
-    errorLabel = (
+    errorText = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
     ),
+    disabled,
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={getHasClearableContent(value, multiple)}
+            hasClearableContent={getHasClearableContent(value, multiple, disabled)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;
@@ -84,6 +92,7 @@ export const FinalFormSelect = <T,>({
     const selectProps = {
         ...rest,
         multiple,
+        disabled,
         endAdornment,
         name,
         onChange,
@@ -156,12 +165,12 @@ export const FinalFormSelect = <T,>({
 
             {showNoOptions && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {noOptionsLabel}
+                    {noOptionsText}
                 </MenuItemDisabledOverrideOpacity>
             )}
             {showError && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {errorLabel}
+                    {errorText}
                 </MenuItemDisabledOverrideOpacity>
             )}
 

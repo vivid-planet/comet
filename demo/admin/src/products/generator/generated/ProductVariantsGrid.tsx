@@ -8,23 +8,31 @@ import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { Button } from "@comet/admin";
 import { CrudContextMenu } from "@comet/admin";
+import { CrudMoreActionsMenu } from "@comet/admin";
 import { DataGridToolbar } from "@comet/admin";
+import { ExportApi } from "@comet/admin";
 import { GridFilterButton } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
+import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
+import { useDataGridExcelExport } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
+import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
+import { Excel as ExcelIcon } from "@comet/admin-icons";
 const productVariantsFragment = gql`
         fragment ProductVariantsGridFuture on ProductVariant {
             id
@@ -32,26 +40,38 @@ const productVariantsFragment = gql`
         }
     `;
 const productVariantsQuery = gql`
-        query ProductVariantsGrid($product: ID!, $offset: Int!, $limit: Int!, $sort: [ProductVariantSort!], $search: String, $filter: ProductVariantFilter) {
-    productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductVariantsGridFuture
-                }
-                totalCount
-            }
+    query ProductVariantsGrid($product: ID!, $offset: Int!, $limit: Int!, $sort: [ProductVariantSort!], $search: String, $filter: ProductVariantFilter) {
+        productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductVariantsGridFuture } totalCount
         }
-        ${productVariantsFragment}
+    }
+    ${productVariantsFragment}
     `;
 const deleteProductVariantMutation = gql`
                 mutation DeleteProductVariant($id: ID!) {
                     deleteProductVariant(id: $id)
                 }
             `;
-function ProductVariantsGridToolbar() {
+interface ProductVariantsGridToolbarToolbarProps extends GridToolbarProps {
+    exportApi: ExportApi;
+}
+function ProductVariantsGridToolbar({ exportApi }: ProductVariantsGridToolbarToolbarProps) {
     return (<DataGridToolbar>
                 <GridToolbarQuickFilter />
                 <GridFilterButton />
                 <FillSpace />
+        <CrudMoreActionsMenu slotProps={{
+            button: {
+                responsive: true
+            }
+        }} overallActions={[
+            {
+                label: <FormattedMessage {...messages.downloadAsExcel}/>,
+                icon: exportApi.loading ? <CircularProgress size={20}/> : <ExcelIcon />,
+                onClick: () => exportApi.exportGrid(),
+                disabled: exportApi.loading,
+            }
+        ]}/>
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
         <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage={`New Product Variant`}/>
     </Button>
@@ -66,7 +86,7 @@ export function ProductVariantsGrid({ product }: Props) {
     const dataGridProps = { ...useDataGridRemote({
             queryParamsPrefix: "product-variants",
         }), ...usePersistentColumnState("ProductVariantsGrid") };
-    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = useMemo(() => [
         { field: "name",
             headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }),
             flex: 1,
@@ -83,6 +103,7 @@ export function ProductVariantsGrid({ product }: Props) {
             align: "right",
             pinned: "right",
             width: 84,
+            disableExport: true,
             renderCell: (params) => {
                 return (<>
                                 
@@ -98,7 +119,7 @@ export function ProductVariantsGrid({ product }: Props) {
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, client]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductVariantsGridQuery, GQLProductVariantsGridQueryVariables>(productVariantsQuery, {
         variables: {
@@ -109,7 +130,21 @@ export function ProductVariantsGrid({ product }: Props) {
     if (error)
         throw error;
     const rows = data?.productVariants.nodes ?? [];
+    const exportApi = useDataGridExcelExport<GQLProductVariantsGridQuery["productVariants"]["nodes"][0], GQLProductVariantsGridQuery, Omit<GQLProductVariantsGridQueryVariables, "offset" | "limit">>({
+        columns,
+        variables: {
+            product, ...muiGridFilterToGql(columns, dataGridProps.filterModel)
+        },
+        query: productVariantsQuery,
+        resolveQueryNodes: (data) => data.productVariants.nodes,
+        totalCount: data?.productVariants.totalCount ?? 0,
+        exportOptions: {
+            fileName: "ProductVariants",
+        },
+    });
     return (<DataGridPro {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} slots={{
             toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
+        }} slotProps={{
+            toolbar: { exportApi, } as ProductVariantsGridToolbarToolbarProps
         }}/>);
 }

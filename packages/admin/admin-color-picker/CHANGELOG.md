@@ -1,5 +1,113 @@
 # @comet/admin-color-picker
 
+## 8.6.0
+
+### Patch Changes
+
+- Updated dependencies [6c5578a]
+    - @comet/admin@8.6.0
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin@8.5.2
+- @comet/admin-icons@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/admin@8.5.1
+- @comet/admin-icons@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- Updated dependencies [a85e7cb]
+- Updated dependencies [ff6d79a]
+- Updated dependencies [ff6d79a]
+    - @comet/admin@8.4.0
+    - @comet/admin-icons@8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- Updated dependencies [422328b]
+- Updated dependencies [ae1dbab]
+- Updated dependencies [becc06c]
+- Updated dependencies [12e9230]
+- Updated dependencies [6f30126]
+- Updated dependencies [1bd73a0]
+- Updated dependencies [d682135]
+- Updated dependencies [ae1dbab]
+- Updated dependencies [becc06c]
+    - @comet/admin@8.3.0
+    - @comet/admin-icons@8.3.0
+
+## 8.2.0
+
+### Patch Changes
+
+- Updated dependencies [ea545c4]
+- Updated dependencies [dfafdb3]
+- Updated dependencies [d7ab390]
+- Updated dependencies [08ad5fe]
+- Updated dependencies [01ef80b]
+- Updated dependencies [0b08988]
+- Updated dependencies [85141bf]
+- Updated dependencies [0cfcf90]
+    - @comet/admin@8.2.0
+    - @comet/admin-icons@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/admin@8.1.1
+- @comet/admin-icons@8.1.1
+
+## 8.1.0
+
+### Patch Changes
+
+- Updated dependencies [00e6a12]
+- Updated dependencies [2f33286]
+- Updated dependencies [ec9bce5]
+- Updated dependencies [3323fa9]
+- Updated dependencies [e70eb31]
+- Updated dependencies [911a6da]
+    - @comet/admin@8.1.0
+    - @comet/admin-icons@8.1.0
+
 ## 8.0.0
 
 ### Major Changes

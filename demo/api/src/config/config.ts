@@ -33,8 +33,8 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiPort: envVars.API_PORT,
         adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
+        defaultLocale: "en", // fallback locale
         auth: {
-            useAuthProxy: envVars.USE_AUTHPROXY,
             systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
             idpClientId: envVars.IDP_CLIENT_ID,
             idpJwksUri: envVars.IDP_JWKS_URI,
@@ -88,9 +88,11 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
             sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 
+            daysToKeepMailLog: 90,
+
             transport: {
-                host: "localhost",
-                port: 1025,
+                host: envVars.MAILER_HOST,
+                port: envVars.MAILER_PORT,
             },
         },
         cdn: {

@@ -3,39 +3,30 @@
 import { gql } from "@apollo/client";
 export const productVariantFormFragment = gql`
         fragment ProductVariantForm on ProductVariant {
-            name
-image
+            name image
         }
-        
-        
     `;
 export const productVariantQuery = gql`
-            query ProductVariant($id: ID!) {
-                productVariant(id: $id) {
-                    id
-                    updatedAt
-                    ...ProductVariantForm
-                }
-            }
-            ${productVariantFormFragment}
-        `;
+    query ProductVariant($id: ID!) {
+        productVariant(id: $id) {
+            id updatedAt ...ProductVariantForm
+        }
+    }
+    ${productVariantFormFragment}
+    `;
 export const createProductVariantMutation = gql`
-            mutation CreateProductVariant($product: ID!, $input: ProductVariantInput!) {
-                createProductVariant(product: $product, input: $input) {
-                    id
-                    updatedAt
-                    ...ProductVariantForm
-                }
-            }
-            ${productVariantFormFragment}
-        `;
+    mutation CreateProductVariant($product: ID!, $input: ProductVariantInput!) {
+        createProductVariant(product: $product, input: $input) {
+            id updatedAt ...ProductVariantForm
+        }
+    }
+    ${productVariantFormFragment}
+    `;
 export const updateProductVariantMutation = gql`
-            mutation UpdateProductVariant($id: ID!, $input: ProductVariantUpdateInput!) {
-                updateProductVariant(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...ProductVariantForm
-                }
-            }
-            ${productVariantFormFragment}
-        `;
+    mutation UpdateProductVariant($id: ID!, $input: ProductVariantUpdateInput!) {
+        updateProductVariant(id: $id, input: $input) {
+            id updatedAt ...ProductVariantForm
+        }
+    }
+    ${productVariantFormFragment}
+    `;

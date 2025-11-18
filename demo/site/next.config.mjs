@@ -1,6 +1,8 @@
 // @ts-check
 
 import nextBundleAnalyzer from "@next/bundle-analyzer";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 import cometConfig from "./src/comet-config.json" with { type: "json" };
 
@@ -19,9 +21,6 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
     },
-    compiler: {
-        styledComponents: true,
-    },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
     },
@@ -37,6 +36,23 @@ const nextConfig = {
                 },
             ],
         };
+    },
+    webpack: (config, { isServer, nextRuntime }) => {
+        if (!isServer) {
+            config.module.rules.push({
+                test: /\.[jt]sx?$/,
+                include: [dirname(fileURLToPath(import.meta.url)) + "/src"],
+                use: [
+                    {
+                        loader: "@comet/site-nextjs/webpackPersistedQueriesLoader",
+                        options: {
+                            persistedQueriesPath: ".next/persisted-queries.json",
+                        },
+                    },
+                ],
+            });
+        }
+        return config;
     },
 };
 

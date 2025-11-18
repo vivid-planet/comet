@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
@@ -28,13 +28,14 @@ import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Onli
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
     DataGridPro,
+    getGridStringOperators,
     GridFilterInputSingleSelect,
     type GridRowSelectionModel,
     type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
-import gql from "graphql-tag";
-import { useState } from "react";
+import { ProductCategoryFilterOperators } from "@src/products/ProductCategoryFilter";
+import { useMemo, useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
@@ -42,8 +43,6 @@ import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     type GQLDeleteProductMutation,
     type GQLDeleteProductMutationVariables,
-    type GQLProductGridRelationsQuery,
-    type GQLProductGridRelationsQueryVariables,
     type GQLProductsListManualFragment,
     type GQLProductsListQuery,
     type GQLProductsListQueryVariables,
@@ -124,203 +123,221 @@ export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
     const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
-    const columns: GridColDef<GQLProductsListManualFragment>[] = [
-        {
-            field: "overview",
-            headerName: "Overview",
-            minWidth: 200,
-            flex: 1,
-            sortBy: ["title", "price", "type", "category", "inStock"],
-            visible: theme.breakpoints.down("md"),
-            renderCell: ({ row }) => {
-                const secondaryValues = [
-                    typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
-                    row.type,
-                    row.category?.title,
-                    row.inStock
-                        ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In stock" })
-                        : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of stock" }),
-                ];
-                return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
+    const columns = useMemo((): GridColDef<GQLProductsListManualFragment>[] => {
+        return [
+            {
+                field: "overview",
+                headerName: "Overview",
+                minWidth: 200,
+                flex: 1,
+                sortBy: ["title", "price", "type", "category", "inStock"],
+                visible: theme.breakpoints.down("md"),
+                renderCell: ({ row }) => {
+                    const secondaryValues = [
+                        typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
+                        row.type,
+                        row.category?.title,
+                        row.inStock
+                            ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In stock" })
+                            : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of stock" }),
+                    ];
+                    return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
+                },
+                disableExport: true,
+                filterable: false,
             },
-            disableExport: true,
-            filterable: false,
-        },
-        {
-            field: "title",
-            headerName: "Title",
-            minWidth: 150,
-            flex: 1,
-            visible: theme.breakpoints.up("md"),
-        },
-        { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
-        {
-            field: "price",
-            headerName: "Price",
-            minWidth: 100,
-            flex: 1,
-            type: "number",
-            visible: theme.breakpoints.up("md"),
-            renderCell: ({ row }) => (typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-"),
-        },
-        {
-            field: "type",
-            headerName: "Type",
-            width: 100,
-            type: "singleSelect",
-            visible: theme.breakpoints.up("md"),
-            valueOptions: [
-                {
-                    value: "cap",
-                    label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
-                    cellContent: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.type.cap.primary" defaultMessage="Great cap" />}
-                            icon={<EducationIcon color="primary" />}
-                        />
-                    ),
-                },
-                {
-                    value: "shirt",
-                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
-                },
-                {
-                    value: "tie",
-                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
-                },
-            ],
-            renderCell: renderStaticSelectCell,
-        },
-        {
-            type: "singleSelect",
-            field: "additionalTypes",
-            headerName: "Additional Types",
-            width: 150,
-            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
-            filterOperators: [
-                {
-                    value: "contains",
-                    getApplyFilterFn: (filterItem) => {
-                        throw new Error("not implemented, we filter server side");
+            {
+                field: "title",
+                headerName: "Title",
+                minWidth: 150,
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+            { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
+            {
+                field: "price",
+                headerName: "Price",
+                minWidth: 100,
+                flex: 1,
+                type: "number",
+                visible: theme.breakpoints.up("md"),
+                renderCell: ({ row }) =>
+                    typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-",
+            },
+            {
+                field: "type",
+                headerName: "Type",
+                width: 100,
+                type: "singleSelect",
+                visible: theme.breakpoints.up("md"),
+                valueOptions: [
+                    {
+                        value: "cap",
+                        label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
+                        cellContent: (
+                            <GridCellContent
+                                primaryText={<FormattedMessage id="product.type.cap.primary" defaultMessage="Great cap" />}
+                                icon={<EducationIcon color="primary" />}
+                            />
+                        ),
                     },
-                    InputComponent: GridFilterInputSingleSelect,
-                },
-            ],
-            valueOptions: ["cap", "shirt", "tie"],
-            disableExport: true,
-        },
-        {
-            field: "category",
-            headerName: "Category",
-            flex: 1,
-            minWidth: 100,
-            renderCell: (params) => <>{params.row.category?.title}</>,
-            type: "singleSelect",
-            visible: theme.breakpoints.up("md"),
-            valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
-            disableExport: true,
-        },
-        {
-            ...dataGridManyToManyColumn,
-            field: "tags",
-            headerName: "Tags",
-            flex: 1,
-            minWidth: 150,
-            renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
-            disableExport: true,
-        },
-        {
-            ...dataGridOneToManyColumn,
-            field: "variants",
-            headerName: "Variants",
-            flex: 1,
-            minWidth: 150,
-            renderCell: (params) => <>{params.row.variants.map((variant) => variant.name).join(", ")}</>,
-            disableExport: true,
-        },
-        {
-            field: "inStock",
-            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
-            type: "boolean",
-            flex: 1,
-            minWidth: 80,
-            disableExport: true,
-        },
-        {
-            ...dataGridDateColumn,
-            field: "availableSince",
-            headerName: "Available Since",
-            width: 130,
-        },
-        {
-            field: "status",
-            headerName: "Status",
-            flex: 1,
-            minWidth: 130,
-            type: "boolean",
-            valueGetter: (params, row) => row.status == "Published",
-            renderCell: (params) => {
-                return (
-                    <CrudVisibility
-                        visibility={params.row.status == "Published"}
-                        onUpdateVisibility={async (status) => {
-                            await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                mutation: updateProductStatusMutation,
-                                variables: { id: params.row.id, status: status ? "Published" : "Unpublished" },
-                                optimisticResponse: {
-                                    __typename: "Mutation",
-                                    updateProduct: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
-                                },
-                            });
-                        }}
-                    />
-                );
+                    {
+                        value: "shirt",
+                        label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    },
+                    {
+                        value: "tie",
+                        label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                    },
+                ],
+                renderCell: renderStaticSelectCell,
             },
-            disableExport: true,
-        },
-        {
-            field: "manufacturer",
-            headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
-            sortable: false,
-            valueGetter: (params, row) => row.manufacturer?.name,
-            filterOperators: [ManufacturerFilterOperator],
-            disableExport: true,
-        },
-        {
-            field: "actions",
-            type: "actions",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            width: 116,
-            pinned: "right",
-            renderCell: (params) => {
-                return (
-                    <>
-                        <ProductsGridPreviewAction {...params} />
-                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit />
-                        </IconButton>
-                        <CrudContextMenu
-                            onDelete={async () => {
-                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                    mutation: deleteProductMutation,
-                                    variables: { id: params.row.id },
+            {
+                type: "singleSelect",
+                field: "additionalTypes",
+                headerName: "Additional Types",
+                width: 150,
+                renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
+                filterOperators: [
+                    {
+                        value: "contains",
+                        getApplyFilterFn: (filterItem) => {
+                            throw new Error("not implemented, we filter server side");
+                        },
+                        InputComponent: GridFilterInputSingleSelect,
+                    },
+                ],
+                valueOptions: ["cap", "shirt", "tie"],
+                disableExport: true,
+            },
+            {
+                field: "titleSlugOrDescription",
+                headerName: "Title, Slug or Description",
+                width: 150,
+                visible: theme.breakpoints.down(0), // always hidden but used for filtering
+                disableExport: true,
+                filterOperators: getGridStringOperators().filter((operator) => operator.value === "contains"),
+                toGqlFilter: (filterItem) => {
+                    return {
+                        or: [
+                            { title: { contains: filterItem.value } },
+                            { slug: { contains: filterItem.value } },
+                            { description: { contains: filterItem.value } },
+                        ],
+                    };
+                },
+            },
+            {
+                field: "category",
+                headerName: "Category",
+                flex: 1,
+                minWidth: 100,
+                renderCell: (params) => <>{params.row.category?.title}</>,
+                filterOperators: ProductCategoryFilterOperators,
+                visible: theme.breakpoints.up("md"),
+                disableExport: true,
+            },
+            {
+                ...dataGridManyToManyColumn,
+                field: "tags",
+                headerName: "Tags",
+                flex: 1,
+                minWidth: 150,
+                renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
+                disableExport: true,
+            },
+            {
+                ...dataGridOneToManyColumn,
+                field: "variants",
+                headerName: "Variants",
+                flex: 1,
+                minWidth: 150,
+                renderCell: (params) => <>{params.row.variants.map((variant) => variant.name).join(", ")}</>,
+                disableExport: true,
+            },
+            {
+                field: "inStock",
+                headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+                type: "boolean",
+                flex: 1,
+                minWidth: 80,
+                disableExport: true,
+            },
+            {
+                ...dataGridDateColumn,
+                field: "availableSince",
+                headerName: "Available Since",
+                width: 130,
+            },
+            {
+                field: "status",
+                headerName: "Status",
+                flex: 1,
+                minWidth: 130,
+                type: "boolean",
+                valueGetter: (params, row) => row.status == "Published",
+                renderCell: (params) => {
+                    return (
+                        <CrudVisibility
+                            visibility={params.row.status == "Published"}
+                            onUpdateVisibility={async (status) => {
+                                await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: params.row.id, status: status ? "Published" : "Unpublished" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
+                                    },
                                 });
                             }}
-                            refetchQueries={["ProductsList"]}
                         />
-                    </>
-                );
+                    );
+                },
+                disableExport: true,
             },
-            disableExport: true,
-        },
-    ];
+            {
+                field: "manufacturer",
+                headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
+                sortable: false,
+                valueGetter: (params, row) => row.manufacturer?.name,
+                filterOperators: [ManufacturerFilterOperator],
+                disableExport: true,
+            },
+            {
+                field: "actions",
+                type: "actions",
+                headerName: "",
+                sortable: false,
+                filterable: false,
+                width: 116,
+                pinned: "right",
+                renderCell: (params) => {
+                    return (
+                        <>
+                            <ProductsGridPreviewAction {...params} />
+                            <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                <Edit />
+                            </IconButton>
+                            <CrudContextMenu
+                                onDelete={async () => {
+                                    await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                                        mutation: deleteProductMutation,
+                                        variables: { id: params.row.id },
+                                    });
+                                }}
+                                refetchQueries={["ProductsList"]}
+                            />
+                        </>
+                    );
+                },
+                disableExport: true,
+            },
+        ];
+    }, [client, intl, theme]);
 
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
@@ -427,23 +444,6 @@ const productsQuery = gql`
         }
     }
     ${productsFragment}
-`;
-
-const productRelationsQuery = gql`
-    query ProductGridRelations {
-        productCategories {
-            nodes {
-                id
-                title
-            }
-        }
-        productTags {
-            nodes {
-                id
-                title
-            }
-        }
-    }
 `;
 
 const deleteProductMutation = gql`

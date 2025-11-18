@@ -5,26 +5,20 @@ export const productFormFragment = gql`
         fragment ProductPriceFormDetails on Product {
             price
         }
-        
-        
     `;
 export const productQuery = gql`
-            query Product($id: ID!) {
-                product(id: $id) {
-                    id
-                    updatedAt
-                    ...ProductPriceFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    query Product($id: ID!) {
+        product(id: $id) {
+            id updatedAt ...ProductPriceFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
 export const updateProductMutation = gql`
-            mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
-                updateProduct(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...ProductPriceFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
+            id updatedAt ...ProductPriceFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;

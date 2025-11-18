@@ -7,6 +7,7 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
+    useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
@@ -16,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
 import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
-import { type ReactNode, useContext } from "react";
+import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
@@ -66,25 +67,27 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         { skip: !isAllowed("userPermissions") },
     );
 
-    const columns: GridColDef<GQLUserForGridFragment>[] = [
-        {
-            field: "name",
-            flex: 1,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.name", defaultMessage: "Name" }),
-            renderCell: ({ row }) => (
-                <NameBox>
-                    <Typography>{row.name}</Typography>
-                </NameBox>
-            ),
-        },
-        {
-            field: "email",
-            flex: 1,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
-        },
-    ];
+    const columns: GridColDef<GQLUserForGridFragment>[] = useMemo(() => {
+        return [
+            {
+                field: "name",
+                flex: 1,
+                pinnable: false,
+                headerName: intl.formatMessage({ id: "comet.userPermissions.name", defaultMessage: "Name" }),
+                renderCell: ({ row }) => (
+                    <NameBox>
+                        <Typography>{row.name}</Typography>
+                    </NameBox>
+                ),
+            },
+            {
+                field: "email",
+                flex: 1,
+                pinnable: false,
+                headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
+            },
+        ];
+    }, [intl]);
     if (isAllowed("userPermissions")) {
         columns.push(
             {
@@ -221,6 +224,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         },
     );
 
+    const rowCount = useBufferedRowCount(data?.users.totalCount);
     if (error) throw new Error(error.message);
 
     return (
@@ -228,7 +232,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             {...dataGridProps}
             rows={data?.users.nodes ?? []}
             columns={columns}
-            rowCount={data?.users.totalCount ?? 0}
+            rowCount={rowCount}
             loading={loading}
             slots={{
                 toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],

@@ -8,13 +8,12 @@ import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { FileUpload } from "../../../../../packages/api/cms-api/lib/file-uploads/entities/file-upload.entity.js";
+import { AffectedEntity, BlocksTransformerService, DamImageBlock, FileUpload, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 import { Product } from "../entities/product.entity";
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
@@ -74,11 +73,7 @@ export class ProductResolver {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<Product, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(Product, where, options);
         return new PaginatedProducts(entities, totalCount);

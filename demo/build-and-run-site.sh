@@ -12,11 +12,11 @@ echo "[1/2] Build site..."
 cd site
 rm -f .env .env.local .env.site-configs
 rm -rf .next
-NODE_ENV=production npm run build
+NODE_ENV=production pnpm run build
 ln -sf ../../.env ./
 ln -sf ../../.env.local ./
 ln -sf ../.env.site-configs ./
 echo ""
 
 echo "[2/2] Start site..."
-npx dotenv -e .env.secrets -e .env.site-configs -- npm run serve
+pnpm exec dotenv -e .env.secrets -e .env.site-configs -- pnpm run serve

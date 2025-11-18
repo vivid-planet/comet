@@ -1,8 +1,9 @@
-import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+import { type IntrospectionQuery } from "graphql";
 
 import { type FormConfig, type FormLayoutConfig, type GQLDocumentConfigMap } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { type Imports } from "../utils/generateImportsCode";
+import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 import { type Prop } from "./generateForm";
 
@@ -31,7 +32,6 @@ export function generateFormLayout({
 
     let code = "";
     let hooksCode = "";
-    let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
     const gqlDocuments: GQLDocumentConfigMap = {};
     const imports: Imports = [];
@@ -53,7 +53,6 @@ export function generateFormLayout({
         });
 
         hooksCode += generatedFields.hooksCode;
-        formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
         formFragmentFields.push(...generatedFields.formFragmentFields);
         for (const name in generatedFields.gqlDocuments) {
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
@@ -94,17 +93,9 @@ export function generateFormLayout({
     } else if (config.type === "optionalNestedFields") {
         const name = String(config.name);
 
-        const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
-            | IntrospectionObjectType
-            | undefined;
-        if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
-
-        const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-        if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-        if (introspectionField.type.kind === "NON_NULL") {
-            throw new Error(`field ${name} in gql introspection type ${gqlType} must not be required to be usable with optionalNestedFields`);
-        }
-        if (introspectionField.type.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
+        const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
+        if (!introspectionFieldType) throw new Error(`field ${name} in gql introspection type ${gqlType} not found`);
+        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
 
         const checkboxLabel = config.checkboxLabel ?? `Enable ${camelCaseToHumanReadable(String(config.name))}`;
 
@@ -114,53 +105,39 @@ export function generateFormLayout({
             fields: config.fields,
             formFragmentName,
             formConfig,
-            gqlType: introspectionField.type.name,
+            gqlType: introspectionFieldType.name,
             namePrefix: name,
         });
         hooksCode += generatedFields.hooksCode;
-        formFragmentFields.push(`${name} { ${generatedFields.formFragmentFields.join(" ")} }`);
+        formFragmentFields.push(...generatedFields.formFragmentFields.map((field) => `${name}.${field}`));
         for (const name in generatedFields.gqlDocuments) {
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        formValuesConfig.push(...generatedFields.formValuesConfig);
 
-        const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
-            omitFromFragmentType: name,
-            destructFromFormValues: `${name}Enabled`,
-            typeCode: `${name}Enabled: boolean;`,
-            initializationCode: `${name}Enabled: !!data.${dataRootName}.${name}`,
-        };
-        const subfieldsFormValuesTypeCode = generatedFields.formValuesConfig
-            .filter((config) => !!config.omitFromFragmentType)
-            .map((config) => `"${config.omitFromFragmentType}"`);
-        if (subfieldsFormValuesTypeCode.length) {
-            wrappingFormValuesConfig.typeCode = `${wrappingFormValuesConfig.typeCode}
-                ${name}: Omit<NonNullable<GQL${formFragmentName}Fragment["${name}"]>, ${subfieldsFormValuesTypeCode.join(" | ")}> & {
-                    ${generatedFields.formValuesConfig.map((config) => config.typeCode).join("\n")}
-                };`;
-        }
-        const subfieldsFormValuesInitCode = generatedFields.formValuesConfig
-            .filter((config) => !!config.initializationCode)
-            .map((config) => config.initializationCode);
-        if (subfieldsFormValuesInitCode.length) {
-            wrappingFormValuesConfig.initializationCode = `${wrappingFormValuesConfig.initializationCode},
-                ${name}: data.${dataRootName}.${name} ? { ${subfieldsFormValuesInitCode.join(", ")}} : undefined    `;
-        }
-        const subfieldsFormValuesDefaultInitCode = generatedFields.formValuesConfig
-            .filter((config) => !!config.defaultInitializationCode)
-            .map((config) => config.defaultInitializationCode);
-        if (subfieldsFormValuesDefaultInitCode.length) {
-            wrappingFormValuesConfig.defaultInitializationCode = `${name}: { ${subfieldsFormValuesDefaultInitCode.join(", ")}}`;
-        }
-        formValuesConfig.push(wrappingFormValuesConfig);
+        // first field is the "enabled" checkbox
+        formValuesConfig.push({
+            fieldName: `${name}Enabled`,
+            omitFromFragmentType: false,
+            destructFromFormValues: true,
+            typeCode: {
+                nullable: false,
+                type: "boolean",
+            },
+            initializationCode: `!!data.${dataRootName}.${name}`,
+        });
+
+        // second field is the nested object, which is not a final-form field itself
+        formValuesConfig.push({
+            fieldName: `${name}`,
+            wrapFormValueToGqlInputCode: `${name.split(".").pop()}Enabled && $fieldName ? $inner : null`,
+        });
 
         imports.push({ name: "FinalFormSwitch", importPath: "@comet/admin" });
         imports.push({ name: "messages", importPath: "@comet/admin" });
         imports.push({ name: "FormControlLabel", importPath: "@mui/material" });
 
-        formValueToGqlInputCode += `${String(config.name)}: ${String(config.name)}Enabled && formValues.${String(config.name)} ? {${
-            generatedFields.formValueToGqlInputCode
-        }} : null,`;
         code = `<Field
                     fullWidth
                     name="${String(config.name)}Enabled"
@@ -191,7 +168,6 @@ export function generateFormLayout({
     return {
         code,
         hooksCode,
-        formValueToGqlInputCode,
         formFragmentFields,
         gqlDocuments,
         imports,

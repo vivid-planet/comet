@@ -1,5 +1,80 @@
 # @comet/eslint-config
 
+## 8.6.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- dcb9712: Disable `@next/next/no-img-element` rule
+    - @comet/eslint-plugin@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- 576731f: Allow `%` as a string literal in `future/react.js`
+    - @comet/eslint-plugin@8.4.0
+
+## 8.3.0
+
+### Minor Changes
+
+- dd4e4a8: Introduce a new future/react.js configuration and enable the ESLint rule react/jsx-no-literals.
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.3.0
+
+## 8.2.0
+
+### Patch Changes
+
+- 594331e: Fix import restriction of `@mui/material` components: `Alert`, `Button`, `Dialog`, `Tooltip`
+
+    The restriction was not working for deep imports like `import Button from "@mui/material/Button"`.
+    - @comet/eslint-plugin@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.1.1
+
+## 8.1.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.1.0
+
 ## 8.0.0
 
 ### Major Changes
