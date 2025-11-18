@@ -86,9 +86,6 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
-
-Please pin typescript to `5.8.3` due to some ESLint plugins not working with
-higher versions.
 :::
 
 **Create a branch `typescript-5`.**
