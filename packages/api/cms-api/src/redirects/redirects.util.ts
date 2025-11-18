@@ -31,6 +31,8 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
             } else {
                 matches = stringMatchesFilter(redirect.target, filter.target);
             }
+        } else if (filter.target.isEmpty) {
+            matches = true;
         } else {
             matches = false;
         }
@@ -87,6 +89,8 @@ function stringMatchesFilter(string: string, filter: StringFilter) {
         return true;
     } else if (filter.isAnyOf && filter.isAnyOf.includes(string)) {
         return true;
+    } else if (filter.isNotEmpty) {
+        return string !== null && string !== "" && string !== undefined;
     }
 
     return false;
