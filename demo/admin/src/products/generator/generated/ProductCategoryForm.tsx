@@ -60,10 +60,7 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            type: formValues.type ? formValues.type.id : null,
-        };
+        const output = { ...formValues, type: formValues.type ? formValues.type.id : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();

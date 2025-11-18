@@ -32,6 +32,19 @@ const config = [
         },
     },
     ...storybook.configs["flat/recommended"],
+    {
+        files: ["**/*.stories.ts", "**/*.stories.tsx"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
+            "@typescript-eslint/no-empty-function": "off",
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-non-null-assertion": "off",
+            "no-console": "off",
+            "@comet/no-other-module-relative-import": "off",
+            "react/react-in-jsx-scope": "off",
+            "react/jsx-no-literals": "off",
+        },
+    },
 ];
 
 export default config;

@@ -52,7 +52,7 @@
         "@babel/cli": "^7.28.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@faker-js/faker": "^9.9.0",
+        "@faker-js/faker": "^10.0.0",
         "@graphql-mocks/network-msw": "^0.4.4",
         "@storybook/addon-docs": "^9.0.16",
         "@storybook/addon-webpack5-compiler-babel": "^3.0.6",
@@ -82,7 +82,7 @@
         "react-router-dom": "^5.3.4",
         "remark-gfm": "^4.0.1",
         "storybook": "^9.0.16",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "msw": {
         "workerDirectory": "public"

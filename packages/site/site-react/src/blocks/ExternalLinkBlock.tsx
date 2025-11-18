@@ -1,11 +1,12 @@
 "use client";
 
-import { type PropsWithData, usePreview } from "@comet/site-react";
 import { cloneElement, type MouseEventHandler, type ReactElement } from "react";
 
 import { type ExternalLinkBlockData } from "../blocks.generated";
+import { usePreview } from "../preview/usePreview";
 import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
+import { type PropsWithData } from "./PropsWithData";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
     children: ReactElement;

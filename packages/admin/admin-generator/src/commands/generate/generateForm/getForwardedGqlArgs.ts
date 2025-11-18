@@ -22,10 +22,17 @@ export function getForwardedGqlArgs({
         gqlArg: GqlArg;
     }[] = [];
 
-    const skipGqlInputArgFields = fields.map((field) => String(field.name));
-
     getArgsIncludingInputArgSubfields(gqlOperation, gqlIntrospection).forEach((arg) => {
-        if (arg.isInputArgSubfield && skipGqlInputArgFields.includes(arg.name)) return;
+        if (arg.isInputArgSubfield) {
+            if (
+                fields.some((field) => {
+                    return field.name === arg.name || field.name.startsWith(`${arg.name}.`);
+                })
+            ) {
+                // there is a field (or subfield) in this form, no need to forward this arg
+                return;
+            }
+        }
 
         let prop: Prop;
         const imports: Imports = [];

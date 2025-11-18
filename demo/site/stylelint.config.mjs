@@ -11,5 +11,6 @@ export default {
         "custom-property-pattern": null,
         "value-keyword-case": null,
         "scss/percent-placeholder-pattern": null,
+        "custom-property-empty-line-before": null,
     },
 };
