@@ -22,8 +22,7 @@ export class CalculateDominantImageColorCommand extends CommandRunner {
     async run(): Promise<void> {
         console.log("Calculate dominant color of images...");
 
-        const qb = this.filesRepository.createQueryBuilder("file").leftJoinAndSelect("file.image", "image").where("image IS NOT NULL");
-        const files = await qb.getResult();
+        const files = await this.filesRepository.find({ image: { $ne: null } });
 
         console.log(`...for ${files.length} images ...`);
 
@@ -31,7 +30,7 @@ export class CalculateDominantImageColorCommand extends CommandRunner {
             const dominantColor = await this.fileService.calculateDominantColor(file.contentHash);
             if (file.image) {
                 if (dominantColor) {
-                    console.log(`${dominantColor}, ${file.image.id}`);
+                    console.log(`${dominantColor}, ${file.image.id}, ${file.name}`);
 
                     await this.em.persistAndFlush(file.image.assign({ dominantColor }));
                 } else {
