@@ -3,7 +3,7 @@
 "@comet/site-nextjs": minor
 ---
 
-Move YoutubeVideoBlock, VimeoVideoBlock and DamVideoBlock to site-react
+Move `YoutubeVideoBlock`, `VimeoVideoBlock` and `DamVideoBlock` to `@comet/site-react`
 
-- no default implementation renderPreviewImage is provided
-- VideoPreviewImage component with renderImage for creating VideoPreviewImage
+The blocks in `@comet/site-react` provide no default implementation for `renderPreviewImage`.
+Instead, use the new `VideoPreviewImage` component with the `renderImage` prop to create the preview image.
