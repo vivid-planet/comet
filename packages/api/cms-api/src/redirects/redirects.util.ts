@@ -90,7 +90,7 @@ function stringMatchesFilter(string: string, filter: StringFilter) {
 }
 
 function booleanMatchesFilter(boolean: boolean, filter: BooleanFilter) {
-    if (filter.equal && boolean === filter.equal) {
+    if (filter.equal !== undefined && boolean === filter.equal) {
         return true;
     }
 
