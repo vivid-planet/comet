@@ -101,8 +101,6 @@ function stringMatchesFilter(string: string, filter: StringFilter) {
         return true;
     } else if (filter.isAnyOf && filter.isAnyOf.includes(string)) {
         return true;
-    } else if (filter.isNotEmpty) {
-        return string !== null && string !== "" && string !== undefined;
     }
 
     return false;
