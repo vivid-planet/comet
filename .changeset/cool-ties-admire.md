@@ -5,7 +5,7 @@
 
 Block Loader: infer `LoadedData` from loader return type
 
-Use the new `BlockLoaderOptions` type to allow inferring the type type from the loader function.
+Use the new `BlockLoaderOptions` type to allow inferring the type from the loader function.
 
 **Before**
 
