@@ -37,9 +37,12 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     }
 
     if (filter.active) {
-        matches = booleanMatchesFilter(redirect.active, filter.active);
+        if (filter.active.equal !== undefined) {
+            matches = booleanMatchesFilter(redirect.active, filter.active);
+        } else {
+            matches = true;
+        }
     }
-
     if (filter.createdAt) {
         matches = dateTimeMatchesFilter(redirect.createdAt, filter.createdAt);
     }
