@@ -1,5 +1,5 @@
-@use "./theme.scss" as *;
-@use "./variables" as *;
+@use "@src/styles/theme.scss" as *;
+@use "@src/styles/variables" as *;
 
 :root {
     @include global-theme-default;
