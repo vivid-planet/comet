@@ -12,6 +12,7 @@ import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permission
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
+import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
 @Injectable()
@@ -90,8 +91,11 @@ export class WarningEventSubscriber implements EventSubscriber {
                         visible: true,
                         rootPath: "root",
                     });
+
+                    const startDate = new Date();
+                    const jsonPaths: string[] = [];
                     for (const node of flatBlocks.depthFirst()) {
-                        const startDate = new Date();
+                        jsonPaths.push(node.pathToString());
                         const warningsOrWarningsService = await node.block.warnings();
                         let warnings: BlockWarning[] = [];
 
@@ -117,8 +121,17 @@ export class WarningEventSubscriber implements EventSubscriber {
                             sourceInfo,
                             scope,
                         });
-                        await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
                     }
+                    await this.entityManager.nativeDelete(Warning, {
+                        updatedAt: { $lt: startDate },
+                        sourceInfo: {
+                            rootEntityName: entity.name,
+                            rootColumnName: key,
+                            targetId: args.entity.id,
+                            rootPrimaryKey: args.meta.primaryKeys[0],
+                            jsonPath: { $in: jsonPaths },
+                        },
+                    });
                 }
             }
 
@@ -146,7 +159,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                     sourceInfo,
                     scope: row.scope,
                 });
-                await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
+                await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: startDate }, sourceInfo });
             }
         }
     }
