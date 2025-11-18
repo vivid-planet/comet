@@ -2256,9 +2256,6 @@ importers:
       '@comet/site-react':
         specifier: workspace:*
         version: link:../site-react
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       jose:
         specifier: ^5.10.0
         version: 5.10.0

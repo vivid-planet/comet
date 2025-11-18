@@ -40,7 +40,6 @@
     },
     "dependencies": {
         "@comet/site-react": "workspace:*",
-        "clsx": "^2.1.1",
         "jose": "^5.10.0",
         "server-only": "^0.0.1"
     },
