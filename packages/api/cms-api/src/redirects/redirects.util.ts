@@ -4,7 +4,9 @@ import { type StringFilter } from "../common/filter/string.filter";
 import { type RedirectFilter } from "./dto/redirects.filter";
 import { type RedirectInterface } from "./entities/redirect-entity.factory";
 
-export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt"> & { target?: string };
+export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt" | "activatedAt"> & {
+    target?: string;
+};
 
 export function redirectMatchesFilter(redirect: FilterableRedirect, filter: RedirectFilter): boolean {
     let matches: boolean | undefined;
@@ -51,6 +53,16 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
 
     if (filter.updatedAt) {
         matches = dateTimeMatchesFilter(redirect.updatedAt, filter.updatedAt);
+    }
+
+    if (filter.activatedAt) {
+        if (redirect.activatedAt) {
+            matches = dateTimeMatchesFilter(redirect.activatedAt, filter.activatedAt);
+        } else if (filter.activatedAt.isEmpty) {
+            matches = true;
+        } else {
+            matches = false;
+        }
     }
 
     if (filter.and) {
