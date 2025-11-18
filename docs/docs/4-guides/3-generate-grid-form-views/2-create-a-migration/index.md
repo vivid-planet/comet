@@ -24,7 +24,7 @@ export class Migration20250203143416 extends Migration {
 }
 ```
 
-More info concerning mikro-orm and the related cli can be found here [mikro-orm - using via cli](https://mikro-orm.io/docs/migrations#using-via-cli).
+More info concerning MikroORM and the related CLI can be found here [MikroORM - Using via CLI](https://mikro-orm.io/docs/migrations#using-via-cli).
 
 To execute the migration and insert the data in the database, run the following command:
 
