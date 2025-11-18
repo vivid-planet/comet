@@ -24,28 +24,18 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     }
 
     if (filter.target) {
-        if (redirect.target) {
-            const isAbsoluteUrl = redirect.target.startsWith("http://") || redirect.target.startsWith("https://");
+        const isAbsoluteUrl = redirect.target?.startsWith("http://") || redirect.target?.startsWith("https://");
 
-            if (isAbsoluteUrl) {
-                const url = new URL(redirect.target);
-                matches = stringMatchesFilter(redirect.target, filter.target) || stringMatchesFilter(url.pathname, filter.target);
-            } else {
-                matches = stringMatchesFilter(redirect.target, filter.target);
-            }
-        } else if (filter.target.isEmpty) {
-            matches = true;
+        if (isAbsoluteUrl && redirect.target) {
+            const url = new URL(redirect.target);
+            matches = stringMatchesFilter(redirect.target, filter.target) || stringMatchesFilter(url.pathname, filter.target);
         } else {
-            matches = false;
+            matches = stringMatchesFilter(redirect.target, filter.target);
         }
     }
 
     if (filter.active) {
-        if (filter.active.equal !== undefined) {
-            matches = booleanMatchesFilter(redirect.active, filter.active);
-        } else {
-            matches = true;
-        }
+        matches = booleanMatchesFilter(redirect.active, filter.active);
     }
     if (filter.createdAt) {
         matches = dateTimeMatchesFilter(redirect.createdAt, filter.createdAt);
@@ -56,13 +46,7 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     }
 
     if (filter.activatedAt) {
-        if (redirect.activatedAt) {
-            matches = dateTimeMatchesFilter(redirect.activatedAt, filter.activatedAt);
-        } else if (filter.activatedAt.isEmpty) {
-            matches = true;
-        } else {
-            matches = false;
-        }
+        matches = dateTimeMatchesFilter(redirect.activatedAt, filter.activatedAt);
     }
 
     if (filter.and) {
@@ -86,7 +70,11 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     return matches ?? false;
 }
 
-function stringMatchesFilter(string: string, filter: StringFilter) {
+function stringMatchesFilter(string: string | undefined, filter: StringFilter) {
+    if (!string) {
+        return filter.isEmpty === true;
+    }
+
     if (filter.contains && string.includes(filter.contains)) {
         return true;
     } else if (filter.notContains && !string.includes(filter.notContains)) {
@@ -101,20 +89,26 @@ function stringMatchesFilter(string: string, filter: StringFilter) {
         return true;
     } else if (filter.isAnyOf && filter.isAnyOf.includes(string)) {
         return true;
+    } else if (filter.isNotEmpty && string !== undefined) {
+        return true;
     }
-
-    return false;
 }
 
 function booleanMatchesFilter(boolean: boolean, filter: BooleanFilter) {
     if (filter.equal !== undefined && boolean === filter.equal) {
+        return true;
+    } else if (filter.equal === undefined) {
         return true;
     }
 
     return false;
 }
 
-function dateTimeMatchesFilter(date: Date, filter: DateTimeFilter) {
+function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter) {
+    if (!date) {
+        return filter.isEmpty === true;
+    }
+
     if (filter.equal && date.getTime() === filter.equal.getTime()) {
         return true;
     } else if (filter.lowerThan && date.getTime() < filter.lowerThan.getTime()) {
