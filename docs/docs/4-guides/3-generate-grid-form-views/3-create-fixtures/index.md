@@ -2,77 +2,62 @@
 title: Create fixtures
 ---
 
-To insert some data into the database, we will use fixtures. Fixtures are a way to insert data into the database. The fixtures are defined in the `db/fixtures/generators` directory in the `api` directory. To generate fixtures, it's often useful to generate a lot of data.[@faker-js/faker](https://github.com/faker-js/faker) is often a good choice for generating a lot of random data.
+To insert some data into the database, we will use fixtures. Fixtures are a way to insert data into the database. The fixtures are defined in the `db/fixtures/generators` directory in the `api` directory. To generate fixtures, it's often useful to generate a lot of data. [@faker-js/faker](https://github.com/faker-js/faker) is often a good choice for generating a lot of random data.
 
 ## Create Fixtures
 
-Create a new file in the `fixtures` directory with the following content:
+Create a new service in the `fixtures/generators` directory with the following content:
 
-```
-customer-fixtures.service.ts
-```
-
-```typescript
+```ts title="customers-fixture.service.ts"
 import { faker } from "@faker-js/faker";
-import { EntityRepository } from "@mikro-orm/postgresql";
-import { Customer } from "@src/customer/entities/customer.entity";
-import { mapLimit } from "async";
-import { SingleBar } from "cli-progress";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { Injectable, Logger } from "@nestjs/common";
+import { Customer } from "@src/customers/entities/customer.entity";
 
-interface GenerateCustomerOptions {
-    repository: EntityRepository<Customer>;
-    bar: SingleBar;
-    total: number;
+@Injectable()
+export class CustomersFixtureService {
+    private logger = new Logger(CustomersFixtureService.name);
+
+    constructor(
+        private readonly entityManager: EntityManager,
+        @InjectRepository(Customer) private readonly repository: EntityRepository<Customer>,
+    ) {}
+
+    async generate(): Promise<void> {
+        this.logger.log("Generating customers...");
+
+        for (let i = 0; i < 100; i++) {
+            const customer = this.repository.create({
+                id: faker.string.uuid(),
+                firstName: faker.person.firstName(),
+                lastName: faker.person.lastName(),
+            });
+
+            this.entityManager.persist(customer);
+        }
+    }
 }
-
-export const generateCustomers = async ({
-    repository,
-    bar,
-    total,
-}: GenerateCustomerOptions): Promise<Customer[]> => {
-    const generateRandomCustomer = async (): Promise<Customer> => {
-        const customer = repository.create({
-            id: faker.string.uuid(),
-            firstName: faker.person.firstName(),
-            lastName: faker.person.lastName(),
-        });
-
-        bar.increment(1, {
-            title: "Customer",
-        });
-
-        return customer;
-    };
-
-    return mapLimit<number, Customer>(Array(total), 100, async () => generateRandomCustomer());
-};
 ```
 
-The `generateCustomers` function is a convenience function that receives some options, like the repository, a progress bar, and the total number of customers to generate. The function then generates the customers and increments the progress bar.
+## Add Fixtures to the FixturesCommand
 
-## Add Fixtures to the FixturesConsole
-
-Additionally, the created fixtures (`generateCustomer`) must be called and executed. Open `db/fixtures/generators/fixtures.console.ts` and add the fixtures function calls so the function gets executed when fixtures get created:
+Additionally, the created fixtures must be executed.
+Open `db/fixtures/fixtures.command.ts` and call the service:
 
 ```typescript
-export class FixturesConsole {
-    //....
-    async execute(total?: string | number): Promise<void> {
+export class FixturesCommand extends CommandRunner {
+    constructor(
+        //...
+        private readonly customersFixtureService: CustomersFixtureService,
+    ) {
+        super();
+    }
+
+    async run(): Promise<void> {
         //...
 
-        const multiBar = new MultiBar(this.barOptions, Presets.shades_classic);
-
-        // Add your fixtures here
-        await Promise.all([
-            generateCustomers({
-                repository: this.orm.em.getRepository(Customer),
-                bar: multiBar.create(total, 0),
-                total,
-            }),
-        ]);
-
-        multiBar.stop();
-        // ...
+        await this.customersFixtureService.generate();
 
         await this.orm.em.flush();
     }
