@@ -6,7 +6,7 @@ import { singular } from "pluralize";
 
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
+import { integerTypes, numberTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
@@ -84,7 +84,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => StringFilter)
                     ${prop.name}?: StringFilter;
                     `;
-                } else if (prop.type === "DecimalType" || prop.type == "number" || integerTypes.includes(prop.type)) {
+                } else if (numberTypes.includes(prop.type)) {
                     imports.push({ name: "NumberFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
