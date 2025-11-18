@@ -38,7 +38,9 @@ export class Customer extends BaseEntity<Customer, "id"> {
 }
 ```
 
-Currently, there is no `api-generator` watch mode - so every time you change the entity, the following command must be run. Information on how to set up the API Generator can be found in the [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) Section.
+If the API Generator is setup correctly, adding the entity should generate multiple files in the specified `../generated` output directory.
+Review the [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) section on how to setup the generator correctly.
+Alternatively, you can run the generator manually:
 
 ```bash
 cd api
