@@ -34,6 +34,7 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    pauseButtonAriaLabel?: string;
     renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactElement;
 }
 
@@ -46,6 +47,7 @@ export const VimeoVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        pauseButtonAriaLabel,
         renderPlayPauseButton,
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
@@ -138,7 +140,12 @@ export const VimeoVideoBlock = withPreview(
                                     onClick: handlePlayPauseClick,
                                 })
                             ) : (
-                                <PlayPauseButton isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
+                                <PlayPauseButton
+                                    isPlaying={isHandledManually}
+                                    onClick={handlePlayPauseClick}
+                                    ariaLabelPlay={playButtonAriaLabel}
+                                    ariaLabelPause={pauseButtonAriaLabel}
+                                />
                             ))}
                     </div>
                 )}

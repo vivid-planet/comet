@@ -19,6 +19,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    pauseButtonAriaLabel?: string;
     renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactNode;
 }
 
@@ -31,6 +32,7 @@ export const DamVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        pauseButtonAriaLabel,
         renderPlayPauseButton,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
@@ -106,7 +108,12 @@ export const DamVideoBlock = withPreview(
                                     onClick: handlePlayPauseClick,
                                 })
                             ) : (
-                                <PlayPauseButton isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
+                                <PlayPauseButton
+                                    isPlaying={isHandledManually}
+                                    onClick={handlePlayPauseClick}
+                                    ariaLabelPlay={playButtonAriaLabel}
+                                    ariaLabelPause={pauseButtonAriaLabel}
+                                />
                             ))}
                     </div>
                 )}

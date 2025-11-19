@@ -31,6 +31,7 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    pauseButtonAriaLabel?: string;
     renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactElement;
 }
 
@@ -43,6 +44,7 @@ export const YouTubeVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        pauseButtonAriaLabel,
         renderPlayPauseButton,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
@@ -135,7 +137,12 @@ export const YouTubeVideoBlock = withPreview(
                                     onClick: handlePlayPauseClick,
                                 })
                             ) : (
-                                <PlayPauseButton isPlaying={!isHandledManually} onClick={handlePlayPauseClick} />
+                                <PlayPauseButton
+                                    isPlaying={!isHandledManually}
+                                    onClick={handlePlayPauseClick}
+                                    ariaLabelPlay={playButtonAriaLabel}
+                                    ariaLabelPause={pauseButtonAriaLabel}
+                                />
                             ))}
                         <iframe
                             ref={iframeRef}
