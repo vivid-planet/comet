@@ -93,9 +93,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                     });
 
                     const startDate = new Date();
-                    const jsonPaths: string[] = [];
                     for (const node of flatBlocks.depthFirst()) {
-                        jsonPaths.push(node.pathToString());
                         const warningsOrWarningsService = await node.block.warnings();
                         let warnings: BlockWarning[] = [];
 
@@ -122,6 +120,8 @@ export class WarningEventSubscriber implements EventSubscriber {
                             scope,
                         });
                     }
+
+                    // Delete all outdated warnings for this entity and rootPrimaryKey
                     await this.entityManager.nativeDelete(Warning, {
                         updatedAt: { $lt: startDate },
                         sourceInfo: {
@@ -129,7 +129,6 @@ export class WarningEventSubscriber implements EventSubscriber {
                             rootColumnName: key,
                             targetId: args.entity.id,
                             rootPrimaryKey: args.meta.primaryKeys[0],
-                            jsonPath: { $in: jsonPaths },
                         },
                     });
                 }
