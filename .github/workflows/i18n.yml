@@ -18,7 +18,7 @@ jobs:
                   git config user.name github-actions
                   git config user.email github-actions@github.com
 
-            - name: "Library: Clone translations"
+            - name: "Demo Admin: Clone library translations"
               uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-lang
@@ -36,12 +36,12 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            - name: "Library: Extract i18n strings"
+            - name: "Demo Admin: Extract library i18n strings"
               run: |
                   pnpm run intl:extract
                   cp -r lang/* demo/admin/lang/comet-lang/
 
-            - name: "Library: Update translatable strings"
+            - name: "Demo Admin: Update library translatable strings"
               uses: EndBug/add-and-commit@v9
               with:
                   cwd: "./demo/admin/lang/comet-lang"
@@ -107,7 +107,7 @@ jobs:
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo-saas/admin/lang/comet-lang"
 
-            - name: "Library: Copy i18n strings to Demo SaaS Admin"
+            - name: "Demo Saas Admin: Extract library i18n strings"
               run: |
                   cp -r lang/* demo-saas/admin/lang/comet-lang/
 
