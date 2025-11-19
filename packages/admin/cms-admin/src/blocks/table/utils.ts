@@ -69,7 +69,7 @@ export const useRecentlyPastedIds = () => {
         setRecentlyPastedIds((prev) => [...prev, id]);
 
         const timeoutId = setTimeout(() => {
-            setRecentlyPastedIds((prev) => prev.filter((id) => id !== id));
+            setRecentlyPastedIds((prev) => prev.filter((prevId) => prevId !== id));
             timeoutsRef.current.delete(timeoutId);
         }, recentlyPastedDurationMs);
 
