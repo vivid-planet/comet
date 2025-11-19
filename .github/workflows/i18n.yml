@@ -111,11 +111,6 @@ jobs:
               run: |
                   cp -r lang/* demo-saas/admin/lang/comet-lang/
 
-            - name: "Demo SaaS Admin: Update library translatable strings"
-              uses: EndBug/add-and-commit@v9
-              with:
-                  cwd: "./demo-saas/admin/lang/comet-lang"
-
             - name: "Demo SaaS Admin: Clone translations"
               uses: actions/checkout@v5
               with:
