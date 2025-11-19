@@ -8,11 +8,11 @@
     z-index: 10;
 
     &:hover {
-        background-color: var(--palette-primary-main);
+        background-color: #9e9e9e;
     }
 
     &:active {
-        background-color: var(--palette-primary-dark);
+        background-color: #9e9e9e;
     }
 
     &:focus {
@@ -23,7 +23,7 @@
 .animatedPlayPause {
     box-sizing: border-box;
     height: 12px;
-    border-color: transparent transparent transparent white;
+    border-color: transparent transparent transparent #fff;
     cursor: pointer;
 
     border-style: solid;
