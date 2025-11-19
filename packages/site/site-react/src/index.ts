@@ -1,4 +1,4 @@
-export { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
+export { type BlockLoader, type BlockLoaderDependencies, type BlockLoaderOptions, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
