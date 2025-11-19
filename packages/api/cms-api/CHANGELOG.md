@@ -1,5 +1,18 @@
 # @comet/cms-api
 
+## 8.7.0
+
+### Minor Changes
+
+- 13babd1: Use `sharp` to calculate the dominant image color
+
+    `sharp` replaces the previous implementation based on `get-image-colors`, which was removed because it's unmaintained and causes some security warnings.
+
+### Patch Changes
+
+- b2da6c9: Add `calculateInheritAspectRatio` to public API (for real)
+- b305d5b: Add EntityInfo to RedirectEntity to provide additional entity information, particularly useful when displaying warnings.
+
 ## 8.6.0
 
 ### Minor Changes
