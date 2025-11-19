@@ -100,6 +100,16 @@ export const YouTubeVideoBlock = withPreview(
         const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
         youtubeUrl.search = searchParams.toString();
 
+        const handlePlayPauseClick = () => {
+            if (isHandledManually) {
+                pauseYouTubeVideo();
+                setIsHandledManually(false);
+            } else {
+                playYouTubeVideo();
+                setIsHandledManually(true);
+            }
+        };
+
         return (
             <>
                 {hasPreviewImage && showPreviewImage ? (
@@ -122,29 +132,10 @@ export const YouTubeVideoBlock = withPreview(
                             (renderPlayPauseButton ? (
                                 renderPlayPauseButton({
                                     isPlaying: !isHandledManually,
-                                    onClick: () => {
-                                        if (isHandledManually) {
-                                            pauseYouTubeVideo();
-                                            setIsHandledManually(false);
-                                        } else {
-                                            playYouTubeVideo();
-                                            setIsHandledManually(true);
-                                        }
-                                    },
+                                    onClick: handlePlayPauseClick,
                                 })
                             ) : (
-                                <PlayPauseButton
-                                    isPlaying={!isHandledManually}
-                                    onClick={() => {
-                                        if (isHandledManually) {
-                                            pauseYouTubeVideo();
-                                            setIsHandledManually(false);
-                                        } else {
-                                            playYouTubeVideo();
-                                            setIsHandledManually(true);
-                                        }
-                                    }}
-                                />
+                                <PlayPauseButton isPlaying={!isHandledManually} onClick={handlePlayPauseClick} />
                             ))}
                         <iframe
                             ref={iframeRef}

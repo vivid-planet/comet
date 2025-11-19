@@ -59,6 +59,17 @@ export const DamVideoBlock = withPreview(
 
         useIsElementInViewport({ current: videoElement }, handleInView);
 
+        const handlePlayPauseClick = () => {
+            setIsHandledManually(!isHandledManually);
+            if (videoElement) {
+                if (videoElement.paused) {
+                    videoElement.play();
+                } else {
+                    videoElement.pause();
+                }
+            }
+        };
+
         return (
             <>
                 {hasPreviewImage && showPreviewImage ? (
@@ -92,31 +103,10 @@ export const DamVideoBlock = withPreview(
                             (renderPlayPauseButton ? (
                                 renderPlayPauseButton({
                                     isPlaying: isHandledManually,
-                                    onClick: () => {
-                                        setIsHandledManually(!isHandledManually);
-                                        if (videoElement) {
-                                            if (videoElement.paused) {
-                                                videoElement.play();
-                                            } else {
-                                                videoElement.pause();
-                                            }
-                                        }
-                                    },
+                                    onClick: handlePlayPauseClick,
                                 })
                             ) : (
-                                <PlayPauseButton
-                                    isPlaying={isHandledManually}
-                                    onClick={() => {
-                                        setIsHandledManually(!isHandledManually);
-                                        if (videoElement) {
-                                            if (videoElement.paused) {
-                                                videoElement.play();
-                                            } else {
-                                                videoElement.pause();
-                                            }
-                                        }
-                                    }}
-                                />
+                                <PlayPauseButton isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
                             ))}
                     </div>
                 )}

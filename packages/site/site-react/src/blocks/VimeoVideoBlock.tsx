@@ -98,6 +98,20 @@ export const VimeoVideoBlock = withPreview(
         const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
         vimeoUrl.search = searchParams.toString();
 
+        const handlePlayPauseClick = () => {
+            setIsHandledManually((prev) => {
+                const next = !prev;
+                if (iframeElement) {
+                    if (next) {
+                        playVimeoVideo();
+                    } else {
+                        pauseVimeoVideo();
+                    }
+                }
+                return next;
+            });
+        };
+
         return (
             <>
                 {hasPreviewImage && showPreviewImage ? (
@@ -121,31 +135,10 @@ export const VimeoVideoBlock = withPreview(
                             (renderPlayPauseButton ? (
                                 renderPlayPauseButton({
                                     isPlaying: isHandledManually,
-                                    onClick: () => {
-                                        setIsHandledManually(!isHandledManually);
-                                        if (iframeElement) {
-                                            if (isHandledManually) {
-                                                playVimeoVideo();
-                                            } else {
-                                                pauseVimeoVideo();
-                                            }
-                                        }
-                                    },
+                                    onClick: handlePlayPauseClick,
                                 })
                             ) : (
-                                <PlayPauseButton
-                                    isPlaying={isHandledManually}
-                                    onClick={() => {
-                                        setIsHandledManually(!isHandledManually);
-                                        if (iframeElement) {
-                                            if (isHandledManually) {
-                                                playVimeoVideo();
-                                            } else {
-                                                pauseVimeoVideo();
-                                            }
-                                        }
-                                    }}
-                                />
+                                <PlayPauseButton isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
                             ))}
                     </div>
                 )}
