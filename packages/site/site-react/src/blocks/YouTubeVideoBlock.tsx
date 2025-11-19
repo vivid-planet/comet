@@ -6,7 +6,7 @@ import { type ReactElement, type ReactNode, useCallback, useRef, useState } from
 import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { PlayPauseButton } from "./helpers/PlayPauseButton";
+import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -23,6 +23,7 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
 
     return youtubeId ?? undefined;
 };
+
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
@@ -30,6 +31,7 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactElement;
 }
 
 export const YouTubeVideoBlock = withPreview(
@@ -41,6 +43,7 @@ export const YouTubeVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        renderPlayPauseButton,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
@@ -115,21 +118,36 @@ export const YouTubeVideoBlock = withPreview(
                         className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
-                        {!showControls && (
-                            <PlayPauseButton
-                                className={styles.playPause}
-                                isPlaying={!isHandledManually}
-                                onClick={() => {
-                                    if (isHandledManually) {
-                                        pauseYouTubeVideo();
-                                        setIsHandledManually(false);
-                                    } else {
-                                        playYouTubeVideo();
-                                        setIsHandledManually(true);
-                                    }
-                                }}
-                            />
-                        )}
+                        {!showControls &&
+                            (renderPlayPauseButton ? (
+                                renderPlayPauseButton({
+                                    isPlaying: !isHandledManually,
+                                    onClick: () => {
+                                        if (isHandledManually) {
+                                            pauseYouTubeVideo();
+                                            setIsHandledManually(false);
+                                        } else {
+                                            playYouTubeVideo();
+                                            setIsHandledManually(true);
+                                        }
+                                    },
+                                    className: styles.playPause,
+                                })
+                            ) : (
+                                <PlayPauseButton
+                                    className={styles.playPause}
+                                    isPlaying={!isHandledManually}
+                                    onClick={() => {
+                                        if (isHandledManually) {
+                                            pauseYouTubeVideo();
+                                            setIsHandledManually(false);
+                                        } else {
+                                            playYouTubeVideo();
+                                            setIsHandledManually(true);
+                                        }
+                                    }}
+                                />
+                            ))}
                         <iframe
                             ref={iframeRef}
                             className={styles.youtubeContainer}

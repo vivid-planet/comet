@@ -5,7 +5,7 @@ import { type ReactElement, type ReactNode, useCallback, useRef, useState } from
 import { type VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { PlayPauseButton } from "./helpers/PlayPauseButton";
+import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -34,7 +34,7 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
-    customPlayPauseButton?: ReactElement;
+    renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactElement;
 }
 
 export const VimeoVideoBlock = withPreview(
@@ -46,7 +46,7 @@ export const VimeoVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
-        customPlayPauseButton,
+        renderPlayPauseButton,
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -118,8 +118,21 @@ export const VimeoVideoBlock = withPreview(
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
                         {!showControls &&
-                            (customPlayPauseButton ? (
-                                customPlayPauseButton
+                            (renderPlayPauseButton ? (
+                                renderPlayPauseButton({
+                                    isPlaying: isHandledManually,
+                                    onClick: () => {
+                                        setIsHandledManually(!isHandledManually);
+                                        if (iframeElement) {
+                                            if (isHandledManually) {
+                                                playVimeoVideo();
+                                            } else {
+                                                pauseVimeoVideo();
+                                            }
+                                        }
+                                    },
+                                    className: styles.playPause,
+                                })
                             ) : (
                                 <PlayPauseButton
                                     className={styles.playPause}

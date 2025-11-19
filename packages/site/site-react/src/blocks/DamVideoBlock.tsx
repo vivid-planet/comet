@@ -7,7 +7,7 @@ import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./DamVideoBlock.module.scss";
-import { PlayPauseButton } from "./helpers/PlayPauseButton";
+import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -19,6 +19,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactNode;
 }
 
 export const DamVideoBlock = withPreview(
@@ -30,6 +31,7 @@ export const DamVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        renderPlayPauseButton,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -86,22 +88,38 @@ export const DamVideoBlock = withPreview(
                             })}
                             <source src={damFile.fileUrl} type={damFile.mimetype} />
                         </video>
-                        {!showControls && (
-                            <PlayPauseButton
-                                className={styles.playPause}
-                                isPlaying={isHandledManually}
-                                onClick={() => {
-                                    setIsHandledManually(!isHandledManually);
-                                    if (videoElement) {
-                                        if (videoElement.paused) {
-                                            videoElement.play();
-                                        } else {
-                                            videoElement.pause();
+                        {!showControls &&
+                            (renderPlayPauseButton ? (
+                                renderPlayPauseButton({
+                                    isPlaying: isHandledManually,
+                                    onClick: () => {
+                                        setIsHandledManually(!isHandledManually);
+                                        if (videoElement) {
+                                            if (videoElement.paused) {
+                                                videoElement.play();
+                                            } else {
+                                                videoElement.pause();
+                                            }
                                         }
-                                    }
-                                }}
-                            />
-                        )}
+                                    },
+                                    className: styles.playPause,
+                                })
+                            ) : (
+                                <PlayPauseButton
+                                    className={styles.playPause}
+                                    isPlaying={isHandledManually}
+                                    onClick={() => {
+                                        setIsHandledManually(!isHandledManually);
+                                        if (videoElement) {
+                                            if (videoElement.paused) {
+                                                videoElement.play();
+                                            } else {
+                                                videoElement.pause();
+                                            }
+                                        }
+                                    }}
+                                />
+                            ))}
                     </div>
                 )}
             </>

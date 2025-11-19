@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import styles from "./PlayPauseButton.module.scss";
 
-interface PlayPauseButtonProps {
+export interface PlayPauseButtonProps {
     isPlaying: boolean;
     onClick: () => void;
     ariaLabel?: string;
