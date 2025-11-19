@@ -131,11 +131,9 @@ export const VimeoVideoBlock = withPreview(
                                             }
                                         }
                                     },
-                                    className: styles.playPause,
                                 })
                             ) : (
                                 <PlayPauseButton
-                                    className={styles.playPause}
                                     isPlaying={isHandledManually}
                                     onClick={() => {
                                         setIsHandledManually(!isHandledManually);

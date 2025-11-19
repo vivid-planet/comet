@@ -131,11 +131,9 @@ export const YouTubeVideoBlock = withPreview(
                                             setIsHandledManually(true);
                                         }
                                     },
-                                    className: styles.playPause,
                                 })
                             ) : (
                                 <PlayPauseButton
-                                    className={styles.playPause}
                                     isPlaying={!isHandledManually}
                                     onClick={() => {
                                         if (isHandledManually) {
