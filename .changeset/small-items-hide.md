@@ -2,7 +2,7 @@
 "@comet/cms-api": patch
 ---
 
-Fix filtering issues in RedirectsGrid
+Fix in-memory filtering in `paginatedRedirects` query
 
 - Fix `isEmpty` and `isNotEmpty` filters for `stringMatchesFilter`
 - Fix boolean filter handling: properly handle the "any" case (when no specific value is set)
