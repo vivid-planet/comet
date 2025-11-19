@@ -22,7 +22,7 @@ const getSupportedBlocks = (sizes: string, aspectRatio: string, fill?: boolean):
                 previewImageSizes={sizes}
                 aspectRatio={aspectRatio}
                 fill={fill}
-                renderPlayPauseButton={(props) => <PlayPauseButton {...props} />}
+                // renderPlayPauseButton={(props) => <PlayPauseButton {...props} />}
             />
         ),
         youTubeVideo: (data) => (
