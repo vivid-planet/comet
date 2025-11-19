@@ -73,9 +73,7 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
 function stringMatchesFilter(string: string | undefined, filter: StringFilter) {
     if (!string) {
         return filter.isEmpty === true;
-    }
-
-    if (filter.contains && string.includes(filter.contains)) {
+    } else if (filter.contains && string.includes(filter.contains)) {
         return true;
     } else if (filter.notContains && !string.includes(filter.notContains)) {
         return true;
