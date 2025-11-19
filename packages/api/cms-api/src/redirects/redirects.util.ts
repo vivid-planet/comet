@@ -102,12 +102,10 @@ function booleanMatchesFilter(boolean: boolean, filter: BooleanFilter) {
     return false;
 }
 
-function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter) {
+function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter): boolean {
     if (!date) {
         return filter.isEmpty === true;
-    }
-
-    if (filter.equal && date.getTime() === filter.equal.getTime()) {
+    } else if (filter.equal && date.getTime() === filter.equal.getTime()) {
         return true;
     } else if (filter.lowerThan && date.getTime() < filter.lowerThan.getTime()) {
         return true;
@@ -119,8 +117,9 @@ function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter) {
         return true;
     } else if (filter.notEqual && date.getTime() !== filter.notEqual.getTime()) {
         return true;
+    } else if (filter.isNotEmpty) {
+        return true;
     }
-
     return false;
 }
 
