@@ -18,59 +18,51 @@
 }
 
 .mediaCaption {
-    margin-top: var(--spacing-s300);
+    margin-top: 42px;
     padding-right: calc(var(--swiper-button-size) * 2 + var(--spacing-s300) + var(--spacing-s500));
+    color: var(--text-secondary);
 
     // min-height to show arrows when no caption
     min-height: 20px;
 
-    @media (min-width: $breakpoint-md) {
+    @media (min-width: $breakpoint-sm) {
         min-height: 22px;
+        margin-top: var(--spacing-s300);
     }
 }
 
 .swiperWrapper {
-    --swiper-button-size: 16px;
-
-    :global(.swiper-button-prev),
-    :global(.swiper-button-next) {
-        width: var(--swiper-button-size);
-        height: var(--swiper-button-size);
+    :global(.swiper-pagination) {
+        gap: var(--spacing-s400);
+        bottom: 35px;
+        width: auto;
         position: absolute;
-        z-index: 10;
-        top: 0;
-        transition: opacity 0.2s linear;
-        cursor: pointer;
+        left: 0;
 
-        // Move buttons just below the image height, calculated with aspectRatio. not possible with top: 100% because this moves them down the whole slider height which is variable because of caption text
-        padding-top: var(--spacing-s300);
-        margin-top: calc(1 / var(--aspect-ratio-numeric) * 100%);
+        @media (min-width: $breakpoint-sm) {
+            right: 0;
+            left: auto;
+            bottom: var(--spacing-s100);
+        }
 
-        &::after {
-            content: "";
-            width: inherit;
-            height: inherit;
-            display: block;
-            mask-image: url("/assets/icons/arrow-right.svg");
-            mask-repeat: no-repeat;
-            background-color: var(--brand-primary-main);
+        :global(.swiper-pagination-bullet) {
+            margin-right: var(--spacing-s400);
+            margin-left: 0;
+            color: var(--media-gallery-dot-navi-default);
+
+            @media (min-width: $breakpoint-sm) {
+                margin-left: var(--spacing-s400);
+                margin-right: 0;
+                bottom: var(--spacing-s100);
+            }
+        }
+
+        :global(.swiper-pagination-bullet-active) {
+            background-color: var(--media-gallery-dot-navi-active);
         }
     }
 
-    :global(.swiper-button-prev) {
-        right: calc(var(--swiper-button-size) + var(--spacing-s300));
-        left: auto;
-
-        &::after {
-            transform: rotate(180deg);
-        }
-    }
-
-    :global(.swiper-button-next) {
-        right: 0;
-    }
-
-    &.mediaCaption {
+    .mediaCaption {
         opacity: 0;
         transition: opacity 0.3s linear 0s;
     }
@@ -79,6 +71,42 @@
         .mediaCaption {
             opacity: 1;
             transition: opacity 0.3s linear 0.2s;
+        }
+    }
+}
+
+.navigationButton {
+    z-index: 10;
+    transform: rotate(225deg);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: var(--spacing-s500);
+    right: var(--spacing-s600);
+
+    &::after {
+        content: "";
+        width: var(--spacing-s200);
+        height: var(--spacing-s200);
+        border-top: 2px solid var(--media-gallery-button-default-contrast);
+        border-right: 2px solid var(--media-gallery-button-default-contrast);
+    }
+
+    &--next {
+        transform: rotate(45deg);
+        right: 0;
+    }
+
+    @media (min-width: $breakpoint-sm) {
+        top: calc(50% - var(--spacing-s300) - 24px);
+        left: -40px;
+
+        &--next {
+            right: -40px;
+            left: auto;
         }
     }
 }
