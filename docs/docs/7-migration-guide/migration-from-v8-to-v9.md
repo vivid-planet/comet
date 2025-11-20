@@ -47,6 +47,10 @@ Example:
 
 </details>
 
+#### Replace `createHttpClient` with native fetch
+
+The `createHttpClient` function has been removed. Use native fetch instead.
+
 ## Site
 
 ### 🤖 Upgrade peer dependencies
