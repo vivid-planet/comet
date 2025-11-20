@@ -9,7 +9,7 @@ type Props = {
 
 export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
     return (
-        <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
+        <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted} data-testid="table-block-grid-cell-value">
             <TextValue $highlighted={highlighted}>{value}</TextValue>
         </CellValueContainer>
     );

@@ -156,7 +156,16 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
 
     return (
         <RowActionsMenu>
-            <RowActionsMenu>
+            <RowActionsMenu
+                componentsProps={{
+                    rowActionsIconItem: {
+                        componentsProps: {
+                            // @ts-expect-error - data-testid is missing in the type definition
+                            iconButton: { "data-testid": "table-block-actions-cell-open-row-actions-menu-button" },
+                        },
+                    },
+                }}
+            >
                 <RowActionsItem
                     icon={stateRow?.highlighted ? <Remove /> : <Add />}
                     onClick={() => {
@@ -171,6 +180,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
                 </RowActionsItem>
                 <Divider />
                 <RowActionsItem
+                    data-testid="table-block-actions-cell-add-row-above-button"
                     icon={<ArrowUp />}
                     onClick={() => {
                         insertRow("above");
@@ -179,6 +189,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
                     <FormattedMessage id="comet.tableBlock.addRowAbove" defaultMessage="Add row above" />
                 </RowActionsItem>
                 <RowActionsItem
+                    data-testid="table-block-actions-cell-add-row-below-button"
                     icon={<ArrowDown />}
                     onClick={() => {
                         insertRow("below");
