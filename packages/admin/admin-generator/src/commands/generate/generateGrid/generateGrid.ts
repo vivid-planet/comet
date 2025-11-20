@@ -27,6 +27,7 @@ import { findRootBlocks } from "../utils/findRootBlocks";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { detectMuiXGridVariant } from "./detectMuiXVersion";
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
@@ -163,6 +164,7 @@ export function generateGrid<T extends { __typename?: string }>(
         throw new Error("gqlType is required in grid config");
     }
 
+    const muiXGridVariant = detectMuiXGridVariant();
     const gqlTypePlural = plural(gqlType);
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -213,14 +215,15 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "ListItemIcon", importPath: "@mui/material" },
         { name: "ListItemText", importPath: "@mui/material" },
         { name: "CircularProgress", importPath: "@mui/material" },
-        { name: "DataGridPro", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridLogicOperator", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridRenderCellParams", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridSlotsComponent", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridToolbarProps", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridColumnHeaderTitle", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridToolbarQuickFilter", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridRowOrderChangeParams", importPath: "@mui/x-data-grid-pro" },
+        { name: muiXGridVariant.gridComponent, importPath: muiXGridVariant.package },
+        { name: `${muiXGridVariant.gridComponent}Props`, importPath: muiXGridVariant.package },
+        { name: "GridLogicOperator", importPath: muiXGridVariant.package },
+        { name: "GridRenderCellParams", importPath: muiXGridVariant.package },
+        { name: "GridSlotsComponent", importPath: muiXGridVariant.package },
+        { name: "GridToolbarProps", importPath: muiXGridVariant.package },
+        { name: "GridColumnHeaderTitle", importPath: muiXGridVariant.package },
+        { name: "GridToolbarQuickFilter", importPath: muiXGridVariant.package },
+        { name: "GridRowOrderChangeParams", importPath: muiXGridVariant.package },
         { name: "useMemo", importPath: "react" },
     ];
 
@@ -605,15 +608,14 @@ export function generateGrid<T extends { __typename?: string }>(
     }
 
     if (config.selectionProps) {
-        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
             name: "rowSelectionModel",
-            type: `DataGridProProps["rowSelectionModel"]`,
+            type: `${muiXGridVariant.gridComponent}Props["rowSelectionModel"]`,
             optional: true,
         });
         props.push({
             name: "onRowSelectionModelChange",
-            type: `DataGridProProps["onRowSelectionModelChange"]`,
+            type: `${muiXGridVariant.gridComponent}Props["onRowSelectionModelChange"]`,
             optional: true,
         });
     }
@@ -929,7 +931,7 @@ export function generateGrid<T extends { __typename?: string }>(
         ${generateGridExportApi(config.excelExport, gqlTypePlural, instanceGqlTypePlural, gridQuery, gqlArgs)}
 
         return (
-            <DataGridPro
+            <${muiXGridVariant.gridComponent}
                 {...dataGridProps}
                 rows={rows}
                 rowCount={rowCount}
