@@ -13,9 +13,6 @@ export default {
     // Use this configuration option to add custom reporters to Jest
     reporters: ["default", "jest-junit"],
 
-    // The root directory that Jest should scan for tests and modules within
-    rootDir: "./src",
-
     // The test environment that will be used for testing
     testEnvironment: "jest-environment-jsdom",
 
@@ -28,11 +25,12 @@ export default {
     testPathIgnorePatterns: ["/node_modules/"],
 
     moduleNameMapper: {
-        "^react-dnd$": "<rootDir>/testing/stub-file.ts",
-        "@mui/material/styles/createPalette": "<rootDir>/testing/stub-file.ts",
-        "@mui/material/styles/createTypography": "<rootDir>/testing/stub-file.ts",
-        "@mui/material/styles/zIndex": "<rootDir>/testing/stub-file.ts",
+        "^react-dnd$": "<rootDir>/src/testing/stub-file.ts",
+        "@mui/material/styles/createPalette": "<rootDir>/src/testing/stub-file.ts",
+        "@mui/material/styles/createTypography": "<rootDir>/src/testing/stub-file.ts",
+        "@mui/material/styles/zIndex": "<rootDir>/src/testing/stub-file.ts",
     },
+    setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
     transform: {
         "^.+\\.tsx?$": [
             "ts-jest",
