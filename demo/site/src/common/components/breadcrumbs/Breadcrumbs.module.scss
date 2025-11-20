@@ -1,7 +1,7 @@
 @use "@src/styles/variables" as *;
 
 .root {
-    background-color: var(--palette-gray-50);
+    background-color: var(--brand-grey-50);
     position: relative;
 
     @media (min-width: $breakpoint-sm) {
@@ -17,7 +17,7 @@
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    color: var(--palette-primary-main);
+    color: var(--brand-primary-main);
     text-decoration: none;
 
     @media (min-width: $breakpoint-sm) {
@@ -73,7 +73,7 @@
 
 .mobileChevron {
     flex-shrink: 0;
-    color: var(--palette-gray-700);
+    color: var(--brand-grey-700);
     transition: transform 0.4s ease;
 
     &Expanded {
@@ -88,25 +88,25 @@
 }
 
 .link {
-    color: var(--palette-gray-700);
+    color: var(--brand-grey-700);
     text-decoration: none;
     text-align: left;
 
     &Active {
-        color: var(--palette-primary-main);
+        color: var(--brand-primary-main);
     }
 
     @media (min-width: $breakpoint-sm) {
-        color: var(--palette-gray-700);
+        color: var(--brand-grey-700);
         font-size: 15px;
 
         &:last-child {
-            color: var(--palette-primary-main);
+            color: var(--brand-primary-main);
         }
 
         &:hover {
             text-decoration: underline;
-            color: var(--palette-primary-main);
+            color: var(--brand-primary-main);
         }
     }
 }
@@ -117,12 +117,12 @@
     @media (min-width: $breakpoint-sm) {
         display: block;
         transform: rotate(-90deg);
-        color: var(--palette-gray-400);
+        color: var(--brand-grey-400);
     }
 }
 
 .mobileCornerDownRightIcon {
-    color: var(--palette-gray-700);
+    color: var(--brand-grey-700);
     margin-right: 4px;
     flex-shrink: 0;
 
@@ -140,7 +140,7 @@
     gap: var(--spacing-s200);
     align-items: center;
     border-bottom: 1px solid;
-    color: var(--palette-gray-700);
+    color: var(--brand-grey-700);
 }
 
 .linkContainer {

@@ -1648,6 +1648,7 @@ type Redirect {
 }
 
 input RedirectFilter {
+  activatedAt: DateTimeFilter
   active: BooleanFilter
   and: [RedirectFilter!]
   createdAt: DateTimeFilter
