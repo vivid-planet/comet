@@ -1,5 +1,7 @@
 # @comet/admin-generator
 
+## 8.7.1
+
 ## 8.7.0
 
 ### Minor Changes
