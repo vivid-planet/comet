@@ -340,16 +340,21 @@ export function generateGrid<T extends { __typename?: string }>(
     const hasSort = !!sortArg;
     let sortFields: string[] = [];
     if (sortArg) {
-        if (sortArg.type.kind !== "LIST") {
+        let sortArgType = sortArg.type;
+        if (sortArgType.kind === "NON_NULL") {
+            sortArgType = sortArgType.ofType;
+        }
+
+        if (sortArgType.kind !== "LIST") {
             throw new Error("Sort argument must be LIST");
         }
-        if (sortArg.type.ofType.kind !== "NON_NULL") {
+        if (sortArgType.ofType.kind !== "NON_NULL") {
             throw new Error("Sort argument must be LIST->NON_NULL");
         }
-        if (sortArg.type.ofType.ofType.kind !== "INPUT_OBJECT") {
+        if (sortArgType.ofType.ofType.kind !== "INPUT_OBJECT") {
             throw new Error("Sort argument must be LIST->NON_NULL->INPUT_OBJECT");
         }
-        const sortTypeName = sortArg.type.ofType.ofType.name;
+        const sortTypeName = sortArgType.ofType.ofType.name;
         const sortType = gqlIntrospection.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === sortTypeName) as
             | IntrospectionInputObjectType
             | undefined;
