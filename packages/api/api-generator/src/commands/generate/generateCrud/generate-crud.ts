@@ -6,7 +6,7 @@ import { singular } from "pluralize";
 
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
+import { integerTypes, numberTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
@@ -84,7 +84,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => StringFilter)
                     ${prop.name}?: StringFilter;
                     `;
-                } else if (prop.type === "DecimalType" || prop.type == "number" || integerTypes.includes(prop.type)) {
+                } else if (numberTypes.includes(prop.type)) {
                     imports.push({ name: "NumberFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
@@ -225,7 +225,10 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps, hasPositionProp } = buildOptions(
+        metadata,
+        generatorOptions,
+    );
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
@@ -234,9 +237,9 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
-    import { OffsetBasedPaginationArgs } from "@comet/cms-api";
+    import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
-    import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
+    import { ${classNameSingular}Sort, ${classNameSingular}SortField } from "./${fileNameSingular}.sort";
 
     ${generateImportsCode(imports)}
 
@@ -294,11 +297,11 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasSortArg
                 ? `
-        @Field(() => [${classNameSingular}Sort], { nullable: true })
+        @Field(() => [${classNameSingular}Sort], { ${hasPositionProp ? `defaultValue: [{ field: ${classNameSingular}SortField.position, direction: SortDirection.ASC }]` : `nullable: true`} })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
-        @IsOptional()
-        sort?: ${classNameSingular}Sort[];
+        ${!hasPositionProp ? `@IsOptional()` : ""}
+        sort${!hasPositionProp ? `?` : ""}: ${classNameSingular}Sort[];
         `
                 : ""
         }

@@ -31,6 +31,11 @@ export class RedirectFilter {
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @Type(() => DateTimeFilter)
+    activatedAt?: DateTimeFilter;
+
+    @Field(() => DateTimeFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => DateTimeFilter)
     createdAt?: DateTimeFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
