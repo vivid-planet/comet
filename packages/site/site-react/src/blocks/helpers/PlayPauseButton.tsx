@@ -7,7 +7,7 @@ export interface PlayPauseButtonProps {
     onClick: () => void;
 }
 
-export interface ExtendedPlayPauseButtonProps extends PlayPauseButtonProps {
+interface ExtendedPlayPauseButtonProps extends PlayPauseButtonProps {
     ariaLabelPlay?: string;
     ariaLabelPause?: string;
 }
