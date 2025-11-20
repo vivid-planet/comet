@@ -172,7 +172,6 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
-export { createHttpClient } from "./http/createHttpClient";
 export { createEditPageNode } from "./pages/createEditPageNode";
 export { createUsePage } from "./pages/createUsePage";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
