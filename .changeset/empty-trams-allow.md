@@ -2,6 +2,6 @@
 "@comet/cms-admin": major
 ---
 
-Uninstall `axios` package and remove `createHttpClient` function
+Remove `createHttpClient` function
 
 Use native fetch instead.
