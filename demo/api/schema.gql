@@ -1603,7 +1603,7 @@ type Query {
   predefinedPage(id: ID!): PredefinedPage!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]): PaginatedProductCategories!
+  productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]! = [{direction: ASC, field: position}]): PaginatedProductCategories!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategoryType(id: ID!): ProductCategoryType!
@@ -1613,7 +1613,7 @@ type Query {
   productTag(id: ID!): ProductTag!
   productTags(filter: ProductTagFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductTagSort!]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!
-  productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
+  productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]! = [{direction: ASC, field: position}]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
   redirect(id: ID!): Redirect!
   redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
@@ -1648,6 +1648,7 @@ type Redirect {
 }
 
 input RedirectFilter {
+  activatedAt: DateTimeFilter
   active: BooleanFilter
   and: [RedirectFilter!]
   createdAt: DateTimeFilter

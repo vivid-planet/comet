@@ -1,5 +1,25 @@
 # @comet/cms-admin
 
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin@8.7.1
+- @comet/admin-date-time@8.7.1
+- @comet/admin-icons@8.7.1
+- @comet/admin-rte@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- a8e8132: Fix layout of `CronJobsPage`
+- Updated dependencies [a8e8132]
+    - @comet/admin@8.7.0
+    - @comet/admin-date-time@8.7.0
+    - @comet/admin-rte@8.7.0
+    - @comet/admin-icons@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes

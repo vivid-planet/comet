@@ -55,8 +55,4 @@ export class WarningService {
             });
         }
     }
-
-    public async deleteOutdatedWarnings({ date, sourceInfo }: { date: Date; sourceInfo: WarningSourceInfo }): Promise<void> {
-        await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: date }, sourceInfo });
-    }
 }
