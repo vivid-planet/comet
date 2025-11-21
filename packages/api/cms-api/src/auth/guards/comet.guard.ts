@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
@@ -12,6 +12,8 @@ import { AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.in
 
 @Injectable()
 export class CometAuthGuard implements CanActivate {
+    protected readonly logger = new Logger(CometAuthGuard.name);
+
     constructor(
         private reflector: Reflector,
         private readonly service: UserPermissionsService,
@@ -40,7 +42,7 @@ export class CometAuthGuard implements CanActivate {
         const result = await this.getAuthenticatedUserResult(request);
         if (!result) {
             const location = `${context.getClass().name}::${context.getHandler().name}()`;
-            console.log(`CometAuthGuard: No AuthService could authenticate the user for ${location}.`);
+            this.logger.debug(`No AuthService could authenticate the user for ${location}.`);
             return false;
         }
         if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);

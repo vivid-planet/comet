@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable, Logger } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
@@ -13,6 +13,8 @@ import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsO
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
+    protected readonly logger = new Logger(UserPermissionsGuard.name);
+
     constructor(
         protected reflector: Reflector,
         private readonly contentScopeService: ContentScopeService,
@@ -40,7 +42,7 @@ export class UserPermissionsGuard implements CanActivate {
 
         const user = this.getUser(context);
         if (!user) {
-            console.log("UserPermissionsGuard: Could not get authenticated user. Maybe CometAuthGuard is missing?");
+            this.logger.debug("Could not get authenticated user. Maybe CometAuthGuard is missing?");
             return false;
         }
 
@@ -84,9 +86,7 @@ export class UserPermissionsGuard implements CanActivate {
             }
         }
 
-        console.log(
-            `UserPermissionsGuard: User ${(typeof user === "string" ? user : user.id) ?? "unknown"} does not have required permissions for ${location}`,
-        );
+        this.logger.debug(`User ${(typeof user === "string" ? user : user.id) ?? "unknown"} does not have required permissions for ${location}`);
         return false;
     }
 

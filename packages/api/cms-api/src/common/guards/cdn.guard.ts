@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
 
@@ -6,6 +6,7 @@ import { Request } from "express";
 export class CdnGuard implements CanActivate {
     private headerName: string;
     private headerValue: string;
+    protected readonly logger = new Logger(CdnGuard.name);
 
     constructor({ headerName, headerValue }: { headerName: string; headerValue: string }) {
         this.headerName = headerName;
@@ -34,7 +35,7 @@ export class CdnGuard implements CanActivate {
             return true;
         }
 
-        console.log(`CdnGuard: Header "${this.headerName}" either missing or invalid.`);
+        this.logger.debug(`Header "${this.headerName}" either missing or invalid.`);
         return false;
     }
 }
