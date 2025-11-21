@@ -3,11 +3,11 @@ import { DynamicModule, Global, Module } from "@nestjs/common";
 import { KUBERNETES_CONFIG } from "./kubernetes.constants";
 import { KubernetesService } from "./kubernetes.service";
 
-export type ClusterKubernetesConfig = {
+type ClusterKubernetesConfig = {
     helmRelease: string;
 };
 
-export type LocalKubernetesConfig = {
+type LocalKubernetesConfig = {
     namespace: string;
     helmRelease: string;
 };
