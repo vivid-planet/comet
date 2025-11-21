@@ -2,10 +2,8 @@ import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { BUILDER_LABEL } from "../builds/builds.constants";
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
-import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { KubernetesAuthenticationGuard } from "../kubernetes/kubernetes-authentication.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
@@ -30,9 +28,7 @@ export class CronJobsResolver {
 
     @Query(() => [CronJob])
     async kubernetesCronJobs(@GetCurrentUser() user: CurrentUser): Promise<CronJob[]> {
-        const cronJobs = await this.kubernetesService.getAllCronJobs(
-            `${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}, ${BUILDER_LABEL} != true`,
-        );
+        const cronJobs = await this.kubernetesService.getAllProjectCronJobs();
         return cronJobs
             .filter((cronJob) => {
                 const contentScope = this.kubernetesService.getContentScope(cronJob);

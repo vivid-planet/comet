@@ -3,10 +3,10 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
-import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
+import { BUILDER_LABEL, CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { KubernetesJobStatus } from "./job-status.enum";
-import { KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants";
+import { INSTANCE_LABEL, KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants";
 import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
@@ -55,9 +55,19 @@ export class KubernetesService {
         return this.batchApi.readNamespacedCronJob({ name, namespace: this.namespace });
     }
 
+    /**
+     * Get all CronJobs for a labelSelector inside the namespace
+     */
     async getAllCronJobs(labelSelector: string): Promise<V1CronJob[]> {
         const { items } = await this.batchApi.listNamespacedCronJob({ namespace: this.namespace, labelSelector });
         return items;
+    }
+
+    /**
+     * Get all CronJobs associated with Helm release inside the namespace
+     */
+    async getAllProjectCronJobs(): Promise<V1CronJob[]> {
+        return this.getAllCronJobs(`${INSTANCE_LABEL} = ${this.helmRelease}, ${BUILDER_LABEL} != true`);
     }
 
     async deleteJob(name: string): Promise<void> {
