@@ -223,7 +223,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={handleDialogClose} />
-                            {!disabled && <SaveButton type="submit" />}
+                            {disabled ? <div /> : <SaveButton type="submit" />}
                         </DialogActions>
                     </>
                 )}
