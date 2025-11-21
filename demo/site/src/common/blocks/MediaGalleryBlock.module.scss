@@ -26,34 +26,34 @@
     min-height: 20px;
 
     @media (min-width: $breakpoint-sm) {
-        min-height: 22px;
         margin-top: var(--spacing-s300);
+        min-height: 22px;
     }
 }
 
 .swiperWrapper {
     :global(.swiper-pagination) {
-        gap: var(--spacing-s400);
-        bottom: 35px;
         width: auto;
         position: absolute;
+        bottom: 35px;
         left: 0;
+        gap: var(--spacing-s400);
 
         @media (min-width: $breakpoint-sm) {
-            right: 0;
-            left: auto;
             bottom: var(--spacing-s100);
+            left: auto;
+            right: 0;
         }
 
         :global(.swiper-pagination-bullet) {
+            color: var(--media-gallery-dot-navi-default);
             margin-right: var(--spacing-s400);
             margin-left: 0;
-            color: var(--media-gallery-dot-navi-default);
 
             @media (min-width: $breakpoint-sm) {
+                bottom: var(--spacing-s100);
                 margin-left: var(--spacing-s400);
                 margin-right: 0;
-                bottom: var(--spacing-s100);
             }
         }
 
