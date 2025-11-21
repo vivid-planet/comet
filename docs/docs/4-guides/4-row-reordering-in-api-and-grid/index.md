@@ -1,0 +1,75 @@
+---
+title: Row-Reordering in API and Grid
+---
+
+This guide will walk you through modifying an existing entity and its DataGrid to allow the admin user to re-order the entries using drag-and-drop.
+
+This guide assumes the existing API and Admin were created using the API Generator and Admin Generator.
+A detailed guide on this is available under [Generate Grid Form View](/docs/guides/generate-grid-form-views/).
+
+![Grid with row reordering](./images/gridWithRowReordering.png)
+
+## Updating the entity
+
+In the entity, simply add the magic `position` field.
+See its [documentation](/docs/getting-started/crud-generator/api-generator/#position) for more information.
+
+```ts
+@Field(() => Int)
+@Property({ columnType: "integer" })
+@Min(1)
+position: number;
+```
+
+### Migrating the database
+
+Generate and run a new migration for the field:
+
+```sh
+npm --prefix api run mikro-orm migration:create
+npm --prefix api run mikro-orm migration:up
+```
+
+:::warning
+If entries already exist in the database, you may need to modify the generated migration to set the `position` field to a default value initially.
+The default value can then be dropped immediately.
+
+```ts
+override async up(): Promise<void> {
+    this.addSql(`alter table "MyEntity" add column "position" integer not null default 1;`);
+    this.addSql(`alter table "MyEntity" alter column "position" drop default;`);
+}
+```
+
+:::
+
+### Update the module
+
+Once the API of the entity has been regenerated, a new `myEntity.service.ts` file should be present in the CrudGenerator's `targetDirectory`.
+This service needs to be included in your module's `providers`.
+
+```ts
+@Module({
+    // ...
+    providers: [
+        // ...
+        MyEntityService,
+    ],
+})
+export class MyEntityModule {}
+```
+
+## Updating the Grid generator config
+
+In your `.cometGen.ts` file, add the `rowReordering` property to the grid config.
+
+```ts
+export const MyEntityGrid: GridConfig<GQLMyEntity> = {
+    // ...
+    rowReordering: {
+        enabled: true,
+    },
+};
+```
+
+After regenerating the grid, you should be able to drag-and-drop the entries to change their position using the grab handle.
