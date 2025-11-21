@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, Enum, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
@@ -10,6 +10,11 @@ import { WarningStatus } from "./warning-status.enum";
 
 @ObjectType()
 @Entity()
+// Index Decorator does nothing, migration has to be created manually as the entity is in library
+@Index({ properties: ["status", "scope"] })
+@Index({
+    properties: ["updatedAt", "sourceInfo.rootEntityName", "sourceInfo.rootColumnName", "sourceInfo.targetId", "sourceInfo.rootPrimaryKey"],
+})
 export class Warning extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 

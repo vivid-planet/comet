@@ -1,5 +1,16 @@
 # @comet/cms-api
 
+## 8.7.1
+
+### Patch Changes
+
+- 9ed0711: Improve Warnings SQL-Performance by setting appropriate indexes
+- 182c930: Optimize `WarningEventSubscriber`. This improves performance for create and update requests where blocks occur.
+- 07c9b17: Fix in-memory filtering in `paginatedRedirects` query
+    - Fix `isEmpty` and `isNotEmpty` filters for string filters
+    - Fix boolean filter handling: properly handle the "any" case (when no specific value is set)
+    - Add support for `activatedAt` field in redirect filters
+
 ## 8.7.0
 
 ### Minor Changes
