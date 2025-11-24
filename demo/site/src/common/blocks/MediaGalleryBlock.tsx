@@ -21,6 +21,13 @@ type MediaGalleryBlockProps = PropsWithData<MediaGalleryBlockData>;
 export const MediaGalleryBlock = withPreview(
     ({ data }: MediaGalleryBlockProps) => {
         const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+        const [isBeginning, setIsBeginning] = useState(true);
+        const [isEnd, setIsEnd] = useState(false);
+
+        const onSlideChange = (swiperInstance: SwiperClass) => {
+            setIsBeginning(swiperInstance.isBeginning);
+            setIsEnd(swiperInstance.isEnd);
+        };
 
         const intl = useIntl();
 
@@ -30,6 +37,7 @@ export const MediaGalleryBlock = withPreview(
                     onClick={() => swiper?.slidePrev()}
                     className={clsx(styles.navigationButton, styles["navigationButton--previous"])}
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.prevSlide", defaultMessage: "Previous slide" })}
+                    disabled={isBeginning}
                 />
                 <BasicSwiper
                     className={styles.swiper}
@@ -44,6 +52,7 @@ export const MediaGalleryBlock = withPreview(
                     watchOverflow
                     speed={400}
                     onSwiper={setSwiper}
+                    onSlideChange={onSlideChange}
                 >
                     {data.items.blocks.map((block) => (
                         <SwiperSlide key={block.key}>
@@ -58,6 +67,7 @@ export const MediaGalleryBlock = withPreview(
                     onClick={() => swiper?.slideNext()}
                     className={clsx(styles.navigationButton, styles["navigationButton--next"])}
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.nextSlide", defaultMessage: "Next slide" })}
+                    disabled={isEnd}
                 />
             </>
         );
