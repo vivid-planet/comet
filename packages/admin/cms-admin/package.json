@@ -38,7 +38,6 @@
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/admin-rte": "workspace:*",
-        "axios": "^0.30.0",
         "change-case": "^4.1.2",
         "class-validator": "^0.14.2",
         "date-fns": "^4.1.0",
