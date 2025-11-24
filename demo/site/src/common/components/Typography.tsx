@@ -30,7 +30,10 @@ export const Typography = <T extends ElementType = "p">(props: PropsWithChildren
     const { as, variant = "p300", bottomSpacing = false, className, children, ...restProps } = props;
     const Component = as || variantToElementMap[variant] || "p";
     return (
-        <Component className={clsx(styles.root, styles[variant], !bottomSpacing && styles.noBottomSpacing, className)} {...restProps}>
+        <Component
+            className={clsx(styles.root, styles[`root--${variant}`], !bottomSpacing && styles[`root--noBottomSpacing`], className)}
+            {...restProps}
+        >
             {children}
         </Component>
     );
