@@ -18,10 +18,10 @@ import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
-import { DataGridProProps } from "@mui/x-data-grid-pro";
 const productsFragment = gql`
         fragment SelectProductsGridFuture on Product {
             id
