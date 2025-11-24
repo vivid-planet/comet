@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
+import { type ComponentType, type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -32,7 +32,7 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
     pauseButtonAriaLabel?: string;
-    renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactElement;
+    playPauseButton?: ComponentType<PlayPauseButtonProps>;
 }
 
 export const YouTubeVideoBlock = withPreview(
@@ -45,7 +45,7 @@ export const YouTubeVideoBlock = withPreview(
         previewImageIcon,
         playButtonAriaLabel,
         pauseButtonAriaLabel,
-        renderPlayPauseButton,
+        playPauseButton: PlayPauseButtonComponent,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
@@ -131,11 +131,8 @@ export const YouTubeVideoBlock = withPreview(
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         {!showControls &&
-                            (renderPlayPauseButton ? (
-                                renderPlayPauseButton({
-                                    isPlaying: !isHandledManually,
-                                    onClick: handlePlayPauseClick,
-                                })
+                            (PlayPauseButtonComponent ? (
+                                <PlayPauseButtonComponent isPlaying={!isHandledManually} onClick={handlePlayPauseClick} />
                             ) : (
                                 <PlayPauseButton
                                     isPlaying={!isHandledManually}

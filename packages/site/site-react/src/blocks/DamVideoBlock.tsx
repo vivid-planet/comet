@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useCallback, useState } from "react";
+import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -20,7 +20,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
     pauseButtonAriaLabel?: string;
-    renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactNode;
+    playPauseButton?: ComponentType<PlayPauseButtonProps>;
 }
 
 export const DamVideoBlock = withPreview(
@@ -33,7 +33,7 @@ export const DamVideoBlock = withPreview(
         previewImageIcon,
         playButtonAriaLabel,
         pauseButtonAriaLabel,
-        renderPlayPauseButton,
+        playPauseButton: PlayPauseButtonComponent,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -102,11 +102,8 @@ export const DamVideoBlock = withPreview(
                             <source src={damFile.fileUrl} type={damFile.mimetype} />
                         </video>
                         {!showControls &&
-                            (renderPlayPauseButton ? (
-                                renderPlayPauseButton({
-                                    isPlaying: isHandledManually,
-                                    onClick: handlePlayPauseClick,
-                                })
+                            (PlayPauseButtonComponent ? (
+                                <PlayPauseButtonComponent isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
                             ) : (
                                 <PlayPauseButton
                                     isPlaying={isHandledManually}

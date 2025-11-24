@@ -17,13 +17,7 @@ const getSupportedBlocks = (sizes: string, aspectRatio: string, fill?: boolean):
     return {
         image: (data) => <DamImageBlock data={data} sizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
         damVideo: (data) => (
-            <DamVideoBlock
-                data={data}
-                previewImageSizes={sizes}
-                aspectRatio={aspectRatio}
-                fill={fill}
-                renderPlayPauseButton={(props) => <PlayPauseButton {...props} />}
-            />
+            <DamVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
         ),
         youTubeVideo: (data) => (
             <CookieSafeYouTubeVideoBlock
@@ -31,17 +25,11 @@ const getSupportedBlocks = (sizes: string, aspectRatio: string, fill?: boolean):
                 previewImageSizes={sizes}
                 aspectRatio={aspectRatio}
                 fill={fill}
-                renderPlayPauseButton={(props) => <PlayPauseButton {...props} />}
+                playPauseButton={PlayPauseButton}
             />
         ),
         vimeoVideo: (data) => (
-            <VimeoVideoBlock
-                data={data}
-                previewImageSizes={sizes}
-                aspectRatio={aspectRatio}
-                fill={fill}
-                renderPlayPauseButton={(props) => <PlayPauseButton {...props} />}
-            />
+            <VimeoVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
         ),
     };
 };

@@ -1,6 +1,6 @@
 "use client";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
+import { type ComponentType, type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -35,7 +35,7 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
     pauseButtonAriaLabel?: string;
-    renderPlayPauseButton?: (props: PlayPauseButtonProps) => ReactElement;
+    playPauseButton?: ComponentType<PlayPauseButtonProps>;
 }
 
 export const VimeoVideoBlock = withPreview(
@@ -48,7 +48,7 @@ export const VimeoVideoBlock = withPreview(
         previewImageIcon,
         playButtonAriaLabel,
         pauseButtonAriaLabel,
-        renderPlayPauseButton,
+        playPauseButton: PlayPauseButtonComponent,
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -134,11 +134,8 @@ export const VimeoVideoBlock = withPreview(
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
                         {!showControls &&
-                            (renderPlayPauseButton ? (
-                                renderPlayPauseButton({
-                                    isPlaying: isHandledManually,
-                                    onClick: handlePlayPauseClick,
-                                })
+                            (PlayPauseButtonComponent ? (
+                                <PlayPauseButtonComponent isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
                             ) : (
                                 <PlayPauseButton
                                     isPlaying={isHandledManually}
