@@ -1452,9 +1452,6 @@ importers:
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
-      lodash.omit:
-        specifier: ^4.5.0
-        version: 4.5.0
       mime-db:
         specifier: ^1.54.0
         version: 1.54.0
@@ -1576,9 +1573,6 @@ importers:
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
-      '@types/lodash.omit':
-        specifier: ^4.5.9
-        version: 4.5.9
       '@types/mime-db':
         specifier: ^1.43.6
         version: 1.43.6
@@ -8959,9 +8953,6 @@ packages:
 
   '@types/lodash.isequal@4.5.8':
     resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
-
-  '@types/lodash.omit@4.5.9':
-    resolution: {integrity: sha512-zuAVFLUPJMOzsw6yawshsYGgq2hWUHtsZgeXHZmSFhaQQFC6EQ021uDKHkSjOpNhSvtNSU9165/o3o/Q51GpTw==}
 
   '@types/lodash.uniqwith@4.5.9':
     resolution: {integrity: sha512-r/L/U1bAHuZF/bKVanxZtPTCr0J47L8Ftpg4BeV1Knv5ZOl9f6bwqVxP5fvvqniHatgcYpp7vwccxbvVGMV8Xw==}
@@ -27156,10 +27147,6 @@ snapshots:
       '@types/lodash': 4.14.191
 
   '@types/lodash.isequal@4.5.8':
-    dependencies:
-      '@types/lodash': 4.14.191
-
-  '@types/lodash.omit@4.5.9':
     dependencies:
       '@types/lodash': 4.14.191
 
