@@ -32,7 +32,7 @@ export const MediaGalleryBlock = withPreview(
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.prevSlide", defaultMessage: "Previous slide" })}
                 />
                 <BasicSwiper
-                    className={styles.swiperWrapper}
+                    className={styles.swiper}
                     slidesPerView={1}
                     slidesPerGroup={1}
                     modules={[Pagination, Navigation]}
