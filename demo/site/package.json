@@ -5,7 +5,7 @@
     "description": "Comet Site Demo Application",
     "type": "commonjs",
     "scripts": {
-        "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build",
+        "build": "run-s intl:compile && run-p gql:types generate-block-types css:types build-server && next build --webpack",
         "build-server": "tsc --project tsconfig.server.json",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "css:types": "typed-scss-modules src --nameFormat none --exportType default --aliasPrefixes.@src src",
@@ -22,13 +22,13 @@
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
         "lint:style": "pnpm exec stylelint '**/*.{css,scss}'",
-        "lint:tsc": "tsc --project .",
+        "lint:tsc": "pnpm exec next typegen && tsc --project .",
         "serve": "NODE_ENV=production node dist/server.js"
     },
     "dependencies": {
         "@comet/site-nextjs": "workspace:*",
         "@formatjs/cli": "^6.7.2",
-        "@next/bundle-analyzer": "^15.5.4",
+        "@next/bundle-analyzer": "^16.0.3",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/auto-instrumentations-node": "^0.66.0",
         "@opentelemetry/exporter-prometheus": "^0.207.0",
@@ -40,7 +40,7 @@
         "filesize": "^10.1.6",
         "ioredis": "^5.6.1",
         "lru-cache": "^11.1.0",
-        "next": "^15.5.4",
+        "next": "^16.0.3",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-focus-lock": "^2.13.6",

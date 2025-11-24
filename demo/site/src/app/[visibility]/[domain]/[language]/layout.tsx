@@ -12,17 +12,10 @@ import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { setNotFoundContext } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata } from "next";
-import { type PropsWithChildren } from "react";
 
 import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "./layout.generated";
 
-type Params = Promise<{ domain: string; language: string }>;
-
-interface LayoutProps {
-    params: Params;
-}
-
-export default async function Layout({ children, params }: PropsWithChildren<LayoutProps>) {
+export default async function Layout({ children, params }: LayoutProps<"/[visibility]/[domain]/[language]">) {
     const { domain, language: languageParam } = await params;
     const siteConfig = getSiteConfigForDomain(domain);
 
@@ -78,7 +71,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Lay
     );
 }
 
-export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
+export async function generateMetadata({ params }: LayoutProps<"/[visibility]/[domain]/[language]">): Promise<Metadata> {
     const { domain } = await params;
     const siteConfig = getSiteConfigForDomain(domain);
 

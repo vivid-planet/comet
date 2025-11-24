@@ -10,7 +10,7 @@ const port = parseInt(process.env.PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname: host, port });
+const app = next({ dev, hostname: host, port, webpack: true });
 
 app.prepare().then(() => {
     if (process.env.TRACING == "production") {

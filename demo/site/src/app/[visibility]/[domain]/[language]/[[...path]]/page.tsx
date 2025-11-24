@@ -32,7 +32,7 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode(params: PageProps["params"]) {
+async function fetchPageTreeNode(params: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">["params"]) {
     const { domain, language, path: pathParam } = await params;
     const siteConfig = getSiteConfigForDomain(domain);
 
@@ -58,15 +58,9 @@ async function fetchPageTreeNode(params: PageProps["params"]) {
     );
 }
 
-type Params = Promise<{ path: string[]; domain: string; language: string; visibility: VisibilityParam }>;
-
-interface PageProps {
-    params: Params;
-}
-
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">) {
     const { visibility, domain, language } = await params;
-    setVisibilityParam(visibility);
+    setVisibilityParam(visibility as VisibilityParam);
     const scope = { domain, language };
     const data = await fetchPageTreeNode(params);
 
@@ -118,7 +112,10 @@ export default async function Page({ params }: PageProps) {
     return <Component {...props} />;
 }
 
-export async function generateMetadata({ params }: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+    { params }: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">,
+    parent: ResolvingMetadata,
+): Promise<Metadata> {
     const { domain, language } = await params;
     const scope = { domain, language };
     const data = await fetchPageTreeNode(params);
