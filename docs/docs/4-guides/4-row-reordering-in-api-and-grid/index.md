@@ -31,13 +31,13 @@ npm --prefix api run mikro-orm migration:up
 ```
 
 :::warning
-If entries already exist in the database, you may need to modify the generated migration to set the `position` field to a default value initially.
-The default value can then be dropped immediately.
+If entries already exist in the database, you may need to modify the generated migration to set the `position` field to an initial value.
 
 ```ts
 override async up(): Promise<void> {
-    this.addSql(`alter table "MyEntity" add column "position" integer not null default 1;`);
-    this.addSql(`alter table "MyEntity" alter column "position" drop default;`);
+    this.addSql(`alter table "MyEntity" add column "position" integer;`);
+    this.addSql(`update "MyEntity" set "position" = (select count(*) from "MyEntity" previousMyEntity where previousMyEntity.id <= "MyEntity".id);`);
+    this.addSql(`alter table "MyEntity" alter column "position" set not null;`);
 }
 ```
 
