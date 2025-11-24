@@ -1,5 +1,5 @@
-@use "../../../styles/variables" as *;
-@use "../../../styles/theme.scss" as *;
+@use "@src/styles/variables" as *;
+@use "@src/styles/theme.scss" as *;
 
 .root {
     @include global-theme-inverted;

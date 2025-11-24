@@ -17,6 +17,7 @@ export {
     AdminMessageType,
     type BlockLoader,
     type BlockLoaderDependencies,
+    type BlockLoaderOptions,
     BlockPreviewProvider,
     BlocksBlock,
     calculateInheritAspectRatio,
