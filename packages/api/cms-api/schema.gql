@@ -507,6 +507,7 @@ input RedirectFilter {
   source: StringFilter
   target: StringFilter
   active: BooleanFilter
+  activatedAt: DateTimeFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   and: [RedirectFilter!]

@@ -44,11 +44,11 @@ export async function setSitePreviewParams(payload: SitePreviewParams) {
 
 /**
  * Helper for SitePreview
- * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
+ * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from proxy.ts (see https://github.com/vercel/next.js/issues/52080)
  * @return If SitePreview is active the current preview settings
  */
 export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<PreviewParams | null> {
-    // Do not call headers() (and hence force dynamic rendering) when called from different places than middleware or API routes
+    // Do not call headers() (and hence force dynamic rendering) when called from different places than proxy or API routes
     if (options.skipDraftModeCheck) {
         const headers = await getHeaders();
         if (headers.has("x-block-preview")) {
