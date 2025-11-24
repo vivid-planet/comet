@@ -26,6 +26,11 @@ export const MediaGalleryBlock = withPreview(
 
         return (
             <>
+                <button
+                    onClick={() => swiper?.slidePrev()}
+                    className={clsx(styles.navigationButton)}
+                    aria-label={intl.formatMessage({ id: "mediaGalleryBlock.prevSlide", defaultMessage: "Previous slide" })}
+                />
                 <BasicSwiper
                     className={styles.swiperWrapper}
                     slidesPerView={1}
@@ -49,11 +54,7 @@ export const MediaGalleryBlock = withPreview(
                         </SwiperSlide>
                     ))}
                 </BasicSwiper>
-                <button
-                    onClick={() => swiper?.slidePrev()}
-                    className={clsx(styles.navigationButton)}
-                    aria-label={intl.formatMessage({ id: "mediaGalleryBlock.prevSlide", defaultMessage: "Previous slide" })}
-                />
+
                 <button
                     onClick={() => swiper?.slideNext()}
                     className={clsx(styles.navigationButton, styles["navigationButton--next"])}
