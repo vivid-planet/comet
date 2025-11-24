@@ -15,6 +15,7 @@ import {
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Collapse, Divider } from "@mui/material";
+import { type GQLManufacturerInput, type GQLManufacturerUpdateInput } from "@src/graphql.generated";
 import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -120,8 +121,10 @@ export function ManufacturerForm({ id }: FormProps) {
 
     const handleSubmit = async ({ useAlternativeAddress, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
+        const output: GQLManufacturerUpdateInput = {
+            coordinates: undefined,
             ...formValues,
+
             address: formValues.address
                 ? {
                       ...formValues.address,
@@ -155,9 +158,23 @@ export function ManufacturerForm({ id }: FormProps) {
                 variables: { id, input: output },
             });
         } else {
+            const createOutput: GQLManufacturerInput = {
+                ...output,
+                addressAsEmbeddable: {
+                    ...formValues.addressAsEmbeddable,
+                    streetNumber: formValues.addressAsEmbeddable?.streetNumber ? parseInt(formValues.addressAsEmbeddable.streetNumber) : null,
+                    alternativeAddress: {
+                        ...formValues.addressAsEmbeddable.alternativeAddress,
+                        streetNumber: formValues.addressAsEmbeddable?.alternativeAddress.streetNumber
+                            ? parseInt(formValues.addressAsEmbeddable.alternativeAddress.streetNumber)
+                            : null,
+                    },
+                },
+                name: output.name ?? "",
+            };
             const { data: mutationResponse } = await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
                 mutation: createManufacturerMutation,
-                variables: { input: output },
+                variables: { input: createOutput },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createManufacturer.id;

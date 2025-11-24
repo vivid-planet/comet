@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { filterByFragment, FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { type GQLProductCategoryInput, type GQLProductCategoryUpdateInput } from "@src/graphql.generated";
 import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -56,7 +57,10 @@ export function ProductCategoryForm({ id }: FormProps) {
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
+        const output: GQLProductCategoryUpdateInput = {
+            type: undefined,
+            products: undefined,
+            position: undefined,
             ...formValues,
         };
         if (mode === "edit") {
@@ -67,9 +71,17 @@ export function ProductCategoryForm({ id }: FormProps) {
                 variables: { id, input: updateInput },
             });
         } else {
+            const createOutput: GQLProductCategoryInput = {
+                type: undefined,
+                position: undefined,
+                products: [],
+                ...formValues,
+            };
             const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
-                variables: { input: output },
+                variables: {
+                    input: createOutput,
+                },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProductCategory.id;

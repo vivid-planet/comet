@@ -166,7 +166,38 @@ export function ProductHighlightForm({ id }: FormProps) {
                                             }
                                         }
                                     `,
-                                    variables: { filter: { category: { equal: values.productCategory?.id } } },
+                                    variables: {
+                                        filter: {
+                                            slug: undefined,
+                                            type: undefined,
+                                            id: undefined,
+                                            additionalTypes: undefined,
+                                            and: undefined,
+                                            colors: undefined,
+                                            availableSince: undefined,
+                                            createdAt: undefined,
+                                            datasheets: undefined,
+                                            description: undefined,
+                                            inStock: undefined,
+                                            lastCheckedAt: undefined,
+                                            manufacturer: undefined,
+                                            or: undefined,
+                                            price: undefined,
+                                            priceList: undefined,
+                                            soldCount: undefined,
+                                            status: undefined,
+                                            tags: undefined,
+                                            tagsWithStatus: undefined,
+                                            title: undefined,
+                                            updatedAt: undefined,
+                                            variants: undefined,
+                                            category: {
+                                                isAnyOf: undefined,
+                                                notEqual: undefined,
+                                                equal: values.productCategory?.id,
+                                            },
+                                        },
+                                    },
                                 });
                                 return data.products.nodes;
                             }}
