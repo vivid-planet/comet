@@ -77,7 +77,6 @@
 
 .navigationButton {
     z-index: 10;
-    transform: rotate(225deg);
     width: 30px;
     height: 30px;
     display: flex;
@@ -85,7 +84,6 @@
     align-items: center;
     position: absolute;
     bottom: var(--spacing-s500);
-    right: var(--spacing-s600);
 
     &::after {
         content: "";
@@ -95,6 +93,11 @@
         border-right: 2px solid var(--media-gallery-button-default-contrast);
     }
 
+    &--previous {
+        transform: rotate(225deg);
+        right: var(--spacing-s600);
+    }
+
     &--next {
         transform: rotate(45deg);
         right: 0;
@@ -102,11 +105,13 @@
 
     @media (min-width: $breakpoint-sm) {
         top: calc(50% - var(--spacing-s300) - 24px);
-        left: -40px;
+
+        &--previous {
+            left: -40px;
+        }
 
         &--next {
             right: -40px;
-            left: auto;
         }
     }
 }
