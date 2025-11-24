@@ -85,7 +85,6 @@
         "@mui/x-data-grid": "^7.29.8",
         "@mui/x-data-grid-pro": "^7.29.8",
         "@testing-library/dom": "^10.4.0",
-        "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.0",
         "@testing-library/user-event": "^14.6.1",
         "@types/draft-js": "^0.11.18",
