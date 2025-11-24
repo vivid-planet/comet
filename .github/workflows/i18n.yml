@@ -107,11 +107,6 @@ jobs:
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo-saas/admin/lang/comet-lang"
 
-            - name: "Demo SaaS Admin: Extract library i18n strings"
-              run: |
-                  pnpm run intl:extract
-                  cp -r lang/* demo-saas/admin/lang/comet-lang/
-
             - name: "Demo SaaS Admin: Clone translations"
               uses: actions/checkout@v5
               with:
