@@ -1,4 +1,4 @@
-import { AsyncLocalStorageService } from "@comet/cms-api";
+import { UserPermissionsStorageService } from "@comet/cms-api";
 import { AppModule } from "@src/app.module";
 import { SYSTEM_USER_NAME } from "@src/auth/auth.module";
 import { useContainer } from "class-validator";
@@ -26,7 +26,7 @@ async function bootstrap() {
         //     https://github.com/typestack/class-validator#using-service-container.
         useContainer(app.select(appModule), { fallbackOnErrors: true });
 
-        await app.get(AsyncLocalStorageService).runWith({ userId: SYSTEM_USER_NAME }, async () => {
+        await app.get(UserPermissionsStorageService).runWith({ user: SYSTEM_USER_NAME }, async () => {
             await CommandFactory.runApplication(app);
 
             await app.close();

@@ -1,7 +1,7 @@
 import { AnyEntity, ChangeSet, ChangeSetType, EntityManager, EventSubscriber, FlushEventArgs, PostgreSqlDriver, raw } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
-import { AsyncLocalStorageService } from "../async-local-storage/async-local-storage.service";
+import { UserPermissionsStorageService } from "../user-permissions/user-permissions-storage.service";
 import { ACTION_LOGS_METADATA_KEY, ActionLogMetadata } from "./action-logs.decorator";
 import { ActionLogsService } from "./action-logs.service";
 import { ActionLog } from "./entities/action-log.entity";
@@ -11,7 +11,7 @@ export class ActionLogsSubscriber implements EventSubscriber {
     constructor(
         private readonly entityManager: EntityManager<PostgreSqlDriver>,
         private readonly service: ActionLogsService,
-        private readonly asyncLocalStorageService: AsyncLocalStorageService,
+        private readonly userPermissionsStorageService: UserPermissionsStorageService,
     ) {
         entityManager.getEventManager().registerSubscriber(this);
     }
@@ -43,7 +43,7 @@ export class ActionLogsSubscriber implements EventSubscriber {
             console.error(`entity '${entityMetadata}' doesn't have a single primary key`);
             return null;
         }
-        const userId = this.asyncLocalStorageService.get("userId");
+        const user = this.userPermissionsStorageService.get("user");
         const entityId = changeSet.entity[entityMetadata.primaryKeys[0]];
         const scope = await this.service.getScopeFromEntity(changeSet.entity);
 
@@ -56,7 +56,7 @@ export class ActionLogsSubscriber implements EventSubscriber {
         return this.entityManager.create(
             ActionLog,
             {
-                userId,
+                userId: typeof user === "string" ? user : user.id,
                 entityName,
                 entityId,
                 snapshot,

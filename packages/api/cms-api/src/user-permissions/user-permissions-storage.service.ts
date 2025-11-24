@@ -1,21 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import { AsyncLocalStorage } from "async_hooks";
 
-import { AsyncLocalStore } from "./async-local-storage.interface";
+import { UserPermissionsStorage } from "./user-permissions-storage.interface";
 
 @Injectable()
-export class AsyncLocalStorageService<T extends AsyncLocalStore = AsyncLocalStore> {
-    private readonly storage = new AsyncLocalStorage<T>();
+export class UserPermissionsStorageService {
+    private readonly storage = new AsyncLocalStorage<UserPermissionsStorage>();
 
     run(callback: () => void): void {
-        return this.storage.run({} as T, callback);
+        return this.storage.run({} as UserPermissionsStorage, callback);
     }
 
-    async runWith(store: T, callback: () => void): Promise<void> {
+    async runWith(store: UserPermissionsStorage, callback: () => void): Promise<void> {
         return this.storage.run(store, callback);
     }
 
-    set<K extends keyof T>(key: keyof T, value: T[K]): void {
+    set<K extends keyof UserPermissionsStorage>(key: K, value: UserPermissionsStorage[K]): void {
         const store = this.storage.getStore();
         if (!store) {
             throw new Error("AsyncLocalStorage store is not initialized. Make sure to call set() within the context of run().");
@@ -23,7 +23,7 @@ export class AsyncLocalStorageService<T extends AsyncLocalStore = AsyncLocalStor
         store[key] = value;
     }
 
-    get<K extends keyof T>(key: K): T[K] {
+    get<K extends keyof UserPermissionsStorage>(key: K): UserPermissionsStorage[K] {
         const store = this.storage.getStore();
         if (!store) {
             throw new Error("AsyncLocalStorage store is not initialized. Make sure to call set() within the context of run().");
@@ -31,7 +31,7 @@ export class AsyncLocalStorageService<T extends AsyncLocalStore = AsyncLocalStor
         return store[key];
     }
 
-    has(key: keyof T): boolean {
+    has(key: keyof UserPermissionsStorage): boolean {
         const store = this.storage.getStore();
         return !!store && key in store;
     }
