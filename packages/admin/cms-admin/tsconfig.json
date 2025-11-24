@@ -2,8 +2,7 @@
     "compilerOptions": {
         "outDir": "lib",
         "rootDir": "src",
-        "strict": true,
-        "typeRoots": ["node_modules/@types", "node_modules/@testing-library"]
+        "strict": true
     },
     "exclude": [],
     "extends": "../tsconfig.base.json",
