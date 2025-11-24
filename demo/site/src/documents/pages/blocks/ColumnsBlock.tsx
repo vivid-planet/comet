@@ -33,19 +33,19 @@ const ColumnsContentBlock = withPreview(
     { label: "Columns" },
 );
 
-const layoutToStyleMap: { [key: string]: unknown } = {
-    "6-12-6": "layout-6-12-6",
-    "4-16-4": "layout-4-16-4",
-    "9-9": "layout-9-9",
-    "12-6": "layout-12-6",
-    "6-12": "layout-6-12",
+const layoutToStyleMap: { [key: string]: string } = {
+    "6-12-6": styles["layout-6-12-6"],
+    "4-16-4": styles["layout-4-16-4"],
+    "9-9": styles["layout-9-9"],
+    "12-6": styles["layout-12-6"],
+    "6-12": styles["layout-6-12"],
 };
 
 export const ColumnsBlock = withPreview(
     ({ data: { columns, layout } }: PropsWithData<ColumnsBlockData>) => (
         <PageLayout grid>
             {columns.map((column) => (
-                <div className={clsx(styles.column, layout && styles[`column--${layoutToStyleMap[layout]}` as keyof typeof styles])} key={column.key}>
+                <div className={clsx(styles.column, layoutToStyleMap[layout])} key={column.key}>
                     <ColumnsContentBlock data={column.props} />
                 </div>
             ))}
