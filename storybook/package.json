@@ -16,7 +16,7 @@
         "storybook": "storybook dev -p 26638 --no-version-updates"
     },
     "dependencies": {
-        "@apollo/client": "^3.13.8",
+        "@apollo/client": "^4.0.9",
         "@comet/admin": "workspace:*",
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",

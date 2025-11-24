@@ -26,7 +26,7 @@
         "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
-        "@apollo/client": "^3.13.8",
+        "@apollo/client": "^4.0.9",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",

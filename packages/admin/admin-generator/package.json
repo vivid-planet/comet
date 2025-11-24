@@ -42,7 +42,7 @@
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@apollo/client": "^3.7.0",
+        "@apollo/client": "^4.0.9",
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
