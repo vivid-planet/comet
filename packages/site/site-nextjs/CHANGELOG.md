@@ -1,5 +1,64 @@
 # @comet/site-nextjs
 
+## 8.7.1
+
+### Patch Changes
+
+- @comet/site-react@8.7.1
+
+## 8.7.0
+
+### Minor Changes
+
+- 27f15e3: Block Loader: infer `LoadedData` from loader return type
+
+    Use the new `BlockLoaderOptions` type to allow inferring the type from the loader function.
+
+    **Before**
+
+    ```ts
+    export const loader: BlockLoader<NewsLinkBlockData> = async ({ blockData, graphQLFetch }): Promise<LoadedData | null> => {
+        // ...
+    };
+
+    export interface LoadedData {
+        title: string;
+    }
+    ```
+
+    **After**
+
+    ```ts
+    export const loader = async ({ blockData, graphQLFetch }: BlockLoaderOptions<NewsLinkBlockData>) => {
+        // ...
+    };
+
+    export type LoadedData = Awaited<ReturnType<typeof loader>>;
+    ```
+
+- 10fc9e7: Move `YoutubeVideoBlock`, `VimeoVideoBlock` and `DamVideoBlock` to `@comet/site-react`
+
+    The blocks in `@comet/site-react` provide no default implementation for `renderPreviewImage`.
+    Instead, use the new `VideoPreviewImage` component with the `renderImage` prop to create the preview image.
+
+- 559c536: Move `DamFileDownloadLinkBlock`, `EmailLinkBlock`, `ExternalLinkBlock` and `PhoneLinkBlock` to `@comet/site-react`
+
+    The blocks have no dependency on Next.js and can therefore be in the generic React package.
+
+- db4b750: Add functionality for persisted queries on client side
+    - `createPersistedQueryGraphQLFetch`: GraphQLFetch implementation that calls the BFF Route Handler with an operation ID (hash)
+    - `persistedQueryRoute`: BFF Route Handler that gets called by the above fetch and forwards the query to the API
+    - `webpackPersistedQueriesLoader`: webpack loader that turns client-side queries into an operation ID (hash)
+
+### Patch Changes
+
+- Updated dependencies [27f15e3]
+- Updated dependencies [10fc9e7]
+- Updated dependencies [559c536]
+- Updated dependencies [a68d4c0]
+- Updated dependencies [db4b750]
+    - @comet/site-react@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes

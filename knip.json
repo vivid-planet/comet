@@ -119,18 +119,6 @@
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
         },
-        "demo/site-pages": {
-            "entry": [
-                "./src/pages/**",
-                "./preBuild/src/createRedirects.ts",
-                "./preBuild/src/createRewrites.ts",
-                "./preBuild/src/publicGenerator/extract.ts",
-                "./preBuild/src/publicGenerator/generate.ts"
-            ],
-            "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
-            "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts"]
-        },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
             "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"],

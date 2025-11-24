@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Button, CancelButton, FillSpace, MainContent, StackLink, Toolbar, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
+import { Button, CancelButton, StackLink, Tooltip, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
@@ -14,7 +14,6 @@ import { parseISO } from "date-fns";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import {
     type GQLKubernetesCronJobsQuery,
     type GQLKubernetesCronJobsQueryVariables,
@@ -58,17 +57,6 @@ const triggerCronJobMutation = gql`
     }
 `;
 
-function CronJobsToolbar() {
-    return (
-        <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
-            <ToolbarTitleItem>
-                <FormattedMessage id="comet.cronJobs.title" defaultMessage="Cron Jobs" />
-            </ToolbarTitleItem>
-            <FillSpace />
-        </Toolbar>
-    );
-}
-
 export function CronJobsGrid() {
     const intl = useIntl();
     const client = useApolloClient();
@@ -87,7 +75,7 @@ export function CronJobsGrid() {
         setCronJobToStart(undefined);
     };
     return (
-        <MainContent disablePadding fullHeight>
+        <>
             <DataGrid
                 rows={rows}
                 loading={loading}
@@ -140,24 +128,27 @@ export function CronJobsGrid() {
                         headerName: "",
                         renderCell: ({ row }) => (
                             <>
-                                <IconButton component={StackLink} pageName="jobs" payload={row.name}>
-                                    <Time color="primary" />
-                                </IconButton>
-                                <IconButton>
-                                    <Play
-                                        color="primary"
-                                        onClick={() => {
-                                            setCronJobToStart(row.name);
-                                        }}
-                                    />
-                                </IconButton>
+                                <Tooltip title={<FormattedMessage id="comet.pages.cronJobs.showRuns" defaultMessage="Show runs" />}>
+                                    <IconButton component={StackLink} pageName="jobs" payload={row.name}>
+                                        <Time color="primary" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={<FormattedMessage id="comet.pages.cronJobs.runJobNow" defaultMessage="Run job now" />}>
+                                    <IconButton>
+                                        <Play
+                                            color="primary"
+                                            onClick={() => {
+                                                setCronJobToStart(row.name);
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
                             </>
                         ),
                         ...disableFieldOptions,
                     },
                 ]}
                 disableColumnSelector
-                slots={{ toolbar: CronJobsToolbar }}
             />
             <Dialog open={dialogOpen} onClose={closeDialog}>
                 <DialogTitle>
@@ -191,6 +182,6 @@ export function CronJobsGrid() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </MainContent>
+        </>
     );
 }

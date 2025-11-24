@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "Comet Admin package",
     "repository": {
         "directory": "packages/admin/admin",
@@ -102,7 +102,7 @@
         "storybook": "^9.1.10",
         "storybook-addon-tag-badges": "^2.0.1",
         "ts-jest": "^29.4.0",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",

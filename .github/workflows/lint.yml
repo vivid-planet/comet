@@ -47,13 +47,6 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/site/lang/comet-demo-lang"
 
-            - name: "Demo Site Pages: Clone translations"
-              uses: actions/checkout@v5
-              with:
-                  repository: vivid-planet/comet-demo-lang
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  path: "demo/site-pages/lang/comet-demo-lang"
-
             - name: "Demo Api: Clone translations"
               uses: actions/checkout@v4
               with:

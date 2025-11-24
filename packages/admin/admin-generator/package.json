@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -65,7 +65,7 @@
         "react-intl": "^7.1.11",
         "rimraf": "^6.0.1",
         "ts-jest": "^29.4.0",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "engines": {
         "node": ">=22.0.0"
