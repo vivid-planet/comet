@@ -45,7 +45,7 @@ override async up(): Promise<void> {
 
 ### Update the module
 
-Once the API of the entity has been regenerated, a new `myEntity.service.ts` file should be present in the CrudGenerator's `targetDirectory`.
+Once the API of the entity has been regenerated, a new `MyEntity.service.ts` file should be present in the CrudGenerator's `targetDirectory`.
 This service needs to be included in your module's `providers`.
 
 ```ts
