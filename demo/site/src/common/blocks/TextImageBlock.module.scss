@@ -8,11 +8,11 @@
     @media (min-width: $breakpoint-md) {
         flex-direction: row;
     }
-}
 
-.imageLeft {
-    @media (min-width: $breakpoint-md) {
-        flex-direction: row-reverse;
+    &--imageLeft {
+        @media (min-width: $breakpoint-md) {
+            flex-direction: row-reverse;
+        }
     }
 }
 

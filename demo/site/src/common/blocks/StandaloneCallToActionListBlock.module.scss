@@ -1,17 +1,17 @@
 .root {
     display: flex;
-}
 
-.left {
-    justify-content: flex-start;
-}
+    &--left {
+        justify-content: flex-start;
+    }
 
-.center {
-    justify-content: center;
-}
+    &--center {
+        justify-content: center;
+    }
 
-.right {
-    justify-content: flex-end;
+    &--right {
+        justify-content: flex-end;
+    }
 }
 
 .pageLayoutContent {

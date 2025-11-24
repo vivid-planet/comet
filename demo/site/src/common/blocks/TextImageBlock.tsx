@@ -12,7 +12,7 @@ import styles from "./TextImageBlock.module.scss";
 export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
-            <div className={clsx(styles.root, imagePosition === "left" && styles.imageLeft)}>
+            <div className={clsx(styles.root, imagePosition === "left" && styles["root--imageLeft"])}>
                 <div className={styles.imageContainer}>
                     <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes={createImageSizes({ default: "100vw", md: "30vw" })} />
                 </div>

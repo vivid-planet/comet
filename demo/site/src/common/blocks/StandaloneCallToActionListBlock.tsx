@@ -12,7 +12,7 @@ type StandaloneCallToActionListBlockProps = PropsWithData<StandaloneCallToAction
 export const StandaloneCallToActionListBlock = withPreview(
     ({ data: { callToActionList, alignment } }: StandaloneCallToActionListBlockProps) => {
         return (
-            <div className={clsx(styles.root, styles[alignment])}>
+            <div className={clsx(styles.root, styles[`root--${alignment}`])}>
                 <CallToActionListBlock data={callToActionList} />
             </div>
         );
