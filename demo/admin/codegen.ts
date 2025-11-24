@@ -24,17 +24,12 @@ const config: CodegenConfig = {
             config: {
                 avoidOptionals: {
                     field: true,
-                    inputValue: true,
+                    inputValue:true
                 },
                 maybeValue: "T | null | undefined",
-
                 enumsAsTypes: true,
                 namingConvention: "keep",
-                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), {
-                    DateTime: "string",
-                    Date: "string",
-                    LocalDate: "string",
-                }),
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string", LocalDate: "string" }),
                 typesPrefix: "GQL",
             },
         },
@@ -52,15 +47,11 @@ const config: CodegenConfig = {
                 },
                 enumsAsTypes: true,
                 namingConvention: "keep",
-                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), {
-                    DateTime: "string",
-                    Date: "string",
-                    LocalDate: "string",
-                }),
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string", LocalDate: "string" }),
                 typesPrefix: "GQL",
                 skipDocumentsValidation: {
                     ignoreRules: ["KnownFragmentNamesRule"],
-                },
+                }
             },
             plugins: [
                 { add: { content: `import { ${rootBlocks.sort().join(", ")} } from "@src/blocks.generated";` } },
