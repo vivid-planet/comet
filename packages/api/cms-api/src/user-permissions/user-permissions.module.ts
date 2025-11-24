@@ -1,6 +1,6 @@
 import { DiscoveryModule } from "@golevelup/nestjs-discovery";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
+import { DynamicModule, Global, MiddlewareConsumer, Module, NestModule, Provider } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { registerEnumType } from "@nestjs/graphql";
 
@@ -21,6 +21,8 @@ import {
     UserPermissionsModuleSyncOptions,
     UserPermissionsOptionsFactory,
 } from "./user-permissions.types";
+import { UserPermissionsStorageMiddleware } from "./user-permissions-storage.middleware";
+import { UserPermissionsStorageService } from "./user-permissions-storage.service";
 
 @Global()
 @Module({
@@ -32,14 +34,19 @@ import {
         UserPermissionResolver,
         UserContentScopesResolver,
         ContentScopeService,
+        UserPermissionsStorageService,
         {
             provide: APP_GUARD,
             useClass: UserPermissionsGuard,
         },
     ],
-    exports: [ContentScopeService, ACCESS_CONTROL_SERVICE, UserPermissionsService, UserPermissionsPublicService],
+    exports: [ContentScopeService, ACCESS_CONTROL_SERVICE, UserPermissionsService, UserPermissionsPublicService, UserPermissionsStorageService],
 })
-export class UserPermissionsModule {
+export class UserPermissionsModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(UserPermissionsStorageMiddleware).forRoutes("*path");
+    }
+
     static forRoot({ AppPermission, ...options }: UserPermissionsModuleSyncOptions): DynamicModule {
         this.registerCombinedPermission(AppPermission);
 
