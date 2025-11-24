@@ -1,4 +1,5 @@
 ---
+"@comet/site-react": minor
 "@comet/site-nextjs": minor
 ---
 
