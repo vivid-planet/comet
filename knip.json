@@ -2,7 +2,7 @@
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
         ".": {
-            "entry": ["dev-pm.config.ts", "site-configs.ts"],
+            "entry": ["dev-pm.config.ts", "demo/site-configs/site-configs.ts", "demo-saas/site-configs/site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
             "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"],
             "ignoreBinaries": ["oauth2-proxy"]
@@ -123,6 +123,27 @@
             "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
+        },
+        "demo-saas/admin": {
+            "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/generated/**", "**/graphql.generated.ts", "**/*.generated.ts"],
+            "ignoreDependencies": ["@swc/plugin-emotion", "cosmiconfig-toml-loader", "@babel/core", "@types/lodash.isequal", "@types/react-dom", "@types/react-router", "@types/react-router-dom"]
+        },
+        "demo-saas/api": {
+            "entry": [
+                "./src/main.ts",
+                "./src/console.ts",
+                "./src/content-scope/content-scope.interface.ts",
+                "./src/repl.ts",
+                "./src/db/ormconfig.cli.ts",
+                "./src/db/migrations/**/*.ts",
+                "./src/auth/user.interface.ts",
+                "./src/auth/permission.interface.ts"
+            ],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["@mikro-orm/cli", "@as-integrations/express5"],
+            "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],

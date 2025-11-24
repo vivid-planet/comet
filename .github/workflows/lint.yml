@@ -26,7 +26,7 @@ jobs:
                   git config user.name github-actions
                   git config user.email github-actions@github.com
 
-            - name: "Library: Clone translations"
+            - name: "Demo Admin: Clone library translations"
               uses: actions/checkout@v5
               with:
                   repository: vivid-planet/comet-lang
@@ -60,6 +60,27 @@ jobs:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/api/lang/comet-demo-lang"
+
+            - name: "Demo SaaS Admin: Clone library translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo-saas/admin/lang/comet-lang"
+
+            - name: "Demo SaaS Admin: Clone demo translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-demo-saas-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo-saas/admin/lang/comet-demo-saas-lang"
+
+            - name: "Demo SaaS Api: Clone translations"
+              uses: actions/checkout@v4
+              with:
+                  repository: vivid-planet/comet-demo-saas-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo-saas/api/lang/comet-demo-saas-lang"
 
             - uses: pnpm/action-setup@v4
 

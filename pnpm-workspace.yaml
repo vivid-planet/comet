@@ -1,6 +1,7 @@
 packages:
     - "packages/**"
     - "demo/**"
+    - "demo-saas/**"
     - "docs"
     - "storybook"
 

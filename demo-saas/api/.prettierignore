@@ -1,0 +1,7 @@
+dist/
+block-meta.json
+
+# translation
+/lang/
+/lang-compiled/
+/lang-extracted/
