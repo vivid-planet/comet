@@ -55,6 +55,11 @@ const config = [
         plugins: {
             react: react,
         },
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
         rules: {
             "react/self-closing-comp": "error",
             "react/display-name": "off",

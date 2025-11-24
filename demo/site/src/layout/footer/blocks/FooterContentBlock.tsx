@@ -10,21 +10,29 @@ import { createImageSizes } from "@src/util/createImageSizes";
 import styles from "./FooterContentBlock.module.scss";
 
 export const FooterContentBlock = withPreview(
-    ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
+    ({ data: { text, image, caption, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
         return (
             // ID is used for skip link
             <footer className={styles.root} id="footer">
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <div className={styles.topContainer}>
-                            <div className={styles.imageWrapper}>
-                                <DamImageBlock
-                                    data={image}
-                                    aspectRatio="inherit"
-                                    style={{ objectFit: "contain" }}
-                                    sizes={createImageSizes({ default: "20vw" })}
-                                />
+                            <div className={styles.imageCaptionWrapper}>
+                                <div className={styles.imageWrapper}>
+                                    <DamImageBlock
+                                        data={image}
+                                        aspectRatio="inherit"
+                                        style={{ objectFit: "contain" }}
+                                        sizes={createImageSizes({ default: "20vw" })}
+                                    />
+                                </div>
+                                {caption && (
+                                    <Typography variant="p200" className={styles.caption}>
+                                        {caption}
+                                    </Typography>
+                                )}
                             </div>
+
                             <div className={styles.richTextWrapper}>
                                 <RichTextBlock data={text} disableLastBottomSpacing />
                             </div>

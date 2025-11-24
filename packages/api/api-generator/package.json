@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
@@ -37,7 +37,7 @@
         "pluralize": "^8.0.0",
         "ts-morph": "^25.0.1",
         "ts-node": "^10.9.2",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
