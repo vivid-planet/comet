@@ -53,11 +53,7 @@ const files = [
     {
         file: "demo-saas/api/src/comet-config.json",
         targetDir: ["demo-saas/admin/src"],
-    },
-    {
-        file: "demo-saas/site-configs/site-configs.d.ts",
-        targetDir: ["demo-saas/admin/src", "demo-saas/api/src"],
-    },
+    }
 ];
 
 for (const { file, targetDir } of files) {
