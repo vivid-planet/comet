@@ -1162,8 +1162,8 @@ importers:
         specifier: ^9.5.0
         version: 9.5.0
       glob:
-        specifier: ^10.4.5
-        version: 10.4.5
+        specifier: ^11.0.0
+        version: 11.0.3
       graphql:
         specifier: ^16.11.0
         version: 16.11.0
