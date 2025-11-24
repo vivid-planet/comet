@@ -32,7 +32,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
         adminUrl: envVars.ADMIN_URL,
-        corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
+        corsAllowedOrigin: new RegExp(envVars.CORS_ALLOWED_ORIGIN),
         defaultLocale: "en", // fallback locale
         auth: {
             systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
