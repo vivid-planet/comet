@@ -1,15 +1,40 @@
 import { DataGrid as MuiDataGrid, type DataGridProps } from "@mui/x-data-grid";
-import { DataGridPro, type DataGridProProps } from "@mui/x-data-grid-pro";
-import { LicenseInfo } from "@mui/x-license";
+import { type FC, useEffect, useState } from "react";
 
-type Props<T extends boolean> = T extends true ? DataGridProProps : DataGridProps;
+export const DataGrid: FC<DataGridProps> = (props) => {
+    const [ProComponent, setProComponent] = useState<null | FC<DataGridProps>>(null);
+    const [PremiumComponent, setPremiumComponent] = useState<null | FC<DataGridProps>>(null);
 
-export function DataGrid<T extends boolean = boolean>(props: Props<T>) {
-    const muiLicenseKey = LicenseInfo.getLicenseKey();
+    useEffect(() => {
+        let isMounted = true;
+        import("@mui/x-data-grid-premium")
+            .then((module) => {
+                if (isMounted && module.DataGridPremium) {
+                    setPremiumComponent(() => module.DataGridPremium as unknown as FC<DataGridProps>);
+                }
+            })
+            .catch(() => {
+                setPremiumComponent(null);
+                import("@mui/x-data-grid-pro")
+                    .then((module) => {
+                        if (isMounted && module.DataGridPro) {
+                            setProComponent(() => module.DataGridPro as unknown as FC<DataGridProps>);
+                        }
+                    })
+                    .catch(() => {
+                        setProComponent(null);
+                    });
+            });
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
-    if (muiLicenseKey) {
-        return <DataGridPro {...(props as DataGridProProps)} />;
+    if (PremiumComponent) {
+        return <PremiumComponent {...props} />;
     }
-
-    return <MuiDataGrid {...(props as DataGridProps)} />;
-}
+    if (ProComponent) {
+        return <ProComponent {...props} />;
+    }
+    return <MuiDataGrid {...props} />;
+};
