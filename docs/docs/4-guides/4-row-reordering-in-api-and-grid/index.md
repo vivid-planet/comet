@@ -31,12 +31,14 @@ npm --prefix api run mikro-orm migration:up
 ```
 
 :::warning
-If entries already exist in the database, you may need to modify the generated migration to set the `position` field to an initial value.
+If entries already exist in the database, you may need to modify the generated migration to set the `position` field to an initial value. The following example sets the position based on the creation date.
 
 ```ts
 override async up(): Promise<void> {
     this.addSql(`alter table "MyEntity" add column "position" integer;`);
-    this.addSql(`update "MyEntity" set "position" = (select count(*) from "MyEntity" previousMyEntity where previousMyEntity.id <= "MyEntity".id);`);
+    this.addSql(
+        `update "MyEntity" set "position" = numbered_myEntities.row_num from (select id, row_number() over (order by "createdAt") as row_num from "MyEntity") numbered_myEntities where "MyEntity".id = numbered_myEntities.id;`,
+    );
     this.addSql(`alter table "MyEntity" alter column "position" set not null;`);
 }
 ```
