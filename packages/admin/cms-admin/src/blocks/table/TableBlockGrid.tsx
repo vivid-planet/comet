@@ -132,9 +132,18 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                     addToRecentlyPastedIds={addToRecentlyPastedColumnIds}
                 />
             ),
-            renderCell: ({ value, row }: GridRenderCellParams) => {
+            renderCell: ({ value, row, field: columnId }: GridRenderCellParams) => {
                 const rowFromState = state.rows.find((rowInState) => rowInState.id === row.id);
-                return <CellValue value={value} highlighted={rowFromState?.highlighted || highlighted} />;
+                const rowWasRecentlyPasted = recentlyPastedRowIds.includes(row.id);
+                const columnWasRecentlyPasted = recentlyPastedColumnIds.includes(columnId);
+
+                return (
+                    <CellValue
+                        value={value}
+                        highlighted={rowFromState?.highlighted || highlighted}
+                        recentlyPasted={rowWasRecentlyPasted || columnWasRecentlyPasted}
+                    />
+                );
             },
             renderEditCell: (params: GridRenderEditCellParams) => <EditCell {...params} />,
         })),
@@ -179,18 +188,6 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             }}
             slots={{
                 rowReorderIcon: DragIndicator,
-            }}
-            getRowClassName={({ row }) => {
-                if (recentlyPastedRowIds.includes(row.id)) {
-                    return "CometDataGridRow--recentlyPasted";
-                }
-                return "";
-            }}
-            getCellClassName={({ field }) => {
-                if (recentlyPastedColumnIds.includes(field)) {
-                    return "CometDataGridCell--recentlyPasted";
-                }
-                return "";
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {
