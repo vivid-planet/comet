@@ -39,7 +39,7 @@
     },
     "dependencies": {
         "@algolia/client-search": "^5.32.0",
-        "@apollo/client": "^3.13.8",
+        "@apollo/client": "^3.14.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",

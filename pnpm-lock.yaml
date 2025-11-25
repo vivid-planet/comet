@@ -63,7 +63,7 @@ importers:
   demo/admin:
     dependencies:
       '@apollo/client':
-        specifier: ^3.13.8
+        specifier: ^3.14.0
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@comet/admin':
         specifier: workspace:*
@@ -612,7 +612,7 @@ importers:
         specifier: ^5.32.0
         version: 5.37.0
       '@apollo/client':
-        specifier: ^3.13.8
+        specifier: ^3.14.0
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@comet/admin':
         specifier: workspace:*
@@ -815,7 +815,7 @@ importers:
         version: 11.1.0
     devDependencies:
       '@apollo/client':
-        specifier: ^3.13.8
+        specifier: ^3.14.0
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@babel/cli':
         specifier: ^7.28.0
@@ -1178,7 +1178,7 @@ importers:
         version: 10.9.2(@swc/core@1.13.3)(@types/node@24.10.1)(typescript@5.9.3)
     devDependencies:
       '@apollo/client':
-        specifier: ^3.7.0
+        specifier: ^3.14.0
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@comet/admin':
         specifier: workspace:*
@@ -1502,7 +1502,7 @@ importers:
         version: 11.1.0
     devDependencies:
       '@apollo/client':
-        specifier: ^3.13.8
+        specifier: ^3.14.0
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@babel/cli':
         specifier: ^7.28.0
@@ -2324,7 +2324,7 @@ importers:
   storybook:
     dependencies:
       '@apollo/client':
-        specifier: ^3.13.8
+        specifier: ^3.14.0
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@comet/admin':
         specifier: workspace:*
