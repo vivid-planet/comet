@@ -6,7 +6,7 @@ The Admin Generator is a powerful tool to generate a complete CRUD interface for
 
 ## Generate DataGrid
 
-To generate a DataGrid with the Admin Generator, you have to create a `.cometGen.ts` file. Those files are used by the Admin Generator to generate different kinds of interfaces (DataGrids or Forms). Create a new file `CustomerGrid.cometGen.ts` in the `api/src/customer` directory with the following content:
+To generate a DataGrid with the Admin Generator, you have to create a `.cometGen.ts` file. Those files are used by the Admin Generator to generate different kinds of interfaces (DataGrids or Forms). Create a new file `CustomerGrid.cometGen.ts` in the `admin/src/customer` directory with the following content:
 
 ```typescript
 import { future_GridConfig as GridConfig } from "@comet/cms-admin";
