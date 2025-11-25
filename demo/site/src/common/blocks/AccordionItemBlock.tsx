@@ -48,7 +48,7 @@ export const AccordionItemBlock = withPreview(
                         {title}
                     </Typography>
                 </button>
-                {(previewType !== "BlockPreview" || (previewType === "BlockPreview" && isExpanded)) && (
+                {(previewType !== "BlockPreview" || isExpanded) && (
                     <section
                         id={contentId}
                         aria-labelledby={headlineId}
