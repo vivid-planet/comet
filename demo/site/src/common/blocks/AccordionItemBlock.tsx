@@ -48,7 +48,7 @@ export const AccordionItemBlock = withPreview(
                         {title}
                     </Typography>
                 </button>
-                {/* In BlockPreview mode, only render content when expanded to prevent overlapping in preview preview */}
+                {/* In block preview, render content only when expanded to prevent overlapping overlays  */}
                 {(previewType !== "BlockPreview" || isExpanded) && (
                     <section
                         id={contentId}
