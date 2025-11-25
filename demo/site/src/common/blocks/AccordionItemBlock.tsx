@@ -50,7 +50,7 @@ export const AccordionItemBlock = withPreview(
                 <section
                     id={contentId}
                     aria-labelledby={headlineId}
-                    className={clsx(styles.contentWrapper, isExpanded && styles.contentWrapperExpanded)}
+                    className={clsx(styles.contentWrapper, isExpanded && styles["contentWrapper--expanded"])}
                 >
                     <div className={styles.contentWrapperInner}>
                         <PreviewSkeleton hasContent={isExpanded}>

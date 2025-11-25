@@ -42,7 +42,8 @@
         "packages/admin/admin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
+            "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
             "entry": ["./src/index.ts"],
@@ -109,18 +110,6 @@
         "demo/site": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts"]
-        },
-        "demo/site-pages": {
-            "entry": [
-                "./src/pages/**",
-                "./preBuild/src/createRedirects.ts",
-                "./preBuild/src/createRewrites.ts",
-                "./preBuild/src/publicGenerator/extract.ts",
-                "./preBuild/src/publicGenerator/generate.ts"
-            ],
-            "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
         },

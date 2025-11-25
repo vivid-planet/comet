@@ -34,6 +34,8 @@ function findReferenceTargetType(
     if (!referencedColumnProp) throw new Error("referencedColumnProp not found");
     if (referencedColumnProp.type == "uuid") {
         return "uuid";
+    } else if (referencedColumnProp.type == "text") {
+        return "string";
     } else if (referencedColumnProp.type == "string") {
         return "string";
     } else if (referencedColumnProp.type == "integer" || referencedColumnProp.type == "int") {

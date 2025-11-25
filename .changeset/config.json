@@ -7,15 +7,7 @@
     "access": "restricted",
     "baseBranch": "main",
     "updateInternalDependencies": "patch",
-    "ignore": [
-        "comet-storybook",
-        "comet-demo-api",
-        "comet-demo-admin",
-        "comet-demo-admin-server",
-        "comet-demo-site",
-        "comet-demo-site-pages",
-        "comet-docs"
-    ],
+    "ignore": ["comet-storybook", "comet-demo-api", "comet-demo-admin", "comet-demo-admin-server", "comet-demo-site", "comet-docs"],
     "snapshot": {
         "useCalculatedVersion": true
     }

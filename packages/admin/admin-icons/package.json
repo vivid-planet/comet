@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "A collection of icons for Comet Admin",
     "repository": {
         "directory": "packages/admin/admin-icons",
@@ -25,7 +25,7 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "use-constant": "^1.1.1",
+        "use-constant": "^2.0.0",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
@@ -48,7 +48,7 @@
         "react-dom": "^18.3.1",
         "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",

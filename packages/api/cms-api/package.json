@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -113,7 +113,7 @@
         "rxjs": "^7.8.2",
         "ts-jest": "^29.4.0",
         "ts-node": "^10.9.2",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@kubernetes/client-node": "^1.0.0",

@@ -1,5 +1,25 @@
 # @comet/api-generator
 
+## 8.7.1
+
+### Patch Changes
+
+- Updated dependencies [9ed0711]
+- Updated dependencies [182c930]
+- Updated dependencies [07c9b17]
+    - @comet/cms-api@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- 8d61ce6: Support type=integer, not just columnType=integer
+- ec40bb1: Support input for relations with text as primary key
+- Updated dependencies [b2da6c9]
+- Updated dependencies [13babd1]
+- Updated dependencies [b305d5b]
+    - @comet/cms-api@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes
