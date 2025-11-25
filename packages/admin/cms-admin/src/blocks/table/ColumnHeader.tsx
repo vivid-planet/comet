@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { type ClipboardColumn, clipboardColumnSchema, type ColumnSize, getNewColumn } from "./utils";
+import { type ClipboardColumn, clipboardColumnSchema, type ColumnSize, getNewColumn, getNewRow, insertRowAtIndex } from "./utils";
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
@@ -179,6 +179,13 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
         }
 
         updateState((state) => {
+            const numberOfRowsToBeAdded = clipboardData.cellValues.length - state.rows.length;
+
+            for (let i = 0; i < numberOfRowsToBeAdded; i++) {
+                const newRow = getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" })));
+                state = insertRowAtIndex(state, newRow, state.rows.length);
+            }
+
             const pastedColumn = { id: uuid(), size: clipboardData.size, highlighted: clipboardData.highlighted };
             addToRecentlyPastedIds(pastedColumn.id);
 
