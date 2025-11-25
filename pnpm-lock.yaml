@@ -126,8 +126,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       rdndmb-html5-to-touch:
-        specifier: ^8.1.2
-        version: 8.1.2(dnd-core@16.0.1)
+        specifier: ^9.0.0
+        version: 9.0.0(dnd-core@16.0.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -11349,6 +11349,11 @@ packages:
     peerDependencies:
       dnd-core: ^16.0.1
 
+  dnd-multi-backend@9.0.0:
+    resolution: {integrity: sha512-BCUFes4x0LA2bZyEZFHeQzZ1CBZo6PB40zMOG/gNgICxjAZfN2jHgISowqkR1isdx/msUNzscxEb17SP7yc4KQ==}
+    peerDependencies:
+      dnd-core: ^16.0.1
+
   dns-equal@1.0.0:
     resolution: {integrity: sha512-z+paD6YUQsk+AbGCEM4PrOXSss5gd66QfcVBFTKR/HpFL9jCqikS94HYwKww6fQyO7IxrIIyUu+g0Ka9tUS2Cg==}
 
@@ -15726,8 +15731,8 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  rdndmb-html5-to-touch@8.1.2:
-    resolution: {integrity: sha512-efi3MaXYxWaLMd5xzF1bVvmX8erTMhYHSlaMjQe+tynf4IdtgRYfKLwYg+4Z5eq4k7idrjKHQOIMDE6D8LjnOA==}
+  rdndmb-html5-to-touch@9.0.0:
+    resolution: {integrity: sha512-g8XfS6y+CEFGWdFF5pIqrGSF6bTVe2sB5AIVVoBRIl+FzNuDrc2jpfzUmpsiNvx28l3BRZ91UFP0Mm4zYVJfHA==}
 
   react-app-polyfill@1.0.6:
     resolution: {integrity: sha512-OfBnObtnGgLGfweORmdZbyEz+3dgVePQBb3zipiaDsMHV1NpWm0rDFYIVXFV/AK+x4VIIfWHhrdMIeoTLyRr2g==}
@@ -29924,6 +29929,10 @@ snapshots:
     dependencies:
       dnd-core: 16.0.1
 
+  dnd-multi-backend@9.0.0(dnd-core@16.0.1):
+    dependencies:
+      dnd-core: 16.0.1
+
   dns-equal@1.0.0: {}
 
   dns-packet@5.4.0:
@@ -35429,9 +35438,9 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  rdndmb-html5-to-touch@8.1.2(dnd-core@16.0.1):
+  rdndmb-html5-to-touch@9.0.0(dnd-core@16.0.1):
     dependencies:
-      dnd-multi-backend: 8.1.2(dnd-core@16.0.1)
+      dnd-multi-backend: 9.0.0(dnd-core@16.0.1)
       react-dnd-html5-backend: 16.0.1
       react-dnd-touch-backend: 16.0.1
     transitivePeerDependencies:

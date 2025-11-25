@@ -47,7 +47,7 @@
         "graphql": "^16.0.0",
         "lodash.isequal": "^4.5.0",
         "p-debounce": "^4.0.0",
-        "rdndmb-html5-to-touch": "^8.1.2",
+        "rdndmb-html5-to-touch": "^9.0.0",
         "react": "^18.3.1",
         "react-app-polyfill": "^1.0.6",
         "react-dnd": "^16.0.1",
