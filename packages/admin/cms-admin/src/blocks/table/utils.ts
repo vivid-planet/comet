@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
 
@@ -81,3 +82,14 @@ export const useRecentlyPastedIds = () => {
         addToRecentlyPastedIds,
     };
 };
+
+export const columnSizeSchema = z.enum(["extraSmall", "small", "standard", "large", "extraLarge"]);
+export type ColumnSize = z.infer<typeof columnSizeSchema>;
+
+export const clipboardColumnSchema = z.object({
+    type: z.literal("tableBlockColumn"),
+    size: columnSizeSchema,
+    highlighted: z.boolean(),
+    cellValues: z.array(z.string()),
+});
+export type ClipboardColumn = z.infer<typeof clipboardColumnSchema>;

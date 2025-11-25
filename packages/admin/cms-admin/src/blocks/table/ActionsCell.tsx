@@ -10,6 +10,7 @@ import { type TableBlockData } from "../../blocks.generated";
 import { getNewColumn, getNewRow } from "./utils";
 
 const clipboardRowSchema = z.object({
+    type: z.literal("tableBlockRow"),
     highlighted: z.boolean(),
     cellValues: z.array(z.string()),
 });
@@ -99,6 +100,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
         }
 
         const copyData: ClipboardRow = {
+            type: "tableBlockRow",
             highlighted: rowToCopy.highlighted,
             cellValues: state.columns.map(({ id: columnId }) => {
                 const cellValue = rowToCopy.cellValues.find(({ columnId: cellColumnId }) => cellColumnId === columnId);

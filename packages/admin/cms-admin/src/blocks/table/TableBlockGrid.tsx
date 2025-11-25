@@ -17,9 +17,7 @@ import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
-import { useRecentlyPastedIds } from "./utils";
-
-export type ColumnSize = "extraSmall" | "small" | "standard" | "large" | "extraLarge";
+import { type ColumnSize, useRecentlyPastedIds } from "./utils";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,
@@ -125,6 +123,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             renderHeader: (params: GridColumnHeaderParams) => (
                 <ColumnHeader
                     {...params}
+                    state={state}
                     columnSize={size}
                     highlighted={highlighted}
                     updateState={updateState}
