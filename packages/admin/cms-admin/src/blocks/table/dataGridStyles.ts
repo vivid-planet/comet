@@ -1,4 +1,4 @@
-import { alpha, type SxProps, type Theme } from "@mui/material";
+import { type SxProps, type Theme } from "@mui/material";
 
 // TODO: Can we remove the `!important`s?
 export const dataGridStyles: SxProps<Theme> = (theme) => ({
@@ -34,26 +34,13 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
         },
     },
 
-    ".MuiDataGrid-row": {
-        transition: "background-color 1s ease-in-out",
-
-        "&.CometDataGridRow--recentlyPasted": {
-            backgroundColor: alpha(theme.palette.primary.dark, 0.4),
-        },
-    },
-
     ".MuiDataGrid-cell": {
-        transition: "background-color 1s ease-in-out",
         borderBottom: `1px solid ${theme.palette.grey[100]}`,
         borderRight: `1px solid ${theme.palette.grey[100]}`,
         borderTop: "none",
 
         "&.MuiDataGrid-cellEmpty[role='presentation']": {
             display: "none",
-        },
-
-        "&.CometDataGridCell--recentlyPasted": {
-            backgroundColor: alpha(theme.palette.primary.dark, 0.4),
         },
 
         "&.MuiDataGrid-cell--pinnedLeft.MuiDataGrid-cell--withRightBorder": {
