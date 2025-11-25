@@ -1,4 +1,4 @@
-import { Alert, readClipboardText, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
+import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
 import { ButtonBase, Divider, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -8,7 +8,15 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { type ClipboardColumn, clipboardColumnSchema, type ColumnSize, getNewColumn, getNewRow, insertRowAtIndex } from "./utils";
+import {
+    type ClipboardColumn,
+    clipboardColumnSchema,
+    type ColumnSize,
+    getClipboardValueForSchema,
+    getNewColumn,
+    getNewRow,
+    insertRowAtIndex,
+} from "./utils";
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
@@ -148,31 +156,8 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
         );
     };
 
-    const getColumnFromClipboard = async () => {
-        const clipboardData = await readClipboardText();
-
-        if (!clipboardData) {
-            return null;
-        }
-
-        let jsonClipboardData;
-        try {
-            jsonClipboardData = JSON.parse(clipboardData);
-        } catch {
-            return null;
-        }
-
-        const validatedClipboardData = clipboardColumnSchema.safeParse(jsonClipboardData);
-
-        if (!validatedClipboardData.success) {
-            return null;
-        }
-
-        return validatedClipboardData.data;
-    };
-
     const pasteColumnFromClipboard = async () => {
-        const clipboardData = await getColumnFromClipboard();
+        const clipboardData = await getClipboardValueForSchema(clipboardColumnSchema);
         if (!clipboardData) {
             showFailedToParseDataSnackbar();
             return;
