@@ -15874,10 +15874,10 @@ packages:
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  react-list@0.8.17:
-    resolution: {integrity: sha512-pgmzGi0G5uGrdHzMhgO7KR1wx5ZXVvI3SsJUmkblSAKtewIhMwbQiMuQiTE83ozo04BQJbe0r3WIWzSO0dR1xg==}
+  react-list@0.8.18:
+    resolution: {integrity: sha512-1OSdDvzuKuwDJvQNuhXxxL+jTmmdtKg1i6KtYgxI9XR98kbOql1FcSGP+Lcvo91fk3cYng+Z6YkC6X9HRJwxfw==}
     peerDependencies:
-      react: 0.14 || 15 - 18
+      react: 0.14 || 15 - 19
 
   react-live@4.1.8:
     resolution: {integrity: sha512-B2SgNqwPuS2ekqj4lcxi5TibEcjWkdVyYykBEUBshPAPDQ527x2zPEZg560n8egNtAjUpwXFQm7pcXV65aAYmg==}
@@ -35466,7 +35466,7 @@ snapshots:
       date-fns: 4.1.0
       prop-types: 15.8.1
       react: 18.3.1
-      react-list: 0.8.17(react@18.3.1)
+      react-list: 0.8.18(react@18.3.1)
       shallow-equal: 1.2.1
 
   react-dnd-html5-backend@16.0.1:
@@ -35601,9 +35601,8 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  react-list@0.8.17(react@18.3.1):
+  react-list@0.8.18(react@18.3.1):
     dependencies:
-      prop-types: 15.8.1
       react: 18.3.1
 
   react-live@4.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
