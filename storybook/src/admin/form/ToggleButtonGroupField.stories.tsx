@@ -218,7 +218,7 @@ export const ToggleButtonFieldAddressSample: Story = {
                             <Box marginBottom={2}>
                                 <Divider />
                             </Box>
-                            {values.type === "address" && (
+                            {values?.type === "address" && (
                                 <>
                                     <NumberField name="address.postcode" label="Postcode" />
                                     <TextField name="address.city" label="City" />
@@ -226,7 +226,7 @@ export const ToggleButtonFieldAddressSample: Story = {
                                 </>
                             )}
 
-                            {values.type === "coordinates" && (
+                            {values?.type === "coordinates" && (
                                 <>
                                     <NumberField name="coordinates.latitude" label="Latitude" decimals={14} />
                                     <NumberField name="coordinates.longitude" label="Longitude" decimals={14} />

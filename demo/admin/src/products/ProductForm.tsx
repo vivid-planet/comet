@@ -245,7 +245,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                                 variables: {
                                     filter: {
                                         addressAsEmbeddable_country: {
-                                            equal: values.manufacturerCountry?.id,
+                                            equal: values?.manufacturerCountry?.id,
                                         },
                                     },
                                 },

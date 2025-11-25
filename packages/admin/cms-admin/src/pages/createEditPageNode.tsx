@@ -235,7 +235,7 @@ export function createEditPageNode({
                         // noop
                     }}
                     mutators={{
-                        setFieldTouched: setFieldTouched as Mutator<FormValues>,
+                        setFieldTouched: setFieldTouched as unknown as Mutator<FormValues, Partial<FormValues>>,
                     }}
                     onSubmit={async (values: FormValues) => {
                         let input = {
@@ -347,7 +347,7 @@ export function createEditPageNode({
 
                                 <FormSpy subscription={{ values: true, dirtyFields: true }}>
                                     {({ values, dirtyFields }) => {
-                                        if (!values.slug) {
+                                        if (!values?.slug) {
                                             return null;
                                         }
 
@@ -363,14 +363,14 @@ export function createEditPageNode({
                                                     variant="horizontal"
                                                 >
                                                     <Typography>
-                                                        {values.slug === "home" && parentPath === null
+                                                        {values?.slug === "home" && parentPath === null
                                                             ? "/"
                                                             : parentPath === null
-                                                              ? `/${values.slug}`
-                                                              : `${parentPath}/${values.slug}`}
+                                                              ? `/${values?.slug}`
+                                                              : `${parentPath}/${values?.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
-                                                {mode === "edit" && dirtyFields.slug && isRedirectSourceAvailable && (
+                                                {mode === "edit" && dirtyFields?.slug && isRedirectSourceAvailable && (
                                                     <Box mt={3}>
                                                         <FieldContainer
                                                             variant="horizontal"
@@ -444,7 +444,7 @@ export function createEditPageNode({
                                                         </FieldContainer>
                                                     </Box>
                                                 )}
-                                                {mode === "edit" && dirtyFields.slug && !isRedirectSourceAvailable && (
+                                                {mode === "edit" && dirtyFields?.slug && !isRedirectSourceAvailable && (
                                                     <FieldContainer variant="horizontal">
                                                         <Typography>
                                                             <FormattedMessage
