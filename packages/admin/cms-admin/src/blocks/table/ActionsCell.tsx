@@ -1,4 +1,4 @@
-import { Alert, readClipboardText, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
+import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@comet/admin-icons";
 import { Divider, Snackbar } from "@mui/material";
 import { type Dispatch, type SetStateAction } from "react";
@@ -7,9 +7,10 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { getNewColumn, getNewRow } from "./utils";
+import { getClipboardValueForSchema, getNewColumn, getNewRow, insertRowAtIndex } from "./utils";
 
 const clipboardRowSchema = z.object({
+    type: z.literal("tableBlockRow"),
     highlighted: z.boolean(),
     cellValues: z.array(z.string()),
 });
@@ -29,17 +30,10 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
 
     const insertRow = (where: "above" | "below") => {
         updateState((state) => {
+            const newRow = getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" })));
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
             const newRowIndex = where === "above" ? currentRowIndex : currentRowIndex + 1;
-
-            return {
-                ...state,
-                rows: [
-                    ...state.rows.slice(0, newRowIndex),
-                    getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" }))),
-                    ...state.rows.slice(newRowIndex),
-                ],
-            };
+            return insertRowAtIndex(state, newRow, newRowIndex);
         });
     };
 
@@ -81,7 +75,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
         updateState((state) => {
             const duplicatedRow = { ...rowToDuplicate, id: uuid() };
             addToRecentlyPastedIds(duplicatedRow.id);
-            return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), duplicatedRow, ...state.rows.slice(currentRowIndex + 1)] };
+            return insertRowAtIndex(state, duplicatedRow, currentRowIndex + 1);
         });
     };
 
@@ -99,6 +93,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
         }
 
         const copyData: ClipboardRow = {
+            type: "tableBlockRow",
             highlighted: rowToCopy.highlighted,
             cellValues: state.columns.map(({ id: columnId }) => {
                 const cellValue = rowToCopy.cellValues.find(({ columnId: cellColumnId }) => cellColumnId === columnId);
@@ -120,31 +115,15 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
     };
 
     const pasteRowFromClipboard = async () => {
-        const clipboardData = await readClipboardText();
+        const clipboardData = await getClipboardValueForSchema(clipboardRowSchema);
 
         if (!clipboardData) {
             showFailedToParseDataSnackbar();
             return;
         }
 
-        let jsonClipboardData;
-
-        try {
-            jsonClipboardData = JSON.parse(clipboardData);
-        } catch {
-            showFailedToParseDataSnackbar();
-            return;
-        }
-
-        const validatedClipboardData = clipboardRowSchema.safeParse(jsonClipboardData);
-
-        if (!validatedClipboardData.success) {
-            showFailedToParseDataSnackbar();
-            return;
-        }
-
         updateState((state) => {
-            const numberOfColumnsToAdd = validatedClipboardData.data.cellValues.length - state.columns.length;
+            const numberOfColumnsToAdd = clipboardData.cellValues.length - state.columns.length;
 
             const updatedColumns = [...state.columns];
             let updatedRows = [...state.rows];
@@ -161,22 +140,17 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
             const currentRowIndex = updatedRows.findIndex(({ id }) => id === row.id);
             const newRowToPaste: TableBlockData["rows"][number] = {
                 id: uuid(),
-                highlighted: validatedClipboardData.data.highlighted,
+                highlighted: clipboardData.highlighted,
                 cellValues: updatedColumns.map(({ id: columnId }, index) => {
                     return {
                         columnId,
-                        value: validatedClipboardData.data.cellValues[index] ?? "",
+                        value: clipboardData.cellValues[index] ?? "",
                     };
                 }),
             };
 
             addToRecentlyPastedIds(newRowToPaste.id);
-
-            return {
-                ...state,
-                columns: updatedColumns,
-                rows: [...updatedRows.slice(0, currentRowIndex + 1), newRowToPaste, ...updatedRows.slice(currentRowIndex + 1)],
-            };
+            return insertRowAtIndex(state, newRowToPaste, currentRowIndex + 1);
         });
     };
 

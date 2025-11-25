@@ -1,5 +1,7 @@
+import { readClipboardText } from "@comet/admin";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
 
@@ -9,6 +11,12 @@ export const getNewColumn = (): TableBlockData["columns"][number] => {
 
 export const getNewRow = (cellValues: TableBlockData["rows"][number]["cellValues"]): TableBlockData["rows"][number] => {
     return { id: uuid(), highlighted: false, cellValues };
+};
+
+export const insertRowAtIndex = (state: TableBlockData, newRow: TableBlockData["rows"][number], index: number) => {
+    const rowsBeforeIndex = state.rows.slice(0, index);
+    const rowsAfterIndex = state.rows.slice(index);
+    return { ...state, rows: [...rowsBeforeIndex, newRow, ...rowsAfterIndex] };
 };
 
 export const getInitialTableData = (): {
@@ -80,4 +88,38 @@ export const useRecentlyPastedIds = () => {
         recentlyPastedIds,
         addToRecentlyPastedIds,
     };
+};
+
+export const columnSizeSchema = z.enum(["extraSmall", "small", "standard", "large", "extraLarge"]);
+export type ColumnSize = z.infer<typeof columnSizeSchema>;
+
+export const clipboardColumnSchema = z.object({
+    type: z.literal("tableBlockColumn"),
+    size: columnSizeSchema,
+    highlighted: z.boolean(),
+    cellValues: z.array(z.string()),
+});
+export type ClipboardColumn = z.infer<typeof clipboardColumnSchema>;
+
+export const getClipboardValueForSchema = async <T>(schema: z.ZodSchema<T>): Promise<T | null> => {
+    const clipboardData = await readClipboardText();
+
+    if (!clipboardData) {
+        return null;
+    }
+
+    let jsonClipboardData;
+    try {
+        jsonClipboardData = JSON.parse(clipboardData);
+    } catch {
+        return null;
+    }
+
+    const validatedClipboardData = schema.safeParse(jsonClipboardData);
+
+    if (!validatedClipboardData.success) {
+        return null;
+    }
+
+    return validatedClipboardData.data;
 };

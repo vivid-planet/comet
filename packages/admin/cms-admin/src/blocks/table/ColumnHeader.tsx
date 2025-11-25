@@ -1,4 +1,4 @@
-import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi } from "@comet/admin";
+import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
 import { ButtonBase, Divider, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -8,12 +8,20 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { type ColumnSize } from "./TableBlockGrid";
-import { getNewColumn } from "./utils";
+import {
+    type ClipboardColumn,
+    clipboardColumnSchema,
+    type ColumnSize,
+    getClipboardValueForSchema,
+    getNewColumn,
+    getNewRow,
+    insertRowAtIndex,
+} from "./utils";
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
     highlighted: boolean;
+    state: TableBlockData;
     updateState: Dispatch<SetStateAction<TableBlockData>>;
     columnIndex: number;
     addToRecentlyPastedIds: (id: string) => void;
@@ -27,7 +35,7 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
     extraLarge: <FormattedMessage id="comet.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
 };
 
-export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
+export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
 
     const insertColumn = (newColumnIndex: number) => {
@@ -112,6 +120,78 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
         });
     };
 
+    const copyColumnToClipboard = () => {
+        const columnToCopy = state.columns.find(({ id }) => id === columnId);
+        if (!columnToCopy) {
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage id="comet.tableBlock.failedToCopyColumn" defaultMessage="Failed to copy column" />
+                    </Alert>
+                </Snackbar>,
+            );
+            return;
+        }
+
+        const copyData: ClipboardColumn = {
+            type: "tableBlockColumn",
+            size: columnToCopy.size,
+            highlighted: columnToCopy.highlighted,
+            cellValues: state.rows.map((row) => {
+                const cellValueOfColumn = row.cellValues.find((cellValue) => cellValue.columnId === columnId);
+                return cellValueOfColumn?.value ?? "";
+            }),
+        };
+
+        writeClipboardText(JSON.stringify(copyData));
+    };
+
+    const showFailedToParseDataSnackbar = () => {
+        snackbarApi.showSnackbar(
+            <Snackbar autoHideDuration={5000}>
+                <Alert severity="error">
+                    <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
+                </Alert>
+            </Snackbar>,
+        );
+    };
+
+    const pasteColumnFromClipboard = async () => {
+        const clipboardData = await getClipboardValueForSchema(clipboardColumnSchema);
+        if (!clipboardData) {
+            showFailedToParseDataSnackbar();
+            return;
+        }
+
+        updateState((state) => {
+            const numberOfRowsToBeAdded = clipboardData.cellValues.length - state.rows.length;
+
+            for (let i = 0; i < numberOfRowsToBeAdded; i++) {
+                const newRow = getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" })));
+                state = insertRowAtIndex(state, newRow, state.rows.length);
+            }
+
+            const pastedColumn = { id: uuid(), size: clipboardData.size, highlighted: clipboardData.highlighted };
+            addToRecentlyPastedIds(pastedColumn.id);
+
+            const columnsBeforePasted = state.columns.slice(0, columnIndex + 1);
+            const columnsAfterPasted = state.columns.slice(columnIndex + 1);
+
+            return {
+                ...state,
+                columns: [...columnsBeforePasted, pastedColumn, ...columnsAfterPasted],
+                rows: state.rows.map((row, rowIndex) => {
+                    const newCellValue = { columnId: pastedColumn.id, value: clipboardData.cellValues[rowIndex] ?? "" };
+
+                    return {
+                        ...row,
+                        cellValues: [...row.cellValues, newCellValue],
+                    };
+                }),
+            };
+        });
+    };
+
     return (
         <>
             <ColumnHeaderButton component="div" disableRipple>
@@ -158,23 +238,10 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                         <FormattedMessage id="comet.tableBlock.insertColumnRight" defaultMessage="Insert column right" />
                     </RowActionsItem>
                     <Divider />
-                    <RowActionsItem
-                        icon={<Copy />}
-                        disabled
-                        onClick={() => {
-                            // TODO: Implement this
-                        }}
-                    >
+                    <RowActionsItem icon={<Copy />} onClick={copyColumnToClipboard}>
                         <FormattedMessage id="comet.tableBlock.copyColumn" defaultMessage="Copy" />
                     </RowActionsItem>
-                    <RowActionsItem
-                        icon={<Paste />}
-                        disabled
-                        onClick={() => {
-                            // TODO: Implement this
-                            // TODO: Add to recently pasted ids
-                        }}
-                    >
+                    <RowActionsItem icon={<Paste />} onClick={pasteColumnFromClipboard}>
                         <FormattedMessage id="comet.tableBlock.pasteColumn" defaultMessage="Paste" />
                     </RowActionsItem>
                     <RowActionsItem icon={<Duplicate />} onClick={duplicateColumn}>
