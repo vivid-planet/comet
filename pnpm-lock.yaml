@@ -138,8 +138,8 @@ importers:
         specifier: ^16.0.1
         version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1)
       react-dnd-multi-backend:
-        specifier: ^8.1.2
-        version: 8.1.2(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^9.0.0
+        version: 9.0.0(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
@@ -15763,18 +15763,18 @@ packages:
   react-dnd-html5-backend@16.0.1:
     resolution: {integrity: sha512-Wu3dw5aDJmOGw8WjH1I1/yTH+vlXEL4vmjk5p+MHxP8HuHJS1lAGeIdG/hze1AvNeXWo/JgULV87LyQOr+r5jw==}
 
-  react-dnd-multi-backend@8.1.2:
-    resolution: {integrity: sha512-Ecj+gwr5B7zRiWqkDU5sUvUmufcu97WnsZFHnqHrWFJhTXAXQnhrperHLFktNP2CnQYtAgbucodr1if0MWpEaA==}
+  react-dnd-multi-backend@9.0.0:
+    resolution: {integrity: sha512-LAKDdyj4oMvVA/k2RiJ8KLIPO9sBiYIjIYtoFCuAgml9qQwIq+oTav2IXGfG4DrP49fBnVO7jjf5ofJMNOlWTA==}
     peerDependencies:
       dnd-core: ^16.0.1
-      react: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react: ^16.14.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
       react-dnd: ^16.0.1
-      react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
 
-  react-dnd-preview@8.1.2:
-    resolution: {integrity: sha512-j5M1NcQBItOCYXONRbCNs6MzW7u4KygeOGZlztNNguTs1/f2d7q1fRnQjFLjCpgeg5Gy/JrTFrbRThZglJP5dg==}
+  react-dnd-preview@9.0.0:
+    resolution: {integrity: sha512-WZTbrrNDlCGYJGrITHN/obI2kpdaKV3AY6Il2LLZcA9ApzG5bbDXBlWSFwuw8eTCMjmCXs5Wcv+p2QCMxX1Afw==}
     peerDependencies:
-      react: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react: ^16.14.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
       react-dnd: ^16.0.1
 
   react-dnd-touch-backend@16.0.1:
@@ -35482,16 +35482,16 @@ snapshots:
     dependencies:
       dnd-core: 16.0.1
 
-  react-dnd-multi-backend@8.1.2(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-dnd-multi-backend@9.0.0(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       dnd-core: 16.0.1
-      dnd-multi-backend: 8.1.2(dnd-core@16.0.1)
+      dnd-multi-backend: 9.0.0(dnd-core@16.0.1)
       react: 18.3.1
       react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1)
-      react-dnd-preview: 8.1.2(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
+      react-dnd-preview: 9.0.0(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
 
-  react-dnd-preview@8.1.2(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1):
+  react-dnd-preview@9.0.0(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.10.1)(@types/react@18.3.26)(react@18.3.1)
