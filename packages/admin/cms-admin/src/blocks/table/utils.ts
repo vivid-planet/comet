@@ -12,6 +12,12 @@ export const getNewRow = (cellValues: TableBlockData["rows"][number]["cellValues
     return { id: uuid(), highlighted: false, cellValues };
 };
 
+export const insertRowAtIndex = (state: TableBlockData, newRow: TableBlockData["rows"][number], index: number) => {
+    const rowsBeforeIndex = state.rows.slice(0, index);
+    const rowsAfterIndex = state.rows.slice(index);
+    return { ...state, rows: [...rowsBeforeIndex, newRow, ...rowsAfterIndex] };
+};
+
 export const getInitialTableData = (): {
     rows: TableBlockData["rows"];
     columns: TableBlockData["columns"];

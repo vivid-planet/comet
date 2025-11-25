@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { getNewColumn, getNewRow } from "./utils";
+import { getNewColumn, getNewRow, insertRowAtIndex } from "./utils";
 
 const clipboardRowSchema = z.object({
     type: z.literal("tableBlockRow"),
@@ -30,17 +30,10 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
 
     const insertRow = (where: "above" | "below") => {
         updateState((state) => {
+            const newRow = getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" })));
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
             const newRowIndex = where === "above" ? currentRowIndex : currentRowIndex + 1;
-
-            return {
-                ...state,
-                rows: [
-                    ...state.rows.slice(0, newRowIndex),
-                    getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" }))),
-                    ...state.rows.slice(newRowIndex),
-                ],
-            };
+            return insertRowAtIndex(state, newRow, newRowIndex);
         });
     };
 
@@ -82,7 +75,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
         updateState((state) => {
             const duplicatedRow = { ...rowToDuplicate, id: uuid() };
             addToRecentlyPastedIds(duplicatedRow.id);
-            return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), duplicatedRow, ...state.rows.slice(currentRowIndex + 1)] };
+            return insertRowAtIndex(state, duplicatedRow, currentRowIndex + 1);
         });
     };
 
@@ -173,12 +166,7 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
             };
 
             addToRecentlyPastedIds(newRowToPaste.id);
-
-            return {
-                ...state,
-                columns: updatedColumns,
-                rows: [...updatedRows.slice(0, currentRowIndex + 1), newRowToPaste, ...updatedRows.slice(currentRowIndex + 1)],
-            };
+            return insertRowAtIndex(state, newRowToPaste, currentRowIndex + 1);
         });
     };
 
