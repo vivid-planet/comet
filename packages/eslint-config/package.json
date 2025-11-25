@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "8.0.0-beta.6",
+    "version": "8.7.1",
     "description": "A set of ESLint configurations for Comet projects",
     "repository": {
         "directory": "packages/eslint-config",
@@ -12,6 +12,9 @@
     "exports": {
         "./core.js": {
             "import": "./core.js"
+        },
+        "./future/react.js": {
+            "import": "./future/react.js"
         },
         "./nestjs.js": {
             "import": "./nestjs.js"
@@ -26,7 +29,7 @@
     "scripts": {
         "lint": "run-p lint:prettier lint:eslint",
         "lint:eslint": "eslint --max-warnings 0 *.json ",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'"
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'"
     },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
@@ -39,20 +42,20 @@
         "eslint-plugin-formatjs": "^5.4.0",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-jsonc": "^2.20.1",
-        "eslint-plugin-package-json": "^0.44.0",
+        "eslint-plugin-package-json": "^0.56.0",
         "eslint-plugin-prettier": "^5.5.1",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
         "globals": "^15.15.0",
-        "npm-run-all2": "^5.0.2",
+        "npm-run-all2": "^8.0.0",
         "typescript-eslint": "^8.24.1"
     },
     "devDependencies": {
         "eslint": "^9.30.1",
         "prettier": "^3.6.2",
-        "typescript": "^5.7.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "eslint": ">=9",

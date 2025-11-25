@@ -70,7 +70,7 @@ describe("GenerateCrudRelationsIdNumber", () => {
             expect(decorators).toContain("IsInt");
             expect(decorators).not.toContain("IsUUID");
             expect(decorators).not.toContain("IsString");
-            orm.close();
+            await orm.close();
         });
 
         it("input type to category relation with primary key type int should be number with integer validator", async () => {
@@ -106,7 +106,7 @@ describe("GenerateCrudRelationsIdNumber", () => {
             expect(decorators).toContain("IsInt");
             expect(decorators).not.toContain("IsUUID");
             expect(decorators).not.toContain("IsString");
-            orm.close();
+            await orm.close();
         });
     });
 });

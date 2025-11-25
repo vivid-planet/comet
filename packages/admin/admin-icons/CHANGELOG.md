@@ -1,5 +1,68 @@
 # @comet/admin-icons
 
+## 8.7.1
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.1
+
+## 8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 04e308a: Upgrade from MUI v5 to v7
+
+    This only causes minimal breaking changes, see the official migration guides from MUI for details:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+
+    To update the MUI dependencies, run the following command:
+
+    ```sh
+    npx @comet/upgrade v8/update-mui-dependencies.ts
+    ```
+
+    To run all of the recommended MUI codemods, run:
+
+    ```sh
+    npx @comet/upgrade v8/mui-codemods.ts
+    ```
+
+### Minor Changes
+
+- f9c32d2: Add `CometDigitalExperienceLogo`
+- 682a674: Add support for React 18
+
+### Patch Changes
+
+- 13d35af: Generated icons now export a variable `${iconName}SearchWords` that includes multiple keywords to improve searchability of icons
+- 5a6efc1: Transform SVG attributes into camelCase to generate valid JSX
+
 ## 8.0.0-beta.6
 
 ## 8.0.0-beta.5

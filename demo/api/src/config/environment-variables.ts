@@ -23,9 +23,8 @@ export class EnvironmentVariables {
     @IsString()
     POSTGRESQL_DB: string;
 
-    @IsOptional()
     @IsString()
-    POSTGRESQL_USER?: string;
+    POSTGRESQL_USER: string;
 
     @IsString()
     POSTGRESQL_PWD: string;
@@ -33,25 +32,16 @@ export class EnvironmentVariables {
     @IsString()
     API_URL: string;
 
-    @IsOptional()
-    @IsBoolean()
-    @Transform(({ value }) => value === "true")
-    USE_AUTHPROXY: boolean;
-
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_CLIENT_ID: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_JWKS_URI: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     IDP_END_SESSION_ENDPOINT: string;
 
     @IsString()
-    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
     POST_LOGOUT_REDIRECT_URI: string;
 
     @IsString()
@@ -66,7 +56,7 @@ export class EnvironmentVariables {
     API_PORT: number;
 
     @IsString()
-    CORS_ALLOWED_ORIGINS: string;
+    CORS_ALLOWED_ORIGIN: string;
 
     @IsString()
     IMGPROXY_SALT: string;
@@ -118,6 +108,13 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    MAILER_HOST: string;
+
+    @Type(() => Number)
+    @IsInt()
+    MAILER_PORT: number;
 
     @IsUndefinable()
     @IsArray()

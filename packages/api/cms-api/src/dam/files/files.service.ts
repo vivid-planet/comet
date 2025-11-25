@@ -4,11 +4,11 @@ import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
-import getColors from "get-image-colors";
 import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
+import sharp from "sharp";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
@@ -24,7 +24,9 @@ import { CometImageResolutionException } from "../common/errors/image-resolution
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
+import { rgbToHex } from "../images/images.util";
 import { DamScopeInterface } from "../types";
+import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
@@ -103,6 +105,7 @@ export class FilesService {
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+        @InjectRepository(DamMediaAlternative) private readonly damMediaAlternativesRepository: EntityRepository<DamMediaAlternative>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
@@ -454,6 +457,8 @@ export class FilesService {
             image: ignoreImage,
             scope: ignoreScope,
             copies: ignoreCopies,
+            alternativesForThisFile: ignoreAlternativesForThisFile,
+            thisFileIsAlternativeFor: ignoreThisFileIsAlternativeFor,
             ...fileProps
         } = file;
 
@@ -465,7 +470,34 @@ export class FilesService {
             scope: inboxFolder.scope,
         };
 
-        return this.create(fileInput);
+        const copiedFile = await this.create(fileInput);
+
+        // handled DAM alternatives
+        const copiedAlternatives: DamMediaAlternative[] = [];
+        if ((await file.alternativesForThisFile.loadItems()).length > 0) {
+            for (const alternative of file.alternativesForThisFile) {
+                const alternativeFile = await alternative.alternative.load();
+                if (alternativeFile === null) {
+                    continue;
+                }
+
+                const copiedAlternativeFile = await this.createCopyOfFile(alternativeFile, { inboxFolder });
+
+                const { id: ignoreId, for: ignoreFor, alternative: ignoreAlternative, ...alternativeProps } = alternative;
+                const copiedDamMediaAlternative = this.damMediaAlternativesRepository.create({
+                    ...alternativeProps,
+
+                    for: copiedFile,
+                    alternative: copiedAlternativeFile,
+                });
+
+                copiedAlternatives.push(copiedDamMediaAlternative);
+            }
+        }
+
+        copiedFile.alternativesForThisFile.set(copiedAlternatives);
+
+        return copiedFile;
     }
 
     async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
@@ -514,7 +546,7 @@ export class FilesService {
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
         const path = this.imgproxyService
             .builder()
-            .resize(ResizingType.AUTO, 128)
+            .resize(ResizingType.AUTO, 1)
             .format(Extension.JPG)
             .generateUrl(
                 `${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.filesDirectory}/${createHashedPath(contentHash)}`,
@@ -526,13 +558,12 @@ export class FilesService {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const imageBuffer = Buffer.from(arrayBuffer);
 
-            // @TODO: make pull request to fix overloads https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/get-image-colors/index.d.ts#L15
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const getColorOptions: any = { type: "image/jpg", count: 1 };
+            const data = await sharp(imageBuffer).removeAlpha().raw().toBuffer();
 
-            const colors = (await getColors(imageBuffer, getColorOptions)).map((color) => color.hex());
+            // since we scale the image to 1px with imgproxy, data only contains the colors for this one pixel
+            const [r, g, b] = data;
 
-            return colors.length > 0 ? colors[0] : undefined;
+            return rgbToHex(r, g, b);
         } catch (e) {
             // When imageproxy is not available it is ok.
             console.error(e);

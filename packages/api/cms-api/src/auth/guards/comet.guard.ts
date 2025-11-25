@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
@@ -7,10 +7,13 @@ import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { User } from "../../user-permissions/interfaces/user";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
 import { SystemUser } from "../../user-permissions/user-permissions.types";
+import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../decorators/disable-comet-guards.decorator";
 import { AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
 @Injectable()
 export class CometAuthGuard implements CanActivate {
+    protected readonly logger = new Logger(CometAuthGuard.name);
+
     constructor(
         private reflector: Reflector,
         private readonly service: UserPermissionsService,
@@ -26,7 +29,7 @@ export class CometAuthGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = this.getRequest(context);
 
-        const disableCometGuard = this.reflector.getAllAndOverride("disableCometGuards", [context.getHandler(), context.getClass()]);
+        const disableCometGuard = this.reflector.getAllAndOverride(DISABLE_COMET_GUARDS_METADATA_KEY, [context.getHandler(), context.getClass()]);
         const hasIncludeInvisibleContentHeader = !!request.headers["x-include-invisible-content"];
         if (disableCometGuard && !hasIncludeInvisibleContentHeader) {
             return true;
@@ -37,7 +40,10 @@ export class CometAuthGuard implements CanActivate {
         }
 
         const result = await this.getAuthenticatedUserResult(request);
-        if (!result) return false;
+        if (!result) {
+            this.logger.debug(`No AuthService could authenticate the user for ${context.getClass().name}::${context.getHandler().name}().`);
+            return false;
+        }
         if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);
 
         if ("systemUser" in result) {

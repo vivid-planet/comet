@@ -23,5 +23,10 @@ export const previewGlobalStyles = (theme: Theme) =>
         &.sbdocs-h3 {
             margin-top: 25px;
         }
+
+        &.isEmbeddedInDocs {
+            // The side padding is used to prevent cutting of the shadow of the individual stories
+            padding: 0 5px;
+        }
     }
 `);

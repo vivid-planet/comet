@@ -27,16 +27,17 @@ type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
     price?: string;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id: string;
 }
-export function ProductPriceForm({ id }: FormProps) {
+export function ProductPriceForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id } });
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
             ...filterByFragment<GQLProductPriceFormDetailsFragment>(productFormFragment, data.product),
-            price: data.product.price ? String(data.product.price) : undefined
+            price: data.product.price ? String(data.product.price) : undefined,
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
@@ -52,10 +53,7 @@ export function ProductPriceForm({ id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            price: formValues.price ? parseFloat(formValues.price) : null,
-        };
+        const output = { ...formValues, price: formValues.price ? parseFloat(formValues.price) : null, };
         if (!id)
             throw new Error();
         const { ...updateInput } = output;

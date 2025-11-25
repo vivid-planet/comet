@@ -4,6 +4,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
 import { DamFile } from "@src/dam/entities/dam-file.entity";
 import { FixturesCommand } from "@src/db/fixtures/fixtures.command";
+import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { Link } from "@src/documents/links/entities/link.entity";
 import { LinksModule } from "@src/documents/links/links.module";
 import { Page } from "@src/documents/pages/entities/page.entity";
@@ -11,6 +12,8 @@ import { PagesModule } from "@src/documents/pages/pages.module";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product } from "@src/products/entities/product.entity";
+import { ProductCategory } from "@src/products/entities/product-category.entity";
+import { ProductCategoryType } from "@src/products/entities/product-category-type.entity";
 
 import { AccordionBlockFixtureService } from "./generators/blocks/layout/accordion-block-fixture.service";
 import { ColumnsBlockFixtureService } from "./generators/blocks/layout/columns-block-fixture.service";
@@ -32,6 +35,7 @@ import { CallToActionBlockFixtureService } from "./generators/blocks/navigation/
 import { CallToActionListBlockFixtureService } from "./generators/blocks/navigation/call-to-action-list-block.service";
 import { LinkBlockFixtureService } from "./generators/blocks/navigation/link-block-fixture.service";
 import { LinkListBlockFixtureService } from "./generators/blocks/navigation/link-list-block-fixture.service";
+import { PageTreeIndexBlockFixtureService } from "./generators/blocks/navigation/page-tree-index-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./generators/blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { TextLinkBlockFixtureService } from "./generators/blocks/navigation/text-link-block-fixture.service";
 import { SliderBlockFixtureService } from "./generators/blocks/slider-fixture.service";
@@ -40,6 +44,7 @@ import { BillboardTeaserBlockFixtureService } from "./generators/blocks/teaser/b
 import { TeaserBlockFixtureService } from "./generators/blocks/teaser/teaser-block-fixture.service";
 import { HeadingBlockFixtureService } from "./generators/blocks/text-and-content/heading-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "./generators/blocks/text-and-content/key-facts-block-fixture.service";
+import { ProductListBlockFixtureService } from "./generators/blocks/text-and-content/product-list-block.fixture";
 import { RichTextBlockFixtureService } from "./generators/blocks/text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "./generators/blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./generators/blocks/text-and-content/text-image-block-fixture.service";
@@ -48,6 +53,7 @@ import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.ser
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { NewsFixtureService } from "./generators/news-fixture.service";
 import { PageContentBlockFixtureService } from "./generators/page-content-block-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
@@ -62,7 +68,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         PagesModule,
         LinksModule,
         DependenciesModule,
-        MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
+        MikroOrmModule.forFeature([DamFile, Page, Link, Product, ProductCategory, ProductCategoryType, Manufacturer, PageTreeNode, AttachedDocument]),
     ],
     providers: [
         FixturesCommand,
@@ -90,6 +96,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         MediaGalleryBlockFixtureService,
         MediaBlockFixtureService,
         PageContentBlockFixtureService,
+        PageTreeIndexBlockFixtureService,
         PixelImageBlockFixtureService,
         RedirectsFixtureService,
         ProductsFixtureService,
@@ -104,12 +111,15 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         StandaloneCallToActionListBlockFixtureService,
         StandaloneHeadingBlockFixtureService,
         StandaloneMediaBlockFixtureService,
+        StandaloneRichTextBlockFixtureService,
         TeaserBlockFixtureService,
         TextImageBlockFixtureService,
         TextLinkBlockFixtureService,
         VideoFixtureService,
         VimeoVideoBlockFixtureService,
         YouTubeVideoBlockFixtureService,
+        NewsFixtureService,
+        ProductListBlockFixtureService,
     ],
 })
 export class FixturesModule {}

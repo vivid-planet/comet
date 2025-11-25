@@ -15,6 +15,7 @@ import {
 import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { LicenseInfo } from "@mui/x-license";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
@@ -60,6 +61,8 @@ declare module "@comet/cms-admin" {
         permission: GQLPermission;
     }
 }
+
+LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
     return (
@@ -130,7 +133,7 @@ export function App() {
             }}
         >
             <ApolloProvider client={apolloClient}>
-                <IntlProvider locale="en" messages={getMessages()}>
+                <IntlProvider locale="en" messages={getMessages("en")}>
                     <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
                         <MuiThemeProvider theme={theme}>
                             <DndProvider options={HTML5toTouch}>

@@ -29,7 +29,7 @@ export function filterByFragment<FD = any, D extends FD = any>(doc: DocumentNode
     };
 
     return Array.isArray(data)
-        ? data.map((dataObj) => graphql(resolver, doc, dataObj, null, variableValues))
+        ? (data.map((dataObj) => graphql(resolver, doc, dataObj, null, variableValues)) as FD)
         : graphql(resolver, doc, data, null, variableValues);
 }
 

@@ -105,7 +105,7 @@ class Meta extends AnnotationBlockMeta {
                         {
                             name: "captions",
                             kind: BlockMetaFieldKind.NestedObjectList,
-                            nullable: false,
+                            nullable: true,
                             object: {
                                 fields: [
                                     {

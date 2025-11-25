@@ -1,11 +1,4 @@
-import { Button, StackLink, SubRoute } from "@comet/admin";
-import { Close } from "@comet/admin-icons";
-import {
-    // eslint-disable-next-line no-restricted-imports
-    Dialog,
-    DialogTitle,
-    IconButton,
-} from "@mui/material";
+import { Button, Dialog, StackLink, SubRoute } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { type SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";
@@ -20,26 +13,6 @@ import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import { type RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
 import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
-
-const FixedHeightDialog = styled(Dialog)`
-    & .MuiDialog-paper {
-        height: 100%; // The fixed height prevents the height of the dialog from changing when navigating between folders which may have different heights depending on the number of items in the folder
-    }
-`;
-
-const StyledDialogTitle = styled(DialogTitle)`
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
-
-const CloseButton = styled(IconButton)`
-    position: absolute;
-    right: ${({ theme }) => theme.spacing(2)};
-`;
 
 const TableRowButton = styled(Button)`
     padding: 0;
@@ -97,13 +70,20 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
     }
 
     return (
-        <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-            <StyledDialogTitle>
-                <FormattedMessage id="comet.form.file.selectFile" defaultMessage="Select file from DAM" />
-                <CloseButton onClick={(event) => onClose(event, "backdropClick")} color="inherit">
-                    <Close />
-                </CloseButton>
-            </StyledDialogTitle>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            fullWidth
+            maxWidth="xl"
+            title={<FormattedMessage id="comet.form.file.selectFile" defaultMessage="Select file from DAM" />}
+            slotProps={{
+                root: {
+                    PaperProps: {
+                        sx: { height: "100%" }, // The fixed height prevents the height of the dialog from changing when navigating between folders which may have different heights depending on the number of items in the folder
+                    },
+                },
+            }}
+        >
             <DamScopeProvider>
                 <MemoryRouter>
                     <SubRoute path="">
@@ -121,6 +101,6 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     </SubRoute>
                 </MemoryRouter>
             </DamScopeProvider>
-        </FixedHeightDialog>
+        </Dialog>
     );
 };

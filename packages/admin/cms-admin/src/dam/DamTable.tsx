@@ -62,14 +62,7 @@ const Folder = ({ id, filterApi, renderWithFullHeightMainContent, ...props }: Fo
     });
 
     const folderDataGridNode = (
-        <FolderDataGrid
-            id={id}
-            breadcrumbs={stackApi?.breadCrumbs}
-            selectionApi={selectionApi}
-            filterApi={filterApi}
-            renderWithFullHeightMainContent={renderWithFullHeightMainContent}
-            {...props}
-        />
+        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
     );
 
     return (

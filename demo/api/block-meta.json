@@ -86,7 +86,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -123,7 +124,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -151,6 +153,19 @@
                 "name": "openByDefault",
                 "kind": "Boolean",
                 "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -168,6 +183,19 @@
             {
                 "name": "openByDefault",
                 "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
                 "nullable": false
             }
         ]
@@ -529,12 +557,13 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -570,12 +599,13 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -659,7 +689,7 @@
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
                                 "mediaGallery": "MediaGallery",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
                             },
@@ -703,7 +733,7 @@
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
                                 "mediaGallery": "MediaGallery",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
                             },
@@ -958,7 +988,7 @@
                                     }
                                 ]
                             },
-                            "nullable": false
+                            "nullable": true
                         }
                     ]
                 },
@@ -1054,6 +1084,11 @@
                 "nullable": false
             },
             {
+                "name": "caption",
+                "kind": "String",
+                "nullable": false
+            },
+            {
                 "name": "linkList",
                 "kind": "Block",
                 "block": "LinkList",
@@ -1076,6 +1111,11 @@
                 "name": "image",
                 "kind": "Block",
                 "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "caption",
+                "kind": "String",
                 "nullable": false
             },
             {
@@ -2050,7 +2090,7 @@
                                 "billboardTeaser": "BillboardTeaser",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -2064,7 +2104,9 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2113,7 +2155,7 @@
                                 "billboardTeaser": "BillboardTeaser",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -2127,7 +2169,9 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2146,6 +2190,11 @@
                 "nullable": false
             }
         ]
+    },
+    {
+        "name": "PageTreeIndex",
+        "fields": [],
+        "inputFields": []
     },
     {
         "name": "PhoneLink",
@@ -2387,6 +2436,35 @@
                     ]
                 },
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductList",
+        "fields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie"
+                ],
+                "nullable": false,
+                "array": true
             }
         ]
     },
@@ -3017,6 +3095,47 @@
         ]
     },
     {
+        "name": "StandaloneRichText",
+        "fields": [
+            {
+                "name": "richText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "richText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "SvgImage",
         "fields": [
             {
@@ -3169,6 +3288,19 @@
                 "kind": "Block",
                 "block": "TextLink",
                 "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -3193,6 +3325,19 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "TextLink",
+                "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
                 "nullable": false
             }
         ]

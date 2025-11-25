@@ -85,7 +85,7 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
     describe("input class json object", () => {
@@ -127,7 +127,7 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -170,7 +170,7 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(0);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 });

@@ -1,5 +1,56 @@
 # @comet/cli
 
+## 8.7.1
+
+## 8.7.0
+
+## 8.6.0
+
+### Minor Changes
+
+- 4c452a1: Add download-mitmproxy command
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- c8f5d89: Add support for literal arrays to block meta
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.1
+
+## 8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 23335c6: Remove workarounds in `inject-site-configs` command.
+
+    Please use the command like the current implementation in the starter.
+
+### Minor Changes
+
+- 5164ad3: comet generate-block-types generates now `AllBlockNames` type, which contains a string union for all blocks
+
 ## 8.0.0-beta.6
 
 ### Minor Changes

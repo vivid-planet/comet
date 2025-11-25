@@ -1,0 +1,84 @@
+@use "@src/styles/variables" as *;
+
+.pageLayoutContent {
+    grid-column: 2 / -2;
+    position: relative;
+
+    @media (min-width: $breakpoint-sm) {
+        grid-column: 5 / -5;
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        grid-column: 6 / -6;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        grid-column: 7 / -7;
+    }
+}
+
+.mediaCaption {
+    margin-top: var(--spacing-s300);
+    padding-right: calc(var(--swiper-button-size) * 2 + var(--spacing-s300) + var(--spacing-s500));
+
+    // min-height to show arrows when no caption
+    min-height: 20px;
+
+    @media (min-width: $breakpoint-md) {
+        min-height: 22px;
+    }
+}
+
+.swiperWrapper {
+    --swiper-button-size: 16px;
+
+    :global(.swiper-button-prev),
+    :global(.swiper-button-next) {
+        width: var(--swiper-button-size);
+        height: var(--swiper-button-size);
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        transition: opacity 0.2s linear;
+        cursor: pointer;
+
+        // Move buttons just below the image height, calculated with aspectRatio. not possible with top: 100% because this moves them down the whole slider height which is variable because of caption text
+        padding-top: var(--spacing-s300);
+        margin-top: calc(1 / var(--aspect-ratio-numeric) * 100%);
+
+        &::after {
+            content: "";
+            width: inherit;
+            height: inherit;
+            display: block;
+            mask-image: url("/assets/icons/arrow-right.svg");
+            mask-repeat: no-repeat;
+            background-color: var(--brand-primary-main);
+        }
+    }
+
+    :global(.swiper-button-prev) {
+        right: calc(var(--swiper-button-size) + var(--spacing-s300));
+        left: auto;
+
+        &::after {
+            transform: rotate(180deg);
+        }
+    }
+
+    :global(.swiper-button-next) {
+        right: 0;
+    }
+
+    &.mediaCaption {
+        opacity: 0;
+        transition: opacity 0.3s linear 0s;
+    }
+
+    :global(.swiper-slide-active) {
+        .mediaCaption {
+            opacity: 1;
+            transition: opacity 0.3s linear 0.2s;
+        }
+    }
+}

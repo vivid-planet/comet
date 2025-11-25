@@ -59,7 +59,8 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         if (!v) {
             v = resolvePath ? resolvePath(initialPath, scope) : initialPath;
         }
-        const url = new URL(v, siteConfig.url); // prevents phishing attacks
+        const url = new URL(v, siteConfig.url); // prevents phishing attacks (exception see next line)
+        if (!url.pathname.startsWith("/") || url.pathname.startsWith("//")) return "/";
         return url.pathname;
     });
 

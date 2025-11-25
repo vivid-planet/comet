@@ -28,6 +28,8 @@ enum Permission {
   fileUploads
   dependencies
   warnings
+  sitePreview
+  blockPreview
 }
 
 """
@@ -237,6 +239,7 @@ type FileUpload {
   createdAt: DateTime!
   updatedAt: DateTime!
   downloadUrl: String!
+  previewUrl: String!
   imageUrl(resizeWidth: Int!): String
 }
 
@@ -504,6 +507,7 @@ input RedirectFilter {
   source: StringFilter
   target: StringFilter
   active: BooleanFilter
+  activatedAt: DateTimeFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   and: [RedirectFilter!]

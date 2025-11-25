@@ -3,7 +3,8 @@ import { type AccordionBlockData } from "@src/blocks.generated";
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";
 import { useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
+
+import styles from "./AccordionBlock.module.scss";
 
 type AccordionBlockProps = PropsWithData<AccordionBlockData>;
 
@@ -61,7 +62,7 @@ export const AccordionBlock = withPreview(
         };
 
         return (
-            <Root>
+            <div className={styles.root}>
                 {data.blocks.map((block) => (
                     <AccordionItemBlock
                         key={block.key}
@@ -70,7 +71,7 @@ export const AccordionBlock = withPreview(
                         isExpanded={expandedItems.has(block.key)}
                     />
                 ))}
-            </Root>
+            </div>
         );
     },
     { label: "Accordion" },
@@ -78,18 +79,8 @@ export const AccordionBlock = withPreview(
 
 export const PageContentAccordionBlock = (props: AccordionBlockProps) => (
     <PageLayout grid>
-        <PageLayoutContent>
+        <div className={styles.pageLayoutContent}>
             <AccordionBlock {...props} />
-        </PageLayoutContent>
+        </div>
     </PageLayout>
 );
-
-const Root = styled.div`
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid ${({ theme }) => theme.palette.gray["300"]};
-`;
-
-const PageLayoutContent = styled.div`
-    grid-column: 3 / -3;
-`;

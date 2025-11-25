@@ -56,6 +56,6 @@ describe("GenerateCrudEnumMultiUse", () => {
 
         expect(isArrayUnique(imports)).toBe(true);
 
-        orm.close();
+        await orm.close();
     });
 });

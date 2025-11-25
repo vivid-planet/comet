@@ -57,6 +57,11 @@ const config = [
         plugins: {
             react: react,
         },
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
         rules: {
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": "error",
@@ -64,6 +69,7 @@ const config = [
             "react/self-closing-comp": "error",
             "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
             "react/react-in-jsx-scope": "off",
+            "@next/next/no-img-element": "off",
         },
     },
 ];

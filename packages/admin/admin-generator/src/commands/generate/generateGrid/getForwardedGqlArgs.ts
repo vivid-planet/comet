@@ -3,40 +3,38 @@ import { type IntrospectionField, type IntrospectionInputValue } from "graphql";
 import { type Imports } from "../utils/generateImportsCode";
 import { type Prop } from "./generateGrid";
 
-type GqlArg = { type: string; name: string; queryOrMutationName: string };
+export type GqlArg = { type: string; name: string; queryOrMutationName: string };
 
-export function getForwardedGqlArgs(gqlFields: IntrospectionField[]): {
-    imports: Imports;
-    props: Prop[];
-    gqlArgs: GqlArg[];
-} {
-    const supportedGqlArgs = ["offset", "limit", "sort", "search", "filter", "scope", "input"]; // this arguments need to be handled differently or are already handled somewhere else
-    const imports: Imports = [];
-    const props: Prop[] = [];
-    const gqlArgs: GqlArg[] = [];
+export function getForwardedGqlArgs(gqlFields: IntrospectionField[]) {
+    const ret: {
+        imports: Imports;
+        prop: Prop;
+        gqlArg: GqlArg;
+    }[] = [];
+
+    const supportedGqlArgs = ["offset", "limit", "sort", "search", "filter", "input"]; // this arguments need to be handled differently or are already handled somewhere else
 
     getArgs(gqlFields, supportedGqlArgs).forEach((arg) => {
+        let prop: Prop;
+        const imports: Imports = [];
+
         if (arg.type === "ID" || arg.type === "String" || arg.type === "DateTime") {
-            props.push({ name: arg.name, optional: false, type: "string" });
+            prop = { name: arg.name, optional: false, type: "string" };
         } else if (arg.type === "Boolean") {
-            props.push({ name: arg.name, optional: false, type: "boolean" });
+            prop = { name: arg.name, optional: false, type: "boolean" };
         } else if (arg.type === "Int" || arg.type === "Float") {
-            props.push({ name: arg.name, optional: false, type: "number" });
+            prop = { name: arg.name, optional: false, type: "number" };
         } else if (arg.type === "JSONObject") {
-            props.push({ name: arg.name, optional: false, type: "unknown" });
+            prop = { name: arg.name, optional: false, type: "unknown" };
         } else {
-            props.push({ name: arg.name, optional: false, type: arg.type });
-            imports.push({ name: arg.type, importPath: "@src/graphql.generated" });
+            prop = { name: arg.name, optional: false, type: `GQL${arg.type}` }; // generated types contain GQL prefix
+            imports.push({ name: `GQL${arg.type}`, importPath: "@src/graphql.generated" });
         }
 
-        gqlArgs.push({ name: arg.name, type: arg.type, queryOrMutationName: arg.gqlField.name });
+        ret.push({ gqlArg: { name: arg.name, type: arg.type, queryOrMutationName: arg.gqlField.name }, prop, imports });
     });
 
-    return {
-        imports,
-        props,
-        gqlArgs,
-    };
+    return ret;
 }
 
 function getArgs(gqlFields: IntrospectionField[], skipGqlArgs: string[]) {

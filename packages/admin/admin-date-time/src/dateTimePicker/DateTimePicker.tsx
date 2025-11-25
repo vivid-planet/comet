@@ -92,6 +92,9 @@ export interface DateTimePickerProps
     onFocus?: InputBaseProps["onFocus"];
 }
 
+/**
+ * @deprecated `DateTimePicker` from `@comet/admin-date-time` will be replaced by `DateTimePicker` (currently `Future_DateTimePicker`) from `@comet/admin` in a future major release.
+ */
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,

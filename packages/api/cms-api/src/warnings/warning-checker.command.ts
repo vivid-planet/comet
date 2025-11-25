@@ -1,16 +1,16 @@
 import { CreateRequestContext, EntityClass, MikroORM } from "@mikro-orm/core";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
 
 import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
+import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { DiscoverService } from "../dependencies/discover.service";
-import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsFunction, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -75,11 +75,18 @@ export class WarningCheckerCommand extends CommandRunner {
 
                         if (!scope) {
                             const entity = this.orm.getMetadata().get(className).class;
-                            const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [entity]);
+                            const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                             if (scoped) {
-                                const service = this.moduleRef.get(scoped, { strict: false });
-                                const scopedEntityScope = await service.getEntityScope(rootBlock);
+                                let scopedEntityScope: ContentScope | ContentScope[];
+
+                                if (isInjectableService(scoped)) {
+                                    const service = this.moduleRef.get(scoped, { strict: false });
+                                    scopedEntityScope = await service.getEntityScope(rootBlock);
+                                } else {
+                                    scopedEntityScope = await scoped(rootBlock);
+                                }
+
                                 if (Array.isArray(scopedEntityScope)) {
                                     throw new Error("Multiple scopes are not supported for warnings");
                                 } else {
@@ -88,43 +95,47 @@ export class WarningCheckerCommand extends CommandRunner {
                             }
                         }
 
-                        const flatBlocks = new FlatBlocks(blockData, {
-                            name: block.name,
-                            visible: true,
-                            rootPath: "root",
-                        });
-                        for (const node of flatBlocks.depthFirst()) {
-                            const warningsOrWarningsService = await node.block.warnings();
-                            let warnings: BlockWarning[] = [];
-
-                            if (this.isBlockWarningService(warningsOrWarningsService)) {
-                                const warningsService = warningsOrWarningsService;
-                                const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
-
-                                warnings = await service.warnings(node.block);
-                            } else {
-                                warnings = warningsOrWarningsService;
-                            }
-
-                            this.warningService.saveWarnings({
-                                warnings,
-                                scope,
-                                sourceInfo: {
-                                    rootEntityName: tableName,
-                                    rootColumnName: column,
-                                    rootPrimaryKey: data.primaryKey,
-                                    targetId: rootBlock.id,
-                                    jsonPath: node.pathToString(),
-                                },
+                        if (blockData) {
+                            const flatBlocks = new FlatBlocks(blockData, {
+                                name: block.name,
+                                visible: true,
+                                rootPath: "root",
                             });
+                            for (const node of flatBlocks.depthFirst()) {
+                                const warningsOrWarningsService = await node.block.warnings();
+                                let warnings: BlockWarning[] = [];
+
+                                if (isInjectableService(warningsOrWarningsService)) {
+                                    const warningsService = warningsOrWarningsService;
+                                    const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
+
+                                    warnings = await service.warnings(node.block);
+                                } else {
+                                    warnings = warningsOrWarningsService;
+                                }
+
+                                await this.warningService.saveWarnings({
+                                    warnings,
+                                    scope,
+                                    sourceInfo: {
+                                        rootEntityName: tableName,
+                                        rootColumnName: column,
+                                        rootPrimaryKey: data.primaryKey,
+                                        targetId: rootBlock.id,
+                                        jsonPath: node.pathToString(),
+                                    },
+                                });
+                            }
                         }
                     }
                 }
 
+                await this.entityManager.flush();
+                this.entityManager.clear();
+
                 offset += queryBuilderLimit;
             } while (rootBlocks.length > 0);
         }
-        await this.entityManager.flush();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entities = this.orm.config.get("entities") as EntityClass<any>[];
@@ -132,11 +143,11 @@ export class WarningCheckerCommand extends CommandRunner {
 
         for (const entity of entities) {
             const entityMetadata = metadataStorage.get(entity.name);
-            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
             if (createWarnings) {
                 const repository = this.entityManager.getRepository(entity);
 
-                if (this.isService(createWarnings)) {
+                if (isInjectableService(createWarnings)) {
                     const service = this.moduleRef.get(createWarnings, { strict: false });
 
                     if (service.bulkCreateWarnings) {
@@ -208,17 +219,6 @@ export class WarningCheckerCommand extends CommandRunner {
                 });
             }
         } while (rows.length > 0);
-    }
-
-    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
-        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
-    }
-
-    private isBlockWarningService(
-        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
-    ): transformResponse is Type<BlockWarningsServiceInterface> {
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 
     // Group root block data by tableName and className to reduce database calls.

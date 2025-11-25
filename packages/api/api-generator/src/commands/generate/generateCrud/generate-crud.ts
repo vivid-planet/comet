@@ -1,133 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
+import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
 
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
+import { integerTypes, numberTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
-
-// TODO move into own file
-export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
-    const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
-
-    const dedicatedResolverArgProps = metadata.props.filter((prop) => {
-        if (hasCrudFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
-            if (prop.kind == "m:1") {
-                return true;
-            } else {
-                console.warn(`${metadata.className} ${prop.name} can't use dedicatedResolverArg as it's not a m:1 relation`);
-                return false;
-            }
-        }
-        return false;
-    });
-
-    const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
-    const hasSearchArg = crudSearchPropNames.length > 0;
-
-    const crudFilterProps = metadata.props.filter(
-        (prop) =>
-            hasCrudFieldFeature(metadata.class, prop.name, "filter") &&
-            !prop.name.startsWith("scope_") &&
-            prop.name != "position" &&
-            (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole embeddable has filter disabled
-            (prop.enum ||
-                prop.type === "string" ||
-                prop.type === "text" ||
-                prop.type === "DecimalType" ||
-                prop.type === "number" ||
-                integerTypes.includes(prop.type) ||
-                prop.type === "BooleanType" ||
-                prop.type === "boolean" ||
-                prop.type === "DateType" ||
-                prop.type === "Date" ||
-                prop.kind === "m:1" ||
-                prop.kind === "1:m" ||
-                prop.kind === "m:n" ||
-                prop.type === "EnumArrayType" ||
-                prop.type === "uuid") &&
-            !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
-    );
-    const hasFilterArg = crudFilterProps.length > 0;
-    const crudSortProps = metadata.props.filter(
-        (prop) =>
-            hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
-            !prop.name.startsWith("scope_") &&
-            (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
-            (prop.type === "string" ||
-                prop.type === "text" ||
-                prop.type === "DecimalType" ||
-                prop.type === "number" ||
-                integerTypes.includes(prop.type) ||
-                prop.type === "BooleanType" ||
-                prop.type === "boolean" ||
-                prop.type === "DateType" ||
-                prop.type === "Date" ||
-                prop.kind === "m:1" ||
-                prop.type === "EnumArrayType" ||
-                prop.enum),
-    );
-    const hasSortArg = crudSortProps.length > 0;
-
-    const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
-
-    const scopeProp = metadata.props.find((prop) => prop.name == "scope");
-    if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-
-    const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
-
-    const positionGroupPropNames: string[] = hasPositionProp
-        ? (generatorOptions.position?.groupByFields ?? [
-              ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupByFields should be used
-          ])
-        : [];
-    const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
-
-    const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
-    const skipScopeCheck = !scopeProp && !scopedEntity;
-
-    const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
-    const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
-
-    const blockProps = metadata.props.filter((prop) => {
-        return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
-    });
-
-    return {
-        crudSearchPropNames,
-        hasSearchArg,
-        crudFilterProps,
-        hasFilterArg,
-        crudSortProps,
-        hasSortArg,
-        hasSlugProp,
-        hasPositionProp,
-        positionGroupProps,
-        scopeProp,
-        skipScopeCheck,
-        argsClassName,
-        argsFileName,
-        blockProps,
-        dedicatedResolverArgProps,
-    };
-}
+import { buildOptions } from "./build-options";
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
     const { crudFilterProps } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
+    imports.push({ name: "IsOptional", importPath: "class-validator" });
+    imports.push({ name: "ValidateNested", importPath: "class-validator" });
+    imports.push({ name: "Type", importPath: "class-transformer" });
+    imports.push({ name: "Field", importPath: "@nestjs/graphql" });
+    imports.push({ name: "InputType", importPath: "@nestjs/graphql" });
+
     let enumFiltersOut = "";
 
     const generatedEnumNames = new Set<string>();
     const generatedEnumsNames = new Set<string>();
     crudFilterProps.map((prop) => {
         if (prop.type == "EnumArrayType") {
+            imports.push({ name: "createEnumsFilter", importPath: "@comet/cms-api" });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumNames.has(enumName)) {
@@ -138,6 +40,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                 imports.push({ name: enumName, importPath });
             }
         } else if (prop.enum) {
+            imports.push({ name: "createEnumFilter", importPath: "@comet/cms-api" });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumsNames.has(enumName)) {
@@ -150,12 +53,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, IdFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
-    import { Field, InputType } from "@nestjs/graphql";
-    import { Type } from "class-transformer";
-    import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-    ${generateImportsCode(imports)}
-
+    const filterOut = `
     ${enumFiltersOut}
 
     @InputType()
@@ -179,13 +77,15 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
                 } else if (prop.type === "string" || prop.type === "text") {
+                    imports.push({ name: "StringFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
                     @Type(() => StringFilter)
                     ${prop.name}?: StringFilter;
                     `;
-                } else if (prop.type === "DecimalType" || prop.type == "number" || integerTypes.includes(prop.type)) {
+                } else if (numberTypes.includes(prop.type)) {
+                    imports.push({ name: "NumberFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -193,6 +93,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: NumberFilter;
                     `;
                 } else if (prop.type === "boolean" || prop.type === "BooleanType") {
+                    imports.push({ name: "BooleanFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => BooleanFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -201,6 +102,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     `;
                 } else if (prop.type === "DateType") {
                     // ISO Date without time
+                    imports.push({ name: "DateFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => DateFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -209,6 +111,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     `;
                 } else if (prop.type === "Date") {
                     // DateTime
+                    imports.push({ name: "DateTimeFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => DateTimeFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -216,6 +119,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: DateTimeFilter;
                     `;
                 } else if (prop.kind === "m:1") {
+                    imports.push({ name: "ManyToOneFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => ManyToOneFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -223,6 +127,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: ManyToOneFilter;
                     `;
                 } else if (prop.kind === "1:m") {
+                    imports.push({ name: "OneToManyFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => OneToManyFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -230,6 +135,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: OneToManyFilter;
                     `;
                 } else if (prop.kind === "m:n") {
+                    imports.push({ name: "ManyToManyFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => ManyToManyFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -237,6 +143,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: ManyToManyFilter;
                     `;
                 } else if (prop.type == "uuid") {
+                    imports.push({ name: "IdFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => IdFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -264,10 +171,10 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     }
     `;
 
-    return filterOut;
+    return generateImportsCode(imports) + filterOut;
 }
 
-function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+export function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
     const { crudSortProps } = buildOptions(metadata, generatorOptions);
 
@@ -279,7 +186,7 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {
-                return `${prop.name} = "${prop.name}",`;
+                return `${prop.replace(".", "_")} = "${prop.replace(".", "_")}",`;
             })
             .join("\n")}
     }
@@ -318,7 +225,10 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps, hasPositionProp } = buildOptions(
+        metadata,
+        generatorOptions,
+    );
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
@@ -327,9 +237,9 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
-    import { OffsetBasedPaginationArgs } from "@comet/cms-api";
+    import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
-    import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
+    import { ${classNameSingular}Sort, ${classNameSingular}SortField } from "./${fileNameSingular}.sort";
 
     ${generateImportsCode(imports)}
 
@@ -387,11 +297,11 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasSortArg
                 ? `
-        @Field(() => [${classNameSingular}Sort], { nullable: true })
+        @Field(() => [${classNameSingular}Sort], { ${hasPositionProp ? `defaultValue: [{ field: ${classNameSingular}SortField.position, direction: SortDirection.ASC }]` : `nullable: true`} })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
-        @IsOptional()
-        sort?: ${classNameSingular}Sort[];
+        ${!hasPositionProp ? `@IsOptional()` : ""}
+        sort${!hasPositionProp ? `?` : ""}: ${classNameSingular}Sort[];
         `
                 : ""
         }
@@ -491,7 +401,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                     positionGroupProps.length
                         ? `getPositionGroupCondition(group: ${positionGroupType}): FilterQuery<${metadata.className}> {
                     return {
-                        ${positionGroupProps.map((field) => `${field.name}: { $eq: group.${field.name} }`).join(",")}
+                        ${positionGroupProps.map((field) => `${field.name}: group.${field.name}`).join(",")}
                     };
                 }`
                         : ``
@@ -505,6 +415,14 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 }
 
 function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: string): Imports[0] {
+    const libMatch = targetMetadata.path.match(/(packages\/api|@comet)\/cms-api\/lib\/(.*)/);
+    if (libMatch) {
+        // Import from cms-api package
+        return {
+            name: targetMetadata.className,
+            importPath: "@comet/cms-api",
+        };
+    }
     return {
         name: targetMetadata.className,
         importPath: path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, ""),
@@ -928,6 +846,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
     imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
+    imports.push({ name: "gqlSortToMikroOrmOrderBy", importPath: "@comet/cms-api" });
 
     const resolverOut = `import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
@@ -1043,11 +962,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${
                 hasSortArg
                     ? `if (sort) {
-                options.orderBy = sort.map((sortItem) => {
-                    return {
-                        [sortItem.field]: sortItem.direction,
-                    };
-                });
+                options.orderBy = gqlSortToMikroOrmOrderBy(sort);
             }`
                     : ""
             }
@@ -1155,8 +1070,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                               .join(",")} }`
                         : ``
                 });
-                if (input.position > lastPosition + 1) {
-                    input.position = lastPosition + 1;
+                if (input.position > lastPosition) {
+                    input.position = lastPosition;
                 }
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${
@@ -1301,7 +1216,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             .filter((prop) => {
                 if (prop.kind === "1:m" && prop.orphanRemoval) {
                     if (!prop.targetMeta) throw new Error(`Target metadata not set`);
-                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    const hasOwnCrudGenerator = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, prop.targetMeta.class);
                     if (!hasOwnCrudGenerator) {
                         //generate nested resolver only if target entity has no own crud generator
                         return true;

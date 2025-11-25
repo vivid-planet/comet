@@ -1,15 +1,17 @@
-import { defineConfig } from "@comet/admin-generator";
+import { defineConfig, type InjectedFormVariables, injectFormVariables } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
 import { productTypeValues } from "./productTypeValues";
+import { validateProductSlug } from "./validateProductSlug";
 
 export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
+    navigateOnCreate: false,
     fields: [
         {
             type: "fieldSet",
@@ -28,7 +30,18 @@ export default defineConfig<GQLProduct>({
                             <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />
                         ) : undefined,
                 },
-                { type: "text", name: "slug" },
+                {
+                    type: "text",
+                    name: "slug",
+                    validate: injectFormVariables(
+                        ({ id, client, manufacturerCountry }: InjectedFormVariables & { manufacturerCountry: string }) =>
+                            (value: string) => {
+                                // eslint-disable-next-line no-console
+                                console.log(manufacturerCountry);
+                                return validateProductSlug({ value, id, client });
+                            },
+                    ),
+                },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
                 {
@@ -39,7 +52,9 @@ export default defineConfig<GQLProduct>({
                     inputType: "radio",
                     values: productTypeValues,
                 },
+                { type: "staticSelect", name: "additionalTypes" },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                { type: "asyncSelect", name: "tags", rootQuery: "productTags" },
                 {
                     type: "numberRange",
                     name: "priceRange",
@@ -71,7 +86,7 @@ export default defineConfig<GQLProduct>({
                     filter: {
                         type: "formProp",
                         propName: "manufacturerCountry",
-                        gqlName: "addressAsEmbeddable_country",
+                        rootQueryArg: "addressAsEmbeddable_country",
                     },
                     startAdornment: { icon: "Location" },
                 },

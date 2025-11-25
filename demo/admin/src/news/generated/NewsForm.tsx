@@ -12,7 +12,6 @@ import { RadioGroupField } from "@comet/admin";
 import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState } from "@comet/cms-admin";
 import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
@@ -20,9 +19,10 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { useContentScope } from "@comet/cms-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
+import { Future_DatePickerField } from "@comet/admin";
 import { newsFormFragment } from "./NewsForm.gql";
 import { GQLNewsFormFragment } from "./NewsForm.gql.generated";
 import { newsQuery } from "./NewsForm.gql";
@@ -38,29 +38,28 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock, content: NewsContentBlock
 };
-type FormValues = Omit<GQLNewsFormFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLNewsFormFragment, "image" | "content"> & {
     image: BlockState<typeof rootBlocks.image>;
     content: BlockState<typeof rootBlocks.content>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
-    scope: GQLNewsContentScopeInput;
 }
-export function NewsForm({ id, scope }: FormProps) {
+export function NewsForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
+    const { scope } = useContentScope();
     const { data, error, loading, refetch } = useQuery<GQLNewsQuery, GQLNewsQueryVariables>(newsQuery, id ? { variables: { id } } : { skip: true });
     const initialValues = useMemo<Partial<FormValues>>(() => data?.news
         ? {
             ...filterByFragment<GQLNewsFormFragment>(newsFormFragment, data.news),
-            image: rootBlocks.image.input2State(data.news.image),
-            content: rootBlocks.content.input2State(data.news.content)
+            image: rootBlocks.image.input2State(data.news.image), content: rootBlocks.content.input2State(data.news.content),
         }
         : {
-            image: rootBlocks.image.defaultValues(),
-            content: rootBlocks.content.defaultValues()
+            image: rootBlocks.image.defaultValues(), content: rootBlocks.content.defaultValues(),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -75,10 +74,7 @@ export function NewsForm({ id, scope }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content), };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -91,15 +87,19 @@ export function NewsForm({ id, scope }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
-                variables: { input: output, scope },
+                variables: {
+                    scope,
+                    input: output
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createNews.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createNews.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };
@@ -118,7 +118,7 @@ export function NewsForm({ id, scope }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title"/>}/>
 
-            <Field required variant="horizontal" fullWidth name="date" component={FinalFormDatePicker} label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
+            <Future_DatePickerField required variant="horizontal" fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
         <RadioGroupField required variant="horizontal" fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category"/>} options={[
                 {
                     label: <FormattedMessage id="news.category.events" defaultMessage="Events"/>,

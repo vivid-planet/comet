@@ -14,6 +14,7 @@ import {
     ImgproxyModule,
     KubernetesModule,
     MailerModule,
+    MailTemplatesModule,
     PageTreeModule,
     RedirectsModule,
     SentryModule,
@@ -32,6 +33,7 @@ import { ContentGenerationService } from "@src/content-generation/content-genera
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/documents/links/links.module";
 import { PagesModule } from "@src/documents/pages/pages.module";
+import { TranslationModule } from "@src/translation/translation.module";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -67,6 +69,7 @@ export class AppModule {
             module: AppModule,
             imports: [
                 ConfigModule.forRoot(config),
+                TranslationModule,
                 DbModule,
                 GraphQLModule.forRootAsync<ApolloDriverConfig>({
                     driver: ApolloDriver,
@@ -76,6 +79,7 @@ export class AppModule {
                         graphiql: config.debug ? { url: "/api/graphql" } : undefined,
                         playground: false,
                         autoSchemaFile: "schema.gql",
+                        sortSchema: true,
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
@@ -87,8 +91,10 @@ export class AppModule {
                         },
                         context: ({ req }: { req: Request }) => ({ ...req }),
                         cors: {
-                            credentials: true,
-                            origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
+                            origin: config.corsAllowedOrigin,
+                            methods: ["GET", "POST"],
+                            credentials: false,
+                            maxAge: 600,
                         },
                         useGlobalPrefix: true,
                         buildSchemaOptions: {
@@ -131,7 +137,15 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
-                    sitePreviewSecret: config.sitePreviewSecret,
+                    // change sitePreviewSecret based on scope
+                    // this is just to demonstrate you can use the scope to change the sitePreviewSecret but it has no effect in this example
+                    // if you only have one secret you can also just provide a string here
+                    sitePreviewSecret: (scope) => {
+                        if (scope.domain === "main") {
+                            return config.sitePreviewSecret;
+                        }
+                        return config.sitePreviewSecret;
+                    },
                 }),
 
                 RedirectsModule.register({
@@ -190,6 +204,7 @@ export class AppModule {
                 PredefinedPagesModule,
                 CronJobsModule,
                 MailerModule.register(config.mailer),
+                MailTemplatesModule,
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({

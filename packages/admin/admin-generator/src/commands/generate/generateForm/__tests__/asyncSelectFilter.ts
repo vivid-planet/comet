@@ -4,36 +4,49 @@ import { type FormConfig, type FormFieldConfig } from "../../generate-command";
 import { generateForm } from "../generateForm";
 import { generateFormField } from "../generateFormField";
 
-describe("AsyncSelect filter", () => {
-    it("generates field without filter", async () => {
+describe("AsyncSelectFilter", () => {
+    it("generates field with filter", async () => {
         const schema = buildSchema(`
             type Query {
-                products: [Product]!
-                categories: [Category]!
-            } 
+                products(filter: ProductFilter): [Product!]
+                productCategories: [ProductCategory!]
+            }
+
+            type Mutation {
+                createProductHighlight(input: ProductHighlightInput!): ProductHighlight!
+                updateProductHighlight(id: ID!, input: ProductHighlightInput!): ProductHighlight!
+            }
+
+            input ProductHighlightInput {
+                product: ID
+            }
+
+            input ProductFilter {
+                category: ManyToOneFilter
+            }
+
+            input ManyToOneFilter {
+                isAnyOf: [ID!]
+                equal: ID
+                notEqual: ID
+            }
 
             type Product {
                 id: ID!
                 title: String!
-                category: Category!
+                category: ProductCategory
             }
-            type Category {
+            type ProductCategory {
                 id: ID!
-                name: String!
+                title: String!
             }
-
-            type Mutation {
-                createProduct(input: ProductInput!): Product!
-                updateProduct(id: ID!, input: ProductInput!): Product!
-            }
-
-            input ProductInput {
-                title: String
-                category: ID
+            type ProductHighlight {
+                id: ID!
+                product: Product
             }
         `);
-        type GQLCategory = {
-            __typename?: "Category";
+        type GQLProductCategory = {
+            __typename?: "ProductCategory";
             id: string;
             name: string;
         };
@@ -41,32 +54,48 @@ describe("AsyncSelect filter", () => {
             __typename?: "Product";
             id: string;
             title: string;
-            category: GQLCategory;
+            category: GQLProductCategory;
         };
-
+        type GQLProductHighlight = {
+            __typename?: "ProductHighlight";
+            id: string;
+            product: GQLProduct;
+        };
         const introspection = introspectionFromSchema(schema);
 
-        const fieldConfig: FormFieldConfig<GQLProduct> = {
-            type: "asyncSelect",
-            rootQuery: "categories",
-            name: "category",
-        };
-        const formConfig: FormConfig<GQLProduct> = {
+        const formConfig: FormConfig<GQLProductHighlight> = {
             type: "form",
-            gqlType: "Product",
-            fields: [fieldConfig],
+            gqlType: "ProductHighlight",
+            fields: [
+                {
+                    type: "asyncSelectFilter",
+                    rootQuery: "productCategories",
+                    loadValueQueryField: "product.category",
+                    name: "productCategory",
+                },
+                {
+                    type: "asyncSelect",
+                    rootQuery: "products",
+                    name: "product",
+                    filter: {
+                        type: "field",
+                        formFieldName: "productCategory",
+                        rootQueryArg: "category",
+                    },
+                },
+            ],
         };
 
-        const output = generateFormField({
-            gqlIntrospection: introspection,
-            baseOutputFilename: "ProductForm",
-            formFragmentName: "ProductFormFragment",
-            config: fieldConfig,
+        const formOutput = generateForm(
+            {
+                gqlIntrospection: introspection,
+                baseOutputFilename: "ProductHighlightForm",
+                exportName: "ProductHighlightForm",
+                targetDirectory: "/test",
+            },
             formConfig,
-            gqlType: "Product",
-        });
-
-        expect(output.code).toMatchSnapshot();
+        );
+        expect(formOutput.code).toMatchSnapshot();
     });
 
     it("generates filter with value dependent on other field", async () => {
@@ -116,7 +145,7 @@ describe("AsyncSelect filter", () => {
             name: "category",
             filter: {
                 type: "field",
-                fieldName: "title",
+                formFieldName: "title",
             },
         };
         const formConfig: FormConfig<GQLProduct> = {
@@ -142,90 +171,6 @@ describe("AsyncSelect filter", () => {
         });
 
         expect(output.code).toMatchSnapshot();
-    });
-
-    it("generates formProp with string filter as root query arg", async () => {
-        const schema = buildSchema(`
-            type Query {
-                products: [Product]!
-                categories(foo: String): [Category]!
-            }
-
-            type Product {
-                id: ID!
-                title: String!
-                category: Category!
-            }
-            type Category {
-                id: ID!
-                name: String!
-            }
-
-            type Mutation {
-                createProduct(input: ProductInput!): Product!
-                updateProduct(id: ID!, input: ProductInput!): Product!
-            }
-
-            input ProductInput {
-                title: String
-                category: ID
-            }
-        `);
-        type GQLCategory = {
-            __typename?: "Category";
-            id: string;
-            name: string;
-        };
-        type GQLProduct = {
-            __typename?: "Product";
-            id: string;
-            title: string;
-            category: GQLCategory;
-        };
-
-        const introspection = introspectionFromSchema(schema);
-
-        const fieldConfig: FormFieldConfig<GQLProduct> = {
-            type: "asyncSelect",
-            rootQuery: "categories",
-            name: "category",
-            filter: {
-                type: "formProp",
-                propName: "foo",
-            },
-        };
-        const formConfig: FormConfig<GQLProduct> = {
-            type: "form",
-            gqlType: "Product",
-            fields: [fieldConfig],
-        };
-
-        const fieldOutput = generateFormField({
-            gqlIntrospection: introspection,
-            baseOutputFilename: "ProductForm",
-            formFragmentName: "ProductFormFragment",
-            config: fieldConfig,
-            formConfig,
-            gqlType: "Product",
-        });
-        expect(fieldOutput.formProps).toEqual([
-            {
-                name: "foo",
-                type: "string",
-                optional: false,
-            },
-        ]);
-
-        const formOutput = generateForm(
-            {
-                gqlIntrospection: introspection,
-                baseOutputFilename: "ProductForm",
-                exportName: "ProductForm",
-                targetDirectory: "/test",
-            },
-            formConfig,
-        );
-        expect(formOutput.code).toMatchSnapshot();
     });
 
     it("generates formProp with enum filter as root query arg", async () => {
@@ -439,7 +384,7 @@ describe("AsyncSelect filter", () => {
                 filter: {
                     type: "formProp",
                     propName: "categoryType",
-                    gqlName: "type",
+                    rootQueryArg: "type",
                 },
             };
             const formConfig: FormConfig<GQLProduct> = {

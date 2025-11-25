@@ -1,5 +1,378 @@
 # @comet/cms-api
 
+## 8.7.1
+
+### Patch Changes
+
+- 9ed0711: Improve Warnings SQL-Performance by setting appropriate indexes
+- 182c930: Optimize `WarningEventSubscriber`. This improves performance for create and update requests where blocks occur.
+- 07c9b17: Fix in-memory filtering in `paginatedRedirects` query
+    - Fix `isEmpty` and `isNotEmpty` filters for string filters
+    - Fix boolean filter handling: properly handle the "any" case (when no specific value is set)
+    - Add support for `activatedAt` field in redirect filters
+
+## 8.7.0
+
+### Minor Changes
+
+- 13babd1: Use `sharp` to calculate the dominant image color
+
+    `sharp` replaces the previous implementation based on `get-image-colors`, which was removed because it's unmaintained and causes some security warnings.
+
+### Patch Changes
+
+- b2da6c9: Add `calculateInheritAspectRatio` to public API (for real)
+- b305d5b: Add EntityInfo to RedirectEntity to provide additional entity information, particularly useful when displaying warnings.
+
+## 8.6.0
+
+### Minor Changes
+
+- 206b352: Add `calculateInheritAspectRatio` to the public API
+- fda9262: Add support for scope-specific site preview secrets
+
+    The `sitePreviewSecret` in `PageTreeModule` now accepts a function `(scope: ContentScope) => string` to use different secrets based on the current content scope.
+
+- 30b671e: File Uploads: add preview endpoint for files
+- fbae3ae: Add new permissions `sitePreview` and `blockPreview` to `SitePreviewResolver`
+
+    These permissions can be assigned to users who can't access the page tree, but some other parts of the CMS where site or block previews are needed.
+
+    Users with the `pageTree` permission can still automatically access both previews.
+
+### Patch Changes
+
+- 6326641: Add validation of parentId to PageTreeNode to avoid setting a page as its own parent
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- 942200f: Improve check-warnings job by adding a missing await which led to bad performance
+- b7156bb: Fix crash in WarningModule with nullable blocks
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- c8f5d89: Add support for literal arrays to block meta
+
+### Patch Changes
+
+- bdfb64f: Fix file replacement by id
+- 8a6244e: Prevent a refresh of `block_index_dependencies` within 5 minutes of the last refresh
+
+    This was already the desired behavior, but the previous implementation was not working correctly.
+
+## 8.3.0
+
+### Minor Changes
+
+- 78b7703: Export additional types for UserPermissions
+    - `ContentScopeWithLabel`
+    - `PermissionForUser` (`PermissionsForUser` is already exported)
+
+- 99950fa: Add new GraphQL to MikroORM helper: `gqlSortToMikroOrmOrderBy`, used by API Generator
+
+### Patch Changes
+
+- 613bc13: Warnings Module: fix `@ScopedEntity()` checks
+- 4a9938a: Warnings Module: make warnings feature truly optional
+
+## 8.2.0
+
+### Minor Changes
+
+- 5456186: Add `delete` method to `FileUploadsService`
+
+### Patch Changes
+
+- 049d5cd: Fix recipient option for mailer:send-test-mail command
+
+## 8.1.1
+
+### Patch Changes
+
+- ef0f848: Export `SeoBlockInputInterface` type
+- 5b61069: Export `ChildBlockInfo`
+
+## 8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- 04b8692: Add `class-transformer`, `reflect-metadata`, and `rxjs` as peer dependencies
+
+    To upgrade, install the latest versions of the packages in your project.
+
+- ef1c645: Add warnings feature
+
+    The warnings module can be used to display application-wide warnings in the admin. See the [docs](https://docs.comet-dxp.com/docs/features-modules/warning-module) for more information.
+
+- 3562a94: Bump MikroORM peer dependency to v6
+
+    Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+
+- b039dcb: Separate `FileUploadsModule` completely from `DamModule`
+
+    Multiple changes were necessary to achieve this:
+    - `ScaledImagesCacheService` was moved to `BlobStorageModule`
+    - You must now pass the `cacheDirectory` config option to `BlobStorageModule` (instead of `DamModule`)
+    - `ImgproxyService` was moved to its own `ImgproxyModule`
+    - You must add the `ImgproxyModule` to your `AppModule`
+    - In the `DamModule` config, the `maxSrcResolution` option was moved from the `imgproxyConfig` to the `damConfig`
+
+- abbe4af: Bump NestJS peer dependency to v11
+
+    Follow the official [migration guide](https://docs.nestjs.com/migration-guide) to upgrade.
+
+- b3e73a5: Remove `ImagesController` export from `@comet/cms-api`
+- bc5f831: Merge `@comet/blocks-api` into `@comet/cms-api`
+
+    The dedicated `@comet/blocks-api` package was originally introduced to support projects without CMS parts.
+    It turned out that this is never the case, so the separation doesn't make sense anymore.
+    Therefore, the `@comet/blocks-api` is merged into this package.
+
+    **Breaking changes**
+    - The `@comet/blocks-api` package doesn't exist anymore
+    - The `getFieldKeys` function has been removed from the public API
+    - Multiple exports that were too generic have been renamed
+        - `getMostSignificantPreviewImageUrlTemplate` -> `getMostSignificantPreviewImageUrlTemplateFromBlock`
+        - `getPreviewImageUrlTemplates` -> `getPreviewImageUrlTemplatesFromBlock`
+        - `getSearchText` -> `getSearchTextFromBlock`
+        - `inputToData` -> `blockInputToData`
+        - `TransformResponse` -> `TransformBlockResponse`
+        - `TransformResponseArray` -> `TransformBlockResponseArray`
+        - `transformToSave` -> `transformToBlockSave`
+        - `transformToSaveIndex` -> `transformToBlockSaveIndex`
+        - `TraversableTransformResponse` -> `TraversableTransformBlockResponse`
+        - `TraversableTransformResponseArray` -> `TraversableTransformBlockResponseArray`
+        - `typesafeMigrationPipe` -> `typeSafeBlockMigrationPipe`
+
+    **How to upgrade**
+
+    To upgrade, perform the following changes:
+    1. Uninstall the `@comet/blocks-api` package
+    2. Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+    3. Remove usages of `getFieldKeys` (probably none)
+    4. Update imports that have been renamed
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 56064fc: Remove `node-fetch` in favor of Node's native Fetch API
+
+    Note: **You need a Node version that supports the Fetch API, preferably Node v22.**
+
+- e8f4b07: Bump class-validator peer dependency to v0.14.0
+
+    To upgrade, install class-validator v0.14.10 or later.
+
+- 412bbf2: Bump `@kubernetes/client-node` peer dependency to v1
+
+    To upgrade, install `@kubernetes/client-node` v1.0.0 or later.
+
+- 8e193a3: Introduce a strongly-typed permission system using the new `Permission` GraphQL enum and `Permission` type, replacing previous string-based permissions.
+
+    **Breaking changes**
+    1. **Mandatory `requiredPermission`**: The `@CrudGenerator` decorator now requires the `requiredPermission` parameter to be explicitly specified
+    2. **Permission Type Changes**: All permission-related APIs now expect typed permissions instead of plain strings
+
+- 0fa9b84: Remove absolute DAM URLs
+
+    Until now, the API returned absolute URLs for DAM assets by default.
+    You could optionally get relative URLs by setting the `x-relative-dam-urls` header.
+    This regularly caused confusion regarding the handling of DAM URLs in the site and admin.
+
+    Now, the API will always return relative URLs for DAM assets.
+    The `x-relative-dam-urls` header is not supported anymore.
+
+    A proxy should be set up in site and admin to proxy the relative /dam URLs to the API.
+
+- 9cb98ee: PageTreeModule: sitePreviewSecret now is mandatory
+- 44915b9: Changed format for `useCurrentUser().allowedContentScopes`
+    - Old: `{ [key]: string }[]`
+    - New: `{ scope: ContentScope; label: { [key in keyof ContentScope]: string }; }[]`
+
+    To support a smooth transition the `defaultValue` prop of the `ContentScopeProvider` now must also have the same format.
+
+- 8ef9a56: Use `GraphQLLocalDate` instead of `GraphQLDate` for date-only columns
+
+    The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type.
+    This causes problems when used in combination with MikroORM v6, which treats date-only columns as strings.
+    Since using strings is preferred, the `GraphQLLocalDate` scalar is used instead, which performs no type coercion.
+
+    **How to upgrade**
+    1. Use `string` instead of `Date` for date-only columns:
+
+    ```diff
+    class Product {
+        @Property({ type: types.date, nullable: true })
+        @Field(() => GraphQLDate, { nullable: true })
+    -   availableSince?: Date = undefined;
+    +   availableSince?: string = undefined;
+    }
+    ```
+
+    2. Use `GraphQLLocalDate` instead of `GraphQLDate`:
+
+    ```diff
+    - import { GraphQLDate } from "graphql-scalars";
+    + import { GraphQLLocalDate } from "graphql-scalars";
+
+    class Product {
+        @Property({ type: types.date, nullable: true })
+    -   @Field(() => GraphQLDate, { nullable: true })
+    +   @Field(() => GraphQLLocalDate, { nullable: true })
+        availableSince?: string = undefined;
+    }
+    ```
+
+    3. Add the `LocalDate` scalar to `codegen.ts`:
+
+    ```diff
+    scalars: rootBlocks.reduce(
+        (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
+    +   { LocalDate: "string" }
+    )
+    ```
+
+- 23f393b: Protect images in the site preview
+
+    The image URLs in the site preview are now generated as preview URLs.
+    Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
+
+- a567f60: `createAuthResolver` does not support the `currentUser` config option anymore
+- 9c3f72e: Make impersonation usable for non root users.
+
+    If activated, impersonation is only available if the impersonating user
+    has as many or fewer permissions and content scopes as the user to impersonate.
+    Since this is an expensive calculation the button to impersonate is only
+    available in the detail view of the user and has been removed from the list
+    view.
+
+    When enabling the `impersonation` permission for non root users the
+    permission should also be added to `requiredPermission` for
+    `UserPermissionsPage`. This enables the user to select the user to impersonate.
+    Nevertheless, without the `userPermissions` permission it's not possible to
+    change permission of users.
+
+- 0d210fe: Replace passport with auth services
+
+    See the migration guide to upgrade.
+
+- e478c6b: Directly pass the entity metadata instead of the repository in `gqlArgsToMikroOrmQuery`
+- 4c48918: Bump `@sentry/node` peer dependency to v8
+- 678bb0b: Move API Generator into separate `@comet/api-generator` package
+
+    It can be run with the same `comet-api-generator` command as before.
+
+- 8552e1b: Remove `createUserFromIdToken` from `UserPermissionsUserServiceInterface`
+
+    `createUserFromRequest` (available since Comet v7.6.0) should be used instead.
+
+- 52b0410: Replace nestjs-console with nest-commander
+
+    The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
+    We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
+
+    To upgrade, perform the following steps:
+    1. Uninstall `nestjs-console`
+    2. Install `nest-commander` and `@types/inquirer`
+    3. Update `api/src/console.ts` to use `nest-commander`
+    4. Update your commands to the new `nest-commander` syntax
+
+    See the migration guide for more information.
+
+- c5de11c: Change S3 config for BlobStorage
+
+    Now the config has all fields from `S3ClientConfig` provided by `@aws-sdk/client-s3`, so you override all options in the project.
+
+### Minor Changes
+
+- 9cf2160: API Generator: Add new option `single` to `@CrudGenerator` which allows to enable/disable the single query
+- b3e73a5: Add configuration option `basePath` to the DAM settings in `comet-config.json`.
+
+    ```diff
+    {
+        "dam": {
+            ...
+    +        "basePath": "foo"
+        },
+        ...
+    }
+    ```
+
+- 26dd92a: Add possibility to use service for `convertJwtToUser`
+- cbfa595: Add support for searching UUIDs to `searchToMikroOrmQuery`
+- 7e97e18: Create a block_index view that contains a flat list of all blocks existing in the project
+- 1e39c70: Add `MailerModule` to send mails from API
+
+    See https://docs.comet-dxp.com/docs/features-modules/mailer-module for more information
+
+- c63817a: Add `getUserForLogin` function in `UserService`.
+
+    This allows implementing a different code path for getting the user to login
+    and the user shown in the administration panel. Examples are caching the currently logged
+    in user or throwing `UnauthorizedException` when not allowed to login.
+
+- 0328fa3: API Generator: Add support for filtering `ID` fields
+- 2a9f23d: Support block preview scope for BFF requests
+
+    The current scope will be sent via a monkey patched fetch and interpreted in `previewParams()`.
+
+- 1450882: Add support for `notContains` to `StringFilter`
+- 864e6de: Add the possibility to filter users by permission
+
+### Patch Changes
+
+- 5cca3e1: Fix `createFile` in `BlobStorageS3Storage`
+
+    Previously, uploading files to an S3 bucket caused this error:
+
+    > Are you using a Stream of unknown length as the Body of a PutObject request? Consider using Upload instead from @aws-sd k/lib-storage.
+    > An error was encountered in a non-retryable streaming request.
+
+- b8817b8: Add `BlocksBlockInputInterface` to the public API
+- ebf05cf: Only regenerate warnings for the row that changed in the `WarningEventSubscriber`
+
+    Previously, the warnings were regenerated for all rows of the entity using a lot of memory.
+
+- cf1a829: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+    - `video/avi` doesn't actually exist
+    - `image/psd` doesn't exist / is non-standard
+    - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+      instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+- 092e96e: Fix validation error caused by `EmptyDamScope` when uploading a file
+- 58a99bb: Fix input validation for missing child blocks
+- 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
+- f20ec6c: Make class-validator a peer dependency
+- b4d1677: Fix copying a file from one scope to another
+
+    Previously, the media alternatives weren't handled when copying a file (which happens automatically when copying a page from one scope to another). This caused this error:
+
+    > ERROR [ExceptionFilter] DriverException: update "DamMediaAlternative" set "for" = 'eb2a6906-eef9-425c-9d46-1f76275f4ca5', "alternative" = 'eb2a6906-eef9-425c-9d46-1f76275f4ca5' where "id" = '[object Object]' - invalid input syntax for type uuid: "[object Object]"
+
+- b63ecc8: RichTextBlock: add childBlocksInfo for embedded links in order to have them in block index
+
+    This fixes missing dependencies for internal links
+
 ## 8.0.0-beta.6
 
 ### Major Changes

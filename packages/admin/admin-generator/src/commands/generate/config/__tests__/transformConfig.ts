@@ -1,4 +1,6 @@
-import { transformConfigFile } from "../transformConfig";
+import ts from "typescript";
+
+import { collectImports, transformConfigFile } from "../transformConfig";
 
 describe("transformConfig", () => {
     function parseString(sourceFileText: string) {
@@ -189,5 +191,50 @@ describe("transformConfig", () => {
         `);
         expect(config).toContain('type: "grid"');
         expect(config).toContain("name: foo(() => true)");
+    });
+
+    it("parses injectFormVariables", () => {
+        const config = parseString(`
+            import { defineConfig, injectFormVariables } from "@comet/admin-generator";
+            import { GQLProduct } from "@src/graphql.generated";
+
+            export default defineConfig<GQLProduct>({
+                type: "form",
+                fields: [
+                    {
+                        name: "title",
+                        validate: injectFormVariables(({ id }) => (value: string) => { return value != id; }),
+                    }
+                ]
+            });
+        `);
+        expect(config).toContain('type: "form"');
+        expect(config.replace(/\s+/g, " ")).toContain(`validate: { code: "(value: string) => { return value != id; }", imports: [] }`);
+    });
+
+    describe("collectImports", () => {
+        function parseString(code: string) {
+            return ts.createSourceFile(
+                "test.tsx",
+                code,
+                ts.ScriptTarget.ES2024, // language version
+                true, // setParentNodes (useful for some traversals)
+            );
+        }
+        it("collects named relative imports", () => {
+            const sourceFile = parseString(`import { productTypeValues } from "./productTypeValues";`);
+            const importedIdentifiers = collectImports(sourceFile);
+            expect(importedIdentifiers).toEqual(new Map([["productTypeValues", { name: "productTypeValues", import: "./productTypeValues" }]]));
+        });
+        it("collects named package imports", () => {
+            const sourceFile = parseString(`import { DamImageBlock } from "@comet/cms-admin";`);
+            const importedIdentifiers = collectImports(sourceFile);
+            expect(importedIdentifiers).toEqual(new Map([["DamImageBlock", { name: "DamImageBlock", import: "@comet/cms-admin" }]]));
+        });
+        it("collects default imports", () => {
+            const sourceFile = parseString(`import debounce from "p-debounce";`);
+            const importedIdentifiers = collectImports(sourceFile);
+            expect(importedIdentifiers).toEqual(new Map([["debounce", { defaultImport: true, name: "debounce", import: "p-debounce" }]]));
+        });
     });
 });

@@ -6,6 +6,8 @@ import react from "eslint-plugin-react";
 import cometPlugin from "@comet/eslint-plugin";
 import reactHooks from "eslint-plugin-react-hooks";
 
+const cometAdminImportsRestrictedFromMuiMaterial = ["Alert", "Button", "Dialog", "Tooltip"];
+
 /** @type {import('eslint')} */
 const config = [
     ...coreConfig,
@@ -53,6 +55,11 @@ const config = [
         plugins: {
             react: react,
         },
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
         rules: {
             "react/self-closing-comp": "error",
             "react/display-name": "off",
@@ -64,6 +71,15 @@ const config = [
                 "error",
                 {
                     paths: [
+                        ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
+                            name: "@mui/material",
+                            importNames: [name],
+                            message: `Please use ${name} from @comet/admin instead`,
+                        })),
+                        ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
+                            name: `@mui/material/${name}`,
+                            message: `Please use ${name} from @comet/admin instead`,
+                        })),
                         {
                             name: "react",
                             importNames: ["default"],
@@ -76,21 +92,6 @@ const config = [
                         {
                             name: "@mui/icons-material",
                             message: "Please use @comet/admin-icons instead",
-                        },
-                        {
-                            name: "@mui/material",
-                            importNames: ["Alert"],
-                            message: "Please use Alert from @comet/admin instead",
-                        },
-                        {
-                            name: "@mui/material",
-                            importNames: ["Button"],
-                            message: "Please use Button from @comet/admin instead",
-                        },
-                        {
-                            name: "@mui/material",
-                            importNames: ["Dialog"],
-                            message: "Please use Dialog from @comet/admin instead",
                         },
                         {
                             name: "@mui/x-data-grid",
@@ -106,11 +107,6 @@ const config = [
                             name: "@mui/x-data-grid-premium",
                             importNames: ["GridColDef"],
                             message: "Please use GridColDef from @comet/admin instead",
-                        },
-                        {
-                            name: "@mui/material",
-                            importNames: ["Tooltip"],
-                            message: "Please use Tooltip from @comet/admin instead",
                         },
                     ],
                 },

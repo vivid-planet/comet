@@ -1,6 +1,7 @@
 import { Box, Divider } from "@mui/material";
 import isEqual from "lodash.isequal";
 import { type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { type MessageDescriptor } from "react-intl";
 import { Route, useRouteMatch } from "react-router";
 
 import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
@@ -30,7 +31,7 @@ export interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
 
 export function createOptionalBlock<T extends BlockInterface>(
     decoratedBlock: T,
-    options?: { title?: ReactNode; name?: string },
+    options?: { title?: ReactNode; name?: string; tags?: Array<MessageDescriptor | string> },
     override?: (
         block: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>>,
     ) => BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>>,
@@ -41,6 +42,8 @@ export function createOptionalBlock<T extends BlockInterface>(
         name: options?.name ?? `Optional${decoratedBlock.name}`,
 
         displayName: decoratedBlock.displayName,
+
+        tags: decoratedBlock.tags,
 
         defaultValues: () => ({ block: undefined, visible: false }),
 

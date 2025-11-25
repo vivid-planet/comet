@@ -126,7 +126,7 @@ const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, 
 const renderToolbarProps = (componentName: string, forwardToolbarAction: boolean | undefined, exportApi: boolean) => {
     if (forwardToolbarAction || exportApi) {
         return `interface ${componentName}ToolbarProps extends GridToolbarProps {
-         ${forwardToolbarAction && "toolbarAction: ReactNode;"}
+         ${forwardToolbarAction ? "toolbarAction: ReactNode;" : ""}
          ${exportApi ? "exportApi: ExportApi;" : ""}
 }`;
     }

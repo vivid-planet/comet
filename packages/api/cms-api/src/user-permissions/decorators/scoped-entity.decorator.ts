@@ -12,6 +12,8 @@ export interface EntityScopeServiceInterface<Entity extends AnyEntity = AnyEntit
 
 export type ScopedEntityMeta<Entity extends AnyEntity = AnyEntity> = EntityScopeFunction<Entity> | Type<EntityScopeServiceInterface<Entity>>;
 
+export const SCOPED_ENTITY_METADATA_KEY = "scopedEntity";
+
 export function ScopedEntity<Entity extends AnyEntity = AnyEntity>(value: ScopedEntityMeta<Entity>): CustomDecorator<string> {
-    return SetMetadata<string, ScopedEntityMeta<Entity>>("scopedEntity", value);
+    return SetMetadata<string, ScopedEntityMeta<Entity>>(SCOPED_ENTITY_METADATA_KEY, value);
 }

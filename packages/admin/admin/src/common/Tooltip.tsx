@@ -7,24 +7,40 @@ import {
     tooltipClasses,
     type TooltipClassKey as MuiTooltipClassKey,
     type TooltipProps as MuiTooltipProps,
+    Typography,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export interface TooltipProps extends MuiTooltipProps {
+type SlotProps = MuiTooltipProps["slotProps"] &
+    ThemedComponentBaseProps<{
+        title: typeof Typography;
+        text: typeof Typography;
+    }>["slotProps"];
+
+export interface TooltipProps extends Omit<MuiTooltipProps, "slotProps" | "title"> {
     variant?: Variant;
+    title?: ReactNode;
+    description?: ReactNode;
+    customContent?: ReactNode;
+    slotProps?: SlotProps;
 }
 
-type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success";
+type Slot = "root" | "title" | "text";
+type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success" | "warning";
+type ComponentState = "hasTitleOnly";
 
-export type TooltipClassKey = "root" | Variant | MuiTooltipClassKey;
+export type TooltipClassKey = Slot | Variant | ComponentState | MuiTooltipClassKey;
 
 type OwnerState = {
     variant: Variant;
     disableInteractive: boolean | undefined;
     arrow: boolean | undefined;
     isRtl: boolean;
+    hasTitleOnly: boolean;
 };
 
 const TooltipRoot = createComponentSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
@@ -41,77 +57,53 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L48
             !ownerState.disableInteractive && "popperInteractive",
             ownerState.arrow && "popperArrow",
+            ownerState.hasTitleOnly && "hasTitleOnly",
         ];
     },
-})(
-    ({ theme, ownerState }) => css`
-        ${ownerState.variant === "light" &&
+})(({ theme, ownerState }) => {
+    const variantToTextColor: Record<Variant, string> = {
+        light: theme.palette.grey[900],
+        dark: theme.palette.common.white,
+        neutral: theme.palette.grey[900],
+        primary: theme.palette.grey[900],
+        error: theme.palette.common.white,
+        success: theme.palette.common.black,
+        warning: theme.palette.common.black,
+    };
+
+    const variantToBackgroundColor: Record<Variant, string> = {
+        light: theme.palette.common.white,
+        dark: ownerState.hasTitleOnly ? theme.palette.grey[500] : theme.palette.grey[900],
+        neutral: theme.palette.grey[100],
+        primary: theme.palette.primary.light,
+        error: theme.palette.error.light,
+        success: theme.palette.success.light,
+        warning: theme.palette.warning.light,
+    };
+
+    return css`
+        ${!ownerState.hasTitleOnly &&
         css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.common.white};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.common.white};
-                color: ${theme.palette.common.black};
-                box-shadow: ${theme.shadows[1]};
-            }
+            min-width: 200px;
         `}
 
-        ${ownerState.variant === "dark" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.grey[900]};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.grey[900]};
-                color: ${theme.palette.common.white};
-                box-shadow: ${theme.shadows[1]};
-            }
-        `}
+        .${tooltipClasses.tooltip} {
+            box-shadow: ${theme.shadows[3]};
+            border-radius: 4px;
+            padding: 3px 6px;
+            color: ${variantToTextColor[ownerState.variant]};
+            background-color: ${variantToBackgroundColor[ownerState.variant]};
+            line-height: 0; // Custom content may include space-caracters, due to code indentation. Removing the line-height prevents these from adding unintended whitespace.
 
-        ${ownerState.variant === "neutral" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.grey[100]};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.grey[100]};
-                color: ${theme.palette.common.black};
-            }
-        `}
+            ${!ownerState.hasTitleOnly &&
+            css`
+                padding: 10px;
+            `}
+        }
 
-        ${ownerState.variant === "primary" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.primary.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.primary.light};
-                color: ${theme.palette.common.black};
-            }
-        `};
-
-        ${ownerState.variant === "error" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.error.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.error.light};
-                color: ${theme.palette.common.white};
-            }
-        `};
-
-        ${ownerState.variant === "success" &&
-        css`
-            .${tooltipClasses.arrow} {
-                color: ${theme.palette.success.light};
-            }
-            .${tooltipClasses.tooltip} {
-                background-color: ${theme.palette.success.light};
-                color: ${theme.palette.common.black};
-            }
-        `};
+        .${tooltipClasses.arrow} {
+            color: ${variantToBackgroundColor[ownerState.variant]};
+        }
 
         // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L55
         z-index: ${theme.zIndex.tooltip};
@@ -169,35 +161,61 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
                 }
             }
         `};
-    `,
-);
+    `;
+});
+
+const Title = createComponentSlot(Typography)<TooltipClassKey>({
+    componentName: "Tooltip",
+    slotName: "title",
+})(css`
+    margin-bottom: 2px;
+`);
+
+const Text = createComponentSlot(Typography)<TooltipClassKey>({
+    componentName: "Tooltip",
+    slotName: "text",
+})();
 
 export const Tooltip = (inProps: TooltipProps) => {
-    const { variant = "dark", disableInteractive, arrow, children, ...props } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const props = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const { variant = "dark", disableInteractive, arrow, children, title, description, customContent, slotProps = {}, ...restProps } = props;
     const theme = useTheme();
+
+    if (customContent && (title || description)) {
+        throw new Error("You cannot provide a `title` or `description` when using custom content via the `customContent` prop.");
+    }
+
+    if (!("title" in props) && !customContent) {
+        throw new Error("You must provide a `title` or `customContent` when using the `Tooltip` component.");
+    }
 
     const ownerState: OwnerState = {
         variant,
         disableInteractive,
         arrow,
         isRtl: theme.direction === "rtl",
+        hasTitleOnly: !description && !customContent,
     };
 
+    const { title: titleSlotProps, text: textSlotProps, ...muiSlotProps } = slotProps;
+
     const commonTooltipProps = {
-        ...props,
+        tabIndex: 0,
+        ...restProps,
+        title: getMuiTooltipTitle({ title, description, customContent }, { title: titleSlotProps, text: textSlotProps }),
         disableInteractive,
         arrow,
         ownerState,
         slots: {
             popper: TooltipPopper,
-            ...props.slots,
+            ...restProps.slots,
         },
         slotProps: {
+            ...muiSlotProps,
             popper: {
                 ownerState,
-                ...props.slotProps?.popper,
+                ...muiSlotProps?.popper,
             },
-            ...props.slotProps,
         },
     };
 
@@ -205,6 +223,38 @@ export const Tooltip = (inProps: TooltipProps) => {
         <TooltipRoot enterTouchDelay={0} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
+    );
+};
+
+type TooltipContentProps = Pick<TooltipProps, "title" | "description" | "customContent">;
+type TooltipContentSlotProps = Pick<NonNullable<SlotProps>, "title" | "text">;
+
+const getMuiTooltipTitle = ({ title, description, customContent }: TooltipContentProps, slotProps: TooltipContentSlotProps) => {
+    if (typeof customContent !== "undefined") {
+        return customContent;
+    }
+
+    if (description) {
+        return (
+            <>
+                <Title variant="subtitle2" {...slotProps.title}>
+                    {title}
+                </Title>
+                <Text variant="body2" {...slotProps.text}>
+                    {description}
+                </Text>
+            </>
+        );
+    }
+
+    if (!title) {
+        return title;
+    }
+
+    return (
+        <Text variant="body2" {...slotProps.text}>
+            {title}
+        </Text>
     );
 };
 

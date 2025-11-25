@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
 import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
@@ -7,7 +8,6 @@ import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { type GQLLink, type GQLLinkInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
-import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import { EditLink } from "./EditLink";

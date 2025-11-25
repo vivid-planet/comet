@@ -3,39 +3,24 @@ import { OptionalBlock, type PropsWithData, withPreview } from "@comet/site-next
 import { type FullWidthImageBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import styled from "styled-components";
+
+import styles from "./FullWidthImageBlock.module.scss";
 
 export const FullWidthImageBlock = withPreview(
     ({ data: { image, content } }: PropsWithData<FullWidthImageBlockData>) => {
         return (
-            <Root>
+            <div className={styles.root}>
                 <DamImageBlock data={image} sizes="100vw" aspectRatio="16x9" />
                 <OptionalBlock
                     block={(props) => (
-                        <Content>
+                        <div className={styles.content}>
                             <RichTextBlock data={props} />
-                        </Content>
+                        </div>
                     )}
                     data={content}
                 />
-            </Root>
+            </div>
         );
     },
     { label: "Full Width Image" },
 );
-
-const Root = styled.div`
-    position: relative;
-`;
-
-const Content = styled.div`
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-`;

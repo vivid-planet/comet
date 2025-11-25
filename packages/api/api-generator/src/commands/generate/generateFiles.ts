@@ -1,6 +1,11 @@
 import console from "node:console";
 
-import type { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "@comet/cms-api";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    CRUD_SINGLE_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    type CrudSingleGeneratorOptions,
+} from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
 import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
@@ -42,7 +47,7 @@ export const generateFiles = async (
             }
             if (file == null || entity.path === `./${file}`) {
                 {
-                    const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
+                    const generatorOptions = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, entity.class) as CrudGeneratorOptions | undefined;
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrud for Entity ${entity.path}`);
                         const files = await generateCrud(generatorOptions, entity);
@@ -50,7 +55,7 @@ export const generateFiles = async (
                     }
                 }
                 {
-                    const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as
+                    const generatorOptions = Reflect.getMetadata(CRUD_SINGLE_GENERATOR_METADATA_KEY, entity.class) as
                         | CrudSingleGeneratorOptions
                         | undefined;
                     if (generatorOptions) {

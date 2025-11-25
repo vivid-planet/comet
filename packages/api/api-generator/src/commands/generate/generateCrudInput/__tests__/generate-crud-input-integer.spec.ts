@@ -95,6 +95,6 @@ describe("GenerateCrudInputInteger", () => {
             }
         }
 
-        orm.close();
+        await orm.close();
     });
 });

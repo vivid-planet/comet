@@ -4,52 +4,32 @@ import { gql } from "@apollo/client";
 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 export const productFormFragment = gql`
         fragment ProductFormDetails on Product {
-            title
-slug
-createdAt
-description
-type
-category { id title }
-priceRange { min max }
-dimensions { width height depth }
-manufacturer { id name }
-inStock
-availableSince
-image
-priceList { ...FinalFormFileUploadDownloadable }
-datasheets { ...FinalFormFileUpload }
-lastCheckedAt
+            title slug createdAt description type additionalTypes category { id title } tags { id title } priceRange { min max } dimensions { width height depth } manufacturer { id name } inStock availableSince image priceList { ...FinalFormFileUploadDownloadable } datasheets { ...FinalFormFileUpload } lastCheckedAt
         }
-        ${finalFormFileUploadFragment}
-        ${finalFormFileUploadDownloadableFragment}
-    `;
+    
+${finalFormFileUploadFragment}
+${finalFormFileUploadDownloadableFragment}`;
 export const productQuery = gql`
-            query Product($id: ID!) {
-                product(id: $id) {
-                    id
-                    updatedAt
-                    ...ProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    query Product($id: ID!) {
+        product(id: $id) {
+            id updatedAt ...ProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
 export const createProductMutation = gql`
-            mutation CreateProduct($input: ProductInput!) {
-                createProduct(input: $input) {
-                    id
-                    updatedAt
-                    ...ProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation CreateProduct($input: ProductInput!) {
+        createProduct(input: $input) {
+            id updatedAt ...ProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;
 export const updateProductMutation = gql`
-            mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
-                updateProduct(id: $id, input: $input) {
-                    id
-                    updatedAt
-                    ...ProductFormDetails
-                }
-            }
-            ${productFormFragment}
-        `;
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
+            id updatedAt ...ProductFormDetails
+        }
+    }
+    ${productFormFragment}
+    `;

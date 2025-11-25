@@ -1,20 +1,32 @@
-import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
+import { ChevronDown, Error } from "@comet/admin-icons";
+import {
+    Autocomplete,
+    type AutocompleteProps,
+    type AutocompleteRenderInputParams,
+    CircularProgress,
+    InputAdornment,
+    InputBase,
+    Typography,
+} from "@mui/material";
+import type { ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { type AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
-> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> &
-    Partial<AsyncOptionsProps<T>> &
+> = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
         clearable?: boolean;
+        errorText?: ReactNode;
     };
+
+type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
 
 /**
  * Final Form-compatible Autocomplete component.
@@ -23,21 +35,43 @@ export type FinalFormAutocompleteProps<
  */
 export const FinalFormAutocomplete = <
     T extends Record<string, any>,
-    Multiple extends boolean | undefined,
-    DisableClearable extends boolean | undefined,
-    FreeSolo extends boolean | undefined,
+    Multiple extends boolean | undefined = false,
+    DisableClearable extends boolean | undefined = false,
+    FreeSolo extends boolean | undefined = false,
 >({
-    input: { onChange, value, multiple, ...restInput },
+    input: { onChange, value: incomingValue, multiple, ...restInput },
     loading = false,
+    loadingError,
     isAsync = false,
     clearable,
+    loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
+    noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
+    errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
     ...rest
-}: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
+}: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
     return (
         <Autocomplete
             popupIcon={popupIcon}
             disableClearable
+            noOptionsText={
+                loadingError ? (
+                    <Typography variant="body2" component="span">
+                        {errorText}
+                    </Typography>
+                ) : (
+                    <Typography variant="body2" component="span">
+                        {noOptionsText}
+                    </Typography>
+                )
+            }
+            loading={loading}
+            loadingText={
+                <Typography variant="body2" component="span">
+                    {loadingText}
+                </Typography>
+            }
             isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
                 return option === value;
@@ -54,17 +88,12 @@ export const FinalFormAutocomplete = <
                     {...params}
                     {...params.InputProps}
                     endAdornment={
-                        loading || clearable ? (
-                            <>
-                                {loading && <CircularProgress color="inherit" size={16} />}
-                                {clearable && (
-                                    <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
-                                )}
-                                {params.InputProps.endAdornment}
-                            </>
-                        ) : (
-                            params.InputProps.endAdornment
-                        )
+                        <InputAdornment position="end">
+                            {loading && <CircularProgress color="inherit" size={16} />}
+                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {loadingError && <Error color="error" />}
+                            {params.InputProps.endAdornment}
+                        </InputAdornment>
                     }
                 />
             )}

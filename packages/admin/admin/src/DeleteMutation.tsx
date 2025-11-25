@@ -1,4 +1,5 @@
 import { type PureQueryOptions, useApolloClient } from "@apollo/client";
+// eslint-disable-next-line no-restricted-imports
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";

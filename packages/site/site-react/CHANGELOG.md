@@ -1,5 +1,99 @@
 # @comet/site-react
 
+## 8.7.1
+
+## 8.7.0
+
+### Minor Changes
+
+- 27f15e3: Block Loader: infer `LoadedData` from loader return type
+
+    Use the new `BlockLoaderOptions` type to allow inferring the type from the loader function.
+
+    **Before**
+
+    ```ts
+    export const loader: BlockLoader<NewsLinkBlockData> = async ({ blockData, graphQLFetch }): Promise<LoadedData | null> => {
+        // ...
+    };
+
+    export interface LoadedData {
+        title: string;
+    }
+    ```
+
+    **After**
+
+    ```ts
+    export const loader = async ({ blockData, graphQLFetch }: BlockLoaderOptions<NewsLinkBlockData>) => {
+        // ...
+    };
+
+    export type LoadedData = Awaited<ReturnType<typeof loader>>;
+    ```
+
+- 10fc9e7: Move `YoutubeVideoBlock`, `VimeoVideoBlock` and `DamVideoBlock` to `@comet/site-react`
+
+    The blocks in `@comet/site-react` provide no default implementation for `renderPreviewImage`.
+    Instead, use the new `VideoPreviewImage` component with the `renderImage` prop to create the preview image.
+
+- 559c536: Move `DamFileDownloadLinkBlock`, `EmailLinkBlock`, `ExternalLinkBlock` and `PhoneLinkBlock` to `@comet/site-react`
+
+    The blocks have no dependency on Next.js and can therefore be in the generic React package.
+
+- a68d4c0: `fetchInMemoryCache` now caches persisted queries
+- db4b750: Add functionality for persisted queries on client side
+    - `createPersistedQueryGraphQLFetch`: GraphQLFetch implementation that calls the BFF Route Handler with an operation ID (hash)
+    - `persistedQueryRoute`: BFF Route Handler that gets called by the above fetch and forwards the query to the API
+    - `webpackPersistedQueriesLoader`: webpack loader that turns client-side queries into an operation ID (hash)
+
+## 8.6.0
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- c6ee74e: Remove unnecessary `rimraf` dependency
+- 22ee3de: Add SEO `title` property to PixelImageBlock and SvgImageBlock
+
+## 8.2.0
+
+## 8.1.1
+
+## 8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+### Minor Changes
+
+- 2a9f23d: Support block preview scope for BFF requests
+
+    The current scope will be sent via a monkey patched fetch and interpreted in `previewParams()`.
+
+### Patch Changes
+
+- b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+- b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+
 ## 8.0.0-beta.6
 
 ## 8.0.0-beta.5

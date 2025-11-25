@@ -56,7 +56,7 @@ app.prepare().then(() => {
                 res.setHeader = function (name: string, value: string | number | readonly string[]) {
                     if (name === "cache-control" || name === "Cache-Control") {
                         // ignore
-                        return;
+                        return this;
                     }
                     return origSetHeader.call(this, name, value);
                 };
@@ -85,7 +85,8 @@ app.prepare().then(() => {
                     }
                 }
 
-                return originalWriteHead.apply(this, [statusCode, ...args]);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                return (originalWriteHead as any).apply(this, [statusCode, ...args]);
             };
 
             await handle(req, res, parsedUrl);

@@ -1,7 +1,7 @@
 import { Field, FinalFormInput, messages } from "@comet/admin";
 import { Box } from "@mui/material";
 import { type ReactNode } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { type TextLinkBlockData, type TextLinkBlockInput } from "../blocks.generated";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -16,10 +16,11 @@ interface CreateTextLinkBlockOptions {
     name?: string;
     displayName?: ReactNode;
     link: BlockInterface;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export function createTextLinkBlock(
-    { link: LinkBlock, name = "TextLink", displayName = <FormattedMessage {...messages.link} /> }: CreateTextLinkBlockOptions,
+    { link: LinkBlock, name = "TextLink", displayName = <FormattedMessage {...messages.link} />, tags }: CreateTextLinkBlockOptions,
     override?: (block: BlockInterface) => BlockInterface,
 ): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
@@ -35,6 +36,8 @@ export function createTextLinkBlock(
         name,
 
         displayName,
+
+        tags: tags ? tags : LinkBlock.tags,
 
         category: BlockCategory.Navigation,
 

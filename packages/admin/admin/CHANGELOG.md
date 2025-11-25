@@ -1,5 +1,882 @@
 # @comet/admin
 
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- a8e8132: Prevent `StackPageTitle` rerender loop when passing a React element as `title`
+    - @comet/admin-icons@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- 6c5578a: Remove the delay before closing the EditDialog after successful save
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin-icons@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.5.1
+
+## 8.5.0
+
+### Minor Changes
+
+- c8359f6: Add Filter Count Chip to DataGrid Filter Button
+
+### Patch Changes
+
+- a2af2c6: `Tooltip` children are now focusable by default for improved accessibility
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- a57d092: Prevent crash in `FinalFormSelect` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- 9374018: Prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Minor Changes
+
+- ff6d79a: Simplify adding an info-icon with a tooltip in `FormSection` using the new `infoTooltip` prop
+
+    Either set the props value to a string or `FormattedMessage` directly:
+
+    ```tsx
+    <FormSection title="Title of the FormSection" infoTooltip="Title of the info tooltip">
+        {/* ... */}
+    </FormSection>
+    ```
+
+    Or use an object for a more detailed definition:
+
+    ```tsx
+    <FormSection
+        title="FormSection"
+        infoTooltip={{
+            title: "Title of the info tooltip",
+            description: "Description of the info tooltip",
+            variant: "light",
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+### Patch Changes
+
+- a85e7cb: Prevent empty `Tooltip` from rendering when `title` is `null`, `undefined`, or empty string
+- ff6d79a: Allow overriding the `divider` value of the `title` slot of `FormSection` using `slotProps`
+
+    ```tsx
+    <FormSection
+        title="Title of the FormSection"
+        slotProps={{
+            title: { divider: false },
+        }}
+    >
+        {/* ... */}
+    </FormSection>
+    ```
+
+    - @comet/admin-icons@8.4.0
+
+## 8.3.0
+
+### Minor Changes
+
+- 422328b: Add backgroundImage to FullPageAlert
+- 1bd73a0: Implement NoContentScopeFallback component according to design specifications
+- ae1dbab: Add `description` and `customContent` props to `Tooltip`
+
+    `description` is intended to be used together with `title` to simplify creating detailed tooltips that match the Comet design:
+
+    ```diff
+     <Tooltip
+    -    title={
+    -        <>
+    -            <Typography variant="subtitle2">Tooltip Title</Typography>
+    -            <Typography variant="body2">This is a detailed description of what's going on.</Typography>
+    -        </>
+    -    }
+    -    sx={{ width: 180 }}
+    +    title="Tooltip Title"
+    +    description="This is a detailed description of what's going on."
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+    `customContent` is an alternative to `title` and `description` for use-cases that require custom elements or styling:
+
+    ```tsx
+    <Tooltip customContent={<SomethingCustom />}>
+        <Info />
+    </Tooltip>
+    ```
+
+### Patch Changes
+
+- ae1dbab: Adjust styling of `Tooltip` to match the Comet design
+- becc06c: The title of `FormSection` now matches the Comet design
+
+    The prop `disableTypography` has been deprecated, use `slotProps.title` for custom styling or for setting a custom `variant` on the underlying `Typography` component.
+
+- 12e9230: Prevent labels from overlaying and inconsistent spacings of fields
+
+    This affects `CheckboxField`, `CheckboxListField`, `RadioGroupField`, and `SwitchField`.
+
+- 6f30126: SelectField / FinalFormSelect: hide the clear button when the field is disabled
+- d682135: AsyncAutocompleteField: fix inferred option type, commonly used in getOptionLabel
+- becc06c: Deprecate `SectionHeadline`
+
+    The component is only meant to be used internally, inside `FormSection`.
+    Use the `FormSection` component with it's `title` prop to create sections in forms.
+    - @comet/admin-icons@8.3.0
+
+## 8.2.0
+
+### Minor Changes
+
+- ea545c4: Add `FullPageAlert` component
+- dfafdb3: Add a `warning` variant to `Tooltip`
+
+    ```tsx
+    <Tooltip title="This is a warning" variant="warning">
+        <WarningSolid color="warning" />
+    </Tooltip>
+    ```
+
+- 08ad5fe: Add new admin component `SectionHeadline`
+- 85141bf: Add new `DateTimeRangePicker` and `DateTimeRangePickerField` components
+
+    The new components are based on the `@mui/x-date-pickers-pro` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/api/date-pickers/date-time-range-picker/) for more details.
+    Unlike the MUI components, these components use an object with `start` and `end` properties, both of which use a `Date` object as the value, instead of an array of two `Date` objects.
+
+    Note: Using these components requires a [MUI X Pro license](https://v7.mui.com/x/introduction/licensing/).
+
+    **Using the new `DateTimeRangePicker`**
+
+    ```tsx
+    import { type DateTimeRange, FieldContainer, DateTimeRangePicker } from "@comet/admin";
+    import { useState } from "react";
+
+    export const Example = () => {
+        const [dateTimeRangeValue, setDateTimeRangeValue] = useState<DateTimeRange | undefined>();
+
+        return (
+            <FieldContainer label="Date-Time Range Picker">
+                <DateTimeRangePicker value={dateTimeRangeValue} onChange={setDateTimeRangeValue} />
+            </FieldContainer>
+        );
+    };
+    ```
+
+    **Using the new `DateTimeRangePickerField` in Final Form**
+
+    ```tsx
+    import { type DateTimeRange, FieldContainer, DateTimeRangePicker } from "@comet/admin";
+    import { useState } from "react";
+
+    type Values = {
+        dateTimeRange: DateTimeRange;
+    };
+
+    export const Example = () => {
+        return (
+            <Form<Values>
+                initialValues={{ dateTimeRange: { start: new Date("2025-07-23 11:30:00"), end: new Date("2025-07-25 14:30:00") } }}
+                onSubmit={() => {}}
+            >
+                {() => <DateTimeRangePickerField name="dateTimeRange" label="Date-Time Range Picker" />}
+            </Form>
+        );
+    };
+    ```
+
+- 0cfcf90: Allow exporting columns with value type boolean
+
+### Patch Changes
+
+- d7ab390: The clear-button, inside `ClearInputAdornment` can now be focused
+- 01ef80b: Fix props of `Tooltip`'s `slotProps.popper` when setting custom values
+
+    When setting custom values to `slotProps.popper`, some default props would unintentionally be reset.
+
+- 0b08988: Prevent the `OpenPickerButton` from appearing focused while not actually being focused
+
+    This was achieved by preventing the `OpenPickerButton` from being focused at all.
+    The input value can still be changed in an accessible way, without using the picker.
+
+    This affects the following components:
+    - `DatePicker`
+    - `DatePickerField`
+    - `DateRangePicker`
+    - `DateRangePickerField`
+    - `DateTimePicker`
+    - `DateTimePickerField`
+    - `TimePicker`
+    - `TimePickerField`
+    - @comet/admin-icons@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.1.1
+
+## 8.1.0
+
+### Minor Changes
+
+- 00e6a12: Add new `Future_DateRangePicker` and `Future_DateRangePickerField` components
+
+    These will replace the existing `DateRangePicker`, `FinalFormDateRangePicker`, and `DateRangeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers-pro` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/api/date-pickers/date-range-picker/) for more details.
+    Unlike the MUI components, these components use an object with `start` and `end` properties, both of which use a `string` (`YYYY-MM-DD`) as the value, instead of an array of two `Date` objects, just like the existing components from `@comet/admin-date-time`.
+
+    Note: Using these components requires a [MUI X Pro license](https://v7.mui.com/x/introduction/licensing/).
+
+    **Using the new `DateRangePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { type DateRange, DateRangePicker } from "@comet/admin-date-time";
+    +import { type DateRange, FieldContainer, Future_DateRangePicker as DateRangePicker } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateRangeValue, setDateRangeValue] = useState<DateRange | undefined>();
+
+         return (
+             <FieldContainer label="Date-Range Picker">
+                 <DateRangePicker value={dateRangeValue} onChange={setDateRangeValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DateRangePickerField` in Final Form**
+
+    ```diff
+    -import { type DateRange, DateRangeField } from "@comet/admin-date-time";
+    +import { type DateRange, Future_DateRangePickerField as DateRangePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         dateRange: DateRange;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ dateRange: { start: "2025-07-23", end: "2025-07-25" } }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateRangeField name="dateRange" label="Date-Range Picker" />
+    +                <DateRangePickerField name="dateRange" label="Date-Range Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- 2f33286: Add new `Future_DateTimePicker` and `Future_DateTimePickerField` components
+
+    These will replace the existing `DateTimePicker`, `FinalFormDateTimePicker` and `DateTimeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/date-time-picker/) for more details.
+
+    **Using the new `DateTimePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { DateTimePicker } from "@comet/admin-date-time";
+    +import { Future_DateTimePicker as DateTimePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateTime, setDateTime] = useState<Date | undefined>();
+
+         return (
+             <FieldContainer label="Date-Time Picker">
+                 <DateTimePicker value={dateTime} onChange={setDateTime} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DateTimePickerField` in Final Form**
+
+    ```diff
+    -import { DateTimeField } from "@comet/admin-date-time";
+    +import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         dateTime: Date;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ dateTime: new Date("2025-07-23 14:30") }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateTimeField name="dateTime" label="Date-Time Picker" />
+    +                <DateTimePickerField name="dateTime" label="Date-Time Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- ec9bce5: Add new `Future_TimePicker` and `Future_TimePickerField` components
+
+    These will replace the existing `TimePicker`, `FinalFormTimePicker` and `TimeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/time-picker/) for more details.
+    Unlike the MUI components, these components use a 24h `string` (`HH:mm`) as the value, instead of `Date`, just like the existing components from `@comet/admin-date-time`.
+
+    **Using the new `TimePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { TimePicker } from "@comet/admin-date-time";
+    +import { Future_TimePicker as TimePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [timeValue, setTimeValue] = useState<string | undefined>();
+
+         return (
+             <FieldContainer label="Time Picker">
+                 <TimePicker value={timeValue} onChange={setTimeValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `TimePickerField` in Final Form**
+
+    ```diff
+    -import { TimeField } from "@comet/admin-date-time";
+    +import { Future_TimePickerField as TimePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         time: string;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ time: "11:30" }} onSubmit={() => {}}>
+                 {() => (
+    -                <TimeField name="time" label="Time Picker" />
+    +                <TimePickerField name="time" label="Time Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- 3323fa9: Add search parameter to `loadOptions` in `AsyncAutocompleteField`, representing the current user input
+
+    Deprecate `useAsyncOptionsProps` in favor of `AsyncSelectField` component which
+
+- 911a6da: Renamed two props of `FinalFormSelect` to align with `FinalFormAutocomplete`
+    - `noOptionsLabel` → `noOptionsText`
+    - `errorLabel` → `errorText`
+
+### Patch Changes
+
+- e70eb31: Fix renderStaticSelectCell support for null values
+    - @comet/admin-icons@8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- 46edfd6: Require `intl` in `MuiThemeProvider`
+
+    This is necessary to support translating the labels for custom Data Grid filter operators, namely "search".
+
+    **How to upgrade**
+
+    Make sure that `MuiThemeProvider` is wrapped by `IntlProvider` in your application:
+
+    ```tsx
+    // IntlProvider needs to be rendered before MuiThemeProvider.
+    <IntlProvider locale="en" messages={getMessages()}>
+        <MuiThemeProvider theme={theme}>{/* ... */}</MuiThemeProvider>
+    </IntlProvider>
+    ```
+
+- 72d1a5e: New usage of `DataGridToolbar` component
+
+    `DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
+
+    The new usage simplifies the component structure - children can now be passed directly without needing to wrap them in `ToolbarItem` and `ToolbarActions` components:
+
+    ```diff
+    - <DataGridToolbar density="compact">
+    + <DataGridToolbar>
+    -     <ToolbarItem>
+              <GridToolbarQuickFilter />
+    -     </ToolbarItem>
+    -     <ToolbarItem>
+              <GridFilterButton />
+    -     </ToolbarItem>
+    -     <ToolbarItem>
+              <GridColumnsButton />
+    -     </ToolbarItem>
+          <FillSpace />
+    -     <ToolbarActions>
+              <Button responsive variant="outlined">
+                  Secondary action
+              </Button>
+              <Button responsive startIcon={<AddIcon />}>
+                  Add item
+              </Button>
+    -     </ToolbarActions>
+      </DataGridToolbar>
+    ```
+
+- 5b8fe2e: Update props and usage of `FeedbackButton` to be consistent with the new Comet `Button`
+    - The `variant` prop now replaces its old values and the now removed `color` prop.
+    - The `responsive` prop is now supported to move the button's text to a tooltip on smaller devices.
+    - The previous values of `slotProps` have been removed, they can now be set through the `slotProps` of the `root` slot.
+
+    ```diff
+    - <FeedbackButton variant="contained" color="primary">
+    + <FeedbackButton>
+          Okay
+      </FeedbackButton>
+    - <FeedbackButton variant="contained" color="error">
+    + <FeedbackButton variant="destructive">
+          Delete
+      </FeedbackButton>
+    ```
+
+- 7ce585d: Prevent the selection of DataGrid rows by clicking on them
+
+    According to the Comet design guidelines, rows should be selected using checkboxes, with the `checkboxSelection` prop, where required.
+
+    ```tsx
+    <DataGrid
+        checkboxSelection
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+            setRowSelectionModel(newRowSelectionModel);
+        }}
+        rowSelectionModel={rowSelectionModel}
+        // ...
+    />
+    ```
+
+    To restore the previous behavior, set the `disableRowSelectionOnClick` prop to `false` in the individual `DataGrid` component or globally, using the theme's `defaultProps`.
+
+    ```tsx
+    <DataGrid
+        disableRowSelectionOnClick
+        // ...
+    />
+    ```
+
+    ```tsx
+    const theme = createCometTheme({
+        components: {
+            MuiDataGrid: {
+                defaultProps: {
+                    disableRowSelectionOnClick: false,
+                },
+            },
+        },
+    });
+    ```
+
+- f7429bd: Rename menu components
+
+    To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
+    - `Menu` → `MainNavigation`
+    - `MenuProps` → `MainNavigationProps`
+    - `MenuClassKey` → `MainNavigationClassKey`
+    - `MenuItem` → `MainNavigationItem`
+    - `MenuItemProps` → `MainNavigationItemProps`
+    - `MenuItemClassKey` → `MainNavigationItemClassKey`
+    - `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
+    - `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
+    - `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
+    - `IWithMenu` → `WithMainNavigation`
+    - `withMenu` → `withMainNavigation`
+    - `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
+    - `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
+    - `MenuItemGroup` → `MainNavigationItemGroup`
+    - `MenuItemGroupClassKey` → `MainNavigationItemGroupClassKey`
+    - `MenuItemGroupProps` → `MainNavigationItemGroupProps`
+    - `MenuItemRouterLink` → `MainNavigationItemRouterLink`
+    - `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
+
+    Remove `MenuContext`, use the `useMainNavigation()` hook instead.
+
+- b374300: Adapt the styling of `Alert` to match the updated Comet design
+
+    Remove styling for the `text` variant of buttons used in `Alert`.
+    Use buttons with the `outlined` variant instead to adhere to the Comet design guidelines.
+
+    ```diff
+     <Alert
+         // ...
+         action={
+    -        <Button variant="text" startIcon={<ArrowRight />}>
+    +        <Button variant="outlined" startIcon={<ArrowRight />}>
+                 Action Text
+             </Button>
+         }
+         // ...
+     >
+    ```
+
+- 1d28c90: Update props and styling of `StackBackButton`, `OkayButton`, `CancelButton`, and `DeleteButton` to match the Comet `Button` component and the Comet DXP design
+    - Adds support for the `responsive` prop
+    - Removes the `color` prop and updates the values of the `variant` prop
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 6cfc60d: SaveBoundary: rename useSavable to useSaveBoundaryState
+- 717ede6: Merge `@comet/admin-theme` into `@comet/admin`
+
+    This affects the following exports: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
+
+    **Migrating your project**
+    1. Remove the `@comet/admin-theme` dependency from your project
+    2. Change all imports from `@comet/admin-theme` to `@comet/admin`
+
+    ```diff
+    -import { createCometTheme } from "@comet/admin-theme";
+    +import { createCometTheme } from "@comet/admin";
+
+     const theme = createCometTheme();
+    ```
+
+    3. Remove the no longer required type overrides that were previously required for the custom `Typography` variants, typically located in `admin/src/vendors.d.ts`
+
+    ```diff
+    -/// <reference types="@comet/admin-theme" />
+    ```
+
+- de6d677: Bump @mui/x-data-grid peer dependency to v7
+
+    This has breaking changes in DataGrid.
+    Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v6/)>) to upgrade.
+
+    As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    +            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+            }]
+        />
+    ```
+
+    Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    -           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+    -           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+    +           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            }]
+        />
+    ```
+
+- 15c6fa0: Remove `DialogContent` from `EditDialog` as spacing inside a dialog is not always needed in the Comet DXP design
+
+    To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent`. This ensures proper spacing.
+    For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
+
+    ```diff
+        <EditDialog>
+        //...
+    +       <DialogContent>
+    +           //...
+    +       </DialogContent>
+        // ...
+        </EditDialog>
+    ```
+
+- 04e308a: Upgrade from MUI v5 to v7
+
+    This only causes minimal breaking changes, see the official migration guides from MUI for details:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+
+    To update the MUI dependencies, run the following command:
+
+    ```sh
+    npx @comet/upgrade v8/update-mui-dependencies.ts
+    ```
+
+    To run all of the recommended MUI codemods, run:
+
+    ```sh
+    npx @comet/upgrade v8/mui-codemods.ts
+    ```
+
+- a8c737b: Redesign the `ToolbarBreadcrumbs` component
+
+    Due to internal changes, including the props and class keys, custom usages and styling may need to be adjusted.
+
+- cfa2f85: Bump @mui/x-data-grid peer dependency to v6
+
+    This has breaking changes in DataGrid.
+    Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v5)>) to upgrade.
+
+    The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
+
+    ```diff
+    - const { pageSize, page, onPageSizeChange } = useDataGridRemote();
+    + const { paginationModel, onPaginationModelChange } = useDataGridRemote();
+    ```
+
+    The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
+
+    ```diff
+    const columns : GridColDef[] = [/* column definitions */];
+    const dataGridRemote = useDataGridRemote();
+    const persistentColumnState = usePersistentColumnState("persistent_column_state");
+
+    -  muiGridSortToGql(dataGridRemote.sortModel, persistentColumnState.apiRef);
+    +  muiGridSortToGql(dataGridRemote.sortModel, columns);
+    ```
+
+- 15b7dd3: `DatePicker` from `@mui/x-date-pickers` is now used inside `DataGrid` filters
+
+    This change replaces the previous `TextField` (which uses `<input type="date" />`) with `DatePicker` for an improved user experience.
+
+    `@mui/x-date-pickers` has been added as a peer dependency and must be installed in your project's admin application.
+    `LocalizationProvider` must be added to your app's root and configured with `date-fns` as the date adapter.
+
+    `admin/package.json`
+
+    ```diff
+        "dependencies": {
+    +       "@mui/x-date-pickers": "^7.29.4",
+    +       "date-fns": "^4.1.0",
+        }
+    ```
+
+    `admin/src/App.tsx`
+
+    ```diff
+    +import { LocalizationProvider } from "@mui/x-date-pickers";
+    +import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+    +import { enUS } from "date-fns/locale";
+
+     // ...
+
+     <IntlProvider locale="en" messages={getMessages()}>
+    +    <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+             <MuiThemeProvider theme={theme}>
+                 {/* ... */}
+             </MuiThemeProvider>
+    +    </LocalizationProvider>
+     </IntlProvider>
+    ```
+
+- c5d9a47: Remove custom `secondary` color styling from `Checkbox` and `Radio`
+- 4828880: Remove `trigger` prop from `Tooltip`
+- 5b8fe2e: Adapt `SaveButton` and `SaveBoundarySaveButton` to look like the standard `FeedbackButton` in order to match the Comet DXP design
+
+    Their props have been updated to match those of `FeedbackButton`:
+    - `saving` has been renamed to `loading`.
+    - `saveIcon` has been renamed to `startIcon`.
+    - `hasConflict` has been removed. Use `hasErrors` instead and optionally provide a `tooltipErrorMessage` to show a more precise error message in the tooltip.
+    - The following icon-props have been removed, as the `startIcon` is now shown in all states: `savingIcon`, `successIcon`, `errorIcon`, `conflictIcon`.
+    - The following props used for the text-content have been removed as now the default text is shown in all states: `savingItem`, `successItem`, `errorItem`, `conflictItem`.
+
+### Minor Changes
+
+- e74ef46: `DateTimePicker` from `@mui/x-date-pickers` is now used inside `DataGrid` filters
+- 9e3e943: Add error handling for asynchronous option loading in `FinalFormSelect`. When loading fails, an error message is shown in the dropdown.
+- afc306b: Add the prop `noOptionsLabel ` to the `FinalFormSelect` to customize it.
+- a93455f: Adapt styling of MUI's List and Menu components according to the Comet DXP design
+
+    This affects the following components: `List`, `Menu`, `ListItem`, `MenuItem`, `ListItemButton`, `ListItemIcon`, `ListItemText`.
+
+- d99602a: Adapt styling of MUI's `Link` according to the Comet DXP design
+
+    Use `Link` only for links in continuous text or as standalone text links. Replace all other usages with better fitting components (e.g., `RouterLink`, `StackLink`, or `Button`).
+
+- 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
+
+    This applies to:
+    - `FinalFormSaveButton`
+    - `FinalFormSaveCancelButtonsLegacy`
+    - `FinalFormSaveSplitButton`
+    - The save button inside `TableLocalChangesToolbar`
+    - The save button inside the `useSaveState` hook
+    - The save button inside `MoveDamItemDialog`
+    - The save button inside `createUsePage`
+
+- afc306b: Add a default message "No options." when the FinalFormSelect has no options
+- e15895a: Add new `dataGridIdColumn` column definition
+
+    The column definition sets `filterOperators` to match the `IdFilter` GraphQL input type.
+
+- ad9b2a3: Remove `SelectionFooter` from `FolderDataGrid` to align with the Comet DXP design
+
+    Crud actions are performed in the `CrudMoreActionsMenu` in the toolbar instead.
+
+- c48ca03: Add new `dataGridOneToManyColumn` column definition
+
+    The column definition sets `filterOperators` to match the `OneToManyFilter` GraphQL input type.
+
+- 1c62e87: Add `InlineAlert` component
+- 9e3e943: Add the possibility to customize the `FinalFormSelect` error message with `errorLabel` prop.
+- 06d5600: Savable: add optional checkForChanges that can return hasChanges (aka dirty) before Savable re-renders and updates the hasChanges prop
+
+    Fixes issue in Form where a "Save changes?"-Dialog appears right after adding a new entry
+
+- 535476e: Format numbers in `DataGrid` pagination depending on the current locale
+- 34124c7: Add new `Future_DatePicker` and `Future_DatePickerField` components
+
+    These will replace the existing `DatePicker`, `FinalFormDatePicker` and `DateField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/date-picker/) for more details.
+    Unlike the MUI components, these components use a `string` (`YYYY-MM-DD`) as the value, instead of `Date`, just like the existing components from `@comet/admin-date-time`.
+
+    **Using the new `DatePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { DatePicker } from "@comet/admin-date-time";
+    +import { Future_DatePicker as DatePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateValue, setDateValue] = useState<string | undefined>();
+
+         return (
+             <FieldContainer label="Date Picker">
+                 <DatePicker value={dateValue} onChange={setDateValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DatePickerField` in Final Form**
+
+    ```diff
+    -import { DateField } from "@comet/admin-date-time";
+    +import { Future_DatePickerField as DatePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         date: string;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ date: "2025-07-23" }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateField name="date" label="Date Picker" />
+    +                <DatePickerField name="date" label="Date Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- 09c4830: Respect SubRoute prefix in SelectionRoute and EditDialog
+
+    This allows using multiple `EditDialog`s on the same level by wrapping them into `<RouteRoute>`.
+
+- 66abe0a: Add new `dataGridManyToManyColumn` column definition
+
+    The column definition sets `filterOperators` to match the `ManyToManyFilter` GraphQL input type.
+
+- 682a674: Add support for React 18
+- 77b52a8: Add `ToggleButtonGroupField` component
+- 1450882: Add support for `notContains` to `StringFilter`
+- 43eb598: Set the custom `DataGridPanel` as default in the theme of the `DataGrid` component
+
+    If set, the `DataGridPanel` can now be removed from the project's theme, e.g., in `admin/src/theme.ts`:
+
+    ```diff
+    - import { DataGridPanel } from "@comet/admin";
+      import { createCometTheme } from "@comet/admin-theme";
+    - import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    - export const theme = createCometTheme({
+    -     components: {
+    -         MuiDataGrid: {
+    -             defaultProps: {
+    -                 components: {
+    -                     Panel: DataGridPanel,
+    -                 },
+    -             },
+    -         },
+    -     },
+    - });
+    + export const theme = createCometTheme();
+    ```
+
+### Patch Changes
+
+- 4182a94: Fix loading state of FinalFormSelect when loading asynchronous options
+- d148091: Display FinalForm field-level validation errors after form submit
+- bb3e809: Fix layout spacing in `TableComponent` footer: add missing gap between item count and pagination (“Page X of Y”)
+- 400dd1e: Adapt `height` of elements in `DataGrid` depending on the `density`-prop to match the Comet DXP design
+- b8817b8: Add `AppHeaderFillSpaceProps`, `ClearInputAdornmentClassKey`, `ToolbarActionButtonClassKey`, `ToolbarActionButton`, `CrudMoreActionsMenuClassKey`, `GridActionsColDef`, `GridBaseColDef`, `GridSingleSelectColDef`, and `TableDndOrderClassKey` to the public API
+- eeb21ce: Allow non-full-width fields in `FieldSet`
+- bf9b1bb: Fix styling of `Chip` in `CrudMoreActionsMenu` to display the full value of its label
+- 12a605e: Fix closing behavior of `CollapsibleItem` if its child or sub-child is selected
+- d6a004a: Fix styling of `DialogTitle`
+    - The title text and the close button are now aligned correctly on mobile
+    - Long titles are no longer overlapped by the close button
+
+- Updated dependencies [13d35af]
+- Updated dependencies [f904b71]
+- Updated dependencies [04e308a]
+- Updated dependencies [5a6efc1]
+- Updated dependencies [f9c32d2]
+- Updated dependencies [682a674]
+    - @comet/admin-icons@8.0.0
+
 ## 8.0.0-beta.6
 
 ### Major Changes

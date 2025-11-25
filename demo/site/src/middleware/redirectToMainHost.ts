@@ -32,7 +32,9 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 getSiteConfigs().find((siteConfig) => matchesHostWithAdditionalDomain(siteConfig, host)) ||
                 getSiteConfigs().find((siteConfig) => matchesHostWithPattern(siteConfig, host));
             if (redirectSiteConfig) {
-                return NextResponse.redirect(redirectSiteConfig.url + request.nextUrl.pathname + request.nextUrl.search, { status: 301 });
+                return NextResponse.redirect(`https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
+                    status: 301,
+                });
             }
 
             return NextResponse.json({ error: `Cannot resolve domain: ${host}` }, { status: 404 });

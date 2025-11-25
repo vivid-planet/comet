@@ -13,7 +13,6 @@ import {
     TextAreaField,
     TextField,
     useFormApiRef,
-    useStackSwitchApi,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
 import {
@@ -60,6 +59,7 @@ import {
 interface FormProps {
     id?: string;
     width?: number;
+    onCreate?: (id: string) => void;
 }
 
 const rootBlocks = {
@@ -83,11 +83,10 @@ type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
 };
 
-export function ProductForm({ id, width }: FormProps) {
+export function ProductForm({ id, width, onCreate }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
-    const stackSwitchApi = useStackSwitchApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
@@ -159,13 +158,11 @@ export function ProductForm({ id, width }: FormProps) {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+            const id = mutationResponse?.createProduct.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                });
             }
         }
     };

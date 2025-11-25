@@ -1,16 +1,18 @@
 import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
+import { SyntaxKind } from "ts-morph";
 
-import { buildOptions } from "../generateCrud/generate-crud";
+import { buildOptions } from "../generateCrud/build-options";
 import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
+import { integerTypes, numberTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import {
     findBlockImportPath,
     findBlockName,
     findEnumImportPath,
     findEnumName,
+    findImportPath,
     findInputClassImportPath,
     findValidatorImportPath,
     getFieldDecoratorClassName,
@@ -32,6 +34,8 @@ function findReferenceTargetType(
     if (!referencedColumnProp) throw new Error("referencedColumnProp not found");
     if (referencedColumnProp.type == "uuid") {
         return "uuid";
+    } else if (referencedColumnProp.type == "text") {
+        return "string";
     } else if (referencedColumnProp.type == "string") {
         return "string";
     } else if (referencedColumnProp.type == "integer" || referencedColumnProp.type == "int") {
@@ -144,7 +148,7 @@ export async function generateCrudInput(
             }
             decorators.push(`@Field(${fieldOptions})`);
             type = "string";
-        } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
+        } else if (numberTypes.includes(prop.type)) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
@@ -361,6 +365,15 @@ export async function generateCrudInput(
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
                 } else {
+                    const typeNode = tsProp.getTypeNodeOrThrow().asKindOrThrow(SyntaxKind.ArrayType);
+                    const elementTypeNode = typeNode.getElementTypeNode();
+                    if (elementTypeNode.isKind(SyntaxKind.TypeReference)) {
+                        // if the element type is a type reference, we need to find the import path
+                        const { importPath } = findImportPath(elementTypeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                        if (importPath) {
+                            imports.push({ name: elementTypeNode.getText(), importPath });
+                        }
+                    }
                     decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
             } else if (tsType.isClass()) {
@@ -371,6 +384,14 @@ export async function generateCrudInput(
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
             } else {
+                const typeNode = tsProp.getTypeNodeOrThrow();
+                if (typeNode.isKind(SyntaxKind.TypeReference)) {
+                    // if the element type is a type reference, we need to find the import path
+                    const { importPath } = findImportPath(typeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                    if (importPath) {
+                        imports.push({ name: typeNode.getText(), importPath });
+                    }
+                }
                 decorators.push(
                     `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
                 );

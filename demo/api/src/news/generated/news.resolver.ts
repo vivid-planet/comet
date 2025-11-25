@@ -7,7 +7,7 @@ import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { PaginatedNews } from "./dto/paginated-news";
 import { NewsListArgs } from "./dto/news-list.args";
 import { NewsComment } from "../entities/news-comment.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { News, NewsContentScope } from "../entities/news.entity";
 @Resolver(() => News)
@@ -47,11 +47,7 @@ export class NewsResolver {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<News, any> = { offset, limit, populate };
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
         }
         const [entities, totalCount] = await this.entityManager.findAndCount(News, where, options);
         return new PaginatedNews(entities, totalCount);

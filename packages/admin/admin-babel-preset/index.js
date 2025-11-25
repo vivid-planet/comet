@@ -35,7 +35,6 @@ module.exports = function () {
                     },
                 },
             ],
-            "@babel/plugin-proposal-class-properties",
         ],
     };
 };

@@ -37,15 +37,16 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock
 };
-type FormValues = Omit<GQLIdFieldInFormFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
     type: GQLProductType;
     slug: string;
 }
-export function IdFieldInForm({ id, type, slug }: FormProps) {
+export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -54,10 +55,10 @@ export function IdFieldInForm({ id, type, slug }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
             ...filterByFragment<GQLIdFieldInFormFragment>(productFormFragment, data.product),
-            image: rootBlocks.image.input2State(data.product.image)
+            image: rootBlocks.image.input2State(data.product.image),
         }
         : {
-            image: rootBlocks.image.defaultValues()
+            image: rootBlocks.image.defaultValues(),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -72,10 +73,7 @@ export function IdFieldInForm({ id, type, slug }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
-        };
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
@@ -86,15 +84,18 @@ export function IdFieldInForm({ id, type, slug }: FormProps) {
         else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: { ...output, slug, type } },
+                variables: {
+                    input: { ...output, slug, type }
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createProduct.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };

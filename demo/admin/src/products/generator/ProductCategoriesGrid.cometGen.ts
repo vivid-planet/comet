@@ -21,6 +21,11 @@ export default defineConfig<GQLProductCategory>({
             headerName: "Slug",
         },
         {
+            type: "text",
+            name: "type.title",
+            headerName: "Type",
+        },
+        {
             type: "number",
             name: "position",
             headerName: "Position",

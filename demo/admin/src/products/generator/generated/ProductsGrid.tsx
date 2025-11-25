@@ -37,6 +37,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ProductTitle } from "../ProductTitle";
@@ -47,19 +48,16 @@ import { Education as EducationIcon } from "@comet/admin-icons";
 const productsFragment = gql`
         fragment ProductsGridFuture on Product {
             id
-            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name }
+            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name } slug
         }
     `;
 const productsQuery = gql`
-        query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
-    products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-                nodes {
-                    ...ProductsGridFuture
-                }
-                totalCount
-            }
+    query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
+        products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+            nodes { ...ProductsGridFuture } totalCount
         }
-        ${productsFragment}
+    }
+    ${productsFragment}
     `;
 const deleteProductMutation = gql`
                 mutation DeleteProduct($id: ID!) {
@@ -93,8 +91,7 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarTo
 type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
+    rowAction?: (params: GridRenderCellParams<GQLProductsGridFutureFragment>) => ReactNode;
     actionsColumnWidth?: number;
 };
 export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
@@ -108,7 +105,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             queryParamsPrefix: "products",
         }), ...usePersistentColumnState("ProductsGrid") };
     const theme = useTheme();
-    const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => [
         { field: "overview",
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
             filterable: false,
@@ -163,7 +160,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         { field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "boolean",
-            valueFormatter: (value, row) => typeof row.inStock === "boolean" ? row.inStock.toString() : "",
             flex: 1,
             visible: theme.breakpoints.up('md'),
             minWidth: 80, },
@@ -195,7 +191,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             width: 170, },
         { field: "manufacturer",
             headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
-            sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
             flex: 1,
@@ -205,12 +200,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
             flex: 1,
+            disableExport: true,
             minWidth: 150, },
         { ...dataGridOneToManyColumn, field: "variants",
             headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
             sortable: false,
             renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
             flex: 1,
+            disableExport: true,
             minWidth: 150, },
         { field: "actions",
             headerName: "",
@@ -233,7 +230,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                     
                                 </>);
             }, }
-    ];
+    ], [intl, theme, client, rowAction, actionsColumnWidth]);
     const { filter: gqlFilter, search: gqlSearch, } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
@@ -247,7 +244,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const exportApi = useDataGridExcelExport<GQLProductsGridQuery["products"]["nodes"][0], GQLProductsGridQuery, Omit<GQLProductsGridQueryVariables, "offset" | "limit">>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel)
         },
         query: productsQuery,
         resolveQueryNodes: (data) => data.products.nodes,

@@ -7,4 +7,4 @@ Structured data is application-specific data that is managed by the customer. Th
 
 ## Table/Form
 
-For more information, please visit the [comet-admin documentation](https://comet-admin.netlify.app/?path=/story/docs-intro--page).
+For more information, please visit the [comet-admin documentation](https://comet-admin.netlify.app/?path=/docs/docs-intro--docs).

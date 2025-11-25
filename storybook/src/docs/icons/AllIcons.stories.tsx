@@ -5,6 +5,8 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
 
+const iconBlockList = ["CometDigitalExperienceLogo"];
+
 const matchesSearchQuery = (str: string, query: string): boolean => {
     if (!query.length) return true;
 
@@ -41,7 +43,9 @@ const IconWrapper = styled("div")`
 const SearchIcon = imports.Search;
 
 const iconsWithSearchTerms = Object.keys(imports)
-    .filter((key) => !key.endsWith("SearchTerms") && key !== "__esModule")
+    .filter((key) => {
+        return !key.endsWith("SearchTerms") && key !== "__esModule" && !iconBlockList.includes(key);
+    })
     .map((key) => ({
         name: key,
         Icon: imports[key as keyof typeof imports],

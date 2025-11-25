@@ -9,12 +9,20 @@ describe("generateGrid", () => {
 
     beforeAll(() => {
         schema = buildSchema(`
+            scalar LocalDate
             input StringFilter {
                 equal: String
             }
 
             type Query {
                 books(
+                    offset: Int!
+                    limit: Int!
+                    sort: [BookSort!]
+                    filter: BookFilter
+                ): PaginatedBooks!
+                booksByAuthor(
+                    authorId: ID!
                     offset: Int!
                     limit: Int!
                     sort: [BookSort!]
@@ -27,9 +35,16 @@ describe("generateGrid", () => {
                 totalCount: Int!
             }
 
+            type Author {
+                id: ID!
+                name: String!
+                birthDate: LocalDate
+            }
+
             type Book {
                 id: ID!
                 title: String!
+                author: Author!
             }
 
             input BookFilter {
@@ -51,7 +66,7 @@ describe("generateGrid", () => {
             }
 
             type Mutation {
-                createBook(input: BookInput!): Book!
+                createBook(author: ID!, input: BookInput!): Book!
                 updateBook(id: ID!, input: BookInput!): Book!
                 deleteBook(id: ID!): Boolean!
             }
@@ -68,6 +83,11 @@ describe("generateGrid", () => {
         __typename: "Book";
         id: string;
         title: string;
+        author?: {
+            __typename: "Author";
+            name: string;
+            birthDate?: string;
+        };
     };
 
     it("should generate a grid with book configuration", () => {
@@ -78,6 +98,65 @@ describe("generateGrid", () => {
                 {
                     type: "text",
                     name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
+
+    it("should generate required root gql args in export-query variables", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "booksByAuthor",
+            excelExport: true,
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
+
+    it("should generate valueGetter for date in nested field", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "books",
+            excelExport: true,
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+                {
+                    type: "date",
+                    name: "author.birthDate",
+                    headerName: "Author Birthdate",
                 },
             ],
         };

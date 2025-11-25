@@ -9,7 +9,6 @@ import { type BlockDependency, type ReplaceDependencyObject } from "../../../blo
 import { type ContentScope } from "../../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { type GQLDamFile } from "../../../graphql.generated";
-import { createHttpClient } from "../../../http/createHttpClient";
 import { type PageTreeConfig } from "../../pageTreeConfig";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { type PageClipboard, type PagesClipboard } from "../useCopyPastePages";
@@ -19,8 +18,6 @@ import {
     type GQLCopyFilesToScopeMutationVariables,
     type GQLCreatePageNodeMutation,
     type GQLCreatePageNodeMutationVariables,
-    type GQLDownloadDamFileMutation,
-    type GQLDownloadDamFileMutationVariables,
     type GQLFindCopiesOfFileInScopeQuery,
     type GQLFindCopiesOfFileInScopeQueryVariables,
     type GQLSlugAvailableQuery,
@@ -117,7 +114,7 @@ export async function sendPages(
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //file already handled (same file used multiple times on page)
-                    } else if (damFile.fileUrl.startsWith(apiUrl) && (!hasDamScope || isEqual(damFile.scope, targetDamScope))) {
+                    } else if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
                         //same scope, same server, no need to copy
                     } else {
                         // TODO eventually handle multiple files in one request for better performance
@@ -273,65 +270,13 @@ export async function sendPages(
                 for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //already copied
-                    } else if (damFile.fileUrl.startsWith(apiUrl)) {
-                        //our own api, no need to download&upload
+                    } else {
+                        // not copied yet
                         if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
                             //same scope, same server, no need to copy
                         } else {
                             //batch copy below
                             fileIdsToCopyDirectly.push(damFile.id);
-                        }
-                    } else {
-                        if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
-                        if (damFile.fileUrl.match(/^https?:\/\/(localhost|.*\.dev\.vivid-planet\.cloud|192\.168\.\d{1,3}\.\d{1,3}):\d{2,4}/)) {
-                            //source is local dev server, download client side and upload
-                            const fileResponse = await fetch(damFile.fileUrl);
-                            const fileBlob = await fileResponse.blob();
-                            const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
-                            const formData = new FormData();
-                            formData.append("file", file);
-                            if (hasDamScope) formData.append("scope", JSON.stringify(targetDamScope));
-                            formData.append("folderId", inboxFolderIdForCopiedFiles);
-                            if (damFile.title) formData.append("title", damFile.title);
-                            if (damFile.altText) formData.append("altText", damFile.altText);
-                            if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
-                            if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
-
-                            const apiClient = createHttpClient(apiUrl);
-                            const response: { data: { id: string } } = await apiClient.post(`/${damBasePath}/files/upload`, formData, {
-                                // cancelToken, //TODO support cancel?
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                },
-                            });
-                            dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
-                        } else {
-                            //remote source, download server side
-                            const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
-                                mutation: gql`
-                                    mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
-                                        importDamFileByDownload(url: $url, scope: $scope, input: $input) {
-                                            id
-                                        }
-                                    }
-                                `,
-                                variables: {
-                                    url: damFile.fileUrl,
-                                    scope: targetDamScope,
-                                    input: {
-                                        name: damFile.name,
-                                        folderId: inboxFolderIdForCopiedFiles,
-                                        title: damFile.title,
-                                        altText: damFile.altText,
-                                        license: damFile.license,
-                                        image: damFile.image ? { cropArea: damFile.image.cropArea } : undefined,
-                                    },
-                                },
-                            });
-                            if (!data?.importDamFileByDownload.id) {
-                                throw Error("Did not receive new id for imported dam file");
-                            }
-                            dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data.importDamFileByDownload.id });
                         }
                     }
                 }
@@ -359,7 +304,9 @@ export async function sendPages(
                 const unhandledDependencies = unhandledDependenciesFromDocument(documentType, sourcePage.document, {
                     existingReplacements: dependencyReplacements,
                     hasDamScope,
+                    targetDamScope,
                 });
+
                 const replacementsForUnhandledDependencies = createUndefinedReplacementsForDependencies(unhandledDependencies);
                 dependencyReplacements.push(...replacementsForUnhandledDependencies);
             }
@@ -413,12 +360,23 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
 function unhandledDependenciesFromDocument(
     documentType: DocumentInterface,
     document: GQLDocument,
-    { existingReplacements, hasDamScope = false }: { existingReplacements: ReplaceDependencyObject[]; hasDamScope?: boolean },
+    {
+        existingReplacements,
+        hasDamScope = false,
+        targetDamScope,
+    }: { existingReplacements: ReplaceDependencyObject[]; hasDamScope?: boolean; targetDamScope: Record<string, unknown> },
 ) {
     const unhandledDependencies = documentType.dependencies(document).filter((dependency) => {
-        if (dependency.targetGraphqlObjectType === "DamFile" && !hasDamScope) {
-            // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
-            return false;
+        if (isDamFileDependency(dependency)) {
+            if (!hasDamScope) {
+                // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
+                return false;
+            }
+
+            if (isEqual(dependency.data.damFile.scope, targetDamScope)) {
+                // Source and target DAM scope are the same, so no need to handle this dependency
+                return false;
+            }
         }
 
         return !existingReplacements.some(
@@ -446,14 +404,17 @@ function createUndefinedReplacementsForDependencies(dependencies: BlockDependenc
 }
 
 function fileDependenciesFromDocument(documentType: DocumentInterface, document: GQLDocument) {
-    return (
-        documentType
-            .dependencies(document)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile)
-            .map((dependency) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                return (dependency.data as any).damFile as GQLDamFile & { scope?: Record<string, unknown> };
-            })
-    );
+    return documentType
+        .dependencies(document)
+        .filter(isDamFileDependency)
+        .map((dependency) => {
+            return dependency.data.damFile;
+        });
+}
+
+function isDamFileDependency(
+    dependency: BlockDependency,
+): dependency is BlockDependency & { data: { damFile: GQLDamFile & { scope?: Record<string, unknown> } } } {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile;
 }

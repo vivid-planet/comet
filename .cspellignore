@@ -26,7 +26,6 @@ subpage
 Traefik
 typesafe
 Undeprecate
-mailhog
 leaddev
 blocklist
 cbdf
@@ -51,3 +50,13 @@ codegen
 usehooks
 graphiql
 retryable
+mjml
+autonumber
+colorpicker
+datetimerangepickerfield
+datetimerangepicker
+inlinealert
+numberfield
+Referer
+mailpit
+axllent

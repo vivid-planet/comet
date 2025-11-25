@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import omit from "lodash.omit";
 import { createContext, type PropsWithChildren, useContext } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { type GQLPermission } from "../../graphql.generated";
@@ -61,7 +62,13 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     `);
 
     if (error) {
-        return <>Cannot load user: {error.message}</>;
+        return (
+            <FormattedMessage
+                id="comet.currentUser.loadError"
+                defaultMessage="Cannot load user: {errorMessage}"
+                values={{ errorMessage: error.message }}
+            />
+        );
     }
 
     if (!data) return <Loading behavior="fillPageHeight" />;

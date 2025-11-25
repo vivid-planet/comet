@@ -2,9 +2,10 @@
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
         ".": {
-            "entry": ["dev-pm.config.js", "waitForPackages.js", "site-configs.ts"],
+            "entry": ["dev-pm.config.ts", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell", "open-cli"]
+            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"],
+            "ignoreBinaries": ["oauth2-proxy"]
         },
         "packages/cli": {
             "entry": ["./src/index.ts"],
@@ -41,7 +42,8 @@
         "packages/admin/admin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
+            "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
             "entry": ["./src/index.ts"],
@@ -96,32 +98,18 @@
                 "./src/content-scope/content-scope.interface.ts",
                 "./src/repl.ts",
                 "./src/db/ormconfig.cli.ts",
-                "./src/db/fixtures/**/*.ts",
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
-                "./src/generator/generate.ts",
                 "./src/auth/permission.interface.ts",
                 "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"],
+            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit", "@as-integrations/express5"],
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts", "./server.ts", "./opentelemetry-metrics.ts"],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/webpack/gql-hash-loader.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@babel/core"],
-            "ignore": ["**/*.generated.ts"]
-        },
-        "demo/site-pages": {
-            "entry": [
-                "./src/pages/**",
-                "./preBuild/src/createRedirects.ts",
-                "./preBuild/src/createRewrites.ts",
-                "./preBuild/src/publicGenerator/extract.ts",
-                "./preBuild/src/publicGenerator/generate.ts"
-            ],
-            "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
         },

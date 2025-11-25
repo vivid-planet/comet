@@ -1,15 +1,18 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
-import { Injectable, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
+import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
+import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
-import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
+import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
 @Injectable()
@@ -29,8 +32,8 @@ export class WarningEventSubscriber implements EventSubscriber {
 
         const entities = this.orm.config.get("entities") as EntityClass<unknown>[];
         for (const entity of entities) {
-            const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
-            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            const rootBlockEntityOptions = Reflect.getMetadata(ROOT_BLOCK_ENTITY_METADATA_KEY, entity);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
 
             if (rootBlockEntityOptions || createWarnings) {
                 subscribedEntities.push(entity);
@@ -54,15 +57,22 @@ export class WarningEventSubscriber implements EventSubscriber {
         const definedProperties = args.meta.definedProperties;
 
         if (entity) {
-            const keys = Reflect.getMetadata(`keys:rootBlock`, entity.prototype) || [];
+            const keys = Reflect.getMetadata(ROOT_BLOCK_KEYS_METADATA_KEY, entity.prototype) || [];
             let scope: ContentScope | undefined = "scope" in definedProperties ? definedProperties.scope : undefined;
 
             if (!scope) {
-                const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [entity]);
+                const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                 if (scoped) {
-                    const service = this.moduleRef.get(scoped, { strict: false });
-                    const scopedEntityScope = await service.getEntityScope(args.entity);
+                    let scopedEntityScope: ContentScope | ContentScope[];
+
+                    if (isInjectableService(scoped)) {
+                        const service = this.moduleRef.get(scoped, { strict: false });
+                        scopedEntityScope = await service.getEntityScope(args.entity);
+                    } else {
+                        scopedEntityScope = await scoped(args.entity);
+                    }
+
                     if (Array.isArray(scopedEntityScope)) {
                         throw new Error("Multiple scopes are not supported for warnings");
                     } else {
@@ -72,52 +82,66 @@ export class WarningEventSubscriber implements EventSubscriber {
             }
 
             for (const key of keys) {
-                const block = Reflect.getMetadata(`data:rootBlock`, entity.prototype, key);
+                const block = Reflect.getMetadata(ROOT_BLOCK_METADATA_KEY, entity.prototype, key);
 
-                const flatBlocks = new FlatBlocks(args.entity[key], {
-                    name: block.name,
-                    visible: true,
-                    rootPath: "root",
-                });
-                for (const node of flatBlocks.depthFirst()) {
+                const blockData = args.entity[key];
+                if (blockData) {
+                    const flatBlocks = new FlatBlocks(blockData, {
+                        name: block.name,
+                        visible: true,
+                        rootPath: "root",
+                    });
+
                     const startDate = new Date();
-                    const warningsOrWarningsService = await node.block.warnings();
-                    let warnings: BlockWarning[] = [];
+                    for (const node of flatBlocks.depthFirst()) {
+                        const warningsOrWarningsService = await node.block.warnings();
+                        let warnings: BlockWarning[] = [];
 
-                    if (this.isBlockWarningService(warningsOrWarningsService)) {
-                        const warningsService = warningsOrWarningsService;
-                        const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
+                        if (isInjectableService(warningsOrWarningsService)) {
+                            const warningsService = warningsOrWarningsService;
+                            const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
 
-                        warnings = await service.warnings(node.block);
-                    } else {
-                        warnings = warningsOrWarningsService;
+                            warnings = await service.warnings(node.block);
+                        } else {
+                            warnings = warningsOrWarningsService;
+                        }
+
+                        const sourceInfo = {
+                            rootEntityName: entity.name,
+                            rootColumnName: key,
+                            targetId: args.entity.id,
+                            rootPrimaryKey: args.meta.primaryKeys[0],
+                            jsonPath: node.pathToString(),
+                        };
+
+                        await this.warningService.saveWarnings({
+                            warnings,
+                            sourceInfo,
+                            scope,
+                        });
                     }
 
-                    const sourceInfo = {
-                        rootEntityName: entity.name,
-                        rootColumnName: key,
-                        targetId: args.entity.id,
-                        rootPrimaryKey: args.meta.primaryKeys[0],
-                        jsonPath: node.pathToString(),
-                    };
-
-                    await this.warningService.saveWarnings({
-                        warnings,
-                        sourceInfo,
-                        scope,
+                    // Delete all outdated warnings for this entity and rootPrimaryKey
+                    await this.entityManager.nativeDelete(Warning, {
+                        updatedAt: { $lt: startDate },
+                        sourceInfo: {
+                            rootEntityName: entity.name,
+                            rootColumnName: key,
+                            targetId: args.entity.id,
+                            rootPrimaryKey: args.meta.primaryKeys[0],
+                        },
                     });
-                    await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
                 }
             }
 
-            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>(CREATE_WARNINGS_METADATA_KEY, [entity]);
             if (createWarnings && args.entity.id) {
                 const repository: EntityRepository<{ id: string; scope: ContentScope }> = this.entityManager.getRepository(entity);
 
                 const row = await repository.findOneOrFail(args.entity.id);
 
                 let warnings: WarningData[] = [];
-                if (this.isService(createWarnings)) {
+                if (isInjectableService(createWarnings)) {
                     const service = this.moduleRef.get(createWarnings, { strict: false });
                     warnings = await service.createWarnings(row);
                 } else {
@@ -134,18 +158,8 @@ export class WarningEventSubscriber implements EventSubscriber {
                     sourceInfo,
                     scope: row.scope,
                 });
-                await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
+                await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: startDate }, sourceInfo });
             }
         }
-    }
-
-    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
-        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
-    }
-    private isBlockWarningService(
-        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
-    ): transformResponse is Type<BlockWarningsServiceInterface> {
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 }
