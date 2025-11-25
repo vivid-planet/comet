@@ -13,7 +13,7 @@ import { IsEnum } from "class-validator";
 
 import { RichTextBlock } from "./rich-text.block";
 
-export enum HeadlineTag {
+enum HeadlineTag {
     h1 = "h1",
     h2 = "h2",
     h3 = "h3",

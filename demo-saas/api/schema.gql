@@ -62,11 +62,6 @@ input AlternativeAddressInput {
   zip: String!
 }
 
-input AttachedDocumentInput {
-  id: String
-  type: String!
-}
-
 type AutoBuildStatus {
   hasChangesSinceLastBuild: Boolean!
   lastCheck: DateTime
@@ -378,35 +373,6 @@ input FolderFilterInput {
   searchText: String
 }
 
-type Footer {
-  content: FooterContentBlockData!
-  createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  id: ID!
-  scope: FooterScope!
-  updatedAt: DateTime!
-}
-
-"""FooterContent root block data"""
-scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""FooterContent root block input"""
-scalar FooterContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-input FooterInput {
-  content: FooterContentBlockInput!
-}
-
-type FooterScope {
-  domain: String!
-  language: String!
-}
-
-input FooterScopeInput {
-  domain: String!
-  language: String!
-}
-
 input IdFilter {
   equal: ID
   isAnyOf: [ID!]
@@ -480,45 +446,10 @@ enum LicenseType {
   ROYALTY_FREE
 }
 
-type Link implements DocumentInterface {
-  content: LinkBlockData!
-  createdAt: DateTime!
-  id: ID!
-  pageTreeNode: PageTreeNode
-  updatedAt: DateTime!
-}
-
-"""Link root block data"""
-scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""Link root block input"""
-scalar LinkBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-input LinkInput {
-  content: LinkBlockInput!
-}
-
 """
 A local date string (i.e., with no associated timezone) in `YYYY-MM-DD` format, e.g. `2020-01-01`.
 """
 scalar LocalDate
-
-type MainMenu {
-  items: [MainMenuItem!]!
-}
-
-type MainMenuItem {
-  content: RichTextBlockData
-  createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  id: ID!
-  node: PageTreeNode!
-  updatedAt: DateTime!
-}
-
-input MainMenuItemInput {
-  content: RichTextBlockInput
-}
 
 type Manufacturer {
   address: Address
@@ -608,17 +539,6 @@ type MappedFile {
   rootFile: DamFile!
 }
 
-input MovePageTreeNodesByNeighbourInput {
-  afterId: String
-  beforeId: String
-  parentId: String
-}
-
-input MovePageTreeNodesByPosInput {
-  parentId: String
-  pos: Int!
-}
-
 type Mutation {
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
@@ -629,14 +549,12 @@ type Mutation {
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
   createNewsComment(input: NewsCommentInput!, newsId: ID!): NewsComment!
-  createPageTreeNode(category: String!, input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!): PageTreeNode!
   createProduct(input: ProductInput!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   createProductCategoryType(input: ProductCategoryTypeInput!): ProductCategoryType!
   createProductHighlight(input: ProductHighlightInput!): ProductHighlight!
   createProductTag(input: ProductTagInput!): ProductTag!
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
-  createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
   currentUserSignOut: String!
   deleteDamFile(id: ID!): Boolean!
   deleteDamFolder(id: ID!): Boolean!
@@ -644,46 +562,31 @@ type Mutation {
   deleteManufacturer(id: ID!): Boolean!
   deleteNews(id: ID!): Boolean!
   deleteNewsComment(id: ID!): Boolean!
-  deletePageTreeNode(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
   deleteProductCategory(id: ID!): Boolean!
   deleteProductCategoryType(id: ID!): Boolean!
   deleteProductHighlight(id: ID!): Boolean!
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
-  deleteRedirect(id: ID!): Boolean!
   importDamFileByDownload(input: UpdateDamFileInput!, scope: DamScopeInput!, url: String!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
-  movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
-  movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
   publishAllProducts: Boolean!
   restoreDamFile(id: ID!): DamFile!
   restoreDamFiles(ids: [ID!]!): [DamFile!]!
-  saveFooter(input: FooterInput!, scope: FooterScopeInput!): Footer!
-  saveLink(attachedPageTreeNodeId: ID, id: ID!, input: LinkInput!, lastUpdatedAt: DateTime): Link!
-  savePage(attachedPageTreeNodeId: ID, input: PageInput!, lastUpdatedAt: DateTime, pageId: ID!): Page!
-  savePredefinedPage(attachedPageTreeNodeId: ID!, id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
-  updateMainMenuItem(input: MainMenuItemInput!, lastUpdatedAt: DateTime, pageTreeNodeId: ID!): MainMenuItem!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   updateNews(id: ID!, input: NewsUpdateInput!): News!
   updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
-  updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
-  updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
-  updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
-  updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
   updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   updateProductCategoryType(id: ID!, input: ProductCategoryTypeUpdateInput!): ProductCategoryType!
   updateProductHighlight(id: ID!, input: ProductHighlightUpdateInput!): ProductHighlight!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
-  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
-  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   userPermissionsCreatePermission(input: UserPermissionInput!, userId: String!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateContentScopes(input: UserContentScopesInput!, userId: String!): Boolean!
@@ -825,107 +728,6 @@ input OneToManyFilter {
   search: String
 }
 
-type Page implements DocumentInterface {
-  content: PageContentBlockData!
-  createdAt: DateTime!
-  id: ID!
-  pageTreeNode: PageTreeNode
-  seo: SeoBlockData!
-  stage: StageBlockData!
-  updatedAt: DateTime!
-}
-
-"""PageContent root block data"""
-scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""PageContent root block input"""
-scalar PageContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-union PageContentUnion = Link | Page | PredefinedPage
-
-input PageInput {
-  content: PageContentBlockInput!
-  seo: SeoBlockInput!
-  stage: StageBlockInput!
-}
-
-type PageTreeNode {
-  category: PageTreeNodeCategory!
-  childNodes: [PageTreeNode!]!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  document: PageContentUnion
-  documentType: String!
-  hideInMenu: Boolean!
-  id: ID!
-  name: String!
-  numberOfDescendants: Int!
-  parentId: String
-  parentNode: PageTreeNode
-  parentNodes: [PageTreeNode!]!
-  path: String!
-  pos: Int!
-  scope: PageTreeNodeScope!
-  slug: String!
-  updatedAt: DateTime!
-  userGroup: UserGroup!
-  visibility: PageTreeNodeVisibility!
-}
-
-enum PageTreeNodeCategory {
-  mainNavigation
-  topMenu
-}
-
-input PageTreeNodeCreateInput {
-  attachedDocument: AttachedDocumentInput!
-  hideInMenu: Boolean
-  id: ID
-  name: String!
-  parentId: String
-  pos: Int
-  slug: String!
-  userGroup: UserGroup! = all
-}
-
-type PageTreeNodeScope {
-  domain: String!
-  language: String!
-}
-
-input PageTreeNodeScopeInput {
-  domain: String!
-  language: String!
-}
-
-input PageTreeNodeSort {
-  direction: SortDirection! = ASC
-  field: PageTreeNodeSortField!
-}
-
-enum PageTreeNodeSortField {
-  pos
-  updatedAt
-}
-
-input PageTreeNodeUpdateInput {
-  attachedDocument: AttachedDocumentInput
-  createAutomaticRedirectsOnSlugChange: Boolean = true
-  hideInMenu: Boolean
-  name: String!
-  slug: String!
-  userGroup: UserGroup! = all
-}
-
-input PageTreeNodeUpdateVisibilityInput {
-  visibility: PageTreeNodeVisibility!
-}
-
-enum PageTreeNodeVisibility {
-  Archived
-  Published
-  Unpublished
-}
-
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -966,11 +768,6 @@ type PaginatedNews {
   totalCount: Int!
 }
 
-type PaginatedPageTreeNodes {
-  nodes: [PageTreeNode!]!
-  totalCount: Int!
-}
-
 type PaginatedProductCategories {
   nodes: [ProductCategory!]!
   totalCount: Int!
@@ -998,11 +795,6 @@ type PaginatedProductVariants {
 
 type PaginatedProducts {
   nodes: [Product!]!
-  totalCount: Int!
-}
-
-type PaginatedRedirects {
-  nodes: [Redirect!]!
   totalCount: Int!
 }
 
@@ -1034,21 +826,6 @@ input PermissionFilter {
   equal: Permission
   isAnyOf: [Permission!]
   notEqual: Permission
-}
-
-type PredefinedPage implements DocumentInterface {
-  createdAt: DateTime!
-  id: ID!
-  type: PredefinedPageType
-  updatedAt: DateTime!
-}
-
-input PredefinedPageInput {
-  type: PredefinedPageType
-}
-
-enum PredefinedPageType {
-  news
 }
 
 type Product {
@@ -1560,7 +1337,6 @@ input ProductVariantUpdateInput {
 
 type Query {
   autoBuildStatus: AutoBuildStatus!
-  blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   currentUser: CurrentUser!
@@ -1577,15 +1353,11 @@ type Query {
   damMediaAlternative(id: ID!): DamMediaAlternative!
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
-  footer(scope: FooterScopeInput!): Footer
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesJob(name: String!): KubernetesJob!
   kubernetesJobLogs(name: String!): String!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
-  link(id: ID!): Link
-  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
-  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   manufacturer(id: ID!): Manufacturer!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
   manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]): PaginatedManufacturers!
@@ -1593,14 +1365,6 @@ type Query {
   newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
   newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
-  page(id: ID!): Page!
-  pageTreeNode(id: ID!): PageTreeNode
-  pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
-  pageTreeNodeSlugAvailable(parentId: ID, scope: PageTreeNodeScopeInput!, slug: String!): SlugAvailability!
-  paginatedPageTreeNodes(category: String, documentType: String, limit: Int! = 25, offset: Int! = 0, scope: PageTreeNodeScopeInput!, sort: [PageTreeNodeSort!]): PaginatedPageTreeNodes!
-  paginatedRedirects(filter: RedirectFilter, limit: Int! = 25, offset: Int! = 0, scope: RedirectScopeInput!, search: String, sort: [RedirectSort!]): PaginatedRedirects!
-  predefinedPage(id: ID!): PredefinedPage!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]): PaginatedProductCategories!
@@ -1615,12 +1379,6 @@ type Query {
   productVariant(id: ID!): ProductVariant!
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
-  redirect(id: ID!): Redirect!
-  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
-  redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
-  redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  sitePreviewJwt(includeInvisible: Boolean!, path: String!, scope: JSONObject!): String!
-  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(skipManual: Boolean, userId: String!): [JSONObject!]!
@@ -1632,107 +1390,16 @@ type Query {
   warnings(filter: WarningFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [WarningSort!], status: [WarningStatus!]! = [open]): PaginatedWarnings!
 }
 
-type Redirect {
-  activatedAt: DateTime
-  active: Boolean!
-  comment: String
-  createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  generationType: RedirectGenerationType!
-  id: ID!
-  scope: RedirectScope!
-  source: String!
-  sourceType: RedirectSourceTypeValues!
-  target: JSONObject!
-  updatedAt: DateTime!
-}
-
-input RedirectFilter {
-  active: BooleanFilter
-  and: [RedirectFilter!]
-  createdAt: DateTimeFilter
-  generationType: StringFilter
-  or: [RedirectFilter!]
-  source: StringFilter
-  target: StringFilter
-  updatedAt: DateTimeFilter
-}
-
-enum RedirectGenerationType {
-  automatic
-  manual
-}
-
-input RedirectInput {
-  active: Boolean
-  comment: String
-  generationType: RedirectGenerationType!
-  source: String!
-  sourceType: RedirectSourceTypeValues!
-  target: JSONObject!
-}
-
-type RedirectScope {
-  domain: String!
-}
-
-input RedirectScopeInput {
-  domain: String!
-}
-
-input RedirectSort {
-  direction: SortDirection! = ASC
-  field: RedirectSortField!
-}
-
-enum RedirectSortField {
-  createdAt
-  source
-  updatedAt
-}
-
-enum RedirectSourceTypeValues {
-  path
-}
-
-input RedirectUpdateActivenessInput {
-  active: Boolean!
-}
-
-"""RichText root block data"""
-scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""RichText root block input"""
-scalar RichTextBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 input ScopeFilter {
   equal: JSONObject
   isAnyOf: [JSONObject!]
   notEqual: JSONObject
 }
 
-"""Seo root block data"""
-scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""Seo root block input"""
-scalar SeoBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-enum SlugAvailability {
-  Available
-  Reserved
-  Taken
-}
-
 enum SortDirection {
   ASC
   DESC
 }
-
-"""Stage root block data"""
-scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""Stage root block input"""
-scalar StageBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input StringFilter {
   contains: String
@@ -1767,12 +1434,6 @@ input UpdateImageFileInput {
 
 input UserContentScopesInput {
   contentScopes: [JSONObject!]! = []
-}
-
-enum UserGroup {
-  admin
-  all
-  editor
 }
 
 type UserPermission {

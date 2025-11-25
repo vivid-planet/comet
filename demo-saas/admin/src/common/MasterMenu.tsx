@@ -1,27 +1,8 @@
-import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import {
-    ContentScopeIndicator,
-    CronJobsPage,
-    DamPage,
-    type DocumentInterface,
-    type DocumentType,
-    MasterMenu,
-    type MasterMenuData,
-    PagesPage,
-    PublisherPage,
-    UserPermissionsPage,
-    WarningsPage,
-} from "@comet/cms-admin";
+import { Assets, Dashboard, Data, Snips, Wrench } from "@comet/admin-icons";
+import { CronJobsPage, DamPage, MasterMenu, type MasterMenuData, PublisherPage, UserPermissionsPage, WarningsPage } from "@comet/cms-admin";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
-import { Link } from "@src/documents/links/Link";
-import { Page } from "@src/documents/pages/Page";
-import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
-import { EditFooterPage } from "@src/footer/EditFooterPage";
-import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsPage } from "@src/news/NewsPage";
-import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
 import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
 import { ProductCategoriesPage } from "@src/products/generator/ProductCategoriesPage";
@@ -34,19 +15,7 @@ import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/Ma
 import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
-import { RedirectsPage } from "@src/redirects/RedirectsPage";
-import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
-import { Redirect, type RouteComponentProps } from "react-router";
-
-import { EditPageNode } from "./EditPageNode";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
-    Page,
-    Link,
-    PredefinedPage,
-};
 
 export const masterMenuData: MasterMenuData = [
     {
@@ -57,50 +26,6 @@ export const masterMenuData: MasterMenuData = [
             path: "/dashboard",
             component: DashboardPage,
         },
-    },
-    {
-        type: "collapsible",
-        primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
-        icon: <PageTree />,
-        items: pageTreeCategories.map((category) => ({
-            type: "route",
-            primary: category.label,
-            to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
-        })),
-        route: {
-            path: "/pages/pagetree/:category",
-            render: ({ match }: RouteComponentProps<{ category: string }>) => {
-                const category = urlParamToCategory(match.params.category);
-
-                if (category === undefined) {
-                    return <Redirect to={`${match.url}/dashboard`} />;
-                }
-
-                return (
-                    <PagesPage
-                        path={`/pages/pagetree/${match.params.category}`}
-                        documentTypes={(category): Record<DocumentType, DocumentInterface> => {
-                            if (category === "TopMenu") {
-                                return {
-                                    Page,
-                                    PredefinedPage,
-                                };
-                            }
-
-                            return {
-                                Page,
-                                PredefinedPage,
-                                Link,
-                            };
-                        }}
-                        editPageNode={EditPageNode}
-                        category={category}
-                        renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
-                    />
-                );
-            },
-        },
-        requiredPermission: "pageTree",
     },
     {
         type: "collapsible",
@@ -130,32 +55,6 @@ export const masterMenuData: MasterMenuData = [
     },
     {
         type: "collapsible",
-        primary: <FormattedMessage id="menu.project-snips" defaultMessage="Project Snips" />,
-        icon: <Snips />,
-        items: [
-            {
-                type: "route",
-                primary: <FormattedMessage id="menu.project-snips.mainMenu" defaultMessage="Main menu" />,
-                route: {
-                    path: "/project-snips/main-menu",
-                    component: MainMenu,
-                },
-                requiredPermission: "pageTree",
-            },
-            {
-                type: "route",
-                primary: <FormattedMessage id="menu.project-snips.footer" defaultMessage="Footer" />,
-                route: {
-                    path: "/project-snips/footer",
-                    component: EditFooterPage,
-                },
-                requiredPermission: "pageTree",
-            },
-        ],
-        requiredPermission: "pageTree",
-    },
-    {
-        type: "collapsible",
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
         icon: <Wrench />,
         items: [
@@ -176,15 +75,6 @@ export const masterMenuData: MasterMenuData = [
                     component: CronJobsPage,
                 },
                 requiredPermission: "cronJobs",
-            },
-            {
-                type: "route",
-                primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
-                route: {
-                    path: "/system/redirects",
-                    render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
-                },
-                requiredPermission: "pageTree",
             },
             {
                 type: "route",

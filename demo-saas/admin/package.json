@@ -40,7 +40,6 @@
         "@mui/x-data-grid-pro": "^7.29.8",
         "@mui/x-date-pickers": "^7.29.4",
         "@mui/x-license": "^7.29.1",
-        "change-case": "^5.4.4",
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
@@ -56,8 +55,7 @@
         "react-intl": "^7.1.11",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "use-debounce": "^10.0.5",
-        "uuid": "^11.1.0"
+        "use-debounce": "^10.0.5"
     },
     "devDependencies": {
         "@babel/core": "^7.28.0",

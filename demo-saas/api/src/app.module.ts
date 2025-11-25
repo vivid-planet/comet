@@ -15,13 +15,10 @@ import {
     KubernetesModule,
     MailerModule,
     MailTemplatesModule,
-    PageTreeModule,
-    RedirectsModule,
     SentryModule,
     UserPermissionsModule,
     WarningsModule,
 } from "@comet/cms-api";
-import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
@@ -31,8 +28,6 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
-import { LinksModule } from "@src/documents/links/links.module";
-import { PagesModule } from "@src/documents/pages/pages.module";
 import { TranslationModule } from "@src/translation/translation.module";
 import { Request } from "express";
 
@@ -42,22 +37,9 @@ import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
-import { Link } from "./documents/links/entities/link.entity";
-import { Page } from "./documents/pages/entities/page.entity";
-import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
-import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
-import { FooterModule } from "./footer/footer.module";
-import { MenusModule } from "./menus/menus.module";
-import { NewsLinkBlock } from "./news/blocks/news-link.block";
-import { News } from "./news/entities/news.entity";
 import { NewsModule } from "./news/news.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
-import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
-import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
-import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
-import { RedirectScope } from "./redirects/dto/redirect-scope";
-import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 import { StatusModule } from "./status/status.module";
 
 @Module({})
@@ -106,12 +88,13 @@ export class AppModule {
                 authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
-                            siteConfig.scope.languages.map((language) => ({
-                                scope: { domain: siteConfig.scope.domain, language },
-                                label: { domain: siteConfig.name },
-                            })),
-                        ),
+                        // TODO: Replace with dynamic content scopes
+                        availableContentScopes: [
+                            {
+                                scope: { domain: "main", language: "en" },
+                                label: { domain: "Main" },
+                            },
+                        ],
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],
@@ -126,32 +109,6 @@ export class AppModule {
                     helmRelease: config.helmRelease,
                 }),
                 BuildsModule,
-                LinksModule,
-                PagesModule,
-                PageTreeModule.forRoot({
-                    PageTreeNode: PageTreeNode,
-                    PageTreeNodeCreateInput: PageTreeNodeCreateInput,
-                    PageTreeNodeUpdateInput: PageTreeNodeUpdateInput,
-                    Documents: [Page, Link, PredefinedPage],
-                    Scope: PageTreeNodeScope,
-                    reservedPaths: ["/events"],
-                    // change sitePreviewSecret based on scope
-                    // this is just to demonstrate you can use the scope to change the sitePreviewSecret but it has no effect in this example
-                    // if you only have one secret you can also just provide a string here
-                    sitePreviewSecret: (scope) => {
-                        if (scope.domain === "main") {
-                            return config.sitePreviewSecret;
-                        }
-                        return config.sitePreviewSecret;
-                    },
-                }),
-
-                RedirectsModule.register({
-                    imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
-                    customTargets: { news: NewsLinkBlock },
-                    Scope: RedirectScope,
-                    TargetUrlService: RedirectTargetUrlService,
-                }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
                     cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
@@ -197,9 +154,6 @@ export class AppModule {
                       ]
                     : []),
                 NewsModule,
-                MenusModule,
-                FooterModule,
-                PredefinedPagesModule,
                 CronJobsModule,
                 MailerModule.register(config.mailer),
                 MailTemplatesModule,

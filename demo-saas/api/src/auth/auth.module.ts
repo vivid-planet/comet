@@ -1,11 +1,4 @@
-import {
-    CometAuthGuard,
-    createAuthGuardProviders,
-    createAuthResolver,
-    createBasicAuthService,
-    createJwtAuthService,
-    createSitePreviewAuthService,
-} from "@comet/cms-api";
+import { CometAuthGuard, createAuthGuardProviders, createAuthResolver, createBasicAuthService, createJwtAuthService } from "@comet/cms-api";
 import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
@@ -39,7 +32,6 @@ export class AuthModule {
                             username: SYSTEM_USER_NAME,
                             password: config.auth.systemUserPassword,
                         }),
-                        createSitePreviewAuthService({ sitePreviewSecret: config.sitePreviewSecret }),
                         createJwtAuthService({
                             verifyOptions: {
                                 audience: config.auth.idpClientId,
