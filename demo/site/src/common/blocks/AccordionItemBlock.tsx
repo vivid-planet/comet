@@ -1,4 +1,4 @@
-import { BlocksBlock, PreviewSkeleton, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks, usePreview, withPreview } from "@comet/site-nextjs";
 import { type AccordionContentBlockData, type AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
@@ -36,6 +36,7 @@ export const AccordionItemBlock = withPreview(
     ({ data: { title, content, titleHtmlTag }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const headlineId = useId();
         const contentId = useId();
+        const { previewType } = usePreview();
 
         return (
             <>
@@ -47,17 +48,17 @@ export const AccordionItemBlock = withPreview(
                         {title}
                     </Typography>
                 </button>
-                <section
-                    id={contentId}
-                    aria-labelledby={headlineId}
-                    className={clsx(styles.contentWrapper, isExpanded && styles["contentWrapper--expanded"])}
-                >
-                    <div className={styles.contentWrapperInner}>
-                        <PreviewSkeleton hasContent={isExpanded}>
+                {(previewType !== "BlockPreview" || (previewType === "BlockPreview" && isExpanded)) && (
+                    <section
+                        id={contentId}
+                        aria-labelledby={headlineId}
+                        className={clsx(styles.contentWrapper, isExpanded && styles["contentWrapper--expanded"])}
+                    >
+                        <div className={styles.contentWrapperInner}>
                             <AccordionContentBlock data={content} />
-                        </PreviewSkeleton>
-                    </div>
-                </section>
+                        </div>
+                    </section>
+                )}
             </>
         );
     },
