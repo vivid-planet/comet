@@ -808,8 +808,8 @@ importers:
         specifier: ^14.3.8
         version: 14.3.8(react@18.3.1)
       use-constant:
-        specifier: ^1.1.1
-        version: 1.1.1(react@18.3.1)
+        specifier: ^2.0.0
+        version: 2.0.0(react@18.3.1)
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -1247,8 +1247,8 @@ importers:
   packages/admin/admin-icons:
     dependencies:
       use-constant:
-        specifier: ^1.1.1
-        version: 1.1.1(react@18.3.1)
+        specifier: ^2.0.0
+        version: 2.0.0(react@18.3.1)
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -17612,10 +17612,10 @@ packages:
       '@types/react':
         optional: true
 
-  use-constant@1.1.1:
-    resolution: {integrity: sha512-sy2ttlE4kuAnNbp2P6a5aTZiGYwsZojkqaGZ31yDDjIurteUS8GOcYiPGmJ3y/LHOHkdazDdVRBZPzH3RZHffA==}
+  use-constant@2.0.0:
+    resolution: {integrity: sha512-Oy0aPHFuM0mMzxQy3wAx1/VVCOWU2dW+88J03/VrkxmpI0XojeHsryCR/6MlnZydb5KKcwj1oS4rZNwdeVo1sg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   use-debounce@10.0.6:
     resolution: {integrity: sha512-C5OtPyhAZgVoteO9heXMTdW7v/IbFI+8bSVKYCJrSmiWWCLsbUxiBSp4t9v0hNBTGY97bT72ydDIDyGSFWfwXg==}
@@ -37772,7 +37772,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.26
 
-  use-constant@1.1.1(react@18.3.1):
+  use-constant@2.0.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
