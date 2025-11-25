@@ -151,7 +151,7 @@ type Mutation {
 }
 ```
 
-The schema should already be available when you start the GraphQL Playground locally `http:4000/api/graphql`, and you should be able to play around with the queries.
+The schema should already be available when you start the GraphQL Playground locally `http://localhost:4000/api/graphql`, and you should be able to play around with the queries.
 
 ![CustomersQueryInPlaygroundWithError](./images/customersQueryInPlaygroundWithError.png)
 
