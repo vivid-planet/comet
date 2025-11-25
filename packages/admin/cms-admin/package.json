@@ -82,8 +82,8 @@
         "@mui/material": "^7.2.0",
         "@mui/system": "^7.2.0",
         "@mui/x-data-grid": "^7.29.8",
-        "@mui/x-data-grid-pro": "^7.0.0",
-        "@mui/x-license": "^8.10.0",
+        "@mui/x-data-grid-premium": "^7.29.8",
+        "@mui/x-data-grid-pro": "^7.29.8",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/react": "^16.3.0",
         "@types/draft-js": "^0.11.18",
@@ -139,6 +139,17 @@
         "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@mui/x-data-grid-premium": {
+            "optional": true
+        },
+        "@mui/x-data-grid-pro": {
+            "optional": true
+        },
+        "@mui/x-date-pickers-pro": {
+            "optional": true
+        }
     },
     "engines": {
         "node": ">=22.0.0"
