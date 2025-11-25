@@ -163,7 +163,7 @@ importers:
         version: 11.1.0
     devDependencies:
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-generator':
         specifier: workspace:*
@@ -534,7 +534,7 @@ importers:
         version: 3.1.1(react@18.3.1)
     devDependencies:
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/cli':
         specifier: workspace:*
@@ -715,7 +715,7 @@ importers:
         version: 2.17.3
     devDependencies:
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/eslint-config':
         specifier: workspace:*
@@ -818,10 +818,10 @@ importers:
         specifier: ^3.13.8
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -983,16 +983,16 @@ importers:
   packages/admin/admin-babel-preset:
     dependencies:
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@babel/preset-env':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5(@babel/core@7.28.5)
       '@babel/preset-react':
-        specifier: ^7.27.1
+        specifier: ^7.28.5
         version: 7.28.5(@babel/core@7.28.5)
       '@babel/preset-typescript':
         specifier: ^7.26.0
@@ -1020,10 +1020,10 @@ importers:
         version: 10.0.6(react@18.3.1)
     devDependencies:
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -1093,10 +1093,10 @@ importers:
         version: 2.0.1(date-fns@4.1.0)(react@18.3.1)
     devDependencies:
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -1254,10 +1254,10 @@ importers:
         version: 11.1.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -1339,10 +1339,10 @@ importers:
         version: 3.8.2
     devDependencies:
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -1505,10 +1505,10 @@ importers:
         specifier: ^3.13.8
         version: 3.14.0(@types/react@18.3.26)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.11.0))
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@babel/core':
-        specifier: ^7.28.0
+        specifier: ^7.28.5
         version: 7.28.5
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -2418,7 +2418,7 @@ importers:
         version: 11.1.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.5)
       '@comet/admin-babel-preset':
         specifier: workspace:*
@@ -19540,7 +19540,7 @@ snapshots:
   '@babel/generator@7.28.3':
     dependencies:
       '@babel/parser': 7.28.5
-      '@babel/types': 7.28.4
+      '@babel/types': 7.28.5
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
       jsesc: 3.1.0
@@ -22807,7 +22807,7 @@ snapshots:
       '@babel/parser': 7.28.5
       '@babel/plugin-syntax-import-assertions': 7.27.1(@babel/core@7.28.5)
       '@babel/traverse': 7.28.5
-      '@babel/types': 7.28.4
+      '@babel/types': 7.28.5
       '@graphql-tools/utils': 10.8.6(graphql@16.11.0)
       graphql: 16.11.0
       tslib: 2.8.1
@@ -29404,7 +29404,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.6)
       postcss-modules-values: 4.0.0(postcss@8.5.6)
       postcss-value-parser: 4.2.0
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       webpack: 5.102.1(@swc/core@1.13.3)
 
@@ -29417,7 +29417,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.6)
       postcss-modules-values: 4.0.0(postcss@8.5.6)
       postcss-value-parser: 4.2.0
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       webpack: 5.102.1
 
@@ -34550,7 +34550,7 @@ snapshots:
       got: 12.6.1
       registry-auth-token: 5.0.3
       registry-url: 6.0.1
-      semver: 7.7.2
+      semver: 7.7.3
 
   package-manager-detector@0.2.11:
     dependencies:
@@ -34915,7 +34915,7 @@ snapshots:
       cosmiconfig: 8.3.6(typescript@5.9.3)
       jiti: 1.21.7
       postcss: 8.5.6
-      semver: 7.7.2
+      semver: 7.7.3
       webpack: 5.102.1(@swc/core@1.13.3)
     transitivePeerDependencies:
       - typescript
@@ -36280,7 +36280,7 @@ snapshots:
 
   semver-diff@4.0.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   semver@5.7.2: {}
 
@@ -37724,7 +37724,7 @@ snapshots:
       is-yarn-global: 0.4.1
       latest-version: 7.0.0
       pupa: 3.1.0
-      semver: 7.7.2
+      semver: 7.7.3
       semver-diff: 4.0.0
       xdg-basedir: 5.1.0
 
