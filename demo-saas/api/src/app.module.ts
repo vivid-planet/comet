@@ -37,7 +37,6 @@ import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
-import { NewsModule } from "./news/news.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { ProductsModule } from "./products/products.module";
 import { StatusModule } from "./status/status.module";
@@ -153,7 +152,6 @@ export class AppModule {
                           }),
                       ]
                     : []),
-                NewsModule,
                 CronJobsModule,
                 MailerModule.register(config.mailer),
                 MailTemplatesModule,

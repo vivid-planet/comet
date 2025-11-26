@@ -309,12 +309,6 @@ type Dependency {
   visible: Boolean!
 }
 
-input DependencyFilter {
-  rootColumnName: String
-  targetGraphqlObjectType: String
-  targetId: String
-}
-
 input DependentFilter {
   rootColumnName: String
   rootGraphqlObjectType: String
@@ -547,8 +541,6 @@ type Mutation {
   createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput!): DamFolder!
   createDamMediaAlternative(alternative: ID!, for: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
-  createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
-  createNewsComment(input: NewsCommentInput!, newsId: ID!): NewsComment!
   createProduct(input: ProductInput!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   createProductCategoryType(input: ProductCategoryTypeInput!): ProductCategoryType!
@@ -560,8 +552,6 @@ type Mutation {
   deleteDamFolder(id: ID!): Boolean!
   deleteDamMediaAlternative(id: ID!): Boolean!
   deleteManufacturer(id: ID!): Boolean!
-  deleteNews(id: ID!): Boolean!
-  deleteNewsComment(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
   deleteProductCategory(id: ID!): Boolean!
   deleteProductCategoryType(id: ID!): Boolean!
@@ -579,8 +569,6 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
-  updateNews(id: ID!, input: NewsUpdateInput!): News!
-  updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   updateProductCategoryType(id: ID!, input: ProductCategoryTypeUpdateInput!): ProductCategoryType!
@@ -592,122 +580,6 @@ type Mutation {
   userPermissionsUpdateContentScopes(input: UserContentScopesInput!, userId: String!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
-}
-
-type News {
-  category: NewsCategory!
-  comments: [NewsComment!]!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  date: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  id: ID!
-  image: DamImageBlockData!
-  scope: NewsContentScope!
-  slug: String!
-  status: NewsStatus!
-  title: String!
-  updatedAt: DateTime!
-}
-
-enum NewsCategory {
-  awards
-  company
-  events
-}
-
-input NewsCategoryEnumFilter {
-  equal: NewsCategory
-  isAnyOf: [NewsCategory!]
-  notEqual: NewsCategory
-}
-
-type NewsComment {
-  comment: String!
-  createdAt: DateTime!
-  id: ID!
-  updatedAt: DateTime!
-}
-
-input NewsCommentInput {
-  comment: String!
-}
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""NewsContent root block input"""
-scalar NewsContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-input NewsContentScopeInput {
-  domain: String!
-  language: String!
-}
-
-input NewsFilter {
-  and: [NewsFilter!]
-  category: NewsCategoryEnumFilter
-  comments: OneToManyFilter
-  createdAt: DateTimeFilter
-  date: DateTimeFilter
-  id: IdFilter
-  or: [NewsFilter!]
-  slug: StringFilter
-  status: NewsStatusEnumFilter
-  title: StringFilter
-  updatedAt: DateTimeFilter
-}
-
-input NewsInput {
-  category: NewsCategory!
-  content: NewsContentBlockInput!
-  date: DateTime!
-  image: DamImageBlockInput!
-  slug: String!
-  status: NewsStatus! = active
-  title: String!
-}
-
-input NewsSort {
-  direction: SortDirection! = ASC
-  field: NewsSortField!
-}
-
-enum NewsSortField {
-  category
-  createdAt
-  date
-  slug
-  status
-  title
-  updatedAt
-}
-
-enum NewsStatus {
-  active
-  deleted
-}
-
-input NewsStatusEnumFilter {
-  equal: NewsStatus
-  isAnyOf: [NewsStatus!]
-  notEqual: NewsStatus
-}
-
-input NewsUpdateInput {
-  category: NewsCategory
-  content: NewsContentBlockInput
-  date: DateTime
-  image: DamImageBlockInput
-  slug: String
-  status: NewsStatus
-  title: String
 }
 
 input NumberFilter {
@@ -760,11 +632,6 @@ type PaginatedManufacturerCountries {
 
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
-  totalCount: Int!
-}
-
-type PaginatedNews {
-  nodes: [News!]!
   totalCount: Int!
 }
 
@@ -1361,10 +1228,6 @@ type Query {
   manufacturer(id: ID!): Manufacturer!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
   manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]): PaginatedManufacturers!
-  news(id: ID!): News!
-  newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
-  newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]): PaginatedNews!
-  newsListByIds(ids: [ID!]!): [News!]!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]): PaginatedProductCategories!

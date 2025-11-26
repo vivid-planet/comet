@@ -14,7 +14,6 @@ import { PixelImageBlockFixtureService } from "./generators/blocks/media/pixel-i
 import { SvgImageBlockFixtureService } from "./generators/blocks/media/svg-image-block-fixture.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
-import { NewsFixtureService } from "./generators/news-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
@@ -33,7 +32,6 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         SvgImageBlockFixtureService,
         SvgImageFileFixtureService,
         VideoFixtureService,
-        NewsFixtureService,
         DamImageBlockFixtureService,
         PixelImageBlockFixtureService,
         SvgImageBlockFixtureService,

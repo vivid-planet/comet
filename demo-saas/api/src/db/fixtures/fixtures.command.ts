@@ -9,7 +9,6 @@ import { Command, CommandRunner } from "nest-commander";
 
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
-import { NewsFixtureService } from "./generators/news-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
@@ -34,7 +33,6 @@ export class FixturesCommand extends CommandRunner {
         private readonly imageFixtureService: ImageFixtureService,
         private readonly orm: MikroORM,
         private readonly videoFixtureService: VideoFixtureService,
-        private readonly newsFixtureService: NewsFixtureService,
     ) {
         super();
     }
@@ -75,8 +73,6 @@ export class FixturesCommand extends CommandRunner {
         await this.fileUploadsFixtureService.generateFileUploads();
 
         await this.productsFixtureService.generate();
-
-        await this.newsFixtureService.generate();
 
         multiBar.stop();
 

@@ -31,7 +31,6 @@ import { AppMasterMenu, masterMenuData } from "./common/MasterMenu";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { type GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
-import { NewsDependency } from "./news/dependencies/NewsDependency";
 
 const GlobalStyle = () => (
     <Global
@@ -77,7 +76,6 @@ export function App() {
             }}
             dependencies={{
                 entityDependencyMap: {
-                    News: NewsDependency,
                     DamFile: createDamFileDependency(),
                 },
             }}
