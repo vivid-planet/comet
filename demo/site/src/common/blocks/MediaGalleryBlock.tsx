@@ -21,13 +21,7 @@ type MediaGalleryBlockProps = PropsWithData<MediaGalleryBlockData>;
 export const MediaGalleryBlock = withPreview(
     ({ data }: MediaGalleryBlockProps) => {
         const [swiper, setSwiper] = useState<SwiperClass | null>(null);
-        const [isBeginning, setIsBeginning] = useState(true);
-        const [isEnd, setIsEnd] = useState(false);
-
-        const onSlideChange = (swiperInstance: SwiperClass) => {
-            setIsBeginning(swiperInstance.isBeginning);
-            setIsEnd(swiperInstance.isEnd);
-        };
+        const [activeItem, setActiveItem] = useState(0);
 
         const intl = useIntl();
 
@@ -37,7 +31,7 @@ export const MediaGalleryBlock = withPreview(
                     onClick={() => swiper?.slidePrev()}
                     className={clsx(styles.navigationButton, styles["navigationButton--previous"])}
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.prevSlide", defaultMessage: "Previous slide" })}
-                    disabled={isBeginning}
+                    disabled={activeItem === 0}
                 />
                 <BasicSwiper
                     className={styles.swiper}
@@ -52,7 +46,9 @@ export const MediaGalleryBlock = withPreview(
                     watchOverflow
                     speed={400}
                     onSwiper={setSwiper}
-                    onSlideChange={onSlideChange}
+                    onSlideChange={(swiper) => {
+                        setActiveItem(swiper.activeIndex);
+                    }}
                 >
                     {data.items.blocks.map((block) => (
                         <SwiperSlide key={block.key}>
@@ -67,7 +63,7 @@ export const MediaGalleryBlock = withPreview(
                     onClick={() => swiper?.slideNext()}
                     className={clsx(styles.navigationButton, styles["navigationButton--next"])}
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.nextSlide", defaultMessage: "Next slide" })}
-                    disabled={isEnd}
+                    disabled={activeItem === data.items.blocks.length - 1}
                 />
             </>
         );
