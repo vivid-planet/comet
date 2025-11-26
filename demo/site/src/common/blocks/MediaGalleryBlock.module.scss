@@ -94,21 +94,21 @@
         border-right: 2px solid var(--media-gallery-button-default-contrast);
     }
 
-    &:disabled {
-        background-color: var(--media-gallery-button-disabled-bg);
-
-        &::after {
-            border-top: 2px solid var(--media-gallery-button-disabled-contrast);
-            border-right: 2px solid var(--media-gallery-button-disabled-contrast);
-        }
-    }
-
     &:hover {
         background-color: var(--media-gallery-button-hover-bg);
 
         &::after {
             border-top: 2px solid var(--media-gallery-button-hover-contrast);
             border-right: 2px solid var(--media-gallery-button-hover-contrast);
+        }
+    }
+
+    &:disabled {
+        background-color: var(--media-gallery-button-disabled-bg);
+
+        &::after {
+            border-top: 2px solid var(--media-gallery-button-disabled-contrast);
+            border-right: 2px solid var(--media-gallery-button-disabled-contrast);
         }
     }
 
