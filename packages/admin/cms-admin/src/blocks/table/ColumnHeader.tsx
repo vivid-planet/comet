@@ -129,7 +129,10 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
             </ColumnHeaderButton>
             <RowActionsMenu>
                 <RowActionsMenu>
-                    <RowActionsMenu text="Column width" icon={<DensityStandard />}>
+                    <RowActionsMenu
+                        text={<FormattedMessage id="comet.tableBlock.columnWidth" defaultMessage="Column width" />}
+                        icon={<DensityStandard />}
+                    >
                         {Object.entries(columnSizes).map(([size, label]) => (
                             <RowActionsItem
                                 key={size}
@@ -143,7 +146,11 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                         ))}
                     </RowActionsMenu>
                     <RowActionsItem icon={highlighted ? <Remove /> : <Add />} onClick={handleToggleColumnHighlight}>
-                        {highlighted ? "Remove highlighting" : "Highlight column"}
+                        {highlighted ? (
+                            <FormattedMessage id="comet.tableBlock.removeHighlighting" defaultMessage="Remove highlighting" />
+                        ) : (
+                            <FormattedMessage id="comet.tableBlock.highlightColumn" defaultMessage="Highlight column" />
+                        )}
                     </RowActionsItem>
                     <Divider />
                     <RowActionsItem
