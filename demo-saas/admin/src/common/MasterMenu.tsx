@@ -1,5 +1,5 @@
 import { Dashboard, Snips, Wrench } from "@comet/admin-icons";
-import { CronJobsPage, MasterMenu, type MasterMenuData, PublisherPage, UserPermissionsPage, WarningsPage } from "@comet/cms-admin";
+import { CronJobsPage, MasterMenu, type MasterMenuData, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
 import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
@@ -47,15 +47,6 @@ export const masterMenuData: MasterMenuData = [
                     component: CronJobsPage,
                 },
                 requiredPermission: "cronJobs",
-            },
-            {
-                type: "route",
-                primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
-                route: {
-                    path: "/system/warnings",
-                    component: WarningsPage,
-                },
-                requiredPermission: "warnings",
             },
         ],
     },

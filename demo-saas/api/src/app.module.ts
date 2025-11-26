@@ -16,7 +16,6 @@ import {
     MailTemplatesModule,
     SentryModule,
     UserPermissionsModule,
-    WarningsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -151,7 +150,6 @@ export class AppModule {
                 }),
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
-                WarningsModule,
             ],
         };
     }

@@ -192,11 +192,6 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
-type EntityInfo {
-  name: String!
-  secondaryInformation: String
-}
-
 type FileUpload {
   contentHash: String!
   createdAt: DateTime!
@@ -447,11 +442,6 @@ type PaginatedProductVariants {
 
 type PaginatedProducts {
   nodes: [Product!]!
-  totalCount: Int!
-}
-
-type PaginatedWarnings {
-  nodes: [Warning!]!
   totalCount: Int!
 }
 
@@ -1021,14 +1011,6 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsUserById(id: String!): UserPermissionsUser!
   userPermissionsUsers(filter: UserPermissionsUserFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
-  warning(id: ID!): Warning!
-  warnings(filter: WarningFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [WarningSort!], status: [WarningStatus!]! = [open]): PaginatedWarnings!
-}
-
-input ScopeFilter {
-  equal: JSONObject
-  isAnyOf: [JSONObject!]
-  notEqual: JSONObject
 }
 
 enum SortDirection {
@@ -1121,7 +1103,6 @@ enum UserPermissionsUserSortField {
 
 type Warning {
   createdAt: DateTime!
-  entityInfo: EntityInfo
   id: ID!
   message: String!
   scope: JSONObject
@@ -1131,42 +1112,10 @@ type Warning {
   updatedAt: DateTime!
 }
 
-input WarningFilter {
-  and: [WarningFilter!]
-  createdAt: DateTimeFilter
-  message: StringFilter
-  or: [WarningFilter!]
-  scope: ScopeFilter
-  severity: WarningSeverityEnumFilter
-  status: WarningStatusEnumFilter
-  type: StringFilter
-  updatedAt: DateTimeFilter
-}
-
 enum WarningSeverity {
   high
   low
   medium
-}
-
-input WarningSeverityEnumFilter {
-  equal: WarningSeverity
-  isAnyOf: [WarningSeverity!]
-  notEqual: WarningSeverity
-}
-
-input WarningSort {
-  direction: SortDirection! = ASC
-  field: WarningSortField!
-}
-
-enum WarningSortField {
-  createdAt
-  message
-  severity
-  status
-  type
-  updatedAt
 }
 
 type WarningSourceInfo {
@@ -1189,10 +1138,4 @@ enum WarningStatus {
   ignored
   open
   resolved
-}
-
-input WarningStatusEnumFilter {
-  equal: WarningStatus
-  isAnyOf: [WarningStatus!]
-  notEqual: WarningStatus
 }
