@@ -226,7 +226,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             validate={validateSource as any}
                             fullWidth
-                            placeholder="/example-path"
+                            placeholder={values.sourceType === "domain" ? "https://example.com" : "/example-path"}
                             disableContentTranslation
                         />
                         <Field
