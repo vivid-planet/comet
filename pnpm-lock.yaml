@@ -1306,9 +1306,6 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.0.1
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.3)(@types/node@24.10.1)(typescript@5.9.3)
