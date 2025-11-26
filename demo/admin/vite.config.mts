@@ -99,7 +99,7 @@ export default defineConfig(({ mode }) => {
                     global: "globalThis",
                 },
             },
-            include: ["@comet/admin", "@comet/admin-rte", "@comet/admin-date-time", "@comet/cms-admin"],
+            include: ["@comet/admin-rte", "@comet/admin-date-time", "@comet/cms-admin"],
         },
         resolve: {
             alias: {
