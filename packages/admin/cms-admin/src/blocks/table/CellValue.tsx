@@ -22,6 +22,7 @@ const CellValueContainer = styled("div")<{ $highlighted: boolean; $recentlyPaste
     marginRight: theme.spacing(-2),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    height: "100%",
 
     "&:after": {
         content: "''",
