@@ -1,6 +1,22 @@
-import { type ComponentNameToClassKey, type ComponentsPropsList, type Theme } from "@mui/material/styles";
-import { type OverridesStyleRules } from "@mui/material/styles/overrides";
+import { type ComponentNameToClassKey, type ComponentsPropsList, type Interpolation, type Theme } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
+
+type OverridesStyleRules<ClassKey extends string = string, ComponentName = keyof ComponentsPropsList, Theme = unknown> = Record<
+    ClassKey,
+    Interpolation<
+        // Record<string, unknown> is for other props that the slot receive internally
+        // Documenting all ownerStates could be a huge work, let's wait until we have a real needs from developers.
+        (ComponentName extends keyof ComponentsPropsList
+            ? ComponentsPropsList[ComponentName] &
+                  Record<string, unknown> & {
+                      ownerState: ComponentsPropsList[ComponentName] & Record<string, unknown>;
+                  }
+            : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+              {}) & {
+            theme: Theme;
+        } & Record<string, unknown>
+    >
+>;
 
 type OwnerState<PropsName extends keyof ComponentsPropsList> = PropsName extends keyof ComponentsPropsList
     ? { ownerState: ComponentsPropsList[PropsName] & Record<string, unknown> }
