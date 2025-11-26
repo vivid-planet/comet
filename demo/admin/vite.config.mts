@@ -18,9 +18,7 @@ const adminPackagesHotReloadPlugin: Plugin = {
         this.addWatchFile("../../packages/admin/admin-color-picker/src");
         this.addWatchFile("../../packages/admin/admin-date-time/src");
         this.addWatchFile("../../packages/admin/admin-icons/src");
-        this.addWatchFile("../../packages/admin/admin-react-select/src");
         this.addWatchFile("../../packages/admin/admin-rte/src");
-        this.addWatchFile("../../packages/admin/blocks-admin/src");
         this.addWatchFile("../../packages/admin/cms-admin/src");
     },
     async handleHotUpdate({ file, server }) {
@@ -100,7 +98,14 @@ export default defineConfig(({ mode }) => {
                     global: "globalThis",
                 },
             },
-            include: ["@comet/admin", "@comet/admin-rte", "@comet/admin-date-time", "@comet/admin-icons", "@comet/cms-admin"],
+            include: [
+                "@comet/admin",
+                "@comet/admin-color-picker",
+                "@comet/admin-date-time",
+                "@comet/admin-icons",
+                "@comet/admin-rte",
+                "@comet/cms-admin",
+            ],
         },
         resolve: {
             alias: {
