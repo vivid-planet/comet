@@ -104,9 +104,6 @@ importers:
       '@mui/x-license':
         specifier: ^7.29.1
         version: 7.29.1(@types/react@18.3.26)(react@18.3.1)
-      change-case:
-        specifier: ^5.4.4
-        version: 5.4.4
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -155,9 +152,6 @@ importers:
       use-debounce:
         specifier: ^10.0.5
         version: 10.0.6(react@18.3.1)
-      uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
     devDependencies:
       '@babel/core':
         specifier: ^7.28.0
@@ -390,9 +384,6 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
-      slugify:
-        specifier: ^1.6.6
-        version: 1.6.6
       uuid:
         specifier: ^11.1.0
         version: 11.1.0

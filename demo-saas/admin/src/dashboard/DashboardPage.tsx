@@ -11,7 +11,6 @@ import { useIntl } from "react-intl";
 
 import backgroundImage1x from "./dashboard-image@1x.jpg";
 import backgroundImage2x from "./dashboard-image@2x.jpg";
-import { LatestContentUpdates } from "./LatestContentUpdates";
 
 export function DashboardPage() {
     const intl = useIntl();
@@ -28,17 +27,6 @@ export function DashboardPage() {
             <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
             <MainContent>
                 <Grid container direction="row" spacing={4}>
-                    {isAllowed("pageTree") && (
-                        <Grid
-                            size={{
-                                xs: 12,
-                                lg: 6,
-                            }}
-                        >
-                            <LatestContentUpdates />
-                        </Grid>
-                    )}
-
                     {import.meta.env.MODE !== "development" && (
                         <Grid
                             size={{
