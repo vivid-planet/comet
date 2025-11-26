@@ -9,13 +9,16 @@ import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
 import {
-    type ClipboardColumn,
-    clipboardColumnSchema,
+    columnInsertSchema,
     type ColumnSize,
     getClipboardValueForSchema,
-    getNewColumn,
-    getNewRow,
-    insertRowAtIndex,
+    getDuplicatedColumnInsertData,
+    getInsertDataFromColumnById,
+    getNewColumnInsertData,
+    insertColumnDataAtIndex,
+    removeColumnFromState,
+    setColumnSize,
+    toggleColumnHighlight,
 } from "./utils";
 
 type Props = GridColumnHeaderParams & {
@@ -38,59 +41,35 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
 export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
 
-    const insertColumn = (newColumnIndex: number) => {
-        const newColumn = getNewColumn();
+    const handleInsertColumnAtIndex = (newColumnIndex: number) => {
         updateState((state) => {
-            return {
-                ...state,
-                columns: [...state.columns.slice(0, newColumnIndex), newColumn, ...state.columns.slice(newColumnIndex)],
-                rows: state.rows.map((row) => ({
-                    ...row,
-                    cellValues: [...row.cellValues, { columnId: newColumn.id, value: "" }],
-                })),
-            };
+            const newColumnInsertData = getNewColumnInsertData(state.rows.length);
+            return insertColumnDataAtIndex(state, newColumnInsertData, newColumnIndex);
         });
     };
 
-    const deleteColumn = () => {
+    const handleDeleteColumn = () => {
         updateState((state) => {
-            return {
-                ...state,
-                columns: state.columns.filter((column) => column.id !== columnId),
-                rows: state.rows.map((row) => ({
-                    ...row,
-                    cellValues: row.cellValues.filter((cellValue) => cellValue.columnId !== columnId),
-                })),
-            };
+            return removeColumnFromState(state, columnId);
         });
     };
 
-    const toggleColumnHighlight = () => {
+    const handleToggleColumnHighlight = () => {
         updateState((state) => {
-            return {
-                ...state,
-                columns: state.columns.map((column) => {
-                    if (column.id === columnId) {
-                        return { ...column, highlighted: !highlighted };
-                    }
-                    return column;
-                }),
-            };
+            return toggleColumnHighlight(state, columnId);
         });
     };
 
-    const setColumnSize = (size: ColumnSize) => {
+    const handleSetColumnSize = (size: ColumnSize) => {
         updateState((state) => {
-            return { ...state, columns: state.columns.map((column) => (column.id === columnId ? { ...column, size } : column)) };
+            return setColumnSize(state, columnId, size);
         });
     };
 
-    const duplicateColumn = () => {
+    const handleDuplicateColumn = () => {
         updateState((state) => {
-            const currentColumnIndex = state.columns.findIndex(({ id }) => id === columnId);
-            const columnToDuplicate = state.columns[currentColumnIndex];
-
-            if (!columnToDuplicate) {
+            const duplicatedColumnInsertData = getDuplicatedColumnInsertData(state, columnIndex);
+            if (!duplicatedColumnInsertData) {
                 snackbarApi.showSnackbar(
                     <Snackbar autoHideDuration={5000}>
                         <Alert severity="error">
@@ -100,29 +79,16 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                 );
                 return state;
             }
-            const duplicatedColumn = { ...columnToDuplicate, id: uuid() };
-            addToRecentlyPastedIds(duplicatedColumn.id);
 
-            return {
-                ...state,
-                columns: [...state.columns.slice(0, currentColumnIndex + 1), duplicatedColumn, ...state.columns.slice(currentColumnIndex + 1)],
-                rows: state.rows.map((row) => {
-                    const cellValueOfDuplicatedColumn = row.cellValues.find(({ columnId: cellValueColumnId }) => cellValueColumnId === columnId);
-                    const newCellValues = [...row.cellValues];
-                    newCellValues.push({ columnId: duplicatedColumn.id, value: cellValueOfDuplicatedColumn?.value ?? "" });
-
-                    return {
-                        ...row,
-                        cellValues: newCellValues,
-                    };
-                }),
-            };
+            const newColumnId = uuid();
+            addToRecentlyPastedIds(newColumnId);
+            return insertColumnDataAtIndex(state, duplicatedColumnInsertData, columnIndex + 1, newColumnId);
         });
     };
 
-    const copyColumnToClipboard = () => {
-        const columnToCopy = state.columns.find(({ id }) => id === columnId);
-        if (!columnToCopy) {
+    const handleCopyColumnToClipboard = () => {
+        const columnInsertData = getInsertDataFromColumnById(state, columnId);
+        if (!columnInsertData) {
             snackbarApi.showSnackbar(
                 <Snackbar autoHideDuration={5000}>
                     <Alert severity="error">
@@ -133,62 +99,26 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
             return;
         }
 
-        const copyData: ClipboardColumn = {
-            type: "tableBlockColumn",
-            size: columnToCopy.size,
-            highlighted: columnToCopy.highlighted,
-            cellValues: state.rows.map((row) => {
-                const cellValueOfColumn = row.cellValues.find((cellValue) => cellValue.columnId === columnId);
-                return cellValueOfColumn?.value ?? "";
-            }),
-        };
-
-        writeClipboardText(JSON.stringify(copyData));
-    };
-
-    const showFailedToParseDataSnackbar = () => {
-        snackbarApi.showSnackbar(
-            <Snackbar autoHideDuration={5000}>
-                <Alert severity="error">
-                    <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
-                </Alert>
-            </Snackbar>,
-        );
+        writeClipboardText(JSON.stringify(columnInsertData));
     };
 
     const pasteColumnFromClipboard = async () => {
-        const clipboardData = await getClipboardValueForSchema(clipboardColumnSchema);
+        const clipboardData = await getClipboardValueForSchema(columnInsertSchema);
         if (!clipboardData) {
-            showFailedToParseDataSnackbar();
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
+                    </Alert>
+                </Snackbar>,
+            );
             return;
         }
 
         updateState((state) => {
-            const numberOfRowsToBeAdded = clipboardData.cellValues.length - state.rows.length;
-
-            for (let i = 0; i < numberOfRowsToBeAdded; i++) {
-                const newRow = getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" })));
-                state = insertRowAtIndex(state, newRow, state.rows.length);
-            }
-
-            const pastedColumn = { id: uuid(), size: clipboardData.size, highlighted: clipboardData.highlighted };
-            addToRecentlyPastedIds(pastedColumn.id);
-
-            const columnsBeforePasted = state.columns.slice(0, columnIndex + 1);
-            const columnsAfterPasted = state.columns.slice(columnIndex + 1);
-
-            return {
-                ...state,
-                columns: [...columnsBeforePasted, pastedColumn, ...columnsAfterPasted],
-                rows: state.rows.map((row, rowIndex) => {
-                    const newCellValue = { columnId: pastedColumn.id, value: clipboardData.cellValues[rowIndex] ?? "" };
-
-                    return {
-                        ...row,
-                        cellValues: [...row.cellValues, newCellValue],
-                    };
-                }),
-            };
+            const newColumnId = uuid();
+            addToRecentlyPastedIds(newColumnId);
+            return insertColumnDataAtIndex(state, clipboardData, columnIndex + 1, newColumnId);
         });
     };
 
@@ -199,12 +129,15 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
             </ColumnHeaderButton>
             <RowActionsMenu>
                 <RowActionsMenu>
-                    <RowActionsMenu text="Column width" icon={<DensityStandard />}>
+                    <RowActionsMenu
+                        text={<FormattedMessage id="comet.tableBlock.columnWidth" defaultMessage="Column width" />}
+                        icon={<DensityStandard />}
+                    >
                         {Object.entries(columnSizes).map(([size, label]) => (
                             <RowActionsItem
                                 key={size}
                                 onClick={() => {
-                                    setColumnSize(size as ColumnSize);
+                                    handleSetColumnSize(size as ColumnSize);
                                 }}
                                 componentsProps={{ menuItem: { selected: columnSize === size } }}
                             >
@@ -212,19 +145,18 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                             </RowActionsItem>
                         ))}
                     </RowActionsMenu>
-                    <RowActionsItem
-                        icon={highlighted ? <Remove /> : <Add />}
-                        onClick={() => {
-                            toggleColumnHighlight();
-                        }}
-                    >
-                        {highlighted ? "Remove highlighting" : "Highlight column"}
+                    <RowActionsItem icon={highlighted ? <Remove /> : <Add />} onClick={handleToggleColumnHighlight}>
+                        {highlighted ? (
+                            <FormattedMessage id="comet.tableBlock.removeHighlighting" defaultMessage="Remove highlighting" />
+                        ) : (
+                            <FormattedMessage id="comet.tableBlock.highlightColumn" defaultMessage="Highlight column" />
+                        )}
                     </RowActionsItem>
                     <Divider />
                     <RowActionsItem
                         icon={<PinLeft />}
                         onClick={() => {
-                            insertColumn(columnIndex);
+                            handleInsertColumnAtIndex(columnIndex);
                         }}
                     >
                         <FormattedMessage id="comet.tableBlock.insertColumnLeft" defaultMessage="Insert column left" />
@@ -232,28 +164,23 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                     <RowActionsItem
                         icon={<PinRight />}
                         onClick={() => {
-                            insertColumn(columnIndex + 1);
+                            handleInsertColumnAtIndex(columnIndex + 1);
                         }}
                     >
                         <FormattedMessage id="comet.tableBlock.insertColumnRight" defaultMessage="Insert column right" />
                     </RowActionsItem>
                     <Divider />
-                    <RowActionsItem icon={<Copy />} onClick={copyColumnToClipboard}>
+                    <RowActionsItem icon={<Copy />} onClick={handleCopyColumnToClipboard}>
                         <FormattedMessage id="comet.tableBlock.copyColumn" defaultMessage="Copy" />
                     </RowActionsItem>
                     <RowActionsItem icon={<Paste />} onClick={pasteColumnFromClipboard}>
                         <FormattedMessage id="comet.tableBlock.pasteColumn" defaultMessage="Paste" />
                     </RowActionsItem>
-                    <RowActionsItem icon={<Duplicate />} onClick={duplicateColumn}>
+                    <RowActionsItem icon={<Duplicate />} onClick={handleDuplicateColumn}>
                         <FormattedMessage id="comet.tableBlock.duplicateColumn" defaultMessage="Duplicate" />
                     </RowActionsItem>
                     <Divider />
-                    <RowActionsItem
-                        icon={<Delete />}
-                        onClick={() => {
-                            deleteColumn();
-                        }}
-                    >
+                    <RowActionsItem icon={<Delete />} onClick={handleDeleteColumn}>
                         <FormattedMessage id="comet.tableBlock.deleteColumn" defaultMessage="Delete" />
                     </RowActionsItem>
                 </RowActionsMenu>
