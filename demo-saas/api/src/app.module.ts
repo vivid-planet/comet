@@ -8,7 +8,6 @@ import {
     BuildsModule,
     ContentGenerationModule,
     CronJobsModule,
-    DependenciesModule,
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
@@ -98,7 +97,6 @@ export class AppModule {
                     AppPermission,
                 }),
                 BlocksModule,
-                DependenciesModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
                 }),

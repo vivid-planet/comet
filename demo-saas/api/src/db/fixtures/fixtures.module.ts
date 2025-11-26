@@ -1,4 +1,4 @@
-import { AttachedDocument, DependenciesModule } from "@comet/cms-api";
+import { AttachedDocument } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
@@ -12,11 +12,7 @@ import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.ser
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 
 @Module({
-    imports: [
-        ConfigModule,
-        DependenciesModule,
-        MikroOrmModule.forFeature([Product, ProductCategory, ProductCategoryType, Manufacturer, AttachedDocument]),
-    ],
+    imports: [ConfigModule, MikroOrmModule.forFeature([Product, ProductCategory, ProductCategoryType, Manufacturer, AttachedDocument])],
     providers: [FixturesCommand, FileUploadsFixtureService, ProductsFixtureService],
 })
 export class FixturesModule {}

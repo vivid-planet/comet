@@ -1,4 +1,4 @@
-import { BlobStorageBackendService, DependenciesService } from "@comet/cms-api";
+import { BlobStorageBackendService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { CreateRequestContext, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
@@ -25,7 +25,6 @@ export class FixturesCommand extends CommandRunner {
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
-        private readonly dependenciesService: DependenciesService,
         private readonly productsFixtureService: ProductsFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly orm: MikroORM,
@@ -65,8 +64,6 @@ export class FixturesCommand extends CommandRunner {
         await this.productsFixtureService.generate();
 
         multiBar.stop();
-
-        await this.dependenciesService.createViews();
 
         await this.orm.em.flush();
     }
