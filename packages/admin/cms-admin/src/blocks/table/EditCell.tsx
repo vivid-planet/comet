@@ -39,7 +39,7 @@ export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams)
                     <EditInput
                         multiline
                         value={valueState}
-                        $columnWidth={colDef.computedWidth}
+                        columnWidth={colDef.computedWidth}
                         onChange={handleChange}
                         autoFocus
                         onKeyDown={handleKeyDown}
@@ -67,7 +67,7 @@ const EditPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
 }));
 
-const EditInput = styled(InputBase)<{ $columnWidth: number }>(({ theme, $columnWidth }) => ({
+const EditInput = styled(InputBase, { shouldForwardProp: (prop) => prop !== "columnWidth" })<{ columnWidth: number }>(({ theme, columnWidth }) => ({
     width: "100%",
     height: "100%",
 
@@ -75,7 +75,7 @@ const EditInput = styled(InputBase)<{ $columnWidth: number }>(({ theme, $columnW
     textarea: {
         resize: "both",
         minHeight: `calc(55px - ${theme.spacing(2)})`,
-        minWidth: `calc(${$columnWidth}px - ${theme.spacing(2)})`,
+        minWidth: `calc(${columnWidth}px - ${theme.spacing(2)})`,
         boxSizing: "border-box",
     },
 }));
