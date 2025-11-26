@@ -97,6 +97,13 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                 defaultMessage: "Path",
             }),
         },
+        {
+            value: "domain",
+            label: intl.formatMessage({
+                id: "comet.pages.redirects.redirect.source.type.domain",
+                defaultMessage: "Domain",
+            }),
+        },
     ];
 
     const [submit] = useSubmitMutation(mode, id, linkBlock, scope);
