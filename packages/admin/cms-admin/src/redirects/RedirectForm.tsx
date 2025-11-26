@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Alert,
     Field,
     FillSpace,
     FinalForm,
@@ -14,7 +15,7 @@ import {
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
-import { MenuItem } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -216,6 +217,16 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                                 </FinalFormSelect>
                             )}
                         </Field>
+                        {values.sourceType === "domain" && (
+                            <Box sx={{ marginBottom: 4 }}>
+                                <Alert severity="warning">
+                                    <FormattedMessage
+                                        id="comet.pages.redirects.redirect.source.type.domain.warning"
+                                        defaultMessage="This only works if the DNS entry for this domain points to the correct web server."
+                                    />
+                                </Alert>
+                            </Box>
+                        )}
                         <Field
                             label={intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" })}
                             name="source"
