@@ -33,7 +33,7 @@ import { updateManufacturerMutation } from "./ManufacturerForm.gql";
 import { GQLUpdateManufacturerMutation } from "./ManufacturerForm.gql.generated";
 import { GQLUpdateManufacturerMutationVariables } from "./ManufacturerForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = Omit<GQLManufacturerFormFragment, "address" | "addressAsEmbeddable"> & {
+export type FormValues = Omit<GQLManufacturerFormFragment, "address" | "addressAsEmbeddable"> & {
     address: Omit<NonNullable<GQLManufacturerFormFragment["address"]>, "streetNumber" | "alternativeAddress"> & {
         streetNumber: string;
         alternativeAddress: Omit<NonNullable<NonNullable<GQLManufacturerFormFragment["address"]>["alternativeAddress"]>, "streetNumber"> & {
@@ -48,6 +48,9 @@ type FormValues = Omit<GQLManufacturerFormFragment, "address" | "addressAsEmbedd
         };
     };
 };
+export function formValuesToOutput({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues) {
+    return { ...formValuesRest, address: { ...formValuesAddressRest, streetNumber: parseFloat(formValuesAddressRest.streetNumber), alternativeAddress: alternativeAddressEnabled && formValuesAddressRest.alternativeAddress ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ? parseFloat(formValuesAddressRest.alternativeAddress.streetNumber) : null, } : null, }, addressAsEmbeddable: { ...formValuesRest.addressAsEmbeddable, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.streetNumber), alternativeAddress: { ...formValuesRest.addressAsEmbeddable.alternativeAddress, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.alternativeAddress.streetNumber), }, }, };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -74,17 +77,16 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, address: { ...formValuesAddressRest, streetNumber: parseFloat(formValuesAddressRest.streetNumber), alternativeAddress: alternativeAddressEnabled && formValuesAddressRest.alternativeAddress ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ? parseFloat(formValuesAddressRest.alternativeAddress.streetNumber) : null, } : null, }, addressAsEmbeddable: { ...formValuesRest.addressAsEmbeddable, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.streetNumber), alternativeAddress: { ...formValuesRest.addressAsEmbeddable.alternativeAddress, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.alternativeAddress.streetNumber), }, }, };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id)
                 throw new Error();
-            const { ...updateInput } = output;
             await client.mutate<GQLUpdateManufacturerMutation, GQLUpdateManufacturerMutationVariables>({
                 mutation: updateManufacturerMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         }
         else {

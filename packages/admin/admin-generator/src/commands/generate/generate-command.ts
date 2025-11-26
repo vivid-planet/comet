@@ -15,7 +15,7 @@ import {
     type GridValidRowModel,
 } from "@mui/x-data-grid";
 import { Command } from "commander";
-import { type FieldValidator, type FormApi } from "final-form";
+import { type FieldValidator, type FormApi, type ValidationErrors } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -191,6 +191,7 @@ export type FormConfig<T extends { __typename?: string }> = {
      * @default true
      */
     navigateOnCreate?: boolean;
+    validate?: (values: any) => ValidationErrors | Promise<ValidationErrors>;
 };
 export type InjectedFormVariables = {
     id?: string;

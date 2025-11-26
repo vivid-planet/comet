@@ -1628,6 +1628,7 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsUserById(id: String!): UserPermissionsUser!
   userPermissionsUsers(filter: UserPermissionsUserFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
+  validateProduct(input: ProductInput!): ValidationResponse!
   warning(id: ID!): Warning!
   warnings(filter: WarningFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [WarningSort!], status: [WarningStatus!]! = [open]): PaginatedWarnings!
 }
@@ -1841,6 +1842,11 @@ enum UserPermissionsUserSortField {
   email
   name
   status
+}
+
+type ValidationResponse {
+  errorCode: String
+  ok: Boolean!
 }
 
 type Warning {

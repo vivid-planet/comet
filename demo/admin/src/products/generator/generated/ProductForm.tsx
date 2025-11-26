@@ -60,6 +60,10 @@ import { GQLCreateProductMutationVariables } from "./ProductForm.gql.generated";
 import { updateProductMutation } from "./ProductForm.gql";
 import { GQLUpdateProductMutation } from "./ProductForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
+import { formValuesToOutput } from "../generated/ProductForm";
+import { GQLValidateProductQuery } from "../ProductForm.cometGen.generated";
+import { GQLValidateProductQueryVariables } from "../ProductForm.cometGen.generated";
+import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock
@@ -68,7 +72,7 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "lastCheckedAt"> & {
+export type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "lastCheckedAt"> & {
     dimensions: Omit<NonNullable<ProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
@@ -78,6 +82,9 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "las
     image: BlockState<typeof rootBlocks.image>;
     lastCheckedAt?: Date | null;
 };
+export function formValuesToOutput({ createdAt, dimensionsEnabled, ...formValuesRest }: FormValues) {
+    return { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     manufacturerCountry: string;
@@ -107,17 +114,16 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ dimensionsEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id)
                 throw new Error();
-            const { createdAt, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         }
         else {
@@ -141,7 +147,33 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
         return <Loading behavior="fillPageHeight"/>;
     }
     return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{ values: true }}>
+     subscription={{ values: true }} validate={async (formValues: FormValues) => {
+            const output = formValuesToOutput(formValues);
+            const validateResponse = await client.query<GQLValidateProductQuery, GQLValidateProductQueryVariables>({
+                query: gql`
+                query ValidateProduct($input: ProductInput!) {
+                    validateProduct(input: $input) {
+                        ok
+                        errorCode
+                    }
+                }
+            `,
+                variables: { input: output },
+            });
+            const validationResult = validateResponse.data.validateProduct;
+            if (!validationResult.ok) {
+                if (validationResult.errorCode === "TITLE_TOO_SHORT") {
+                    return {
+                        title: <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long"/>,
+                    };
+                }
+                else {
+                    return {
+                        [FORM_ERROR]: <FormattedMessage id="product.validate.unknownValidationError" defaultMessage="Unknown validation error"/>,
+                    };
+                }
+            }
+        }}>
                 {({ values, form }) => (<>
                         {saveConflict.dialogs}
                         <>

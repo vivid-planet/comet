@@ -36,7 +36,7 @@ import { updateProductHighlightMutation } from "./ProductHighlightForm.gql";
 import { GQLUpdateProductHighlightMutation } from "./ProductHighlightForm.gql.generated";
 import { GQLUpdateProductHighlightMutationVariables } from "./ProductHighlightForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = GQLProductHighlightFormDetailsFragment & {
+export type FormValues = GQLProductHighlightFormDetailsFragment & {
     productCategoryType?: {
         id: string;
         title: string;
@@ -46,6 +46,9 @@ type FormValues = GQLProductHighlightFormDetailsFragment & {
         title: string;
     };
 };
+export function formValuesToOutput({ productCategoryType, productCategory, ...formValuesRest }: FormValues) {
+    return { ...formValuesRest, product: formValuesRest.product?.id, };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -72,17 +75,16 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ productCategoryType, productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, product: formValuesRest.product?.id, };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id)
                 throw new Error();
-            const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductHighlightMutation, GQLUpdateProductHighlightMutationVariables>({
                 mutation: updateProductHighlightMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         }
         else {
