@@ -112,18 +112,8 @@ input CoordinatesInput {
   longitude: Float!
 }
 
-type CopyFilesResponse {
-  mappedFiles: [MappedFile!]!
-}
-
 input CreateBuildsInput {
   names: [String!]!
-}
-
-input CreateDamFolderInput {
-  isInboxFromOtherScope: Boolean! = false
-  name: String!
-  parentId: ID
 }
 
 type CurrentUser {
@@ -142,132 +132,20 @@ type CurrentUserPermission {
   permission: Permission!
 }
 
-type DamFile {
-  altText: String
-  alternativesForThisFile: [DamMediaAlternative!]!
-  archived: Boolean!
-  contentHash: String!
-  createdAt: DateTime!
-  damPath: String!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  duplicates: [DamFile!]!
-  fileUrl: String!
-  folder: DamFolder
-  id: ID!
-  image: DamFileImage
-  importSourceId: String
-  importSourceType: String
-  license: DamFileLicense
-  mimetype: String!
-  name: String!
-  scope: DamScope!
-  size: Int!
-  thisFileIsAlternativeFor: [DamMediaAlternative!]!
-  title: String
-  updatedAt: DateTime!
-}
-
-type DamFileImage {
-  cropArea: ImageCropArea!
-  dominantColor: String
-  exif: JSONObject
-  height: Int!
-  id: ID!
-  url(height: Int!, width: Int!): String
-  width: Int!
-}
-
-type DamFileLicense {
-  author: String
-  details: String
-  durationFrom: DateTime
-  durationTo: DateTime
-
-  """The expirationDate is the durationTo + 1 day"""
-  expirationDate: DateTime
-  expiresWithinThirtyDays: Boolean!
-  hasExpired: Boolean!
-  isNotValidYet: Boolean!
-  isValid: Boolean!
-  type: LicenseType
-}
-
-type DamFolder {
-  archived: Boolean!
-  createdAt: DateTime!
-  id: ID!
-  isInboxFromOtherScope: Boolean!
-  mpath: [ID!]!
-  name: String!
-  numberOfChildFolders: Int!
-  numberOfFiles: Int!
-  parent: DamFolder
-  parents: [DamFolder!]!
-  scope: DamScope!
-  updatedAt: DateTime!
-}
-
 """DamImage root block data"""
 scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 """DamImage root block input"""
 scalar DamImageBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-union DamItem = DamFile | DamFolder
-
-input DamItemFilterInput {
-  mimetypes: [String!]
-  searchText: String
-}
-
-enum DamItemType {
-  File
-  Folder
-}
-
 type DamMediaAlternative {
-  alternative: DamFile!
-  for: DamFile!
   id: ID!
   language: String!
   type: DamMediaAlternativeType!
 }
 
-input DamMediaAlternativeInput {
-  language: String!
-  type: DamMediaAlternativeType!
-}
-
-input DamMediaAlternativeSort {
-  direction: SortDirection! = ASC
-  field: DamMediaAlternativeSortField!
-}
-
-enum DamMediaAlternativeSortField {
-  alternative
-  for
-  id
-  language
-  type
-}
-
 enum DamMediaAlternativeType {
   captions
-}
-
-input DamMediaAlternativeUpdateInput {
-  alternative: ID
-  for: ID
-  language: String
-  type: DamMediaAlternativeType
-}
-
-type DamScope {
-  domain: String!
-}
-
-input DamScopeInput {
-  domain: String!
 }
 
 input DateFilter {
@@ -309,12 +187,6 @@ type Dependency {
   visible: Boolean!
 }
 
-input DependentFilter {
-  rootColumnName: String
-  rootGraphqlObjectType: String
-  rootId: String
-}
-
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -323,11 +195,6 @@ interface DocumentInterface {
 type EntityInfo {
   name: String!
   secondaryInformation: String
-}
-
-input FileFilterInput {
-  mimetypes: [String!]
-  searchText: String
 }
 
 type FileUpload {
@@ -343,17 +210,6 @@ type FileUpload {
   updatedAt: DateTime!
 }
 
-input FilenameInput {
-  folderId: ID
-  name: String!
-}
-
-type FilenameResponse {
-  folderId: ID
-  isOccupied: Boolean!
-  name: String!
-}
-
 enum FocalPoint {
   CENTER
   NORTHEAST
@@ -363,10 +219,6 @@ enum FocalPoint {
   SOUTHWEST
 }
 
-input FolderFilterInput {
-  searchText: String
-}
-
 input IdFilter {
   equal: ID
   isAnyOf: [ID!]
@@ -374,14 +226,6 @@ input IdFilter {
 }
 
 type ImageCropArea {
-  focalPoint: FocalPoint!
-  height: Float
-  width: Float
-  x: Float
-  y: Float
-}
-
-input ImageCropAreaInput {
   focalPoint: FocalPoint!
   height: Float
   width: Float
@@ -425,19 +269,6 @@ enum KubernetesJobStatus {
   failed
   pending
   succeeded
-}
-
-input LicenseInput {
-  author: String
-  details: String
-  durationFrom: DateTime
-  durationTo: DateTime
-  type: LicenseType
-}
-
-enum LicenseType {
-  RIGHTS_MANAGED
-  ROYALTY_FREE
 }
 
 """
@@ -528,18 +359,8 @@ input ManyToOneFilter {
   notEqual: ID
 }
 
-type MappedFile {
-  copy: DamFile!
-  rootFile: DamFile!
-}
-
 type Mutation {
-  archiveDamFile(id: ID!): DamFile!
-  archiveDamFiles(ids: [ID!]!): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
   createBuilds(input: CreateBuildsInput!): Boolean!
-  createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput!): DamFolder!
-  createDamMediaAlternative(alternative: ID!, for: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   createProduct(input: ProductInput!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
@@ -548,9 +369,6 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
   currentUserSignOut: String!
-  deleteDamFile(id: ID!): Boolean!
-  deleteDamFolder(id: ID!): Boolean!
-  deleteDamMediaAlternative(id: ID!): Boolean!
   deleteManufacturer(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
   deleteProductCategory(id: ID!): Boolean!
@@ -558,16 +376,8 @@ type Mutation {
   deleteProductHighlight(id: ID!): Boolean!
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
-  importDamFileByDownload(input: UpdateDamFileInput!, scope: DamScopeInput!, url: String!): DamFile!
-  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   publishAllProducts: Boolean!
-  restoreDamFile(id: ID!): DamFile!
-  restoreDamFiles(ids: [ID!]!): [DamFile!]!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
-  updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
-  updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
@@ -598,31 +408,6 @@ input OneToManyFilter {
   contains: ID
   isAnyOf: [ID!]
   search: String
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
-}
-
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-type PaginatedDamMediaAlternatives {
-  nodes: [DamMediaAlternative!]!
-  totalCount: Int!
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
 }
 
 type PaginatedManufacturerCountries {
@@ -1207,19 +992,6 @@ type Query {
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   currentUser: CurrentUser!
-  damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
-  damFile(id: ID!): DamFile!
-  damFilesList(filter: FileFilterInput, folderId: ID, includeArchived: Boolean = false, limit: Int! = 25, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFiles!
-  damFolder(id: ID!): DamFolder!
-  damFolderByNameAndParentId(name: String!, parentId: ID, scope: DamScopeInput!): DamFolder
-  damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
-  damFoldersList(filter: FolderFilterInput, includeArchived: Boolean, limit: Int! = 25, offset: Int! = 0, parentId: ID, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFolders!
-  damIsFilenameOccupied(filename: String!, folderId: String, scope: DamScopeInput!): Boolean!
-  damItemListPosition(filter: DamItemFilterInput, folderId: ID, id: ID!, includeArchived: Boolean, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: DamItemType!): Int!
-  damItemsList(filter: DamItemFilterInput, folderId: ID, includeArchived: Boolean, limit: Int! = 25, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamItems!
-  damMediaAlternative(id: ID!): DamMediaAlternative!
-  damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
-  findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesJob(name: String!): KubernetesJob!
@@ -1274,25 +1046,6 @@ input StringFilter {
   notContains: String
   notEqual: String
   startsWith: String
-}
-
-input UpdateDamFileInput {
-  altText: String
-  folderId: ID
-  image: UpdateImageFileInput
-  license: LicenseInput
-  name: String
-  title: String
-}
-
-input UpdateDamFolderInput {
-  archived: Boolean
-  name: String
-  parentId: ID
-}
-
-input UpdateImageFileInput {
-  cropArea: ImageCropAreaInput
 }
 
 input UserContentScopesInput {

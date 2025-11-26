@@ -8,9 +8,7 @@ import { MultiBar, Options, Presets } from "cli-progress";
 import { Command, CommandRunner } from "nest-commander";
 
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
-import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
-import { VideoFixtureService } from "./generators/video-fixture.service";
 
 @Command({
     name: "fixtures",
@@ -30,9 +28,7 @@ export class FixturesCommand extends CommandRunner {
         private readonly dependenciesService: DependenciesService,
         private readonly productsFixtureService: ProductsFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
-        private readonly imageFixtureService: ImageFixtureService,
         private readonly orm: MikroORM,
-        private readonly videoFixtureService: VideoFixtureService,
     ) {
         super();
     }
@@ -62,12 +58,6 @@ export class FixturesCommand extends CommandRunner {
         await migrator.up();
 
         const multiBar = new MultiBar(this.barOptions, Presets.shades_classic);
-
-        this.logger.log("Generate Images...");
-        await this.imageFixtureService.generateImages(5, { domain: "main" });
-
-        this.logger.log("Generate Videos...");
-        await this.videoFixtureService.generateVideos({ domain: "main" });
 
         this.logger.log("Generate File Uploads...");
         await this.fileUploadsFixtureService.generateFileUploads();

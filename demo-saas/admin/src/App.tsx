@@ -3,15 +3,7 @@ import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import {
-    CometConfigProvider,
-    type ContentScope,
-    ContentScopeProvider,
-    createDamFileDependency,
-    CurrentUserProvider,
-    MasterMenuRoutes,
-    SitePreview,
-} from "@comet/cms-admin";
+import { CometConfigProvider, type ContentScope, ContentScopeProvider, CurrentUserProvider, MasterMenuRoutes, SitePreview } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -22,13 +14,12 @@ import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
-import { FormattedMessage, IntlProvider } from "react-intl";
+import { IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
 
 import { type ContentScope as BaseContentScope } from "./common/ContentScope";
 import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, masterMenuData } from "./common/MasterMenu";
-import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { type GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
 
@@ -60,25 +51,6 @@ export function App() {
         <CometConfigProvider
             {...config}
             graphQLApiUrl={`${config.apiUrl}/graphql`}
-            dam={{
-                ...config.dam,
-                scopeParts: ["domain"],
-                additionalToolbarItems: <ImportFromPicsum />,
-                importSources: {
-                    picsum: {
-                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
-                    },
-                },
-                contentGeneration: {
-                    generateAltText: true,
-                    generateImageTitle: true,
-                },
-            }}
-            dependencies={{
-                entityDependencyMap: {
-                    DamFile: createDamFileDependency(),
-                },
-            }}
             buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
             contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
         >

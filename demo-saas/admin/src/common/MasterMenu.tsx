@@ -1,6 +1,5 @@
-import { Assets, Dashboard, Snips, Wrench } from "@comet/admin-icons";
-import { CronJobsPage, DamPage, MasterMenu, type MasterMenuData, PublisherPage, UserPermissionsPage, WarningsPage } from "@comet/cms-admin";
-import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
+import { Dashboard, Snips, Wrench } from "@comet/admin-icons";
+import { CronJobsPage, MasterMenu, type MasterMenuData, PublisherPage, UserPermissionsPage, WarningsPage } from "@comet/cms-admin";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
 import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
@@ -25,16 +24,6 @@ export const masterMenuData: MasterMenuData = [
             path: "/dashboard",
             component: DashboardPage,
         },
-    },
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
-        icon: <Assets />,
-        route: {
-            path: "/assets",
-            render: () => <DamPage additionalToolbarItems={<ImportFromPicsum />} />,
-        },
-        requiredPermission: "dam",
     },
     {
         type: "collapsible",
