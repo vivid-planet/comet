@@ -355,6 +355,7 @@ type Redirect {
 
 enum RedirectSourceTypeValues {
   path
+  domain
 }
 
 enum RedirectGenerationType {
