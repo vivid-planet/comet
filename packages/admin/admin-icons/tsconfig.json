@@ -1,17 +1,10 @@
 {
     "compilerOptions": {
-        "declaration": true,
-        "emitDeclarationOnly": true,
-        "jsx": "react-jsx",
-        "lib": ["es2023", "DOM"],
         "module": "preserve",
-        "moduleDetection": "force",
         "moduleResolution": "bundler",
-        "resolveJsonModule": true,
-        "target": "esnext",
-        "types": [],
-        "verbatimModuleSyntax": true
+        "noEmitOnError": true,
+        "target": "esnext"
     },
-    "extends": "@tsconfig/strictest/tsconfig.json",
-    "include": ["src"]
+    "extends": "../tsconfig.base.json",
+    "include": ["./src"]
 }
