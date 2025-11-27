@@ -74,38 +74,38 @@ export class EnvironmentVariables {
     @IsString()
     BLOB_STORAGE_DRIVER: BlobStorageConfig["backend"]["driver"];
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "file")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "file")
     @IsString()
     FILE_STORAGE_PATH: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "azure")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "azure")
     @IsString()
     AZURE_ACCOUNT_NAME: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "azure")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "azure")
     @IsString()
     AZURE_ACCOUNT_KEY: string;
 
     @IsString()
     BLOB_STORAGE_DIRECTORY_PREFIX: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_REGION: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_ENDPOINT: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_ACCESS_KEY_ID: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_SECRET_ACCESS_KEY: string;
 
-    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
+    @ValidateIf((variables: EnvironmentVariables) => variables.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
 
@@ -132,27 +132,33 @@ export class EnvironmentVariables {
     @ValidateIf(() => process.env.NODE_ENV === "production")
     CDN_ORIGIN_CHECK_SECRET: string;
 
-    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_KEY || v.AZURE_AI_TRANSLATOR_REGION)
+    @ValidateIf((variables: EnvironmentVariables) => Boolean(variables.AZURE_AI_TRANSLATOR_KEY || variables.AZURE_AI_TRANSLATOR_REGION))
     @IsUrl()
     AZURE_AI_TRANSLATOR_ENDPOINT?: string;
 
-    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_REGION)
+    @ValidateIf((variables: EnvironmentVariables) => Boolean(variables.AZURE_AI_TRANSLATOR_ENDPOINT || variables.AZURE_AI_TRANSLATOR_REGION))
     @IsString()
     AZURE_AI_TRANSLATOR_KEY?: string;
 
-    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_KEY)
+    @ValidateIf((variables: EnvironmentVariables) => Boolean(variables.AZURE_AI_TRANSLATOR_ENDPOINT || variables.AZURE_AI_TRANSLATOR_KEY))
     @IsString()
     AZURE_AI_TRANSLATOR_REGION?: string;
 
-    @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
+    @ValidateIf((variables: EnvironmentVariables) =>
+        Boolean(variables.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY || variables.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID),
+    )
     @IsString()
     AZURE_OPEN_AI_CONTENT_GENERATION_API_URL?: string;
 
-    @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
+    @ValidateIf((variables: EnvironmentVariables) =>
+        Boolean(variables.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || variables.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID),
+    )
     @IsString()
     AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY?: string;
 
-    @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY)
+    @ValidateIf((variables: EnvironmentVariables) =>
+        Boolean(variables.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || variables.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY),
+    )
     @IsString()
     AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID?: string;
 
@@ -160,7 +166,7 @@ export class EnvironmentVariables {
     @IsUrl()
     SENTRY_DSN?: string;
 
-    @ValidateIf((v) => v.SENTRY_DSN)
+    @ValidateIf((variables: EnvironmentVariables) => Boolean(variables.SENTRY_DSN))
     @IsString()
     SENTRY_ENVIRONMENT?: string;
 
