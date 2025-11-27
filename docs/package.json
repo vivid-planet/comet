@@ -53,7 +53,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@fontsource/roboto": "^5.2.6",
-        "@mdx-js/react": "^3.1.0",
+        "@mdx-js/react": "^3.1.1",
         "@mui/material": "^7.3.5",
         "@mui/system": "^7.3.5",
         "@mui/x-data-grid": "^7.29.8",
