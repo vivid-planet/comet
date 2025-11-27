@@ -289,7 +289,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api/cms-api
       '@faker-js/faker':
-        specifier: ^10.0.0
+        specifier: ^10.1.0
         version: 10.1.0
       '@kubernetes/client-node':
         specifier: ^1.3.0
@@ -2424,7 +2424,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/eslint-config
       '@faker-js/faker':
-        specifier: ^10.0.0
+        specifier: ^10.1.0
         version: 10.1.0
       '@graphql-mocks/network-msw':
         specifier: ^0.4.4
