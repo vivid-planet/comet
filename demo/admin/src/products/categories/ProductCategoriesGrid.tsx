@@ -82,7 +82,16 @@ export function ProductCategoriesGrid() {
     const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
         await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
             mutation: updateProductCategoryPositionMutation,
-            variables: { id, input: { position: targetIndex + 1 } },
+            variables: {
+                id,
+                input: {
+                    products: undefined,
+                    type: undefined,
+                    slug: undefined,
+                    title: undefined,
+                    position: targetIndex + 1,
+                },
+            },
             awaitRefetchQueries: true,
             refetchQueries: [productCategoriesQuery],
         });

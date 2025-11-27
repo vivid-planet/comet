@@ -26,7 +26,7 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
-import { type GQLProductType } from "@src/graphql.generated";
+import { type GQLProductType, type GQLProductUpdateInput } from "@src/graphql.generated";
 import {
     type GQLManufacturerCountriesQuery,
     type GQLManufacturerCountriesQueryVariables,
@@ -131,7 +131,11 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
     const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
 
-        const output = {
+        const output: GQLProductUpdateInput = {
+            colors: undefined,
+            price: undefined,
+            status: undefined,
+            tagsWithStatus: undefined,
             ...formValues,
             description: formValues.description ?? null,
             image: rootBlocks.image.state2Output(formValues.image),
@@ -156,7 +160,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: { input: createOutput },
             });
             const id = mutationResponse?.createProduct.id;
             if (id) {
@@ -244,7 +248,27 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                                 `,
                                 variables: {
                                     filter: {
+                                        name: undefined,
+                                        id: undefined,
+                                        addressAsEmbeddable_alternativeAddress_country: undefined,
+                                        addressAsEmbeddable_alternativeAddress_street: undefined,
+                                        addressAsEmbeddable_alternativeAddress_streetNumber: undefined,
+                                        addressAsEmbeddable_alternativeAddress_zip: undefined,
+                                        addressAsEmbeddable_street: undefined,
+                                        and: undefined,
+                                        addressAsEmbeddable_streetNumber: undefined,
+                                        addressAsEmbeddable_zip: undefined,
+                                        updatedAt: undefined,
+                                        or: undefined,
                                         addressAsEmbeddable_country: {
+                                            contains: undefined,
+                                            endsWith: undefined,
+                                            isAnyOf: undefined,
+                                            isEmpty: undefined,
+                                            isNotEmpty: undefined,
+                                            notContains: undefined,
+                                            notEqual: undefined,
+                                            startsWith: undefined,
                                             equal: values.manufacturerCountry?.id,
                                         },
                                     },
