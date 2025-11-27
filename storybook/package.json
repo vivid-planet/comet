@@ -52,7 +52,7 @@
         "@babel/cli": "^7.28.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@faker-js/faker": "^10.0.0",
+        "@faker-js/faker": "^10.1.0",
         "@graphql-mocks/network-msw": "^0.4.4",
         "@storybook/addon-docs": "^9.0.16",
         "@storybook/addon-webpack5-compiler-babel": "^3.0.6",

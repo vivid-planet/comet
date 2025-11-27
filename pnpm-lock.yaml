@@ -289,7 +289,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api/cms-api
       '@faker-js/faker':
-        specifier: ^10.0.0
+        specifier: ^10.1.0
         version: 10.1.0
       '@kubernetes/client-node':
         specifier: ^1.3.0
@@ -2424,7 +2424,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/eslint-config
       '@faker-js/faker':
-        specifier: ^10.0.0
+        specifier: ^10.1.0
         version: 10.1.0
       '@graphql-mocks/network-msw':
         specifier: ^0.4.4
@@ -11358,11 +11358,6 @@ packages:
 
   dnd-core@16.0.1:
     resolution: {integrity: sha512-HK294sl7tbw6F6IeuK16YSBUoorvHpY8RHO+9yFfaJyCDVb6n7PRcezrOEOa2SBCqiYpemh5Jx20ZcjKdFAVng==}
-
-  dnd-multi-backend@8.1.2:
-    resolution: {integrity: sha512-KPDVEsiM+6gNEegqZYTWJQgJxYV4vB91tUrvoKJjaS0wwWqT/jNU0P7xJAwCue/cbasJNvk2dFZH7tC+bjX1Rg==}
-    peerDependencies:
-      dnd-core: ^16.0.1
 
   dnd-multi-backend@9.0.0:
     resolution: {integrity: sha512-BCUFes4x0LA2bZyEZFHeQzZ1CBZo6PB40zMOG/gNgICxjAZfN2jHgISowqkR1isdx/msUNzscxEb17SP7yc4KQ==}
@@ -29973,10 +29968,6 @@ snapshots:
       '@react-dnd/asap': 5.0.2
       '@react-dnd/invariant': 4.0.2
       redux: 4.2.0
-
-  dnd-multi-backend@8.1.2(dnd-core@16.0.1):
-    dependencies:
-      dnd-core: 16.0.1
 
   dnd-multi-backend@9.0.0(dnd-core@16.0.1):
     dependencies:
