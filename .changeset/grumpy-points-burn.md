@@ -2,4 +2,4 @@
 "@comet/api-generator": minor
 ---
 
-Add default sort order: createdAt (if existing) or id
+Add default sort order: position (if exists), createdAt (if exists), id
