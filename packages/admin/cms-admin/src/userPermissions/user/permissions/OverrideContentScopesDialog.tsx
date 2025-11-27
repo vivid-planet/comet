@@ -8,9 +8,10 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
+import { DataGrid } from "../../../common/dataGrid/DataGrid";
 import { type ContentScope } from "../../../contentScope/Provider";
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {

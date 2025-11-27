@@ -1,9 +1,10 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { DataGridToolbar, Field, FillSpace, FinalForm, type GridColDef, Loading, useFormApiRef } from "@comet/admin";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import { type FunctionComponent, type PropsWithChildren } from "react";
 
+import { DataGrid } from "../../../../common/dataGrid/DataGrid";
 import { generateGridColumnsFromContentScopeProperties } from "../ContentScopeGrid";
 import { type GQLContentScopesQuery } from "../ContentScopeGrid.generated";
 import {

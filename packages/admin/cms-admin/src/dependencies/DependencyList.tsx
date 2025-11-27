@@ -3,10 +3,10 @@ import { Alert, type GridColDef, messages, Tooltip, useDataGridRemote } from "@c
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { IconButton, tablePaginationClasses } from "@mui/material";
 import { type LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
-import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
+import { DataGrid } from "../common/dataGrid/DataGrid";
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
