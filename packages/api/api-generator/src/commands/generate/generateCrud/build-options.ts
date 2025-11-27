@@ -63,10 +63,13 @@ export function buildSortProps(metadata: EntityMetadata<any>) {
     }
     const crudSortProps = directSortProps(metadata);
 
-    // add nested from relations, one level deep
     metadata.props.forEach((prop) => {
         if (hasCrudFieldFeature(metadata.class, prop.name, "sort")) {
-            if ((prop.kind == "1:1" || prop.kind == "m:1") && prop.targetMeta) {
+            if (prop.primary) {
+                // primary only on root level
+                crudSortProps.push(prop.name);
+            } else if ((prop.kind == "1:1" || prop.kind == "m:1") && prop.targetMeta) {
+                // add nested from relations, one level deep
                 crudSortProps.push(...directSortProps(prop.targetMeta).map((nestedProp) => `${prop.name}.${nestedProp}`));
                 return true;
             }

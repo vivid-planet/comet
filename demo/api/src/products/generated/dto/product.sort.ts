@@ -20,6 +20,7 @@ export enum ProductSortField {
     updatedAt = "updatedAt",
     manufacturer = "manufacturer",
     priceList = "priceList",
+    id = "id",
     statistics_views = "statistics_views",
     statistics_createdAt = "statistics_createdAt",
     statistics_updatedAt = "statistics_updatedAt",

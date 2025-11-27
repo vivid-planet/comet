@@ -9,6 +9,7 @@ export enum ProductVariantSortField {
     product = "product",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
+    id = "id",
     product_title = "product_title",
     product_status = "product_status",
     product_slug = "product_slug",
