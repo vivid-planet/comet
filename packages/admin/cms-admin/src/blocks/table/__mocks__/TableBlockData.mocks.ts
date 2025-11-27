@@ -1,32 +1,34 @@
+import { v4 as uuid } from "uuid";
+
 import { type TableBlockData } from "../../../blocks.generated";
 import { type ColumnInsertData } from "../utils";
 
 const smallHighlightedColumn: TableBlockData["columns"][number] = {
-    id: "d7bc6f8f-9b86-44e4-ac74-291bef074b9d",
+    id: uuid(),
     size: "small",
     highlighted: true,
 };
 
 const firstStandardColumn: TableBlockData["columns"][number] = {
-    id: "92c2d68c-7804-4fb6-8f02-ffc4bdaf22d0",
+    id: uuid(),
     size: "standard",
     highlighted: false,
 };
 
 const secondStandardColumn: TableBlockData["columns"][number] = {
-    id: "cb8bd2e3-2388-45e3-9e47-78ae8370846d",
+    id: uuid(),
     size: "standard",
     highlighted: false,
 };
 
 const extraLargeColumn: TableBlockData["columns"][number] = {
-    id: "376c7ea0-2c91-497c-9ad0-d40ee948f78c",
+    id: uuid(),
     highlighted: false,
     size: "extraLarge",
 };
 
 const headerRow: TableBlockData["rows"][number] = {
-    id: "6a5dc6a9-b58e-465a-b0d7-75e09fdb4f10",
+    id: uuid(),
     highlighted: true,
     cellValues: [
         { columnId: smallHighlightedColumn.id, value: "Product ID" },
@@ -37,7 +39,7 @@ const headerRow: TableBlockData["rows"][number] = {
 };
 
 const dataRowOne: TableBlockData["rows"][number] = {
-    id: "b76d3afa-f2d4-4952-bf35-e3ea8aed9f41",
+    id: uuid(),
     highlighted: false,
     cellValues: [
         { columnId: smallHighlightedColumn.id, value: "p1" },
@@ -48,7 +50,7 @@ const dataRowOne: TableBlockData["rows"][number] = {
 };
 
 const dataRowTwo: TableBlockData["rows"][number] = {
-    id: "dce30e71-dd61-46ee-8590-3c192e675248",
+    id: uuid(),
     highlighted: false,
     cellValues: [
         { columnId: smallHighlightedColumn.id, value: "p2" },
@@ -62,7 +64,7 @@ const dataRowTwo: TableBlockData["rows"][number] = {
 };
 
 const dataRowThree: TableBlockData["rows"][number] = {
-    id: "2543ff7f-761f-4b34-9202-de33e3828599",
+    id: uuid(),
     highlighted: false,
     cellValues: [
         { columnId: smallHighlightedColumn.id, value: "p3" },
@@ -76,7 +78,7 @@ const dataRowThree: TableBlockData["rows"][number] = {
 };
 
 const dataRowFour: TableBlockData["rows"][number] = {
-    id: "bf947237-2211-4bd7-82a8-e0875f3e7fce",
+    id: uuid(),
     highlighted: false,
     cellValues: [
         { columnId: smallHighlightedColumn.id, value: "p4" },
