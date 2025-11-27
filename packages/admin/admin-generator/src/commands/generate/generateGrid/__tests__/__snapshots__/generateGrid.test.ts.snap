@@ -55,14 +55,15 @@ import { MenuItem } from "@mui/material";
 import { ListItemIcon } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { CircularProgress } from "@mui/material";
-import { DataGridPro } from "@mui/x-data-grid-pro";
-import { GridLogicOperator } from "@mui/x-data-grid-pro";
-import { GridRenderCellParams } from "@mui/x-data-grid-pro";
-import { GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { GridToolbarProps } from "@mui/x-data-grid-pro";
-import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridProps } from "@mui/x-data-grid";
+import { GridLogicOperator } from "@mui/x-data-grid";
+import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridSlotsComponent } from "@mui/x-data-grid";
+import { GridToolbarProps } from "@mui/x-data-grid";
+import { GridColumnHeaderTitle } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -169,7 +170,7 @@ renderCell: (params) => {
         
 
         return (
-            <DataGridPro
+            <DataGrid
                 {...dataGridProps}
                 rows={rows}
                 rowCount={rowCount}
@@ -241,14 +242,15 @@ import { MenuItem } from "@mui/material";
 import { ListItemIcon } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { CircularProgress } from "@mui/material";
-import { DataGridPro } from "@mui/x-data-grid-pro";
-import { GridLogicOperator } from "@mui/x-data-grid-pro";
-import { GridRenderCellParams } from "@mui/x-data-grid-pro";
-import { GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { GridToolbarProps } from "@mui/x-data-grid-pro";
-import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridProps } from "@mui/x-data-grid";
+import { GridLogicOperator } from "@mui/x-data-grid";
+import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridSlotsComponent } from "@mui/x-data-grid";
+import { GridToolbarProps } from "@mui/x-data-grid";
+import { GridColumnHeaderTitle } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -388,7 +390,7 @@ renderCell: (params) => {
     });
 
         return (
-            <DataGridPro
+            <DataGrid
                 {...dataGridProps}
                 rows={rows}
                 rowCount={rowCount}
@@ -462,14 +464,15 @@ import { MenuItem } from "@mui/material";
 import { ListItemIcon } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { CircularProgress } from "@mui/material";
-import { DataGridPro } from "@mui/x-data-grid-pro";
-import { GridLogicOperator } from "@mui/x-data-grid-pro";
-import { GridRenderCellParams } from "@mui/x-data-grid-pro";
-import { GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { GridToolbarProps } from "@mui/x-data-grid-pro";
-import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridProps } from "@mui/x-data-grid";
+import { GridLogicOperator } from "@mui/x-data-grid";
+import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridSlotsComponent } from "@mui/x-data-grid";
+import { GridToolbarProps } from "@mui/x-data-grid";
+import { GridColumnHeaderTitle } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -614,7 +617,7 @@ renderCell: (params) => {
     });
 
         return (
-            <DataGridPro
+            <DataGrid
                 {...dataGridProps}
                 rows={rows}
                 rowCount={rowCount}

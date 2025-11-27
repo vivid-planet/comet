@@ -1,8 +1,8 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
-import { addHours } from "date-fns";
+import { addHours, addSeconds } from "date-fns";
 import hasha from "hasha";
 import { basename, extname, parse } from "path";
 import { Readable } from "stream";
@@ -20,13 +20,23 @@ import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 @Injectable()
 export class FileUploadsService {
     constructor(
+        private readonly orm: MikroORM,
         @InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
         private readonly entityManager: EntityManager,
-    ) {}
+    ) {
+        // Delete expired files every minute
+        setInterval(async () => {
+            try {
+                await this.deleteExpiredFiles();
+            } catch (error) {
+                console.error("Error while deleting expired files", error);
+            }
+        }, 60000);
+    }
 
-    async upload(file: FileUploadInput): Promise<FileUpload> {
+    async upload(file: FileUploadInput, expiresIn?: number): Promise<FileUpload> {
         const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
         await this.blobStorageBackendService.upload(file, contentHash, this.config.directory);
 
@@ -34,11 +44,13 @@ export class FileUploadsService {
         const filename = basename(file.originalname, extension);
         const name = slugifyFilename(filename, extension);
 
+        const expires = expiresIn || this.config.expiresIn;
         const fileUpload = this.repository.create({
             name,
             size: file.size,
             mimetype: file.mimetype,
             contentHash,
+            expiresAt: expires ? addSeconds(new Date(), expires) : undefined,
         });
 
         this.entityManager.persist(fileUpload);
@@ -129,5 +141,28 @@ export class FileUploadsService {
         }
 
         this.entityManager.remove(fileUpload);
+    }
+
+    @CreateRequestContext()
+    async deleteExpiredFiles(): Promise<void> {
+        let hasMore = false;
+        const limit = 100;
+        do {
+            const files = await this.repository.find(
+                {
+                    expiresAt: { $lt: new Date() },
+                },
+                {
+                    limit,
+                    offset: 0,
+                },
+            );
+
+            for (const file of files) {
+                await this.delete(file);
+            }
+            hasMore = files.length === limit;
+        } while (hasMore);
+        await this.entityManager.flush();
     }
 }

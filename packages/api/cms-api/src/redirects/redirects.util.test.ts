@@ -47,6 +47,9 @@ describe("redirectMatchesFilter", () => {
 
         expect(redirectMatchesFilter(redirect, { source: { isAnyOf: ["/source", "/target"] } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { source: { isAnyOf: ["/target"] } })).toBe(false);
+
+        expect(redirectMatchesFilter(redirect, { source: { isEmpty: true } })).toBe(false);
+        expect(redirectMatchesFilter(redirect, { source: { isNotEmpty: true } })).toBe(true);
     });
 
     it("should match for boolean filter", () => {
@@ -61,6 +64,7 @@ describe("redirectMatchesFilter", () => {
 
         expect(redirectMatchesFilter(redirect, { active: { equal: true } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { active: { equal: false } })).toBe(false);
+        expect(redirectMatchesFilter(redirect, { active: {} })).toBe(true);
     });
 
     it("should match for date time filter", () => {
@@ -94,6 +98,9 @@ describe("redirectMatchesFilter", () => {
 
         expect(redirectMatchesFilter(redirect, { updatedAt: { lowerThanEqual: today } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { updatedAt: { lowerThanEqual: yesterday } })).toBe(false);
+
+        expect(redirectMatchesFilter(redirect, { createdAt: { isEmpty: false } })).toBe(false);
+        expect(redirectMatchesFilter(redirect, { createdAt: { isNotEmpty: true } })).toBe(true);
     });
 
     it("should match for multiple filters", () => {

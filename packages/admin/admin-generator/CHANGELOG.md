@@ -1,5 +1,14 @@
 # @comet/admin-generator
 
+## 8.7.1
+
+## 8.7.0
+
+### Minor Changes
+
+- bfb954e: Form: add support for fields accessing nested objects (e.g., Embeddable in MikroORM)
+- 91f0b8d: Add injectFormVariables helper function to inject id, mode, client or formApi into validator
+
 ## 8.6.0
 
 ## 8.5.2
