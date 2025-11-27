@@ -7,7 +7,7 @@ import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Navigation, Pagination } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
@@ -24,6 +24,22 @@ export const MediaGalleryBlock = withPreview(
         const [activeItem, setActiveItem] = useState(0);
 
         const intl = useIntl();
+
+        useEffect(() => {
+            if (!swiper) return;
+
+            const updateInert = () => {
+                swiper.slides.forEach((slide, index) => {
+                    if (index === swiper.activeIndex) {
+                        slide.removeAttribute("inert");
+                    } else {
+                        slide.setAttribute("inert", "");
+                    }
+                });
+            };
+
+            updateInert();
+        }, [swiper, activeItem]);
 
         return (
             <>
@@ -45,7 +61,14 @@ export const MediaGalleryBlock = withPreview(
                     allowTouchMove
                     watchOverflow
                     speed={400}
-                    onSwiper={setSwiper}
+                    onSwiper={(swiperInstance) => {
+                        setSwiper(swiperInstance);
+                        swiperInstance.slides.forEach((slide, index) => {
+                            if (index !== swiperInstance.activeIndex) {
+                                slide.setAttribute("inert", "");
+                            }
+                        });
+                    }}
                     onSlideChange={(swiper) => {
                         setActiveItem(swiper.activeIndex);
                     }}
