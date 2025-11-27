@@ -60,7 +60,7 @@ export const DependentAsyncSelects = function () {
                                             }
                                         }
                                     `,
-                                    variables: { manufacturer: values.manufacturer?.id },
+                                    variables: { manufacturer: values?.manufacturer?.id },
                                 });
 
                                 return data.products;
@@ -68,7 +68,7 @@ export const DependentAsyncSelects = function () {
                             getOptionLabel={(option) => option.name}
                             label="Product"
                             fullWidth
-                            disabled={!values.manufacturer}
+                            disabled={!values?.manufacturer}
                         />
                         <OnChangeField name="manufacturer">
                             {() => {

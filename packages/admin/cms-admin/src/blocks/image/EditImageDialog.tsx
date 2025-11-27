@@ -159,7 +159,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             </Grid>
                         </DialogTitle>
                         <DialogContent>
-                            <ImageCrop src={image.url} style={imageStyle} disabled={values.useInheritedDamSettings} />
+                            <ImageCrop src={image.url} style={imageStyle} disabled={values?.useInheritedDamSettings} />
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>
@@ -214,7 +214,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                     </>
                                 )}
                                 <Box padding={8}>
-                                    <CropSettingsFields disabled={inheritedDamSettings === undefined ? false : values.useInheritedDamSettings} />
+                                    <CropSettingsFields disabled={inheritedDamSettings === undefined ? false : values?.useInheritedDamSettings} />
                                 </Box>
                             </div>
                         </DialogContent>

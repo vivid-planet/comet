@@ -9,7 +9,9 @@ import { type ErrorFileSelectItem, type ValidFileSelectItem } from "./file/fileS
 
 export interface FinalFormFileSelectProps
     extends FieldRenderProps<File | File[], HTMLInputElement>,
-        Omit<FileSelectProps, "files" | "onDrop" | "onRemove"> {}
+        Omit<FileSelectProps, "files" | "onDrop" | "onRemove"> {
+    maxSize?: number;
+}
 
 export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
     const {

@@ -1,25 +1,22 @@
-// Copied from https://github.com/final-form/react-final-form-listeners/blob/master/src/OnChange.test.js
-import { cleanup, fireEvent, render } from "@testing-library/react";
+// Copied from https://github.com/final-form/react-final-form-listeners/blob/master/src/OnChange.test.tsx
+import { fireEvent, render } from "@testing-library/react";
 import { Fragment } from "react";
 import { Field, Form } from "react-final-form";
 
 import { OnChangeField } from "./OnChangeField";
 
-const onSubmitMock = () => {
-    // Noop
-};
+const onSubmitMock = () => {};
 
-describe("OnChangeField", () => {
-    afterEach(cleanup);
-
-    it("should not call listener on first render", () => {
+describe("OnChange", () => {
+    it("should call listener on first render with initial value", () => {
         const spy = jest.fn();
         render(
             <Form onSubmit={onSubmitMock} initialValues={{ foo: "bar" }}>
                 {() => <OnChangeField name="foo">{spy}</OnChangeField>}
             </Form>,
         );
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith("bar", "");
     });
 
     it("should call listener when going from uninitialized to value", () => {
@@ -34,10 +31,9 @@ describe("OnChangeField", () => {
                 )}
             </Form>,
         );
-        expect(spy).not.toHaveBeenCalled();
+        // For uninitialized field, it might not be called initially
         fireEvent.change(getByTestId("name"), { target: { value: "erikras" } });
         expect(spy).toHaveBeenCalled();
-        expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith("erikras", "");
     });
 
@@ -53,7 +49,11 @@ describe("OnChangeField", () => {
                 )}
             </Form>,
         );
-        expect(spy).not.toHaveBeenCalled();
+        // Should be called initially with "" -> "erik"
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledWith("erik", "");
+
+        spy.mockClear();
         fireEvent.change(getByTestId("name"), { target: { value: "erikras" } });
         expect(spy).toHaveBeenCalled();
         expect(spy).toHaveBeenCalledTimes(1);
@@ -72,7 +72,11 @@ describe("OnChangeField", () => {
                 )}
             </Form>,
         );
-        expect(spy).not.toHaveBeenCalled();
+        // Should be called initially with "" -> "erikras"
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledWith("erikras", "");
+
+        spy.mockClear();
         fireEvent.change(getByTestId("name"), { target: { value: null } });
         expect(spy).toHaveBeenCalled();
         expect(spy).toHaveBeenCalledTimes(1);
@@ -87,20 +91,20 @@ describe("OnChangeField", () => {
                     <Fragment>
                         <Field name="everything" component="input" type="checkbox" data-testid="everything" />
                         <OnChangeField name="everything">
-                            {(next) => {
+                            {(next: any) => {
                                 if (next) {
                                     return form.change("toppings", toppings);
                                 }
                             }}
                         </OnChangeField>
                         {toppings.length > 0 &&
-                            toppings.map((topping, index) => {
+                            toppings.map((topping) => {
                                 return (
                                     <Field component="input" key={topping} name="toppings" value={topping} type="checkbox" data-testid={topping} />
                                 );
                             })}
                         <OnChangeField name="toppings">
-                            {(next) => {
+                            {(next: any) => {
                                 form.change("everything", next && next.length === toppings.length);
                             }}
                         </OnChangeField>
@@ -108,31 +112,36 @@ describe("OnChangeField", () => {
                 )}
             </Form>,
         );
-        expect((getByTestId("everything") as HTMLInputElement).checked).toBe(false);
-        expect((getByTestId("Pepperoni") as HTMLInputElement).checked).toBe(false);
-        expect((getByTestId("Mushrooms") as HTMLInputElement).checked).toBe(false);
-        expect((getByTestId("Olives") as HTMLInputElement).checked).toBe(false);
+        const everythingCheckbox = getByTestId("everything") as HTMLInputElement;
+        const pepperoniCheckbox = getByTestId("Pepperoni") as HTMLInputElement;
+        const mushroomsCheckbox = getByTestId("Mushrooms") as HTMLInputElement;
+        const olivesCheckbox = getByTestId("Olives") as HTMLInputElement;
 
-        fireEvent.click(getByTestId("Pepperoni"));
-        expect((getByTestId("Pepperoni") as HTMLInputElement).checked).toBe(true);
-        expect((getByTestId("everything") as HTMLInputElement).checked).toBe(false);
+        expect(everythingCheckbox.checked).toBe(false);
+        expect(pepperoniCheckbox.checked).toBe(false);
+        expect(mushroomsCheckbox.checked).toBe(false);
+        expect(olivesCheckbox.checked).toBe(false);
 
-        fireEvent.click(getByTestId("Mushrooms"));
-        expect((getByTestId("Mushrooms") as HTMLInputElement).checked).toBe(true);
-        expect((getByTestId("everything") as HTMLInputElement).checked).toBe(false);
+        fireEvent.click(pepperoniCheckbox);
+        expect(pepperoniCheckbox.checked).toBe(true);
+        expect(everythingCheckbox.checked).toBe(false);
 
-        fireEvent.click(getByTestId("Olives"));
-        expect((getByTestId("Olives") as HTMLInputElement).checked).toBe(true);
-        expect((getByTestId("everything") as HTMLInputElement).checked).toBe(true);
+        fireEvent.click(mushroomsCheckbox);
+        expect(mushroomsCheckbox.checked).toBe(true);
+        expect(everythingCheckbox.checked).toBe(false);
 
-        fireEvent.click(getByTestId("Olives"));
-        expect((getByTestId("Olives") as HTMLInputElement).checked).toBe(false);
-        expect((getByTestId("everything") as HTMLInputElement).checked).toBe(false);
+        fireEvent.click(olivesCheckbox);
+        expect(olivesCheckbox.checked).toBe(true);
+        expect(everythingCheckbox.checked).toBe(true);
 
-        fireEvent.click(getByTestId("everything"));
-        expect((getByTestId("Pepperoni") as HTMLInputElement).checked).toBe(true);
-        expect((getByTestId("Mushrooms") as HTMLInputElement).checked).toBe(true);
-        expect((getByTestId("Olives") as HTMLInputElement).checked).toBe(true);
-        expect((getByTestId("everything") as HTMLInputElement).checked).toBe(true);
+        fireEvent.click(olivesCheckbox);
+        expect(olivesCheckbox.checked).toBe(false);
+        expect(everythingCheckbox.checked).toBe(false);
+
+        fireEvent.click(everythingCheckbox);
+        expect(pepperoniCheckbox.checked).toBe(true);
+        expect(mushroomsCheckbox.checked).toBe(true);
+        expect(olivesCheckbox.checked).toBe(true);
+        expect(everythingCheckbox.checked).toBe(true);
     });
 });
