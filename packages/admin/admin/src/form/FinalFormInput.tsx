@@ -32,16 +32,28 @@ export function FinalFormInput({
     const [open, setOpen] = useState<boolean>(false);
     const [pendingTranslation, setPendingTranslation] = useState<string | undefined>(undefined);
 
+    const { onChange, ...restInput } = input;
+
+    const hadValueInitially = Boolean(meta.initial);
+    const clearValue = hadValueInitially ? null : meta.initial;
+
     return (
         <>
             <InputBase
-                {...input}
+                {...restInput}
                 {...props}
+                onChange={(event) => {
+                    if (event.target.value === "") {
+                        return onChange(clearValue);
+                    }
+
+                    return onChange(event);
+                }}
                 endAdornment={
                     (endAdornment || clearable || isTranslatable) && (
                         <>
                             {clearable && (
-                                <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
+                                <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => onChange(clearValue)} />
                             )}
                             {isTranslatable && (
                                 <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
@@ -51,7 +63,7 @@ export function FinalFormInput({
                                                 setPendingTranslation(await translate(input.value));
                                                 setOpen(true);
                                             } else {
-                                                input.onChange(await translate(input.value));
+                                                onChange(await translate(input.value));
                                             }
                                         }}
                                     >
