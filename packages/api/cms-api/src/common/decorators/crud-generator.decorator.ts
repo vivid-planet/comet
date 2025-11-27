@@ -9,6 +9,8 @@ export interface CrudGeneratorOptions {
     list?: boolean;
     single?: boolean;
     position?: { groupByFields: string[] };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    requestContextVisibilityFilter?: any;
 }
 
 export const CRUD_GENERATOR_METADATA_KEY = "data:crudGeneratorOptions";
@@ -22,12 +24,13 @@ export function CrudGenerator({
     list = true,
     single = true,
     position,
+    requestContextVisibilityFilter,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(
             CRUD_GENERATOR_METADATA_KEY,
-            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position },
+            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position, requestContextVisibilityFilter },
             target,
         );
     };

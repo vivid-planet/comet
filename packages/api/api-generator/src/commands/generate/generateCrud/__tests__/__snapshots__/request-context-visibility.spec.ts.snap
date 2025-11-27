@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`request-context-visibility resolver should include requestContextVisibilityFilter visible 1`] = `
+"import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
+import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+import { GraphQLResolveInfo } from "graphql";
+
+import { TestEntityInput, TestEntityUpdateInput } from "./dto/test-entity.input";
+import { PaginatedTestEntities } from "./dto/paginated-test-entities";
+import { TestEntitiesArgs } from "./dto/test-entities.args";
+import { TestEntity } from "request-context-visibility.spec";
+import {
+    AffectedEntity,
+    BlocksTransformerService,
+    RequestContext,
+    RequestContextInterface,
+    RequiredPermission,
+    RootBlockDataScalar,
+    SortDirection,
+    extractGraphqlFields,
+    gqlArgsToMikroOrmQuery,
+    gqlSortToMikroOrmOrderBy,
+    validateNotModified,
+} from "@comet/cms-api";
+
+@Resolver(() => TestEntity)
+@RequiredPermission("crud", { skipScopeCheck: true })
+export class TestEntityResolver {
+    constructor(protected readonly entityManager: EntityManager) {}
+
+    @Query(() => TestEntity)
+    @AffectedEntity(TestEntity)
+    async testEntity(@Args("id", { type: () => ID }) id: string): Promise<TestEntity> {
+        const testEntity = await this.entityManager.findOneOrFail(TestEntity, id);
+        return testEntity;
+    }
+
+    @Query(() => PaginatedTestEntities)
+    async testEntities(
+        @Args() { search, filter, sort, offset, limit }: TestEntitiesArgs,
+
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
+    ): Promise<PaginatedTestEntities> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(TestEntity));
+        if (!includeInvisiblePages) {
+            where.visible = true;
+        }
+
+        const options: FindOptions<TestEntity> = { offset, limit };
+
+        if (sort) {
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
+        }
+
+        const [entities, totalCount] = await this.entityManager.findAndCount(TestEntity, where, options);
+        return new PaginatedTestEntities(entities, totalCount);
+    }
+
+    @Mutation(() => TestEntity)
+    async createTestEntity(@Args("input", { type: () => TestEntityInput }) input: TestEntityInput): Promise<TestEntity> {
+        const testEntity = this.entityManager.create(TestEntity, {
+            ...input,
+        });
+
+        await this.entityManager.flush();
+
+        return testEntity;
+    }
+
+    @Mutation(() => TestEntity)
+    @AffectedEntity(TestEntity)
+    async updateTestEntity(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("input", { type: () => TestEntityUpdateInput }) input: TestEntityUpdateInput,
+    ): Promise<TestEntity> {
+        const testEntity = await this.entityManager.findOneOrFail(TestEntity, id);
+
+        testEntity.assign({
+            ...input,
+        });
+
+        await this.entityManager.flush();
+
+        return testEntity;
+    }
+
+    @Mutation(() => Boolean)
+    @AffectedEntity(TestEntity)
+    async deleteTestEntity(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+        const testEntity = await this.entityManager.findOneOrFail(TestEntity, id);
+        this.entityManager.remove(testEntity);
+        await this.entityManager.flush();
+        return true;
+    }
+}
+"
+`;
+
+exports[`request-context-visibility resolver should include requestContextVisibilityFilter visible 2`] = `
+"import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
+import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+import { GraphQLResolveInfo } from "graphql";
+
+import { TestEntityInput, TestEntityUpdateInput } from "./dto/test-entity.input";
+import { PaginatedTestEntities } from "./dto/paginated-test-entities";
+import { TestEntitiesArgs } from "./dto/test-entities.args";
+import { TestEntity } from "request-context-visibility.spec";
+import {
+    AffectedEntity,
+    BlocksTransformerService,
+    RequestContext,
+    RequestContextInterface,
+    RequiredPermission,
+    RootBlockDataScalar,
+    SortDirection,
+    extractGraphqlFields,
+    gqlArgsToMikroOrmQuery,
+    gqlSortToMikroOrmOrderBy,
+    validateNotModified,
+} from "@comet/cms-api";
+
+@Resolver(() => TestEntity)
+@RequiredPermission("crud", { skipScopeCheck: true })
+export class TestEntityResolver {
+    constructor(protected readonly entityManager: EntityManager) {}
+
+    @Query(() => TestEntity)
+    @AffectedEntity(TestEntity)
+    async testEntity(@Args("id", { type: () => ID }) id: string): Promise<TestEntity> {
+        const testEntity = await this.entityManager.findOneOrFail(TestEntity, id);
+        return testEntity;
+    }
+
+    @Query(() => PaginatedTestEntities)
+    async testEntities(
+        @Args() { search, filter, sort, offset, limit }: TestEntitiesArgs,
+
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
+    ): Promise<PaginatedTestEntities> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(TestEntity));
+        if (!includeInvisiblePages) {
+            where.title = { $ne: "example" };
+        }
+
+        const options: FindOptions<TestEntity> = { offset, limit };
+
+        if (sort) {
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
+        }
+
+        const [entities, totalCount] = await this.entityManager.findAndCount(TestEntity, where, options);
+        return new PaginatedTestEntities(entities, totalCount);
+    }
+
+    @Mutation(() => TestEntity)
+    async createTestEntity(@Args("input", { type: () => TestEntityInput }) input: TestEntityInput): Promise<TestEntity> {
+        const testEntity = this.entityManager.create(TestEntity, {
+            ...input,
+        });
+
+        await this.entityManager.flush();
+
+        return testEntity;
+    }
+
+    @Mutation(() => TestEntity)
+    @AffectedEntity(TestEntity)
+    async updateTestEntity(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("input", { type: () => TestEntityUpdateInput }) input: TestEntityUpdateInput,
+    ): Promise<TestEntity> {
+        const testEntity = await this.entityManager.findOneOrFail(TestEntity, id);
+
+        testEntity.assign({
+            ...input,
+        });
+
+        await this.entityManager.flush();
+
+        return testEntity;
+    }
+
+    @Mutation(() => Boolean)
+    @AffectedEntity(TestEntity)
+    async deleteTestEntity(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+        const testEntity = await this.entityManager.findOneOrFail(TestEntity, id);
+        this.entityManager.remove(testEntity);
+        await this.entityManager.flush();
+        return true;
+    }
+}
+"
+`;
