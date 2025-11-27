@@ -35,7 +35,7 @@
         "@aws-sdk/lib-storage": "^3.850.0",
         "@azure-rest/ai-translation-text": "^1.0.1",
         "@azure/storage-blob": "^12.27.0",
-        "@fast-csv/parse": "^5.0.0",
+        "@fast-csv/parse": "^5.0.5",
         "@golevelup/nestjs-discovery": "^5.0.0",
         "@hapi/accept": "^6.0.3",
         "@nestjs/mapped-types": "^2.1.0",
