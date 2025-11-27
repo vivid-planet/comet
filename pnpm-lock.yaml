@@ -1752,7 +1752,7 @@ importers:
         specifier: ^12.27.0
         version: 12.28.0
       '@fast-csv/parse':
-        specifier: ^5.0.0
+        specifier: ^5.0.5
         version: 5.0.5
       '@golevelup/nestjs-discovery':
         specifier: ^5.0.0
