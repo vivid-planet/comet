@@ -1,5 +1,20 @@
 # @comet/admin-date-time
 
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin@8.7.1
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- Updated dependencies [a8e8132]
+    - @comet/admin@8.7.0
+    - @comet/admin-icons@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes

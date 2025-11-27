@@ -17,7 +17,6 @@ pnpm run copy-project-files
 sh ./demo/admin/intl-update.sh
 sh ./demo/api/intl-update.sh
 sh ./demo/site/intl-update.sh
-sh ./demo/site-pages/intl-update.sh
 
 # Build the packages CLI and eslint-plugin to be used for dev startup
 pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build

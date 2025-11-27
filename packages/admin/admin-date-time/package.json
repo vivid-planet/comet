@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "Comet Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
@@ -30,7 +30,7 @@
     "dependencies": {
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
-        "@mui/utils": "^7.2.0",
+        "@mui/utils": "^7.3.5",
         "date-fns": "^4.1.0",
         "react-date-range": "^2.0.1"
     },
@@ -39,7 +39,7 @@
         "@babel/core": "^7.28.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.2.0",
+        "@mui/material": "^7.3.5",
         "@types/react": "^18.3.23",
         "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^18.3.7",
@@ -52,7 +52,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "rimraf": "^6.0.1",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",

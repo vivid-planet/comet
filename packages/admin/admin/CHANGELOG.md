@@ -1,5 +1,18 @@
 # @comet/admin
 
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- a8e8132: Prevent `StackPageTitle` rerender loop when passing a React element as `title`
+    - @comet/admin-icons@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes

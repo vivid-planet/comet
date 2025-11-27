@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "8.6.0",
+    "version": "8.7.1",
     "description": "Comet Admin Rich Text Editor component",
     "repository": {
         "directory": "packages/admin/admin-rte",
@@ -43,7 +43,7 @@
         "@babel/core": "^7.28.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.2.0",
+        "@mui/material": "^7.3.5",
         "@types/draft-js": "^0.11.18",
         "@types/jest": "^29.5.14",
         "@types/react": "^18.3.23",
@@ -61,7 +61,7 @@
         "react-intl": "^7.1.11",
         "rimraf": "^6.0.1",
         "ts-jest": "^29.4.0",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",

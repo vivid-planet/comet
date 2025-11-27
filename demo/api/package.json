@@ -64,7 +64,7 @@
         "express": "^5.1.0",
         "graphql": "^16.11.0",
         "graphql-scalars": "^1.24.2",
-        "helmet": "^4.6.0",
+        "helmet": "^8.1.0",
         "nest-commander": "^3.17.0",
         "react-intl": "^7.1.11",
         "reflect-metadata": "^0.2.2",
@@ -96,7 +96,7 @@
         "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^3.15.0",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "mikro-orm": {
         "configPaths": [
