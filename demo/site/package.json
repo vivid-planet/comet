@@ -65,7 +65,7 @@
         "@types/react-dom": "^18.3.7",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
-        "eslint": "^9.30.1",
+        "eslint": "^9.39.1",
         "graphql": "^16.0.0",
         "npm-run-all2": "^8.0.0",
         "prettier": "^3.6.2",
