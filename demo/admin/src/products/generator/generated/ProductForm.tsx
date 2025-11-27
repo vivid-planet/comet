@@ -95,7 +95,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             dimensions: data.product.dimensions ? { ...data.product.dimensions, width: String(data.product.dimensions.width), height: String(data.product.dimensions.height), depth: String(data.product.dimensions.depth), } : undefined, dimensionsEnabled: !!data.product.dimensions, image: rootBlocks.image.input2State(data.product.image), lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
         }
         : {
-            inStock: false, image: rootBlocks.image.defaultValues(),
+            title: "New Product", type: "cap", priceRange: { "min": 10, "max": 100 }, inStock: true, availableSince: "2025-01-01", image: rootBlocks.image.defaultValues(), lastCheckedAt: new Date("2018-01-12T00:00:00.000Z"),
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
