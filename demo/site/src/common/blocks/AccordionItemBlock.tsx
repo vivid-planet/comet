@@ -44,7 +44,7 @@ export const AccordionItemBlock = withPreview(
                     <div className={styles.iconWrapper}>
                         <SvgUse href={isExpanded ? "/assets/icons/minus.svg#root" : "/assets/icons/plus.svg#root"} width={16} height={16} />
                     </div>
-                    <Typography variant="h350" as={titleHtmlTag}>
+                    <Typography variant="headline350" as={titleHtmlTag}>
                         {title}
                     </Typography>
                 </button>
