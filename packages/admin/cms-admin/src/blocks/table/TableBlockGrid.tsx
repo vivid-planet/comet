@@ -193,6 +193,11 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                 moveRow(targetIndex, row.id);
             }}
             processRowUpdate={processRowUpdate}
+            slotProps={{
+                row: {
+                    "data-testid": "table-block-grid-row",
+                },
+            }}
         />
     );
 };
