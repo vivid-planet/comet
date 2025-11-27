@@ -59,6 +59,7 @@ export {
     parseAspectRatio,
     persistedQueryRoute,
     PhoneLinkBlock,
+    type PlayPauseButtonProps,
     Preview,
     type PreviewData,
     PreviewSkeleton,
