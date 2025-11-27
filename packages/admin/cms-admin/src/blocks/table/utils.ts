@@ -98,7 +98,7 @@ export const columnInsertSchema = z.object({
     highlighted: z.boolean(),
     cellValues: z.array(z.string()),
 });
-type ColumnInsertData = z.infer<typeof columnInsertSchema>;
+export type ColumnInsertData = z.infer<typeof columnInsertSchema>;
 
 export const getClipboardValueForSchema = async <T>(schema: z.ZodSchema<T>): Promise<T | null> => {
     const clipboardData = await readClipboardText();
