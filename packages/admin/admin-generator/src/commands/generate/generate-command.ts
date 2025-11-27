@@ -191,6 +191,11 @@ export type FormConfig<T extends { __typename?: string }> = {
      * @default true
      */
     navigateOnCreate?: boolean;
+    /**
+     * If true, the generated from will have an initialValues prop to set initial form values.
+     * @default false
+     */
+    initialValuesAsProp?: boolean;
 };
 export type InjectedFormVariables = {
     id?: string;

@@ -79,11 +79,12 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "las
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
+    initialValues?: Partial<FormValues>;
     onCreate?: (id: string) => void;
     manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
+export function ProductForm({ initialValues: passedInitialValues, onCreate, manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -96,6 +97,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
         }
         : {
             inStock: false, image: rootBlocks.image.defaultValues(),
+            ...passedInitialValues,
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
