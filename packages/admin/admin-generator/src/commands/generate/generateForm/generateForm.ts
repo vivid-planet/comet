@@ -5,7 +5,7 @@ import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "../utils/findMutationType";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
-import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { flatFormFieldsFromFormConfig } from "./flatFormFieldsFromFormConfig";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 import { generateDestructFormValueForInput, generateFormValuesToGqlInput, generateFormValuesType, generateInitialValues } from "./generateFormValues";
@@ -312,6 +312,17 @@ export function generateForm(
         filterByFragmentType = `${formFragmentName}Fragment`;
     }
 
+    let validateCode = "";
+    if (config.validate) {
+        if (isGeneratorConfigImport(config.validate)) {
+            imports.push(convertConfigImport(config.validate));
+            validateCode = `validate={${config.validate.name}}`;
+        } else if (isGeneratorConfigCode(config.validate)) {
+            validateCode = `validate={${config.validate.code}}`;
+            imports.push(...config.validate.imports.map((imprt) => convertConfigImport(imprt)));
+        }
+    }
+
     const code = `
     ${generateImportsCode(imports)}
     import isEqual from "lodash.isequal";
@@ -327,6 +338,14 @@ export function generateForm(
     ${customFilterByFragment}
 
     ${generateFormValuesType({ formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
+
+    export function formValuesToOutput(${generateDestructFormValueForInput({
+        formValuesConfig,
+        gqlIntrospection,
+        gqlType,
+    })}: FormValues) {
+        return ${generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection, gqlType })};
+    }
 
     ${formPropsTypeCode}
 
@@ -368,23 +387,18 @@ export function generateForm(
                 : ""
         }
 
-        const handleSubmit = async (${generateDestructFormValueForInput({
-            formValuesConfig,
-            gqlIntrospection,
-            gqlType,
-        })}: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
-            ${generateFormValuesToGqlInput({ formValuesConfig, gqlIntrospection, gqlType })}
-
+            const output = formValuesToOutput(formValues);
+            
             ${mode == "all" ? `if (mode === "edit") {` : ""}
                 ${
                     editMode
                         ? `
                 ${readOnlyFields.some((field) => field.name === "id") ? "" : "if (!id) throw new Error();"}
-                const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: updateInput },
+                    variables: { id, input: output },
                 });
                 `
                         : ""
@@ -450,6 +464,7 @@ export function generateForm(
                 initialValues={initialValues}
                 initialValuesEqual={isEqual} //required to compare block data correctly
                 subscription={{ ${finalFormSubscription.length ? finalFormSubscription.map((field) => `${field}: true`).join(", ") : ``} }}
+                ${validateCode}
             >
                 {(${finalFormRenderProps.length ? `{${finalFormRenderProps.join(", ")}}` : ``}) => (
                     ${editMode ? `<>` : ``}
