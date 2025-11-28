@@ -11,8 +11,9 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
-import { StoryObj } from "@storybook/react/*";
+import { DialogContent, Typography } from "@mui/material";
+import { type StoryObj } from "@storybook/react-webpack5";
+import { expect, waitFor, within } from "storybook/test";
 
 import { stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -70,7 +71,9 @@ const Page = () => {
                 </StackPage>
             </StackSwitch>
             <EditDialog title="Add new item">
-                <Form />
+                <DialogContent>
+                    <Form />
+                </DialogContent>
             </EditDialog>
         </>
     );
@@ -78,4 +81,38 @@ const Page = () => {
 
 export const AddDialogEditPage: StoryObj<typeof Page> = {
     render: Page,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Open Add Dialog", async () => {
+            const addButton = canvas.getByText(/add new item/i);
+            await userEvent.click(addButton);
+
+            await waitFor(
+                async () => {
+                    const addText = within(document.body).queryByText(/form: adding a new item/i);
+                    expect(addText).toBeInTheDocument();
+
+                    const editText = within(document.body).queryByText(/form: editing existing item/i);
+                    expect(editText).not.toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Open Edit Page", async () => {
+            const editButton = canvas.getByText(/edit existing item/i);
+            await userEvent.click(editButton);
+
+            await waitFor(
+                async () => {
+                    const editText = within(document.body).queryByText(/form: editing existing item/i);
+                    expect(editText).toBeInTheDocument();
+                    expect(editText).toHaveTextContent("example-id");
+
+                    const addText = within(document.body).queryByText(/form: adding a new item/i);
+                    expect(addText).not.toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
 };
