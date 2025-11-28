@@ -16,7 +16,6 @@ import {
 import { onDraftEditorCopy, onDraftEditorCut } from "draftjs-conductor";
 import {
     type ClipboardEvent,
-    type CSSProperties,
     forwardRef,
     type ForwardRefExoticComponent,
     type KeyboardEvent,
@@ -35,7 +34,7 @@ import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
 import { type CustomInlineStyles, type IBlocktypeMap, type ICustomBlockTypeMap_Deprecated, type ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
-import getRteTheme from "./utils/getRteTheme";
+import getRteTheme, { type RteThemeColors } from "./utils/getRteTheme";
 import { pasteAndFilterText } from "./utils/pasteAndFilterText";
 
 const mandatoryFilterEditorStateFn = composeFilterEditorFns([removeBlocksExceedingBlockLimit, manageDefaultBlockType]);
@@ -113,15 +112,7 @@ export interface RteProps
     options?: IOptions;
     disabled?: boolean;
     minHeight?: number;
-    colors?: {
-        border?: CSSProperties["color"];
-        toolbarBackground?: CSSProperties["color"];
-        buttonIcon?: CSSProperties["color"];
-        buttonIconDisabled?: CSSProperties["color"];
-        buttonBackgroundHover?: CSSProperties["color"];
-        buttonBorderHover?: CSSProperties["color"];
-        buttonBorderDisabled?: CSSProperties["color"];
-    };
+    colors?: Partial<RteThemeColors>;
 }
 
 export const defaultOptions: IRteOptions = {
@@ -357,9 +348,19 @@ const Root = createComponentSlot("div")<RteClassKey, OwnerState>({
     },
 })(
     ({ theme }) => css`
-        border: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
-        border-top-width: 0;
+        --comet-admin-rte-outer-border-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
+        border: 1px solid var(--comet-admin-rte-outer-border-color);
+        border-top-width: 0; // To prevent the top border from being hidden, when to toolbar is sticky, the top border must be handled by the Toolbar itself
         background-color: #fff;
+        border-radius: 2px;
+
+        &:hover {
+            --comet-admin-rte-outer-border-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.outerBorderOnHover};
+        }
+
+        &:focus-within {
+            --comet-admin-rte-outer-border-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.outerBorderOnFocus};
+        }
     `,
 );
 
