@@ -149,7 +149,7 @@ export default defineConfig({
         //group demo api
         {
             name: "demo-docker",
-            script: "docker compose up",
+            script: "docker compose -f demo/docker-compose.yml up",
             group: ["demo-api", "demo"],
         },
         {
@@ -166,7 +166,7 @@ export default defineConfig({
         },
         {
             name: "demo-api-mitmproxy",
-            script: "pnpm run dev:demo-api-mitmproxy",
+            script: "pnpm --filter comet-demo run dev:demo-api-mitmproxy",
             group: ["demo-api", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
@@ -174,13 +174,13 @@ export default defineConfig({
         // group demo login
         {
             name: "demo-oidc-provider",
-            script: "pnpm run dev:oidc-provider",
-            group: ["demo-login", "demo", "demo-saas"],
+            script: "pnpm --filter comet-demo run dev:oidc-provider",
+            group: ["demo-login", "demo"],
         },
         {
             name: "demo-oauth2-proxy",
-            script: "pnpm run dev:oauth2-proxy",
-            group: ["demo-login", "demo", "demo-saas"],
+            script: "pnpm --filter comet-demo run dev:oauth2-proxy",
+            group: ["demo-login", "demo"],
             waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
         },
 
@@ -248,6 +248,19 @@ export default defineConfig({
             waitOn: waitOnPackages("@comet/admin"),
         },
 
+        // group demo-saas login
+        {
+            name: "demo-saas-oidc-provider",
+            script: "pnpm --filter comet-demo-saas run dev:oidc-provider",
+            group: ["demo-saas-login", "demo-saas"],
+        },
+        {
+            name: "demo-saas-oauth2-proxy",
+            script: "pnpm --filter comet-demo-saas run dev:oauth2-proxy",
+            group: ["demo-saas-login", "demo-saas"],
+            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
+        },
+
         // group demo-saas admin
         {
             name: "demo-saas-admin",
@@ -271,7 +284,7 @@ export default defineConfig({
         //group demo-saas api
         {
             name: "demo-saas-docker",
-            script: "docker compose up",
+            script: "docker compose -f demo-saas/docker-compose.yml up",
             group: ["demo-saas-api", "demo-saas"],
         },
         {
@@ -288,7 +301,7 @@ export default defineConfig({
         },
         {
             name: "demo-saas-api-mitmproxy",
-            script: "pnpm run dev:demo-api-mitmproxy",
+            script: "pnpm --filter comet-demo-saas run dev:demo-api-mitmproxy",
             group: ["demo-saas-api", "demo-saas"],
             waitOn: ["tcp:$API_PORT"],
         },

@@ -131,6 +131,21 @@ It is also possible to start specific microservices
 pnpm exec dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
 ```
 
+#### Start Demo-SaaS
+
+```bash
+pnpm exec dev-pm start @demo
+```
+
+Demo-SaaS will be available at
+
+- Admin: [http://localhost:8000/](http://localhost:8000/)
+- API: [http://localhost:4000/](http://localhost:4000/)
+
+If you want to run demo-saas and demo simultaneously, change the following variables in /demo-saas .env:
+ADMIN_PORT: 8001
+API_PORT
+
 #### Start Storybook
 
 ```bash

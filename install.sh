@@ -29,5 +29,8 @@ pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 # create site-config-envs
 pnpm run create-site-configs-env
 
-pnpm run setup:download-oauth2-proxy
-pnpm run setup:download-mitmproxy
+# Download oauth2-proxy and mitmproxy in demo and demo-saas
+pnpm --filter 'comet-demo' run setup:download-oauth2-proxy
+pnpm --filter 'comet-demo' run setup:download-mitmproxy
+pnpm --filter 'comet-demo-saas' run setup:download-oauth2-proxy
+pnpm --filter 'comet-demo-saas' run setup:download-mitmproxy

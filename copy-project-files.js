@@ -6,8 +6,8 @@ const files = [
         ? []
         : [
               {
-                  file: ".env",
-                  targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages", "demo-saas/admin", "demo-saas/api"],
+                  file: "demo/.env",
+                  targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages"],
               },
               {
                   file: "demo/.env.local",
@@ -16,6 +16,14 @@ const files = [
               {
                   file: "demo/.env.site-configs",
                   targetDir: ["demo/admin", "demo/api", "demo/site"],
+              },
+              {
+                file: "demo-saas/.env",
+                targetDir: ["demo-saas/admin", "demo-saas/api",],
+              },
+              {
+                file: "demo-saas/.env.local",
+                targetDir: ["demo-saas/admin", "demo-saas/api"],
               }
           ]),
     {
