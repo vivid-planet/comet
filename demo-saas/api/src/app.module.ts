@@ -8,6 +8,7 @@ import {
     BuildsModule,
     ContentGenerationModule,
     CronJobsModule,
+    DependenciesModule,
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
@@ -147,6 +148,7 @@ export class AppModule {
                     },
                 }),
                 OpenTelemetryModule,
+                DependenciesModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
             ],
         };

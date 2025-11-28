@@ -67,10 +67,6 @@ export class EnvironmentVariables {
     IMGPROXY_KEY: string;
 
     @IsString()
-    @MinLength(16)
-    DAM_SECRET: string;
-
-    @IsString()
     BLOB_STORAGE_DRIVER: BlobStorageConfig["backend"]["driver"];
 
     @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "file")

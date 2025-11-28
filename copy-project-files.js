@@ -7,7 +7,7 @@ const files = [
         : [
               {
                   file: ".env",
-                  targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages"],
+                  targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages", "demo-saas/admin", "demo-saas/api"],
               },
               {
                   file: "demo/.env.local",
@@ -16,7 +16,7 @@ const files = [
               {
                   file: "demo/.env.site-configs",
                   targetDir: ["demo/admin", "demo/api", "demo/site"],
-              },
+              }
           ]),
     {
         file: "packages/api/cms-api/block-meta.json",
