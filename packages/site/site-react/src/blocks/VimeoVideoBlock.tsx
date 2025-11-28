@@ -101,17 +101,14 @@ export const VimeoVideoBlock = withPreview(
         vimeoUrl.search = searchParams.toString();
 
         const handlePlayPauseClick = () => {
-            setIsHandledManually((prev) => {
-                const next = !prev;
-                if (iframeElement) {
-                    if (next) {
-                        playVimeoVideo();
-                    } else {
-                        pauseVimeoVideo();
-                    }
+            setIsHandledManually(!isHandledManually);
+            if (iframeElement) {
+                if (isHandledManually) {
+                    playVimeoVideo();
+                } else {
+                    pauseVimeoVideo();
                 }
-                return next;
-            });
+            }
         };
 
         return (
