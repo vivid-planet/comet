@@ -1,5 +1,19 @@
 # @comet/api-generator
 
+## 8.8.0
+
+### Minor Changes
+
+- e16e1f9: list query: add default value for sort if there is a position column
+- 6898b95: Add default sort order: position (if exists), createdAt (if exists), id
+
+### Patch Changes
+
+- Updated dependencies [d328dac]
+- Updated dependencies [e62d6bd]
+- Updated dependencies [b79687c]
+    - @comet/cms-api@8.8.0
+
 ## 8.7.1
 
 ### Patch Changes

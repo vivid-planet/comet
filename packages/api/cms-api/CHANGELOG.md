@@ -1,5 +1,27 @@
 # @comet/cms-api
 
+## 8.8.0
+
+### Minor Changes
+
+- d328dac: Log guard rejections
+
+    The following error now lead to a log output:
+    - CometAuthGuard can't authenticate the user
+    - CdnGuard does not receive correct header
+    - UserPermissionsGuard does not receive an authenticated user
+    - UserPermissionsGuard denies access due to insufficient permissions
+
+- e62d6bd: Add support for temporary file uploads with configurable expiration times. The `expiresIn` duration can be set as a default value in the module configuration, and can be overridden by setting the value when using the `FileUploadsService` or sending the request to the upload endpoint.
+
+    Files are automatically validated for expiration when accessed, and expired files are cleared every minute in the background.
+
+    The `FileUploadField` also supports overriding the `expiresIn` property.
+
+### Patch Changes
+
+- b79687c: Fix a Bug where some warnings where not correctly detected
+
 ## 8.7.1
 
 ### Patch Changes
