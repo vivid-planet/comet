@@ -194,7 +194,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 <TextField
                                     fullWidth
                                     name="reason"
-                                    clearable
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
                                     disableContentTranslation
@@ -207,7 +206,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 <TextField
                                     fullWidth
                                     name="requestedBy"
-                                    clearable
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
                                     disableContentTranslation
@@ -220,7 +218,6 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 <TextField
                                     fullWidth
                                     name="approvedBy"
-                                    clearable
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
                                     disableContentTranslation
