@@ -238,6 +238,11 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  """
+  The date and time the file will be deleted. If undefined, the file will never be deleted.
+  """
+  expiresAt: DateTime
   downloadUrl: String!
   previewUrl: String!
   imageUrl(resizeWidth: Int!): String

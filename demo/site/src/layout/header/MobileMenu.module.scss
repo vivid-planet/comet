@@ -30,7 +30,7 @@
         height 0.15s ease-out,
         visibility 0s linear 0.15s;
 
-    &Open {
+    &--open {
         visibility: visible;
         height: calc(var(--full-viewport-height) - var(--header-height));
         transition: height 0.25s ease-in;
@@ -59,7 +59,7 @@
         transform 0.2s ease-out,
         visibility 0s linear 0.2s;
 
-    &Expanded {
+    &--expanded {
         visibility: visible;
         transform: translateX(0);
         transition: transform 0.2s ease-in;

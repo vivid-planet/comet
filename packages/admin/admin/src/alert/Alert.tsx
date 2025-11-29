@@ -55,6 +55,9 @@ type OwnerState = {
  * and custom content, actions and close functionality to communicate various types of information.
  *
  * - Use for feedback messages, notifications, or status updates
+ *
+ * @see {@link https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-alert-alert--docs|Storybook}
+ * @see {@link https://mui.com/material-ui/react-alert/|MUI Documentation}
  */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
     const {

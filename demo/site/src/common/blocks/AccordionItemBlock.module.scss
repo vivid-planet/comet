@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: center;
     color: var(--accordion-default-icon);
+    flex-shrink: 0;
 }
 
 .titleWrapper {
@@ -34,13 +35,13 @@
         grid-template-rows 0.5s ease-out,
         visibility 0s linear 0.5s;
     visibility: hidden;
-}
 
-.contentWrapperExpanded {
-    grid-template-rows: 1fr;
-    padding-bottom: var(--spacing-s300);
-    visibility: visible;
-    transition-delay: 0s;
+    &--expanded {
+        grid-template-rows: 1fr;
+        padding-bottom: var(--spacing-s300);
+        visibility: visible;
+        transition-delay: 0s;
+    }
 }
 
 .contentWrapperInner {
