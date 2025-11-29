@@ -1,5 +1,14 @@
 # @comet/cms-admin
 
+## 8.9.0
+
+### Patch Changes
+
+- @comet/admin@8.9.0
+- @comet/admin-date-time@8.9.0
+- @comet/admin-icons@8.9.0
+- @comet/admin-rte@8.9.0
+
 ## 8.8.0
 
 ### Minor Changes
