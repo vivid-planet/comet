@@ -32,7 +32,7 @@ export class FileUpload extends BaseEntity {
     @Property({
         columnType: "timestamp with time zone",
     })
-    createdAt: Date = new Date(); // TODO: delete after x days?
+    createdAt: Date = new Date();
 
     @Field()
     @Property({
@@ -40,4 +40,11 @@ export class FileUpload extends BaseEntity {
         onUpdate: () => new Date(),
     })
     updatedAt: Date = new Date();
+
+    @Field({ nullable: true, description: "The date and time the file will be deleted. If undefined, the file will never be deleted." })
+    @Property({
+        columnType: "timestamp with time zone",
+        nullable: true,
+    })
+    expiresAt?: Date;
 }

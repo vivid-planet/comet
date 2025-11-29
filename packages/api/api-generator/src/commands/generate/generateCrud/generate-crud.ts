@@ -234,6 +234,13 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
     }
 
+    let defaultSortField = metadata.props.find((prop) => prop.primary)?.name || "id";
+    if (hasPositionProp) {
+        defaultSortField = "position";
+    } else if (metadata.props.some((prop) => prop.name === "createdAt" && prop.type === "Date")) {
+        defaultSortField = "createdAt";
+    }
+
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
@@ -297,11 +304,10 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasSortArg
                 ? `
-        @Field(() => [${classNameSingular}Sort], { ${hasPositionProp ? `defaultValue: [{ field: ${classNameSingular}SortField.position, direction: SortDirection.ASC }]` : `nullable: true`} })
+        @Field(() => [${classNameSingular}Sort], { defaultValue: [{ field: ${classNameSingular}SortField.${defaultSortField}, direction: SortDirection.ASC }] })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
-        ${!hasPositionProp ? `@IsOptional()` : ""}
-        sort${!hasPositionProp ? `?` : ""}: ${classNameSingular}Sort[];
+        sort: ${classNameSingular}Sort[];
         `
                 : ""
         }

@@ -106,6 +106,14 @@
         {
             "groupName": "Next.js",
             "matchPackageNames": ["next", "@next/bundle-analyzer", "@next/eslint-plugin-next", "eslint-config-next"]
+        },
+        {
+            "matchDepTypes": ["dependencies", "devDependencies"],
+            "rangeStrategy": ["bump"]
+        },
+        {
+            "matchDepTypes": ["peerDependencies"],
+            "rangeStrategy": ["widen"]
         }
     ],
     "lockFileMaintenance": { "enabled": true },

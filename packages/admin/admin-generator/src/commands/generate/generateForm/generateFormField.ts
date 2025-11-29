@@ -107,6 +107,9 @@ export function generateFormField({
         if (!required && !config.readOnly) {
             formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
         }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
+        }
     } else if (config.type == "number") {
         code = `
             <NumberField
@@ -145,6 +148,9 @@ export function generateFormField({
             type: "string",
         };
         formValueConfig.initializationCode = `${initializationAssignment}`;
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
+        }
     } else if (config.type === "numberRange") {
         code = `
             <Field
@@ -171,6 +177,9 @@ export function generateFormField({
             />`;
 
         formFragmentFields = [`${name}.min`, `${name}.max`];
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
+        }
     } else if (config.type == "boolean") {
         code = `<CheckboxField
                         label={${fieldLabel}}
@@ -187,7 +196,7 @@ export function generateFormField({
                         }
                         ${validateCode}
                     />`;
-        formValueConfig.defaultInitializationCode = `false`;
+        formValueConfig.defaultInitializationCode = config.initialValue ? "true" : "false";
     } else if (config.type == "date") {
         imports.push({
             name: "Future_DatePickerField",
@@ -214,6 +223,9 @@ export function generateFormField({
             />`;
         if (!required && !config.readOnly) {
             formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
+        }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "dateTime") {
         imports.push({
@@ -246,6 +258,9 @@ export function generateFormField({
         };
         if (!config.readOnly) {
             formValueConfig.formValueToGqlInputCode = required ? `$fieldName.toISOString()` : `$fieldName ? $fieldName.toISOString() : null`;
+        }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = `new Date("${config.initialValue.toISOString()}")`;
         }
     } else if (config.type == "block") {
         code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
@@ -369,6 +384,9 @@ export function generateFormField({
                                     }`;
                                 })}]}
                             />`;
+        }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else {
         throw new Error(`Unsupported type`);
