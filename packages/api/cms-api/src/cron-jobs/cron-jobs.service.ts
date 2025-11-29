@@ -13,6 +13,7 @@ export class CronJobsService {
             name: cronJob.metadata?.name as string,
             label: cronJob.metadata?.annotations?.[LABEL_ANNOTATION],
             schedule: cronJob.spec?.schedule as string,
+            suspend: cronJob.spec?.suspend as boolean,
             lastScheduledAt: cronJob.status?.lastScheduleTime,
         };
     }
