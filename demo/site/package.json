@@ -50,7 +50,7 @@
         "usehooks-ts": "^3.1.1"
     },
     "devDependencies": {
-        "@babel/core": "^7.28.0",
+        "@babel/core": "^7.28.5",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^5.0.3",

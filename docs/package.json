@@ -75,7 +75,7 @@
         "search-insights": "^2.17.3"
     },
     "devDependencies": {
-        "@babel/core": "^7.28.0",
+        "@babel/core": "^7.28.5",
         "@comet/eslint-config": "workspace:*",
         "@docusaurus/module-type-aliases": "^3.8.1",
         "@docusaurus/tsconfig": "^3.8.1",
