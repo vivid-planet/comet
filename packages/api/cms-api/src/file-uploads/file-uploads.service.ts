@@ -19,21 +19,29 @@ import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 
 @Injectable()
 export class FileUploadsService {
+    private deleteExpiredFilesInterval: NodeJS.Timeout;
+
     constructor(
         private readonly orm: MikroORM,
         @InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
         private readonly entityManager: EntityManager,
-    ) {
+    ) {}
+
+    onApplicationBootstrap() {
         // Delete expired files every minute
-        setInterval(async () => {
+        this.deleteExpiredFilesInterval = setInterval(async () => {
             try {
                 await this.deleteExpiredFiles();
             } catch (error) {
                 console.error("Error while deleting expired files", error);
             }
         }, 60000);
+    }
+
+    beforeApplicationShutdown() {
+        clearInterval(this.deleteExpiredFilesInterval);
     }
 
     async upload(file: FileUploadInput, expiresIn?: number): Promise<FileUpload> {
