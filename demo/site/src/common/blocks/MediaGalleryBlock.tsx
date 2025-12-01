@@ -62,9 +62,7 @@ export const MediaGalleryBlock = withPreview(
                     allowTouchMove
                     watchOverflow
                     speed={400}
-                    onSwiper={(swiperInstance) => {
-                        setSwiper(swiperInstance);
-                    }}
+                    onSwiper={setSwiper}
                     onSlideChange={(swiper) => {
                         setActiveItem(swiper.activeIndex);
                     }}
