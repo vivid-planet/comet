@@ -46,9 +46,13 @@
         }
 
         :global(.swiper-pagination-bullet) {
-            color: var(--media-gallery-dot-navi-default);
+            color: var(--media-gallery-dot-navigation-default);
             margin-right: var(--spacing-s400);
             margin-left: 0;
+
+            &:hover {
+                background-color: var(--media-gallery-dot-navigation-hover);
+            }
 
             @media (min-width: $breakpoint-sm) {
                 bottom: var(--spacing-s100);
@@ -58,7 +62,11 @@
         }
 
         :global(.swiper-pagination-bullet-active) {
-            background-color: var(--media-gallery-dot-navi-active);
+            background-color: var(--media-gallery-dot-navigation-active);
+
+            &:hover {
+                background-color: var(--media-gallery-dot-navigation-active-hover);
+            }
         }
     }
 
