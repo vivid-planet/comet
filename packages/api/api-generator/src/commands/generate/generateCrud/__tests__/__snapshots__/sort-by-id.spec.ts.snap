@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sort by id id not be default value if sort is disabled 1`] = `
+"import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
+import { Type } from "class-transformer";
+import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
+import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
+import { TestEntity3Filter } from "./test-entity3.filter";
+import { TestEntity3Sort, TestEntity3SortField } from "./test-entity3.sort";
+
+@ArgsType()
+export class TestEntity3sArgs extends OffsetBasedPaginationArgs {
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    search?: string;
+
+    @Field(() => TestEntity3Filter, { nullable: true })
+    @ValidateNested()
+    @Type(() => TestEntity3Filter)
+    @IsOptional()
+    filter?: TestEntity3Filter;
+
+    @Field(() => [TestEntity3Sort], { nullable: true })
+    @ValidateNested({ each: true })
+    @Type(() => TestEntity3Sort)
+    sort?: TestEntity3Sort[];
+}
+"
+`;
