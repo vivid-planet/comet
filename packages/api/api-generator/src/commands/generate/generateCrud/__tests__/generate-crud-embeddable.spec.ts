@@ -143,7 +143,7 @@ describe("GenerateCrudInputEmbedded", () => {
 
             {
                 const structure = enums[0].getStructure();
-                expect(structure.members?.length).toBe(2);
+                expect(structure.members?.length).toBe(3);
                 expect(structure.members?.[0].name).toBe("foo");
                 expect(structure.members?.[1].name).toBe("embedded_test");
             }
@@ -240,7 +240,7 @@ describe("GenerateCrudInputEmbedded", () => {
 
             {
                 const structure = enums[0].getStructure();
-                expect(structure.members?.length).toBe(1);
+                expect(structure.members?.length).toBe(2);
                 expect(structure.members?.[0].name).toBe("foo");
             }
         });

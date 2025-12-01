@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-react",
-    "version": "8.7.1",
+    "version": "8.8.0",
     "description": "Comet Site React package",
     "repository": {
         "type": "git",
@@ -48,7 +48,7 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@types/draft-js": "^0.11.18",
+        "@types/draft-js": "^0.11.20",
         "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
         "@types/react": "^18.3.23",

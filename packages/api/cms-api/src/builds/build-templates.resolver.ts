@@ -3,7 +3,7 @@ import { Query, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants";
-import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
+import { KubernetesAuthenticationGuard } from "../kubernetes/kubernetes-authentication.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { BuildTemplatesService } from "./build-templates.service";
@@ -11,7 +11,7 @@ import { BuildTemplateObject } from "./dto/build-template.object";
 
 @Resolver(() => BuildTemplateObject)
 @RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in Code
-@UseGuards(PreventLocalInvocationGuard)
+@UseGuards(KubernetesAuthenticationGuard)
 export class BuildTemplatesResolver {
     constructor(private readonly buildTemplatesService: BuildTemplatesService) {}
 

@@ -24,10 +24,10 @@ export const TeaserItemBlock = withPreview(
                 <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
             </div>
             <div className={styles.contentContainer}>
-                <Typography className={styles.title} variant="h350" as={titleHtmlTag}>
+                <Typography className={styles.title} variant="headline350" as={titleHtmlTag}>
                     {title}
                 </Typography>
-                <Typography variant="p200">
+                <Typography variant="paragraph200">
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
                 </Typography>
                 {link.text && isValidLink(link.link) && (

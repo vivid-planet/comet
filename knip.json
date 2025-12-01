@@ -42,7 +42,8 @@
         "packages/admin/admin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
+            "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
             "entry": ["./src/index.ts"],

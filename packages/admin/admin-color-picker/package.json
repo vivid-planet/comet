@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-color-picker",
-    "version": "8.7.1",
+    "version": "8.8.0",
     "description": "Comet Admin Color Picker component",
     "repository": {
         "directory": "packages/admin/admin-color-picker",
@@ -39,7 +39,7 @@
         "@babel/core": "^7.28.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.2.0",
+        "@mui/material": "^7.3.5",
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@types/tinycolor2": "^1.4.6",

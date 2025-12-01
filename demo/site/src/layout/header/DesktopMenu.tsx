@@ -50,7 +50,7 @@ export const DesktopMenu = ({ menu }: Props) => {
                             }}
                         >
                             <div className={styles.linkContainer}>
-                                <PageLink page={node.node} activeClassName={styles.menuPageLinkActive} className={styles.menuPageLink}>
+                                <PageLink page={node.node} activeClassName={styles["menuPageLink--active"]} className={styles.menuPageLink}>
                                     {node.node.name}
                                 </PageLink>
                                 {hasChildren && (
@@ -72,7 +72,7 @@ export const DesktopMenu = ({ menu }: Props) => {
                                     >
                                         <SvgUse
                                             href="/assets/icons/chevron-down.svg#root"
-                                            className={clsx(styles.animatedChevron, isExpanded && styles.animatedChevronExpanded)}
+                                            className={clsx(styles.animatedChevron, isExpanded && styles["animatedChevron--expanded"])}
                                         />
                                     </button>
                                 )}
@@ -81,7 +81,7 @@ export const DesktopMenu = ({ menu }: Props) => {
                                 <FocusLock disabled={!isExpanded} autoFocus={autoFocus}>
                                     <ol
                                         id={sublevelMenuId}
-                                        className={clsx(styles.subLevelNavigation, isExpanded && styles.subLevelNavigationExpanded)}
+                                        className={clsx(styles.subLevelNavigation, isExpanded && styles["subLevelNavigation--expanded"])}
                                     >
                                         <button
                                             className={styles.closeSublevelNavigationButton}
@@ -101,7 +101,7 @@ export const DesktopMenu = ({ menu }: Props) => {
                                             <li key={childNode.id}>
                                                 <PageLink
                                                     page={childNode}
-                                                    activeClassName={styles.menuPageLinkActive}
+                                                    activeClassName={styles["menuPageLink--active"]}
                                                     className={styles.menuPageLink}
                                                 >
                                                     {childNode.name}
