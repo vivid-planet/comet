@@ -7,7 +7,7 @@ import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { Navigation, Pagination } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
@@ -22,6 +22,8 @@ export const MediaGalleryBlock = withPreview(
     ({ data }: MediaGalleryBlockProps) => {
         const [swiper, setSwiper] = useState<SwiperClass | null>(null);
         const [activeItem, setActiveItem] = useState(0);
+        const nextButtonRef = useRef<HTMLButtonElement | null>(null);
+        const prevButtonRef = useRef<HTMLButtonElement | null>(null);
 
         const intl = useIntl();
 
@@ -44,7 +46,7 @@ export const MediaGalleryBlock = withPreview(
         return (
             <>
                 <button
-                    onClick={() => swiper?.slidePrev()}
+                    ref={prevButtonRef}
                     className={clsx(styles.navigationButton, styles["navigationButton--previous"])}
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.prevSlide", defaultMessage: "Previous slide" })}
                     disabled={activeItem === 0}
@@ -55,7 +57,7 @@ export const MediaGalleryBlock = withPreview(
                     slidesPerGroup={1}
                     modules={[Pagination, Navigation]}
                     pagination={{ clickable: true }}
-                    navigation={false}
+                    navigation={{ prevEl: prevButtonRef.current, nextEl: nextButtonRef.current }}
                     longSwipesRatio={0.1}
                     threshold={3}
                     allowTouchMove
@@ -83,7 +85,7 @@ export const MediaGalleryBlock = withPreview(
                     ))}
                 </BasicSwiper>
                 <button
-                    onClick={() => swiper?.slideNext()}
+                    ref={nextButtonRef}
                     className={clsx(styles.navigationButton, styles["navigationButton--next"])}
                     aria-label={intl.formatMessage({ id: "mediaGalleryBlock.nextSlide", defaultMessage: "Next slide" })}
                     disabled={activeItem === data.items.blocks.length - 1}
