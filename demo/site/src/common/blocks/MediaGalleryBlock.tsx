@@ -27,20 +27,19 @@ export const MediaGalleryBlock = withPreview(
 
         const intl = useIntl();
 
+        const updateInert = (swiperInstance: SwiperClass) => {
+            swiperInstance.slides.forEach((slide, index) => {
+                if (index === swiperInstance.activeIndex) {
+                    slide.removeAttribute("inert");
+                } else {
+                    slide.setAttribute("inert", "");
+                }
+            });
+        };
+
         useEffect(() => {
             if (!swiper) return;
-
-            const updateInert = () => {
-                swiper.slides.forEach((slide, index) => {
-                    if (index === swiper.activeIndex) {
-                        slide.removeAttribute("inert");
-                    } else {
-                        slide.setAttribute("inert", "");
-                    }
-                });
-            };
-
-            updateInert();
+            updateInert(swiper);
         }, [swiper, activeItem]);
 
         return (
@@ -65,11 +64,7 @@ export const MediaGalleryBlock = withPreview(
                     speed={400}
                     onSwiper={(swiperInstance) => {
                         setSwiper(swiperInstance);
-                        swiperInstance.slides.forEach((slide, index) => {
-                            if (index !== swiperInstance.activeIndex) {
-                                slide.setAttribute("inert", "");
-                            }
-                        });
+                        updateInert(swiperInstance);
                     }}
                     onSlideChange={(swiper) => {
                         setActiveItem(swiper.activeIndex);
