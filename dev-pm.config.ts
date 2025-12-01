@@ -1,6 +1,6 @@
 import { defineConfig } from "@comet/dev-process-manager";
 
-const packageFolderMapping = {
+const packageEntryMapping = {
     "@comet/admin": "packages/admin/admin/lib/index.d.ts",
     "@comet/admin-color-picker": "packages/admin/admin-color-picker/lib/index.d.ts",
     "@comet/admin-date-time": "packages/admin/admin-date-time/lib/index.d.ts",
@@ -12,8 +12,8 @@ const packageFolderMapping = {
     "@comet/site-react": "packages/site/site-react/lib/index.d.ts",
 };
 
-const waitOnPackages = (...packages: (keyof typeof packageFolderMapping)[]) => {
-    return packages.map((packageName) => packageFolderMapping[packageName]);
+const waitOnPackages = (...packages: (keyof typeof packageEntryMapping)[]) => {
+    return packages.map((packageName) => packageEntryMapping[packageName]);
 };
 
 export default defineConfig({
