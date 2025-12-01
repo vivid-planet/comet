@@ -192,7 +192,7 @@ export type FormConfig<T extends { __typename?: string }> = {
      */
     navigateOnCreate?: boolean;
     /**
-     * If true, the generated from will have an initialValues prop to set initial form values.
+     * If true, the generated form will have an initialValues prop to set initial form values.
      * @default false
      */
     initialValuesAsProp?: boolean;
