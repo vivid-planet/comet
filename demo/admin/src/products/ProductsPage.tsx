@@ -20,6 +20,7 @@ import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
+import { ProductFormTanstack } from "./ProductFormTanstack";
 import { ProductPriceForm } from "./ProductPriceForm";
 import { ProductsGrid } from "./ProductsGrid";
 import { ProductVariantForm } from "./ProductVariantForm";
@@ -63,6 +64,15 @@ const ProductsPage = () => {
                                     >
                                         <FieldSet>
                                             <ProductForm id={selectedProductId} />
+                                        </FieldSet>
+                                    </RouterTab>
+                                    <RouterTab
+                                        forceRender={true}
+                                        path="/tanstack"
+                                        label={intl.formatMessage({ id: "products.productTanstack", defaultMessage: "Product Tanstack" })}
+                                    >
+                                        <FieldSet>
+                                            <ProductFormTanstack id={selectedProductId} />
                                         </FieldSet>
                                     </RouterTab>
                                     <RouterTab
@@ -141,7 +151,7 @@ const ProductsPage = () => {
                         <FormToolbar />
                         <StackMainContent>
                             <FieldSet>
-                                <ProductForm
+                                <ProductFormTanstack
                                     onCreate={(id) => {
                                         productsStackSwitchApi.activatePage("edit", id);
                                     }}
