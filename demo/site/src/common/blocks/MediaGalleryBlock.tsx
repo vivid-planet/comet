@@ -64,7 +64,6 @@ export const MediaGalleryBlock = withPreview(
                     speed={400}
                     onSwiper={(swiperInstance) => {
                         setSwiper(swiperInstance);
-                        updateInert(swiperInstance);
                     }}
                     onSlideChange={(swiper) => {
                         setActiveItem(swiper.activeIndex);
