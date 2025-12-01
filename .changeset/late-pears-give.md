@@ -2,4 +2,4 @@
 "@comet/api-generator": patch
 ---
 
-Fix generated sort dto to avoid inclulding duplicate id
+Fix generated sort dto to avoid including duplicate id
