@@ -18,6 +18,16 @@ import styles from "./MediaGalleryBlock.module.scss";
 
 type MediaGalleryBlockProps = PropsWithData<MediaGalleryBlockData>;
 
+const updateInert = (swiperInstance: SwiperClass) => {
+    swiperInstance.slides.forEach((slide, index) => {
+        if (index === swiperInstance.activeIndex) {
+            slide.removeAttribute("inert");
+        } else {
+            slide.setAttribute("inert", "");
+        }
+    });
+};
+
 export const MediaGalleryBlock = withPreview(
     ({ data }: MediaGalleryBlockProps) => {
         const [swiper, setSwiper] = useState<SwiperClass | null>(null);
@@ -26,16 +36,6 @@ export const MediaGalleryBlock = withPreview(
         const prevButtonRef = useRef<HTMLButtonElement | null>(null);
 
         const intl = useIntl();
-
-        const updateInert = (swiperInstance: SwiperClass) => {
-            swiperInstance.slides.forEach((slide, index) => {
-                if (index === swiperInstance.activeIndex) {
-                    slide.removeAttribute("inert");
-                } else {
-                    slide.setAttribute("inert", "");
-                }
-            });
-        };
 
         useEffect(() => {
             if (!swiper) return;
