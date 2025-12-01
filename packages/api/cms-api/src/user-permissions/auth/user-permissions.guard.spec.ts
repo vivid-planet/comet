@@ -11,6 +11,7 @@ import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "..
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
 import { CurrentUser } from "../dto/current-user";
 import { Permission } from "../user-permissions.types";
+import { UserPermissionsStorageService } from "../user-permissions-storage.service";
 import { UserPermissionsGuard } from "./user-permissions.guard";
 
 const permissions = {
@@ -34,6 +35,7 @@ describe("UserPermissionsGuard", () => {
     let orm: MikroORM;
     let contentScopeService: ContentScopeService;
     let accessControlService: AccessControlService;
+    let userPermissionsStorageService: UserPermissionsStorageService;
     let moduleRef: ModuleRef;
 
     const mockAnnotations = (annotations: {
@@ -86,7 +88,8 @@ describe("UserPermissionsGuard", () => {
         moduleRef = createMock<ModuleRef>();
         contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();
-        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {});
+        userPermissionsStorageService = new UserPermissionsStorageService();
+        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {}, userPermissionsStorageService);
     });
 
     it("allows bypassing", async () => {
