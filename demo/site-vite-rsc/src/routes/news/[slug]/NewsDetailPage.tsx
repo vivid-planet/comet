@@ -1,5 +1,6 @@
 import { gql } from "@comet/site-react";
 import type { PublicSiteConfig } from "@src/site-configs";
+import { cacheLifetime } from "@src/util/cacheLifetime";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { NotFoundError } from "@src/util/rscErrors";
 
@@ -18,6 +19,7 @@ interface Props {
     siteConfig: PublicSiteConfig;
 }
 export async function NewsDetailPage({ scope, params }: Props) {
+    cacheLifetime(60); // for demonstration, cache news detail pages for 60 seconds
     const graphqlFetch = createGraphQLFetch();
 
     const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(

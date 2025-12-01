@@ -1,7 +1,13 @@
+import { vitePersistedQueries } from "@comet/site-react/vitePersistedQueries";
 import react from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
+import gzipPlugin from "rollup-plugin-gzip";
 import { fileURLToPath } from "url";
-import { defineConfig } from "vite";
+import { promisify } from "util";
+import { defineConfig, type PluginOption } from "vite";
+import { brotliCompress } from "zlib";
+
+const brotliPromise = promisify(brotliCompress);
 
 export default defineConfig({
     plugins: [
@@ -21,6 +27,10 @@ export default defineConfig({
         // use https://github.com/antfu-collective/vite-plugin-inspect
         // to understand internal transforms required for RSC.
         // import("vite-plugin-inspect").then(m => m.default()),
+
+        vitePersistedQueries({
+            persistedQueriesPath: ".persisted-queries.json",
+        }) as PluginOption,
     ],
 
     resolve: {
@@ -78,6 +88,13 @@ export default defineConfig({
                     input: {
                         index: "./src/framework/entry.browser.tsx",
                     },
+                    plugins: [
+                        gzipPlugin(),
+                        gzipPlugin({
+                            customCompression: (content) => brotliPromise(Buffer.from(content)),
+                            fileName: ".br",
+                        }),
+                    ],
                 },
             },
         },

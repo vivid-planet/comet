@@ -1,9 +1,10 @@
 "use client";
 
-import { BlockPreviewProvider, IFrameBridgeProvider, useBlockPreviewFetch, useIFrameBridge } from "@comet/site-react";
+import { BlockPreviewProvider, createFetchInMemoryCache, IFrameBridgeProvider, useIFrameBridge } from "@comet/site-react";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { StageBlock } from "@src/documents/pages/blocks/StageBlock";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { type ComponentType, useEffect, useState } from "react";
 
@@ -22,6 +23,8 @@ const rootBlockTypes: Record<string, { blockType: string; component: ComponentTy
     },
 };
 
+const cachingFetch = createFetchInMemoryCache(fetch);
+
 export type BlockPreviewProps = {
     type: string;
 };
@@ -31,26 +34,25 @@ export function BlockPreviewInner(props: BlockPreviewProps) {
 
     const iFrameBridge = useIFrameBridge();
 
-    const { fetch, graphQLFetch } = useBlockPreviewFetch();
-
     const [blockData, setBlockData] = useState<any>();
     useEffect(() => {
         async function load() {
-            if (!graphQLFetch) return;
             if (!iFrameBridge.block) {
                 setBlockData(undefined);
                 return;
             }
+            const graphQLFetch = createGraphQLFetch({ fetch: cachingFetch });
+
             const newData = await recursivelyLoadBlockData({
                 blockType: rootBlockType.blockType,
                 blockData: iFrameBridge.block,
                 graphQLFetch,
-                fetch,
+                fetch: cachingFetch,
             });
             setBlockData(newData);
         }
         load();
-    }, [iFrameBridge.block, fetch, graphQLFetch, rootBlockType.blockType]);
+    }, [iFrameBridge.block, rootBlockType.blockType]);
 
     return <div>{blockData && <Component data={blockData} />}</div>;
 }

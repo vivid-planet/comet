@@ -38,26 +38,23 @@ TODO done:
 - Component: Slider (feiglt)
 - Component: alle Link
 - Component MediaBlock: DamVideoBlock, VimeoVideoBlock (wegen PixelImageBlock in nextjs) -> PR im comet
+- alle responses gezip? html, assets, svg?
+- gql im client mit persistedqueries (news mehr laden)
+- beispiel für api route (/graphql ist schon eine)
 
 
 TODO:
 - renderRscPayload in library (wie mehrsprachigkeit u.a. optional?)
 - rsc-entry file besser strukturieren
 - schöne 404 seite wenn language nicht matched, wenn predefined page nicht matched
-- beispiel für api route
-- alle responses gezip? html, assets, svg?
 - 404 rendern für rsc request, auch 404 http response status? 404 fehler anzeigen (derzeit wird error throwed)
-- cache haders abhängig von page abschaltbar oder konfigurierbar (html response, rsc response)
-- gql im client mit persistedqueries (news mehr laden)
+- FEIGLT: cache haders abhängig von page abschaltbar oder konfigurierbar (html response, rsc response)
 - error handling wenn RSC request failed (oder lange dauert?)
   - testen: server stoppen und klicken
   - wie macht next das?
 - wenn RSC request ein redirect machen würde (link auf / redirected auf /en) funktioniert das noch nicht
 - das regelmäßig durchgehen: https://github.com/vitejs/vite-plugin-react/commits/main/packages/plugin-rsc/examples/starter (letzter stand: 17.11.25)
-- PixelImageBlock fehlende features
-  - fill
-  - placeholder
-  - lazy loading / priority?
+- im dev modus kein max-age header? (wegen browser cache, eventuell nur s-maxage?)
 
 middlewares:
 - csp header
@@ -73,9 +70,11 @@ futureLib:
 - NextImage features implementieren
   - sizes? oder geht das eh browser nativ schon?
   - placeholder
-  - preload
+  - preload / priority?
+  - lazy loading?
+  - fill
   - ...
 
 später:
 - "use cache" evaluieren (statt fetch cache, um einzelne pages cachebar zu machen (und cache-header zu beeinflussen))
-
+- möglichst viel server components machen, lösung für block-preivew-hoc finden

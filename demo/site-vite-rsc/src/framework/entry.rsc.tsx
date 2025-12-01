@@ -1,3 +1,4 @@
+import { persistedQueryRoute } from "@comet/site-react/persistedQueryRoute";
 import { type SitePreviewJwtPayload, type SitePreviewParams, verifyJwt } from "@src/futureLib/previewUtils.ts";
 import { BlockPreview } from "@src/routes/BlockPreview.tsx";
 import { NotFound } from "@src/routes/NotFound.tsx";
@@ -5,6 +6,7 @@ import { Root } from "@src/routes/Root.tsx";
 import { RootLayout } from "@src/routes/RootLayout.tsx";
 import { sitemapXmlRoute } from "@src/routes/sitemap.xml.ts";
 import type { PublicSiteConfig } from "@src/site-configs";
+import { cacheLifetimeStorage } from "@src/util/cacheLifetime.ts";
 import { fetchPredefinedPages } from "@src/util/predefinedPages.ts";
 import type { RedirectError } from "@src/util/rscErrors.ts";
 import { getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig.ts";
@@ -66,15 +68,41 @@ async function renderRscPayload(
         },
     });
 
-    const isSitePreviewActive = !!sitePreviewParamsStorage.getStore();
-    const cacheControl = isSitePreviewActive ? "private" : "max-age=450, s-maxage=450, stale-while-revalidate";
-
     if (isRscRequest) {
-        return new Response(rscStream, {
+        const [waitForHtmlTagStream, responseRscStream] = rscStream.tee();
+
+        async function waitUntilHtmlTagArrives(stream: ReadableStream<Uint8Array>): Promise<void> {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            stream = stream.pipeThrough(new TextDecoderStream() as any);
+            const reader = stream.getReader();
+
+            let previousChunk = "";
+            let totalBytes = 0;
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                totalBytes += value.byteLength;
+
+                if ((previousChunk + value).includes(`"$","html"`)) break;
+                if (totalBytes >= 20000) break;
+
+                previousChunk += value; // keep only two chunks in memory
+            }
+
+            reader.releaseLock();
+        }
+        await waitUntilHtmlTagArrives(waitForHtmlTagStream);
+
+        const isSitePreviewActive = !!sitePreviewParamsStorage.getStore();
+        const cacheLifetime = cacheLifetimeStorage.getStore()?.time;
+        const cacheControl = isSitePreviewActive ? "private" : `max-age=${cacheLifetime}, s-maxage=${cacheLifetime}, stale-while-revalidate`;
+
+        return new Response(responseRscStream, {
             status: rscPayload.returnValue?.ok === false ? 500 : undefined,
             headers: {
                 "content-type": "text/x-component;charset=utf-8",
-                vary: "accept",
                 "Cache-Control": cacheControl,
             },
         });
@@ -94,6 +122,7 @@ async function renderRscPayload(
             formState,
         });
     } catch (e) {
+        console.log(e, Object.entries(e));
         if (e instanceof Error && e.message === "Redirect" /*e instanceof RedirectError*/) {
             return new Response("Redirect", { status: 302, headers: { Location: (e as RedirectError).target } });
         } else if (e instanceof Error && e.message === "NotFound" /*e instanceof NotFoundError*/) {
@@ -117,12 +146,15 @@ async function renderRscPayload(
         throw e;
     }
 
+    const isSitePreviewActive = !!sitePreviewParamsStorage.getStore();
+    const cacheLifetime = cacheLifetimeStorage.getStore()?.time;
+    const cacheControl = isSitePreviewActive ? "private" : `max-age=${cacheLifetime}, s-maxage=${cacheLifetime}, stale-while-revalidate`;
+
     // respond html
     return new Response(ssrResult.stream, {
         status: ssrResult.status,
         headers: {
             "Content-type": "text/html",
-            vary: "accept",
             "Cache-Control": cacheControl,
         },
     });
@@ -137,7 +169,6 @@ async function handler(
     let returnValue: RscPayload["returnValue"] | undefined;
     let formState: ReactFormState | undefined;
     let temporaryReferences: unknown | undefined;
-    let actionStatus: number | undefined;
 
     if (isAction) {
         // x-rsc-action header exists when action is called via `ReactClient.setServerCallback`.
@@ -154,7 +185,6 @@ async function handler(
                 returnValue = { ok: true, data };
             } catch (e) {
                 returnValue = { ok: false, data: e };
-                actionStatus = 500;
             }
         } else {
             // otherwise server function is called via `<form action={...}>`
@@ -175,22 +205,24 @@ async function handler(
         }
     }
 
-    const predefinedPages = await fetchPredefinedPages(siteConfig.scope.domain, language); // cached (=fast)
+    return cacheLifetimeStorage.run({ time: 450 }, async () => {
+        const predefinedPages = await fetchPredefinedPages(siteConfig.scope.domain, language); // cached (=fast)
 
-    // serialization from React VDOM tree to RSC stream.
-    // we render RSC stream after handling server function request
-    // so that new render reflects updated state from server function call
-    // to achieve single round trip to mutate and fetch from server.
-    const rscPayload: RscPayload = {
-        root: (
-            <RouterProvider value={{ path, language, predefinedPages }}>
-                <Root path={path} language={language} siteConfig={siteConfig} />
-            </RouterProvider>
-        ),
-        formState,
-        returnValue,
-    };
-    return renderRscPayload(rscPayload, { path, isRscRequest, temporaryReferences, siteConfig, language });
+        // serialization from React VDOM tree to RSC stream.
+        // we render RSC stream after handling server function request
+        // so that new render reflects updated state from server function call
+        // to achieve single round trip to mutate and fetch from server.
+        const rscPayload: RscPayload = {
+            root: (
+                <RouterProvider value={{ path, language, predefinedPages }}>
+                    <Root path={path} language={language} siteConfig={siteConfig} />
+                </RouterProvider>
+            ),
+            formState,
+            returnValue,
+        };
+        return renderRscPayload(rscPayload, { path, isRscRequest, temporaryReferences, siteConfig, language });
+    });
 }
 
 if (import.meta.hot) {
@@ -296,11 +328,22 @@ app.get("/robots.txt", (c) => {
 
 app.get("/sitemap.xml", sitemapXmlRoute);
 
+app.all("/graphql", (c) => {
+    return persistedQueryRoute(c.req.raw, {
+        graphqlTarget: `${process.env.API_URL_INTERNAL}/graphql`,
+        headers: {
+            authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+        },
+        persistedQueriesPath: ".persisted-queries.json",
+        cacheMaxAge: 450,
+    });
+});
+/*
 app.get("/", async (c) => {
     return c.redirect("/en");
 });
-
-app.on(["GET", "POST"], ["/.rsc/:language/*", "/:language/*"], async (c) => {
+*/
+app.on(["GET", "POST"], ["/.rsc/:language/*", "/:language/*", "/*"], async (c) => {
     const isRscRequest = c.req.path.startsWith("/.rsc/");
     const path = c.req.path.replace("/.rsc/", "/").replace(/^\/[^/]+/, "");
     const language = c.req.param("language");

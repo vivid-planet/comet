@@ -79,12 +79,16 @@ export async function Root(props: RootProps) {
     // Redirects are scoped by domain only, not by language.
     // If the language param isn't a valid language, it may still be the first segment of a redirect source.
     // In that case we skip resolving page and only check if the path is a redirect source.
-    const skipPage = !props.siteConfig.scope.languages.includes(scope.language);
+    const isValidLanguage = props.siteConfig.scope.languages.includes(scope.language);
+
+    if (props.path === "/" && !isValidLanguage) {
+        throw new RedirectError(`/en`); // redirect to language root
+    }
 
     const data = await graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {
-            skipPage,
+            skipPage: !isValidLanguage,
             path: props.path,
             scope: scope,
             redirectSource: `/${scope.language}${props.path !== "/" ? props.path : ""}`,

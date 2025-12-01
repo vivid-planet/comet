@@ -3,13 +3,17 @@ import { serve } from "@hono/node-server";
 import rscHandler from "./dist/rsc/index.js";
 import { serveStatic } from "@hono/node-server/serve-static";
 import path from "path";
+import { compress } from 'hono/compress'
 
 const app = new Hono();
+
+app.use(compress())
 
 app.use(
   "/assets/*",
   serveStatic({
     root: path.join(process.cwd(), "dist/client"),
+    precompressed: true,
   })
 );
 app.use(
