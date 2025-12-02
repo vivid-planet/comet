@@ -482,7 +482,6 @@ type Product {
   dimensions: ProductDimensions
   discounts: [ProductDiscounts!]!
   id: ID!
-  image: DamImageBlockData!
   inStock: Boolean!
   lastCheckedAt: DateTime
   manufacturer: Manufacturer
@@ -712,7 +711,6 @@ input ProductInput {
   description: String = null
   dimensions: ProductDimensionsInput
   discounts: [ProductDiscountsInput!]! = []
-  image: DamImageBlockInput!
   inStock: Boolean! = true
   lastCheckedAt: DateTime = null
   manufacturer: ID = null
@@ -901,7 +899,6 @@ input ProductUpdateInput {
   description: String
   dimensions: ProductDimensionsInput
   discounts: [ProductDiscountsInput!]
-  image: DamImageBlockInput
   inStock: Boolean
   lastCheckedAt: DateTime
   manufacturer: ID

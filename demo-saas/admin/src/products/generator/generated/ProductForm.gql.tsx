@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 export const productFormFragment = gql`
         fragment ProductFormDetails on Product {
-            title slug createdAt description type additionalTypes category { id title } tags { id title } priceRange { min max } dimensions { width height depth } manufacturer { id name } inStock availableSince image priceList { ...FinalFormFileUploadDownloadable } datasheets { ...FinalFormFileUpload } lastCheckedAt
+            title slug createdAt description type additionalTypes category { id title } tags { id title } priceRange { min max } dimensions { width height depth } manufacturer { id name } inStock availableSince priceList { ...FinalFormFileUploadDownloadable } datasheets { ...FinalFormFileUpload } lastCheckedAt
         }
     
 ${finalFormFileUploadFragment}
