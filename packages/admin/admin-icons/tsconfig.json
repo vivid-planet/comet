@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
+        "module": "preserve",
+        "moduleResolution": "bundler",
         "noEmitOnError": true,
-        "outDir": "lib/"
+        "target": "esnext"
     },
     "extends": "../tsconfig.base.json",
     "include": ["./src"]
