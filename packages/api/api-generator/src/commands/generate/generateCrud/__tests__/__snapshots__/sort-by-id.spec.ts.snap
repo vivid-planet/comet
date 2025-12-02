@@ -24,6 +24,7 @@ export class TestEntity3sArgs extends OffsetBasedPaginationArgs {
     @Field(() => [TestEntity3Sort], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => TestEntity3Sort)
+    @IsOptional()
     sort?: TestEntity3Sort[];
 }
 "

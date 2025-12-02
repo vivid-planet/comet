@@ -306,6 +306,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         @Field(() => [${classNameSingular}Sort], { ${defaultSortField === null ? "nullable: true" : `defaultValue: [{ field: ${classNameSingular}SortField.${defaultSortField}, direction: SortDirection.ASC }]`} })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
+        ${defaultSortField === null ? "@IsOptional()" : ""}
         sort${defaultSortField === null ? "?" : ""}: ${classNameSingular}Sort[];
         `
                 : ""
