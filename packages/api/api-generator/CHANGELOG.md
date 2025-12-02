@@ -1,5 +1,15 @@
 # @comet/api-generator
 
+## 8.9.0
+
+### Patch Changes
+
+- 1231050: Fix id default value for sort if sort is disabled
+- 0839ae8: Fix generated sort DTO to avoid duplicate `id` field
+- Updated dependencies [ef30d93]
+- Updated dependencies [5cf497f]
+    - @comet/cms-api@8.9.0
+
 ## 8.8.0
 
 ### Minor Changes
