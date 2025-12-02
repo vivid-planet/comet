@@ -14,7 +14,6 @@ const adminPackagesPathRegex = /\/packages\/admin\/.*\/src\//;
 const adminPackagesHotReloadPlugin: Plugin = {
     name: "admin-packages-hot-reload",
     buildStart() {
-        this.addWatchFile("../../packages/admin/admin/src");
         this.addWatchFile("../../packages/admin/admin-color-picker/src");
         this.addWatchFile("../../packages/admin/admin-date-time/src");
         this.addWatchFile("../../packages/admin/admin-react-select/src");
@@ -99,7 +98,7 @@ export default defineConfig(({ mode }) => {
                     global: "globalThis",
                 },
             },
-            include: ["@comet/admin", "@comet/admin-rte", "@comet/admin-date-time", "@comet/cms-admin"],
+            include: ["@comet/admin-rte", "@comet/admin-date-time", "@comet/cms-admin", "react-is"],
         },
         resolve: {
             alias: {

@@ -1,7 +1,7 @@
 import { defineConfig } from "@comet/dev-process-manager";
 
 const packageEntryMapping = {
-    "@comet/admin": "packages/admin/admin/lib/index.d.ts",
+    "@comet/admin": "packages/admin/admin/dist/index.d.ts",
     "@comet/admin-color-picker": "packages/admin/admin-color-picker/lib/index.d.ts",
     "@comet/admin-date-time": "packages/admin/admin-date-time/lib/index.d.ts",
     "@comet/admin-icons": "packages/admin/admin-icons/dist/index.d.ts",
