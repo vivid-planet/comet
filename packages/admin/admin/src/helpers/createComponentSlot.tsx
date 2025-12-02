@@ -6,7 +6,7 @@ import {
     styled,
     type Theme,
 } from "@mui/material";
-import { type CSSProperties } from "@mui/material/styles/createMixins";
+import { type CSSProperties } from "@mui/material/styles";
 import { type ComponentProps, type ElementType, forwardRef } from "react";
 
 const classNamePrefix = "CometAdmin";

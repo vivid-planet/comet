@@ -1,8 +1,6 @@
 import { CrudMoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
-import { Slide, Snackbar } from "@mui/material";
-import { type PopoverOrigin } from "@mui/material/Popover/Popover";
-import { type SlideProps } from "@mui/material/Slide/Slide";
+import { type PopoverOrigin, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { useRef } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
