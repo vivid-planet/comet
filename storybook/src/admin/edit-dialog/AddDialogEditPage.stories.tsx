@@ -42,40 +42,38 @@ const Page = () => {
     const [EditDialog, , editDialogApi] = useEditDialog();
 
     return (
-        <>
-            <StackSwitch>
-                <StackPage name="grid">
-                    <StackMainContent fullHeight>
-                        <Tooltip title="Open the add dialog">
-                            <Button sx={{ m: 2 }} startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
-                                Add new item
-                            </Button>
-                        </Tooltip>
-                        <Tooltip title="Open the edit page">
-                            <Button sx={{ m: 2 }} startIcon={<Edit />} variant="secondary" component={StackLink} pageName="edit" payload="example-id">
-                                Edit existing item
-                            </Button>
-                        </Tooltip>
-                    </StackMainContent>
-                </StackPage>
-                <StackPage name="edit">
-                    {(id) => (
-                        <SaveBoundary>
-                            <StackMainContent>
-                                <FieldSet title="Edit form" endAdornment={<StackBackButton />}>
-                                    <Form id={id} />
-                                </FieldSet>
-                            </StackMainContent>
-                        </SaveBoundary>
-                    )}
-                </StackPage>
-            </StackSwitch>
-            <EditDialog title="Add new item">
-                <DialogContent>
-                    <Form />
-                </DialogContent>
-            </EditDialog>
-        </>
+        <StackSwitch>
+            <StackPage name="grid">
+                <StackMainContent fullHeight>
+                    <Tooltip title="Open the add dialog">
+                        <Button sx={{ m: 2 }} startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                            Add new item
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Open the edit page">
+                        <Button sx={{ m: 2 }} startIcon={<Edit />} variant="secondary" component={StackLink} pageName="edit" payload="example-id">
+                            Edit existing item
+                        </Button>
+                    </Tooltip>
+                </StackMainContent>
+                <EditDialog title="Add new item">
+                    <DialogContent>
+                        <Form />
+                    </DialogContent>
+                </EditDialog>
+            </StackPage>
+            <StackPage name="edit">
+                {(id) => (
+                    <SaveBoundary>
+                        <StackMainContent>
+                            <FieldSet title="Edit form" endAdornment={<StackBackButton />}>
+                                <Form id={id} />
+                            </FieldSet>
+                        </StackMainContent>
+                    </SaveBoundary>
+                )}
+            </StackPage>
+        </StackSwitch>
     );
 };
 
