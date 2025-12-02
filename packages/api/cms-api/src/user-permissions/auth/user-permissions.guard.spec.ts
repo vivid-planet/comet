@@ -38,6 +38,24 @@ describe("UserPermissionsGuard", () => {
     let userPermissionsStorageService: UserPermissionsStorageService;
     let moduleRef: ModuleRef;
 
+    /**
+     * Helper to run tests within AsyncLocalStorage context
+     */
+    const testWithAls = (name: string, fn: () => void) => {
+        test(name, async () => {
+            await new Promise<void>((resolve, reject) => {
+                userPermissionsStorageService.runWith({ user: "jest" }, async () => {
+                    try {
+                        await fn();
+                        resolve();
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+            });
+        });
+    };
+
     const mockAnnotations = (annotations: {
         requiredPermission?: RequiredPermissionMetadata;
         affectedEntities?: AffectedEntityMeta[];
@@ -92,18 +110,18 @@ describe("UserPermissionsGuard", () => {
         guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {}, userPermissionsStorageService);
     });
 
-    it("allows bypassing", async () => {
+    test("allows bypassing", async () => {
         mockAnnotations({
             disableCometGuards: true,
         });
         expect(await guard.canActivate(mockContext())).toBe(true);
     });
 
-    it("denies if no user is provided", async () => {
+    test("denies if no user is provided", async () => {
         expect(await guard.canActivate(mockContext())).toBe(false);
     });
 
-    it("allows user with exact permission", async () => {
+    testWithAls("allows user with exact permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -119,7 +137,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("allows user with at least one permission", async () => {
+    testWithAls("allows user with at least one permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -138,7 +156,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user with a wrong permission", async () => {
+    testWithAls("denies user with a wrong permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -154,7 +172,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("denies user with only a partial permission", async () => {
+    testWithAls("denies user with only a partial permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -170,7 +188,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("denies user with empty permission", async () => {
+    testWithAls("denies user with empty permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -186,7 +204,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("denies user without permissions", async () => {
+    testWithAls("denies user without permissions", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -202,7 +220,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows user with at least one of the required permissions", async () => {
+    testWithAls("allows user with at least one of the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1, permissions.p2], // One of the permissions is required
@@ -218,7 +236,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user without one of the required permissions", async () => {
+    testWithAls("denies user without one of the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1, permissions.p2], // One of the permissions is required
@@ -234,7 +252,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows user with scope", async () => {
+    testWithAls("allows user with scope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -251,7 +269,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("allows user with scope when submitted scope is partial", async () => {
+    testWithAls("allows user with scope when submitted scope is partial", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -268,7 +286,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true); // It is explicitly allowed to have a partial scope (e.g. for operations using ScopeParts). To prevent allowing empty objects, the shape of the content scope object must be checked in another place (e.g. in the Input-Object of a graphql-resolver)
     });
 
-    it("allows user with scope when submitted scope is empty", async () => {
+    testWithAls("allows user with scope when submitted scope is empty", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -285,7 +303,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true); // It is explicitly allowed to have a partial scope (e.g. for operations using ScopeParts). To prevent allowing empty objects, the shape of the content scope object must be checked in another place (e.g. in the Input-Object of a graphql-resolver)
     });
 
-    it("denies user with wrong scope", async () => {
+    testWithAls("denies user with wrong scope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -302,7 +320,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("denies user with a partial scope", async () => {
+    testWithAls("denies user with a partial scope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -319,7 +337,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows user by affected entity", async () => {
+    testWithAls("allows user by affected entity", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -341,7 +359,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user with wrong scope by affected entity", async () => {
+    testWithAls("denies user with wrong scope by affected entity", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -363,7 +381,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows user by multiple affected entities", async () => {
+    testWithAls("allows user by multiple affected entities", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -385,7 +403,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user without all requried scopes by multiple affected entities", async () => {
+    testWithAls("denies user without all requried scopes by multiple affected entities", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -407,7 +425,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows user by scoped entity", async () => {
+    testWithAls("allows user by scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -427,7 +445,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user with wrong scope by scoped entity", async () => {
+    testWithAls("denies user with wrong scope by scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -447,7 +465,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows user by multiple scopes from one scoped entity", async () => {
+    testWithAls("allows user by multiple scopes from one scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -467,7 +485,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user with wrong scope by multiple scopes from one scoped entity", async () => {
+    testWithAls("denies user with wrong scope by multiple scopes from one scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -487,7 +505,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("fails when RequiredPermission decorator is missing", async () => {
+    testWithAls("fails when RequiredPermission decorator is missing", async () => {
         mockAnnotations({});
         expect(async () =>
             guard.canActivate(
@@ -498,7 +516,7 @@ describe("UserPermissionsGuard", () => {
         ).rejects.toThrowError("RequiredPermission decorator is missing");
     });
 
-    it("fails when RequiredPermission decorator has empty permissions", async () => {
+    testWithAls("fails when RequiredPermission decorator has empty permissions", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [],
@@ -514,7 +532,7 @@ describe("UserPermissionsGuard", () => {
         ).rejects.toThrowError("RequiredPermission decorator has empty permissions");
     });
 
-    it("fails when Content Scope cannot be acquired", async () => {
+    testWithAls("fails when Content Scope cannot be acquired", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
