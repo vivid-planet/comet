@@ -425,7 +425,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/inquirer':
-        specifier: ^8.2.11
+        specifier: ^8.2.12
         version: 8.2.12
       '@types/node':
         specifier: ^24.9.1
@@ -1900,7 +1900,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/inquirer':
-        specifier: ^8.2.11
+        specifier: ^8.2.12
         version: 8.2.12
       '@types/jest':
         specifier: ^29.5.14
