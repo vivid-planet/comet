@@ -12,11 +12,11 @@ import {
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { ActionsCell } from "./ActionsCell";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
+import { RowActionsCell } from "./RowActionsCell";
 import { type ColumnSize, useRecentlyPastedIds } from "./utils";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
@@ -154,7 +154,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             maxWidth: 36,
             disableReorder: true,
             renderCell: ({ row }) => (
-                <ActionsCell row={row} updateState={updateState} state={state} addToRecentlyPastedIds={addToRecentlyPastedRowIds} />
+                <RowActionsCell row={row} updateState={updateState} state={state} addToRecentlyPastedIds={addToRecentlyPastedRowIds} />
             ),
         },
     ];

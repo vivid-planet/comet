@@ -24,7 +24,7 @@ type Props = {
     addToRecentlyPastedIds: (id: string) => void;
 };
 
-export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
+export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
 
