@@ -65,6 +65,13 @@ async function bootstrap(): Promise<void> {
     app.use(compression());
     app.use(cookieParser());
 
+    // TODO: described in the mikro orm discussion, do I need this?
+    // app.use((request: Request, response: Response, next: NextFunction) => {
+    //     const orm = app.get<MikroORM>(MikroORM);
+
+    //     RequestContext.create(orm.em, next);
+    // });
+
     // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
     if (config.cdn.originCheckSecret) {
         app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));

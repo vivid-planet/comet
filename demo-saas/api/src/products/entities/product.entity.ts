@@ -16,6 +16,7 @@ import {
 } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
+import { Tenant } from "@src/tenants/entities/tenant.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
@@ -80,7 +81,7 @@ export class ProductPriceRange {
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
 export class Product extends BaseEntity {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "status";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "status" | "tenant";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
@@ -220,4 +221,11 @@ export class Product extends BaseEntity {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
+
+    @ManyToOne(() => Tenant, { nullable: false, ref: true })
+    @Field(() => Tenant)
+    @CrudField({
+        input: false,
+    })
+    tenant: Ref<Tenant>;
 }

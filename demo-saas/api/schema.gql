@@ -459,6 +459,7 @@ enum Permission {
   prelogin
   products
   sitePreview
+  tenants
   translation
   userPermissions
   warnings
@@ -494,6 +495,7 @@ type Product {
   status: ProductStatus!
   tags: [ProductTag!]!
   tagsWithStatus: [ProductToTag!]!
+  tenant: Tenant!
   title: String!
   type: ProductType!
   updatedAt: DateTime!
@@ -639,6 +641,7 @@ input ProductFilter {
   status: ProductStatusEnumFilter
   tags: ManyToManyFilter
   tagsWithStatus: OneToManyFilter
+  tenant: ManyToOneFilter
   title: StringFilter
   type: ProductTypeEnumFilter
   updatedAt: DateTimeFilter
@@ -690,6 +693,7 @@ enum ProductHighlightSortField {
   product_slug
   product_soldCount
   product_status
+  product_tenant
   product_title
   product_type
   product_updatedAt
@@ -794,6 +798,8 @@ enum ProductSortField {
   statistics_updatedAt
   statistics_views
   status
+  tenant
+  tenant_name
   title
   type
   updatedAt
@@ -962,6 +968,7 @@ enum ProductVariantSortField {
   product_slug
   product_soldCount
   product_status
+  product_tenant
   product_title
   product_type
   product_updatedAt
@@ -1025,6 +1032,11 @@ input StringFilter {
   notContains: String
   notEqual: String
   startsWith: String
+}
+
+type Tenant {
+  id: ID!
+  name: String!
 }
 
 input UserContentScopesInput {

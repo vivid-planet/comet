@@ -9,6 +9,7 @@ import { ProductsArgs } from "./dto/products.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
 import { AffectedEntity, FileUpload, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { Tenant } from "../../tenants/entities/tenant.entity";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
@@ -51,6 +52,9 @@ export class ProductResolver {
         }
         if (fields.includes("priceList")) {
             populate.push("priceList");
+        }
+        if (fields.includes("tenant")) {
+            populate.push("tenant");
         }
         if (fields.includes("colors")) {
             populate.push("colors");
@@ -226,6 +230,12 @@ export class ProductResolver {
     @Parent()
     product: Product): Promise<FileUpload | undefined> {
         return product.priceList?.loadOrFail();
+    }
+    @ResolveField(() => Tenant)
+    async tenant(
+    @Parent()
+    product: Product): Promise<Tenant> {
+        return product.tenant.loadOrFail();
     }
     @ResolveField(() => [ProductColor])
     async colors(
