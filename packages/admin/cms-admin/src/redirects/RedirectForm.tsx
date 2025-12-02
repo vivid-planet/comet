@@ -182,7 +182,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                     <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>
-                            {values.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
+                            {values?.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
                         </ToolbarTitleItem>
                         <FillSpace />
                         <ToolbarActions>

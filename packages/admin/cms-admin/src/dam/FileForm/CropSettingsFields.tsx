@@ -16,9 +16,8 @@ interface Props {
 
 export function CropSettingsFields({ disabled }: Props): JSX.Element {
     const form = useForm<EditImageFormValues>();
-    const {
-        values: { focalPoint },
-    } = useFormState<EditImageFormValues>();
+    const { values } = useFormState<EditImageFormValues>();
+    const focalPoint = values?.focalPoint;
 
     const handleSmartFocalPointChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {

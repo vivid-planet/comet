@@ -20,9 +20,8 @@ const clipValue = (value?: number) => {
 
 export const ImageCrop = (props: ImageCropProps) => {
     const form = useForm<EditImageFormValues>();
-    const {
-        values: { focalPoint },
-    } = useFormState<EditImageFormValues>();
+    const { values } = useFormState<EditImageFormValues>();
+    const focalPoint = values?.focalPoint;
 
     const disabled = props.disabled === true || focalPoint === "SMART";
 

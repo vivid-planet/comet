@@ -125,7 +125,7 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
                 initialValues={outerForm.getState().values}
             >
                 {({ form, values, handleSubmit, dirtyFields }) => {
-                    const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
+                    const countValue = values ? calcNumberDirtyFields(values, form.getRegisteredFields()) : undefined;
                     return (
                         <FieldBarWrapper {...slotProps?.fieldBarWrapper}>
                             <FilterBarButton
@@ -191,7 +191,7 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
                                                 setAnchorEl(null);
                                             }}
                                             startIcon={<Check />}
-                                            disabled={Object.values(dirtyFields).length === 0}
+                                            disabled={!dirtyFields || Object.values(dirtyFields).length === 0}
                                             {...submitButtonProps}
                                         >
                                             <FormattedMessage {...messages.apply} />

@@ -1,4 +1,4 @@
-import { type AnyObject, Form, type FormProps, FormSpy } from "react-final-form";
+import { Form, type FormProps, FormSpy } from "react-final-form";
 
 function AutosaveSpy() {
     return (
@@ -18,7 +18,8 @@ function AutosaveSpy() {
 /**
  * @deprecated Use `BlocksFinalForm` instead
  */
-export function AutosaveFinalForm<FormValues = AnyObject>(props: FormProps<FormValues>): JSX.Element {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function AutosaveFinalForm<FormValues = Record<string, any>>(props: FormProps<FormValues>): JSX.Element {
     return <Form {...props} render={renderForm} />;
 
     function renderForm() {

@@ -204,7 +204,7 @@ id?: string;
     }
     
     \`, variables: { 
-                            filter: { category: { equal: values.productCategory?.id } },
+                            filter: { category: { equal: values?.productCategory?.id } },
                             
                          }
                     });
@@ -249,7 +249,7 @@ exports[`AsyncSelectFilter generates filter with value dependent on other field 
     }
     
     \`, variables: { 
-                            title: values.title,
+                            title: values?.title,
                             
                          }
                     });

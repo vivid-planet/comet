@@ -51,7 +51,7 @@ exports[`AsyncSelect filter generates filter with value dependent on other field
     }
     
     \`, variables: { 
-                            title: values.title,
+                            title: values?.title,
                             
                          }
                     });
