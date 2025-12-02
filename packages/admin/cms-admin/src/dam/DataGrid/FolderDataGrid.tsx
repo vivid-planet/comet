@@ -60,14 +60,14 @@ import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 export { damFolderQuery } from "./FolderDataGrid.gql";
 export { moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
 export {
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
-    GQLMoveDamFilesMutation,
-    GQLMoveDamFilesMutationVariables,
-    GQLMoveDamFoldersMutation,
-    GQLMoveDamFoldersMutationVariables,
+    type GQLDamFileTableFragment,
+    type GQLDamFolderQuery,
+    type GQLDamFolderQueryVariables,
+    type GQLDamFolderTableFragment,
+    type GQLMoveDamFilesMutation,
+    type GQLMoveDamFilesMutationVariables,
+    type GQLMoveDamFoldersMutation,
+    type GQLMoveDamFoldersMutationVariables,
 } from "./FolderDataGrid.gql.generated";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
