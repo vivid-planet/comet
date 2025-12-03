@@ -7,6 +7,11 @@ import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { ProductType } from "./entities/product-type.enum";
 
+const transformToProductType = (value: string) => {
+    const camelCase = value.charAt(0).toLowerCase() + value.slice(1);
+    return ProductType[camelCase as keyof typeof ProductType];
+};
+
 export class ProductImporterInput {
     @CsvColumn("title")
     @IsString()
@@ -24,12 +29,14 @@ export class ProductImporterInput {
     @IsString()
     description: string;
 
-    @CsvColumn("type")
+    @CsvColumn("type", {
+        transform: transformToProductType,
+    })
     @IsEnum(ProductType)
     type: ProductType;
 
     @CsvColumn("additionalTypes", {
-        transform: (value: string) => (value ? value.split(",").map((type) => ProductType[type.trim() as keyof typeof ProductType]) : []),
+        transform: (value: string) => (value ? value.split(",").map((type) => transformToProductType(type.trim())) : []),
     })
     @IsArray()
     @IsEnum(ProductType, { each: true })
