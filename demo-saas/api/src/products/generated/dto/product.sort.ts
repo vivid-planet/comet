@@ -20,6 +20,7 @@ export enum ProductSortField {
     updatedAt = "updatedAt",
     manufacturer = "manufacturer",
     priceList = "priceList",
+    tenant = "tenant",
     statistics_views = "statistics_views",
     statistics_createdAt = "statistics_createdAt",
     statistics_updatedAt = "statistics_updatedAt",
@@ -44,7 +45,8 @@ export enum ProductSortField {
     priceList_mimetype = "priceList_mimetype",
     priceList_contentHash = "priceList_contentHash",
     priceList_createdAt = "priceList_createdAt",
-    priceList_updatedAt = "priceList_updatedAt"
+    priceList_updatedAt = "priceList_updatedAt",
+    tenant_name = "tenant_name"
 }
 registerEnumType(ProductSortField, {
     name: "ProductSortField",

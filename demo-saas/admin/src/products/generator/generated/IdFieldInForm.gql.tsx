@@ -3,7 +3,7 @@
 import { gql } from "@apollo/client";
 export const productFormFragment = gql`
         fragment IdFieldInForm on Product {
-            id title image
+            id title
         }
     `;
 export const productQuery = gql`

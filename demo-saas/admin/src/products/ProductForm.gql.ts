@@ -9,7 +9,6 @@ export const productFormFragment = gql`
         type
         additionalTypes
         inStock
-        image
         priceList {
             ...FinalFormFileUpload
         }

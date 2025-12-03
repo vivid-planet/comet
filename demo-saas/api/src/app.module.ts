@@ -18,8 +18,8 @@ import {
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
-import { DynamicModule, Module } from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
+import { DynamicModule, MiddlewareConsumer, Module } from "@nestjs/common";
+import { APP_INTERCEPTOR, ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { AppPermission } from "@src/auth/app-permission.enum";
 import { Config } from "@src/config/config";
@@ -27,7 +27,8 @@ import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
 import { TranslationModule } from "@src/translation/translation.module";
-import { Request } from "express";
+import { AsyncLocalStorage } from "async_hooks";
+import { NextFunction, Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
@@ -35,13 +36,27 @@ import { UserService } from "./auth/user.service";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { ProductsModule } from "./products/products.module";
 import { StatusModule } from "./status/status.module";
+import { TenantInterceptor } from "./tenants/tenant.interceptor";
+import { TenantsModule } from "./tenants/tenants.module";
 
 @Module({})
 export class AppModule {
+    constructor(private readonly asyncLocalStorage: AsyncLocalStorage<unknown>) {}
+
     static forRoot(config: Config): DynamicModule {
         const authModule = AuthModule.forRoot(config);
 
         return {
+            providers: [
+                {
+                    provide: AsyncLocalStorage,
+                    useValue: new AsyncLocalStorage(),
+                },
+                {
+                    provide: APP_INTERCEPTOR,
+                    useClass: TenantInterceptor,
+                },
+            ],
             module: AppModule,
             imports: [
                 ConfigModule.forRoot(config),
@@ -150,7 +165,19 @@ export class AppModule {
                 OpenTelemetryModule,
                 DependenciesModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
+                TenantsModule,
             ],
         };
+    }
+
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply((req: Request, res: Response, next: NextFunction) => {
+                const store = {
+                    tenantId: req.headers["x-tenant-id"],
+                };
+                this.asyncLocalStorage.run(store, () => next());
+            })
+            .forRoutes("*path");
     }
 }

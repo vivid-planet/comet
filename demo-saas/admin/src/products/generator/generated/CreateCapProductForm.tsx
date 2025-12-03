@@ -4,19 +4,15 @@ import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { CheckboxField } from "@comet/admin";
-import { Field } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
 import { TextAreaField } from "@comet/admin";
 import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
-import { BlockState } from "@comet/cms-admin";
-import { createFinalFormBlock } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { GQLProductType } from "@src/graphql.generated";
-import { DamImageBlock } from "@comet/cms-admin";
 import { validateTitle } from "../validateTitle";
 import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
@@ -28,12 +24,7 @@ import { createProductMutation } from "./CreateCapProductForm.gql";
 import { GQLCreateProductMutation } from "./CreateCapProductForm.gql.generated";
 import { GQLCreateProductMutationVariables } from "./CreateCapProductForm.gql.generated";
 import isEqual from "lodash.isequal";
-const rootBlocks = {
-    image: DamImageBlock
-};
-type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image"> & {
-    image: BlockState<typeof rootBlocks.image>;
-};
+type FormValues = GQLCreateCapProductFormDetailsFragment;
 interface FormProps {
     onCreate?: (id: string) => void;
     type: GQLProductType;
@@ -43,10 +34,10 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
     const initialValues = {
-        inStock: false, image: rootBlocks.image.defaultValues(),
+        inStock: false,
     };
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        const output = { ...formValues, description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), };
+        const output = { ...formValues, description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
             variables: {
@@ -90,9 +81,6 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
         <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
 
             <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
                         </>)}
             </FinalForm>);
 }
