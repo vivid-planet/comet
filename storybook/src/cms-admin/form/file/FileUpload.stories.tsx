@@ -30,6 +30,7 @@ export const Default: Story = {
                     return (
                         <>
                             <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" />
+
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>
