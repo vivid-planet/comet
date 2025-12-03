@@ -30,7 +30,6 @@ export const Default: Story = {
                     return (
                         <>
                             <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" />
-
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>
@@ -72,6 +71,38 @@ export const DefaultWithInitializedImage: Story = {
                         <>
                             <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" />
 
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * Example of a single file upload with the `Maximum 1 file` info text not shown.
+ *
+ */
+export const DefaultWithNoMaxFilesHelperText: Story = {
+    render: () => {
+        interface FormValues {
+            value: GQLFinalFormFileUploadFragment;
+        }
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" showMaxFilesHelperText={false} />
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>
