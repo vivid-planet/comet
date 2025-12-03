@@ -55,7 +55,7 @@ export const VimeoVideoBlock = withPreview(
         const inViewRef = useRef<HTMLDivElement>(null);
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
         const iframeRef = setIframeElement;
-        const [isHandledManually, setIsHandledManually] = useState(!autoplay);
+        const [isPlaying, setIsPlaying] = useState(!autoplay);
 
         const pauseVimeoVideo = useCallback(() => {
             iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
@@ -67,7 +67,7 @@ export const VimeoVideoBlock = withPreview(
 
         const handleInView = useCallback(
             (isVisible: boolean) => {
-                if (!isHandledManually) {
+                if (!isPlaying) {
                     if (isVisible && autoplay) {
                         playVimeoVideo();
                     } else {
@@ -75,7 +75,7 @@ export const VimeoVideoBlock = withPreview(
                     }
                 }
             },
-            [autoplay, isHandledManually, playVimeoVideo, pauseVimeoVideo],
+            [autoplay, isPlaying, playVimeoVideo, pauseVimeoVideo],
         );
 
         useIsElementInViewport(inViewRef, handleInView);
@@ -101,9 +101,9 @@ export const VimeoVideoBlock = withPreview(
         vimeoUrl.search = searchParams.toString();
 
         const handlePlayPauseClick = () => {
-            setIsHandledManually(!isHandledManually);
+            setIsPlaying(!isPlaying);
             if (iframeElement) {
-                if (isHandledManually) {
+                if (isPlaying) {
                     playVimeoVideo();
                 } else {
                     pauseVimeoVideo();
@@ -132,10 +132,10 @@ export const VimeoVideoBlock = withPreview(
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
                         {!showControls &&
                             (PlayPauseButtonComponent ? (
-                                <PlayPauseButtonComponent isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
+                                <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />
                             ) : (
                                 <PlayPauseButton
-                                    isPlaying={isHandledManually}
+                                    isPlaying={isPlaying}
                                     onClick={handlePlayPauseClick}
                                     ariaLabelPlay={playButtonAriaLabel}
                                     ariaLabelPause={pauseButtonAriaLabel}
