@@ -1,11 +1,12 @@
 import { type ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode, useContext } from "react";
+import { isValidElement, type ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
-import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
+import { StackBreadcrumbs, type StackBreadcrumbsProps } from "../../stack/breadcrumbs/StackBreadcrumbs";
+import { type ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
 
@@ -27,6 +28,7 @@ export interface ToolbarProps
      * MasterLayoutContext, but can be overriden here
      */
     headerHeight?: number;
+    stackBreadcrumbsProps?: StackBreadcrumbsProps;
 }
 type OwnerState = {
     headerHeight: number;
@@ -53,6 +55,7 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
 })(
     ({ theme }) => css`
         min-height: 40px;
+        width: 100%;
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
@@ -116,7 +119,7 @@ const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
     flex: 1;
 `);
 
-const Breadcrumbs = createComponentSlot(ToolbarBreadcrumbs)<ToolbarClassKey>({
+const Breadcrumbs = createComponentSlot(StackBreadcrumbs)<ToolbarClassKey>({
     componentName: "Toolbar",
     slotName: "breadcrumbs",
 })();
@@ -128,6 +131,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
         elevation = 1,
         slotProps,
         scopeIndicator,
+        stackBreadcrumbsProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = useContext(MasterLayoutContext);
@@ -135,11 +139,14 @@ export const Toolbar = (inProps: ToolbarProps) => {
     const ownerState: OwnerState = {
         headerHeight: inProps.headerHeight ?? headerHeight,
     };
+
+    const isGlobal = isValidElement(scopeIndicator) && (scopeIndicator.props as any)?.global === true;
+
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (
                 <TopBar {...slotProps?.topBar}>
-                    {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
+                    {Boolean(scopeIndicator) && isGlobal && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
                     <Breadcrumbs {...slotProps?.breadcrumbs} />
                 </TopBar>
             )}
