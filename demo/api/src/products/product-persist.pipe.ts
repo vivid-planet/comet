@@ -9,7 +9,7 @@ import { type ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { type ProductImporterInput } from "./product-importer.input";
 
-export type ProductData = Omit<ProductImporterInput, "image"> & {
+type ProductData = Omit<ProductImporterInput, "image"> & {
     id: string;
     colors: string;
     category: Reference<ProductCategory>;
