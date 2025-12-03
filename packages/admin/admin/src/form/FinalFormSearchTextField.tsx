@@ -5,12 +5,10 @@ import { type ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { FinalFormInput, type FinalFormInputProps } from "./FinalFormInput";
 
 export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
     icon?: ReactNode;
-    clearable?: boolean;
 }
 
 type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
@@ -25,7 +23,7 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
         icon = <Search />,
         placeholder,
         endAdornment,
-        clearable,
+        required,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
     const intl = useIntl();
@@ -39,20 +37,7 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
                     {icon}
                 </InputAdornment>
             }
-            endAdornment={
-                clearable ? (
-                    <>
-                        <ClearInputAdornment
-                            position="end"
-                            hasClearableContent={Boolean(restProps.input.value)}
-                            onClick={() => restProps.input.onChange("")}
-                        />
-                        {endAdornment}
-                    </>
-                ) : (
-                    endAdornment
-                )
-            }
+            endAdornment={endAdornment}
             disableContentTranslation={true}
         />
     );
