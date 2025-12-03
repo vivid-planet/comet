@@ -1,12 +1,15 @@
 {
     "compilerOptions": {
         "baseUrl": "src",
-        "outDir": "lib",
+        "module": "preserve",
+        "moduleResolution": "bundler",
         "paths": {
             "test-utils": ["./utils/test-utils"]
         },
         "rootDir": "src",
-        "typeRoots": ["node_modules/@types", "node_modules/@testing-library"]
+        "target": "esnext",
+        "typeRoots": ["node_modules/@types", "node_modules/@testing-library"],
+        "verbatimModuleSyntax": true
     },
     "exclude": [],
     "extends": "../tsconfig.base.json",

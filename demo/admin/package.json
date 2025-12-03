@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "description": "Comet Admin Demo Application",
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",
         "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
@@ -23,7 +23,7 @@
         "lint:tsc": "tsc --project .",
         "preview": "pnpm run build && vite preview",
         "serve": "node server",
-        "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
+        "start": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
         "@apollo/client": "^3.13.8",
@@ -55,6 +55,7 @@
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
+        "react-is": "^19.2.0",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "use-debounce": "^10.0.5",
@@ -75,14 +76,15 @@
         "@graphql-codegen/typescript": "^4.1.6",
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@parcel/watcher": "^2.5.1",
-        "@swc/plugin-emotion": "^10.0.3",
+        "@rollup/plugin-commonjs": "^29.0.0",
+        "@swc/plugin-emotion": "^14.0.1",
         "@types/lodash.isequal": "^4.5.8",
         "@types/node": "^24.9.1",
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
-        "@vitejs/plugin-react-swc": "^3.10.2",
+        "@vitejs/plugin-react-swc": "^4.2.2",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
         "cosmiconfig-toml-loader": "^1.0.0",
@@ -92,7 +94,7 @@
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
         "typescript": "5.9.3",
-        "vite": "^5.4.19",
+        "vite": "^7.2.6",
         "vite-plugin-html": "^3.2.2"
     }
 }

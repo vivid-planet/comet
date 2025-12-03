@@ -7,25 +7,23 @@
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
-    "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js"
+    },
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
-        "lib"
+        "dist"
     ],
     "scripts": {
-        "build": "pnpm run clean && run-p build:babel build:types",
-        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
-        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
+        "build": "pnpm exec tsdown",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
-        "start": "run-p start:babel start:types",
-        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
+        "start": "pnpm exec tsdown --watch"
     },
     "dependencies": {
         "@comet/admin": "workspace:*",
@@ -40,6 +38,7 @@
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.2.0",
+        "@rollup/plugin-babel": "^6.1.0",
         "@types/react": "^18.3.23",
         "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^18.3.7",
@@ -51,7 +50,7 @@
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
-        "rimraf": "^6.0.1",
+        "tsdown": "^0.16.7",
         "typescript": "5.9.3"
     },
     "peerDependencies": {

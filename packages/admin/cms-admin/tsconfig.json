@@ -1,8 +1,11 @@
 {
     "compilerOptions": {
-        "outDir": "lib",
+        "module": "preserve",
+        "moduleResolution": "bundler",
         "rootDir": "src",
-        "strict": true
+        "strict": true,
+        "target": "esnext",
+        "verbatimModuleSyntax": true
     },
     "exclude": [],
     "extends": "../tsconfig.base.json",

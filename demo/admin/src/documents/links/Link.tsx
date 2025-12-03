@@ -1,8 +1,13 @@
 import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
-import { type PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import {
+    createDocumentDependencyMethods,
+    createDocumentRootBlocksMethods,
+    type DependencyInterface,
+    type DocumentInterface,
+    type PageTreePage,
+} from "@comet/cms-admin";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";

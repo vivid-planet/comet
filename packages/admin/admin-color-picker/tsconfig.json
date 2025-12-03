@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
-        "outDir": "lib",
-        "rootDir": "src"
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        "rootDir": "src",
+        "target": "esnext",
+        "verbatimModuleSyntax": true
     },
     "extends": "../tsconfig.base.json",
     "include": ["./src"]
