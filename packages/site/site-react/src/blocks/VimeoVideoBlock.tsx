@@ -101,13 +101,12 @@ export const VimeoVideoBlock = withPreview(
         vimeoUrl.search = searchParams.toString();
 
         const handlePlayPauseClick = () => {
-            setIsPlaying(!isPlaying);
-            if (iframeElement) {
-                if (isPlaying) {
-                    playVimeoVideo();
-                } else {
-                    pauseVimeoVideo();
-                }
+            if (isPlaying) {
+                setIsPlaying(false);
+                pauseVimeoVideo();
+            } else {
+                setIsPlaying(true);
+                playVimeoVideo();
             }
         };
 
