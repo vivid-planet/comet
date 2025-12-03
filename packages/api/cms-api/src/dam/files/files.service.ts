@@ -1,44 +1,44 @@
-import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
-import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
+import sharp from "sharp";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
+import { FileUploadInput } from "../../file-utils/file-upload.input";
+import { slugifyFilename } from "../../file-utils/files.utils";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
+import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
+import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
-import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
+import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
-import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
-import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
+import { rgbToHex } from "../images/images.util";
 import { DamScopeInterface } from "../types";
+import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
-import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
-export const withFilesSelect = (
+const withFilesSelect = (
     qb: QueryBuilder<FileInterface>,
     args: {
         query?: string;
@@ -102,13 +102,12 @@ export const withFilesSelect = (
 @Injectable()
 export class FilesService {
     protected readonly logger = new Logger(FilesService.name);
-    static readonly UPLOAD_FIELD = "file";
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+        @InjectRepository(DamMediaAlternative) private readonly damMediaAlternativesRepository: EntityRepository<DamMediaAlternative>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
-        @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
@@ -248,27 +247,32 @@ export class FilesService {
                 );
             }
 
-            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(uploadedFile);
-            await this.blobStorageBackendService.upload(uploadedFile, contentHash, this.config.filesDirectory);
+            const uploadedFileMetadata = await this.getFileMetadataForUpload(uploadedFile);
+            const oldAndNewFileAreIdentical = fileToReplace.contentHash === uploadedFileMetadata.contentHash;
 
-            // Check if the current file is the only one using the contentHash before deleting from blob storage
-            if (
-                (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: fileToReplace.contentHash }).getResult())
-                    .length === 1
-            ) {
-                await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
+            if (!oldAndNewFileAreIdentical) {
+                // Don't upload the file if it is identical to the existing one
+                await this.blobStorageBackendService.upload(uploadedFile, uploadedFileMetadata.contentHash, this.config.filesDirectory);
+
+                // Check if the current file is the only one using the contentHash before deleting from blob storage
+                if (
+                    (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: fileToReplace.contentHash }).getResult())
+                        .length === 1
+                ) {
+                    await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
+                }
             }
 
-            if (image && image.width && image.height && fileToReplace.image) {
-                fileToReplace.image.width = image.width;
-                fileToReplace.image.height = image.height;
-                fileToReplace.image.exif = exifData;
+            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height && fileToReplace.image) {
+                fileToReplace.image.width = uploadedFileMetadata.image.width;
+                fileToReplace.image.height = uploadedFileMetadata.image.height;
+                fileToReplace.image.exif = uploadedFileMetadata.exifData;
             }
 
             Object.assign(fileToReplace, {
                 size: uploadedFile.size,
                 mimetype: uploadedFile.mimetype,
-                contentHash,
+                contentHash: uploadedFileMetadata.contentHash,
                 ...assignData,
             });
 
@@ -408,7 +412,7 @@ export class FilesService {
         const subQb = withFilesSelect(
             this.filesRepository
                 .createQueryBuilder("file")
-                .select(["file.id", `ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`])
+                .select(["file.id", raw(`ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)])
                 .leftJoinAndSelect("file.folder", "folder"),
             {
                 archived: !args.includeArchived ? false : undefined,
@@ -421,7 +425,7 @@ export class FilesService {
             },
         );
 
-        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.createQueryBuilder().raw(
+        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.getKnex().raw(
             `select "file_with_row_number".row_number
                 from "${FILE_TABLE_NAME}" as "file"
                 join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
@@ -453,6 +457,8 @@ export class FilesService {
             image: ignoreImage,
             scope: ignoreScope,
             copies: ignoreCopies,
+            alternativesForThisFile: ignoreAlternativesForThisFile,
+            thisFileIsAlternativeFor: ignoreThisFileIsAlternativeFor,
             ...fileProps
         } = file;
 
@@ -464,7 +470,34 @@ export class FilesService {
             scope: inboxFolder.scope,
         };
 
-        return this.create(fileInput);
+        const copiedFile = await this.create(fileInput);
+
+        // handled DAM alternatives
+        const copiedAlternatives: DamMediaAlternative[] = [];
+        if ((await file.alternativesForThisFile.loadItems()).length > 0) {
+            for (const alternative of file.alternativesForThisFile) {
+                const alternativeFile = await alternative.alternative.load();
+                if (alternativeFile === null) {
+                    continue;
+                }
+
+                const copiedAlternativeFile = await this.createCopyOfFile(alternativeFile, { inboxFolder });
+
+                const { id: ignoreId, for: ignoreFor, alternative: ignoreAlternative, ...alternativeProps } = alternative;
+                const copiedDamMediaAlternative = this.damMediaAlternativesRepository.create({
+                    ...alternativeProps,
+
+                    for: copiedFile,
+                    alternative: copiedAlternativeFile,
+                });
+
+                copiedAlternatives.push(copiedDamMediaAlternative);
+            }
+        }
+
+        copiedFile.alternativesForThisFile.set(copiedAlternatives);
+
+        return copiedFile;
     }
 
     async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
@@ -513,7 +546,7 @@ export class FilesService {
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
         const path = this.imgproxyService
             .builder()
-            .resize(ResizingType.AUTO, 128)
+            .resize(ResizingType.AUTO, 1)
             .format(Extension.JPG)
             .generateUrl(
                 `${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.filesDirectory}/${createHashedPath(contentHash)}`,
@@ -525,13 +558,12 @@ export class FilesService {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const imageBuffer = Buffer.from(arrayBuffer);
 
-            // @TODO: make pull request to fix overloads https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/get-image-colors/index.d.ts#L15
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const getColorOptions: any = { type: "image/jpg", count: 1 };
+            const data = await sharp(imageBuffer).removeAlpha().raw().toBuffer();
 
-            const colors = (await getColors(imageBuffer, getColorOptions)).map((color) => color.hex());
+            // since we scale the image to 1px with imgproxy, data only contains the colors for this one pixel
+            const [r, g, b] = data;
 
-            return colors.length > 0 ? colors[0] : undefined;
+            return rgbToHex(r, g, b);
         } catch (e) {
             // When imageproxy is not available it is ok.
             console.error(e);
@@ -540,13 +572,10 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(
-        file: FileInterface,
-        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
-    ): Promise<string> {
+    async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files`];
+        const baseUrl = [`/${this.config.basePath}/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
@@ -565,19 +594,19 @@ export class FilesService {
     async getFileAsBase64String(file: FileInterface) {
         const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
 
-        const buffer = await new Response(fileStream).buffer();
-        const base64String = buffer.toString("base64");
+        const chunks: Buffer[] = [];
+        for await (const chunk of fileStream) {
+            chunks.push(chunk);
+        }
 
+        const base64String = Buffer.concat(chunks).toString("base64");
         return `data:${file.mimetype};base64,${base64String}`;
     }
 
-    async createFileDownloadUrl(
-        file: FileInterface,
-        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
-    ): Promise<string> {
+    async createFileDownloadUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
+        const baseUrl = [`/dam/files/download`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
@@ -615,7 +644,7 @@ export class FilesService {
                     height: image.width,
                 };
             }
-        } catch (e) {
+        } catch {
             // empty
         }
 
@@ -623,7 +652,7 @@ export class FilesService {
             image !== undefined &&
             image.width &&
             image.height &&
-            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
+            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.config.maxSrcResolution
         ) {
             throw new CometImageResolutionException(`Maximal image resolution exceeded`);
         }

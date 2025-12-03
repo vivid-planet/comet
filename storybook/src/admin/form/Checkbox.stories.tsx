@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FinalFormCheckbox } from "@comet/admin";
-import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
+import { CheckboxField, FieldContainer } from "@comet/admin";
+import { Card, CardContent, Grid } from "@mui/material";
 import { Form } from "react-final-form";
 
 export default {
@@ -26,24 +26,14 @@ export const Checkbox = () => {
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Card variant="outlined">
                                     <CardContent>
                                         <FieldContainer label="Checkboxes">
-                                            <Field name="unchecked" type="checkbox" fullWidth>
-                                                {(props) => <FormControlLabel label="Unchecked" control={<FinalFormCheckbox {...props} />} />}
-                                            </Field>
-                                            <Field name="checked" type="checkbox" fullWidth>
-                                                {(props) => <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} />} />}
-                                            </Field>
-                                            <Field name="disabledUnchecked" type="checkbox" fullWidth disabled>
-                                                {(props) => <FormControlLabel label="Disabled" control={<FinalFormCheckbox {...props} />} />}
-                                            </Field>
-                                            <Field name="disabledChecked" type="checkbox" fullWidth disabled>
-                                                {(props) => (
-                                                    <FormControlLabel label="Disabled & Checked" control={<FinalFormCheckbox {...props} />} />
-                                                )}
-                                            </Field>
+                                            <CheckboxField name="unchecked" label="Unchecked" fullWidth />
+                                            <CheckboxField name="checked" label="Checked" fullWidth />
+                                            <CheckboxField name="disabledUnchecked" label="Disabled" fullWidth disabled />
+                                            <CheckboxField name="disabledChecked" label="Disabled & Checked" fullWidth disabled />
                                         </FieldContainer>
                                     </CardContent>
                                 </Card>

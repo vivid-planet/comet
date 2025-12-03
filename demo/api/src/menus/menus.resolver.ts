@@ -23,7 +23,7 @@ export class MenusResolver {
         const rootNodes = await this.pageTreeReadApi.pageTreeRootNodeList({
             scope,
             excludeHiddenInMenu: true,
-            category: PageTreeNodeCategory.MainNavigation,
+            category: PageTreeNodeCategory.mainNavigation,
         });
 
         const items = await Promise.all(
@@ -49,6 +49,6 @@ export class MenusResolver {
     @Query(() => [PageTreeNode])
     async topMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<PageTreeNodeInterface[]> {
         //don't preloadNodes for topMenu as that consists only of a few nodes (and preloading would be more expensive than doing live queries)
-        return this.pageTreeReadApi.pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.TopMenu, excludeHiddenInMenu: true });
+        return this.pageTreeReadApi.pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.mainNavigation, excludeHiddenInMenu: true });
     }
 }

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const predefinedPageFormFragment = gql`
+const predefinedPageFormFragment = gql`
     fragment PredefinedPageForm on PredefinedPage {
         type
     }

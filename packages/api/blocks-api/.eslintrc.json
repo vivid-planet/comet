@@ -1,7 +1,0 @@
-{
-    "extends": "@comet/eslint-config/nestjs",
-    "ignorePatterns": ["lib/**"],
-    "rules": {
-        "@comet/no-other-module-relative-import": "off"
-    }
-}

@@ -1,17 +1,34 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
-import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
-import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+import { Button, DataGridToolbar, FieldSet, FillSpace, GridCellContent, type GridColDef, TableDeleteButton } from "@comet/admin";
+import { Add, Delete, Edit, StateFilled } from "@comet/admin-icons";
+import { IconButton, Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
-import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
+import {
+    type GQLPermissionForGridFragment,
+    type GQLPermissionsQuery,
+    type GQLPermissionsQueryVariables,
+    namedOperations,
+} from "./PermissionGrid.generated";
+
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
+function PermissionGridToolbar({ toolbarAction }: ToolbarProps) {
+    return (
+        <DataGridToolbar>
+            <FillSpace />
+            {toolbarAction}
+        </DataGridToolbar>
+    );
+}
 
 export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
@@ -53,10 +70,40 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
             renderCell: ({ row }) => <Typography variant="subtitle2">{camelCaseToHumanReadable(row.permission)}</Typography>,
         },
         {
-            field: "source",
-            width: 100,
+            field: "status",
+            width: 200,
+            filterable: false,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Source" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.status", defaultMessage: "Status" }),
+            renderCell: ({ row }) => (
+                <>
+                    {row.validTo && differenceInDays(parseISO(row.validTo), new Date()) < 0 && (
+                        <GridCellContent
+                            icon={<StateFilled color="error" />}
+                            primaryText={<FormattedMessage id="comet.userPermissions.expired" defaultMessage="Expired" />}
+                        />
+                    )}
+                    {row.validTo &&
+                    differenceInDays(parseISO(row.validTo), new Date()) >= 0 &&
+                    differenceInDays(parseISO(row.validTo), new Date()) < 30 ? (
+                        <GridCellContent
+                            icon={<StateFilled color="warning" />}
+                            primaryText={<FormattedMessage id="comet.userPermissions.expiringSoon" defaultMessage="Expiring soon" />}
+                        />
+                    ) : (
+                        <GridCellContent
+                            icon={<StateFilled color="success" />}
+                            primaryText={<FormattedMessage id="comet.userPermissions.active" defaultMessage="Active" />}
+                        />
+                    )}
+                </>
+            ),
+        },
+        {
+            field: "source",
+            width: 200,
+            pinnable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Assignment type" }),
         },
         {
             field: "validityPeriod",
@@ -69,36 +116,9 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 }`,
         },
         {
-            field: "status",
-            flex: 1,
-            filterable: false,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.status", defaultMessage: "Status" }),
-            renderCell: ({ row }) => (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                    {row.validTo && differenceInDays(parseISO(row.validTo), new Date()) < 0 && (
-                        <Chip
-                            icon={<Reject />}
-                            color="error"
-                            label={<FormattedMessage id="comet.userPermissions.expired" defaultMessage="Expired" />}
-                        />
-                    )}
-                    {row.validTo &&
-                        differenceInDays(parseISO(row.validTo), new Date()) >= 0 &&
-                        differenceInDays(parseISO(row.validTo), new Date()) < 30 && (
-                            <Chip
-                                icon={<Info />}
-                                color="warning"
-                                label={<FormattedMessage id="comet.userPermissions.expiringSoon" defaultMessage="Expiring soon" />}
-                            />
-                        )}
-                </div>
-            ),
-        },
-        {
             field: "overrideContentScopes",
             headerName: "",
-            width: 175,
+            flex: 1,
             sortable: false,
             pinnable: false,
             filterable: false,
@@ -110,80 +130,75 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 ),
         },
         {
-            field: "edit",
-            width: 60,
+            field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             pinnable: false,
             filterable: false,
-            renderCell: ({ row }) => (
-                <IconButton
-                    onClick={() => {
-                        setPermissionId(row.id);
-                    }}
-                    color="primary"
-                >
-                    <Edit />
-                </IconButton>
-            ),
-        },
-        {
-            field: "delete",
-            width: 60,
-            headerName: "",
-            sortable: false,
-            pinnable: false,
-            filterable: false,
-            renderCell: ({ row }) =>
-                row.source !== "BY_RULE" && (
-                    <TableDeleteButton
-                        icon={<Delete />}
-                        mutation={gql`
-                            mutation DeletePermission($id: ID!) {
-                                userPermissionsDeletePermission(id: $id)
-                            }
-                        `}
-                        selectedId={`${row.id}`}
-                        text=""
-                        refetchQueries={[namedOperations.Query.Permissions]}
-                    />
-                ),
+            width: 116,
+            pinned: "right",
+            renderCell: ({ row }) => {
+                return (
+                    <>
+                        <IconButton
+                            onClick={() => {
+                                setPermissionId(row.id);
+                            }}
+                            color="primary"
+                        >
+                            <Edit />
+                        </IconButton>
+
+                        {row.source !== "BY_RULE" && (
+                            <TableDeleteButton
+                                icon={<Delete />}
+                                mutation={gql`
+                                    mutation DeletePermission($id: ID!) {
+                                        userPermissionsDeletePermission(id: $id)
+                                    }
+                                `}
+                                selectedId={`${row.id}`}
+                                text=""
+                                refetchQueries={[namedOperations.Query.Permissions]}
+                            />
+                        )}
+                    </>
+                );
+            },
         },
     ];
 
     if (error) throw new Error(error.message);
 
+    const toolbarSlotProps: ToolbarProps = {
+        toolbarAction: (
+            <Button
+                startIcon={<Add />}
+                onClick={() => {
+                    setPermissionId("add");
+                }}
+            >
+                <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
+            </Button>
+        ),
+    };
+
     return (
-        <Card>
+        <FieldSet
+            title={intl.formatMessage({ id: "comet.userPermissions.assignedPermissions", defaultMessage: "Assigned Permissions" })}
+            disablePadding
+        >
             <DataGrid<GQLPermissionForGridFragment>
-                autoHeight={true}
                 rows={data?.permissions ?? []}
                 columns={columns}
                 rowCount={data?.permissions.length ?? 0}
                 loading={loading}
-                getRowHeight={() => "auto"}
-                sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
-                components={{
-                    Toolbar: () => (
-                        <GridToolbar>
-                            <ToolbarTitleItem>
-                                <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />
-                            </ToolbarTitleItem>
-                            <FillSpace />
-                            <ToolbarActions>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon={<Add />}
-                                    onClick={() => {
-                                        setPermissionId("add");
-                                    }}
-                                >
-                                    <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
-                                </Button>
-                            </ToolbarActions>
-                        </GridToolbar>
-                    ),
+                slots={{
+                    toolbar: PermissionGridToolbar,
+                }}
+                slotProps={{
+                    toolbar: toolbarSlotProps,
                 }}
             />
             {overrideContentScopesId && (
@@ -194,11 +209,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 />
             )}
             {permissionId && <PermissionDialog userId={userId} permissionId={permissionId} handleDialogClose={() => setPermissionId(null)} />}
-        </Card>
+        </FieldSet>
     );
 };
-
-const GridToolbar = styled(GridToolbarContainer)`
-    padding: 10px;
-    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
-`;

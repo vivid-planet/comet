@@ -1,17 +1,16 @@
-import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
+import { useDamConfig } from "./config/damConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
-import { useDamConfig } from "./config/useDamConfig";
 import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
 type Props = {
-    renderContentScopeIndicator?: (scope: ContentScopeInterface) => ReactNode;
+    renderContentScopeIndicator?: (scope: ContentScope) => ReactNode;
     /**
      * @deprecated Use `additionalToolbarItems` option in `DamConfigProvider` instead
      */
@@ -28,13 +27,6 @@ const DefaultContentScopeIndicator = () => {
     }
 };
 
-const DamTableWrapper = styled("div")`
-    display: grid;
-    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
-    grid-template-columns: 1fr;
-    grid-template-rows: max-content;
-`;
-
 function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
     const { scope, match } = useContentScope();
     const routeMatch = useRouteMatch();
@@ -44,12 +36,11 @@ function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props)
 
     return (
         <DamScopeProvider>
-            <DamTableWrapper>
-                <DamTable
-                    contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultContentScopeIndicator />}
-                    additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
-                />
-            </DamTableWrapper>
+            <DamTable
+                contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultContentScopeIndicator />}
+                additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
+                renderWithFullHeightMainContent
+            />
         </DamScopeProvider>
     );
 }

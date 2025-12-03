@@ -1,4 +1,4 @@
-import { create } from "@storybook/theming/create";
+import { create, type ThemeVars } from "storybook/theming";
 
 import CometLogo from "./assets/comet-logo-header.svg";
 
@@ -7,4 +7,4 @@ export default create({
     brandTitle: "Comet",
     brandUrl: "https://github.com/vivid-planet/comet",
     brandImage: CometLogo,
-});
+}) as ThemeVars;

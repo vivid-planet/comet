@@ -16,7 +16,7 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { DialogContent, IconButton, Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -118,13 +118,15 @@ export const StackEditDialogHooks = {
                 </Stack>
 
                 <EditDialog>
-                    {selection.mode && (
-                        <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
-                            {(row, { selectionMode: sm }) => {
-                                return <EditForm mode={sm} row={row} />;
-                            }}
-                        </Selected>
-                    )}
+                    <DialogContent>
+                        {selection.mode && (
+                            <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
+                                {(row, { selectionMode: sm }) => {
+                                    return <EditForm mode={sm} row={row} />;
+                                }}
+                            </Selected>
+                        )}
+                    </DialogContent>
                 </EditDialog>
                 <p>This story uses a Stack plus an EditDialog</p>
             </>

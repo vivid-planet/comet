@@ -1,6 +1,6 @@
 import { Alert, ErrorBoundary } from "@comet/admin";
 import { Box, Card, CardContent, Link, Typography } from "@mui/material";
-import { Meta } from "@storybook/react";
+import { type Meta } from "@storybook/react-webpack5";
 
 const ViewWithNoError = () => {
     return (

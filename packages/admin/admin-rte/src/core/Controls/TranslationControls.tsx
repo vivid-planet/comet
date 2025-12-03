@@ -2,7 +2,7 @@ import { useContentTranslationService } from "@comet/admin";
 import { ButtonGroup } from "@mui/material";
 
 import TranslationToolbarButton from "../translation/ToolbarButton";
-import { IControlProps } from "../types";
+import { type IControlProps } from "../types";
 
 function TranslationControls(props: IControlProps) {
     const translationContext = useContentTranslationService();

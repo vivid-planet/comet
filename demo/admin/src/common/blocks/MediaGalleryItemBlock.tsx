@@ -1,4 +1,4 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
+import { BlockCategory, createCompositeBlock, createCompositeBlockTextField } from "@comet/cms-admin";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { FormattedMessage } from "react-intl";
 
@@ -13,7 +13,6 @@ export const MediaGalleryItemBlock = createCompositeBlock(
             },
             caption: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="mediaGalleryBlock.mediaGalleryItem.caption" defaultMessage="Caption" />,
                 }),
                 hiddenInSubroute: true,

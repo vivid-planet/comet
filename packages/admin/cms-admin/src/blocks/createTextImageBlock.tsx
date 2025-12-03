@@ -1,21 +1,18 @@
 import { messages } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    AdminComponentSection,
-    BlockCategory,
-    BlockInterface,
-    composeBlocks,
-    createBlockSkeleton,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
-import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
-import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
-import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
-import { useCmsBlockContext } from "./useCmsBlockContext";
+import { type TextImageBlockData, type TextImageBlockInput } from "../blocks.generated";
+import { useDamConfig } from "../dam/config/damConfig";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
+import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlock";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
+import { type ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, type BlockInterface } from "./types";
 
 interface State {
     text: RichTextBlockState;
@@ -27,12 +24,15 @@ interface State {
 export interface TextImageBlockFactoryOptions {
     text: RichTextBlock;
     image?: BlockInterface;
+    tags?: Array<MessageDescriptor | string>;
 }
 
-const createTextImageBlock = ({
-    text,
-    image = PixelImageBlock,
-}: TextImageBlockFactoryOptions): BlockInterface<TextImageBlockData, State, TextImageBlockInput> => {
+const createTextImageBlock = (
+    { text, image = PixelImageBlock, tags }: TextImageBlockFactoryOptions,
+    override?: (
+        block: BlockInterface<TextImageBlockData, State, TextImageBlockInput>,
+    ) => BlockInterface<TextImageBlockData, State, TextImageBlockInput>,
+): BlockInterface<TextImageBlockData, State, TextImageBlockInput> => {
     const composed = composeBlocks({ text, image });
 
     const { api: composedApi, block: composedBlock } = composed;
@@ -52,22 +52,26 @@ const createTextImageBlock = ({
 
         category: BlockCategory.TextAndContent,
 
+        tags: tags ? tags : [...(text.tags || []), ...(image.tags || [])],
+
         AdminComponent: ({ state, updateState }) => {
             const { text, image } = composedApi.adminComponents({
                 state,
                 updateState: decomposeUpdateStateAction(updateState, ["text", "image"]),
             });
-            const context = useCmsBlockContext();
+            const { allowedImageAspectRatios } = useDamConfig();
 
             return (
                 <>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.text" defaultMessage="Text" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.text" defaultMessage="Text" />}>
                         {text}
-                    </AdminComponentSection>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.image" defaultMessage="Image" />}>
-                        <AdminComponentPaper disablePadding>{image}</AdminComponentPaper>
-                    </AdminComponentSection>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.imagePosition" defaultMessage="Image position" />}>
+                    </BlockAdminComponentSection>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.image" defaultMessage="Image" />}>
+                        <BlockAdminComponentPaper disablePadding>{image}</BlockAdminComponentPaper>
+                    </BlockAdminComponentSection>
+                    <BlockAdminComponentSection
+                        title={<FormattedMessage id="comet.blocks.textImage.imagePosition" defaultMessage="Image position" />}
+                    >
                         <RadioGroup
                             row
                             value={state.imagePosition}
@@ -81,8 +85,8 @@ const createTextImageBlock = ({
                             <FormControlLabel value="left" control={<Radio />} label={<FormattedMessage {...messages.left} />} />
                             <FormControlLabel value="right" control={<Radio />} label={<FormattedMessage {...messages.right} />} />
                         </RadioGroup>
-                    </AdminComponentSection>
-                    <AdminComponentSection
+                    </BlockAdminComponentSection>
+                    <BlockAdminComponentSection
                         title={<FormattedMessage id="comet.blocks.textImage.imageAspectRatio" defaultMessage="Image aspect ratio" />}
                     >
                         <Select
@@ -95,17 +99,22 @@ const createTextImageBlock = ({
                             }}
                             fullWidth
                         >
-                            {context.damConfig.allowedImageAspectRatios.map((aspectRatio) => (
+                            {allowedImageAspectRatios.map((aspectRatio) => (
                                 <MenuItem key={aspectRatio} value={aspectRatio}>
                                     {aspectRatio}
                                 </MenuItem>
                             ))}
                         </Select>
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </>
             );
         },
     };
+
+    if (override) {
+        return override(TextImageBlock);
+    }
+
     return TextImageBlock;
 };
 

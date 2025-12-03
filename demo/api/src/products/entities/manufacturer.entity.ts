@@ -1,8 +1,10 @@
 import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
-import { BaseEntity, Embeddable, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Embeddable, Embedded, Entity, IType, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsObject, IsString } from "class-validator";
 import { v4 as uuid } from "uuid";
+
+import { Coordinates, CoordinatesType } from "../coordinates.type";
 
 @ObjectType()
 @InputType("AlternativeAddressInput")
@@ -12,7 +14,7 @@ export class AlternativeAddress {
     @IsString()
     street: string;
 
-    @Field(() => Number, { nullable: true })
+    @Field({ nullable: true })
     @Property({ nullable: true })
     @IsNumber()
     @IsNullable()
@@ -20,8 +22,8 @@ export class AlternativeAddress {
 
     @Field()
     @Property()
-    @IsNumber()
-    zip: number;
+    @IsString()
+    zip: string;
 
     @Field()
     @Property()
@@ -49,7 +51,7 @@ export class AlternativeAddressAsEmbeddable {
     @IsString()
     street: string;
 
-    @Field(() => Number, { nullable: true })
+    @Field({ nullable: true })
     @Property({ nullable: true })
     @IsNumber()
     @IsNullable()
@@ -57,8 +59,8 @@ export class AlternativeAddressAsEmbeddable {
 
     @Field()
     @Property()
-    @IsNumber()
-    zip: number;
+    @IsString()
+    zip: string;
 
     @Field()
     @Property()
@@ -78,8 +80,8 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 
 @Entity()
 @ObjectType()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Manufacturer extends BaseEntity<Manufacturer, "id"> {
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["manufacturers"] })
+export class Manufacturer extends BaseEntity {
     [OptionalProps]?: "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -97,6 +99,10 @@ export class Manufacturer extends BaseEntity<Manufacturer, "id"> {
     @Embedded(() => AddressAsEmbeddable) // Embedded can only be optional if all contained properties are optional
     @Field(() => AddressAsEmbeddable)
     addressAsEmbeddable: AddressAsEmbeddable;
+
+    @Property({ type: CoordinatesType, nullable: true })
+    @Field(() => Coordinates, { nullable: true })
+    coordinates?: IType<Coordinates, string>;
 
     @Property({ onUpdate: () => new Date() })
     @Field()

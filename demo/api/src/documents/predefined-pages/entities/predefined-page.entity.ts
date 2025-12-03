@@ -1,10 +1,10 @@
 import { DocumentInterface, PageTreeNodeDocumentEntityScopeService, ScopedEntity } from "@comet/cms-api";
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 export enum PredefinedPageType {
-    News = "News",
+    news = "news",
 }
 
 registerEnumType(PredefinedPageType, {
@@ -16,7 +16,7 @@ registerEnumType(PredefinedPageType, {
     implements: () => [DocumentInterface],
 })
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
-export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements DocumentInterface {
+export class PredefinedPage extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ columnType: "uuid" })

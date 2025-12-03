@@ -1,7 +1,6 @@
-import { useContext } from "react";
-
-import { BuildInformation, BuildInformationContext } from "./BuildInformationContext";
+import { useCometConfig } from "../../../../config/CometConfigContext";
+import { type BuildInformation } from "./buildInformation";
 
 export function useBuildInformation(): BuildInformation | undefined {
-    return useContext(BuildInformationContext);
+    return useCometConfig().buildInformation;
 }

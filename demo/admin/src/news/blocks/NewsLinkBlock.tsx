@@ -1,6 +1,8 @@
 import { TextField } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface } from "@comet/blocks-admin";
-import { NewsLinkBlockData, NewsLinkBlockInput } from "@src/blocks.generated";
+import { FileData } from "@comet/admin-icons";
+import { type BlockInterface, BlocksFinalForm, createBlockSkeleton, type LinkBlockInterface } from "@comet/cms-admin";
+import { type NewsLinkBlockData, type NewsLinkBlockInput } from "@src/blocks.generated";
+import { FormattedMessage } from "react-intl";
 
 type State = NewsLinkBlockData;
 
@@ -16,12 +18,18 @@ const NewsLinkBlock: BlockInterface<NewsLinkBlockData, State, NewsLinkBlockInput
     AdminComponent: ({ state, updateState }) => {
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                <TextField name="id" label="ID" fullWidth disableContentTranslation />
+                <TextField
+                    name="id"
+                    label={<FormattedMessage id="blocks.newsLink.id.label" defaultMessage="ID" />}
+                    fullWidth
+                    disableContentTranslation
+                />
             </BlocksFinalForm>
         );
     },
 
-    previewContent: (state) => (state.id !== undefined ? [{ type: "text", content: state.id }] : []),
+    previewContent: (state) => [...(state.id !== undefined ? [{ type: "text" as const, content: state.id }] : [])],
+    icon: (state) => <FileData color="primary" />,
 };
 
 export { NewsLinkBlock };

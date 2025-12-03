@@ -1,0 +1,140 @@
+---
+title: Cropping and Aspect Ratio
+---
+
+# Cropping and Aspect Ratio
+
+This guide describes the interplay between cropping in the DAM and the aspect ratio in the site.
+Consider the following example: A stage block has a 1:2 aspect ratio on mobile and a 16:9 aspect ratio on desktop.
+The block should use the same image for both viewport sizes:
+
+import AspectRatioMobile from "./images/aspect-ratio-mobile.png";
+import AspectRatioDesktop from "./images/aspect-ratio-desktop.png";
+
+<figure>
+
+<img src={AspectRatioMobile} />
+<img src={AspectRatioDesktop} />
+
+<figcaption>The same image in different aspect ratios for mobile and desktop</figcaption>
+</figure>
+
+## On-demand cropping
+
+The same image with different aspect ratios is achieved by cropping the image on demand.
+When fetching an image in the site, the DAM returns an image URL template:
+
+```text title="Image URL template"
+http://localhost:4000/dam/images/b89d5b2b31e80708f00f34a3109726fe64f77c48/c210c292e35d1fc51c6490e75fe0b1ba/06c81833-903f-4731-a0e6-476f0e89bf13/crop:SMART/resize:$resizeWidth:$resizeHeight/astronaut
+```
+
+Note that the image URL template doesn't contain the aspect ratio.
+Instead, the site can specify the aspect ratio by setting the `resizeWidth` and `resizeHeight` parameters.
+With this, the site can control the aspect ratio of the image based on the viewport size:
+
+```tsx title="StageBlock.tsx"
+// MediaPhone and MediaDesktop show/hide the block based on the viewport size
+<MediaPhone>
+    <MediaBlock data={media} aspectRatio="1x2" fill />
+</MediaPhone>
+<MediaDesktop>
+    <MediaBlock data={media} aspectRatio="16x9" fill />
+</MediaDesktop>
+```
+
+Editors can (to a limited extent) control the image area displayed using the DAM's focus point and crop area features.
+
+## Focus point
+
+The focus point defines which part of the image should be focused when cropping the image.
+It can be either smart or manually set.
+
+### Smart focus point
+
+The smart focus point uses imgproxy's smart gravity feature:
+
+> smart gravity. `libvips` detects the most "interesting" section of the image and considers it as the center of the resulting image. Offsets are not applicable here.
+> – [imgproxy documentation](https://docs.imgproxy.net/usage/processing#gravity)
+
+The smart focus point will be the default behavior when uploading new images to the DAM.
+
+import FocusPointSmartDam from "./images/focus-point-smart-dam.png";
+
+<figure>
+
+<img src={FocusPointSmartDam} />
+
+<figcaption>The smart focus point option in the DAM</figcaption>
+</figure>
+
+import FocusPointSmartSite from "./images/focus-point-smart-site.png";
+
+<figure>
+
+<img src={FocusPointSmartSite} />
+
+<figcaption>The image in the site is cropped to show the most "interesting" section</figcaption>
+</figure>
+
+### Manual focus point
+
+The focus point can also be manually set if the smart focus point doesn't work as expected:
+
+import FocusPointManualDam from "./images/focus-point-manual-dam.png";
+
+<figure>
+
+<img src={FocusPointManualDam} />
+
+<figcaption>The focus point is manually set to the upper right corner of the image</figcaption>
+</figure>
+
+import FocusPointManualSite from "./images/focus-point-manual-site.png";
+
+<figure>
+
+<img src={FocusPointManualSite} />
+
+<figcaption>The image in the site will be cropped accordingly</figcaption>
+</figure>
+
+## Crop area
+
+Editors can set the crop area in the DAM to specify the maximum visible area of the image, which can be helpful when only a specific section of the image should be considered for cropping.
+For instance, only a person's head should be shown:
+
+import CropAreaDam from "./images/crop-area-dam.png";
+
+<figure>
+
+<img src={CropAreaDam} />
+
+<figcaption>The crop area is set only to consider the astronaut's helmet</figcaption>
+</figure>
+
+import CropAreaSite from "./images/crop-area-site.png";
+
+<figure>
+
+<img src={CropAreaSite} />
+
+<figcaption>The cropped image in the site now only considers the astronaut's helmet</figcaption>
+</figure>
+
+All images requested by the site will now be cropped in the specified crop area.
+For instance, the above-mentioned stage block's images (1:2 and 16:9) would roughly be cropped like this:
+
+import CropAreaDamSiteAspectRatios from "./images/crop-area-dam-site-aspect-ratios.png";
+
+<figure>
+
+<img src={CropAreaDamSiteAspectRatios} width="500px" />
+
+<figcaption>The crop area is set only to consider the astronaut's helmet</figcaption>
+</figure>
+
+## Summary
+
+- The same image in the DAM can be cropped differently in the site based on the aspect ratio.
+- Editors can control the image area displayed using the DAM's focus point and crop area features.
+- The site can specify the aspect ratio by setting the `resizeWidth` and `resizeHeight` parameters in the image URL template.

@@ -1,7 +1,7 @@
 import { orange, yellow } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 import escapeRegExp from "lodash.escaperegexp";
-import { Fragment, ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 
 export type TextMatch = { start: number; end: number; focused: boolean };
 

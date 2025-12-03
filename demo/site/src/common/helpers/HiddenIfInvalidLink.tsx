@@ -1,13 +1,13 @@
-import { usePreview } from "@comet/cms-site";
+import { usePreview } from "@comet/site-nextjs";
 import {
-    DamFileDownloadLinkBlockData,
-    EmailLinkBlockData,
-    ExternalLinkBlockData,
-    InternalLinkBlockData,
-    LinkBlockData,
-    PhoneLinkBlockData,
+    type DamFileDownloadLinkBlockData,
+    type EmailLinkBlockData,
+    type ExternalLinkBlockData,
+    type InternalLinkBlockData,
+    type LinkBlockData,
+    type PhoneLinkBlockData,
 } from "@src/blocks.generated";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 export function HiddenIfInvalidLink({ link, children }: PropsWithChildren<{ link: LinkBlockData }>) {
     const { previewType } = usePreview();

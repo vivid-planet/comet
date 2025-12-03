@@ -22,7 +22,7 @@ export const Radio = () => {
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Card variant="outlined">
                                     <CardContent>
                                         <FieldContainer label="Radios">

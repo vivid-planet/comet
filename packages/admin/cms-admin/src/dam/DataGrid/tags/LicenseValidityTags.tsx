@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl";
 
 import { Tag } from "./Tag";
 
-export const LicenseNotValidYetTag = () => {
+const LicenseNotValidYetTag = () => {
     return (
         <Tag type="error">
             <WarningSolid />
@@ -13,7 +13,7 @@ export const LicenseNotValidYetTag = () => {
     );
 };
 
-export const LicenseExpiredTag = () => {
+const LicenseExpiredTag = () => {
     return (
         <Tag type="error">
             <WarningSolid />
@@ -26,7 +26,7 @@ interface LicenseExpiresSoonTagProps {
     expirationDate: Date;
 }
 
-export const LicenseExpiresSoonTag = ({ expirationDate }: LicenseExpiresSoonTagProps) => {
+const LicenseExpiresSoonTag = ({ expirationDate }: LicenseExpiresSoonTagProps) => {
     return (
         <Tag type="warning">
             <WarningSolid />

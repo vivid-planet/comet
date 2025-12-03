@@ -1,18 +1,19 @@
 import {
+    AnchorBlock,
     ColumnsLayoutPreview,
     ColumnsLayoutPreviewContent,
     ColumnsLayoutPreviewSpacing,
     createBlocksBlock,
     createColumnsBlock,
-} from "@comet/blocks-admin";
-import { AnchorBlock } from "@comet/cms-admin";
+} from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
-import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
+import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { FormattedMessage } from "react-intl";
 
 const oneColumnLayouts = [
@@ -41,14 +42,14 @@ const oneColumnLayouts = [
         ),
     },
     {
-        name: "9-6-9",
+        name: "6-12-6",
         columns: 1,
         label: <FormattedMessage id="columnsBlock.center.small" defaultMessage="Center small" />,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewSpacing width={9} />
-                <ColumnsLayoutPreviewContent width={6} />
-                <ColumnsLayoutPreviewSpacing width={9} />
+                <ColumnsLayoutPreviewSpacing width={6} />
+                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewSpacing width={6} />
             </ColumnsLayoutPreview>
         ),
     },
@@ -116,12 +117,13 @@ const ColumnsContentBlock = createBlocksBlock({
     supportedBlocks: {
         accordion: AccordionBlock,
         anchor: AnchorBlock,
-        richtext: RichTextBlock,
+        richtext: StandaloneRichTextBlock,
         space: SpaceBlock,
         heading: StandaloneHeadingBlock,
         callToActionList: StandaloneCallToActionListBlock,
         media: StandaloneMediaBlock,
         mediaGallery: MediaGalleryBlock,
+        textImage: TextImageBlock,
     },
 });
 

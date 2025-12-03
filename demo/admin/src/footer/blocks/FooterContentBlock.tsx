@@ -1,5 +1,4 @@
-import { createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { createCompositeBlock, createCompositeBlockTextField, DamImageBlock } from "@comet/cms-admin";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";
@@ -18,6 +17,12 @@ export const FooterContentBlock = createCompositeBlock({
             title: <FormattedMessage id="footers.blocks.image" defaultMessage="Image" />,
             hiddenInSubroute: true,
         },
+        caption: {
+            block: createCompositeBlockTextField({
+                label: <FormattedMessage id="footers.blocks.caption" defaultMessage="Caption" />,
+            }),
+            hiddenInSubroute: true,
+        },
         linkList: {
             block: LinkListBlock,
             title: <FormattedMessage id="footers.blocks.content.links" defaultMessage="Links" />,
@@ -25,7 +30,6 @@ export const FooterContentBlock = createCompositeBlock({
         copyrightNotice: {
             block: createCompositeBlockTextField({
                 label: <FormattedMessage id="footers.blocks.content.copyrightNotice" defaultMessage="Copyright notice" />,
-                fullWidth: true,
             }),
             hiddenInSubroute: true,
         },

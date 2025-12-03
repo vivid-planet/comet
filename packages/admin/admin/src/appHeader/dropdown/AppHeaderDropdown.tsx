@@ -1,11 +1,11 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
+import { type ComponentsOverrides, Popover as MuiPopover, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { AppHeaderButton, type AppHeaderButtonProps } from "../button/AppHeaderButton";
 
 export type AppHeaderDropdownClassKey = "root" | "popover" | "button";
 

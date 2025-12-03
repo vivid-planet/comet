@@ -14,17 +14,17 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { ContentScopeIndicator, PageName, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { GQLPredefinedPageType } from "@src/graphql.generated";
+import { type GQLPredefinedPageType } from "@src/graphql.generated";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { predefinedPageQuery, savePredefinedPageMutation } from "./EditPredefinedPage.gql";
 import {
-    GQLPredefinedPageQuery,
-    GQLPredefinedPageQueryVariables,
-    GQLSavePredefinedPageMutation,
-    GQLSavePredefinedPageMutationVariables,
+    type GQLPredefinedPageQuery,
+    type GQLPredefinedPageQueryVariables,
+    type GQLSavePredefinedPageMutation,
+    type GQLSavePredefinedPageMutationVariables,
 } from "./EditPredefinedPage.gql.generated";
 import { predefinedPageLabels } from "./predefinedPageLabels";
 
@@ -116,7 +116,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
                         <SelectField
                             name="type"
                             label={<FormattedMessage id="predefinedPages.type.label" defaultMessage="Type" />}
-                            options={[{ value: "News", label: predefinedPageLabels.News }]}
+                            options={[{ value: "news", label: predefinedPageLabels.news }]}
                             fullWidth
                         />
                     </MainContent>

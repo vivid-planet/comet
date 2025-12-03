@@ -1,4 +1,4 @@
-import { ValidateIf, ValidationOptions } from "class-validator";
+import { ValidateIf, type ValidationOptions } from "class-validator";
 
 export function IsUndefinable(options?: ValidationOptions): PropertyDecorator {
     return function IsUndefinableDecorator(prototype: object, propertyKey: string | symbol): void {

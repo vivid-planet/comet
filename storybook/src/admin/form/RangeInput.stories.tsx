@@ -150,6 +150,43 @@ export const RangeInput = () => {
                         </CardContent>
                     </Card>
                 </Box>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography variant="h3" gutterBottom>
+                                disabled
+                            </Typography>
+                            <Form
+                                onSubmit={(values) => {
+                                    // values
+                                }}
+                                initialValues={{ price: { min: 50, max: 80 } }}
+                                render={({ values, form, initialValues }) => (
+                                    <>
+                                        <Field
+                                            component={FinalFormRangeInput}
+                                            name="price"
+                                            min={0}
+                                            max={100}
+                                            endAdornment={<span>€</span>}
+                                            sliderProps={{ components: { Thumb } }}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <Button
+                                            onClick={() => {
+                                                form.reset();
+                                            }}
+                                        >
+                                            Reset
+                                        </Button>
+                                        <pre>{JSON.stringify(values, undefined, 2)}</pre>
+                                    </>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+                </Box>
             </div>
         </>
     );

@@ -1,4 +1,5 @@
 import { Button, Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
+import { DialogContent } from "@mui/material";
 import { useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -45,30 +46,32 @@ const RootPage = ({ counter }: RootPageProps) => {
                 </Button>
             </p>
             <EditDialog>
-                {selection.id === "without_deselect" && (
-                    <FinalForm
-                        mode={selection.mode!}
-                        onSubmit={async () => {
-                            console.log("submitted without deselect");
-                        }}
-                    >
-                        <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
-                    </FinalForm>
-                )}
-                {selection.id === "with_deselect" && (
-                    <FinalForm
-                        mode={selection.mode!}
-                        onSubmit={async () => {
-                            console.log("submitted with deselect");
-                        }}
-                        onAfterSubmit={() => {
-                            // override stackApi.goBack()
-                            selectionApi.handleDeselect();
-                        }}
-                    >
-                        <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
-                    </FinalForm>
-                )}
+                <DialogContent>
+                    {selection.id === "without_deselect" && (
+                        <FinalForm
+                            mode={selection.mode!}
+                            onSubmit={async () => {
+                                console.log("submitted without deselect");
+                            }}
+                        >
+                            <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
+                        </FinalForm>
+                    )}
+                    {selection.id === "with_deselect" && (
+                        <FinalForm
+                            mode={selection.mode!}
+                            onSubmit={async () => {
+                                console.log("submitted with deselect");
+                            }}
+                            onAfterSubmit={() => {
+                                // override stackApi.goBack()
+                                selectionApi.handleDeselect();
+                            }}
+                        >
+                            <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
+                        </FinalForm>
+                    )}
+                </DialogContent>
             </EditDialog>
         </>
     );

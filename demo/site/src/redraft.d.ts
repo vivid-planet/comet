@@ -1,16 +1,18 @@
 declare module "redraft" {
+    import { type ReactElement, type ReactNode } from "react";
+
     interface InlineStylesMap {
-        [key: string]: (children: React.ReactNode, options: { key: string }) => React.ReactNode;
+        [key: string]: (children: ReactNode, options: { key: string }) => ReactNode;
     }
 
-    export type TextBlockRenderFn = (children: React.ReactNode[], options: { key: string; depth: number; keys: string[] }) => React.ReactNode;
+    export type TextBlockRenderFn = (children: ReactNode[], options: { key: string; depth: number; keys: string[] }) => ReactNode;
     interface BlockMap {
         [key: string]: TextBlockRenderFn;
     }
 
     interface EntityMap {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [key: string]: (children: React.ReactNode, data: any, options: { key: string }) => React.ReactNode;
+        [key: string]: (children: ReactNode, data: any, options: { key: string }) => ReactNode;
     }
 
     export interface Renderers {
@@ -19,8 +21,8 @@ declare module "redraft" {
         entities?: EntityMap;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any
-    const redraft = (raw: any, renderers: Renderers): React.ReactElement<any, any> | null => {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const redraft = (raw: any, renderers: Renderers): ReactElement<any, any> | null => {};
 
     export default redraft;
 }

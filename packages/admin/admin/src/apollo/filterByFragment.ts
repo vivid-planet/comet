@@ -1,9 +1,9 @@
-import { FragmentMatcher } from "@apollo/client";
+import { type FragmentMatcher } from "@apollo/client";
 import {
     argumentsObjectFromField,
     createFragmentMap,
-    DirectiveInfo,
-    FragmentMap,
+    type DirectiveInfo,
+    type FragmentMap,
     getFragmentDefinitions,
     getMainDefinition,
     isField,
@@ -11,7 +11,14 @@ import {
     resultKeyNameFromField,
     shouldInclude,
 } from "@apollo/client/utilities";
-import { DirectiveNode, DocumentNode, FieldNode, FragmentDefinitionNode, InlineFragmentNode, SelectionSetNode } from "graphql";
+import {
+    type DirectiveNode,
+    type DocumentNode,
+    type FieldNode,
+    type FragmentDefinitionNode,
+    type InlineFragmentNode,
+    type SelectionSetNode,
+} from "graphql";
 
 // Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/utilities.ts
 export function filterByFragment<FD = any, D extends FD = any>(doc: DocumentNode, data: D, variableValues: VariableMap = {}): FD {
@@ -22,7 +29,7 @@ export function filterByFragment<FD = any, D extends FD = any>(doc: DocumentNode
     };
 
     return Array.isArray(data)
-        ? data.map((dataObj) => graphql(resolver, doc, dataObj, null, variableValues))
+        ? (data.map((dataObj) => graphql(resolver, doc, dataObj, null, variableValues)) as FD)
         : graphql(resolver, doc, data, null, variableValues);
 }
 

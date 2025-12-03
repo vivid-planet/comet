@@ -1,79 +1,48 @@
 "use client";
+import { Button } from "@src/common/components/Button";
 import { PageLink } from "@src/layout/header/PageLink";
-import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
-import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
+import { type GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
+import styles from "./TopNavigation.module.scss";
 
 interface Props {
     data: GQLTopMenuPageTreeNodeFragment[];
 }
 
-export function TopNavigation({ data }: Props): JSX.Element {
+export const TopNavigation = ({ data }: Props) => {
     return (
-        <TopLevelNavigation>
-            {data.map((item) => (
-                <TopLevelLinkContainer key={item.id}>
-                    <Link page={item} activeClassName="active">
-                        {item.name}
-                    </Link>
-                    {item.childNodes.length > 0 && (
-                        <SubLevelNavigation>
-                            {item.childNodes.map((node) => (
-                                <li key={node.id}>
-                                    <Link page={node} activeClassName="active">
-                                        {node.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </SubLevelNavigation>
-                    )}
-                </TopLevelLinkContainer>
-            ))}
-        </TopLevelNavigation>
+        <>
+            <a className={styles.skipLink} href="#mainContent">
+                <Button as="span">
+                    <FormattedMessage defaultMessage="Skip to main content" id="skipLink.skipToMainContent" />
+                </Button>
+            </a>
+            <a className={styles.skipLink} href="#footer">
+                <Button as="span">
+                    <FormattedMessage defaultMessage="Skip to footer" id="skipLink.skipToFooter" />
+                </Button>
+            </a>
+            <ol className={styles.topLevelNavigation}>
+                {data.map((item) => (
+                    <li className={styles.topLevelLinkContainer} key={item.id}>
+                        <PageLink page={item} activeClassName={styles.linkActive} className={styles.link}>
+                            {item.name}
+                        </PageLink>
+                        {item.childNodes.length > 0 && (
+                            <ol className={styles.subLevelNavigation}>
+                                {item.childNodes.map((node) => (
+                                    <li key={node.id}>
+                                        <PageLink page={node} activeClassName={styles.linkActive} className={styles.link}>
+                                            {node.name}
+                                        </PageLink>
+                                    </li>
+                                ))}
+                            </ol>
+                        )}
+                    </li>
+                ))}
+            </ol>
+        </>
     );
-}
-
-const TopLevelNavigation = styled.ol`
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-`;
-
-const SubLevelNavigation = styled.ol`
-    display: none;
-    position: absolute;
-    min-width: 100px;
-    list-style-type: none;
-    padding: 5px;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const TopLevelLinkContainer = styled.li`
-    position: relative;
-
-    &:hover {
-        text-decoration: underline;
-
-        & > ${SubLevelNavigation} {
-            display: block;
-        }
-    }
-`;
-
-const Link = styled(PageLink)`
-    text-decoration: none;
-    padding: 5px 10px;
-    color: ${({ theme }) => theme.palette.text.primary};
-    font-size: 12px;
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &.active {
-        color: ${({ theme }) => theme.palette.text.inverted};
-    }
-`;
+};

@@ -1,17 +1,18 @@
 import {
+    Button,
     CancelButton,
+    CheckboxField,
+    createCometTheme,
     Field,
     FieldContainer,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRadio,
     FinalFormSelect,
     FormSection,
     OkayButton,
 } from "@comet/admin";
-import { createCometTheme } from "@comet/admin-theme";
 import {
-    Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
@@ -103,9 +104,7 @@ export const FieldsInSidebar = {
                                         fullWidth
                                         component={FinalFormInput}
                                     />
-                                    <Field name="checkbox" type="checkbox" fullWidth>
-                                        {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                                    </Field>
+                                    <CheckboxField name="checkbox" label="Checkbox" fullWidth />
                                     <FieldContainer label="Radio" fullWidth>
                                         <>
                                             {flavourOptions.map(({ value, label }) => (
@@ -164,9 +163,7 @@ export const FieldsInDialog = {
                                             fullWidth
                                             component={FinalFormInput}
                                         />
-                                        <Field name="checkbox" type="checkbox" fullWidth>
-                                            {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                                        </Field>
+                                        <CheckboxField name="checkbox" label="Checkbox" fullWidth />
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
@@ -179,9 +176,7 @@ export const FieldsInDialog = {
                 </Dialog>
 
                 <div style={{ textAlign: "center" }}>
-                    <Button variant="contained" color="primary" onClick={() => setShowDialog(true)}>
-                        Show Dialog
-                    </Button>
+                    <Button onClick={() => setShowDialog(true)}>Show Dialog</Button>
                 </div>
             </>
         );
@@ -238,7 +233,7 @@ export const GridLayout = {
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="select1" label="Select 1" fullWidth>
                                     {(props) => (
                                         <FinalFormSelect {...props}>
@@ -251,7 +246,7 @@ export const GridLayout = {
                                     )}
                                 </Field>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="select2" label="Select 2" fullWidth>
                                     {(props) => (
                                         <FinalFormSelect {...props}>
@@ -264,10 +259,10 @@ export const GridLayout = {
                                     )}
                                 </Field>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="text1" label="Text 1" component={FinalFormInput} fullWidth />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="text2" label="Text 2" component={FinalFormInput} fullWidth />
                             </Grid>
                         </Grid>
@@ -323,9 +318,7 @@ export const HorizontalFields = {
                                         ))}
                                     </>
                                 </FieldContainer>
-                                <Field name="checkbox" type="checkbox" label="Checkbox">
-                                    {(props) => <FormControlLabel label="" control={<FinalFormCheckbox {...props} />} />}
-                                </Field>
+                                <CheckboxField name="checkbox" fieldLabel="Checkbox" fullWidth />
                             </form>
                         )}
                     />

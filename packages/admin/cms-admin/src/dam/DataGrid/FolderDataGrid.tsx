@@ -1,28 +1,33 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
-    BreadcrumbItem,
+    type BreadcrumbItem,
+    DataGridToolbar,
     EditDialog,
+    FillSpace,
     GridCellContent,
-    IFilterApi,
-    ISelectionApi,
+    type GridColDef,
+    type IFilterApi,
+    type ISelectionApi,
     PrettyBytes,
+    ToolbarActions,
+    ToolbarItem,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { Slide, SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
+import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
+import { type ReactNode, useEffect, useState } from "react";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { GQLDamItemType } from "../../graphql.generated";
+import { type GQLDamItemType } from "../../graphql.generated";
+import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
-import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
-import { DamConfig, DamFilter } from "../DamTable";
+import { type DamConfig, type DamFilter } from "../DamTable";
 import { licenseTypeLabels } from "../FileForm/licenseType";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -30,23 +35,24 @@ import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
+import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
+import { DamTableFilter } from "./filter/DamTableFilter";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
-    GQLDamItemListPositionQuery,
-    GQLDamItemListPositionQueryVariables,
-    GQLDamItemsListQuery,
-    GQLDamItemsListQueryVariables,
+    type GQLDamFileTableFragment,
+    type GQLDamFolderQuery,
+    type GQLDamFolderQueryVariables,
+    type GQLDamFolderTableFragment,
+    type GQLDamItemListPositionQuery,
+    type GQLDamItemListPositionQueryVariables,
+    type GQLDamItemsListQuery,
+    type GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
-import { FolderHead } from "./FolderHead";
-import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
+import { DamMoreActions } from "./selection/DamMoreActions";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { LicenseValidityTags } from "./tags/LicenseValidityTags";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
@@ -73,12 +79,64 @@ interface FolderDataGridProps extends DamConfig {
     selectionApi: ISelectionApi;
 }
 
+type FolderDataGridToolbarProps = {
+    id?: string;
+    filterApi: IFilterApi<DamFilter>;
+    hideArchiveFilter?: boolean;
+    additionalToolbarItems?: ReactNode;
+    uploadFilters: {
+        allowedMimetypes?: string[];
+    };
+};
+
+function FolderDataGridToolbar({
+    id: currentFolderId,
+    filterApi,
+    hideArchiveFilter,
+    additionalToolbarItems,
+    uploadFilters,
+}: FolderDataGridToolbarProps) {
+    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+        variables: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: currentFolderId!,
+        },
+        skip: currentFolderId === undefined,
+    });
+
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <DamTableFilter hideArchiveFilter={hideArchiveFilter} filterApi={filterApi} />
+            </ToolbarItem>
+            <FillSpace />
+            <ToolbarActions>
+                {additionalToolbarItems}
+                <DamMoreActions
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                    folderId={data?.damFolder.id}
+                    filter={uploadFilters}
+                />
+
+                <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
+            </ToolbarActions>
+        </DataGridToolbar>
+    );
+}
+
 const FolderDataGrid = ({
     id: currentFolderId,
     filterApi,
     breadcrumbs,
     selectionApi,
-    hideContextMenu,
+    hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
@@ -114,11 +172,9 @@ const FolderDataGrid = ({
         skip: currentFolderId === undefined,
     });
 
-    const {
-        data: dataGridData,
-        loading,
-        error,
-    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
+    const apiRef = useGridApiRef();
+
+    const { data: dataGridData, loading } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: currentFolderId,
             includeArchived: filterApi.current.archived,
@@ -128,8 +184,8 @@ const FolderDataGrid = ({
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             scope,
         },
     });
@@ -215,12 +271,12 @@ const FolderDataGrid = ({
             });
 
             const position = result.data.damItemListPosition;
-            const targetPage = Math.floor(position / dataGridProps.pageSize);
+            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
 
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                dataGridProps.onPageChange?.(targetPage, {});
+                apiRef.current?.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
             }
 
             setRedirectedToId(id);
@@ -254,7 +310,7 @@ const FolderDataGrid = ({
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage={"Empty folders can't be uploaded"} />}
+            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage="Empty folders can't be uploaded" />}
         />
     );
 
@@ -304,7 +360,7 @@ const FolderDataGrid = ({
         setDamItemToMove(undefined);
     };
 
-    const handleSelectionModelChange = (newSelectionModel: GridSelectionModel) => {
+    const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
         const newMap: DamItemSelectionMap = new Map();
 
         newSelectionModel.forEach((selectedId) => {
@@ -345,7 +401,7 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
+    const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -488,7 +544,7 @@ const FolderDataGrid = ({
                       hideSortIcons: true,
                       disableColumnMenu: true,
                   },
-              ] as GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment>)
+              ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
         {
             field: "createdAt",
@@ -499,7 +555,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -513,15 +569,18 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
         },
         {
-            field: "contextMenu",
+            field: "actions",
             headerName: "",
-            align: "center",
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 52,
             renderCell: ({ row }) => {
                 return isFile(row) ? (
                     <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
@@ -533,38 +592,48 @@ const FolderDataGrid = ({
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
-            hide: hideContextMenu,
         },
     ];
 
+    const uploadFilters = {
+        allowedMimetypes: props.allowedMimetypes,
+    };
+
     return (
-        <sc.FolderWrapper>
-            <FolderHead
-                isSearching={isSearching}
-                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
-                breadcrumbs={breadcrumbs}
-                folderId={currentFolderId}
-            />
+        <>
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
+                    apiRef={apiRef}
                     {...dataGridProps}
                     rowHeight={58}
                     rows={dataGridData?.damItemsList.nodes ?? []}
-                    rowCount={dataGridData?.damItemsList.totalCount ?? 0}
+                    rowCount={dataGridData?.damItemsList.totalCount ?? undefined}
                     loading={loading}
-                    error={error}
-                    rowsPerPageOptions={[10, 20, 50]}
+                    pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    disableSelectionOnClick
-                    selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
-                    onSelectionModelChange={handleSelectionModelChange}
-                    autoHeight={true}
+                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+                    onRowSelectionModelChange={handleSelectionModelChange}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
+                    columnVisibilityModel={{
+                        contextMenu: !hideContextMenu,
+                    }}
+                    slots={{
+                        toolbar: FolderDataGridToolbar as GridSlotsComponent["toolbar"],
+                    }}
+                    slotProps={{
+                        toolbar: {
+                            id: currentFolderId,
+                            breadcrumbs,
+                            filterApi,
+                            selectionApi,
+                            uploadFilters,
+                            additionalToolbarItems: props.additionalToolbarItems,
+                        } as FolderDataGridToolbarProps,
+                    }}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{
@@ -574,10 +643,10 @@ const FolderDataGrid = ({
             >
                 {({ selectedId, selectionMode }) => {
                     return (
-                        <>
+                        <DialogContent>
                             {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
                             {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
-                        </>
+                        </DialogContent>
                     );
                 }}
             </EditDialog>
@@ -589,7 +658,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </sc.FolderWrapper>
+        </>
     );
 };
 

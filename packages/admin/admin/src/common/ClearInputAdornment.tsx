@@ -1,20 +1,20 @@
 import { Clear } from "@comet/admin-icons";
 import {
     ButtonBase,
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     Grow,
     InputAdornment,
-    InputAdornmentClassKey,
-    InputAdornmentProps,
+    type InputAdornmentClassKey,
+    type InputAdornmentProps,
     selectClasses,
-    Theme,
+    type Theme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface ClearInputAdornmentProps
     extends InputAdornmentProps,
@@ -45,10 +45,14 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
         position,
     };
 
+    if (!hasClearableContent) {
+        return null;
+    }
+
     return (
         <Grow in={hasClearableContent}>
             <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
-                <Button tabIndex={-1} onClick={onClick} {...slotProps?.buttonBase}>
+                <Button onClick={onClick} focusRipple {...slotProps?.buttonBase}>
                     {icon}
                 </Button>
             </Root>

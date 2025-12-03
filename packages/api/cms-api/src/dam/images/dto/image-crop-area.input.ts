@@ -1,7 +1,7 @@
 import { Field, Float, InputType } from "@nestjs/graphql";
 import { IsEnum, IsNumber, IsOptional, Max, Min, ValidateIf } from "class-validator";
 
-import { FocalPoint } from "../../common/enums/focal-point.enum";
+import { FocalPoint } from "../../../file-utils/focal-point.enum";
 
 @InputType({ isAbstract: true })
 export class ImageCropAreaInput {

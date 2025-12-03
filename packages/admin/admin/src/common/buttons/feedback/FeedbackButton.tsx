@@ -1,19 +1,19 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { LoadingButton, LoadingButtonProps } from "@mui/lab";
-import { ButtonClassKey, ComponentsOverrides } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useEffect, useState } from "react";
+import { type ComponentsOverrides } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { Tooltip as CometTooltip } from "../../Tooltip";
+import { Button, type ButtonClassKey, type ButtonProps } from "../Button";
 
 export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | "tooltip" | ButtonClassKey;
 
 type OwnerState = { displayState: FeedbackButtonDisplayState };
 
-const Root = createComponentSlot(LoadingButton)<FeedbackButtonClassKey, OwnerState>({
+const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     componentName: "FeedbackButton",
     slotName: "root",
     classesResolver(ownerState) {
@@ -33,10 +33,10 @@ const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
 
 export interface FeedbackButtonProps
     extends ThemedComponentBaseProps<{
-            root: typeof LoadingButton;
+            root: typeof Button;
             tooltip: typeof CometTooltip;
         }>,
-        Omit<LoadingButtonProps, "loading"> {
+        Omit<ButtonProps, "slotProps"> {
     onClick?: () => void | Promise<void>;
     hasErrors?: boolean;
     loading?: boolean;
@@ -54,8 +54,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         loading,
         hasErrors,
         children,
-        variant = "contained",
-        color = "primary",
         classes,
         disabled,
         startIcon,
@@ -95,7 +93,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                       setDisplayState("loading");
                       await onClick();
                       setDisplayState("success");
-                  } catch (_) {
+                  } catch {
                       setDisplayState("error");
                   } finally {
                       setTimeout(() => {
@@ -157,8 +155,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             onClick={handleOnClick}
             ownerState={ownerState}
             loading={loading !== undefined ? loading : displayState === "loading"}
-            variant={variant}
-            color={color}
             disabled={disabled || (loading !== undefined ? loading : displayState === "loading")}
             loadingPosition={startIcon ? "start" : "end"}
             loadingIndicator={<ThreeDotSaving />}

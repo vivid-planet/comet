@@ -58,7 +58,7 @@ Once we have defined the block data, we also need to define the block input. The
 <!-- TODO Add a comparison to GraphQL object and input type -->
 
 ```ts title="headline.block.ts"
-import { inputToData } from "@comet/blocks-api";
+import { blockInputToData } from "@comet/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
     @IsUndefinable()
@@ -74,12 +74,12 @@ class HeadlineBlockInput extends BlockInput {
     level: HeadlineLevel;
 
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }
 ```
 
-Note the method called `transformToBlockData()`. This method transforms the block input into the savable block data. As this method is nearly identical for all blocks, we provide a `inputToData` method to create the intended outcome.
+Note the method called `transformToBlockData()`. This method transforms the block input into the savable block data. As this method is nearly identical for all blocks, we provide a `blockInputToData` method to create the intended outcome.
 
 ### Create and Register the Block
 
@@ -124,8 +124,8 @@ The complete code for our Headline API block (including all necessary imports) c
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+    blockInputToData,
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsUndefinable } from "@comet/cms-api";
 import { IsEnum, IsString } from "class-validator";\n
@@ -156,7 +156,7 @@ export class HeadlineBlockInput extends BlockInput {
     @BlockField({ type: "enum", enum: HeadlineLevel })
     level: HeadlineLevel;\n
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }\n
 export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, "Headline");
@@ -178,7 +178,7 @@ export const HeadlineBlock = createCompositeBlock(
         displayName: "Headline",
         blocks: {
             eyebrow: {
-                block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
+                block: createCompositeBlockField<HeadlineBlockData["eyebrow"]>({
                     defaultValue: undefined,
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
@@ -195,7 +195,7 @@ export const HeadlineBlock = createCompositeBlock(
                 title: "Headline",
             },
             level: {
-                block: createCompositeSetting<HeadlineBlockData["level"]>({
+                block: createCompositeBlockField<HeadlineBlockData["level"]>({
                     defaultValue: "header-one",
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "level">>
@@ -223,7 +223,7 @@ export const HeadlineBlock = createCompositeBlock(
 );
 ```
 
-Please note that the names of the keys of the `blocks` object must be the same as the name of fields in the the API block (eyebrow, headline and level).
+Please note that the names of the keys of the `blocks` object must be the same as the name of fields in the API block (eyebrow, headline and level).
 
 ### The Admin Component
 
@@ -232,11 +232,11 @@ _The admin component of the Headline block_
 
 The admin component is the primary way a user interacts with a block. For our Headline block, the admin component consists of a text field for the eyebrow text, a rich text editor for the headline, and a select for the headline level.
 
-Let's take a look at how the admin component is defined in code. The text field for the **eyebrow text** is a plain Final Form field, used the same way you'd use it in any COMET DXP Admin application. The form is wrapped using `createCompositeSetting`, which helps to integrate the form state into the block state. Also, note the use of the `HeadlineBlockData` type. This interface is generated using the block mentioned above meta -- how cool is that?!
+Let's take a look at how the admin component is defined in code. The text field for the **eyebrow text** is a plain Final Form field, used the same way you'd use it in any COMET DXP Admin application. The form is wrapped using `createCompositeBlockField`, which helps to integrate the form state into the block state. Also, note the use of the `HeadlineBlockData` type. This interface is generated using the block mentioned above meta -- how cool is that?!
 
 ```tsx title="HeadlineBlock.tsx"
 eyebrow: {
-    block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
+    block: createCompositeBlockField<HeadlineBlockData["eyebrow"]>({
         defaultValue: undefined,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
@@ -259,11 +259,11 @@ headline: {
 },
 ```
 
-For the **level** select, we're once again using a plain Final Form field in combination with createCompositeSetting.
+For the **level** select, we're once again using a plain Final Form field in combination with createCompositeBlockField.
 
 ```tsx title="HeadlineBlock.tsx"
 level: {
-    block: createCompositeSetting<HeadlineBlockData["level"]>({
+    block: createCompositeBlockField<HeadlineBlockData["level"]>({
         defaultValue: "header-one",
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<Pick<HeadlineBlockData, "level">>
@@ -313,12 +313,10 @@ The complete code for our Headline admin block (including all necessary imports)
     <div>
         <CodeBlock language="ts">
             {`import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
-import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
-import { createRichTextBlock } from "@comet/cms-admin";
+import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeBlockField, createRichTextBlock } from "@comet/cms-admin";
 import { MenuItem } from "@material-ui/core";
 import { HeadlineBlockData } from "@src/blocks.generated";
-import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import * as React from "react";\n
+import { LinkBlock } from "@src/common/blocks/LinkBlock";\n
 const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
     rte: {
@@ -334,7 +332,7 @@ export const HeadlineBlock = createCompositeBlock(
         displayName: "Headline",
         blocks: {
             eyebrow: {
-                block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
+                block: createCompositeBlockField<HeadlineBlockData["eyebrow"]>({
                     defaultValue: undefined,
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
@@ -351,7 +349,7 @@ export const HeadlineBlock = createCompositeBlock(
                 title: "Headline",
             },
             level: {
-                block: createCompositeSetting<HeadlineBlockData["level"]>({
+                block: createCompositeBlockField<HeadlineBlockData["level"]>({
                     defaultValue: "header-one",
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "level">>
@@ -440,9 +438,8 @@ The complete code for our Headline site block (including all necessary imports) 
     <summary>HeadlineBlock.tsx</summary>
     <div>
         <CodeBlock language="tsx">
-            {`import { PropsWithData, withPreview } from "@comet/cms-site";
+            {`import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { HeadlineBlockData } from "@src/blocks.generated";
-import * as React from "react";
 import { Renderers } from "redraft";\n
 import { RichTextBlock } from "./RichTextBlock";\n
 const headlineTags: { [key: string]: React.ElementType } = {
@@ -492,6 +489,6 @@ Now you should be ready to create additional blocks! Maybe even a Dog Ear block?
 
 :::info
 
-We've only covered the basic concepts of COMET DXP blocks in this guide. To get a full picture, please review the [blocks](../Blocks/) section in our documentation.
+We've only covered the basic concepts of COMET DXP blocks in this guide. To get a full picture, please review the [blocks](/docs/core-concepts/blocks/) section in our documentation.
 
 :::

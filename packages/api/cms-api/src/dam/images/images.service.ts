@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 import { parse } from "path";
 
-import { FocalPoint } from "../common/enums/focal-point.enum";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageInterface } from "./dto/image.interface";
@@ -22,15 +22,11 @@ export class ImagesService {
         return createHmac("sha1", this.config.secret).update([fileHash, cropHash].join(":")).digest("hex");
     }
 
-    createUrlTemplate(
-        { file, cropArea }: ImageInterface,
-        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
-    ): string {
+    createUrlTemplate({ file, cropArea }: ImageInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): string {
         const imageCropArea = cropArea !== undefined ? cropArea : file.image!.cropArea;
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/images`];
-
+        const baseUrl = [`/${this.config.basePath}/images`];
         if (previewDamUrls) {
             baseUrl.push("preview");
         } else {

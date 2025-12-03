@@ -1,6 +1,12 @@
 # compiled output
 /dist
 /node_modules
+
+# translation
+/lang/
+/lang-compiled/
+/lang-extracted/
+
 .env
 src/site-configs.d.ts
 
@@ -34,3 +40,8 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Hot reloading for API packages
+src/reload.ts
+
+.nestjs_repl_history

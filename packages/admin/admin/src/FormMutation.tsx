@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 interface IProps {
     updateMutation: any;

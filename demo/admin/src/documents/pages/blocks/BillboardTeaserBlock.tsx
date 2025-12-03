@@ -1,5 +1,5 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { BillboardTeaserBlockData } from "@src/blocks.generated";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { type BillboardTeaserBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
@@ -41,7 +41,6 @@ export const BillboardTeaserBlock = createCompositeBlock(
                 block: createCompositeBlockSelectField<BillboardTeaserBlockData["overlay"]>({
                     defaultValue: 50,
                     options: overlayOptions,
-                    fullWidth: true,
                 }),
                 title: <FormattedMessage id="billboardTeaserBlock.overlay" defaultMessage="Overlay" />,
                 hiddenInSubroute: true,

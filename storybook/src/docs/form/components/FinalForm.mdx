@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
 import dedent from "ts-dedent";
 
 import * as FinalFormStories from "./FinalForm.stories";
@@ -12,8 +12,8 @@ It's built on top of [React Final Form's `Form` component](https://final-form.or
 
 There are two required properties:
 
--   `mode` can be `add` (for creating a new resource) or `edit` (for editing an existing resource)
--   `onSubmit()` handles the submission of form values to the API
+- `mode` can be `add` (for creating a new resource) or `edit` (for editing an existing resource)
+- `onSubmit()` handles the submission of form values to the API
 
 <Canvas of={FinalFormStories.BasicFinalForm} />
 

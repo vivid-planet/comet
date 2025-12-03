@@ -1,15 +1,15 @@
-import { AllCategories } from "@comet/cms-admin";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import { kebabCase, pascalCase } from "change-case";
+import { type AllCategories } from "@comet/cms-admin";
+import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { camelCase, kebabCase } from "change-case";
 import { FormattedMessage } from "react-intl";
 
 export const pageTreeCategories: AllCategories = [
     {
-        category: "MainNavigation",
+        category: "mainNavigation",
         label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
     },
     {
-        category: "TopMenu",
+        category: "topMenu",
         label: <FormattedMessage id="menu.pageTree.topMenu" defaultMessage="Top menu" />,
     },
 ];
@@ -23,6 +23,6 @@ export function categoryToUrlParam(category: GQLPageTreeNodeCategory | string): 
 }
 
 export function urlParamToCategory(param: string): GQLPageTreeNodeCategory | undefined {
-    const category = pascalCase(param);
+    const category = camelCase(param);
     return isCategory(category) ? category : undefined;
 }

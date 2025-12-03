@@ -1,10 +1,10 @@
-import { createForm, FormApi } from "final-form";
+import { createForm, type FormApi } from "final-form";
 import debounce from "lodash.debounce";
 import isEqual from "lodash.isequal";
 import { useEffect, useRef } from "react";
 
 import { usePersistedState } from "./usePersistedState";
-import { IPagingApi } from "./useTableQueryPaging";
+import { type IPagingApi } from "./useTableQueryPaging";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

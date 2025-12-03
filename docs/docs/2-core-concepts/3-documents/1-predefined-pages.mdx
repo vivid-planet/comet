@@ -41,10 +41,10 @@ Create the module in `src/documents/predefined-pages`.
 To do this, copy the corresponding [folder](https://github.com/vivid-planet/comet/tree/main/demo/api/src/documents/predefined-pages) from the Demo project.
 The following files should be copied:
 
--   `predefined-pages.module.ts`: The module
--   `predefined-pages.resolver.ts`: The GraphQL resolver with the required operations
--   `entities/predefined-page.entity.ts`: The entity
--   `dto/predefined-page.input.ts`: The input
+- `predefined-pages.module.ts`: The module
+- `predefined-pages.resolver.ts`: The GraphQL resolver with the required operations
+- `entities/predefined-page.entity.ts`: The entity
+- `dto/predefined-page.input.ts`: The input
 
 #### Creation of the migration
 
@@ -131,10 +131,10 @@ Create the module in `src/documents/predefinedPages`.
 To do this, copy the corresponding [folder](https://github.com/vivid-planet/comet/tree/main/demo/admin/src/documents/predefinedPages) from the Demo project.
 The following files should be copied:
 
--   `EditPredefinedPage.tsx`: The editing component
--   `EditPredefinedPage.gql.ts`: The GraphQL operations for the edit component
--   `PredefinedPage.tsx`: The document type
--   `PredefinedPageLabels`: The labels for the predefined page types
+- `EditPredefinedPage.tsx`: The editing component
+- `EditPredefinedPage.gql.ts`: The GraphQL operations for the edit component
+- `PredefinedPage.tsx`: The document type
+- `PredefinedPageLabels`: The labels for the predefined page types
 
 #### Registration of the `PredefinedPage` document type
 
@@ -166,7 +166,7 @@ Create the module in `src/documents/predefinedPages`.
 To do this, copy the corresponding [folder](https://github.com/vivid-planet/comet/tree/main/demo/site/src/documents/predefinedPages) from the Demo project.
 The following files should be copied:
 
--   `predefinedPagePaths.ts`: The paths where the predefined pages are located in the code
+- `predefinedPagePaths.ts`: The paths where the predefined pages are located in the code
 
 #### Adding the predefined pages to the middleware
 
@@ -177,8 +177,8 @@ For the German site, the news page should be located at `https://example.com/de/
 However, in code, the news page is located at `/app/[language]/news`, resulting in `https://example.com/de/news`.
 To ensure that the page can be viewed at the expected location, we need the following redirect and rewrite:
 
--   A **rewrite** from `/de/aktuelles` to `/de/news` (to ensure that the page can be viewed at the expected location)
--   A **redirect** from `/de/news` to `/de/aktuelles` (to avoid duplicate content)
+- A **rewrite** from `/de/aktuelles` to `/de/news` (to ensure that the page can be viewed at the expected location)
+- A **redirect** from `/de/news` to `/de/aktuelles` (to avoid duplicate content)
 
 Perform the following changes in the middleware:
 

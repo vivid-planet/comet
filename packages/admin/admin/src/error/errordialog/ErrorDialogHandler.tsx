@@ -1,7 +1,7 @@
 import { useReactiveVar } from "@apollo/client";
 import { useEffect, useState } from "react";
 
-import { ErrorDialog, ErrorDialogOptions } from "./ErrorDialog";
+import { ErrorDialog, type ErrorDialogOptions } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 
 export const ErrorDialogHandler = () => {

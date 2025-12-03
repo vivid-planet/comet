@@ -1,8 +1,20 @@
 module.exports = function () {
     return {
-        presets: ["@babel/preset-env", "@babel/preset-typescript", ["@babel/preset-react", {
-            "runtime": "automatic"
-        }]],
+        presets: [
+            "@babel/preset-env",
+            [
+                "@babel/preset-typescript",
+                {
+                    allowDeclareFields: true,
+                },
+            ],
+            [
+                "@babel/preset-react",
+                {
+                    runtime: "automatic",
+                },
+            ],
+        ],
         plugins: [
             [
                 "@emotion",
@@ -23,7 +35,6 @@ module.exports = function () {
                     },
                 },
             ],
-            "@babel/plugin-proposal-class-properties",
         ],
     };
 };

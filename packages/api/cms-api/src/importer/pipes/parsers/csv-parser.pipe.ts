@@ -1,9 +1,9 @@
 import * as csv from "@fast-csv/parse";
-import { HeaderArray, ParserOptionsArgs } from "@fast-csv/parse";
-import { Transform, TransformCallback } from "stream";
+import { type HeaderArray, type ParserOptionsArgs } from "@fast-csv/parse";
+import { Transform, type TransformCallback } from "stream";
 
-import { ImportFieldMetadata } from "../../decorators/csv-column.decorator";
-import { ImporterPipe, PipeMetadata } from "../importer-pipe.type";
+import { type ImportFieldMetadata } from "../../decorators/csv-column.decorator";
+import { type ImporterPipe, type PipeMetadata } from "../importer-pipe.type";
 
 export type CsvParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: BufferEncoding };
 
@@ -36,7 +36,7 @@ export class CsvParsePipe implements ImporterPipe {
             trim: true,
             ...jobRunParserOptions,
             headers:
-                jobRunParserOptions?.headers ?? entityHasOnlyNumericCsvColumnNames
+                (jobRunParserOptions?.headers ?? entityHasOnlyNumericCsvColumnNames)
                     ? undefined
                     : (headers: HeaderArray) =>
                           headers.map((header) => {

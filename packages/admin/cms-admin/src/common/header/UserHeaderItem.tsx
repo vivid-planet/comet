@@ -1,22 +1,15 @@
-import { gql, useMutation } from "@apollo/client";
-import { AppHeaderDropdown, AppHeaderDropdownProps } from "@comet/admin";
-import { Account, ImpersonateUser, Logout, ThreeDotSaving } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, AvatarProps, Box, Button, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { AppHeaderDropdown, type AppHeaderDropdownProps } from "@comet/admin";
+import { Account, ImpersonateUser } from "@comet/admin-icons";
+import { Avatar, AvatarGroup, type AvatarProps, Box, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import { PropsWithChildren, ReactElement, useState } from "react";
+import { type PropsWithChildren, type ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { version } from "../..";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
+import { SignOutButton } from "../signOutButton/SignOutButton";
 import { AboutModal } from "./about/AboutModal";
 import { ImpersonationInlay } from "./ImpersonationInlay";
-import { GQLSignOutMutation } from "./UserHeaderItem.generated";
-
-const signOutMutation = gql`
-    mutation SignOut {
-        currentUserSignOut
-    }
-`;
 
 interface UserHeaderItemProps {
     aboutModalLogo?: ReactElement;
@@ -30,7 +23,6 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const user = useCurrentUser();
 
     const [showAboutModal, setShowAboutModal] = useState(false);
-    const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     const accountIcon = user.impersonated ? (
         <AvatarGroup>
@@ -75,21 +67,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                     </>
                 )}
                 <Box padding={4}>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        disabled={isSigningOut}
-                        startIcon={isSigningOut ? <ThreeDotSaving /> : <Logout />}
-                        onClick={async () => {
-                            const result = await signOut();
-                            if (result.data) {
-                                location.href = result.data.currentUserSignOut;
-                            }
-                        }}
-                    >
-                        <FormattedMessage id="comet.logout" defaultMessage="Logout" />
-                    </Button>
+                    <SignOutButton fullWidth variant="contained" />
                     <MenuFooter>
                         <Typography variant="caption" color={theme.palette.grey[400]}>{`Version: v${version}`}</Typography>
                         <Typography variant="caption">

@@ -1,7 +1,7 @@
-import { GridValidRowModel } from "@mui/x-data-grid";
+import { type GridValidRowModel } from "@mui/x-data-grid";
 import * as Excel from "exceljs";
 
-import { GridColDef } from "../GridColDef";
+import { type GridColDef } from "../GridColDef";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
 export interface ExcelGenerationOptions {
@@ -46,14 +46,20 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                     let value = row[column.field];
                     if (column.valueGetter) {
                         // @ts-expect-error `valueGetter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
-                        value = column.valueGetter({ value, row }) ?? "";
+                        value = column.valueGetter(value, row) ?? "";
                     }
                     if (column.valueFormatter) {
                         // @ts-expect-error `valueFormatter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
-                        value = column.valueFormatter({ value }) ?? "";
+                        value = column.valueFormatter(value, row) ?? "";
                     }
 
-                    if (typeof value !== "string" && typeof value !== "number" && value !== null && !(value instanceof Date)) {
+                    if (
+                        typeof value !== "string" &&
+                        typeof value !== "boolean" &&
+                        typeof value !== "number" &&
+                        value !== null &&
+                        !(value instanceof Date)
+                    ) {
                         throw new Error(`The type of the provided value "${typeof value}" is not supported for excel export.`);
                     }
 

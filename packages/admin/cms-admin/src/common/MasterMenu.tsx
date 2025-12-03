@@ -1,27 +1,27 @@
 import {
-    Menu,
-    MenuCollapsibleItem,
-    MenuCollapsibleItemProps,
-    MenuContext,
-    MenuItemAnchorLink,
-    MenuItemAnchorLinkProps,
-    MenuItemGroup,
-    MenuItemGroupProps,
-    MenuItemRouterLink,
-    MenuItemRouterLinkProps,
+    MainNavigation,
+    MainNavigationCollapsibleItem,
+    type MainNavigationCollapsibleItemProps,
+    MainNavigationItemAnchorLink,
+    type MainNavigationItemAnchorLinkProps,
+    MainNavigationItemGroup,
+    type MainNavigationItemGroupProps,
+    MainNavigationItemRouterLink,
+    type MainNavigationItemRouterLinkProps,
+    useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
-import { ReactNode, useContext, useEffect } from "react";
-import { RouteProps, useRouteMatch } from "react-router-dom";
+import { type ReactNode, useEffect } from "react";
+import { type RouteProps, useRouteMatch } from "react-router-dom";
 
-import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
+import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 
 type MasterMenuItemBase = {
-    requiredPermission?: string;
+    requiredPermission?: Permission | Permission[];
 };
 
 type MasterMenuItemRoute = MasterMenuItemBase &
-    Omit<MenuItemRouterLinkProps, "to"> & {
+    Omit<MainNavigationItemRouterLinkProps, "to"> & {
         type: "route";
         route?: RouteProps;
         to?: string;
@@ -29,19 +29,19 @@ type MasterMenuItemRoute = MasterMenuItemBase &
     };
 
 type MasterMenuItemCollapsible = MasterMenuItemBase &
-    Omit<MenuCollapsibleItemProps, "children"> & {
+    Omit<MainNavigationCollapsibleItemProps, "children"> & {
         type: "collapsible";
         items?: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
         route?: RouteProps;
     };
 
 type MasterMenuItemAnchor = MasterMenuItemBase &
-    MenuItemAnchorLinkProps & {
+    MainNavigationItemAnchorLinkProps & {
         type: "externalLink";
     };
 
 type MasterMenuItemGroup = MasterMenuItemBase &
-    MenuItemGroupProps & {
+    MainNavigationItemGroupProps & {
         type: "group";
         items: Array<
             (MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible) & {
@@ -60,23 +60,23 @@ export type MasterMenuData = MasterMenuItem[];
 
 type MenuItemRouteElement = {
     type: "route";
-    menuElement: MenuItemRouterLinkProps;
+    menuElement: MainNavigationItemRouterLinkProps;
 };
 
 type MenuItemCollapsibleElement = {
     type: "collapsible";
-    menuElement: Omit<MenuCollapsibleItemProps, "children">;
+    menuElement: Omit<MainNavigationCollapsibleItemProps, "children">;
     items: MenuItem[];
 };
 
 type MenuItemAnchorElement = {
     type: "externalLink";
-    menuElement: MenuItemAnchorLinkProps;
+    menuElement: MainNavigationItemAnchorLinkProps;
 };
 
 type MenuItemGroupElement = {
     type: "group";
-    menuElement: Omit<MenuItemGroupProps, "children">;
+    menuElement: Omit<MainNavigationItemGroupProps, "children">;
     items: MenuItem[];
 };
 
@@ -96,7 +96,8 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
             }
             return true;
         }
-        return isAllowed(item.requiredPermission);
+        const requiredPermissions = Array.isArray(item.requiredPermission) ? item.requiredPermission : [item.requiredPermission];
+        return requiredPermissions.some((permission) => isAllowed(permission));
     };
 
     const mapFn = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): MenuItem => {
@@ -137,7 +138,7 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
 export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
-    const { open, toggleOpen } = useContext(MenuContext);
+    const { open, toggleOpen } = useMainNavigation();
     const windowSize = useWindowSize();
     const match = useRouteMatch();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
@@ -155,40 +156,42 @@ export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuPro
         items.flatMap((item, index) => {
             if (item.type === "collapsible") {
                 return (
-                    <MenuCollapsibleItem key={index} {...item.menuElement}>
+                    <MainNavigationCollapsibleItem key={index} {...item.menuElement}>
                         {renderMenuItems(item.items)}
-                    </MenuCollapsibleItem>
+                    </MainNavigationCollapsibleItem>
                 );
             } else if (item.type === "externalLink") {
-                return <MenuItemAnchorLink key={index} {...item.menuElement} />;
+                return <MainNavigationItemAnchorLink key={index} {...item.menuElement} />;
             } else if (item.type === "route") {
-                return <MenuItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
+                return <MainNavigationItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
             }
             return [];
         });
 
     return (
-        <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
+        <MainNavigation variant={useTemporaryMenu ? "temporary" : "permanent"}>
             {menuItems.map((menuElement, index) => {
                 switch (menuElement.type) {
                     case "group":
                         return (
-                            <MenuItemGroup key={index} {...menuElement.menuElement}>
+                            <MainNavigationItemGroup key={index} {...menuElement.menuElement}>
                                 {renderMenuItems(menuElement.items)}
-                            </MenuItemGroup>
+                            </MainNavigationItemGroup>
                         );
                     case "collapsible":
                         return (
-                            <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
+                            <MainNavigationCollapsibleItem key={index} {...menuElement.menuElement}>
                                 {renderMenuItems(menuElement.items)}
-                            </MenuCollapsibleItem>
+                            </MainNavigationCollapsibleItem>
                         );
                     case "externalLink":
-                        return <MenuItemAnchorLink key={index} {...menuElement.menuElement} />;
+                        return <MainNavigationItemAnchorLink key={index} {...menuElement.menuElement} />;
                     case "route":
-                        return <MenuItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />;
+                        return (
+                            <MainNavigationItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />
+                        );
                 }
             })}
-        </Menu>
+        </MainNavigation>
     );
 };

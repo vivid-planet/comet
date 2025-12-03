@@ -1,19 +1,29 @@
-import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
-import { ReactNode } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { Error } from "@comet/admin-icons";
+import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
+import { type ReactNode } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
-export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
+export interface FinalFormSelectProps<T> {
+    noOptionsText?: ReactNode;
+    errorText?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
+    loadingError?: Error | null;
 }
 
-const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
+
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined, disabled: boolean | undefined) => {
+    if (disabled) {
+        return false;
+    }
     if (multiple && Array.isArray(value)) {
         return value.length > 0;
     }
@@ -21,15 +31,20 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined) =
     return value !== undefined && value !== "";
 };
 
+/**
+ * Final Form-compatible Select component.
+ *
+ * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
+    input: { checked, value: incomingValue, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
     loading = false,
+    loadingError,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
-            // eslint-disable-next-line no-console
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
         }
         return "";
@@ -43,19 +58,33 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
+
+    noOptionsText = (
+        <Typography variant="body2">
+            <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
+        </Typography>
+    ),
+    errorText = (
+        <Typography variant="body2">
+            <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
+        </Typography>
+    ),
+    disabled,
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
+    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={getHasClearableContent(value, multiple)}
+            hasClearableContent={getHasClearableContent(value, multiple, disabled)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;
@@ -63,6 +92,7 @@ export const FinalFormSelect = <T,>({
     const selectProps = {
         ...rest,
         multiple,
+        disabled,
         endAdornment,
         name,
         onChange,
@@ -79,18 +109,21 @@ export const FinalFormSelect = <T,>({
         );
     }
 
+    const showLoadingMessage = loading === true && options.length === 0 && loadingError == null;
+    const showLinearProgress = loading === true && !showLoadingMessage;
+    const showOptions = options.length > 0 && loadingError == null;
+    const showError = loadingError != null && !loading;
+    const showNoOptions = loading === false && loadingError == null && options.length === 0;
+
     return (
         <Select
             {...selectProps}
             endAdornment={
-                <>
-                    {loading && (
-                        <InputAdornment position="end">
-                            <CircularProgress size={16} color="inherit" />
-                        </InputAdornment>
-                    )}
+                <InputAdornment position="end">
+                    {loadingError && <Error color="error" />}
+
                     {endAdornment}
-                </>
+                </InputAdornment>
             }
             onChange={(event) => {
                 const value = event.target.value;
@@ -101,11 +134,19 @@ export const FinalFormSelect = <T,>({
                 );
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
+            renderValue={() => {
+                if (Array.isArray(value)) {
+                    return value.map((i) => getOptionLabel(i));
+                } else {
+                    return getOptionLabel(value);
+                }
+            }}
         >
-            {loading && (
-                <MenuItem value="" disabled>
+            <LinearLoadingContainer>{showLinearProgress && <LinearProgress />}</LinearLoadingContainer>
+            {showLoadingMessage && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
-                </MenuItem>
+                </MenuItemDisabledOverrideOpacity>
             )}
 
             {options.length === 0 &&
@@ -121,11 +162,24 @@ export const FinalFormSelect = <T,>({
                         {getOptionLabel(value)}
                     </MenuItem>
                 ))}
-            {options.map((option: T) => (
-                <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
-                    {getOptionLabel(option)}
-                </MenuItem>
-            ))}
+
+            {showNoOptions && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
+                    {noOptionsText}
+                </MenuItemDisabledOverrideOpacity>
+            )}
+            {showError && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
+                    {errorText}
+                </MenuItemDisabledOverrideOpacity>
+            )}
+
+            {showOptions &&
+                options.map((option: T) => (
+                    <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
+                        {getOptionLabel(option)}
+                    </MenuItem>
+                ))}
         </Select>
     );
 };

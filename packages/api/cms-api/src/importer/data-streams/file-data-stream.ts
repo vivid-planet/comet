@@ -1,7 +1,7 @@
-import { ReadStream } from "node:fs";
+import { type ReadStream } from "node:fs";
 
-import { SdkStream } from "@smithy/types";
-import { IncomingMessage } from "http";
+import { type SdkStream } from "@smithy/types";
+import { type IncomingMessage } from "http";
 
 import { ImporterDataStream } from "./data-stream";
 

@@ -1,5 +1,11 @@
 import { MainContent, Stack, Toolbar } from "@comet/admin";
-import { ContentScopeIndicator, DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
+import {
+    ContentScopeIndicator,
+    DashboardHeader,
+    LatestBuildsDashboardWidget,
+    LatestWarningsDashboardWidget,
+    useUserPermissionCheck,
+} from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import { useIntl } from "react-intl";
 
@@ -22,8 +28,37 @@ export function DashboardPage() {
             <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
             <MainContent>
                 <Grid container direction="row" spacing={4}>
-                    {isAllowed("pageTree") && <LatestContentUpdates />}
-                    {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
+                    {isAllowed("pageTree") && (
+                        <Grid
+                            size={{
+                                xs: 12,
+                                lg: 6,
+                            }}
+                        >
+                            <LatestContentUpdates />
+                        </Grid>
+                    )}
+
+                    {import.meta.env.MODE !== "development" && (
+                        <Grid
+                            size={{
+                                xs: 12,
+                                lg: 6,
+                            }}
+                        >
+                            <LatestBuildsDashboardWidget />
+                        </Grid>
+                    )}
+                    {isAllowed("warnings") && (
+                        <Grid
+                            size={{
+                                xs: 12,
+                                lg: 6,
+                            }}
+                        >
+                            <LatestWarningsDashboardWidget />
+                        </Grid>
+                    )}
                 </Grid>
             </MainContent>
         </Stack>

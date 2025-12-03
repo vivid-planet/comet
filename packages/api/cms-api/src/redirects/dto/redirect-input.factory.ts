@@ -1,10 +1,10 @@
-import { Block, BlockInputInterface, ExtractBlockInput } from "@comet/blocks-api";
 import { Type } from "@nestjs/common";
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsEnum, IsOptional, ValidateNested, ValidationArguments } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
 
+import { Block, BlockInputInterface, ExtractBlockInput } from "../../blocks/block";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { IsValidRedirectSource } from "../validators/isValidRedirectSource";
 

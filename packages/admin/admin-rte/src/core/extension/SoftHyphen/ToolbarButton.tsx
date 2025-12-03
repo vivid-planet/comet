@@ -1,11 +1,12 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
-import { MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
-import { IControlProps } from "../../types";
+import { type IControlProps } from "../../types";
 
 const SHY_UNICODE_CHAR = 0x00ad;
 
@@ -14,7 +15,7 @@ export function ToolbarButton({ editorState, setEditorState }: IControlProps) {
         e.preventDefault(); // important to preserve focus
         const currentContent = editorState.getCurrentContent();
         const selection = editorState.getSelection();
-        //@TODO: insert \u00ad in a way that link-entities dont break when inserted in the middle of a link text
+        //@TODO: insert \u00ad in a way that link-entities don’t break when inserted in the middle of a link text
         // right now the link is split into 2 link-entities
         // works as expected when \u00ad is copied and pasted: https://unicode.flopp.net/c/00AD
         const textWithEntity = Modifier.insertText(currentContent, selection, String.fromCharCode(SHY_UNICODE_CHAR));

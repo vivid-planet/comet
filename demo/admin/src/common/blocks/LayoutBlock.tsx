@@ -3,15 +3,15 @@ import { Hamburger, Image } from "@comet/admin-icons";
 import {
     BlockCategory,
     BlocksFinalForm,
-    ColumnsBlockLayout,
+    type ColumnsBlockLayout,
     ColumnsLayoutPreview,
     ColumnsLayoutPreviewContent,
     ColumnsLayoutPreviewSpacing,
     createCompositeBlock,
-    createCompositeSetting,
+    createCompositeBlockField,
     FinalFormLayoutSelect,
-} from "@comet/blocks-admin";
-import { LayoutBlockData } from "@src/blocks.generated";
+} from "@comet/cms-admin";
+import { type LayoutBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";
 
@@ -124,7 +124,7 @@ export const LayoutBlock = createCompositeBlock(
         visibleOrderedBlocksForState: (state: LayoutBlockData) => layoutOptions.find((option) => option.name === state.layout)?.visibleBlocks,
         blocks: {
             layout: {
-                block: createCompositeSetting<LayoutBlockData["layout"]>({
+                block: createCompositeBlockField<LayoutBlockData["layout"]>({
                     defaultValue: "layout1",
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<{ layout: ColumnsBlockLayout }>
@@ -134,6 +134,7 @@ export const LayoutBlock = createCompositeBlock(
                             <Field name="layout" component={FinalFormLayoutSelect} layouts={layoutOptions} fullWidth />
                         </BlocksFinalForm>
                     ),
+                    extractTextContents: () => [],
                 }),
                 title: <FormattedMessage id="layoutBlock.layout" defaultMessage="Layout" />,
             },

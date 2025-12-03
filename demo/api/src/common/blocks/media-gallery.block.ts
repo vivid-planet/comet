@@ -3,18 +3,18 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     createListBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { MediaGalleryItemBlock } from "@src/common/blocks/media-gallery-item.block";
 import { MediaAspectRatios } from "@src/util/mediaAspectRatios";
 import { IsEnum } from "class-validator";
 
-const MediaGalleryListBlock = createListBlock({ block: MediaGalleryItemBlock }, "MediaGalleryList");
+export const MediaGalleryListBlock = createListBlock({ block: MediaGalleryItemBlock }, "MediaGalleryList");
 
 class MediaGalleryBlockData extends BlockData {
     @ChildBlock(MediaGalleryListBlock)
@@ -33,7 +33,7 @@ class MediaGalleryBlockInput extends BlockInput {
     aspectRatio: MediaAspectRatios;
 
     transformToBlockData(): MediaGalleryBlockData {
-        return inputToData(MediaGalleryBlockData, this);
+        return blockInputToData(MediaGalleryBlockData, this);
     }
 }
 

@@ -9,22 +9,22 @@ export const _Typography = () => (
         <Typography variant="body1">Headlines</Typography>
         <Divider />
         <Grid container>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="h1">Lorem ipsum dolor</Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="h2">Lorem ipsum dolor</Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="h3">Lorem ipsum dolor</Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="h4">Lorem ipsum dolor</Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="h5">Lorem ipsum dolor</Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="h6">Lorem ipsum dolor</Typography>
             </Grid>
         </Grid>
@@ -34,37 +34,37 @@ export const _Typography = () => (
         </Typography>
         <Divider />
         <Grid container>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="body1">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque
                     penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                 </Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="body2">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque
                     penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                 </Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="caption">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque
                     penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                 </Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="subtitle1">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque
                     penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                 </Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="subtitle2">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque
                     penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                 </Typography>
             </Grid>
-            <Grid item xs={12} py={4}>
+            <Grid py={4} size={12}>
                 <Typography variant="overline">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque
                     penatibus et magnis dis parturient montes, nascetur ridiculus mus.

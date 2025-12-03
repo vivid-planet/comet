@@ -1,13 +1,12 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { FileData, FileDataNotMenu } from "@comet/admin-icons";
-import { DocumentInterface } from "@comet/cms-admin";
+import { type DocumentInterface } from "@comet/cms-admin";
 import { Chip } from "@mui/material";
-import { GQLPredefinedPage, GQLPredefinedPageInput } from "@src/graphql.generated";
-import gql from "graphql-tag";
+import { type GQLPredefinedPage, type GQLPredefinedPageInput } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { EditPredefinedPage } from "./EditPredefinedPage";
-import { GQLPredefinedPageInfoTagQuery, GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";
+import { type GQLPredefinedPageInfoTagQuery, type GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";
 import { predefinedPageLabels } from "./predefinedPageLabels";
 
 const predefinedPageInfoTagQuery = gql`

@@ -1,8 +1,9 @@
-import { PureQueryOptions, useApolloClient } from "@apollo/client";
+import { type PureQueryOptions, useApolloClient } from "@apollo/client";
+// eslint-disable-next-line no-restricted-imports
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Fragment, ReactNode, useContext, useState } from "react";
+import { Fragment, type ReactNode, useContext, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";

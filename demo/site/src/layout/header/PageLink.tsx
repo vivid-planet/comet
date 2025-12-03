@@ -1,10 +1,11 @@
 "use client";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { GQLPageLinkFragment } from "./PageLink.fragment.generated";
+import { type GQLPageLinkFragment } from "./PageLink.fragment.generated";
 
 interface Props extends PropsWithChildren {
     page: GQLPageLinkFragment;
@@ -34,13 +35,25 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
         );
     } else if (page.documentType === "Page") {
         return (
-            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+            <Link
+                href={createSitePath({
+                    path: page.path,
+                    scope: page.scope,
+                })}
+                className={className}
+            >
                 {children}
             </Link>
         );
     } else if (page.documentType === "PredefinedPage") {
         return (
-            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+            <Link
+                href={createSitePath({
+                    path: page.path,
+                    scope: page.scope,
+                })}
+                className={className}
+            >
                 {children}
             </Link>
         );

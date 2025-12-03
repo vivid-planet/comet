@@ -2,47 +2,7 @@ import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
 import { format, resolveConfig } from "prettier";
 
-type BlockMetaField =
-    | {
-          name: string;
-          kind: "String" | "Number" | "Boolean" | "Json";
-          nullable: boolean;
-          array?: boolean;
-      }
-    | {
-          name: string;
-          kind: "Enum";
-          nullable: boolean;
-          enum: string[];
-      }
-    | {
-          name: string;
-          kind: "Block";
-          nullable: boolean;
-          block: string;
-      }
-    | {
-          name: string;
-          kind: "OneOfBlocks";
-          nullable: boolean;
-          blocks: Record<string, string>;
-      }
-    | {
-          name: string;
-          kind: "NestedObject" | "NestedObjectList";
-          nullable: boolean;
-          object: BlockMetaNestedObject;
-      };
-
-interface BlockMeta {
-    name: string;
-    fields: BlockMetaField[];
-    inputFields: BlockMetaField[];
-}
-
-interface BlockMetaNestedObject {
-    fields: BlockMetaField[];
-}
+import { type BlockMeta, type BlockMetaField } from "../BlockMeta";
 
 let content = "";
 
@@ -72,7 +32,8 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
             content += "[]";
         }
     } else if (field.kind === "Enum") {
-        content += `"${field.enum.join('" | "')}"`;
+        const enumType = `"${field.enum.join('" | "')}"`;
+        content += field.array ? `(${enumType})[]` : enumType;
     } else if (field.kind === "Block") {
         content += `${field.block}${blockNamePostfix}`;
     } else if (field.kind === "OneOfBlocks") {
@@ -114,6 +75,16 @@ type Options = {
     outputFile: string;
 };
 
+const generateAllBlockNames = (blockMeta: BlockMeta[]): string => {
+    const uniqueBlockNames = Array.from(new Set(blockMeta.map((block) => block.name))).sort();
+
+    let content = "export type AllBlockNames =";
+    uniqueBlockNames.forEach((blockName) => {
+        content += ` | "${blockName}"`;
+    });
+    return content;
+};
+
 const generateBlockTypes = new Command("generate-block-types")
     .description("generate block types from block meta")
     .option("--inputs", "include block inputs")
@@ -150,8 +121,10 @@ const generateBlockTypes = new Command("generate-block-types")
             });
         }
 
+        content += generateAllBlockNames(blockMeta);
+
         const prettierOptions = await resolveConfig(process.cwd());
-        content = format(content, { ...prettierOptions, parser: "typescript" });
+        content = await format(content, { ...prettierOptions, parser: "typescript" });
 
         await writeFile(options.outputFile, content);
     });

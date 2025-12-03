@@ -1,8 +1,8 @@
 import { registerEnumType } from "@nestjs/graphql";
 
 export enum PageTreeNodeCategory {
-    MainNavigation = "MainNavigation",
-    TopMenu = "TopMenu",
+    mainNavigation = "mainNavigation",
+    topMenu = "topMenu",
 }
 
 registerEnumType(PageTreeNodeCategory, { name: "PageTreeNodeCategory" });

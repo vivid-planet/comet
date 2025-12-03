@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsHash, IsInt, IsNumber, IsOptional, IsString, IsUUID, Max, Min, ValidateIf } from "class-validator";
 
-import { FocalPoint } from "../../common/enums/focal-point.enum";
+import { FocalPoint } from "../../../file-utils/focal-point.enum";
 import { ImageCropArea } from "../entities/image-crop-area.entity";
 import { IsAllowedImageSize } from "../validators/is-allowed-image-size.validator";
 import { IsValidImageAspectRatio } from "../validators/is-valid-aspect-ratio.validator";

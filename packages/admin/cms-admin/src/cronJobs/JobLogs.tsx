@@ -1,33 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { Loading, StackPageTitle } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { GQLKubernetesJobWithLogsQuery, GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
-
-function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string | null } }) {
-    const { kubernetesJob } = props;
-    if (!kubernetesJob) {
-        return null;
-    }
-
-    return (
-        <Toolbar>
-            <ToolbarBackButton />
-            <ToolbarTitleItem>
-                <FormattedMessage
-                    id="comet.jobLogs.title"
-                    defaultMessage="Job logs for {job}"
-                    values={{
-                        job: kubernetesJob.label ? `${kubernetesJob.label} (${kubernetesJob.name})` : kubernetesJob.name,
-                    }}
-                />
-            </ToolbarTitleItem>
-            <FillSpace />
-        </Toolbar>
-    );
-}
+import { type GQLKubernetesJobWithLogsQuery, type GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
 
 const LogsContainer = styled("pre")`
     margin: 0;
@@ -64,8 +41,18 @@ export function JobLogs(props: { jobName: string }) {
     const job = data?.kubernetesJob;
 
     return (
-        <MainContent disablePadding>
-            <JobLogsToolbar kubernetesJob={job} />
+        <>
+            <StackPageTitle
+                title={
+                    <FormattedMessage
+                        id="comet.jobLogs.title"
+                        defaultMessage="Job logs for {job}"
+                        values={{
+                            job: job?.label ? `${job?.label} (${job?.name})` : job?.name,
+                        }}
+                    />
+                }
+            />
             {logs ? (
                 <Box paddingLeft={4}>
                     <LogsContainer>{logs}</LogsContainer>
@@ -80,6 +67,6 @@ export function JobLogs(props: { jobName: string }) {
                     </Typography>
                 </Box>
             )}
-        </MainContent>
+        </>
     );
 }

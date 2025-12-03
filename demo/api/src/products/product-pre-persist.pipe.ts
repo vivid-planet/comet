@@ -1,11 +1,16 @@
-import { ImporterPipe } from "@comet/cms-api";
-import { Connection, EntityManager, IDatabaseDriver, Reference } from "@mikro-orm/core";
-import { LoggerService } from "@nestjs/common";
+import { type ImporterPipe } from "@comet/cms-api";
+import { type Connection, type EntityManager, type IDatabaseDriver, Reference } from "@mikro-orm/core";
+import { type LoggerService } from "@nestjs/common";
 import slugify from "slugify";
-import { Transform, TransformCallback } from "stream";
+import { Transform, type TransformCallback } from "stream";
 import { v4 } from "uuid";
 
 import { ProductCategory } from "./entities/product-category.entity";
+import { type ProductImporterInput } from "./product-importer.input";
+
+type RawProductData = Omit<ProductImporterInput, "category"> & {
+    category: string;
+};
 
 export class ProductPrePersistPipe implements ImporterPipe {
     constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>) {}
@@ -18,7 +23,10 @@ export class ProductPrePersistPipe implements ImporterPipe {
 export class ProductPrePersist extends Transform {
     private persistedEntitiesAmount: number;
 
-    constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>, private readonly logger: LoggerService) {
+    constructor(
+        private readonly em: EntityManager<IDatabaseDriver<Connection>>,
+        private readonly logger: LoggerService,
+    ) {
         super({ writableObjectMode: true, objectMode: true });
         this.persistedEntitiesAmount = 0;
     }
@@ -28,7 +36,7 @@ export class ProductPrePersist extends Transform {
     }
 
     async _transform(
-        inputDataAndMetadata: { data: Record<string, unknown>; metadata: Record<string, unknown> },
+        inputDataAndMetadata: { data: RawProductData; metadata: Record<string, unknown> },
         encoding: BufferEncoding,
         callback: TransformCallback,
     ) {

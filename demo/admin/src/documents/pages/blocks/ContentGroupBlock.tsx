@@ -1,17 +1,16 @@
-import { BlockCategory, createBlocksBlock, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { AnchorBlock } from "@comet/cms-admin";
-import { ContentGroupBlockData } from "@src/blocks.generated";
+import { AnchorBlock, BlockCategory, createBlocksBlock, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { type ContentGroupBlockData } from "@src/blocks.generated";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
-import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 const backgroundColorOptions: Array<{ value: ContentGroupBlockData["backgroundColor"]; label: ReactNode }> = [
@@ -27,7 +26,7 @@ const ContentGroupContentBlock = createBlocksBlock({
         anchor: AnchorBlock,
         space: SpaceBlock,
         teaser: TeaserBlock,
-        richtext: RichTextBlock,
+        richtext: StandaloneRichTextBlock,
         heading: StandaloneHeadingBlock,
         columns: ColumnsBlock,
         callToActionList: StandaloneCallToActionListBlock,
@@ -44,10 +43,9 @@ export const ContentGroupBlock = createCompositeBlock(
         blocks: {
             backgroundColor: {
                 block: createCompositeBlockSelectField<ContentGroupBlockData["backgroundColor"]>({
+                    label: <FormattedMessage id="contentGroupBlock.overlay" defaultMessage="Background Color" />,
                     defaultValue: "default",
                     options: backgroundColorOptions,
-                    fullWidth: true,
-                    label: <FormattedMessage id="contentGroupBlock.overlay" defaultMessage="Background Color" />,
                 }),
                 hiddenInSubroute: true,
             },

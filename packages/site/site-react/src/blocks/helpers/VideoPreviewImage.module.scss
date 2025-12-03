@@ -1,0 +1,42 @@
+.root {
+    position: relative;
+    width: 100%;
+}
+
+.fill {
+    height: 100%;
+}
+
+.iconWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    opacity: 0.5;
+    appearance: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus {
+        .playIcon {
+            outline: 4px solid white;
+            outline-offset: 10px;
+            border-radius: 2px;
+        }
+    }
+}
+
+.playIcon {
+    width: 64px;
+    height: 64px;
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 32px 0 32px 64px;
+    border-color: transparent transparent transparent white;
+}

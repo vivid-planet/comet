@@ -1,11 +1,21 @@
 import { getApolloContext } from "@apollo/client";
-import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+import {
+    type Config,
+    type Decorator,
+    FORM_ERROR,
+    type FormApi,
+    type FormSubscription,
+    type MutableState,
+    type Mutator,
+    type SubmissionErrors,
+    type ValidationErrors,
+} from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
-import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
+import { type MutableRefObject, type PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
+import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
+import { type FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
 import { renderFinalFormChildren } from "./renderFinalFormChildren";
 import { RouterPrompt } from "./router/Prompt";
@@ -162,6 +172,8 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
         const registeredFields = formRenderProps.form.getRegisteredFields();
 
+        const formLevelWarnings = useRef<Record<string, string | undefined>>({});
+
         useEffect(() => {
             if (validateWarning) {
                 const validate = async () => {
@@ -177,10 +189,16 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
                     if (!validationWarnings) {
                         registeredFields.forEach((fieldName) => {
-                            setFieldData(fieldName, { warning: undefined });
+                            const hasFormLevelWarning = Boolean(formLevelWarnings.current[fieldName]);
+                            if (hasFormLevelWarning) {
+                                setFieldData(fieldName, { warning: undefined });
+                            }
                         });
+                        formLevelWarnings.current = {};
                         return;
                     }
+
+                    formLevelWarnings.current = validationWarnings;
 
                     Object.entries(validationWarnings).forEach(([fieldName, warning]) => {
                         setFieldData(fieldName, { warning });
@@ -193,12 +211,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
         const doSave = useCallback(async () => {
             const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
-            if (hasValidationErrors) {
-                return false;
-            }
 
             const submissionErrors = await formRenderProps.form.submit();
-            if (submissionErrors) {
+            if (hasValidationErrors || submissionErrors) {
                 return false;
             }
 
@@ -211,7 +226,18 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
-                        {(props) => <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />}
+                        {(props) => {
+                            return (
+                                <Savable
+                                    hasChanges={props.dirty}
+                                    doSave={doSave}
+                                    doReset={doReset}
+                                    checkForChanges={() => {
+                                        return formRenderProps.form.getState().dirty;
+                                    }}
+                                />
+                            );
+                        }}
                     </FormSpy>
                 )}
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>

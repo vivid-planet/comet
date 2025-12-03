@@ -1,15 +1,15 @@
-import { ComponentType, createContext, ReactNode, SFC, useContext } from "react";
+import { type ComponentType, createContext, type FC, type ReactNode, useContext } from "react";
 
-import { BreadcrumbItem, SwitchItem } from "./Stack";
+import { type BreadcrumbItem, type SwitchItem } from "./Stack";
 
 export interface IStackApi {
-    addBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode, invisible: boolean) => void;
-    updateBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode, invisible: boolean) => void;
+    addBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode) => void;
+    updateBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode) => void;
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;
 
-    addSwitchMeta: (id: string, options: { activePage: string; isInitialPageActive: boolean }) => void;
+    addSwitchMeta: (id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => void;
     removeSwitchMeta: (id: string) => void;
     switches: SwitchItem[];
     breadCrumbs: BreadcrumbItem[];
@@ -39,6 +39,5 @@ type Subtract<T, K> = Omit<T, keyof K>;
 
 // TODO implement ref forwarding with typescript
 export const withStackApi =
-    <P extends IWithApiProps>(WrappedComponent: ComponentType<P>): SFC<Subtract<P, IWithApiProps>> =>
-    (props: any) =>
-        <StackApiContext.Consumer>{(stackApi) => <WrappedComponent {...props} stackApi={stackApi} />}</StackApiContext.Consumer>;
+    <P extends IWithApiProps>(WrappedComponent: ComponentType<P>): FC<Subtract<P, IWithApiProps>> =>
+    (props: any) => <StackApiContext.Consumer>{(stackApi) => <WrappedComponent {...props} stackApi={stackApi} />}</StackApiContext.Consumer>;

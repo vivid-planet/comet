@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
+import { AutocompleteField, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { Grid } from "@mui/material";
 import * as qs from "qs";
 
@@ -50,9 +49,10 @@ interface IQueryData {
 }
 
 interface IFilterValues {
-    selectQuery?: string;
+    selectQuery?: { label: string; value: string };
 }
-interface IVariables extends IFilterValues {
+interface IVariables {
+    selectQuery?: string;
     pathFunction: any;
 }
 
@@ -65,7 +65,7 @@ export const ResetFilter = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
-            ...filterApi.current,
+            selectQuery: filterApi.current.selectQuery?.value,
             pathFunction,
         },
         resolveTableData: (data) => ({
@@ -80,17 +80,16 @@ export const ResetFilter = () => {
                 <>
                     <TableFilterFinalForm filterApi={filterApi} resetButton>
                         <Grid container>
-                            <Grid item xs={2}>
-                                <Field
+                            <Grid size={2}>
+                                <AutocompleteField
                                     name="selectQuery"
-                                    label="Name"
-                                    component={FinalFormReactSelectStaticOptions}
                                     options={[
                                         { label: "Leanne Graham", value: "Leanne Graham" },
                                         { label: "Ervin Howell", value: "Ervin Howell" },
                                         { label: "Clementine Bauch", value: "Clementine Bauch" },
                                     ]}
-                                    isClearable
+                                    clearable
+                                    fullWidth
                                 />
                             </Grid>
                         </Grid>

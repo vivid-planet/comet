@@ -1,63 +1,68 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "7.12.0",
+    "version": "8.8.0",
+    "description": "Comet Admin Date Time component",
     "repository": {
+        "directory": "packages/admin/admin-date-time",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/admin/admin-date-time"
+        "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
+    "type": "commonjs",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && run-p build:babel build:types",
-        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
+        "build": "pnpm run clean && run-p build:babel build:types",
+        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
-        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^7.12.0",
-        "@comet/admin-icons": "workspace:^7.12.0",
-        "@mui/utils": "^5.4.1",
-        "date-fns": "^2.28.0",
-        "react-date-range": "^1.4.0"
+        "@comet/admin": "workspace:*",
+        "@comet/admin-icons": "workspace:*",
+        "@mui/utils": "^7.3.5",
+        "date-fns": "^4.1.0",
+        "react-date-range": "^2.0.1"
     },
     "devDependencies": {
-        "@babel/cli": "^7.17.6",
-        "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.12.0",
-        "@comet/eslint-config": "workspace:^7.12.0",
-        "@mui/material": "^5.0.0",
-        "@types/react": "^17.0",
-        "@types/react-date-range": "^1.4.3",
-        "@types/react-dom": "^17.0.0",
-        "eslint": "^8.0.0",
-        "final-form": "^4.0.0",
-        "npm-run-all": "^4.1.5",
-        "prettier": "^2.0.0",
-        "react": "^17.0",
-        "react-dom": "^17.0",
-        "react-final-form": "^6.5.7",
-        "react-intl": "^6.0.0",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.0.0"
+        "@babel/cli": "^7.28.0",
+        "@babel/core": "^7.28.0",
+        "@comet/admin-babel-preset": "workspace:*",
+        "@comet/eslint-config": "workspace:*",
+        "@mui/material": "^7.3.5",
+        "@types/react": "^18.3.23",
+        "@types/react-date-range": "^1.4.10",
+        "@types/react-dom": "^18.3.7",
+        "eslint": "^9.30.1",
+        "final-form": "^4.20.10",
+        "npm-run-all2": "^8.0.0",
+        "prettier": "^3.6.2",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-final-form": "^6.5.9",
+        "react-intl": "^7.1.11",
+        "rimraf": "^6.0.1",
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
-        "@mui/material": "^5.0.0",
-        "react": "^17.0",
-        "react-dom": "^17.0",
-        "react-final-form": "^6.5.7",
-        "react-intl": "^5.0.0 || ^6.0.0"
+        "@mui/material": "^7.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0",
+        "react-final-form": "^6.3.1",
+        "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     },
     "publishConfig": {
         "access": "public",

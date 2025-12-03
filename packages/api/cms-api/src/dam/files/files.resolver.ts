@@ -9,11 +9,14 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
+import { FileValidationService } from "../../file-utils/file-validation.service";
+import { createFileUploadInputFromUrl, slugifyFilename } from "../../file-utils/files.utils";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
+import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
@@ -23,9 +26,7 @@ import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface
 import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
-import { createFileUploadInputFromUrl, slugifyFilename } from "./files.utils";
 
 export function createFilesResolver({
     File,
@@ -147,7 +148,10 @@ export function createFilesResolver({
             })
             inboxFolderId: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
+            const copyFilesResponse = await this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
+
+            await this.entityManager.flush();
+            return copyFilesResponse;
         }
 
         @Mutation(() => File)
@@ -254,7 +258,6 @@ export function createFilesResolver({
         async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
             return this.filesService.createFileUrl(file, {
                 previewDamUrls: Boolean(req.headers["x-preview-dam-urls"]),
-                relativeDamUrls: Boolean(req.headers["x-relative-dam-urls"]),
             });
         }
 
@@ -267,6 +270,16 @@ export function createFilesResolver({
         @ResolveField(() => String)
         async damPath(@Parent() file: FileInterface): Promise<string> {
             return this.filesService.getDamPath(file);
+        }
+
+        @ResolveField(() => [DamMediaAlternative])
+        async alternativesForThisFile(@Parent() file: FileInterface): Promise<DamMediaAlternative[]> {
+            return file.alternativesForThisFile.loadItems();
+        }
+
+        @ResolveField(() => [DamMediaAlternative])
+        async thisFileIsAlternativeFor(@Parent() file: FileInterface): Promise<DamMediaAlternative[]> {
+            return file.thisFileIsAlternativeFor.loadItems();
         }
     }
 

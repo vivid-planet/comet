@@ -1,5 +1,5 @@
-import { BlockDataInterface } from "@comet/blocks-api";
 import {
+    BlockDataInterface,
     DocumentInterface,
     EntityInfo,
     PageTreeNodeDocumentEntityInfoService,
@@ -8,7 +8,7 @@ import {
     RootBlockType,
     ScopedEntity,
 } from "@comet/cms-api";
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { LinkBlock } from "@src/common/blocks/link.block";
 import { v4 } from "uuid";
@@ -19,14 +19,14 @@ import { v4 } from "uuid";
     implements: () => [DocumentInterface],
 })
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
-export class Link extends BaseEntity<Link, "id"> implements DocumentInterface {
+export class Link extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
     id: string = v4();
 
-    @Property({ customType: new RootBlockType(LinkBlock) })
+    @Property({ type: new RootBlockType(LinkBlock) })
     @Field(() => RootBlockDataScalar(LinkBlock))
     content: BlockDataInterface;
 

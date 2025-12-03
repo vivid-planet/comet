@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 
-import { ISelectionApi } from "./SelectionApi";
+import { type ISelectionApi } from "./SelectionApi";
 
 interface IState {
     id?: string;

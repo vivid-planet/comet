@@ -4,25 +4,25 @@ title: Cron Jobs
 
 Cron Jobs are defined as [console commands](../console-commands). The preferred way to run them is as a [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Advantages of using Kubernetes Cron Jobs:
 
--   You can run multiple instances of the API in parallel without additional configuration for Cron Jobs.
--   Different resources can be used for Cron Jobs and the API.
--   You don't have to worry about blocking the API event loop.
+- You can run multiple instances of the API in parallel without additional configuration for Cron Jobs.
+- Different resources can be used for Cron Jobs and the API.
+- You don't have to worry about blocking the API event loop.
 
 ## Best Practices
 
--   Test your Cron Job locally with the specified memory resource request.
+- Test your Cron Job locally with the specified memory resource request.
 
 ```bash
 NODE_OPTIONS='--max-old-space-size=256' npm run console demo-command
 ```
 
--   If you're using Kubernetes, avoid running a Cron Job every minute, as this will create a lot of overhead.
+- If you're using Kubernetes, avoid running a Cron Job every minute, as this will create a lot of overhead.
 
--   Don't run every Cron Job simultaneously (e.g. always on the first minute of an hour), as this might create a considerable load on all involved systems.
+- Don't run every Cron Job simultaneously (e.g. always on the first minute of an hour), as this might create a considerable load on all involved systems.
 
--   If you need alerting, consider using a Heartbeat monitor.
+- If you need alerting, consider using a Heartbeat monitor.
 
--   Ensure that your Cron Job allows repeated runs so manual runs are possible.
+- Ensure that your Cron Job allows repeated runs so manual runs are possible.
 
 ## Cron Job Module
 

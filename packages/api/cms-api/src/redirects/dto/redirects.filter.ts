@@ -18,10 +18,20 @@ export class RedirectFilter {
     @Type(() => StringFilter)
     source?: StringFilter;
 
+    @Field(() => StringFilter, { nullable: true })
+    @IsOptional()
+    @Type(() => StringFilter)
+    target?: StringFilter;
+
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()
     @Type(() => BooleanFilter)
     active?: BooleanFilter;
+
+    @Field(() => DateTimeFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => DateTimeFilter)
+    activatedAt?: DateTimeFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()

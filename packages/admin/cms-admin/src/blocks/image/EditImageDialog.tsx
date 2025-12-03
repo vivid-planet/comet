@@ -5,7 +5,9 @@ import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/a
 import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
+    // eslint-disable-next-line no-restricted-imports
     Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent as MuiDialogContent,
@@ -18,16 +20,17 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ImageCrop } from "../../common/image/ImageCrop";
 import { useContentScope } from "../../contentScope/Provider";
 import { CropSettingsFields } from "../../dam/FileForm/CropSettingsFields";
-import { EditImageFormValues } from "../../dam/FileForm/EditFile";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
-import { GQLFocalPoint } from "../../graphql.generated";
+import { type EditImageFormValues } from "../../dam/FileForm/EditFile";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
+import { DamPathLazy } from "../../form/file/DamPathLazy";
+import { type GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
     focalPoint: GQLFocalPoint;
@@ -71,7 +74,7 @@ const DialogContent = styled(MuiDialogContent)`
 export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props) {
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
 
     const handleSubmit = (values: FormValues) => {
         if (values.useInheritedDamSettings) {
@@ -121,7 +124,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                     <DialogFormWrapper onSubmit={handleSubmit}>
                         <DialogTitle>
                             <Grid container justifyContent="space-between">
-                                <Grid item>
+                                <Grid>
                                     <Typography>
                                         <FormattedMessage
                                             id="comet.blocks.image.edit"
@@ -132,7 +135,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                         />
                                     </Typography>
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Typography>
                                         <FormattedMessage
                                             id="comet.blocks.image.dimensions"
@@ -156,7 +159,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             </Grid>
                         </DialogTitle>
                         <DialogContent>
-                            <ImageCrop src={image.url} imageStyle={imageStyle} disabled={values.useInheritedDamSettings} />
+                            <ImageCrop src={image.url} style={imageStyle} disabled={values.useInheritedDamSettings} />
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>
@@ -180,13 +183,21 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                             </FormSection>
                                         </Box>
 
-                                        {dependencyMap["DamFile"] && damFileId && (
+                                        {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
+                                                <>
+                                                    <Typography variant="subtitle1">
+                                                        <FormattedMessage id="comet.blocks.image.damPath" defaultMessage="DAM Path: " />
+                                                    </Typography>
+                                                    <Typography mb={2}>
+                                                        <DamPathLazy fileId={damFileId} />
+                                                    </Typography>
+                                                </>
                                                 <Button
                                                     variant="outlined"
                                                     color="inherit"
                                                     onClick={async () => {
-                                                        const path = await dependencyMap["DamFile"].resolvePath({
+                                                        const path = await entityDependencyMap["DamFile"].resolvePath({
                                                             apolloClient,
                                                             id: damFileId,
                                                         });

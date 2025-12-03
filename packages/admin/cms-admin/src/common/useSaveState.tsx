@@ -1,5 +1,5 @@
-import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import { ReactNode, useCallback, useState } from "react";
+import { messages, SaveButton } from "@comet/admin";
+import { type ComponentProps, type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SaveStateOptions<TData> {
@@ -66,7 +66,7 @@ export function useSaveState<TData>(options: SaveStateOptions<TData>): SaveState
     );
 
     const saveButton = (
-        <SaveStateSaveButton hasChanges={options.hasChanges} handleSaveClick={handleSaveClick} saveError={saveError} saving={saving} />
+        <SaveStateSaveButton hasChanges={options.hasChanges} handleSaveClick={handleSaveClick} saveError={saveError} loading={saving} />
     );
 
     return {
@@ -80,16 +80,15 @@ export function useSaveState<TData>(options: SaveStateOptions<TData>): SaveState
 interface SaveStateSaveButtonProps {
     handleSaveClick: (canNavigate?: boolean) => Promise<void>;
     hasChanges?: boolean;
-    saving: boolean;
+    loading: boolean;
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
-export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
-    const saveButtonProps: Omit<SaveButtonProps, "children" | "onClick"> = {
-        color: "primary",
-        variant: "contained",
-        saving,
+
+function SaveStateSaveButton({ handleSaveClick, hasChanges, loading, saveError }: SaveStateSaveButtonProps): JSX.Element {
+    const saveButtonProps: Omit<ComponentProps<typeof SaveButton>, "children" | "onClick"> = {
+        loading,
         hasErrors: !!saveError,
-        errorItem:
+        tooltipErrorMessage:
             saveError == "invalid" ? (
                 <FormattedMessage {...messages.invalidData} />
             ) : saveError == "conflict" ? (
@@ -98,8 +97,12 @@ export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveE
     };
 
     return (
-        <SaveButton disabled={!hasChanges} onClick={() => handleSaveClick(true)} {...saveButtonProps}>
-            <FormattedMessage {...messages.save} />
-        </SaveButton>
+        <SaveButton
+            disabled={!hasChanges}
+            onClick={async () => {
+                await handleSaveClick(true);
+            }}
+            {...saveButtonProps}
+        />
     );
 }

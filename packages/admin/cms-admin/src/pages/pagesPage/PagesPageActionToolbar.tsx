@@ -1,15 +1,15 @@
 import { useApolloClient } from "@apollo/client";
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
-import { Button, Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { Button, Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { Archive, Copy, Delete, Offline, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
+import { Checkbox, Grid, IconButton, useTheme } from "@mui/material";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
+import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
-import { traverse, TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
+import { traverse, type TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { GQLPageTreePageFragment, PageTreeSelectionState } from "../pageTree/usePageTree";
+import { type GQLPageTreePageFragment, type PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
@@ -24,7 +24,7 @@ interface ConfirmActionState {
     handleAction: () => void;
 }
 
-export interface PagesPageActionToolbarProps {
+interface PagesPageActionToolbarProps {
     selectedState: PageTreeSelectionState;
     onSelectAllPressed: () => void;
 
@@ -113,7 +113,7 @@ export const PagesPageActionToolbar = ({
         <>
             {progressDialog}
             <Root container justifyContent="space-between">
-                <Grid item>
+                <Grid>
                     <SelectAllLabel
                         control={
                             <Checkbox
@@ -125,7 +125,7 @@ export const PagesPageActionToolbar = ({
                         label={<FormattedMessage id="comet.pagesPageActionToolbar.selectAll" defaultMessage="Select all" />}
                     />
                 </Grid>
-                <CenterContainer item>
+                <CenterContainer>
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.publish" defaultMessage="Publish" />}>
                         <span>
                             <IconButton
@@ -152,7 +152,7 @@ export const PagesPageActionToolbar = ({
                                 }}
                                 size="large"
                             >
-                                {!unpublishLoading ? <Disabled /> : <ThreeDotSaving />}
+                                {!unpublishLoading ? <Offline /> : <ThreeDotSaving />}
                             </IconButton>
                         </span>
                     </Tooltip>
@@ -227,8 +227,14 @@ export const PagesPageActionToolbar = ({
                         </span>
                     </Tooltip>
                 </CenterContainer>
-                <Grid item>
-                    <Button disabled={collapseAllDisabled} startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
+                <Grid>
+                    <Button
+                        disabled={collapseAllDisabled}
+                        startIcon={<TreeCollapseAll />}
+                        onClick={onCollapseAllPressed}
+                        size="small"
+                        variant="textDark"
+                    >
                         <FormattedMessage id="comet.pages.pages.collapseAll" defaultMessage="Collapse all" />
                     </Button>
                 </Grid>
@@ -273,8 +279,7 @@ export const PagesPageActionToolbar = ({
                                     variables: { id: node.id },
                                 });
                             }
-                        } catch (e) {
-                            // eslint-disable-next-line no-console
+                        } catch {
                             console.error("Error deleting pages");
                         } finally {
                             client.refetchQueries({ include: ["Pages"] });

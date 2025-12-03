@@ -13,7 +13,7 @@ import {
 } from "@comet/admin";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

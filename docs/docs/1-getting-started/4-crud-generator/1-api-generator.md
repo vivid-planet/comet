@@ -13,8 +13,8 @@ DTOs for the feature. For this, the entity must be annotated with the `CrudGener
 
 ```ts
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> {
-    // ...
+export class Product extends BaseEntity {
+    ...
 }
 ```
 
@@ -27,15 +27,15 @@ decorator. The usage of both decorators is the same.
 
 ### `@CrudGenerator()` options
 
-| Parameter            | Type                 | Default     | Description                                                                                                                                                                                                                             |
-| -------------------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.                                                                                                                                                                                  |
-| `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.                                                                                                                                                                                   |
-| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                                                                                                                                                                                             |
-| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                                                                                                                                                                                             |
-| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                                                                                                                                                                                             |
-| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                                                                                                                                                                                               |
-| `position`           | `object`             | `undefined` | Only relevant if the entity has the magic `position` field. This option allows to split the position by specific fields. E.g. `{ groupByFields: ["country"] }` means the `position` starts over at 1 for each distinct `country` value. |
+| Parameter            | Type                 | Default     | Description                                                  |
+| -------------------- | -------------------- | ----------- | ------------------------------------------------------------ |
+| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.       |
+| `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.        |
+| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                  |
+| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                  |
+| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                  |
+| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                    |
+| `position`           | `object`             | `undefined` | Configures the optional [magic `position` field](#position). |
 
 ## Annotate field
 
@@ -73,7 +73,7 @@ If it's still missing, you can add it to `api/package.json`:
 {
   ...
   "scripts": {
-    "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+    "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
     ...
   }
 }
@@ -85,6 +85,28 @@ Now you can run the generator with `npm run api-generator`. The generated files 
 :::info
 Although this is generated code, it should still be checked into the repository. This enables a quick start of the API.
 :::
+
+### Watch Mode
+
+The api-generator script also supports the `-w` or `--watch` flag. This will watch for changes in the .entity.ts files and regenerate the corresponding files.
+
+```json
+{
+  ...
+  "scripts": {
+    "api-generator:watch": "rimraf 'src/*/generated' && comet-api-generator --watch",
+    ...
+  }
+}
+```
+
+### Generate only for specific entities
+
+If you want to generate only for specific entities, you can pass a file path to an .entity.ts file with the `-f` or `--file` flag
+
+```sh
+npm exec comet-api-generator -f src/products/entities/product.entity.ts
+```
 
 ## Register generated resolvers and services
 
@@ -116,12 +138,7 @@ You should not reference the generated code externally (except, of course, to pr
 ## Changing the entity
 
 When making changes (e.g., adding a new field) to an entity annotated with the CrudGenerator, the API Generator must be
-run again: `npm run api-generator`. The resulting changes must be checked into the repository.
-
-:::info
-The CI/CD pipeline checks whether the checked-in code matches the generated code. See the
-`lint:generated-files-not-modified` script in `api/package.json`.
-:::
+run again: `npm run api-generator`.
 
 ## Magic fields
 
@@ -131,6 +148,26 @@ The API generator supports the following magic fields:
 
 Adding a `position` field enables item ordering. The generated code ensures unique positions and updates them during
 create, update, or delete actions.
+
+```ts
+@Field(() => Int)
+@Property({ columnType: "integer" })
+@Min(1)
+position: number;
+```
+
+#### Grouping by a specific field
+
+Using the `position.groupByFields` option in the [`@CrudGenerator` decorator](#crudgenerator-options), you can group the entries by a specific field, or a combination of fields, ensuring the `position` starts over at 1 for each distinct value of the grouped field(s).
+
+For example, if your entity is listed separately for each value of its `country` field, you can group the positions by country:
+
+```ts
+@CrudGenerator({
+    // ...
+    position: { groupByFields: ["country"] },
+})
+```
 
 ### status
 
@@ -187,6 +224,19 @@ export class CustomProductResolver {
 
 GraphQL will automatically "merge" the resolvers if the returned entities in `@Resolver(() => Entity)` is identical.
 
+While it is generally discouraged to extend the generated resolvers, it is possible to do so. This can be useful if you need to modify small parts of the resolver or your custom code needs to reuse code from the generated resolver.
+
+```ts
+@Resolver(() => Product)
+export class CustomProductResolver extends ProductResolver {
+    // ...
+}
+```
+
+:::warning
+Only add the CustomProductResolver to the module if you extend the generated resolver.
+:::
+
 #### Service
 
 You can't add custom code to the generated service directly. Instead, the recommended way is to create a second,
@@ -218,6 +268,8 @@ export class CustomProductsService {
     }
 }
 ```
+
+The custom service can also be extended using inheritance in the same way as the resolver.
 
 ### Scaffolding
 

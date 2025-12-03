@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
-import { useDragLayer, XYCoord } from "react-dnd";
+import { useDragLayer, type XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl/lib";
 
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeDragLayer.sc";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 
 function getItemStyles(initialOffset: XYCoord | null, currentOffset: XYCoord | null) {
     if (!initialOffset || !currentOffset) {

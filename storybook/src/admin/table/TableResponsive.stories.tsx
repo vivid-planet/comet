@@ -1,4 +1,4 @@
-import { ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
+import { type ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
 import { TableCell } from "@mui/material";
 
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {

@@ -12,14 +12,13 @@ import {
 import { IncomingMessage, ServerResponse } from "http";
 import { NextUrlWithParsedQuery } from "next/dist/server/request-meta";
 
-export enum MetricType {
-    "Counter" = "Counter",
-    "UpDownCounter" = "UpDownCounter",
-    "Histogram" = "Histogram",
-    "ObservableGauge" = "ObservableGauge",
-    "ObservableCounter" = "ObservableCounter",
-    "ObservableUpDownCounter" = "ObservableUpDownCounter",
-}
+export type MetricType =
+    | "Counter"
+    | "UpDownCounter"
+    | "Histogram"
+    | "ObservableGauge"
+    | "ObservableCounter"
+    | "ObservableUpDownCounter";
 export type GenericMetric = Counter | UpDownCounter | Histogram | ObservableGauge | ObservableCounter | ObservableUpDownCounter;
 export const OTEL_METER_NAME = "nestjs-otel";
 
@@ -36,27 +35,27 @@ function getOrCreate(name: string, options: MetricOptions = {}, type: MetricType
 }
 
 export function getOrCreateHistogram(name: string, options: MetricOptions = {}): Histogram {
-    return getOrCreate(name, options, MetricType.Histogram) as Histogram;
+    return getOrCreate(name, options, "Histogram") as Histogram;
 }
 
 export function getOrCreateCounter(name: string, options: MetricOptions = {}): Counter {
-    return getOrCreate(name, options, MetricType.Counter) as Counter;
+    return getOrCreate(name, options, "Counter") as Counter;
 }
 
 export function getOrCreateUpDownCounter(name: string, options: MetricOptions = {}): UpDownCounter {
-    return getOrCreate(name, options, MetricType.UpDownCounter) as UpDownCounter;
+    return getOrCreate(name, options, "UpDownCounter") as UpDownCounter;
 }
 
 export function getOrCreateObservableGauge(name: string, options: MetricOptions = {}): ObservableGauge {
-    return getOrCreate(name, options, MetricType.ObservableGauge) as ObservableGauge;
+    return getOrCreate(name, options, "ObservableGauge") as ObservableGauge;
 }
 
 export function getOrCreateObservableCounter(name: string, options: MetricOptions = {}): ObservableCounter {
-    return getOrCreate(name, options, MetricType.ObservableCounter) as ObservableCounter;
+    return getOrCreate(name, options, "ObservableCounter") as ObservableCounter;
 }
 
 export function getOrCreateObservableUpDownCounter(name: string, options: MetricOptions = {}): ObservableUpDownCounter {
-    return getOrCreate(name, options, MetricType.ObservableUpDownCounter) as ObservableUpDownCounter;
+    return getOrCreate(name, options, "ObservableUpDownCounter") as ObservableUpDownCounter;
 }
 
 function getStatusCodeClass(code: number): string {

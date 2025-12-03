@@ -1,18 +1,18 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, useFormApiRef } from "@comet/admin";
+import { Field, filterByFragment, FinalForm, FinalFormInput, type FinalFormSubmitEvent, useFormApiRef } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { productPriceFormFragment, productPriceFormQuery, updateProductPriceFormMutation } from "./ProductPriceForm.gql";
 import {
-    GQLProductPriceFormFragment,
-    GQLProductPriceFormQuery,
-    GQLProductPriceFormQueryVariables,
-    GQLProductPriceFormUpdateProductMutation,
-    GQLProductPriceFormUpdateProductMutationVariables,
+    type GQLProductPriceFormFragment,
+    type GQLProductPriceFormQuery,
+    type GQLProductPriceFormQueryVariables,
+    type GQLProductPriceFormUpdateProductMutation,
+    type GQLProductPriceFormUpdateProductMutationVariables,
 } from "./ProductPriceForm.gql.generated";
 
 interface FormProps {

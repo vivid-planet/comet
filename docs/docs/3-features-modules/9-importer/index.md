@@ -10,11 +10,11 @@ The Importer module provides a standardized way to import data. It uses Node.js 
 
 The Importer module uses a pipeline-based architecture that processes data through a series of transformation steps(pipes). This architecture provides:
 
--   Memory-efficient processing via Node.js streams
--   Multiple data sources (currently local files, with API requests and S3 buckets planned)
--   Support for different data formats (currently CSV, with JSON planned)
--   Configurable data transformation
--   Validation using class-validator
+- Memory-efficient processing via Node.js streams
+- Multiple data sources (currently local files, with API requests and S3 buckets planned)
+- Support for different data formats (currently CSV, with JSON planned)
+- Configurable data transformation
+- Validation using class-validator
 
 ## Getting Started
 
@@ -173,7 +173,10 @@ export class ProductPrePersistPipe implements ImporterPipe {
 }
 
 class ProductPrePersist extends Transform {
-    constructor(private readonly em: EntityManager, private readonly logger: LoggerService) {
+    constructor(
+        private readonly em: EntityManager,
+        private readonly logger: LoggerService,
+    ) {
         super({ writableObjectMode: true, objectMode: true });
     }
 
@@ -225,27 +228,27 @@ const result = await importer.executeRun();
 
 Data streams provide the input data for the importer:
 
--   `ImporterDataStream`: Base abstract class for all data streams
--   `FileDataStream`: Base class for file-based data streams
--   `ImporterLocalFileDataStream`: Implementation for local file system
+- `ImporterDataStream`: Base abstract class for all data streams
+- `FileDataStream`: Base class for file-based data streams
+- `ImporterLocalFileDataStream`: Implementation for local file system
 
 Future implementations will include:
 
--   API request data streams
--   S3 bucket data streams
+- API request data streams
+- S3 bucket data streams
 
 ### Pipes
 
 Pipes process the data as it flows through the import pipeline:
 
--   `CsvParsePipe`: Parses CSV data into objects
--   `DataTransformerPipe`: Transforms raw objects into typed instances
--   `DataValidatorPipe`: Validates data using class-validator
--   Custom pipes: Implement your own transformation or persistence logic
+- `CsvParsePipe`: Parses CSV data into objects
+- `DataTransformerPipe`: Transforms raw objects into typed instances
+- `DataValidatorPipe`: Validates data using class-validator
+- Custom pipes: Implement your own transformation or persistence logic
 
 ### Composite Pipes
 
--   `ImporterCsvParseAndTransformPipes`: Combines CSV parsing, transformation, and validation
+- `ImporterCsvParseAndTransformPipes`: Combines CSV parsing, transformation, and validation
 
 ## Advanced Usage
 

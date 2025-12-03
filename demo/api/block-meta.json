@@ -86,7 +86,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -123,7 +124,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -151,6 +153,19 @@
                 "name": "openByDefault",
                 "kind": "Boolean",
                 "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -168,6 +183,19 @@
             {
                 "name": "openByDefault",
                 "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
                 "nullable": false
             }
         ]
@@ -350,9 +378,9 @@
                 "name": "variant",
                 "kind": "Enum",
                 "enum": [
-                    "Contained",
-                    "Outlined",
-                    "Text"
+                    "contained",
+                    "outlined",
+                    "text"
                 ],
                 "nullable": false
             }
@@ -368,9 +396,9 @@
                 "name": "variant",
                 "kind": "Enum",
                 "enum": [
-                    "Contained",
-                    "Outlined",
-                    "Text"
+                    "contained",
+                    "outlined",
+                    "text"
                 ],
                 "nullable": false
             }
@@ -529,12 +557,13 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -570,12 +599,13 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -653,15 +683,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "StandaloneRichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -697,15 +727,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "StandaloneRichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -744,8 +774,23 @@
                             "nullable": false
                         },
                         {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
                             "name": "scope",
                             "kind": "Json",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
                             "nullable": true
                         }
                     ]
@@ -920,6 +965,30 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "captions",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "id",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "language",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "fileUrl",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": true
                         }
                     ]
                 },
@@ -1015,6 +1084,11 @@
                 "nullable": false
             },
             {
+                "name": "caption",
+                "kind": "String",
+                "nullable": false
+            },
+            {
                 "name": "linkList",
                 "kind": "Block",
                 "block": "LinkList",
@@ -1037,6 +1111,11 @@
                 "name": "image",
                 "kind": "Block",
                 "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "caption",
+                "kind": "String",
                 "nullable": false
             },
             {
@@ -1102,12 +1181,12 @@
                 "name": "htmlTag",
                 "kind": "Enum",
                 "enum": [
-                    "H1",
-                    "H2",
-                    "H3",
-                    "H4",
-                    "H5",
-                    "H6"
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
                 ],
                 "nullable": false
             }
@@ -1129,12 +1208,12 @@
                 "name": "htmlTag",
                 "kind": "Enum",
                 "enum": [
-                    "H1",
-                    "H2",
-                    "H3",
-                    "H4",
-                    "H5",
-                    "H6"
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
                 ],
                 "nullable": false
             }
@@ -1496,9 +1575,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -1533,9 +1612,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -2011,7 +2090,7 @@
                                 "billboardTeaser": "BillboardTeaser",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -2019,12 +2098,15 @@
                                 "media": "StandaloneMedia",
                                 "contentGroup": "ContentGroup",
                                 "mediaGallery": "MediaGallery",
+                                "slider": "Slider",
                                 "image": "DamImage",
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2032,9 +2114,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -2073,7 +2155,7 @@
                                 "billboardTeaser": "BillboardTeaser",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -2081,12 +2163,15 @@
                                 "media": "StandaloneMedia",
                                 "contentGroup": "ContentGroup",
                                 "mediaGallery": "MediaGallery",
+                                "slider": "Slider",
                                 "image": "DamImage",
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "productList": "ProductList",
+                                "pageTreeIndex": "PageTreeIndex"
                             },
                             "nullable": false
                         },
@@ -2094,9 +2179,9 @@
                             "name": "userGroup",
                             "kind": "Enum",
                             "enum": [
-                                "All",
-                                "Admin",
-                                "User"
+                                "all",
+                                "admin",
+                                "editor"
                             ],
                             "nullable": false
                         }
@@ -2105,6 +2190,11 @@
                 "nullable": false
             }
         ]
+    },
+    {
+        "name": "PageTreeIndex",
+        "fields": [],
+        "inputFields": []
     },
     {
         "name": "PhoneLink",
@@ -2346,6 +2436,59 @@
                     ]
                 },
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductList",
+        "fields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
+                ],
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "types",
+                "kind": "Enum",
+                "enum": [
+                    "cap",
+                    "shirt",
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
+                ],
+                "nullable": false,
+                "array": true
             }
         ]
     },
@@ -2623,6 +2766,113 @@
         ]
     },
     {
+        "name": "Slider",
+        "fields": [
+            {
+                "name": "sliderList",
+                "kind": "Block",
+                "block": "SliderList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "sliderList",
+                "kind": "Block",
+                "block": "SliderList",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SliderItem",
+        "fields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SliderList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SliderItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SliderItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Space",
         "fields": [
             {
@@ -2646,16 +2896,16 @@
                 "name": "spacing",
                 "kind": "Enum",
                 "enum": [
-                    "D100",
-                    "D200",
-                    "D300",
-                    "D400",
-                    "S100",
-                    "S200",
-                    "S300",
-                    "S400",
-                    "S500",
-                    "S600"
+                    "d100",
+                    "d200",
+                    "d300",
+                    "d400",
+                    "s100",
+                    "s200",
+                    "s300",
+                    "s400",
+                    "s500",
+                    "s600"
                 ],
                 "nullable": false
             }
@@ -2665,16 +2915,16 @@
                 "name": "spacing",
                 "kind": "Enum",
                 "enum": [
-                    "D100",
-                    "D200",
-                    "D300",
-                    "D400",
-                    "S100",
-                    "S200",
-                    "S300",
-                    "S400",
-                    "S500",
-                    "S600"
+                    "d100",
+                    "d200",
+                    "d300",
+                    "d400",
+                    "s100",
+                    "s200",
+                    "s300",
+                    "s400",
+                    "s500",
+                    "s600"
                 ],
                 "nullable": false
             }
@@ -2869,6 +3119,47 @@
         ]
     },
     {
+        "name": "StandaloneRichText",
+        "fields": [
+            {
+                "name": "richText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "richText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "SvgImage",
         "fields": [
             {
@@ -3021,6 +3312,19 @@
                 "kind": "Block",
                 "block": "TextLink",
                 "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -3045,6 +3349,19 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "TextLink",
+                "nullable": false
+            },
+            {
+                "name": "titleHtmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6"
+                ],
                 "nullable": false
             }
         ]

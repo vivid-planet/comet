@@ -1,20 +1,20 @@
 import MuiTable from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { TableCellProps } from "@mui/material/TableCell";
+import TableCell, { type TableCellProps } from "@mui/material/TableCell";
 import TableFooter from "@mui/material/TableFooter";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import { Component, createRef, KeyboardEvent, ReactNode, RefObject } from "react";
+import { Component, createRef, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 
-import { ISelectionApi } from "../SelectionApi";
-import { IExportApi } from "./excelexport/IExportApi";
+import { type ISelectionApi } from "../SelectionApi";
+import { type IExportApi } from "./excelexport/IExportApi";
 import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";
-import { IPagingInfo } from "./paging/IPagingInfo";
+import { type IPagingInfo } from "./paging/IPagingInfo";
 import { safeColumnGet } from "./safeColumnGet";
-import { TableBodyRow, TableBodyRowProps } from "./TableBodyRow";
-import { ISortApi, SortDirection } from "./useTableQuerySort";
+import { TableBodyRow, type TableBodyRowProps } from "./TableBodyRow";
+import { type ISortApi, SortDirection } from "./useTableQuerySort";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

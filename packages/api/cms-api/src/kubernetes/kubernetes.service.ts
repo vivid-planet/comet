@@ -1,5 +1,5 @@
 import { BatchV1Api, CoreV1Api, KubeConfig, V1CronJob, V1Job, V1ObjectMeta, V1Pod } from "@kubernetes/client-node";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
@@ -11,7 +11,9 @@ import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
 export class KubernetesService {
-    localMode: boolean;
+    private readonly logger = new Logger(KubernetesService.name);
+
+    isAuthenticated: boolean = false;
 
     namespace: string;
 
@@ -19,27 +21,30 @@ export class KubernetesService {
     coreApi: CoreV1Api;
 
     constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
-        const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
-        this.localMode = !fs.existsSync(path);
+        if ("namespace" in this.config) {
+            // Local mode, used for development and testing
+            this.namespace = this.config.namespace;
 
-        const kc = new KubeConfig();
-
-        if (!this.localMode) {
-            this.namespace = fs.readFileSync(path, "utf8");
-
-            kc.loadFromCluster();
-            this.batchApi = kc.makeApiClient(BatchV1Api);
-            this.coreApi = kc.makeApiClient(CoreV1Api);
-        }
-        // DEBUG-Code if used locally, you need to be logged in (e.g. by using oc login)
-        /*else {
-            this.namespace = "comet-demo";
-
+            const kc = new KubeConfig();
             kc.loadFromDefault();
             this.batchApi = kc.makeApiClient(BatchV1Api);
             this.coreApi = kc.makeApiClient(CoreV1Api);
-            this.localMode = false;
-        }*/
+            this.isAuthenticated = true;
+        } else {
+            // Cluster mode
+            const namespaceFilePath = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
+            if (fs.existsSync(namespaceFilePath)) {
+                this.namespace = fs.readFileSync(namespaceFilePath, "utf8");
+
+                const kc = new KubeConfig();
+                kc.loadFromCluster();
+                this.batchApi = kc.makeApiClient(BatchV1Api);
+                this.coreApi = kc.makeApiClient(CoreV1Api);
+                this.isAuthenticated = true;
+            } else {
+                this.logger.warn("Namespace file not found, cannot connect to Kubernetes API. KubernetesService will not work.");
+            }
+        }
     }
 
     get helmRelease(): string {
@@ -47,67 +52,32 @@ export class KubernetesService {
     }
 
     async getCronJob(name: string): Promise<V1CronJob> {
-        const { response, body } = await this.batchApi.readNamespacedCronJob(name, this.namespace);
-        if (response.statusCode !== 200) {
-            throw new Error(`Error fetching Job "${name}"`);
-        }
-        return body;
+        return this.batchApi.readNamespacedCronJob({ name, namespace: this.namespace });
     }
 
     async getAllCronJobs(labelSelector: string): Promise<V1CronJob[]> {
-        const { response, body } = await this.batchApi.listNamespacedCronJob(
-            this.namespace,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            labelSelector,
-        );
-        if (response.statusCode !== 200) {
-            throw new Error(`Error fetching CronJobs for selector "${labelSelector}"`);
-        }
-
-        return body.items;
+        const { items } = await this.batchApi.listNamespacedCronJob({ namespace: this.namespace, labelSelector });
+        return items;
     }
 
     async deleteJob(name: string): Promise<void> {
-        const { response } = await this.batchApi.deleteNamespacedJob(name, this.namespace, undefined, undefined, undefined, undefined, "Background");
-        if (response.statusCode !== 200) {
+        const { status } = await this.batchApi.deleteNamespacedJob({ name, namespace: this.namespace, propagationPolicy: "Background" });
+        if (status !== "Success") {
             throw new Error(`Error deleting Job "${name}"`);
         }
     }
 
     async getJob(name: string): Promise<V1Job> {
-        const { response, body } = await this.batchApi.readNamespacedJob(name, this.namespace);
-        if (response.statusCode !== 200) {
-            throw new Error(`Error fetching Job "${name}"`);
-        }
-        return body;
+        return this.batchApi.readNamespacedJob({ name, namespace: this.namespace });
     }
 
     async getPodsForJob(job: V1Job): Promise<V1Pod[]> {
-        const { response, body } = await this.coreApi.listNamespacedPod(
-            this.namespace,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            `job-name=${job.metadata?.name}`,
-        );
-        if (response.statusCode !== 200) {
-            throw new Error(`Error fetching Job "${job.metadata?.name}"`);
-        }
-
-        return body.items;
+        const { items } = await this.coreApi.listNamespacedPod({ namespace: this.namespace, labelSelector: `job-name=${job.metadata?.name}` });
+        return items;
     }
 
     async getPodLogs(pod: V1Pod): Promise<string> {
-        const { response, body } = await this.coreApi.readNamespacedPodLog(pod.metadata?.name || "", this.namespace);
-        if (response.statusCode !== 200) {
-            throw new Error(`Error fetching logs for Pod "${pod.metadata?.name}"`);
-        }
-
-        return body;
+        return this.coreApi.readNamespacedPodLog({ name: pod.metadata?.name ?? "", namespace: this.namespace });
     }
 
     async getJobLogs(job: V1Job): Promise<string> {
@@ -122,14 +92,11 @@ export class KubernetesService {
     }
 
     /**
-     * Returns all Jobs for a labelFilter sorted by creationTimestamp DESC (most recent first)
+     * Returns all Jobs for a labelSelector sorted by creationTimestamp DESC (most recent first)
      */
-    async getAllJobs(labelFilter?: string): Promise<V1Job[]> {
-        const { response, body } = await this.batchApi.listNamespacedJob(this.namespace, undefined, undefined, undefined, undefined, labelFilter);
-        if (response.statusCode != 200) {
-            throw new Error(`Error listing Jobs for labelFilter "${labelFilter}"`);
-        }
-        return body.items.sort((a, b) => (b.metadata?.creationTimestamp?.getTime() || 0) - (a.metadata?.creationTimestamp?.getTime() || 0));
+    async getAllJobs(labelSelector?: string): Promise<V1Job[]> {
+        const { items } = await this.batchApi.listNamespacedJob({ namespace: this.namespace, labelSelector });
+        return items.sort((a, b) => (b.metadata?.creationTimestamp?.getTime() ?? 0) - (a.metadata?.creationTimestamp?.getTime() ?? 0));
     }
 
     async getAllJobsForCronJob(cronJob: string) {
@@ -142,17 +109,15 @@ export class KubernetesService {
     }
 
     async createJobFromCronJob(cronJob: V1CronJob, overwriteJobMetaData: V1ObjectMeta): Promise<V1Job> {
-        const { response, body } = await this.batchApi.createNamespacedJob(this.namespace, {
-            apiVersion: "batch/v1",
-            kind: "Job",
-            metadata: { ...cronJob.spec?.jobTemplate.metadata, ...overwriteJobMetaData },
-            spec: cronJob.spec?.jobTemplate.spec,
+        return this.batchApi.createNamespacedJob({
+            namespace: this.namespace,
+            body: {
+                apiVersion: "batch/v1",
+                kind: "Job",
+                metadata: { ...cronJob.spec?.jobTemplate.metadata, ...overwriteJobMetaData },
+                spec: cronJob.spec?.jobTemplate.spec,
+            },
         });
-        if (response.statusCode !== 201) {
-            throw new Error("Error creating Job");
-        }
-
-        return body;
     }
 
     getStatusForKubernetesJob(job: V1Job): KubernetesJobStatus {

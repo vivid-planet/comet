@@ -1,12 +1,12 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Link, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { css } from "@mui/material/styles";
-import { ReactNode, useRef, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { BreadcrumbItem } from "../Stack";
+import { type BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
+import { type StackBreadcrumbsClassKey, type StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 interface BreadcrumbsOverflowProps {
     items: BreadcrumbItem[];

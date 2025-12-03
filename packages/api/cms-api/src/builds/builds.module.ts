@@ -5,7 +5,7 @@ import { BuildTemplatesResolver } from "./build-templates.resolver";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BuildsResolver } from "./builds.resolver";
 import { BuildsService } from "./builds.service";
-import { ChangesCheckerConsole } from "./changes-checker.console";
+import { ChangesCheckerCommand } from "./changes-checker.command";
 import { ChangesCheckerInterceptor } from "./changes-checker.interceptor";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
 
@@ -20,7 +20,7 @@ import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entit
             provide: "APP_INTERCEPTOR",
             useClass: ChangesCheckerInterceptor,
         },
-        ChangesCheckerConsole,
+        ChangesCheckerCommand,
     ],
     exports: [BuildsService],
 })

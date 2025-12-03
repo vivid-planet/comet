@@ -1,16 +1,17 @@
-import { createBlocksBlock } from "@comet/blocks-admin";
-import { AnchorBlock, DamImageBlock } from "@comet/cms-admin";
+import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
-import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
+import { ProductListBlock } from "@src/products/blocks/ProductListBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
@@ -20,6 +21,7 @@ import { ColumnsBlock } from "./ColumnsBlock";
 import { ContentGroupBlock } from "./ContentGroupBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { KeyFactsBlock } from "./KeyFactsBlock";
+import { SliderBlock } from "./SliderBlock";
 import { TeaserBlock } from "./TeaserBlock";
 
 export const PageContentBlock = createBlocksBlock({
@@ -30,7 +32,7 @@ export const PageContentBlock = createBlocksBlock({
         billboardTeaser: BillboardTeaserBlock,
         space: SpaceBlock,
         teaser: TeaserBlock,
-        richtext: RichTextBlock,
+        richtext: StandaloneRichTextBlock,
         heading: StandaloneHeadingBlock,
         columns: ColumnsBlock,
         callToActionList: StandaloneCallToActionListBlock,
@@ -38,6 +40,7 @@ export const PageContentBlock = createBlocksBlock({
         media: StandaloneMediaBlock,
         contentGroup: ContentGroupBlock,
         mediaGallery: MediaGalleryBlock,
+        slider: SliderBlock,
 
         image: DamImageBlock,
         newsDetail: NewsDetailBlock,
@@ -45,6 +48,8 @@ export const PageContentBlock = createBlocksBlock({
         layout: LayoutBlock,
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
+        productList: ProductListBlock,
+        pageTreeIndex: PageTreeIndexBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

@@ -4,17 +4,17 @@ import {
     CometLogo,
     FillSpace,
     MainContent,
+    MainNavigation,
+    MainNavigationCollapsibleItem,
+    MainNavigationItemAnchorLink,
+    MainNavigationItemRouterLink,
     MasterLayout,
-    Menu,
-    MenuCollapsibleItem,
-    MenuContext,
-    MenuItemAnchorLink,
-    MenuItemRouterLink,
+    useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
 
 const AppMenu = () => {
-    const { open, toggleOpen } = useContext(MenuContext);
+    const { open, toggleOpen } = useMainNavigation();
     const windowSize = useWindowSize();
     const location = useLocation();
 
@@ -44,18 +44,18 @@ const AppMenu = () => {
     }, [location]);
 
     return (
-        <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
-            <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
-            <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
-                <MenuItemRouterLink primary="Foo1" to="/foo1" />
-                <MenuItemRouterLink primary="Foo2" to="/foo2" />
-            </MenuCollapsibleItem>
-            <MenuCollapsibleItem primary="Even More Items" secondary="Forcing temporary menu" icon={<Sort />}>
-                <MenuItemRouterLink primary="Foo3" to="/foo3" />
-                <MenuItemRouterLink primary="Foo4" to="/foo4" />
-            </MenuCollapsibleItem>
-            <MenuItemAnchorLink
+        <MainNavigation variant={useTemporaryMenu ? "temporary" : "permanent"}>
+            <MainNavigationItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
+            <MainNavigationItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
+            <MainNavigationCollapsibleItem primary="More Items" icon={<Sort />}>
+                <MainNavigationItemRouterLink primary="Foo1" to="/foo1" />
+                <MainNavigationItemRouterLink primary="Foo2" to="/foo2" />
+            </MainNavigationCollapsibleItem>
+            <MainNavigationCollapsibleItem primary="Even More Items" secondary="Forcing temporary menu" icon={<Sort />}>
+                <MainNavigationItemRouterLink primary="Foo3" to="/foo3" />
+                <MainNavigationItemRouterLink primary="Foo4" to="/foo4" />
+            </MainNavigationCollapsibleItem>
+            <MainNavigationItemAnchorLink
                 primary="Comet Admin"
                 secondary="View on GitHub"
                 target="_blank"
@@ -63,7 +63,7 @@ const AppMenu = () => {
                 icon={<CometColor />}
                 secondaryAction={<LinkExternal />}
             />
-        </Menu>
+        </MainNavigation>
     );
 };
 

@@ -1,101 +1,79 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { MainContent, MuiThemeProvider } from "@comet/admin";
-import { DateFnsLocaleProvider } from "@comet/admin-date-time";
-import { createCometTheme } from "@comet/admin-theme";
-import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
-import type { Preview } from "@storybook/react";
-import { Locale as DateFnsLocale } from "date-fns";
-import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { IntlProvider } from "react-intl";
+import { LicenseInfo } from "@mui/x-license";
+import type { Preview } from "@storybook/react-webpack5";
+import { type GlobalTypes } from "storybook/internal/csf";
 
+import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
+import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
+import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
+import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
-import { previewGlobalStyles } from "./preview.styles";
 
-const themeOptions = {
-    comet: "Comet",
-    defaultMui: "Default MUI",
-};
+if (process.env.MUI_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(process.env.MUI_LICENSE_KEY);
+}
 
-type LocaleKey = "de" | "en";
-
-const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
-    de: deLocale,
-    en: enLocale,
-};
-
-// @TODO: use messages from lang-package
-const messages = {
-    en: {
-        "comet.core.deleteMutation.promptDelete": "Delete data?",
-        "comet.core.deleteMutation.yes": "Yes",
-        "comet.core.deleteMutation.no": "No",
-        "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-        "comet.core.editDialog.edit": "Edit",
-        "comet.core.editDialog.add": "Add",
-        "comet.core.editDialog.cancel": "Cancel",
-        "comet.core.editDialog.save": "Save",
-        "comet.core.finalForm.abort": "Cancel",
-        "comet.core.finalForm.save": "Save",
-        "comet.core.router.confirmationDialog.confirm": "OK",
-        "comet.core.router.confirmationDialog.abort": "Cancel",
-        "comet.core.stack.stack.back": "Back",
-        "comet.core.table.addButton": "Add",
-        "comet.core.table.excelExportButton": "Export",
-        "comet.core.table.deleteButton": "Delete",
-        "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
-        "comet.core.table.localChangesToolbar.save": "Save",
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-        "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-        "comet.core.table.tableQuery.error": "Error :( {error}",
+export const globalTypes: GlobalTypes = {
+    theme: {
+        description: "Global MUI Theme",
+        toolbar: {
+            title: "Theme",
+            icon: "paintbrush",
+            items: [
+                { value: ThemeOption.Comet, right: "🟩", title: "Comet Theme" },
+                { value: ThemeOption.Mui, right: "🟦", title: "Mui Theme" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
     },
-    de: {
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-        "comet.core.table.tableQuery.error": "Fehler :( {error}",
+    locale: {
+        name: "Locale",
+        description: "Locale",
+        toolbar: {
+            title: "Locale",
+            icon: "globe",
+            items: [
+                { value: LocaleOption.English, title: "English", right: "🇺🇸" },
+                { value: LocaleOption.German, title: "German", right: "🇩🇪" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    layout: {
+        description: "Layout",
+        toolbar: {
+            title: "Layout",
+            icon: "switchalt",
+            items: [
+                { value: LayoutOption.Padded, title: "Padded" },
+                { value: LayoutOption.Default, title: "Default" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
     },
 };
 
 const preview: Preview = {
-    argTypes: {
-        theme: {
-            name: "Theme",
-            control: "select",
-            options: Object.values(themeOptions),
-        },
-        locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
-    },
-    args: { theme: Object.values(themeOptions)[0], locale: "en" },
-    decorators: [
-        (Story, context) => {
-            const { theme: selectedTheme, locale: selectedLocale } = context.args;
-            const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
-
-            return (
-                <MuiThemeProvider theme={theme}>
-                    <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
-                        <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
-                            <GlobalStyles styles={previewGlobalStyles} />
-                            <>
-                                {context.parameters.layout === "padded" ? (
-                                    <MainContent>
-                                        <Story />
-                                    </MainContent>
-                                ) : (
-                                    <Story />
-                                )}
-                            </>
-                        </DateFnsLocaleProvider>
-                    </IntlProvider>
-                </MuiThemeProvider>
-            );
-        },
-    ],
+    tags: ["autodocs"],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, CometConfigProviderDecorator],
     parameters: {
-        layout: "padded",
         options: {
-            storySort: (a, b) => {
+            /**
+             * Note: according to: https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy#sorting-stories
+             * the `storySort` function gets injected as javascript. Adding types is not possible
+             */
+            storySort: (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                a,
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                b,
+            ) => {
                 const orderGettingStarted = [
                     "docs-getting-started-installation",
                     "docs-getting-started-structure",
@@ -150,6 +128,7 @@ const preview: Preview = {
                     ...orderIcons,
                     ...orderBestPractices,
                     ...orderDevelopment,
+                    "component-docs-",
                     "admin-",
                     "comet-",
                     "stories-",
@@ -162,6 +141,10 @@ const preview: Preview = {
                 const bIdx = order.findIndex((i) => bName.indexOf(i) > -1);
                 return aIdx - bIdx;
             },
+        },
+
+        docs: {
+            codePanel: true,
         },
     },
 };

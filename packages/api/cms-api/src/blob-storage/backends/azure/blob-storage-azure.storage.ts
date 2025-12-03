@@ -1,13 +1,15 @@
-import { BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
+import { type BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
+import { Logger } from "@nestjs/common";
 import { Readable } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageAzureConfig } from "./blob-storage-azure.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageAzureConfig } from "./blob-storage-azure.config";
 
 export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
+    private readonly logger = new Logger(BlobStorageAzureStorage.name);
     private readonly client: BlobServiceClient;
 
-    constructor(private readonly config: BlobStorageAzureConfig["azure"]) {
+    constructor(readonly config: BlobStorageAzureConfig["azure"]) {
         const sharedKeyCredential = new StorageSharedKeyCredential(config.accountName, config.accountKey);
         this.client = new BlobServiceClient(`https://${config.accountName}.blob.core.windows.net`, sharedKeyCredential);
     }
@@ -29,10 +31,10 @@ export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
                 // retry the creation for three times if the container is being deleted, waiting 30 seconds between each attempt.
                 // See https://docs.microsoft.com/en-us/rest/api/storageservices/delete-container#remarks for more information.
                 if (error instanceof RestError && error.code === "ContainerBeingDeleted") {
-                    console.info(`Container is being deleted, retrying in 30s`);
+                    this.logger.log(`Container (${folderName}) is being deleted, retrying in 30s`);
                     await this.sleep(30);
                     currentAttempt++;
-                    console.info(`Retrying... (Attempt ${currentAttempt} of ${maxNumberOfAttempts})`);
+                    this.logger.log(`Retrying to create container (${folderName})... (Attempt ${currentAttempt} of ${maxNumberOfAttempts})`);
                     continue;
                 }
 
@@ -53,23 +55,19 @@ export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
         folderName: string,
         fileName: string,
         data: NodeJS.ReadableStream | Buffer | string,
-        { headers }: CreateFileOptions,
+        { contentType }: CreateFileOptions,
     ): Promise<void> {
-        const metadata = {
-            headers: JSON.stringify(headers),
-        };
         const blobHTTPHeaders: BlobHTTPHeaders = {
-            blobContentType: headers["content-type"],
+            blobContentType: contentType,
         };
 
         const blockBlobClient = this.client.getContainerClient(folderName).getBlockBlobClient(fileName);
         if (typeof data === "string") {
-            await blockBlobClient.uploadFile(data, { metadata, blobHTTPHeaders });
+            await blockBlobClient.uploadFile(data, { blobHTTPHeaders });
         } else if (Buffer.isBuffer(data)) {
-            await blockBlobClient.uploadData(data, { metadata, blobHTTPHeaders });
+            await blockBlobClient.uploadData(data, { blobHTTPHeaders });
         } else {
             await blockBlobClient.uploadStream(new Readable().wrap(data), undefined, undefined, {
-                metadata,
                 blobHTTPHeaders,
             });
         }
@@ -99,7 +97,8 @@ export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
             size: properties.contentLength!, // is defined in node.js but not for browsers
             etag: properties.etag,
             lastModified: properties.lastModified,
-            headers: properties.metadata?.headers ? JSON.parse(properties.metadata.headers) : {},
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            contentType: properties.contentType!,
         };
     }
 

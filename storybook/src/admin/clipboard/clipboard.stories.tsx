@@ -12,10 +12,10 @@ export const ClipboardFallbackSizeLimit = function () {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Alert severity="info">To test this story, either a) disallow clipboard access in your browser, or b) try it in Firefox.</Alert>
             </Grid>
-            <Grid item>
+            <Grid>
                 <Button
                     onClick={() => {
                         writeClipboardText(writtenClipboardContent);
@@ -24,7 +24,7 @@ export const ClipboardFallbackSizeLimit = function () {
                     Write clipboard
                 </Button>
             </Grid>
-            <Grid item>
+            <Grid>
                 <Button
                     onClick={async () => {
                         setReadClipboardContent(await readClipboardText());
@@ -34,7 +34,7 @@ export const ClipboardFallbackSizeLimit = function () {
                 </Button>
             </Grid>
             {readClipboardContent && (
-                <Grid item xs={12}>
+                <Grid size={12}>
                     {writtenClipboardContent === readClipboardContent ? (
                         <Alert severity="success">Read clipboard content matches written clipboard content.</Alert>
                     ) : (
@@ -46,4 +46,4 @@ export const ClipboardFallbackSizeLimit = function () {
     );
 };
 
-ClipboardFallbackSizeLimit.storyName = "Clipboard fallback size limit";
+ClipboardFallbackSizeLimit.name = "Clipboard fallback size limit";

@@ -4,24 +4,24 @@ title: Access Logging
 
 There is an option to enable global access logging, where request data is logged in the standard output. The following information is logged:
 
--   Timestamp
--   Request type (GraphQL or HTTP)
--   IP address
--   User (if available)
+- Timestamp
+- Request type (GraphQL or HTTP)
+- IP address
+- User (if available)
 
 For GraphQL requests, the following additional information is logged:
 
--   Operation type
--   Operation name
--   Resolver function name
--   For queries, the arguments (args)
--   For mutations, the arguments excluding the input and data properties
+- Operation type
+- Operation name
+- Resolver function name
+- For queries, the arguments (args)
+- For mutations, the arguments excluding the input and data properties
 
 For HTTP requests, the following is logged:
 
--   The HTTP method
--   The route
--   For GET requests, the parameters
+- The HTTP method
+- The route
+- For GET requests, the parameters
 
 The access log allows to see who accessed what data and when. This can be useful for fulfilling legal requirements regarding data integrity or for forensics.
 

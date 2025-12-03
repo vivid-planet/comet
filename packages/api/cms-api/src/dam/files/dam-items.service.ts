@@ -8,7 +8,10 @@ import { FoldersService } from "./folders.service";
 
 @Injectable()
 export class DamItemsService {
-    constructor(private readonly foldersService: FoldersService, private readonly filesService: FilesService) {}
+    constructor(
+        private readonly foldersService: FoldersService,
+        private readonly filesService: FilesService,
+    ) {}
 
     async findAndCount(
         { folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: Omit<DamItemsArgsInterface, "scope">,

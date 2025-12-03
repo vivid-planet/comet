@@ -9,7 +9,10 @@ import { FilesService } from "./files.service";
 @Resolver(() => DamFileImage)
 @RequiredPermission(["dam"])
 export class FileImagesResolver {
-    constructor(private readonly imagesService: ImagesService, private readonly filesService: FilesService) {}
+    constructor(
+        private readonly imagesService: ImagesService,
+        private readonly filesService: FilesService,
+    ) {}
 
     @ResolveField(() => String, { nullable: true })
     async url(
@@ -25,7 +28,6 @@ export class FileImagesResolver {
                 { file },
                 {
                     previewDamUrls: Boolean(req.headers["x-preview-dam-urls"]),
-                    relativeDamUrls: Boolean(req.headers["x-relative-dam-urls"]),
                 },
             );
             return urlTemplate.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(height));

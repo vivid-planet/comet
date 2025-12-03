@@ -1,12 +1,11 @@
-import { NotFoundError } from "@mikro-orm/core";
-import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { type EntityRepository, NotFoundError, type QueryBuilder } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 import { compareAsc, compareDesc, isEqual } from "date-fns";
 
 import { SortDirection } from "../common/sorting/sort-direction.enum";
-import { PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
-import { AttachedDocument } from "./entities/attached-document.entity";
-import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
+import { type PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
+import { type AttachedDocument } from "./entities/attached-document.entity";
+import { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, type ScopeInterface } from "./types";
 import pathBuilder from "./utils/path-builder";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
@@ -67,10 +66,10 @@ export function createReadApi(
         visibility === "all"
             ? [Visibility.Published, Visibility.Unpublished, Visibility.Archived]
             : typeof visibility === "string"
-            ? [visibility]
-            : visibility.length === 0 // empty array is not allowed, as someone might unintendedly query all visibilites (empty array means no filter)
-            ? [Visibility.Published]
-            : [...visibility];
+              ? [visibility]
+              : visibility.length === 0 // empty array is not allowed, as someone might unintendedly query all visibilites (empty array means no filter)
+                ? [Visibility.Published]
+                : [...visibility];
 
     const preloadedNodes = new Map<string, PageTreeNodeInterface[]>();
     const nodesById = new Map<string, PageTreeNodeInterface>();

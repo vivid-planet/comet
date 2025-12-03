@@ -23,14 +23,14 @@ Live preview of unsaved content shown while editing blocks, iframe that embends 
 EditPage: previewApi, created with useBlockPreview: State containing showOnlyVisible (and admin only device/minimized)
           previewState, created using RootBlock.createPreviewState from pageState (uses showOnlyVisible)
   BlockPreviewWithTabs (prop drilling: previewApi, previewState)
-    IFrameBridgeProvider[blocks-admin]
+    IFrameBridgeProvider
          - creates context containing:
                 - iFrameRef: used to attach the context to the actual iframe, done by BlockPreview
                 - sendBlockState: sends the current block preview state, done by BlockPreview
                 - iFrameReady
                 - hoveredSiteRoute: used by block admin to highlight block
-                - sendSelectComponent: used by block admin (SelectPreviewComponent[blocks-admin])
-                - sendHoverComponent: used by block admin (HoverPreviewComponent[blocks-admin])
+                - sendSelectComponent: used by block admin (SelectPreviewComponent)
+                - sendHoverComponent: used by block admin (HoverPreviewComponent)
                 - sendAccessToken: sends the AccessToken, done by BlockPreview (not possible in IFrameBridgeProvider direclty because it's in block-admin)
          - has hoveredSiteRoute state
          - handles messages coming from iframe (SelectComponent, HoverComponent)
@@ -45,8 +45,8 @@ EditPage: previewApi, created with useBlockPreview: State containing showOnlyVis
               - renders the actual iframe
     RootBlockAdmin
         - highlights blocks with matching hoveredSiteRoute (with useIFrameBridge)
-        - sends SelectComponent on block admin render (using SelectPreviewComponent[blocks-admin] with useIFrameBridge)
-        - sends HoverComponent on block preview hover (using HoverPreviewComponent[blocks-admin] with useIFrameBridge)
+        - sends SelectComponent on block admin render (using SelectPreviewComponent with useIFrameBridge)
+        - sends HoverComponent on block preview hover (using HoverPreviewComponent with useIFrameBridge)
 
 ```
 
@@ -84,9 +84,9 @@ Uses Next.js Preview Mode to live render pages (SSR), optionally with invisible 
 
 Admin opens I-Frame with {previewSiteUrl}/api/preview to enter Next.js Preview Mode and passes the following parameters:
 
--   path: which pathname to be shown
--   includeInvisibleBlocks
--   timestamp & hash: is validated to activate Preview Mode -
+- path: which pathname to be shown
+- includeInvisibleBlocks
+- timestamp & hash: is validated to activate Preview Mode -
 
 ### iframe messages: site -> admin
 

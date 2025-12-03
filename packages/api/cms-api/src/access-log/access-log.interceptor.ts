@@ -1,21 +1,31 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { Request } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
+import { DamConfig } from "../dam/dam.config";
+import { DAM_CONFIG } from "../dam/dam.constants";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
-const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
-
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
+    private ignoredPaths: string[];
 
-    constructor(@Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig) {}
+    constructor(
+        @Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig,
+        @Optional() @Inject(DAM_CONFIG) private readonly damConfig?: DamConfig,
+    ) {
+        const damBasePath = this.damConfig?.basePath ?? "dam";
 
+        this.ignoredPaths = this.damConfig
+            ? [`/${damBasePath}/images/`, `/${damBasePath}/files/preview`, `/${damBasePath}/files/download`, `/${damBasePath}/files/:hash/`]
+            : [];
+    }
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
 
@@ -59,14 +69,16 @@ export class AccessLogInterceptor implements NestInterceptor {
             requestData.push(`args: ${JSON.stringify(gqlArgs)}`);
         } else {
             const httpContext = context.switchToHttp();
-            const httpRequest = httpContext.getRequest();
+            const httpRequest = httpContext.getRequest<Request>();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const user = (httpRequest as any).user as CurrentUser;
 
             if (
-                IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
+                this.ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
                 (this.config &&
                     this.config.shouldLogRequest &&
                     !this.config.shouldLogRequest({
-                        user: httpRequest.user,
+                        user: user,
                         req: httpRequest,
                     }))
             ) {
@@ -75,7 +87,7 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             const ipAddress = getClientIp(httpRequest);
             requestData.push(`ip: ${ipAddress}`);
-            this.pushUserToRequestData(httpRequest.user, requestData);
+            this.pushUserToRequestData(user, requestData);
 
             requestData.push(
                 ...[`method: ${httpRequest.method}`, `route: ${httpRequest.route.path}`, `params: ${JSON.stringify(httpRequest.params)}`],

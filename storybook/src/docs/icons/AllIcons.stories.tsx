@@ -1,9 +1,11 @@
 import { ClearInputAdornment } from "@comet/admin";
-import * as icons from "@comet/admin-icons";
-import { Grid, InputAdornment, InputBase, SvgIconProps, Typography } from "@mui/material";
+import * as imports from "@comet/admin-icons";
+import { Grid, InputAdornment, InputBase, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ComponentType, useState } from "react";
+import { useState } from "react";
 import { useDebounce } from "use-debounce";
+
+const iconBlockList = ["CometDigitalExperienceLogo"];
 
 const matchesSearchQuery = (str: string, query: string): boolean => {
     if (!query.length) return true;
@@ -38,30 +40,45 @@ const IconWrapper = styled("div")`
     margin-right: 10px;
 `;
 
-const SearchIcon = icons.Search;
+const SearchIcon = imports.Search;
 
-const IconsGrid = ({ searchQuery }: { searchQuery: string }) => {
-    return (
-        <Grid container spacing={4}>
-            {Object.keys(icons).map((key) => {
-                if (key !== "__esModule" && key != null && matchesSearchQuery(key, searchQuery)) {
-                    const Icon = (icons as Record<string, ComponentType<SvgIconProps>>)[key];
+const iconsWithSearchTerms = Object.keys(imports)
+    .filter((key) => {
+        return !key.endsWith("SearchTerms") && key !== "__esModule" && !iconBlockList.includes(key);
+    })
+    .map((key) => ({
+        name: key,
+        Icon: imports[key as keyof typeof imports],
+        searchTerms: (imports as any)[`${key}SearchTerms`] || "",
+    }));
 
-                    return (
-                        <Grid item key={key} xs={12} sm={6} md={4} lg={3}>
-                            <IconContainer>
-                                <IconWrapper>
-                                    <Icon fontSize="large" />
-                                </IconWrapper>
-                                <Typography>{key}</Typography>
-                            </IconContainer>
-                        </Grid>
-                    );
-                }
-            })}
-        </Grid>
-    );
-};
+const IconsGrid = ({ searchQuery }: { searchQuery: string }) => (
+    <Grid container spacing={4}>
+        {iconsWithSearchTerms.map(({ name, searchTerms, Icon }) => {
+            if (matchesSearchQuery(searchTerms, searchQuery)) {
+                return (
+                    <Grid
+                        key={name}
+                        size={{
+                            xs: 12,
+                            sm: 6,
+                            md: 4,
+                            lg: 3,
+                        }}
+                    >
+                        <IconContainer>
+                            <IconWrapper>
+                                <Icon fontSize="large" />
+                            </IconWrapper>
+                            <Typography>{name}</Typography>
+                        </IconContainer>
+                    </Grid>
+                );
+            }
+            return null;
+        })}
+    </Grid>
+);
 
 export default {
     title: "Docs/Icons/All Icons",

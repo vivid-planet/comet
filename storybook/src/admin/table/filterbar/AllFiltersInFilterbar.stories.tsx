@@ -1,18 +1,18 @@
 import {
+    AutocompleteField,
     Field,
     FilterBar,
     FilterBarMoreFilters,
     FilterBarPopoverFilter,
     FinalFormInput,
     FinalFormRangeInput,
-    FinalFormSwitch,
+    SwitchField,
     Table,
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
+import { Box, Divider, Typography } from "@mui/material";
 
 interface ColorFilterFieldProps {
     colors: string[];
@@ -25,7 +25,7 @@ const ColorFilterField = ({ colors }: ColorFilterFieldProps) => {
             return { value: color, label: color };
         });
 
-    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
+    return <AutocompleteField name="color" options={options} fullWidth />;
 };
 
 interface IFilterValues {
@@ -128,9 +128,7 @@ function Story({ tableData }: StoryProps) {
                             <Box maxWidth={350}>
                                 <Field name="price" component={FinalFormRangeInput} startAdornment="€" fullWidth min={50} max={1000} />
                                 <Divider />
-                                <Field name="expressDelivery" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label="Express delivery" control={<FinalFormSwitch {...props} />} />}
-                                </Field>
+                                <SwitchField name="expressDelivery" label="Express delivery" fullWidth />
                                 <Box paddingBottom={4} paddingLeft={4} paddingRight={4}>
                                     <Typography variant="body2">
                                         Show all articles that can be shipped with express delivery (usually shipped within 2-3 work days)
@@ -193,12 +191,12 @@ export const FilterbarWithAllKindsOfFilters = {
                 id: i,
                 model: faker.vehicle.model(),
                 brand: faker.vehicle.manufacturer(),
-                color: faker.commerce.color(),
-                horsepower: faker.datatype.number({ min: 50, max: 200 }),
-                price: faker.commerce.price(100, 1000, 2),
+                color: faker.color.human(),
+                horsepower: faker.number.int({ min: 50, max: 200 }),
+                price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
                 owner: {
-                    firstname: faker.name.firstName(),
-                    lastname: faker.name.lastName(),
+                    firstname: faker.person.firstName(),
+                    lastname: faker.person.lastName(),
                 },
             };
         });

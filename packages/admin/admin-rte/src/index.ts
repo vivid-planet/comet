@@ -19,6 +19,7 @@ export { default as filterEditorUtilsRemoveInlineStyles } from "./core/filterEdi
 export { IMakeRteApiProps, IRteApiProps, default as makeRteApi, OnDebouncedContentChangeFn } from "./core/makeRteApi";
 export { FilterEditorStateBeforeUpdateFn, IOptions as IRteOptions, IRteRef, Rte, RteClassKey, RteProps } from "./core/Rte";
 export { IOptions as IRteReadOnlyOptions, IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
+export { stateToHtml } from "./core/translation/stateToHtml";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";

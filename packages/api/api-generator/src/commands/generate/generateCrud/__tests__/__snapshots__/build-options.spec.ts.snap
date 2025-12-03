@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildOptions buildSortProps nested m:1 relation string field should be used as sortProp 1`] = `
+"import { SortDirection } from "@comet/cms-api";
+    import { Field, InputType, registerEnumType } from "@nestjs/graphql";
+    import { Type } from "class-transformer";
+    import { IsEnum } from "class-validator";
+
+    export enum TestEntity2SortField {
+        nested = "nested",
+id = "id",
+nested_foo = "nested_foo",
+    }
+    registerEnumType(TestEntity2SortField, {
+        name: "TestEntity2SortField",
+    });
+    
+    @InputType()
+    export class TestEntity2Sort {
+        @Field(() => TestEntity2SortField)
+        @IsEnum(TestEntity2SortField)
+        field: TestEntity2SortField;
+    
+        @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
+        @IsEnum(SortDirection)
+        direction: SortDirection = SortDirection.ASC;
+    }
+    "
+`;

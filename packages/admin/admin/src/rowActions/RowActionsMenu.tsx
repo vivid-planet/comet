@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
 
-import { RowActionsSubMenu, RowActionsSubMenuProps } from "./RowActionsSubMenu";
+import { RowActionsSubMenu, type RowActionsSubMenuProps } from "./RowActionsSubMenu";
 
 export type RowActionsMenuProps = Omit<RowActionsSubMenuProps, "menuIsOpen" | "openMenu" | "closeMenu"> & {
     text?: ReactNode;

@@ -1,6 +1,6 @@
-import { Readable } from "stream";
+import type { Readable } from "stream";
 
-import { PipeMetadata } from "../pipes/importer-pipe.type";
+import type { PipeMetadata } from "../pipes/importer-pipe.type";
 
 export type StreamChunkAndMetadata = {
     chunk: Buffer | string;

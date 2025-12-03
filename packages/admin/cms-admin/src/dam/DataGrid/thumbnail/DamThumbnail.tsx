@@ -1,11 +1,11 @@
 import { File, Folder, FolderCopy, Pdf } from "@comet/admin-icons";
 import { Fade, Popper, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 
-import { GQLDamFile, GQLDamFolder } from "../../../graphql.generated";
+import { type GQLDamFile, type GQLDamFolder } from "../../../graphql.generated";
 import { AudioThumbnail } from "./AudioThumbnail";
-import { GQLDamFileThumbnailFragment } from "./DamThumbnail.gql.generated";
+import { type GQLDamFileThumbnailFragment } from "./DamThumbnail.gql.generated";
 import { VideoThumbnail } from "./VideoThumbnail";
 
 export { damFileThumbnailFragment } from "./DamThumbnail.gql";
@@ -66,15 +66,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps) => {
             thumbnail = (
                 <>
                     <ImageThumbnail onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} src={asset.image.thumbnailUrl} />
-                    <Popper
-                        sx={{ zIndex: 1301 }}
-                        open={open}
-                        anchorEl={anchorEl}
-                        placement="auto-end"
-                        onResize={undefined}
-                        onResizeCapture={undefined}
-                        transition
-                    >
+                    <Popper sx={{ zIndex: 1301 }} open={open} anchorEl={anchorEl} placement="auto-end" transition>
                         {({ TransitionProps }) => (
                             <Fade {...TransitionProps} timeout={350}>
                                 <ImagePreview src={asset.fileUrl || undefined} />

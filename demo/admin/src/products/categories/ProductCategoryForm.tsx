@@ -1,85 +1,73 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
-import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress } from "@mui/material";
-import { FormApi } from "final-form";
+import { filterByFragment, FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { type FormApi } from "final-form";
+import isEqual from "lodash.isequal";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
     createProductCategoryMutation,
-    productCategoryCheckForChangesQuery,
     productCategoryFormFragment,
     productCategoryQuery,
     updateProductCategoryMutation,
 } from "./ProductCategoryForm.gql";
 import {
-    GQLCheckForChangesProductCategoryQuery,
-    GQLCheckForChangesProductCategoryQueryVariables,
-    GQLProductCategoryFormCreateProductCategoryMutation,
-    GQLProductCategoryFormCreateProductCategoryMutationVariables,
-    GQLProductCategoryFormFragment,
-    GQLProductCategoryFormUpdateProductCategoryMutation,
-    GQLProductCategoryFormUpdateProductCategoryMutationVariables,
-    GQLProductCategoryQuery,
-    GQLProductCategoryQueryVariables,
+    type GQLCreateProductCategoryMutation,
+    type GQLCreateProductCategoryMutationVariables,
+    type GQLProductCategoryFormHandmadeFragment,
+    type GQLProductCategoryQuery,
+    type GQLProductCategoryQueryVariables,
+    type GQLUpdateProductCategoryMutation,
+    type GQLUpdateProductCategoryMutationVariables,
 } from "./ProductCategoryForm.gql.generated";
 
+type FormValues = GQLProductCategoryFormHandmadeFragment;
 interface FormProps {
     id?: string;
 }
-
-type FormState = GQLProductCategoryFormFragment;
-
-function ProductCategoryForm({ id }: FormProps) {
+export function ProductCategoryForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
-    const formApiRef = useFormApiRef<FormState>();
+    const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-
     const { data, error, loading, refetch } = useQuery<GQLProductCategoryQuery, GQLProductCategoryQueryVariables>(
         productCategoryQuery,
         id ? { variables: { id } } : { skip: true },
     );
-
-    const initialValues: Partial<FormState> = data?.productCategory
-        ? {
-              ...filterByFragment<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
-          }
-        : {};
-
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.productCategory
+                ? {
+                      ...filterByFragment<GQLProductCategoryFormHandmadeFragment>(productCategoryFormFragment, data.productCategory),
+                  }
+                : {},
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
-            if (!id) return false;
-            const { data: hasConflictData } = await client.query<
-                GQLCheckForChangesProductCategoryQuery,
-                GQLCheckForChangesProductCategoryQueryVariables
-            >({
-                query: productCategoryCheckForChangesQuery,
-                variables: { id },
-                fetchPolicy: "no-cache",
-            });
-            return resolveHasSaveConflict(data?.productCategory.updatedAt, hasConflictData.productCategory.updatedAt);
+            const updatedAt = await queryUpdatedAt(client, "productCategory", id);
+            return resolveHasSaveConflict(data?.productCategory.updatedAt, updatedAt);
         },
         formApiRef,
         loadLatestVersion: async () => {
             await refetch();
         },
     });
-
-    const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = { ...formState };
+        const output = {
+            ...formValues,
+        };
         if (mode === "edit") {
             if (!id) throw new Error();
-            await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
+            const { ...updateInput } = output;
+            await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
-                variables: { id, input: output },
+                variables: { id, input: updateInput },
             });
         } else {
-            const { data: mutationResponse } = await client.mutate<
-                GQLProductCategoryFormCreateProductCategoryMutation,
-                GQLProductCategoryFormCreateProductCategoryMutationVariables
-            >({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
                 variables: { input: output },
             });
@@ -93,28 +81,41 @@ function ProductCategoryForm({ id }: FormProps) {
             }
         }
     };
-
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
-    }
-
+    if (error) throw error;
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
-
     return (
-        <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
-                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
-                    </MainContent>
+                    <>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="productCategory.title" defaultMessage="Title" />}
+                        />
+
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="slug"
+                            label={<FormattedMessage id="productCategory.slug" defaultMessage="Slug" />}
+                        />
+                    </>
                 </>
             )}
         </FinalForm>
     );
 }
-
-export default ProductCategoryForm;

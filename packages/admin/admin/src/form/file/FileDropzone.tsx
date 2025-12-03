@@ -1,11 +1,12 @@
 import { Error, Select } from "@comet/admin-icons";
-import { Box, Button, ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import { ReactNode, useState } from "react";
-import { DropzoneOptions, useDropzone } from "react-dropzone";
+import { Box, type ComponentsOverrides, css, type Theme, Typography, useThemeProps } from "@mui/material";
+import { type ReactNode, useState } from "react";
+import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../../common/buttons/Button";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type FileDropzoneProps = ThemedComponentBaseProps<{
     root: "div";
@@ -48,7 +49,6 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         hasError,
         hideDroppableArea,
         hideButton,
-        // @ts-expect-error The type should be used from `DropzoneOptions`, however it's missing during lint/build.
         multiple,
         dropzoneText = multiple ? (
             <FormattedMessage id="comet.fileDropzone.dropfiles" defaultMessage="Drop files here to upload" />
@@ -104,14 +104,7 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
                     </Dropzone>
                 )}
                 {!hideButton && (
-                    <SelectFileButton
-                        tabIndex={-1}
-                        disabled={disabled}
-                        variant="contained"
-                        color="secondary"
-                        startIcon={selectIcon}
-                        {...slotProps?.selectFileButton}
-                    >
+                    <SelectFileButton tabIndex={-1} disabled={disabled} variant="secondary" startIcon={selectIcon} {...slotProps?.selectFileButton}>
                         {buttonText}
                     </SelectFileButton>
                 )}
@@ -157,7 +150,9 @@ const Dropzone = createComponentSlot("div")<FileDropzoneClassKey, OwnerState>({
         border-radius: 4px;
         border: 1px dashed ${theme.palette.grey[200]};
         background-color: white;
-        transition: background-color 200ms, border-color 200ms;
+        transition:
+            background-color 200ms,
+            border-color 200ms;
         cursor: pointer;
 
         &:hover {

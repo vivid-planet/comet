@@ -1,4 +1,4 @@
-import { subTreeFromNodes, TreeMap, TreeMapNode } from "../TreeMapUtils";
+import { subTreeFromNodes, TreeMap, type TreeMapNode } from "../TreeMapUtils";
 
 export const sampleTree = (): TreeMap<TreeMapNode> => {
     /*

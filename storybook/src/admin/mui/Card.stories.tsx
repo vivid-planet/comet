@@ -9,7 +9,7 @@ export default {
 export const _Card = () => {
     return (
         <Grid container spacing={10}>
-            <Grid item xs={5}>
+            <Grid size={5}>
                 <Card>
                     <CardHeader title={<Typography>Card Header</Typography>} />
                     <CardContent>
@@ -21,7 +21,7 @@ export const _Card = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={5}>
+            <Grid size={5}>
                 <Card>
                     <CardHeader title={<Typography>Card Header with Avatar (Icon)</Typography>} avatar={<Reload />} />
                     <CardContent>
@@ -33,7 +33,7 @@ export const _Card = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={5}>
+            <Grid size={5}>
                 <Card>
                     <CardHeader
                         title={<Typography>Card Header with Action (Button)</Typography>}
@@ -52,7 +52,7 @@ export const _Card = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={5}>
+            <Grid size={5}>
                 <Card>
                     <CardHeader
                         title={<Typography>Card Header with Avatar (Icon) and Action (Button)</Typography>}
@@ -72,7 +72,7 @@ export const _Card = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={5}>
+            <Grid size={5}>
                 <Card>
                     <CardHeader
                         title={<Typography>Card Header with IconButton</Typography>}

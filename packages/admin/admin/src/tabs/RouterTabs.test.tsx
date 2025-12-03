@@ -1,8 +1,8 @@
-/* eslint-disable @calm/react-intl/missing-formatted-message */
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { useEffect } from "react";
+import { IntlProvider } from "react-intl";
 import { Router, useRouteMatch } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
@@ -37,11 +37,13 @@ test("RouterTabs in SubRoute", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
     expect(rendered.getByText("foo tab content")).toBeInTheDocument();
 
@@ -93,11 +95,13 @@ test("RouterTabs must not remount content", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
     expect(rendered.getByText("FooContent")).toBeInTheDocument();
     expect(mountCountFoo).toBe(1);

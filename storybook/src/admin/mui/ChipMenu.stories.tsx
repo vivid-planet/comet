@@ -1,6 +1,6 @@
 import { ChevronDown, Cookie, Domain, Favorite } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, ListItemIcon, ListItemText, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 
 export default {
     title: "@comet/admin/mui",

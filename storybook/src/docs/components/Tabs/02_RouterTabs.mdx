@@ -1,4 +1,4 @@
-import { Canvas, Meta } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as RouterTabsStories from "./02_RouterTabs.stories";
 
@@ -11,15 +11,15 @@ However, `RouterTabs` manages its state in the URL so that each tab has a unique
 
 `RouterTabs` has the following props:
 
--   `tabComponent` for passing a custom tab component. Per default, [Material UI's `Tab` component](https://v4.mui.com/api/tab/) is used
--   `tabsProps` for passing props to [Material UI's `Tabs` component](https://v4.mui.com/api/tabs/)
+- `tabComponent` for passing a custom tab component. Per default, [Material UI's `Tab` component](https://v4.mui.com/api/tab/) is used
+- `tabsProps` for passing props to [Material UI's `Tabs` component](https://v4.mui.com/api/tabs/)
 
 As children, an array of `RouterTab` elements should be passed to `RouterTabs`.
 Each `RouterTab` needs:
 
--   a `label` that is shown in the tab bar
--   a unique `path` of the tab that is attached to the URL
--   optionally a `forceRender` flag ([see Tabs docs for examples](?path=/docs/docs-components-tabs-tabs--docs#tabs-and-forcerender))
+- a `label` that is shown in the tab bar
+- a unique `path` of the tab that is attached to the URL
+- optionally a `forceRender` flag ([see Tabs docs for examples](?path=/docs/docs-components-tabs-tabs--docs#tabs-and-forcerender))
 
 <Canvas of={RouterTabsStories.Basic} />
 

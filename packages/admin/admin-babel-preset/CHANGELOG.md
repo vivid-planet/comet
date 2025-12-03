@@ -1,5 +1,105 @@
 # @comet/admin-babel-preset
 
+## 8.8.0
+
+## 8.7.1
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+## 8.4.2
+
+## 8.4.1
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.1
+
+## 8.1.0
+
+## 8.0.0
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+### Minor Changes
+
+- 682a674: Add support for React 18
+
+## 8.0.0-beta.6
+
+## 8.0.0-beta.5
+
+## 8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+## 8.0.0-beta.1
+
+## 8.0.0-beta.0
+
+### Minor Changes
+
+- 682a674: Add support for React 18
+
+## 7.25.3
+
+## 7.25.2
+
+## 7.25.1
+
+## 7.25.0
+
+## 7.24.0
+
+## 7.23.0
+
+## 7.22.0
+
+## 7.21.1
+
+## 7.21.0
+
+## 7.20.0
+
+## 7.19.0
+
+## 7.18.0
+
+## 7.17.0
+
+## 7.16.0
+
+## 7.15.0
+
+## 7.14.0
+
+## 7.13.0
+
 ## 7.12.0
 
 ## 7.11.0

@@ -1,11 +1,11 @@
-import { BlockLoader, gql } from "@comet/cms-site";
-import { NewsListBlockData } from "@src/blocks.generated";
+import { type BlockLoaderOptions, gql } from "@comet/site-nextjs";
+import { type NewsListBlockData } from "@src/blocks.generated";
 
-import { GQLNewsListBlockNewsFragment, GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.loader.generated";
+import { type GQLNewsListBlockQuery, type GQLNewsListBlockQueryVariables } from "./NewsListBlock.loader.generated";
 
-export type LoadedData = GQLNewsListBlockNewsFragment[];
+export type LoadedData = Awaited<ReturnType<typeof loader>>;
 
-export const loader: BlockLoader<NewsListBlockData> = async ({ blockData, graphQLFetch }): Promise<LoadedData> => {
+export const loader = async ({ blockData, graphQLFetch }: BlockLoaderOptions<NewsListBlockData>) => {
     if (blockData.ids.length === 0) {
         return [];
     }

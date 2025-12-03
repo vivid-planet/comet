@@ -1,23 +1,49 @@
 import {
     convertPreviewDataToHeaders,
+    createFetchWithDefaultNextRevalidate,
     createFetchWithDefaults,
     createGraphQLFetch as createGraphQLFetchLibrary,
-    SitePreviewData,
-} from "@comet/cms-site";
+    createPersistedQueryGraphQLFetch,
+    type GraphQLFetch,
+    type SitePreviewData,
+} from "@comet/site-nextjs";
 
-export function createGraphQLFetch(previewData?: SitePreviewData) {
-    if (typeof window !== "undefined") {
-        throw new Error("createGraphQLFetch: cannot use on client side.");
+import { getVisibilityParam } from "./ServerContext";
+
+type Fetch = typeof fetch;
+
+export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {}): GraphQLFetch {
+    if (process.env.NEXT_RUNTIME === "edge") {
+        throw new Error("createGraphQLFetch: cannot use in edge runtime, use createGraphQLFetchMiddleware instead.");
     }
 
-    const headers = {
-        authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
-    };
+    if (typeof window !== "undefined") {
+        // Client-side rendering
+        return createPersistedQueryGraphQLFetch(
+            passedFetch || fetch,
+            `/graphql`, // bff api route
+        );
+    } else {
+        // Server-side rendering
+        if (!process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD) {
+            throw new Error("API_BASIC_AUTH_SYSTEM_USER_PASSWORD is not set");
+        }
 
-    return createGraphQLFetchLibrary(
-        // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled
-        // see cache-handler.ts for maximum cache duration (24 hours)
-        createFetchWithDefaults(fetch, { next: { revalidate: 7.5 * 60 }, headers: { ...convertPreviewDataToHeaders(previewData), ...headers } }),
-        `${process.env.API_URL_INTERNAL}/graphql`,
-    );
+        let previewData: SitePreviewData | undefined;
+        const visibilityParam = getVisibilityParam();
+        if (visibilityParam === "invisibleBlocks") previewData = { includeInvisible: true };
+        if (visibilityParam === "invisiblePages") previewData = { includeInvisible: false };
+
+        return createGraphQLFetchLibrary(
+            // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled
+            // see cache-handler.ts for maximum cache duration (24 hours)
+            createFetchWithDefaults(createFetchWithDefaultNextRevalidate(passedFetch || fetch, 7.5 * 60), {
+                headers: {
+                    authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                    ...convertPreviewDataToHeaders(previewData),
+                },
+            }),
+            `${process.env.API_URL_INTERNAL}/graphql`,
+        );
+    }
 }

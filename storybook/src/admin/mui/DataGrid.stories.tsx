@@ -1,6 +1,6 @@
-import { DataGridToolbar, FillSpace, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { Button, DataGridToolbar, FillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { exampleColumns, exampleRows } from "../../helpers/ExampleDataGrid";
@@ -27,15 +27,10 @@ export const Default = {
     render: ({ density }: DefaultArgs) => {
         const ToolbarForGrid = () => {
             return (
-                // TODO: Use "density" directly once "compact" is supported: https://vivid-planet.atlassian.net/browse/COM-1504
-                <DataGridToolbar density={density === "compact" ? "standard" : density}>
+                <DataGridToolbar>
                     <ToolbarTitleItem>DataGrid example</ToolbarTitleItem>
                     <FillSpace />
-                    <ToolbarActions>
-                        <Button variant="contained" startIcon={<Add />}>
-                            Add
-                        </Button>
-                    </ToolbarActions>
+                    <Button startIcon={<Add />}>Add</Button>
                 </DataGridToolbar>
             );
         };
@@ -46,8 +41,8 @@ export const Default = {
                     density={density}
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: ToolbarForGrid,
+                    slots={{
+                        toolbar: ToolbarForGrid,
                     }}
                 />
             </Box>

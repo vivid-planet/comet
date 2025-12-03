@@ -1,15 +1,10 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { SpaceBlockData } from "@src/blocks.generated";
-import styled from "styled-components";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type SpaceBlockData } from "@src/blocks.generated";
 
 export const SpaceBlock = withPreview(
     ({ data: { spacing } }: PropsWithData<SpaceBlockData>) => {
-        return <Root $spacing={spacing} />;
+        return <div style={{ height: `var(--spacing-${spacing})` }} />;
     },
     { label: "Space" },
 );
-
-const Root = styled.div<{ $spacing: SpaceBlockData["spacing"] }>`
-    height: ${({ theme, $spacing }) => theme.spacing[$spacing]};
-`;

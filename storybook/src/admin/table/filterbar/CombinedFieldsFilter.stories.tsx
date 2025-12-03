@@ -3,13 +3,13 @@ import {
     FilterBar,
     FilterBarPopoverFilter,
     FinalFormRangeInput,
-    FinalFormSwitch,
+    SwitchField,
     Table,
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
+import { Box, Divider, Typography } from "@mui/material";
 
 interface IFilterValues {
     expressDelivery: boolean;
@@ -49,9 +49,7 @@ function Story({ tableData }: StoryProps) {
                         <Box maxWidth={350}>
                             <Field name="price" component={FinalFormRangeInput} startAdornment="€" fullWidth min={50} max={1000} />
                             <Divider />
-                            <Field name="expressDelivery" type="checkbox" fullWidth>
-                                {(props) => <FormControlLabel label="Express delivery" control={<FinalFormSwitch {...props} />} />}
-                            </Field>
+                            <SwitchField name="expressDelivery" label="Express delivery" fullWidth />
                             <Box paddingBottom={4} paddingLeft={4} paddingRight={4}>
                                 <Typography variant="body2">
                                     Show all articles that can be shipped with express delivery (usually shipped within 2-3 work days)
@@ -95,7 +93,7 @@ export const FilterbarWithCombinedFieldsFilterPriceDelivery = {
         const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
             return {
                 id: i,
-                price: faker.commerce.price(100, 1000, 2),
+                price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
                 expressDelivery: faker.datatype.boolean(),
             };
         });

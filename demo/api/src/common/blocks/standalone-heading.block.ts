@@ -3,16 +3,16 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { HeadingBlock } from "@src/common/blocks/heading.block";
 import { IsEnum } from "class-validator";
 
-enum TextAlignment {
+export enum TextAlignment {
     left = "left",
     center = "center",
 }
@@ -34,7 +34,7 @@ class StandaloneHeadingBlockInput extends BlockInput {
     textAlignment: TextAlignment;
 
     transformToBlockData(): StandaloneHeadingBlockData {
-        return inputToData(StandaloneHeadingBlockData, this);
+        return blockInputToData(StandaloneHeadingBlockData, this);
     }
 }
 

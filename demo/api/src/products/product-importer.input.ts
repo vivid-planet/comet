@@ -58,7 +58,7 @@ export class ProductImporterInput {
     @CsvColumn("availableSince", { type: CsvColumnType.DateTime, dateFormatString: "dd-MM-yyyy" })
     @IsOptional()
     @IsDate()
-    availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
+    availableSince?: string = undefined;
 
     @CsvColumn("lastCheckedAt", { type: CsvColumnType.DateTime, dateFormatString: "dd-MM-yyyy-HH:mm:ss" })
     @IsOptional()

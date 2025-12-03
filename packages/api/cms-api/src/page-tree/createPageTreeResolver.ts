@@ -1,5 +1,5 @@
 import { Inject, Type } from "@nestjs/common";
-import { Args, ArgsType, createUnionType, ID, Info, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import { Args, ArgsType, createUnionType, ID, Info, Int, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
@@ -140,7 +140,7 @@ export function createPageTreeResolver({
             return this.pageTreeReadApi.getChildNodes(node);
         }
 
-        @ResolveField(() => Number)
+        @ResolveField(() => Int)
         async numberOfDescendants(@Parent() node: PageTreeNodeInterface): Promise<number> {
             const childNodes = await this.pageTreeReadApi.getChildNodes(node);
             let numberOfDescendants = childNodes.length;
@@ -292,6 +292,10 @@ export function createPageTreeResolver({
             });
 
             if (input.parentId !== null) {
+                if (ids.includes(input.parentId)) {
+                    throw new GraphQLError("A page cannot be its own parent.");
+                }
+
                 const newParentNode = await pageTreeReadApi.getNodeOrFail(input.parentId);
 
                 let parentId = newParentNode.parentId;

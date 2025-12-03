@@ -2,21 +2,35 @@ import {
     DamVideoBlock,
     OneOfBlock,
     PreviewSkeleton,
-    PropsWithData,
-    SupportedBlocks,
+    type PropsWithData,
+    type SupportedBlocks,
     VimeoVideoBlock,
     withPreview,
-    YouTubeVideoBlock,
-} from "@comet/cms-site";
-import { MediaBlockData } from "@src/blocks.generated";
+} from "@comet/site-nextjs";
+import { type MediaBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
+
+import { PlayPauseButton } from "../helpers/PlayPauseButton";
+import { CookieSafeYouTubeVideoBlock } from "./CookieSafeYouTubeVideoBlock";
 
 const getSupportedBlocks = (sizes: string, aspectRatio: string, fill?: boolean): SupportedBlocks => {
     return {
         image: (data) => <DamImageBlock data={data} sizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
-        damVideo: (data) => <DamVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
-        youTubeVideo: (data) => <YouTubeVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
-        vimeoVideo: (data) => <VimeoVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
+        damVideo: (data) => (
+            <DamVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
+        ),
+        youTubeVideo: (data) => (
+            <CookieSafeYouTubeVideoBlock
+                data={data}
+                previewImageSizes={sizes}
+                aspectRatio={aspectRatio}
+                fill={fill}
+                playPauseButton={PlayPauseButton}
+            />
+        ),
+        vimeoVideo: (data) => (
+            <VimeoVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
+        ),
     };
 };
 

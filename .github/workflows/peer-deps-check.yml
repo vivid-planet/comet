@@ -1,0 +1,29 @@
+name: Check Peer Dependencies
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+        paths:
+            - "pnpm-lock.yaml"
+jobs:
+    check-peer-deps:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.event.pull_request.head.ref || github.ref }}
+
+            - uses: pnpm/action-setup@v4
+
+            - name: Use Node.js 24.x
+              uses: actions/setup-node@v5
+              with:
+                  node-version: 24
+                  registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+
+            - name: Check peer dependencies
+              # This will fail if peer dependencies are not satisfied
+              run: pnpm install --resolution-only --no-frozen-lockfile

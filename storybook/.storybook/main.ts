@@ -1,12 +1,10 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
-import * as path from "path";
 import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
     framework: "@storybook/react-webpack5",
     stories: ["../src/**/*.@(mdx|stories.tsx)"],
     addons: [
-        "@storybook/addon-controls",
         {
             name: "@storybook/addon-docs",
             options: {
@@ -17,27 +15,21 @@ const config: StorybookConfig = {
                 },
             },
         },
-        {
-            name: "@storybook/addon-storysource",
-            options: {
-                rule: {
-                    test: [/\.tsx$/],
-                    include: [path.resolve(__dirname, "../src")],
-                },
-                sourceLoaderOptions: {
-                    parser: "typescript",
-                    injectStoryParameters: false,
-                },
-            },
-        },
         "@storybook/addon-webpack5-compiler-babel",
     ],
+
+    env: (config) => ({
+        ...config,
+        MUI_LICENSE_KEY: process.env.MUI_LICENSE_KEY || "",
+    }),
     staticDirs: ["../public"],
-    docs: {
-        autodocs: true,
-    },
-    typescript: {
-        reactDocgen: "react-docgen-typescript",
+    refs: (config, { configType }) => {
+        return {
+            "@comet/admin": {
+                title: "@comet/admin",
+                url: configType === "DEVELOPMENT" ? "http://localhost:26646/" : "https://main--68e7b70f15b8f51dac492af6.chromatic.com", // TODO: support pull request previews,
+            },
+        };
     },
 };
 

@@ -1,23 +1,23 @@
 import { useApolloClient } from "@apollo/client";
-import { useStackApi } from "@comet/admin";
+import { Button, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
-import { Button, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { DamFileDetails } from "./EditFile";
+import { type DamFileDetails } from "./EditFile";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import {
-    GQLArchiveFileMutation,
-    GQLArchiveFileMutationVariables,
-    GQLDeleteDamFileMutation,
-    GQLDeleteDamFileMutationVariables,
-    GQLRestoreFileMutation,
-    GQLRestoreFileMutationVariables,
+    type GQLArchiveFileMutation,
+    type GQLArchiveFileMutationVariables,
+    type GQLDeleteDamFileMutation,
+    type GQLDeleteDamFileMutationVariables,
+    type GQLRestoreFileMutation,
+    type GQLRestoreFileMutationVariables,
 } from "./FilePreview.gql.generated";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
@@ -78,7 +78,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
         <FilePreviewWrapper>
             <ActionsContainer>
                 <Button
-                    sx={{ color: "white" }}
+                    variant="textLight"
                     startIcon={<Download />}
                     onClick={() => {
                         saveAs(file.fileUrl, file.name);
@@ -88,7 +88,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                 </Button>
                 <ReplaceFileButton file={file} />
                 <Button
-                    sx={{ color: "white" }}
+                    variant="textLight"
                     startIcon={file.archived ? <Restore /> : <Archive />}
                     onClick={() => {
                         if (file.archived) {
@@ -111,7 +111,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     )}
                 </Button>
                 <Button
-                    sx={{ color: "white" }}
+                    variant="textLight"
                     startIcon={<Delete />}
                     onClick={() => {
                         setDeleteDialogOpen(true);

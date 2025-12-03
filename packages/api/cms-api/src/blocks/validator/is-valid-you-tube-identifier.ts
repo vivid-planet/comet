@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { isString, registerDecorator, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 
 export const IsValidYouTubeIdentifier = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return (object: Object, propertyName: string): void => {
         registerDecorator({
             target: object.constructor,
@@ -16,7 +16,7 @@ const EXPECTED_YT_ID_LENGTH = 11;
 
 @ValidatorConstraint({ name: "IsValidYoutubeIdentifier" })
 @Injectable()
-export class IsValidYouTubeIdentifierConstraint implements ValidatorConstraintInterface {
+class IsValidYouTubeIdentifierConstraint implements ValidatorConstraintInterface {
     validate(value: unknown): boolean {
         if (!isString(value)) {
             return false;

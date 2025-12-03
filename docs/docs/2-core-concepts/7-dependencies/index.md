@@ -16,8 +16,8 @@ If you still need to know which entities a block references or in which blocks a
 
 Follow the upcoming guide if you want to
 
--   make the "Dependents" tab in the DAM work
--   display the dependencies or dependents of an entity somewhere in your admin app
+- make the "Dependents" tab in the DAM work
+- display the dependencies or dependents of an entity somewhere in your admin app
 
 ### Configuring the block index
 
@@ -28,23 +28,23 @@ It will scan these fields for dependency information.
 
 To do that, you must
 
--   Annotate the entity with `@RootBlockEntity()`
--   Annotate all columns containing block data with `@RootBlock(ExampleBlock)`
+- Annotate the entity with `@RootBlockEntity()`
+- Annotate all columns containing block data with `@RootBlock(ExampleBlock)`
 
 For example:
 
 ```diff
 +   @RootBlockEntity()
-    export class News extends BaseEntity<News, "id"> {
+    export class News extends BaseEntity {
         // ...
 
 +       @RootBlock(DamImageBlock)
-        @Property({ customType: new RootBlockType(DamImageBlock) })
+        @Property({ type: new RootBlockType(DamImageBlock) })
         @Field(() => RootBlockDataScalar(DamImageBlock))
         image: BlockDataInterface;
 
 +       @RootBlock(NewsContentBlock)
-        @Property({ customType: new RootBlockType(NewsContentBlock) })
+        @Property({ type: new RootBlockType(NewsContentBlock) })
         @Field(() => RootBlockDataScalar(NewsContentBlock))
         content: BlockDataInterface;
 
@@ -59,11 +59,39 @@ This creates a materialized view called `block_index_dependencies` in your datab
 
 You must recreate the block index views after
 
--   executing database migrations
--   executing the fixtures (because they drop the whole database and recreate it)
+- executing database migrations
+- executing the fixtures (because they drop the whole database and recreate it)
 
 You can automate this process by following the steps in the [migration guide](/docs/migration-guide/migration-from-v5-to-v6/#block-index).
 For new projects, it should already be automated.
+
+### Providing dependency information
+
+If your block depends on certain entities, you should provide dependency information.
+You can do that using the `indexData()` method in your block data class like this:
+
+```ts
+class MyCustomBlockData extends BlockData {
+    // ...
+
+    indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
+        return {
+            dependencies: [
+                {
+                    targetEntityName: DamFile.name,
+                    id: this.damFileId,
+                },
+            ],
+        };
+    }
+}
+```
+
+This works for all entities - not just `DamFile`.
 
 ### Displaying dependencies in the admin interface
 
@@ -120,7 +148,7 @@ It will return the `PageTreeNode` name and slug (as secondary information).
 ```ts
 // page.entity.ts
 @EntityInfo(PageTreeNodeDocumentEntityInfoService)
-export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
+export class Page extends BaseEntity implements DocumentInterface {
     // ...
 }
 ```
@@ -280,8 +308,8 @@ The DAM uses this component in its "Dependents" tab.
 
 The component requires two props:
 
--   `query`: A GraphQL query. It must have a `dependencies` or `dependents` field resolver.
--   `variables`: The variables for the query.
+- `query`: A GraphQL query. It must have a `dependencies` or `dependents` field resolver.
+- `variables`: The variables for the query.
 
 <details>
 

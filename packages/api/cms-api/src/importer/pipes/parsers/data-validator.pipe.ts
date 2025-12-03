@@ -1,8 +1,8 @@
-import { LoggerService } from "@nestjs/common";
+import { type LoggerService } from "@nestjs/common";
 import { validate } from "class-validator";
-import { Transform as StreamTransform, TransformCallback } from "stream";
+import { Transform as StreamTransform, type TransformCallback } from "stream";
 
-import { ImporterPipe, PipeData, PipeMetadata, ValidationError } from "../importer-pipe.type";
+import { type ImporterPipe, type PipeData, type PipeMetadata, type ValidationError } from "../importer-pipe.type";
 
 export class DataValidatorPipe implements ImporterPipe {
     getPipe(runLogger: LoggerService) {

@@ -1,8 +1,9 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { LayoutBlockData } from "@src/blocks.generated";
-import styled, { css } from "styled-components";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type LayoutBlockData } from "@src/blocks.generated";
+import clsx from "clsx";
 
+import styles from "./LayoutBlock.module.scss";
 import { MediaBlock } from "./MediaBlock";
 import { RichTextBlock } from "./RichTextBlock";
 
@@ -53,90 +54,16 @@ const LayoutBlock = withPreview(
             );
 
         return (
-            <Root>
+            <div className={styles.root}>
                 {layoutVariant?.blocks.map((key) => (
-                    <Box key={key} $layout={layoutVariant.name}>
+                    <div key={key} className={clsx(styles.box, styles[layoutVariant.name])}>
                         {blockForKey(key)}
-                    </Box>
+                    </div>
                 ))}
-            </Root>
+            </div>
         );
     },
     { label: "Columns" },
 );
-
-const Root = styled.div`
-    display: grid;
-    grid-template-columns: repeat(24, 1fr);
-`;
-
-const Box = styled.div<{ $layout: string }>`
-    grid-column: 1 / -1;
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
-        ${({ $layout }) =>
-            $layout === "layout1" &&
-            css`
-                &:nth-child(3n + 1) {
-                    grid-column: 1 / 11;
-                }
-                &:nth-child(3n + 2) {
-                    grid-column: 11 / 18;
-                }
-                &:nth-child(3n + 3) {
-                    grid-column: 18 / -1;
-                }
-            `};
-        ${({ $layout }) =>
-            $layout === "layout2" &&
-            css`
-                &:nth-child(3n + 1) {
-                    grid-column: 1 / 8;
-                }
-                &:nth-child(3n + 2) {
-                    grid-column: 8 / 18;
-                }
-                &:nth-child(3n + 3) {
-                    grid-column: 18 / -1;
-                }
-            `};
-        ${({ $layout }) =>
-            $layout === "layout3" &&
-            css`
-                &:nth-child(3n + 1) {
-                    grid-column: 1 / 7;
-                }
-                &:nth-child(3n + 2) {
-                    grid-column: 7 / 13;
-                }
-                &:nth-child(3n + 3) {
-                    grid-column: 13 / -1;
-                }
-            `};
-        ${({ $layout }) =>
-            $layout === "layout4" &&
-            css`
-                grid-column: 1 / 15;
-                &:nth-child(even) {
-                    grid-column: 15 / -1;
-                }
-            `};
-        ${({ $layout }) =>
-            $layout === "layout5" &&
-            css`
-                grid-column: 1 / 11;
-                &:nth-child(even) {
-                    grid-column: 11 / -1;
-                }
-            `};
-        ${({ $layout }) =>
-            ($layout === "layout6" || $layout === "layout7") &&
-            css`
-                grid-column: 1 / 13;
-                &:nth-child(even) {
-                    grid-column: 13 / -1;
-                }
-            `};
-    }
-`;
 
 export { LayoutBlock };

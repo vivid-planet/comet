@@ -21,8 +21,8 @@ Use `@comet/create-app` to create a new Comet DXP project. More information can 
 
 The following tools need to be installed on your local machine.
 
--   [Docker Desktop](https://www.docker.com/products/docker-desktop/)
--   [nvm](https://github.com/nvm-sh/nvm)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [nvm](https://github.com/nvm-sh/nvm)
 
 ### Setup workspace
 
@@ -36,6 +36,16 @@ sh install.sh
 ```
 
 _It is recommended to run `install.sh` every time you switch to the `main` branch._
+
+### MUI X Data Grid Pro License
+
+If you want to use features from `@mui/x-data-grid-pro`, you need to configure your MUI license key. Create a `.env.local` file in your project root and add your license key:
+
+`.env.local`:
+
+```
+MUI_LICENSE_KEY=your_license_key_here
+```
 
 ### Build packages
 
@@ -60,7 +70,7 @@ Here are a few examples:
     Start the development process for `@comet/admin`:
 
     ```bash
-    npx dev-pm start @comet-admin
+    pnpm exec dev-pm start @comet-admin
     ```
 
     Create a development story in Storybook:
@@ -74,13 +84,13 @@ Here are a few examples:
     Start the development process for `@comet/cms-api`:
 
     ```bash
-    npx dev-pm start @cms-api
+    pnpm exec dev-pm start @cms-api
     ```
 
     Start Demo API:
 
     ```bash
-    npx dev-pm start @demo-api
+    pnpm exec dev-pm start @demo-api
     ```
 
     The Demo API will be available at [http://localhost:4000/](http://localhost:4000/)
@@ -90,13 +100,13 @@ Here are a few examples:
     Start the development process for `@comet/cms-admin`:
 
     ```bash
-    npx dev-pm start @cms-admin
+    pnpm exec dev-pm start @cms-admin
     ```
 
     Start Demo API and Admin:
 
     ```bash
-    npx dev-pm start @demo-api @demo-admin
+    pnpm exec dev-pm start @demo-api @demo-admin
     ```
 
     The Demo Admin will be available at [http://localhost:8000/](http://localhost:8000/)
@@ -106,19 +116,19 @@ See [dev-pm.config.js](/dev-pm.config.js) for a list of all available processes 
 #### Start Demo
 
 ```bash
-npx dev-pm start @demo
+pnpm exec dev-pm start @demo
 ```
 
 Demo will be available at
 
--   Admin: [http://localhost:8000/](http://localhost:8000/)
--   API: [http://localhost:4000/](http://localhost:4000/)
--   Site: [http://localhost:3000/](http://localhost:3000/)
+- Admin: [http://localhost:8000/](http://localhost:8000/)
+- API: [http://localhost:4000/](http://localhost:4000/)
+- Site: [http://localhost:3000/](http://localhost:3000/)
 
 It is also possible to start specific microservices
 
 ```bash
-npx dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
+pnpm exec dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
 ```
 
 #### Start Storybook
@@ -132,15 +142,16 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 #### Start Docs
 
 ```bash
-pnpm run docs
+pnpm exec dev-pm start @docs
 ```
 
-The docs will be available at [http://localhost:3300/](http://localhost:3300/)
+The docs will be available at [http://localhost:3300/](http://localhost:3300/)  
+_This will also start Storybook, due to some docs-pages being generated from storybook stories._
 
 ### Stop processes
 
 ```bash
-npx dev-pm shutdown
+pnpm exec dev-pm shutdown
 ```
 
 ### Dev scripts
@@ -156,17 +167,32 @@ However, we recommend directly using dev-process-manager for greater control ove
 
 See [package.json](/package.json) for a list of all available dev scripts.
 
-## Develop in a project
+## Developing in an external project
 
-### additional Requirements
+### Requirements
 
--   [watchman](https://facebook.github.io/watchman/)
--   [wml](https://github.com/wix/wml)
+- [watchman](https://facebook.github.io/watchman/)
+- [wml](https://github.com/wix/wml)
 
-###
+### Setup
 
-    ./wml-add.sh ../example
-    wml start
+Configure `wml` to sync the comet `node_modules` to the external project:
+
+```bash
+./wml-add.sh /path/to/my-project
+```
+
+It may be necessary to configure `watchman` to watch your globally installed `wml`:
+
+```bash
+watchman watch $(dirname "$(dirname "$(which node)")")/lib/node_modules/wml/src
+```
+
+Start syncing the comet `node_modules` to the external project:
+
+```bash
+wml start
+```
 
 ## Contributing
 

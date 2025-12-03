@@ -1,6 +1,6 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, FormControl } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { type ComponentsOverrides, FormControl, type InputBaseProps } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { useRef } from "react";
 import { useIntl } from "react-intl";
 
@@ -14,37 +14,67 @@ export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormContr
 const Root = createComponentSlot("div")<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "root",
-})(css`
-    display: flex;
-    align-items: center;
-`);
+})(
+    ({ theme }) => css`
+        ${theme.breakpoints.up("sm")} {
+            display: flex;
+            align-items: center;
+        }
+    `,
+);
 
 const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "dateFormControl",
 })(
     ({ theme }) => css`
-        flex-grow: 1;
-        margin-right: ${theme.spacing(2)};
+        margin-bottom: ${theme.spacing(2)};
+        width: 100%;
+
+        ${theme.breakpoints.up("sm")} {
+            flex-grow: 1;
+            margin-right: ${theme.spacing(2)};
+            margin-bottom: 0;
+            width: auto;
+        }
     `,
 );
 
 const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timeFormControl",
-})(css`
-    flex-grow: 1;
-`);
+})(
+    ({ theme }) => css`
+        width: 100%;
+        flex-grow: 1;
+
+        ${theme.breakpoints.up("sm")} {
+            width: auto;
+        }
+    `,
+);
 
 const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "datePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 export interface DateTimePickerProps
     extends ThemedComponentBaseProps<{
@@ -57,10 +87,16 @@ export interface DateTimePickerProps
     onChange?: (value?: Date) => void;
     value?: Date;
     required?: boolean;
+    disabled?: boolean;
+    onBlur?: InputBaseProps["onBlur"];
+    onFocus?: InputBaseProps["onFocus"];
 }
 
+/**
+ * @deprecated `DateTimePicker` from `@comet/admin-date-time` will be replaced by `DateTimePicker` (currently `Future_DateTimePicker`) from `@comet/admin` in a future major release.
+ */
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, required, slotProps, ...restProps } = useThemeProps({
+    const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
@@ -107,7 +143,16 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     onChange={onChangeDate}
                     fullWidth
                     required={required}
+                    disabled={disabled}
                     {...slotProps?.datePicker}
+                    onBlur={(event) => {
+                        onBlur?.(event);
+                        slotProps?.datePicker?.onBlur?.(event);
+                    }}
+                    onFocus={(event) => {
+                        onFocus?.(event);
+                        slotProps?.datePicker?.onFocus?.(event);
+                    }}
                 />
             </DateFormControl>
             <TimeFormControl {...slotProps?.timeFormControl}>
@@ -118,7 +163,16 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     onChange={onChangeTime}
                     fullWidth
                     required={required}
+                    disabled={disabled}
                     {...slotProps?.timePicker}
+                    onBlur={(event) => {
+                        onBlur?.(event);
+                        slotProps?.timePicker?.onBlur?.(event);
+                    }}
+                    onFocus={(event) => {
+                        onFocus?.(event);
+                        slotProps?.timePicker?.onFocus?.(event);
+                    }}
                 />
             </TimeFormControl>
         </Root>

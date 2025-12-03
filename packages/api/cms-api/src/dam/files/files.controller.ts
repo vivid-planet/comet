@@ -1,4 +1,4 @@
-import { BaseEntity } from "@mikro-orm/core";
+import { BaseEntity } from "@mikro-orm/postgresql";
 import {
     BadRequestException,
     Body,
@@ -28,6 +28,8 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { FileUploadInput } from "../../file-utils/file-upload.input";
+import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
@@ -40,15 +42,13 @@ import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createUploadFileBody, ReplaceFileByIdBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
-import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
-import { calculatePartialRanges, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const fileUrl = `:fileId/:filename`;
 
-export function createFilesController({ Scope: PassedScope }: { Scope?: Type<DamScopeInterface> }): Type<unknown> {
+export function createFilesController({ Scope: PassedScope, damBasePath }: { Scope?: Type<DamScopeInterface>; damBasePath: string }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -58,7 +58,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
     const UploadFileBody = createUploadFileBody({ Scope });
 
-    @Controller("dam/files")
+    @Controller(`${damBasePath}/files`)
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
         private readonly logger = new Logger(FilesController.name);
@@ -72,14 +72,13 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         ) {}
 
         @Post("upload")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor())
         async upload(
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
-            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
-        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -104,21 +103,19 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             const uploadedFile = await this.filesService.upload(file, { ...transformedBody, folderId, scope });
             const fileUrl = await this.filesService.createFileUrl(uploadedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
-                relativeDamUrls: Boolean(relativeDamUrls),
             });
 
             return { ...uploadedFile, fileUrl };
         }
 
         @Post("replace-by-filename-and-folder")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor())
         async replaceByFilenameAndFolder(
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
-            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
-        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -156,23 +153,23 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             const fileUrl = await this.filesService.createFileUrl(replacedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
-                relativeDamUrls: Boolean(relativeDamUrls),
             });
 
             return { ...replacedFile, fileUrl };
         }
 
         @Post("replace-by-id")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor())
         async replaceById(
             @UploadedFile() file: FileUploadInput,
             @Body() body: ReplaceFileByIdBody,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
-            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
-        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
-            const { fileId, ...transformedBody } = plainToInstance(ReplaceFileByIdBody, body);
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
+            const transformedBody = plainToInstance(ReplaceFileByIdBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            const { fileId, ...restBody } = transformedBody;
 
             if (errors.length > 0) {
                 throw new CometValidationException("Validation failed", errors);
@@ -186,17 +183,16 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new ForbiddenException();
             }
 
-            const replacedFile = await this.filesService.replace(fileToReplace, file, transformedBody);
+            const replacedFile = await this.filesService.replace(fileToReplace, file, restBody);
 
             const fileUrl = await this.filesService.createFileUrl(replacedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
-                relativeDamUrls: Boolean(relativeDamUrls),
             });
 
             return { ...replacedFile, fileUrl };
         }
 
-        @Get(`/preview/:contentHash?/${fileUrl}`)
+        @Get(`/preview{/:contentHash}/${fileUrl}`)
         async previewFileUrl(
             @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
@@ -220,7 +216,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
-        @Get(`/download/preview/:contentHash?/${fileUrl}`)
+        @Get(`/download/preview{/:contentHash}/${fileUrl}`)
         async previewDownloadFile(
             @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
@@ -246,7 +242,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/download/:hash/:contentHash?/${fileUrl}`)
+        @Get(`/download/:hash{/:contentHash}/${fileUrl}`)
         async downloadFile(
             @Param() { hash, contentHash, ...params }: HashFileParams,
             @Res() res: Response,
@@ -267,11 +263,11 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             res.setHeader("Content-Disposition", "attachment");
-            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, s-maxage=86400, public" } }); // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         }
 
         @DisableCometGuards()
-        @Get(`/:hash/:contentHash?/${fileUrl}`)
+        @Get(`/:hash{/:contentHash}/${fileUrl}`)
         async hashedFileUrl(
             @Param() { hash, contentHash, ...params }: HashFileParams,
             @Res() res: Response,
@@ -291,7 +287,12 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
+            return this.streamFile(file, res, {
+                range,
+                overrideHeaders: {
+                    "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
+                },
+            });
         }
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {
@@ -335,6 +336,15 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 } catch (err) {
                     throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
                 }
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
 
                 res.writeHead(206, {
                     ...headers,

@@ -5,13 +5,13 @@ import {
     ExternalLinkBlock,
     OneOfBlock,
     PhoneLinkBlock,
-    PropsWithData,
-    SupportedBlocks,
+    type PropsWithData,
+    type SupportedBlocks,
     withPreview,
-} from "@comet/cms-site";
-import { LinkBlockData } from "@src/blocks.generated";
+} from "@comet/site-nextjs";
+import { type LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 import { InternalLinkBlock } from "./InternalLinkBlock";
 

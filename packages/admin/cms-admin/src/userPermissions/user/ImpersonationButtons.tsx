@@ -1,4 +1,5 @@
-import { Button, ButtonProps } from "@mui/material";
+// eslint-disable-next-line no-restricted-imports
+import { Button, type ButtonProps } from "@mui/material";
 import Cookies from "js-cookie";
 
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
