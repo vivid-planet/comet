@@ -53,7 +53,7 @@ export const Clearable: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <TextField clearable name="value" label="Textfield" fullWidth variant="horizontal" />
+                            <TextField name="value" label="Textfield" fullWidth variant="horizontal" />
 
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
