@@ -31,9 +31,9 @@ const DisabledLink = createComponentSlot(Typography)<StackBreadcrumbsClassKey>({
     ({ theme }) => css`
         font-size: 13px;
         line-height: 14px;
-        font-weight: ${theme.typography.fontWeightMedium};
+        font-weight: ${theme.typography.fontWeightBold};
         text-decoration-color: currentColor;
-        color: ${theme.palette.text.disabled};
+        color: ${theme.palette.grey[900]};
     `,
 );
 
