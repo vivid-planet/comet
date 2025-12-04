@@ -6,7 +6,6 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { StackBreadcrumbs, type StackBreadcrumbsProps } from "../../stack/breadcrumbs/StackBreadcrumbs";
-import { type ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
 
@@ -16,7 +15,7 @@ export interface ToolbarProps
         bottomBar: typeof MuiToolbar;
         mainContentContainer: "div";
         topBar: "div";
-        breadcrumbs: typeof ToolbarBreadcrumbs;
+        breadcrumbs: typeof StackBreadcrumbs;
         scopeIndicator: "div";
     }> {
     elevation?: number;
