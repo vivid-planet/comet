@@ -55,6 +55,7 @@
         "@opentelemetry/exporter-trace-otlp-http": "^0.207.0",
         "@opentelemetry/sdk-node": "^0.207.0",
         "@sentry/node": "^9.37.0",
+        "change-case": "^5.4.4",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.2",
         "cli-progress": "^3.12.0",

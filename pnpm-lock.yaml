@@ -342,6 +342,9 @@ importers:
       '@sentry/node':
         specifier: ^9.37.0
         version: 9.46.0
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1

@@ -1,5 +1,6 @@
 import { CsvColumn, CsvColumnType } from "@comet/cms-api";
 import { Collection, Ref } from "@mikro-orm/core";
+import { camelCase } from "change-case";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "./entities/product.entity";
@@ -8,8 +9,7 @@ import { ProductColor } from "./entities/product-color.entity";
 import { ProductType } from "./entities/product-type.enum";
 
 const transformToProductType = (value: string) => {
-    const camelCase = value.charAt(0).toLowerCase() + value.slice(1);
-    return ProductType[camelCase as keyof typeof ProductType];
+    return ProductType[camelCase(value) as keyof typeof ProductType];
 };
 
 export class ProductImporterInput {
