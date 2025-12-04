@@ -24,7 +24,7 @@
 }
 
 .button:after {
-    content: "";
+    content: '';
     background-color: var(--ifm-color-primary);
     mask-image: var(--ifm-menu-link-sublist-icon);
     mask-size: 1.5rem;
