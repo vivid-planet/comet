@@ -1377,7 +1377,6 @@ enum ProductSortField {
   priceList_contentHash
   priceList_createdAt
   priceList_expiresAt
-  priceList_id
   priceList_mimetype
   priceList_name
   priceList_updatedAt
