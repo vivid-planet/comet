@@ -49,7 +49,7 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.0",
+        "@babel/cli": "^7.28.3",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@faker-js/faker": "^10.1.0",
