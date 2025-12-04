@@ -43,7 +43,7 @@ const IconButton = createComponentSlot(MuiIconButton)<StackBreadcrumbsClassKey>(
 })() as typeof MuiIconButton;
 
 interface BreadcrumbsEntryProps {
-    item: BreadcrumbItem;
+    item?: BreadcrumbItem;
     isLastItem?: boolean;
     backButtonUrl?: string;
     slotProps: StackBreadcrumbsProps["slotProps"];
@@ -58,18 +58,19 @@ export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }:
                     <IconButton component={BreadcrumbLink} to={backButtonUrl} {...slotProps?.backButton}>
                         <LevelUp />
                     </IconButton>
-                    <BackButtonSeparator {...slotProps?.backButtonSeparator} />
+                    {item && <BackButtonSeparator {...slotProps?.backButtonSeparator} />}
                 </>
             )}
-            {isLastItem ? (
-                <DisabledLink {...slotProps?.disabledLink} variant="body2">
-                    {item.title}
-                </DisabledLink>
-            ) : (
-                <Link to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
-                    {item.title}
-                </Link>
-            )}
+            {item &&
+                (isLastItem ? (
+                    <DisabledLink {...slotProps?.disabledLink} variant="body2">
+                        {item.title}
+                    </DisabledLink>
+                ) : (
+                    <Link to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
+                        {item.title}
+                    </Link>
+                ))}
         </>
     );
 };
