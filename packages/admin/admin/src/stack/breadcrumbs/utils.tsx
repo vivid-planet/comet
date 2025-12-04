@@ -79,9 +79,11 @@ export const useItemsToRender = (
         ? items.slice(NUMBER_OF_ITEMS_BEFORE_OVERFLOW_MENU)
         : items.slice(NUMBER_OF_ITEMS_BEFORE_OVERFLOW_MENU, items.length);
 
-    const itemsInsideOverflowMenu = renderAllItemsToAllowCalculatingWidths ? [] : itemsAfterOverflowMenu.splice(0, numberOfItemsToBeHidden);
+    const itemsInsideOverflowMenuWithoutFirst = renderAllItemsToAllowCalculatingWidths
+        ? []
+        : itemsAfterOverflowMenu.splice(0, numberOfItemsToBeHidden);
 
-    const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenu.length);
+    const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenuWithoutFirst.length);
 
     const firstItemIsInOverflow =
         !renderAllItemsToAllowCalculatingWidths && numberOfItemsToBeHidden !== undefined && numberOfItemsToBeHidden >= items.length - 2;
@@ -91,6 +93,9 @@ export const useItemsToRender = (
     const firstItem = !firstItemIsInOverflow ? (
         <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} slotProps={slotProps} />
     ) : null;
+
+    // If first item is in overflow, add it to the overflow menu items
+    const itemsInsideOverflowMenu = firstItemIsInOverflow ? [items[0], ...itemsInsideOverflowMenuWithoutFirst] : itemsInsideOverflowMenuWithoutFirst;
 
     const backButtonWithOverflow =
         firstItemIsInOverflow && showBackButtonEntry ? (
