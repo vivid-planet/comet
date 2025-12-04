@@ -6,7 +6,6 @@ import { useIntl } from "react-intl";
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 
 export type FinalFormNumberInputProps = InputBaseProps & {
-    clearable?: boolean;
     decimals?: number;
 };
 
@@ -21,8 +20,8 @@ export function FinalFormNumberInput({
     meta,
     input,
     innerRef,
-    clearable,
     endAdornment,
+    required,
     decimals = 0,
     ...props
 }: FinalFormNumberInputProps & FinalFormNumberInputInternalProps) {
@@ -96,9 +95,9 @@ export function FinalFormNumberInput({
             onChange={handleChange}
             onBlur={handleBlur}
             endAdornment={
-                (endAdornment || clearable) && (
+                (endAdornment || !required) && (
                     <>
-                        {clearable && (
+                        {!required && (
                             <ClearInputAdornment
                                 position="end"
                                 hasClearableContent={typeof input.value === "number"}

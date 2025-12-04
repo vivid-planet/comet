@@ -35,10 +35,28 @@ export const _FinalFormInput = {
                     alert(JSON.stringify(values, null, 4));
                 }}
             >
-                <Field component={FinalFormInput} name="text" label="Text" placeholder="Some Text" fullWidth />
-                <Field component={FinalFormInput} name="number" label="Number" type="number" placeholder="12" fullWidth />
-                <Field component={FinalFormInput} name="email" label="Email" type="email" placeholder="john.doe@example.com" fullWidth />
-                <Field component={FinalFormInput} name="password" label="Password" type="password" placeholder="Password" fullWidth />
+                <Field component={FinalFormInput} name="text" label="Text" placeholder="Some Text" fullWidth required />
+                <Field component={FinalFormInput} name="textOptional" label="Text (optional)" placeholder="Some Text" fullWidth />
+                <Field component={FinalFormInput} name="number" label="Number" type="number" placeholder="12" fullWidth required />
+                <Field component={FinalFormInput} name="numberOptional" label="Number (optional)" type="number" placeholder="12" fullWidth />
+                <Field component={FinalFormInput} name="email" label="Email" type="email" placeholder="john.doe@example.com" fullWidth required />
+                <Field
+                    component={FinalFormInput}
+                    name="emailOptional"
+                    label="Email (optional)"
+                    type="email"
+                    placeholder="john.doe@example.com"
+                    fullWidth
+                />
+                <Field component={FinalFormInput} name="password" label="Password" type="password" placeholder="Password" fullWidth required />
+                <Field
+                    component={FinalFormInput}
+                    name="passwordOptional"
+                    label="Password (optional)"
+                    type="password"
+                    placeholder="Password"
+                    fullWidth
+                />
                 <Button type="submit">Submit</Button>
             </FinalForm>
         );
@@ -106,6 +124,16 @@ export const _FinalFormAutocomplete = {
                     name="autocomplete"
                     label="Autocomplete"
                     fullWidth
+                    required
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteOptional"
+                    label="Autocomplete (optional)"
+                    fullWidth
                 />
                 <Field
                     component={FinalFormAsyncAutocomplete}
@@ -117,6 +145,18 @@ export const _FinalFormAutocomplete = {
                     name="autocompleteAsync"
                     label="AutocompleteAsync"
                     fullWidth
+                    required
+                />
+                <Field
+                    component={FinalFormAsyncAutocomplete}
+                    loadOptions={async () => {
+                        return new Promise((resolve) => setTimeout(() => resolve(options), 3000));
+                    }}
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    name="autocompleteAsyncOptional"
+                    label="AutocompleteAsync (optional)"
+                    fullWidth
                 />
                 <Field
                     component={FinalFormAutocomplete}
@@ -126,6 +166,17 @@ export const _FinalFormAutocomplete = {
                     options={options}
                     name="autocompleteMultiple"
                     label="Autocomplete multiple select"
+                    fullWidth
+                    required
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    multiple
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteMultipleOptional"
+                    label="Autocomplete multiple select (optional)"
                     fullWidth
                 />
                 <Button type="submit">Submit</Button>

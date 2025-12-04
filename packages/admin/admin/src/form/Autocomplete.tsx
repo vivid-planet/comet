@@ -22,7 +22,6 @@ export type FinalFormAutocompleteProps<
     FreeSolo extends boolean | undefined,
 > = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
-        clearable?: boolean;
         errorText?: ReactNode;
     };
 
@@ -43,7 +42,7 @@ export const FinalFormAutocomplete = <
     loading = false,
     loadingError,
     isAsync = false,
-    clearable,
+    required,
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
@@ -90,7 +89,7 @@ export const FinalFormAutocomplete = <
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {!required && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
                             {loadingError && <Error color="error" />}
                             {params.InputProps.endAdornment}
                         </InputAdornment>
