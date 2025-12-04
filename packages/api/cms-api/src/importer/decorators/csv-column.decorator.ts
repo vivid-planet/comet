@@ -11,7 +11,7 @@ export enum CsvColumnType {
     DateTime = "DateTime",
 }
 
-export interface ParsingOptions {
+interface ParsingOptions {
     valueMapping?: ValueMapping;
     dateFormatString?: string;
     type?: CsvColumnType;
@@ -22,7 +22,7 @@ export interface ImportFieldMetadata extends ParsingOptions {
     fieldPath: string;
     fieldName: string | number;
 }
-export interface ValueMapping {
+interface ValueMapping {
     [key: string]: boolean;
 }
 

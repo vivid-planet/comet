@@ -5,9 +5,9 @@ import { type IncomingMessage } from "http";
 
 import { ImporterDataStream } from "./data-stream";
 
-export type FileStream = SdkStream<IncomingMessage> | ReadStream;
+type FileStream = SdkStream<IncomingMessage> | ReadStream;
 
-export interface FileStreamAndSize {
+interface FileStreamAndSize {
     fileStream: FileStream;
     fileName?: string;
     fileSize?: number;
