@@ -1,4 +1,4 @@
-import { EntityClass, EntityName } from "@mikro-orm/core";
+import { type EntityClass, type EntityName } from "@mikro-orm/postgresql";
 
 export interface AffectedEntityOptions {
     idArg?: string;
@@ -6,10 +6,11 @@ export interface AffectedEntityOptions {
     nullable?: boolean;
 }
 export type AffectedEntityMeta = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entity: EntityClass<object>;
     options: AffectedEntityOptions;
 };
+
+export const AFFECTED_ENTITY_METADATA_KEY = "affectedEntities";
 
 export const AffectedEntity = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,9 +18,9 @@ export const AffectedEntity = (
     { idArg, pageTreeNodeIdArg, nullable }: AffectedEntityOptions = { idArg: "id" },
 ): MethodDecorator => {
     return (target: object, key: string | symbol, descriptor: PropertyDescriptor) => {
-        const metadata = Reflect.getOwnMetadata("affectedEntities", descriptor.value) || [];
+        const metadata = Reflect.getOwnMetadata(AFFECTED_ENTITY_METADATA_KEY, descriptor.value) || [];
         metadata.push({ entity, options: { idArg, pageTreeNodeIdArg, nullable } });
-        Reflect.defineMetadata("affectedEntities", metadata, descriptor.value);
+        Reflect.defineMetadata(AFFECTED_ENTITY_METADATA_KEY, metadata, descriptor.value);
         return descriptor;
     };
 };

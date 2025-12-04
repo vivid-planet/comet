@@ -14,9 +14,9 @@ Those features should be usable as described in [Customization and Styling](/doc
 
 Generally, a Comet Admin component should export the following in the `index.ts` file:
 
--   The component itself, with a unique name
--   The props type, named as the component, followed by `Props`
--   The class key type, named as the component, followed by `ClassKey`
+- The component itself, with a unique name
+- The props type, named as the component, followed by `Props`
+- The class key type, named as the component, followed by `ClassKey`
 
 ```tsx
 export { MyComponent, MyComponentProps, MyComponentClassKey } from "./src/MyComponent";

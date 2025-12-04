@@ -1,7 +1,7 @@
-/* eslint-disable @calm/react-intl/missing-formatted-message */
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
+import { IntlProvider } from "react-intl";
 import { Router } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
@@ -47,11 +47,13 @@ test("multiple stacks on same page", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
 
     fireEvent.click(rendered.getByText("activate First Page2"));

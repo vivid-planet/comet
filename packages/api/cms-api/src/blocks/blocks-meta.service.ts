@@ -1,6 +1,7 @@
-import { getBlocksMeta } from "@comet/blocks-api";
-import { Logger, OnModuleInit } from "@nestjs/common";
+import { Logger, type OnModuleInit } from "@nestjs/common";
 import { promises as fs } from "fs";
+
+import { getBlocksMeta } from "./blocks-meta";
 
 export class BlocksMetaService implements OnModuleInit {
     private readonly logger = new Logger(BlocksMetaService.name);
@@ -11,7 +12,7 @@ export class BlocksMetaService implements OnModuleInit {
         try {
             await fs.access("block-meta.json", fs.constants.W_OK);
             canWrite = true;
-        } catch (error) {
+        } catch {
             this.logger.warn("Cannot write block-meta.json file");
             canWrite = false;
         }

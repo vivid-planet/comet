@@ -1,9 +1,9 @@
-import { FilterQuery, FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Type } from "@nestjs/common";
+import { EntityManager, EntityRepository, FilterQuery, FindOptions, wrap } from "@mikro-orm/postgresql";
+import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
+import { type ExtractBlockData } from "../blocks/block";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
@@ -17,8 +17,12 @@ import { RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
 import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
+import { REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
 import { RedirectSourceTypeValues } from "./redirects.enum";
+import { RedirectsLinkBlock } from "./redirects.module";
 import { RedirectsService } from "./redirects.service";
+import { isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
 import { RedirectScopeInterface } from "./types";
 
 export function createRedirectsResolver({
@@ -59,6 +63,7 @@ export function createRedirectsResolver({
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
             private readonly pageTreeReadApi: PageTreeReadApiService,
             private readonly entityManager: EntityManager,
+            @Inject(REDIRECTS_TARGET_URL_SERVICE) private readonly targetUrlService: RedirectTargetUrlServiceInterface,
         ) {}
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
@@ -66,7 +71,7 @@ export function createRedirectsResolver({
             const where = this.redirectService.getFindCondition({ query, type, active });
             if (hasNonEmptyScope) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (where as any).scope = scope;
+                (where as any).scope = nonEmptyScopeOrNothing(scope);
             }
 
             const options: FindOptions<RedirectInterface> = {};
@@ -81,10 +86,77 @@ export function createRedirectsResolver({
 
         @Query(() => PaginatedRedirects)
         async paginatedRedirects(@Args() { scope, search, filter, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
+            const needsInMemoryFiltering = search || (filter && !isEmptyFilter(filter));
+
+            if (needsInMemoryFiltering) {
+                const where = {};
+                if (hasNonEmptyScope) {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (where as any).scope = scope;
+                }
+
+                const options: FindOptions<RedirectInterface> = {};
+
+                if (sort) {
+                    options.orderBy = sort.map((sortItem) => {
+                        return {
+                            [sortItem.field]: sortItem.direction,
+                        };
+                    });
+                }
+
+                await this.pageTreeReadApi.preloadNodes(scope);
+
+                const allRedirects = await this.repository.find(where, options);
+                const redirects = [];
+
+                const targetUrlCache = new Map<string, string | undefined>();
+
+                for (const redirect of allRedirects) {
+                    let targetUrl: string | undefined;
+
+                    const target = redirect.target as ExtractBlockData<RedirectsLinkBlock>;
+
+                    if (target.activeType) {
+                        const targetBlock = target.attachedBlocks.find((block) => block.type === target.activeType);
+
+                        if (!targetBlock) {
+                            throw new Error(`Can't find target block for redirect '${redirect.id}'`);
+                        }
+
+                        const targetBlockKey = JSON.stringify(targetBlock);
+
+                        if (targetUrlCache.has(targetBlockKey)) {
+                            targetUrl = targetUrlCache.get(targetBlockKey);
+                        } else {
+                            targetUrl = await this.targetUrlService.resolveTargetUrl(targetBlock);
+                            targetUrlCache.set(targetBlockKey, targetUrl);
+                        }
+                    }
+
+                    let searchMatches = true;
+                    let filterMatches = true;
+
+                    if (search) {
+                        searchMatches = redirect.source.includes(search) || (targetUrl?.includes(search) ?? false);
+                    }
+
+                    if (filter) {
+                        filterMatches = redirectMatchesFilter({ ...redirect, target: targetUrl }, filter);
+                    }
+
+                    if (searchMatches && filterMatches) {
+                        redirects.push(redirect);
+                    }
+                }
+
+                return new PaginatedRedirects(redirects.slice(offset, offset + limit), redirects.length);
+            }
+
             const where = this.redirectService.getFindConditionPaginatedRedirects({ search, filter });
             if (hasNonEmptyScope) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (where as any).scope = scope;
+                (where as any).scope = nonEmptyScopeOrNothing(scope);
             }
 
             const options: FindOptions<RedirectInterface> = { offset, limit };
@@ -118,7 +190,7 @@ export function createRedirectsResolver({
         ): Promise<RedirectInterface | null> {
             const where: FilterQuery<RedirectInterface> = { source, sourceType };
             if (hasNonEmptyScope) {
-                where.scope = scope;
+                where.scope = nonEmptyScopeOrNothing(scope);
             }
             const redirect = await this.repository.findOne(where);
             return redirect ?? null;
@@ -144,6 +216,7 @@ export function createRedirectsResolver({
 
             const entity = this.repository.create({
                 scope: nonEmptyScopeOrNothing(scope),
+                activatedAt: new Date(),
                 ...input,
                 target: input.target.transformToBlockData(),
             });
@@ -180,7 +253,7 @@ export function createRedirectsResolver({
         ): Promise<RedirectInterface> {
             const redirect = await this.repository.findOneOrFail(id);
 
-            wrap(redirect).assign({ active: input.active });
+            wrap(redirect).assign({ active: input.active, activatedAt: input.active ? new Date() : null });
             await this.entityManager.persistAndFlush(redirect);
 
             return this.repository.findOneOrFail(id);

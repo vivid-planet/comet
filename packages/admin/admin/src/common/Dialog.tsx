@@ -1,18 +1,19 @@
 import { Close } from "@comet/admin-icons";
 import {
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
+    // eslint-disable-next-line no-restricted-imports
     Dialog as MuiDialog,
-    DialogProps as MuiDialogProps,
+    type DialogProps as MuiDialogProps,
     DialogTitle as MuiDialogTitle,
     IconButton,
-    Theme,
+    type Theme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type DialogClassKey = "root" | "closeButton" | "dialogTitle";
 
@@ -25,7 +26,7 @@ export type DialogProps = ThemedComponentBaseProps<{
     iconMapping?: {
         closeIcon?: ReactNode;
     };
-} & MuiDialogProps;
+} & Omit<MuiDialogProps, "title">;
 
 type OwnerState = {
     hasCloseButton: boolean;
@@ -48,7 +49,7 @@ export function Dialog(inProps: DialogProps) {
     };
 
     return (
-        <Root open={open} {...slotProps?.root} {...restProps}>
+        <Root open={open} onClose={onClose} {...slotProps?.root} {...restProps}>
             {onClose && (
                 <CloseButton {...slotProps?.closeButton} onClick={(event) => onClose(event, "escapeKeyDown")}>
                     {closeIcon}
@@ -71,14 +72,10 @@ const DialogTitle = createComponentSlot(MuiDialogTitle)<DialogClassKey, OwnerSta
     componentName: "Dialog",
     slotName: "dialogTitle",
 })(
-    ({ ownerState }) => css`
-        min-height: 20px;
-        display: flex;
-        align-items: center;
-
+    ({ ownerState, theme }) => css`
         ${ownerState.hasCloseButton &&
         css`
-            padding-right: 40px;
+            padding-right: ${theme.spacing(10)};
         `}
     `,
 );
@@ -90,8 +87,12 @@ const CloseButton = createComponentSlot(IconButton)<DialogClassKey>({
     ({ theme }) => css`
         position: absolute;
         right: 12px;
-        top: 14px;
+        top: 9px;
         color: ${theme.palette.secondary.contrastText};
+
+        ${theme.breakpoints.up("sm")} {
+            top: 14px;
+        }
     `,
 );
 

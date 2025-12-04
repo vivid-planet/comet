@@ -28,7 +28,7 @@ export class SentryModule {
     static async forRootAsync({ shouldReportException, ...options }: Options): Promise<DynamicModule> {
         const Sentry = await import("@sentry/node");
 
-        const integrations = options.integrations ?? [new Sentry.Integrations.Http({ tracing: true })];
+        const integrations = options.integrations ?? [Sentry.httpIntegration()];
 
         Sentry.init({
             ...options,

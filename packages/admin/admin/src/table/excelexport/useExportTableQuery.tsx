@@ -1,15 +1,19 @@
-import { useApolloClient } from "@apollo/client";
+import { type OperationVariables, useApolloClient } from "@apollo/client";
 import { useState } from "react";
 
-import { Table } from "../Table";
-import { ITableQueryApi } from "../TableQueryContext";
-import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
-import { IExportApi } from "./IExportApi";
+import { type Table } from "../Table";
+import { type ITableQueryApi } from "../TableQueryContext";
+import { createExcelExportDownload, type IExcelExportOptions } from "./createExcelExportDownload";
+import { type IExportApi } from "./IExportApi";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: IVariables, options?: IExcelExportOptions): IExportApi<any> {
+export function useExportTableQuery<IVariables extends OperationVariables>(
+    api: ITableQueryApi,
+    variables: IVariables,
+    options?: IExcelExportOptions,
+): IExportApi<any> {
     let tableRef: Table<any> | undefined;
     const [loading, setLoading] = useState(false);
     function attachTable(ref: Table<any>) {
@@ -20,7 +24,7 @@ export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: 
 
     async function exportTable() {
         if (tableRef != null) {
-            await setLoading(true);
+            setLoading(true);
             try {
                 const query = api.getQuery();
                 const innerOptions = api.getInnerOptions();
@@ -36,10 +40,10 @@ export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: 
                 if (data && data.data) {
                     createExcelExportDownload<any>(tableRef.props.columns, data.data, options);
                 }
-            } catch (e) {
+            } catch {
                 throw new Error("Error happend while exporting data");
             } finally {
-                await setLoading(false);
+                setLoading(false);
             }
         }
     }

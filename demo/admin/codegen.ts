@@ -1,9 +1,10 @@
+import { resolve } from "node:path";
+
 import { CodegenConfig } from "@graphql-codegen/cli";
 import { readFileSync } from "fs";
 import { buildSchema } from "graphql";
 
-const schema = buildSchema(readFileSync("./schema.gql").toString());
-
+const schema = buildSchema(readFileSync(resolve(__dirname, "./schema.gql")).toString());
 const rootBlocks = Object.keys(schema.getTypeMap()).filter((type) => type.endsWith("BlockData") || type.endsWith("BlockInput"));
 
 const config: CodegenConfig = {
@@ -26,7 +27,7 @@ const config: CodegenConfig = {
                 },
                 enumsAsTypes: true,
                 namingConvention: "keep",
-                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string" }),
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string", LocalDate: "string" }),
                 typesPrefix: "GQL",
             },
         },
@@ -44,8 +45,11 @@ const config: CodegenConfig = {
                 },
                 enumsAsTypes: true,
                 namingConvention: "keep",
-                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), {}),
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string", LocalDate: "string" }),
                 typesPrefix: "GQL",
+                skipDocumentsValidation: {
+                    ignoreRules: ["KnownFragmentNamesRule"], 
+                }
             },
             plugins: [
                 { add: { content: `import { ${rootBlocks.sort().join(", ")} } from "@src/blocks.generated";` } },

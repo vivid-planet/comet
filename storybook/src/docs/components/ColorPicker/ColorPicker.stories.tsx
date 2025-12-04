@@ -1,5 +1,5 @@
 import { Field, FieldContainer } from "@comet/admin";
-import { ColorPicker, ColorPickerColorPreviewProps, FinalFormColorPicker } from "@comet/admin-color-picker";
+import { ColorPicker, type ColorPickerColorPreviewProps, FinalFormColorPicker } from "@comet/admin-color-picker";
 import { StateFilled, StateRing, Warning } from "@comet/admin-icons";
 import { Grid } from "@mui/material";
 import { useState } from "react";
@@ -19,17 +19,29 @@ export const Basic = {
 
         return (
             <Grid container spacing={4} sx={{ pb: 2 }}>
-                <Grid item md={3}>
+                <Grid
+                    size={{
+                        md: 3,
+                    }}
+                >
                     <FieldContainer label="Color Picker" fullWidth>
                         <ColorPicker fullWidth value={colorOne} onChange={setColorOne} />
                     </FieldContainer>
                 </Grid>
-                <Grid item md={3}>
+                <Grid
+                    size={{
+                        md: 3,
+                    }}
+                >
                     <FieldContainer label="With Alpha Slider" fullWidth>
                         <ColorPicker fullWidth value={colorTwo} onChange={setColorTwo} colorFormat="rgba" />
                     </FieldContainer>
                 </Grid>
-                <Grid item md={3}>
+                <Grid
+                    size={{
+                        md: 3,
+                    }}
+                >
                     <FieldContainer label="With Color Palette" fullWidth>
                         <ColorPicker
                             fullWidth
@@ -58,12 +70,20 @@ export const Basic = {
                         />
                     </FieldContainer>
                 </Grid>
-                <Grid item md={3}>
+                <Grid
+                    size={{
+                        md: 3,
+                    }}
+                >
                     <FieldContainer label="Disabled" fullWidth disabled>
                         <ColorPicker fullWidth disabled value={colorFour} onChange={setColorFour} />
                     </FieldContainer>
                 </Grid>
-                <Grid item md={3}>
+                <Grid
+                    size={{
+                        md: 3,
+                    }}
+                >
                     <FieldContainer label="Required" fullWidth required>
                         <ColorPicker fullWidth required value={colorFive} onChange={setColorFive} />
                     </FieldContainer>
@@ -79,13 +99,25 @@ export const FinalForm = {
             <Form initialValues={{ color1: "#00ff00", color2: "rgba(255, 127, 80, 0.75)" }} onSubmit={() => {}}>
                 {() => (
                     <Grid container spacing={4} sx={{ pb: 2 }}>
-                        <Grid item md={3}>
+                        <Grid
+                            size={{
+                                md: 3,
+                            }}
+                        >
                             <Field name="color1" label="Color-Picker" fullWidth component={FinalFormColorPicker} />
                         </Grid>
-                        <Grid item md={3}>
+                        <Grid
+                            size={{
+                                md: 3,
+                            }}
+                        >
                             <Field name="color2" label="With Alpha Slider" fullWidth component={FinalFormColorPicker} colorFormat="rgba" />
                         </Grid>
-                        <Grid item md={3}>
+                        <Grid
+                            size={{
+                                md: 3,
+                            }}
+                        >
                             <Field
                                 name="color3"
                                 label="With Color Palette"
@@ -113,10 +145,18 @@ export const FinalForm = {
                                 ]}
                             />
                         </Grid>
-                        <Grid item md={3}>
+                        <Grid
+                            size={{
+                                md: 3,
+                            }}
+                        >
                             <Field name="color4" label="Disabled" fullWidth disabled component={FinalFormColorPicker} />
                         </Grid>
-                        <Grid item md={3}>
+                        <Grid
+                            size={{
+                                md: 3,
+                            }}
+                        >
                             <Field name="color5" label="Required" fullWidth required component={FinalFormColorPicker} />
                         </Grid>
                     </Grid>
@@ -145,7 +185,11 @@ export const Customized = {
 
         return (
             <Grid container spacing={4} sx={{ pb: 2 }}>
-                <Grid item md={6}>
+                <Grid
+                    size={{
+                        md: 6,
+                    }}
+                >
                     <FieldContainer label="Without Picker" fullWidth>
                         <ColorPicker
                             fullWidth
@@ -175,7 +219,11 @@ export const Customized = {
                         />
                     </FieldContainer>
                 </Grid>
-                <Grid item md={6}>
+                <Grid
+                    size={{
+                        md: 6,
+                    }}
+                >
                     <FieldContainer label="Custom Color Preview" fullWidth>
                         <ColorPicker
                             fullWidth

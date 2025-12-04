@@ -1,8 +1,8 @@
-import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useRef } from "react";
+import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
+import { type ReactNode, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useTopOffset } from "../helpers/useTopOffset";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 
@@ -27,7 +27,11 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
     ({ theme, ownerState }) => css`
         position: relative;
         z-index: 5;
-        padding: ${theme.spacing(4)};
+        padding: ${theme.spacing(2)};
+
+        ${theme.breakpoints.up("md")} {
+            padding: ${theme.spacing(4)};
+        }
 
         ${ownerState.fullHeight &&
         css`
@@ -37,16 +41,28 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
         ${ownerState.disablePaddingTop &&
         css`
             padding-top: 0;
+
+            ${theme.breakpoints.up("md")} {
+                padding-top: 0;
+            }
         `}
 
         ${ownerState.disablePaddingBottom &&
         css`
             padding-bottom: 0;
+
+            ${theme.breakpoints.up("md")} {
+                padding-bottom: 0;
+            }
         `}
 
         ${ownerState.disablePadding &&
         css`
             padding: 0;
+
+            ${theme.breakpoints.up("md")} {
+                padding: 0;
+            }
         `}
     `,
 );

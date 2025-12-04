@@ -1,4 +1,4 @@
-import { GridCellContent, GridColDef } from "@comet/admin";
+import { GridCellContent, type GridColDef } from "@comet/admin";
 import { StateFilled } from "@comet/admin-icons";
 import { faker } from "@faker-js/faker";
 import { DataGrid } from "@mui/x-data-grid";
@@ -11,8 +11,8 @@ export const Basic = {
     render: () => {
         const gridRows = Array.from({ length: 5 }).map((_, index) => ({
             id: index + 1,
-            name: faker.name.fullName(),
-            occupation: faker.name.jobTitle(),
+            name: faker.person.fullName(),
+            occupation: faker.person.jobTitle(),
             email: faker.internet.email(),
             onlineStatus: faker.datatype.boolean(),
         }));
@@ -47,7 +47,7 @@ export const Basic = {
             },
         ];
 
-        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} disableSelectionOnClick />;
+        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} />;
     },
     name: "GridCellContent",
 };

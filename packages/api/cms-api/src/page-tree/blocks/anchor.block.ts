@@ -1,5 +1,7 @@
-import { BlockData, BlockField, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
 import { IsOptional, IsString } from "class-validator";
+
+import { BlockData, BlockInput, blockInputToData, createBlock } from "../../blocks/block";
+import { BlockField } from "../../blocks/decorators/field";
 
 class AnchorBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -13,7 +15,7 @@ class AnchorBlockInput extends BlockInput {
     name?: string;
 
     transformToBlockData(): AnchorBlockData {
-        return inputToData(AnchorBlockData, this);
+        return blockInputToData(AnchorBlockData, this);
     }
 }
 

@@ -1,18 +1,12 @@
-import {
-    BlockContext,
-    BlockDataInterface,
-    BlockTransformerServiceInterface,
-    isBlockDataInterface,
-    TraversableTransformResponse,
-} from "@comet/blocks-api";
-import { Scope, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
-import { ContextId, ModuleRef } from "@nestjs/core";
+import { Scope } from "@nestjs/common";
+import { type ContextId, type ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
+
+import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { type BlockContext, type BlockDataInterface, type BlockTransformerServiceInterface, isBlockDataInterface } from "./block";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function transformToPlain(
     block: BlockDataInterface,
     blockContext: BlockContext,
@@ -29,7 +23,7 @@ export async function transformToPlain(
                 if (isBlockDataInterface(json)) {
                     const transformResponse = await json.transformToPlain(blockContext);
 
-                    if (isBlockTransformerService(transformResponse)) {
+                    if (isInjectableService(transformResponse)) {
                         let service: BlockTransformerServiceInterface;
 
                         if (moduleRef.introspect(transformResponse).scope === Scope.DEFAULT) {
@@ -57,10 +51,4 @@ export async function transformToPlain(
         span.end();
         return result;
     });
-}
-
-function isBlockTransformerService(
-    transformResponse: Type<BlockTransformerServiceInterface> | TraversableTransformResponse,
-): transformResponse is Type<BlockTransformerServiceInterface> {
-    return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
 }

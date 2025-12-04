@@ -1,6 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
-
-import { GQLUpdateDamFileInput } from "../../graphql.generated";
+import { type GQLUpdateDamFileInput } from "../../graphql.generated";
 
 interface UploadFileData {
     file: File &
@@ -16,29 +14,29 @@ interface UploadFileData {
      */
     importSourceType?: string;
 }
-
 interface UploadFileParams {
-    apiClient: AxiosInstance;
+    apiUrl: string;
     data: UploadFileData;
-    cancelToken: CancelToken;
-    options?: Omit<AxiosRequestConfig, "cancelToken">;
+    options?: { onUploadProgress?: (event: ProgressEvent) => void };
+    damBasePath: string;
 }
 
-export function upload<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
-    return uploadOrReplaceByFilenameAndFolder(uploadFileParams);
+export function upload<ResponseData>(uploadFileParams: UploadFileParams) {
+    const controller = new AbortController();
+    const promise = uploadOrReplaceByFilenameAndFolder<ResponseData>(uploadFileParams, controller.signal);
+    return promise;
 }
 
-export function replaceByFilenameAndFolder<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
-    return uploadOrReplaceByFilenameAndFolder({ ...uploadFileParams, replace: true });
+export function replaceByFilenameAndFolder<ResponseData>(uploadFileParams: UploadFileParams) {
+    const controller = new AbortController();
+    const promise = uploadOrReplaceByFilenameAndFolder<ResponseData>({ ...uploadFileParams, replace: true }, controller.signal);
+    return promise;
 }
 
-function uploadOrReplaceByFilenameAndFolder<ResponseData>({
-    apiClient,
-    data,
-    cancelToken,
-    options,
-    replace = false,
-}: UploadFileParams & { replace?: boolean }): Promise<AxiosResponse<ResponseData>> {
+async function uploadOrReplaceByFilenameAndFolder<ResponseData>(
+    { apiUrl, data, replace = false, damBasePath }: UploadFileParams & { replace?: boolean },
+    signal?: AbortSignal,
+): Promise<{ data: ResponseData }> {
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("scope", JSON.stringify(data.scope));
@@ -64,15 +62,15 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
         formData.append("folderId", data.folderId);
     }
 
-    const endpoint = replace ? "/dam/files/replace-by-filename-and-folder" : "/dam/files/upload";
-
-    return apiClient.post<ResponseData>(endpoint, formData, {
-        ...options,
-        cancelToken,
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
+    const endpoint = replace ? `/${damBasePath}/files/replace-by-filename-and-folder` : `/${damBasePath}/files/upload`;
+    const url = apiUrl + endpoint;
+    const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+        signal,
     });
+    const dataJson = await response.json();
+    return { data: dataJson };
 }
 
 interface ReplaceFileByIdData {
@@ -80,30 +78,30 @@ interface ReplaceFileByIdData {
     fileId: string;
 }
 
-export function replaceById<ResponseData>({
-    apiClient,
-    data,
-    cancelToken,
-    options,
-}: Omit<UploadFileParams, "data"> & { data: ReplaceFileByIdData }): Promise<AxiosResponse<ResponseData>> {
-    const formData = new FormData();
-    formData.append("file", data.file);
-    formData.append("fileId", data.fileId);
-    if (data.file.license) {
-        formData.append("license", JSON.stringify(data.file.license));
-    }
-    if (data.file.title) {
-        formData.append("title", data.file.title);
-    }
-    if (data.file.altText) {
-        formData.append("altText", data.file.altText);
-    }
+export function replaceById({ apiUrl, data, damBasePath }: Omit<UploadFileParams, "data"> & { data: ReplaceFileByIdData }) {
+    const controller = new AbortController();
+    const promise = (async () => {
+        const formData = new FormData();
+        formData.append("file", data.file);
+        formData.append("fileId", data.fileId);
+        if (data.file.license) {
+            formData.append("license", JSON.stringify(data.file.license));
+        }
+        if (data.file.title) {
+            formData.append("title", data.file.title);
+        }
+        if (data.file.altText) {
+            formData.append("altText", data.file.altText);
+        }
 
-    return apiClient.post<ResponseData>("/dam/files/replace-by-id", formData, {
-        ...options,
-        cancelToken,
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
+        const url = `${apiUrl}/${damBasePath}/files/replace-by-id`;
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData,
+            signal: controller.signal,
+        });
+        const dataJson = await response.json();
+        return { data: dataJson };
+    })();
+    return promise;
 }

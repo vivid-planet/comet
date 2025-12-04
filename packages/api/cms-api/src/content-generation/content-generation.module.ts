@@ -4,8 +4,9 @@ import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
 import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
 import { GenerateAltTextResolver } from "./generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./generate-image-title.resolver";
+import { GenerateSeoTagsResolver } from "./generate-seo-tags.resolver";
 
-export interface ContentGenerationModuleOptions {
+interface ContentGenerationModuleOptions {
     Service: Type<ContentGenerationServiceInterface>;
     imports?: ModuleMetadata["imports"];
 }
@@ -21,6 +22,9 @@ export class ContentGenerationModule {
         }
         if (methods.includes("generateAltText")) {
             providers.push(GenerateAltTextResolver);
+        }
+        if (methods.includes("generateSeoTags")) {
+            providers.push(GenerateSeoTagsResolver);
         }
 
         return {

@@ -1,9 +1,10 @@
-import { hasRichTextBlockContent, PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
-import { KeyFactsItemBlockData } from "@src/blocks.generated";
+import { hasRichTextBlockContent, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
+import { type KeyFactsItemBlockData } from "@src/blocks.generated";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
-import { Renderers } from "redraft";
-import styled from "styled-components";
+import { type Renderers } from "redraft";
+
+import styles from "./KeyFactItemBlock.module.scss";
 
 const descriptionRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
@@ -11,36 +12,18 @@ const descriptionRenderers: Renderers = {
 
 export const KeyFactItemBlock = withPreview(
     ({ data: { icon, fact, label, description } }: PropsWithData<KeyFactsItemBlockData>) => (
-        <Root>
-            {icon.damFile && <Icon data={icon} width={48} height={48} />}
-            <FactTypography variant="h500">{fact}</FactTypography>
-            <Typography variant="h350">{label}</Typography>
+        <div className={styles.root}>
+            {icon.damFile && <SvgImageBlock data={icon} width={48} height={48} className={styles.icon} />}
+            <Typography variant="headline500" className={styles.fact}>
+                {fact}
+            </Typography>
+            <Typography variant="headline350">{label}</Typography>
             {hasRichTextBlockContent(description) && (
-                <DescriptionTypography variant="p200">
+                <Typography variant="paragraph200" className={styles.description}>
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
-                </DescriptionTypography>
+                </Typography>
             )}
-        </Root>
+        </div>
     ),
     { label: "Key fact" },
 );
-
-const Root = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-`;
-
-const Icon = styled(SvgImageBlock)`
-    margin-bottom: ${({ theme }) => theme.spacing.S100};
-`;
-
-const FactTypography = styled(Typography)`
-    margin-bottom: ${({ theme }) => theme.spacing.S300};
-    color: ${({ theme }) => theme.palette.primary.dark};
-`;
-
-const DescriptionTypography = styled(Typography)`
-    margin-top: ${({ theme }) => theme.spacing.S100};
-`;

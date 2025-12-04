@@ -5,11 +5,10 @@
 The versions of the project that are currently supported with security updates.
 
 | Version | Supported                             |
-| ------: | :------------------------------------ |
-|     7.x | :white_check_mark:                    |
-|     6.x | :white_check_mark: (until 2025-07-31) |
-|     5.x | :white_check_mark: (until 2025-01-30) |
-|   < 5.x | :x:                                   |
+|--------:|:--------------------------------------|
+|     8.x | :white_check_mark:                    |
+|     7.x | :white_check_mark: (until 2026-08-07) |
+|   < 7.x | :x:                                   |
 
 ## Reporting a vulnerability
 

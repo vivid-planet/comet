@@ -1,85 +1,68 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
-import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress } from "@mui/material";
-import { FormApi } from "final-form";
+import { filterByFragment, FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { type FormApi } from "final-form";
+import isEqual from "lodash.isequal";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createProductTagMutation, productTagFormFragment, productTagQuery, updateProductTagMutation } from "./ProductTagForm.gql";
 import {
-    createProductTagMutation,
-    productTagCheckForChangesQuery,
-    productTagFormFragment,
-    productTagQuery,
-    updateProductTagMutation,
-} from "./ProductTagForm.gql";
-import {
-    GQLCheckForChangesProductTagQuery,
-    GQLCheckForChangesProductTagQueryVariables,
-    GQLProductTagFormCreateProductTagMutation,
-    GQLProductTagFormCreateProductTagMutationVariables,
-    GQLProductTagFormFragment,
-    GQLProductTagFormUpdateProductTagMutation,
-    GQLProductTagFormUpdateProductTagMutationVariables,
-    GQLProductTagQuery,
-    GQLProductTagQueryVariables,
+    type GQLCreateProductTagMutation,
+    type GQLCreateProductTagMutationVariables,
+    type GQLProductTagFormFragment,
+    type GQLProductTagQuery,
+    type GQLProductTagQueryVariables,
+    type GQLUpdateProductTagMutation,
+    type GQLUpdateProductTagMutationVariables,
 } from "./ProductTagForm.gql.generated";
 
+type FormValues = GQLProductTagFormFragment;
 interface FormProps {
     id?: string;
 }
-
-type FormState = GQLProductTagFormFragment;
-
-function ProductTagForm({ id }: FormProps) {
+export function ProductTagForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
-    const formApiRef = useFormApiRef<FormState>();
+    const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-
     const { data, error, loading, refetch } = useQuery<GQLProductTagQuery, GQLProductTagQueryVariables>(
         productTagQuery,
         id ? { variables: { id } } : { skip: true },
     );
-
-    const initialValues: Partial<FormState> = data?.productTag
-        ? {
-              ...filterByFragment<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
-          }
-        : {};
-
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.productTag
+                ? {
+                      ...filterByFragment<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
+                  }
+                : {},
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
-            if (!id) return false;
-            const { data: hasConflictData } = await client.query<GQLCheckForChangesProductTagQuery, GQLCheckForChangesProductTagQueryVariables>({
-                query: productTagCheckForChangesQuery,
-                variables: { id },
-                fetchPolicy: "no-cache",
-            });
-            return resolveHasSaveConflict(data?.productTag.updatedAt, hasConflictData.productTag.updatedAt);
+            const updatedAt = await queryUpdatedAt(client, "productTag", id);
+            return resolveHasSaveConflict(data?.productTag.updatedAt, updatedAt);
         },
         formApiRef,
         loadLatestVersion: async () => {
             await refetch();
         },
     });
-
-    const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
-            ...formState,
-            products: [], // TODO don't reset on update
+            ...formValues,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
-            await client.mutate<GQLProductTagFormUpdateProductTagMutation, GQLProductTagFormUpdateProductTagMutationVariables>({
+            const { ...updateInput } = output;
+            await client.mutate<GQLUpdateProductTagMutation, GQLUpdateProductTagMutationVariables>({
                 mutation: updateProductTagMutation,
-                variables: { id, input: output },
+                variables: { id, input: updateInput },
             });
         } else {
-            const { data: mutationResponse } = await client.mutate<
-                GQLProductTagFormCreateProductTagMutation,
-                GQLProductTagFormCreateProductTagMutationVariables
-            >({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductTagMutation, GQLCreateProductTagMutationVariables>({
                 mutation: createProductTagMutation,
                 variables: { input: output },
             });
@@ -93,27 +76,31 @@ function ProductTagForm({ id }: FormProps) {
             }
         }
     };
-
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
-    }
-
+    if (error) throw error;
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
-
     return (
-        <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
-                    </MainContent>
+                    <TextField
+                        required
+                        variant="horizontal"
+                        fullWidth
+                        name="title"
+                        label={<FormattedMessage id="productTag.title" defaultMessage="Title" />}
+                    />
                 </>
             )}
         </FinalForm>
     );
 }
-
-export default ProductTagForm;

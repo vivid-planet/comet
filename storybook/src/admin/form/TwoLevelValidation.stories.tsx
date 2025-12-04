@@ -1,6 +1,6 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
-import { FieldValidator } from "final-form";
+import { type FieldValidator } from "final-form";
 
 const validateWarning = (value: number | undefined) => {
     if (value === undefined) {
@@ -38,7 +38,7 @@ export const TwoLevelValidationWarningAndError = {
     render: () => {
         return (
             <Grid container spacing={4} style={{ maxWidth: 800 }}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FinalForm
                         mode="add"
                         onSubmit={() => {}}
@@ -102,7 +102,7 @@ export const TwoLevelValidationWarningAndError = {
                         )}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FinalForm<{ input1: number }>
                         mode="add"
                         onSubmit={() => {}}

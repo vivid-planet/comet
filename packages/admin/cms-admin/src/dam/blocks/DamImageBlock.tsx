@@ -1,11 +1,14 @@
 import { Field } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createOneOfBlock, resolveNewState } from "@comet/blocks-admin";
-import { FormattedMessage } from "react-intl";
+import { defineMessage, FormattedMessage } from "react-intl";
 
-import { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";
+import { type PixelImageBlockData, type SvgImageBlockData } from "../../blocks.generated";
+import { createOneOfBlock } from "../../blocks/factories/createOneOfBlock";
+import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
 import { PixelImageBlock } from "../../blocks/PixelImageBlock";
 import { SvgImageBlock } from "../../blocks/SvgImageBlock";
-import { FileField, GQLDamFileFieldFileFragment } from "../../form/file/FileField";
+import { BlockCategory, type BlockInterface } from "../../blocks/types";
+import { resolveNewState } from "../../blocks/utils";
+import { FileField, type GQLDamFileFieldFileFragment } from "../../form/file/FileField";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 
 const supportedBlocks: Record<string, BlockInterface> = {
@@ -19,6 +22,7 @@ const DamImageBlock = createOneOfBlock({
     category: BlockCategory.Media,
     supportedBlocks,
     allowEmpty: false,
+    tags: [defineMessage({ id: "damImageBlock.tag.image", defaultMessage: "Image" })],
 });
 
 // Custom Admin component to improve the image selection UX.

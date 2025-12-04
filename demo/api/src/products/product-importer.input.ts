@@ -1,11 +1,16 @@
 import { CsvColumn, CsvColumnType } from "@comet/cms-api";
 import { Collection, Ref } from "@mikro-orm/core";
+import { camelCase } from "change-case";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { ProductType } from "./entities/product-type.enum";
+
+const transformToProductType = (value: string) => {
+    return ProductType[camelCase(value) as keyof typeof ProductType];
+};
 
 export class ProductImporterInput {
     @CsvColumn("title")
@@ -24,12 +29,14 @@ export class ProductImporterInput {
     @IsString()
     description: string;
 
-    @CsvColumn("type")
+    @CsvColumn("type", {
+        transform: transformToProductType,
+    })
     @IsEnum(ProductType)
     type: ProductType;
 
     @CsvColumn("additionalTypes", {
-        transform: (value: string) => (value ? value.split(",").map((type) => ProductType[type.trim() as keyof typeof ProductType]) : []),
+        transform: (value: string) => (value ? value.split(",").map((type) => transformToProductType(type.trim())) : []),
     })
     @IsArray()
     @IsEnum(ProductType, { each: true })
@@ -58,7 +65,7 @@ export class ProductImporterInput {
     @CsvColumn("availableSince", { type: CsvColumnType.DateTime, dateFormatString: "dd-MM-yyyy" })
     @IsOptional()
     @IsDate()
-    availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
+    availableSince?: string = undefined;
 
     @CsvColumn("lastCheckedAt", { type: CsvColumnType.DateTime, dateFormatString: "dd-MM-yyyy-HH:mm:ss" })
     @IsOptional()

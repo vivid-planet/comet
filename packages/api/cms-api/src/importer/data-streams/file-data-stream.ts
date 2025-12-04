@@ -1,13 +1,13 @@
-import { ReadStream } from "node:fs";
+import { type ReadStream } from "node:fs";
 
-import { SdkStream } from "@smithy/types";
-import { IncomingMessage } from "http";
+import { type SdkStream } from "@smithy/types";
+import { type IncomingMessage } from "http";
 
 import { ImporterDataStream } from "./data-stream";
 
-export type FileStream = SdkStream<IncomingMessage> | ReadStream;
+type FileStream = SdkStream<IncomingMessage> | ReadStream;
 
-export interface FileStreamAndSize {
+interface FileStreamAndSize {
     fileStream: FileStream;
     fileName?: string;
     fileSize?: number;

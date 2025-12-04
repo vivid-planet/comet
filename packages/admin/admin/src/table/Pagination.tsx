@@ -3,7 +3,7 @@ import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
-import { IPagingInfo } from "./paging/IPagingInfo";
+import { type IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {
     totalCount: number;
@@ -22,15 +22,15 @@ export const TablePagination = ({ totalCount, pagingInfo, rowName }: IProps) => 
         <TableCell colSpan={1000}>
             <Toolbar>
                 <Grid container justifyContent="space-between" alignItems="center">
-                    <Grid item>
+                    <Grid>
                         <Typography color="textPrimary" variant="body2">
                             <FormattedNumber value={totalCount} /> {rowName}
                         </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <Grid container alignItems="center" spacing={2}>
                             {pagingInfo.totalPages && pagingInfo.currentPage && (
-                                <Grid item>
+                                <Grid>
                                     <Typography color="textSecondary" variant="body2">
                                         <FormattedMessage
                                             id="comet.table.pagination.pageInfo"
@@ -41,7 +41,7 @@ export const TablePagination = ({ totalCount, pagingInfo, rowName }: IProps) => 
                                     </Typography>
                                 </Grid>
                             )}
-                            <Grid item>
+                            <Grid>
                                 <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()} size="large">
                                     <ChevronLeft />
                                 </IconButton>

@@ -1,5 +1,5 @@
 import { useStoredState } from "@comet/admin";
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
 import { Device } from "../common/Device";
 

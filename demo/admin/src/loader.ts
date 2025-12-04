@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import { App } from "./App";
 
@@ -7,7 +7,8 @@ const loadHtml = () => {
     const rootElement = document.querySelector<HTMLElement>("#root");
     if (!rootElement) return false;
 
-    render(createElement(App), rootElement);
+    const root = createRoot(rootElement);
+    root.render(createElement(App));
 };
 
 if (["interactive", "complete"].includes(document.readyState)) {

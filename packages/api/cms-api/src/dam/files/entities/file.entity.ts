@@ -2,6 +2,7 @@ import {
     BaseEntity,
     BigIntType,
     Cascade,
+    Collection,
     Embedded,
     Entity,
     Index,
@@ -11,20 +12,23 @@ import {
     OptionalProps,
     PrimaryKey,
     Property,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfo } from "../../../dependencies/decorators/entity-info.decorator";
+import { EntityInfo } from "../../../common/entityInfo/entity-info.decorator";
+import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
 import { DamScopeInterface } from "../../types";
+import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
+import { FileWarningService } from "../file-warning.service";
 import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
-export interface FileInterface extends BaseEntity<FileInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
+export interface FileInterface extends BaseEntity {
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -43,12 +47,15 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     scope?: DamScopeInterface;
     importSourceId?: string;
     importSourceType?: string;
+    alternativesForThisFile: Collection<DamMediaAlternative>;
+    thisFileIsAlternativeFor: Collection<DamMediaAlternative>;
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
-    class FileBase extends BaseEntity<FileBase, "id"> implements FileInterface {
+    @CreateWarnings(FileWarningService)
+    class FileBase extends BaseEntity implements FileInterface {
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
         id: string = uuid();
@@ -67,7 +74,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         name: string;
 
         @Field(() => Int)
-        @Property({ type: BigIntType })
+        @Property({ type: new BigIntType("number") })
         size: number;
 
         @Field()
@@ -145,6 +152,12 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field({ nullable: true })
         @Property({ columnType: "text", nullable: true })
         importSourceType?: string;
+
+        @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.for)
+        alternativesForThisFile: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
+
+        @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.alternative)
+        thisFileIsAlternativeFor: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
 
         // fileUrl: Field is resolved in resolver
     }

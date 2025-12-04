@@ -1,17 +1,9 @@
-import {
-    AnnotationBlockMeta,
-    BlockDataInterface,
-    BlockField,
-    BlockIndexData,
-    BlockMetaField,
-    BlockMetaFieldKind,
-    createBlock,
-    inputToData,
-    typesafeMigrationPipe,
-} from "@comet/blocks-api";
 import { IsOptional, IsUUID } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-video-block";
+import { BlockDataInterface, BlockIndexData, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../../blocks/block";
+import { AnnotationBlockMeta, BlockField } from "../../../blocks/decorators/field";
+import { typeSafeBlockMigrationPipe } from "../../../blocks/migrations/typeSafeBlockMigrationPipe";
 import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";
@@ -46,7 +38,7 @@ class DamVideoBlockInput extends BaseVideoBlockInput {
     damFileId?: string;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(DamVideoBlockData, this);
+        return blockInputToData(DamVideoBlockData, this);
     }
 }
 
@@ -110,6 +102,30 @@ class Meta extends AnnotationBlockMeta {
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },
+                        {
+                            name: "captions",
+                            kind: BlockMetaFieldKind.NestedObjectList,
+                            nullable: true,
+                            object: {
+                                fields: [
+                                    {
+                                        name: "id",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                    {
+                                        name: "language",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                    {
+                                        name: "fileUrl",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                ],
+                            },
+                        },
                     ],
                 },
             },
@@ -122,7 +138,7 @@ export const DamVideoBlock = createBlock(DamVideoBlockData, DamVideoBlockInput, 
     blockMeta: new Meta(DamVideoBlockData),
     migrate: {
         version: 1,
-        migrations: typesafeMigrationPipe([AddPreviewImageMigration]),
+        migrations: typeSafeBlockMigrationPipe([AddPreviewImageMigration]),
     },
 });
 

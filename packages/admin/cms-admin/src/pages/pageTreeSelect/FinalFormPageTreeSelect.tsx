@@ -1,7 +1,7 @@
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 
 import PageTreeSelect from "./PageTreeSelect";
-import { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
+import { type GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
 type Props = FieldRenderProps<GQLSelectedPageFragment | undefined | null, HTMLDivElement>;
 

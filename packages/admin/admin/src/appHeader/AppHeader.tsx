@@ -1,6 +1,6 @@
-import { AppBar as MuiAppBar, AppBarClassKey, capitalize, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import { AppBarProps } from "@mui/material/AppBar";
-import { CSSProperties, useContext } from "react";
+import { AppBar as MuiAppBar, type AppBarClassKey, capitalize, type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
+import { type AppBarProps } from "@mui/material/AppBar";
+import { type CSSProperties, useContext } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";

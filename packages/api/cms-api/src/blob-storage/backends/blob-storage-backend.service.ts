@@ -13,7 +13,8 @@ import { BlobStorageS3Storage } from "./s3/blob-storage-s3.storage";
 @Injectable()
 export class BlobStorageBackendService implements BlobStorageBackendInterface {
     private readonly backend: BlobStorageBackendInterface;
-    constructor(@Inject(BLOB_STORAGE_CONFIG) private readonly config: BlobStorageConfig) {
+
+    constructor(@Inject(BLOB_STORAGE_CONFIG) readonly config: BlobStorageConfig) {
         if (config.backend.driver === "file") {
             this.backend = new BlobStorageFileStorage(config.backend.file);
         } else if (config.backend.driver === "azure") {
@@ -43,9 +44,9 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface {
         folderName: string,
         fileName: string,
         data: NodeJS.ReadableStream | Buffer | string,
-        { headers, ...options }: CreateFileOptions,
+        { contentType, ...options }: CreateFileOptions,
     ): Promise<void> {
-        return this.backend.createFile(folderName, fileName, data, { ...options, headers: normalizeHeaders(headers) });
+        return this.backend.createFile(folderName, fileName, data, { ...options, contentType: contentType });
     }
 
     async getFile(folderName: string, fileName: string): Promise<Readable> {
@@ -61,8 +62,7 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface {
     }
 
     async getFileMetaData(folderName: string, fileName: string): Promise<StorageMetaData> {
-        const metaData = await this.backend.getFileMetaData(folderName, fileName);
-        return { ...metaData, headers: normalizeHeaders(metaData.headers) };
+        return this.backend.getFileMetaData(folderName, fileName);
     }
 
     getBackendFilePathPrefix(): string {
@@ -79,20 +79,8 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface {
         if (!(await this.fileExists(folderName, objectName))) {
             await this.createFile(folderName, objectName, file.path, {
                 size: file.size,
-                headers: {
-                    "Content-Type": file.mimetype,
-                },
+                contentType: file.mimetype,
             });
         }
     }
 }
-
-export const normalizeHeaders = (headers: CreateFileOptions["headers"]): CreateFileOptions["headers"] => {
-    const result: CreateFileOptions["headers"] = {};
-
-    for (const [key, value] of Object.entries(headers)) {
-        result[key.toLowerCase()] = value;
-    }
-
-    return result;
-};

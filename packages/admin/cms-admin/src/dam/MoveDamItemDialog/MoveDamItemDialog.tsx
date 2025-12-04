@@ -1,25 +1,31 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { FetchResult } from "@apollo/client/link/core";
-import { SaveButton } from "@comet/admin";
+import { type FetchResult } from "@apollo/client/link/core";
+import { Button, SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { TextMatch } from "../../common/MarkedMatches";
+import { type TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
 import { useDamScope } from "../config/useDamScope";
 import {
-    GQLMoveDamFilesMutation,
-    GQLMoveDamFilesMutationVariables,
-    GQLMoveDamFoldersMutation,
-    GQLMoveDamFoldersMutationVariables,
+    type GQLMoveDamFilesMutation,
+    type GQLMoveDamFilesMutationVariables,
+    type GQLMoveDamFoldersMutation,
+    type GQLMoveDamFoldersMutationVariables,
     moveDamFilesMutation,
     moveDamFoldersMutation,
 } from "../DataGrid/FolderDataGrid";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { allFoldersQuery, ChooseFolder, GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
+import { allFoldersQuery, ChooseFolder, type GQLAllFoldersWithoutFiltersQuery, type GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
 import { useFolderTree } from "./useFolderTree";
 import { useFolderTreeSearch } from "./useFolderTreeSearch";
 
@@ -197,6 +203,7 @@ const MoveDamItemDialogInner = ({
             </DialogContent>
             <DialogActions>
                 <Button
+                    variant="textDark"
                     startIcon={<Reset />}
                     onClick={() => {
                         setSelectedId(undefined);
@@ -207,13 +214,12 @@ const MoveDamItemDialogInner = ({
                 </Button>
                 <SaveButton
                     startIcon={<Move />}
-                    variant="contained"
                     onClick={async () => {
                         await moveSelected();
                         handleClose();
                     }}
                     disabled={selectedId === undefined}
-                    saving={moving}
+                    loading={moving}
                     hasErrors={hasErrors}
                 >
                     <FormattedMessage

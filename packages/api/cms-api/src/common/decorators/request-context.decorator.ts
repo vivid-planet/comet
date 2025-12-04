@@ -1,5 +1,5 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { IncomingHttpHeaders } from "http";
+import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
+import { type IncomingHttpHeaders } from "http";
 
 import { BlockVisibility } from "../../blocks/types";
 import { PageTreeNodeVisibility } from "../../page-tree/types";
@@ -9,7 +9,6 @@ export interface RequestContextInterface {
     includeInvisiblePages?: Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished>;
     includeInvisibleBlocks?: boolean;
     previewDamUrls: boolean;
-    relativeDamUrls: boolean;
 }
 
 export const getRequestContextHeadersFromRequest = (request: { headers: IncomingHttpHeaders }): RequestContextInterface => {
@@ -19,7 +18,6 @@ export const getRequestContextHeadersFromRequest = (request: { headers: Incoming
         includeInvisiblePages,
         includeInvisibleBlocks,
         previewDamUrls: !!request.headers["x-preview-dam-urls"],
-        relativeDamUrls: !!request.headers["x-relative-dam-urls"],
     };
 };
 

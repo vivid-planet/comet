@@ -1,11 +1,11 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
-import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
-import { ChangeEvent, Children, ComponentType, isValidElement, ReactElement, ReactNode, useState } from "react";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import MuiTab, { type TabProps as MuiTabProps } from "@mui/material/Tab";
+import MuiTabs, { type TabsProps as MuiTabsProps } from "@mui/material/Tabs";
+import { type ChangeEvent, Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { TabScrollButton } from "./TabScrollButton";
 
 export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";
@@ -53,13 +53,17 @@ interface ITabsState {
 type TabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type TabsChildren = TabsChild | Array<TabsChild | Array<TabsChild>>;
 
-export interface TabsProps
-    extends MuiTabsProps,
-        ThemedComponentBaseProps<{
-            root: "div";
-            tabs: typeof MuiTabs;
-            content: "div";
-        }> {
+type BaseProps = ThemedComponentBaseProps<{
+    root: "div";
+    tabs: typeof MuiTabs;
+    content: "div";
+}>;
+
+interface SlotProps {
+    slotProps?: MuiTabsProps["slotProps"] & BaseProps["slotProps"];
+}
+
+export interface TabsProps extends Omit<MuiTabsProps, "slotProps">, Omit<BaseProps, "slotProps">, SlotProps {
     children: TabsChildren;
     tabComponent?: ComponentType<MuiTabProps>;
     defaultIndex?: number;
@@ -100,7 +104,7 @@ export function Tabs(inProps: TabsProps) {
         }
 
         if (child.type !== Tab) {
-            throw new Error("RouterTabs must contain only Tab children");
+            throw new Error("Tabs must contain only Tab children");
         }
     });
 

@@ -1,6 +1,6 @@
-import { ApolloClient } from "@apollo/client";
-import { DocumentNode } from "graphql";
-import { Component, ReactNode } from "react";
+import { type ApolloClient } from "@apollo/client";
+import { type DocumentNode } from "graphql";
+import { Component, type ReactNode } from "react";
 
 import { RouterPrompt } from "../router/Prompt";
 

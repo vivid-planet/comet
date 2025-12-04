@@ -1,19 +1,20 @@
 import {
-    Breakpoint,
+    type Breakpoint,
+    // eslint-disable-next-line no-restricted-imports
     Button as MuiButton,
-    ButtonProps as MuiButtonProps,
-    ComponentsOverrides,
+    type ButtonProps as MuiButtonProps,
+    type ComponentsOverrides,
     css,
-    Theme,
-    Tooltip,
+    type Theme,
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { OverridableComponent, OverridableTypeMap } from "@mui/material/OverridableComponent";
-import { ElementType, ForwardedRef, forwardRef, ReactNode } from "react";
+import { type OverridableComponent, type OverridableTypeMap } from "@mui/material/OverridableComponent";
+import { type ElementType, type ForwardedRef, forwardRef, type ReactNode } from "react";
 
+import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";
 
 type Variant = "primary" | "secondary" | "outlined" | "destructive" | "success" | "textLight" | "textDark";
@@ -33,7 +34,12 @@ export type ButtonProps<C extends ElementType = "button"> = Omit<MuiButtonProps<
     };
 
 interface ButtonTypeMap<C extends ElementType = "button"> extends OverridableTypeMap {
-    props: ButtonProps<C>;
+    props: ButtonProps<C> & {
+        /**
+         * @deprecated Use variant instead. The button's color is controlled by the variant prop.
+         */
+        color?: string;
+    };
     defaultComponent: C;
 }
 
@@ -48,8 +54,8 @@ const variantToMuiProps: Record<Variant, Partial<MuiButtonProps>> = {
     outlined: { variant: "outlined" },
     destructive: { variant: "outlined", color: "error" },
     success: { variant: "contained", color: "success" },
-    textLight: { variant: "text", sx: { color: "white" } },
-    textDark: { variant: "text", sx: { color: "black" } },
+    textLight: { variant: "text" },
+    textDark: { variant: "text" },
 };
 
 const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps, "mobileIcon" | "startIcon" | "endIcon">) => {
@@ -71,6 +77,7 @@ const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps,
 export const Button = forwardRef(<C extends ElementType = "button">(inProps: ButtonProps<C>, ref: ForwardedRef<any>) => {
     const {
         slotProps,
+        sx,
         variant = "primary",
         responsive,
         mobileIcon = "auto",
@@ -96,7 +103,13 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
     };
 
     const commonButtonProps = {
+        disableFocusRipple: true,
+        disableTouchRipple: true,
         ...variantToMuiProps[variant],
+        sx: {
+            ...variantToMuiProps[variant].sx,
+            ...sx,
+        },
         ...restProps,
         ownerState,
         ...slotProps?.root,
@@ -127,10 +140,30 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
         return [ownerState.usingResponsiveBehavior && "usingResponsiveBehavior", ownerState.variant];
     },
 })(
-    ({ ownerState }) => css`
+    ({ ownerState, theme }) => css`
         ${ownerState.usingResponsiveBehavior &&
         css`
             min-width: 0;
+        `}
+
+        ${ownerState.variant === "textLight" &&
+        css`
+            color: ${theme.palette.common.white};
+            &:focus {
+                color: ${theme.palette.primary.main};
+            }
+
+            &.Mui-disabled {
+                color: ${theme.palette.grey[200]};
+            }
+        `}
+
+        ${ownerState.variant === "textDark" &&
+        css`
+            color: ${theme.palette.common.black};
+            &.Mui-disabled {
+                color: ${theme.palette.grey[200]};
+            }
         `}
     `,
 );

@@ -12,4 +12,9 @@ export class ManyToManyFilter {
     @IsOptional()
     @IsString()
     search?: string;
+
+    @Field(() => [ID], { nullable: true })
+    @IsOptional()
+    @IsUUID(undefined, { each: true })
+    isAnyOf?: string[];
 }

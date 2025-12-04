@@ -1,6 +1,6 @@
-import { DraftBlockType, EditorState } from "draft-js";
+import { type DraftBlockType, EditorState } from "draft-js";
 
-import { FilterEditorStateFn } from "../../types";
+import { type FilterEditorStateFn } from "../../types";
 
 type BlockTypeList = DraftBlockType[];
 

@@ -1,10 +1,10 @@
-import { EditorState } from "draft-js";
-import { RenderConfig, stateToHTML } from "draft-js-export-html";
+import { type EditorState } from "draft-js";
+import { type RenderConfig, stateToHTML } from "draft-js-export-html";
 
 import defaultBlocktypeMap from "../defaultBlocktypeMap";
-import { IRteOptions } from "../Rte";
+import { type IOptions } from "../Rte";
 
-export function stateToHtml({ editorState, options }: { editorState: EditorState; options: IRteOptions }) {
+export function stateToHtml({ editorState, options }: { editorState: EditorState; options: IOptions }) {
     const contentState = editorState.getCurrentContent();
 
     const customInlineStyleKeys = options?.customInlineStyles ? Object.keys(options.customInlineStyles) : [];

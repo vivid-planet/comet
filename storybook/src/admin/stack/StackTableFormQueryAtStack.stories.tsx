@@ -3,7 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    IFilterApi,
+    type IFilterApi,
     Loading,
     MainContent,
     Stack,
@@ -95,7 +95,7 @@ function ExampleTable(props: IExampleTableProps) {
                             cellProps: { padding: "none" },
 
                             render: (row) => (
-                                <Grid item>
+                                <Grid>
                                     <IconButton
                                         onClick={() => {
                                             stackApi.activatePage("form", String(row.id));

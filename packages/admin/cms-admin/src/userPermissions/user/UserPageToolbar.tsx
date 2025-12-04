@@ -7,7 +7,7 @@ import { commonImpersonationMessages } from "../../common/impersonation/commonIm
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
-import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
+import { type GQLUserPageQuery, type GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
@@ -19,6 +19,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                 user: userPermissionsUserById(id: $id) {
                     name
                     email
+                    impersonationAllowed
                 }
             }
         `,
@@ -51,12 +52,12 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                                 ? {
                                       icon: <Reset />,
                                       label: commonImpersonationMessages.stopImpersonation,
-                                      onClick: () => stopImpersonation,
+                                      onClick: () => stopImpersonation(),
                                   }
                                 : {
                                       label: commonImpersonationMessages.startImpersonation,
                                       icon: <ImpersonateUser />,
-                                      disabled: userId === currentUser.id,
+                                      disabled: !data.user.impersonationAllowed,
                                       onClick: () => startImpersonation(userId),
                                   },
                         ]}

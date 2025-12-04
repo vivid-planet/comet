@@ -18,8 +18,9 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
+                  ref: ${{ github.event.pull_request.head.ref || github.ref }}
                   token: ${{ secrets.GITHUB_TOKEN }}
             - run: |
                   git config user.name github-actions
@@ -27,17 +28,17 @@ jobs:
 
             - uses: pnpm/action-setup@v4
 
-            - name: Use Node.js 22.x
-              uses: actions/setup-node@v4
+            - name: Use Node.js 24.x
+              uses: actions/setup-node@v5
               with:
-                  node-version: 22
+                  node-version: 24
                   registry-url: "https://registry.npmjs.org"
                   cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
             - run: pnpm install --frozen-lockfile
 
-            - name: Copy schema files
-              run: pnpm run copy-schema-files
+            - name: Setup project for CI run
+              run: pnpm run setup:ci
 
             - name: Build
               run: pnpm run build:packages

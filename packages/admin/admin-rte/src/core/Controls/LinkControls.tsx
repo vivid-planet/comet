@@ -1,9 +1,9 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ButtonGroup, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { ButtonGroup, type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
 
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
-import { IControlProps } from "../types";
+import { type IControlProps } from "../types";
 
 export interface RteLinkControlsProps
     extends IControlProps,

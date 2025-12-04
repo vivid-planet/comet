@@ -13,7 +13,7 @@ export const getDateRangeListByMinuteStep = (startTimeValue: string, endTimeValu
     return eachMinuteOfInterval({ start: startDate, end: endDate }, { step: minuteStep });
 };
 
-export const timeValueIsValid = (timeValue: string): boolean => {
+const timeValueIsValid = (timeValue: string): boolean => {
     if (!/^([0-9]?[0-9]):[0-9]?[0-9]$/.test(timeValue)) {
         return false;
     }

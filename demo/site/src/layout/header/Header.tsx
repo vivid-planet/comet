@@ -1,87 +1,35 @@
 "use client";
 
-import styled from "styled-components";
+import { SvgUse } from "@src/common/helpers/SvgUse";
+import Link from "next/link";
+import { useIntl } from "react-intl";
 
-import { GQLHeaderFragment } from "./Header.fragment.generated";
-import { PageLink } from "./PageLink";
+import { PageLayout } from "../PageLayout";
+import { DesktopMenu } from "./DesktopMenu";
+import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import styles from "./Header.module.scss";
+import { MobileMenu } from "./MobileMenu";
 
 interface Props {
     header: GQLHeaderFragment;
 }
 
-function Header({ header }: Props): JSX.Element {
+export const Header = ({ header }: Props) => {
+    const intl = useIntl();
+
     return (
-        <Root>
-            <nav>
-                <TopLevelNavigation>
-                    {header.items.map((item) => (
-                        <TopLevelLinkContainer key={item.id}>
-                            <Link page={item.node} activeClassName="active">
-                                {item.node.name}
-                            </Link>
-                            {item.node.childNodes.length > 0 && (
-                                <SubLevelNavigation>
-                                    {item.node.childNodes.map((node) => (
-                                        <li key={node.id}>
-                                            <Link page={node} activeClassName="active">
-                                                {node.name}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </SubLevelNavigation>
-                            )}
-                        </TopLevelLinkContainer>
-                    ))}
-                </TopLevelNavigation>
-            </nav>
-        </Root>
+        <header>
+            <PageLayout grid>
+                <div className={styles.pageLayoutContent}>
+                    <nav className={styles.root}>
+                        <Link href="/" title={intl.formatMessage({ id: "header.logo.title", defaultMessage: "Comet DXP Logo" })}>
+                            <SvgUse href="/assets/comet-logo.svg#root" />
+                        </Link>
+                        <DesktopMenu menu={header} />
+                        <MobileMenu menu={header} />
+                    </nav>
+                </div>
+            </PageLayout>
+        </header>
     );
-}
-
-const Root = styled.header`
-    padding: 10px 20px;
-`;
-
-const TopLevelNavigation = styled.ol`
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-`;
-
-const SubLevelNavigation = styled.ol`
-    display: none;
-    position: absolute;
-    min-width: 100px;
-    list-style-type: none;
-    padding: 5px;
-    background-color: white;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const TopLevelLinkContainer = styled.li`
-    position: relative;
-
-    &:hover {
-        text-decoration: underline;
-
-        & > ${SubLevelNavigation} {
-            display: block;
-        }
-    }
-`;
-
-const Link = styled(PageLink)`
-    text-decoration: none;
-    padding: 5px 10px;
-    color: ${({ theme }) => theme.palette.text.primary};
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &.active {
-        color: ${({ theme }) => theme.palette.primary.main};
-    }
-`;
-
-export { Header };
+};

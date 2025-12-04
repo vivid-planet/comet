@@ -1,6 +1,6 @@
-import { ComponentType, SFC } from "react";
+import { type ComponentType, type FC } from "react";
 
-import { ITableQueryContext, TableQueryContext } from "./TableQueryContext";
+import { type ITableQueryContext, TableQueryContext } from "./TableQueryContext";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -26,6 +26,7 @@ type Subtract<T, K> = Omit<T, keyof K>;
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export const withTableQueryContext =
-    <P extends IWithTableQueryProps>(WrappedComponent: ComponentType<P>): SFC<Subtract<P, IWithTableQueryProps>> =>
-    (props: any) =>
-        <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>;
+    <P extends IWithTableQueryProps>(WrappedComponent: ComponentType<P>): FC<Subtract<P, IWithTableQueryProps>> =>
+    (props: any) => (
+        <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>
+    );

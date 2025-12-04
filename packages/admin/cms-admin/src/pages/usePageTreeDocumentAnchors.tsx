@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 
-import { useCmsBlockContext } from "../blocks/useCmsBlockContext";
-import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
+import { type GQLPageQuery, type GQLPageQueryVariables } from "../documents/types";
 import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
+import { usePageTreeConfig } from "./pageTreeConfig";
 
 // Noop query to prevent useQuery from crashing, will never be queries
 const noopQuery = gql`
@@ -14,7 +14,7 @@ const noopQuery = gql`
 `;
 
 function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType: string } | null | undefined): string[] | undefined {
-    const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
+    const { documentTypes } = usePageTreeConfig();
     const localAnchors = useLocalPageTreeNodeAnchors();
 
     const shouldFetchRemoteAnchors =

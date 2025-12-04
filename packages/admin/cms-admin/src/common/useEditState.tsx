@@ -1,7 +1,7 @@
-import { ApolloError, ApolloQueryResult, OperationVariables, useQuery } from "@apollo/client";
-import { DocumentNode } from "graphql";
+import { type ApolloError, type ApolloQueryResult, type OperationVariables, useQuery } from "@apollo/client";
+import { type DocumentNode } from "graphql";
 import isEqual from "lodash.isequal";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from "react";
 
 interface EditStateOptions<TData, TVariables, TState, TOutput> {
     query: DocumentNode;
@@ -27,7 +27,7 @@ interface EditStateReturn<TData, TVariables, TState, TOutput> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useEditState<TData = any, TVariables = OperationVariables, TState = any, TOutput = any>(
+export function useEditState<TData = any, TVariables extends OperationVariables = OperationVariables, TState = any, TOutput = any>(
     options: EditStateOptions<TData, TVariables, TState, TOutput>,
 ): EditStateReturn<TData, TVariables, TState, TOutput> {
     const [referenceContent, setReferenceContent] = useState<TOutput | undefined>(

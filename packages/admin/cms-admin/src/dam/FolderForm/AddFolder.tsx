@@ -1,11 +1,11 @@
 import { useMutation } from "@apollo/client";
-import { FinalForm, ISelectionApi } from "@comet/admin";
+import { FinalForm, type ISelectionApi } from "@comet/admin";
 
 import { useDamScope } from "../config/useDamScope";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { createDamFolderMutation } from "./AddFolder.gql";
-import { GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables } from "./AddFolder.gql.generated";
-import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
+import { type GQLCreateDamFolderMutation, type GQLCreateDamFolderMutationVariables } from "./AddFolder.gql.generated";
+import { FolderFormFields, type FolderFormValues } from "./FolderFormFields";
 
 interface AddFolderProps {
     parentId?: string;

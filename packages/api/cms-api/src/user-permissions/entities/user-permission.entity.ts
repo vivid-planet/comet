@@ -1,9 +1,10 @@
-import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
+import { CombinedPermission, Permission } from "../user-permissions.types";
 
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
@@ -15,10 +16,10 @@ registerEnumType(UserPermissionSource, {
 
 @ObjectType()
 @Entity({ tableName: "CometUserPermission" })
-export class UserPermission extends BaseEntity<UserPermission, "id"> {
+export class UserPermission extends BaseEntity {
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
-    id: string = v4();
+    id: string = uuid();
 
     @Property()
     userId: string;
@@ -26,9 +27,9 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Field(() => UserPermissionSource)
     source: UserPermissionSource;
 
-    @Field()
+    @Field(() => CombinedPermission)
     @Property({ columnType: "text" })
-    permission: string;
+    permission: Permission;
 
     @Field(() => Date, { nullable: true })
     @Property({ columnType: "date", nullable: true })

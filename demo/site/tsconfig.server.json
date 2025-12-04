@@ -1,12 +1,12 @@
 {
-    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "outDir": "dist",
-        "lib": ["es2019"],
-        "target": "es2019",
         "isolatedModules": false,
-        "noEmit": false
+        "lib": ["es2019"],
+        "module": "commonjs",
+        "noEmit": false,
+        "outDir": "dist",
+        "target": "es2019"
     },
-    "include": ["server.ts", "tracing.production.ts", "tracing.dev.ts", "cache-handler.ts"]
+    "extends": "./tsconfig.json",
+    "include": ["server.ts", "tracing.production.ts", "tracing.dev.ts", "cache-handler.ts", "src/webpack"]
 }

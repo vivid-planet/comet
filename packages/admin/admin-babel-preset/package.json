@@ -1,24 +1,25 @@
 {
     "name": "@comet/admin-babel-preset",
-    "version": "7.12.0",
+    "version": "8.8.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/admin/admin-babel-preset"
     },
+    "type": "commonjs",
+    "description": "Babel preset for Comet Admin packages",
     "license": "BSD-2-Clause",
     "main": "index.js",
     "dependencies": {
-        "@babel/cli": "^7.0.0",
-        "@babel/core": "^7.0.0",
-        "@babel/plugin-proposal-class-properties": "^7.0.0",
-        "@babel/preset-env": "^7.0.0",
-        "@babel/preset-react": "^7.0.0",
-        "@babel/preset-typescript": "^7.0.0",
-        "@emotion/babel-plugin": "^11.0.0"
+        "@babel/cli": "^7.28.0",
+        "@babel/core": "^7.28.0",
+        "@babel/preset-env": "^7.28.0",
+        "@babel/preset-react": "^7.27.1",
+        "@babel/preset-typescript": "^7.26.0",
+        "@emotion/babel-plugin": "^11.13.5"
     },
     "devDependencies": {
-        "@babel/cli": "^7.0.0"
+        "@babel/cli": "^7.28.0"
     },
     "peerDependencies": {
         "@babel/cli": ">= 7"
@@ -26,5 +27,8 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     }
 }

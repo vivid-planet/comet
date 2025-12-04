@@ -1,14 +1,14 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { ButtonBase, ComponentsOverrides, css, ListItemText, Menu, MenuItem, Theme, Typography, useThemeProps } from "@mui/material";
-import { Fragment, ReactNode, useRef, useState } from "react";
+import { ButtonBase, type ComponentsOverrides, css, ListItemText, Menu, MenuItem, type Theme, Typography, useThemeProps } from "@mui/material";
+import { Fragment, type ReactNode, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 
-type ToolbarBreadcrumbsClassKey =
+export type ToolbarBreadcrumbsClassKey =
     | "root"
     | "breadcrumbsList"
     | "mobileBreadcrumbsButton"
@@ -23,7 +23,7 @@ type ToolbarBreadcrumbsClassKey =
     | "mobileMenuItemText"
     | "mobileMenuItemNestingIndicator";
 
-interface ToolbarBreadcrumbsProps
+export interface ToolbarBreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         breadcrumbsList: "div";
@@ -113,7 +113,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                     <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
                         <>
                             <BreadcrumbsEllipsisItem variant="body2" {...slotProps?.breadcrumbsEllipsisItem}>
-                                ...
+                                …
                             </BreadcrumbsEllipsisItem>
                             {itemSeparator}
                         </>
@@ -142,7 +142,6 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                     ...slotProps?.mobileMenu?.transformOrigin,
                 }}
                 MenuListProps={{
-                    // @ts-expect-error This works but the `component` prop seems to be missing in the type definitions
                     component: "div",
                     ...slotProps?.mobileMenu?.MenuListProps,
                 }}

@@ -9,11 +9,11 @@ While COMET DXP does not provide authentication, it handles authorization by pro
 
 The user permissions system
 
--   streamlines authorization throughout the application
--   not only checks operations but also the handled data
--   relies on external user handling
--   allows assigning permissions by code as well as in the admin panel
--   offers an admin panel that works out of the box
+- streamlines authorization throughout the application
+- not only checks operations but also the handled data
+- relies on external user handling
+- allows assigning permissions by code as well as in the admin panel
+- offers an admin panel that works out of the box
 
 COMET DXP checks authentication in two dimensions:
 
@@ -27,7 +27,7 @@ There are no roles as they can easily be represented as a combination of permiss
 
 ## Important types
 
--   `User` is provided by COMET DXP as an interface so that it's possible to enhance the type by TypeScript module augmentation. By default, a ` User` object contains the fields `id`, `name` and `email`.
--   `CurrentUser` is used as a GraphQL-type and is returned by `@GetCurrentUser`. It's not customizable and enhances the default `User` type with the current permissions and scopes.
--   `ContentScope` is provided as an interface and should be augmented in the application.
--   There is no custom type for permissions, they are reflected as plain strings.
+- `User` is provided by COMET DXP as an interface so that it's possible to enhance the type by TypeScript module augmentation. By default, a ` User` object contains the fields `id`, `name` and `email`.
+- `CurrentUser` is used as a GraphQL-type and is returned by `@GetCurrentUser`. It's not customizable and enhances the default `User` type with the current permissions and scopes.
+- `ContentScope` is provided as an interface and should be augmented in the application.
+- There is no custom type for permissions, they are reflected as plain strings.

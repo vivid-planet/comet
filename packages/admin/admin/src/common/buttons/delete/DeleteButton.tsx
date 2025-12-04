@@ -1,26 +1,14 @@
 import { Delete } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentsOverrides } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
+import { Button, type ButtonClassKey, type ButtonProps } from "../Button";
 
 export type DeleteButtonClassKey = ButtonClassKey;
 export type DeleteButtonProps = ButtonProps;
-
-const Root = createComponentSlot(Button)<DeleteButtonClassKey>({
-    componentName: "DeleteButton",
-    slotName: "root",
-})(
-    ({ theme }) => css`
-        background-color: ${theme.palette.error.main};
-        color: ${theme.palette.error.contrastText};
-        &:hover {
-            background-color: ${theme.palette.error.dark};
-        }
-    `,
-);
 
 export function DeleteButton(inProps: DeleteButtonProps) {
     const {
@@ -30,11 +18,16 @@ export function DeleteButton(inProps: DeleteButtonProps) {
     } = useThemeProps({ props: inProps, name: "CometAdminDeleteButton" });
 
     return (
-        <Root startIcon={startIcon} {...restProps}>
+        <Root startIcon={startIcon} variant="destructive" {...restProps}>
             {children}
         </Root>
     );
 }
+
+const Root = createComponentSlot(Button)<DeleteButtonClassKey>({
+    componentName: "DeleteButton",
+    slotName: "root",
+})();
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

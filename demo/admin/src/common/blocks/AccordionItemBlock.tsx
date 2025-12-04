@@ -4,15 +4,18 @@ import {
     BlocksFinalForm,
     createBlocksBlock,
     createCompositeBlock,
+    createCompositeBlockField,
+    createCompositeBlockSelectField,
     createCompositeBlockTextField,
-    createCompositeSetting,
-} from "@comet/blocks-admin";
-import { AccordionItemBlockData } from "@src/blocks.generated";
+} from "@comet/cms-admin";
+import { type AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
-import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { FormattedMessage } from "react-intl";
+
+import { StandaloneHeadingBlock } from "./StandaloneHeadingBlock";
+import { TextImageBlock } from "./TextImageBlock";
 
 const AccordionContentBlock = createBlocksBlock({
     name: "AccordionContent",
@@ -21,6 +24,7 @@ const AccordionContentBlock = createBlocksBlock({
         space: SpaceBlock,
         heading: StandaloneHeadingBlock,
         callToActionList: StandaloneCallToActionListBlock,
+        textImage: TextImageBlock,
     },
 });
 
@@ -31,8 +35,19 @@ export const AccordionItemBlock = createCompositeBlock(
         blocks: {
             title: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="accordionBlock.accordionItem.title" defaultMessage="Title" />,
+                }),
+                hiddenInSubroute: true,
+            },
+            titleHtmlTag: {
+                block: createCompositeBlockSelectField<AccordionItemBlockData["titleHtmlTag"]>({
+                    label: <FormattedMessage id="accordionItem.titleHtmlTag" defaultMessage="Title HTML tag" />,
+                    defaultValue: "h3",
+                    options: ([1, 2, 3, 4, 5, 6] as const).map((level) => ({
+                        value: `h${level}`,
+                        label: <FormattedMessage id="accordionItem.headline" defaultMessage="Headline {level}" values={{ level }} />,
+                    })),
+                    required: true,
                 }),
                 hiddenInSubroute: true,
             },
@@ -41,7 +56,7 @@ export const AccordionItemBlock = createCompositeBlock(
                 title: <FormattedMessage id="accordionBlock.accordionItem.content" defaultMessage="Content" />,
             },
             openByDefault: {
-                block: createCompositeSetting<AccordionItemBlockData["openByDefault"]>({
+                block: createCompositeBlockField<AccordionItemBlockData["openByDefault"]>({
                     defaultValue: false,
                     AdminComponent: ({ state, updateState }) => {
                         return (

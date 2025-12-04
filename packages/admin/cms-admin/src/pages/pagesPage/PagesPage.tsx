@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     Alert,
+    Button,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -16,32 +17,32 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
+import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
+import { type ComponentType, type ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
+import { type ContentScope, createEditPageNode, useSiteConfig } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
-import { DocumentInterface, DocumentType } from "../../documents/types";
-import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
-import { EditPageNodeProps } from "../createEditPageNode";
+import { type DocumentInterface, type DocumentType } from "../../documents/types";
+import { usePageTreeScope } from "../config/usePageTreeScope";
+import { type EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
-import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
+import { PageTree, type PageTreeRefApi } from "../pageTree/PageTree";
+import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
-import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "./createPagesQuery";
+import { usePageTreeConfig } from "../pageTreeConfig";
+import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {
     category: string;
     path: string;
-    allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
-    renderContentScopeIndicator: (scope: ContentScopeInterface) => ReactNode;
+    renderContentScopeIndicator: (scope: ContentScope) => ReactNode;
 }
 
 const DefaultEditPageNode = createEditPageNode({});
@@ -49,14 +50,14 @@ const DefaultEditPageNode = createEditPageNode({});
 export function PagesPage({
     category,
     path,
-    allCategories,
     documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
-    const { additionalPageTreeNodeFragment } = useCmsBlockContext();
+    const { additionalPageTreeNodeFragment } = usePageTreeConfig();
+    const pageTreeScope = usePageTreeScope();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
@@ -73,7 +74,7 @@ export function PagesPage({
     const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         fetchPolicy: "cache-and-network",
         variables: {
-            contentScope: scope,
+            contentScope: pageTreeScope,
             category,
         },
         context: LocalErrorScopeApolloContext,
@@ -118,7 +119,7 @@ export function PagesPage({
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        domain: scope.domain,
+        siteUrl: siteConfig.url,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
@@ -138,7 +139,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(pageTreeScope)}>
                             <ToolbarItem sx={{ flexGrow: 1 }}>
                                 <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             </ToolbarItem>
@@ -150,8 +151,6 @@ export function PagesPage({
                             </ToolbarItem>
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         editDialogApi.openAddDialog();
@@ -163,9 +162,7 @@ export function PagesPage({
                         </Toolbar>
                         <PageTreeContext.Provider
                             value={{
-                                allCategories,
                                 currentCategory: category,
-                                documentTypes,
                                 getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
                                 tree,
                                 query: pagesQuery,
@@ -221,12 +218,14 @@ export function PagesPage({
                         </PageTreeContext.Provider>
 
                         <EditDialog>
-                            <EditPageNode
-                                id={editDialogSelection.id || null}
-                                mode={editDialogSelection.mode ?? "add"}
-                                category={category}
-                                documentTypes={documentTypes}
-                            />
+                            <DialogContent>
+                                <EditPageNode
+                                    id={editDialogSelection.id || null}
+                                    mode={editDialogSelection.mode ?? "add"}
+                                    category={category}
+                                    documentTypes={documentTypes}
+                                />
+                            </DialogContent>
                         </EditDialog>
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>

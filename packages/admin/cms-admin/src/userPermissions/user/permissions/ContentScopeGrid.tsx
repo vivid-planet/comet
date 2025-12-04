@@ -1,51 +1,64 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CheckboxListField, FillSpace, FinalForm, Loading, SaveButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
-import { Card, CardContent, Toolbar } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { gql, useQuery } from "@apollo/client";
+import {
+    Button,
+    CancelButton,
+    DataGridToolbar,
+    FieldSet,
+    FillSpace,
+    type GridColDef,
+    Loading,
+    messages,
+    SaveBoundary,
+    SaveBoundarySaveButton,
+} from "@comet/admin";
+import { Select } from "@comet/admin-icons";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Typography,
+} from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
-import { FormattedMessage } from "react-intl";
+import { type ReactNode, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import {
-    GQLContentScopesQuery,
-    GQLContentScopesQueryVariables,
-    GQLUpdateContentScopesMutation,
-    GQLUpdateContentScopesMutationVariables,
-} from "./ContentScopeGrid.generated";
+import { type GQLContentScopesQuery, type GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
+import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
+import { type GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
 
-type FormValues = {
-    contentScopes: string[];
-};
 type ContentScope = {
     [key: string]: string;
 };
 
-export const ContentScopeGrid = ({ userId }: { userId: string }) => {
-    const client = useApolloClient();
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
 
-    const submit = async (data: FormValues) => {
-        await client.mutate<GQLUpdateContentScopesMutation, GQLUpdateContentScopesMutationVariables>({
-            mutation: gql`
-                mutation UpdateContentScopes($userId: String!, $input: UserContentScopesInput!) {
-                    userPermissionsUpdateContentScopes(userId: $userId, input: $input)
-                }
-            `,
-            variables: {
-                userId,
-                input: {
-                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
-                },
-            },
-            refetchQueries: ["ContentScopes"],
-        });
-    };
+function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
+    return (
+        <DataGridToolbar>
+            <FillSpace />
+            {toolbarAction}
+        </DataGridToolbar>
+    );
+}
+
+export const ContentScopeGrid = ({ userId }: { userId: string }) => {
+    const intl = useIntl();
+    const [open, setOpen] = useState(false);
 
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
                 userContentScopes: userPermissionsContentScopes(userId: $userId)
                 userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
             }
         `,
         {
@@ -58,48 +71,78 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     if (!data) {
         return <Loading />;
     }
+
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+
+    const toolbarSlotProps: ToolbarProps = {
+        toolbarAction: (
+            <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
+                <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
+            </Button>
+        ),
+    };
+
     return (
-        <Card>
-            <FinalForm<FormValues>
-                mode="edit"
-                onSubmit={submit}
-                onAfterSubmit={() => null}
-                initialValues={{ contentScopes: data.userContentScopes.map((cs) => JSON.stringify(cs)) }}
+        <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })} disablePadding>
+            <DataGrid
+                rows={data.userContentScopes}
+                columns={columns}
+                rowCount={data?.userContentScopes.length ?? 0}
+                loading={false}
+                getRowId={(row) => JSON.stringify(row)}
+                slots={{
+                    toolbar: ContentScopeGridToolbar,
+                }}
+                slotProps={{
+                    toolbar: toolbarSlotProps,
+                }}
+            />
+            <SaveBoundary
+                onAfterSave={() => {
+                    setOpen(false);
+                }}
             >
-                <CardToolbar>
-                    <ToolbarTitleItem>
-                        <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
-                    </ToolbarTitleItem>
-                    <FillSpace />
-                    <ToolbarActions>
-                        <SaveButton type="submit">
-                            <FormattedMessage id="comet.userPermissions.save" defaultMessage="Save" />
-                        </SaveButton>
-                    </ToolbarActions>
-                </CardToolbar>
-                <CardContent>
-                    <CheckboxListField
-                        fullWidth
-                        name="contentScopes"
-                        layout="column"
-                        options={data.availableContentScopes.map((contentScope: ContentScope) => ({
-                            label: Object.entries(contentScope).map(([scope, value]) => (
-                                <>
-                                    {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                    <br />
-                                </>
-                            )),
-                            value: JSON.stringify(contentScope),
-                            disabled: data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope)),
-                        }))}
+                <Dialog open={open} maxWidth="lg">
+                    <DialogTitle>
+                        <FormattedMessage id="comet.userScopes.dialog.title" defaultMessage="Select scopes" />
+                    </DialogTitle>
+                    <SelectScopesDialogContent
+                        userId={userId}
+                        userContentScopes={data.userContentScopes}
+                        userContentScopesSkipManual={data.userContentScopesSkipManual}
                     />
-                </CardContent>
-            </FinalForm>
-        </Card>
+                    <DialogActions>
+                        <CancelButton onClick={() => setOpen(false)}>
+                            <FormattedMessage {...messages.close} />
+                        </CancelButton>
+                        <SaveBoundarySaveButton />
+                    </DialogActions>
+                </Dialog>
+            </SaveBoundary>
+        </FieldSet>
     );
 };
 
-const CardToolbar = styled(Toolbar)`
-    top: 0px;
-    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
-`;
+export function generateGridColumnsFromContentScopeProperties(
+    availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
+): GridColDef[] {
+    const uniquePropertyNames = Array.from(new Set(availableContentScopes.flatMap((item) => Object.keys(item.scope))));
+    return uniquePropertyNames.map((propertyName, index) => {
+        return {
+            field: propertyName,
+            flex: 1,
+            pinnable: false,
+            sortable: false,
+            filterable: true,
+            headerName: camelCaseToHumanReadable(propertyName),
+            renderCell: ({ row }: { row: ContentScope }) => {
+                const contentScopeWithLabel = availableContentScopes.find((availableContentScope) => isEqual(availableContentScope.scope, row));
+                if (contentScopeWithLabel) {
+                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{contentScopeWithLabel.label[propertyName]}</Typography>;
+                } else {
+                    return "-";
+                }
+            },
+        };
+    });
+}

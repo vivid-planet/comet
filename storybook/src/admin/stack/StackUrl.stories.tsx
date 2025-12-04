@@ -1,5 +1,4 @@
 import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { Link } from "@mui/material";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -21,32 +20,32 @@ export const StackUrl = {
                     <StackSwitch>
                         <StackPage name="page1">
                             <h3>Page 1</h3>
-                            <Link component={StackLink} pageName="page2" payload="test">
+                            <StackLink pageName="page2" payload="test">
                                 go to page 2
-                            </Link>
+                            </StackLink>
                         </StackPage>
                         <StackPage name="page2">
                             <h3>Page 2</h3>
                             <p>
-                                <Link component={StackLink} pageName="page1" payload="test">
+                                <StackLink pageName="page1" payload="test">
                                     go to page 1
-                                </Link>
+                                </StackLink>
                             </p>
                             <StackSwitch>
                                 <StackPage name="page2-1">
                                     <h3>Page 2-1</h3>
                                     <p>
-                                        <Link component={StackLink} pageName="page2-2" payload="test">
+                                        <StackLink pageName="page2-2" payload="test">
                                             go to page 2-2
-                                        </Link>
+                                        </StackLink>
                                     </p>
                                 </StackPage>
                                 <StackPage name="page2-2">
                                     <h3>Page 2-2</h3>
                                     <p>
-                                        <Link component={StackLink} pageName="page2-1" payload="test">
+                                        <StackLink pageName="page2-1" payload="test">
                                             go to page 2-1
-                                        </Link>
+                                        </StackLink>
                                     </p>
                                 </StackPage>
                             </StackSwitch>

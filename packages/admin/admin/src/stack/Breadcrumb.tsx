@@ -1,20 +1,22 @@
-import { Component, createContext, ReactNode } from "react";
+import { Component, type ContextType, createContext, type PropsWithChildren, type ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 
 import { StackApiContext } from "./Api";
 
-interface IProps {
+type IProps = PropsWithChildren<{
     url: string;
     title: ReactNode;
     ignoreParentId?: boolean;
-}
+}>;
 
 const BreadcrumbContext = createContext<string>("");
 
 export class StackBreadcrumb extends Component<IProps> {
     public static contextType = StackApiContext;
+    declare context: ContextType<typeof StackApiContext>;
+
     public id: string;
-    private parentId?: string;
+    private parentId: string;
     constructor(props: IProps) {
         super(props);
         this.id = uuid();
@@ -31,16 +33,16 @@ export class StackBreadcrumb extends Component<IProps> {
     }
 
     public componentDidMount() {
-        this.context.addBreadcrumb(this.id, this.parentId, this.props.url, this.props.title);
+        this.context?.addBreadcrumb(this.id, this.parentId, this.props.url, this.props.title);
     }
 
     public componentDidUpdate(prevProps: IProps) {
         if (this.props.url !== prevProps.url || this.props.title !== prevProps.title) {
-            this.context.updateBreadcrumb(this.id, this.parentId, this.props.url, this.props.title);
+            this.context?.updateBreadcrumb(this.id, this.parentId, this.props.url, this.props.title);
         }
     }
 
     public componentWillUnmount() {
-        this.context.removeBreadcrumb(this.id);
+        this.context?.removeBreadcrumb(this.id);
     }
 }

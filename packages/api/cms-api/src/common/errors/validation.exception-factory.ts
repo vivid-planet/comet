@@ -1,4 +1,4 @@
-import { ValidationError } from "@nestjs/common";
+import { type ValidationError } from "@nestjs/common";
 
 import { CometValidationException } from "./validation.exception";
 

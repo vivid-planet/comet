@@ -1,18 +1,18 @@
 import {
     Button,
+    CheckboxField,
     Field,
     FieldContainer,
     FinalForm,
     FinalFormAsyncAutocomplete,
     FinalFormAsyncSelect,
     FinalFormAutocomplete,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRadio,
     FinalFormRangeInput,
     FinalFormSearchTextField,
     FinalFormSelect,
-    FinalFormSwitch,
+    SwitchField,
 } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
 import { useMemo } from "react";
@@ -227,12 +227,8 @@ export const _FinalFormCheckbox = {
                     alert(JSON.stringify(values, null, 4));
                 }}
             >
-                <Field name="checkbox" label="FinalFormCheckbox" type="checkbox" fullWidth>
-                    {(props) => <FormControlLabel label="Confirm" control={<FinalFormCheckbox {...props} />} />}
-                </Field>
-                <Field name="checkboxDisabled" label="FinalFormCheckbox disabled" type="checkbox" fullWidth disabled>
-                    {(props) => <FormControlLabel label="Confirm" control={<FinalFormCheckbox {...props} />} />}
-                </Field>
+                <CheckboxField name="checkbox" fieldLabel="FinalFormCheckbox" label="Confirm" fullWidth />
+                <CheckboxField name="checkboxDisabled" fieldLabel="FinalFormCheckbox disabled" label="Confirm" fullWidth disabled />
                 <Button type="submit">Submit</Button>
             </FinalForm>
         );
@@ -250,12 +246,14 @@ export const _FinalFormSwitch = {
                     alert(JSON.stringify(values, null, 4));
                 }}
             >
-                <Field name="switch" label="FinalFormSwitch" fullWidth>
-                    {(props) => <FormControlLabel label={props.input.value ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />}
-                </Field>
-                <Field name="switchDisabled" label="FinalFormSwitch disabled" fullWidth disabled>
-                    {(props) => <FormControlLabel label={props.input.value ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />}
-                </Field>
+                <SwitchField name="switch" fieldLabel="FinalFormSwitch" label={(checked) => (checked ? "On" : "Off")} fullWidth />
+                <SwitchField
+                    name="switchDisabled"
+                    fieldLabel="FinalFormSwitch disabled"
+                    label={(checked) => (checked ? "On" : "Off")}
+                    fullWidth
+                    disabled
+                />
                 <Button type="submit">Submit</Button>
             </FinalForm>
         );

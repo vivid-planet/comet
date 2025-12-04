@@ -1,18 +1,22 @@
 import { useApolloClient } from "@apollo/client";
-import axios, { AxiosError, CancelTokenSource } from "axios";
-import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
-import { Accept, FileRejection } from "react-dropzone";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { type Accept, type FileRejection } from "react-dropzone";
 
-import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
+import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
-import { GQLLicenseInput } from "../../../graphql.generated";
+import { type GQLLicenseInput } from "../../../graphql.generated";
+import { useDamBasePath, useDamConfig } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { DuplicateAction, FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
+import {
+    type DuplicateAction,
+    type FilenameData,
+    useManualDuplicatedFilenamesHandler,
+} from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { convertMimetypesToDropzoneAccept } from "./fileUpload.utils";
-import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
+import { type NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -26,10 +30,10 @@ import {
 import { ProgressDialog } from "./ProgressDialog";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import {
-    GQLDamFolderByNameAndParentIdQuery,
-    GQLDamFolderByNameAndParentIdQueryVariables,
-    GQLDamFolderForFolderUploadMutation,
-    GQLDamFolderForFolderUploadMutationVariables,
+    type GQLDamFolderByNameAndParentIdQuery,
+    type GQLDamFolderByNameAndParentIdQueryVariables,
+    type GQLDamFolderForFolderUploadMutation,
+    type GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
 export interface FileWithDamUploadMetadata extends File {
@@ -127,7 +131,9 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]):
 };
 
 export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
-    const context = useCmsBlockContext(); // TODO create separate CmsContext?
+    const { apiUrl } = useCometConfig();
+    const damConfig = useDamConfig();
+    const damBasePath = useDamBasePath();
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
     const scope = useDamScope();
@@ -148,9 +154,8 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     const totalSize = Object.values(totalSizes).length > 0 ? Object.values(totalSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
     const uploadedSize = Object.values(uploadedSizes).length > 0 ? Object.values(uploadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
 
-    const maxFileSizeInMegabytes = context.damConfig.maxFileSize;
+    const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
-    const cancelUpload = useRef<CancelTokenSource>();
 
     const addValidationError = (file: FileWithFolderPath, newError: ReactNode) => {
         setValidationErrors((prevErrors) => {
@@ -391,7 +396,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
             const { filesToUpload, duplicateAction } = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
 
-            cancelUpload.current = axios.CancelToken.source();
             for (const file of filesToUpload) {
                 const { folderIdMap: newFolderIdMap, newlyCreatedFolderIds } = await createFoldersIfNecessary(folderIdMap, file, folderId);
                 folderIdMap = newFolderIdMap;
@@ -419,26 +423,28 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     };
 
                     const uploadParams = {
-                        apiClient: context.damConfig.apiClient,
+                        apiUrl,
                         data: uploadConfig,
-                        cancelToken: cancelUpload.current.token,
                         options: { onUploadProgress },
+                        damBasePath,
                     };
 
-                    const response: { data: { id: string } } =
-                        duplicateAction === "replace" ? await replaceByFilenameAndFolder(uploadParams) : await upload(uploadParams);
+                    const uploadResult =
+                        duplicateAction === "replace"
+                            ? await replaceByFilenameAndFolder<{ id: string }>(uploadParams)
+                            : await upload<{ id: string }>(uploadParams);
+
+                    const response = await uploadResult;
 
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
                     errorOccurred = true;
-                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
 
-                    if (typedErr.response?.data.error === "CometImageResolutionException") {
-                        addValidationError(file, <MaxResolutionError maxResolution={context.damConfig.maxSrcResolution} />);
-                    } else if (typedErr.response?.data.error === "CometValidationException") {
-                        const message = typedErr.response.data.message;
+                    if (hasObjectErrorData(err) && err.response?.data.error === "CometImageResolutionException") {
+                        addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
+                    } else if (hasObjectErrorData(err) && err.response?.data.error === "CometValidationException") {
+                        const message = err.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
-
                         if (message.includes("Unsupported mime type")) {
                             addValidationError(file, <UnsupportedTypeError extension={extension} />);
                         } else if (message.includes("Missing file extension")) {
@@ -450,14 +456,13 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response?.data.message.includes("SVG contains forbidden content")) {
+                    } else if (hasStringErrorData(err) && err.response.data.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
-                    } else if (typedErr.response === undefined && typedErr.request) {
+                    } else if (hasRequestData(err)) {
                         addValidationError(file, <NetworkError />);
                     } else {
                         addValidationError(file, <UnknownError />);
                     }
-
                     rejectedFiles.push({ file });
                 }
             }
@@ -503,3 +508,36 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         newlyUploadedItems,
     };
 };
+
+function hasRequestData(err: unknown): err is { request: unknown; response?: undefined } {
+    return (
+        typeof err === "object" &&
+        err !== null &&
+        "request" in err &&
+        (err as { request?: unknown }).request !== undefined &&
+        (!("response" in err) || (err as { response?: unknown }).response === undefined)
+    );
+}
+
+function hasObjectErrorData(err: unknown): err is { response: { data: { error: string; message: string; statusCode: number } } } {
+    if (typeof err === "object" && err !== null && "response" in err) {
+        const response = (err as { response?: unknown }).response;
+        if (typeof response === "object" && response !== null && "data" in response) {
+            const data = (response as { data?: unknown }).data;
+            if (typeof data === "object" && data !== null && "error" in data && typeof (data as { error?: unknown }).error === "string") {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function hasStringErrorData(err: unknown): err is { response: { data: string } } {
+    if (typeof err === "object" && err !== null && "response" in err) {
+        const response = (err as { response?: unknown }).response;
+        if (typeof response === "object" && response !== null && "data" in response && typeof (response as { data?: unknown }).data === "string") {
+            return true;
+        }
+    }
+    return false;
+}

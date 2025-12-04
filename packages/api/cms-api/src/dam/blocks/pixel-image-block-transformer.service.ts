@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { ImageCropArea } from "../images/entities/image-crop-area.entity";
 import { ImagesService } from "../images/images.service";
@@ -34,9 +34,12 @@ type TransformResponse = {
 
 @Injectable()
 export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformResponse> {
-    constructor(private readonly filesService: FilesService, private readonly imagesService: ImagesService) {}
+    constructor(
+        private readonly filesService: FilesService,
+        private readonly imagesService: ImagesService,
+    ) {}
 
-    async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
+    async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls }: BlockContext) {
         if (!block.damFileId) {
             return {};
         }
@@ -47,7 +50,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
             return {};
         }
 
-        const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }) : undefined;
+        const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls }) : undefined;
 
         return {
             damFile: {
@@ -73,7 +76,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
                 fileUrl,
             },
             cropArea: block.cropArea ? { ...block.cropArea } : undefined,
-            urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea: block.cropArea }, { previewDamUrls, relativeDamUrls }),
+            urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea: block.cropArea }, { previewDamUrls }),
         };
     }
 }

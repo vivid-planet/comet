@@ -1,7 +1,7 @@
 import {
     ExcelExportButton,
     FillSpace,
-    IRow,
+    type IRow,
     MainContent,
     Table,
     Toolbar,

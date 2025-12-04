@@ -1,10 +1,11 @@
-import { Block } from "@comet/blocks-api";
-import { RootBlockEntityOptions } from "@comet/blocks-api/lib/blocks/decorators/root-block-entity";
-import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
-import { EntityClass } from "@mikro-orm/core/typings";
+import { EntityClass, EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 import { ObjectTypeMetadata } from "@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata";
+
+import { Block } from "../blocks/block";
+import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks/decorators/root-block";
+import { ROOT_BLOCK_ENTITY_METADATA_KEY, RootBlockEntityOptions } from "../blocks/decorators/root-block-entity";
 
 interface DiscoverRootBlocksResult {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,14 +43,14 @@ export class DiscoverService {
         const metadataStorage = this.orm.em.getMetadata();
 
         entities.forEach((entity) => {
-            const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
+            const rootBlockEntityOptions = Reflect.getMetadata(ROOT_BLOCK_ENTITY_METADATA_KEY, entity);
 
             if (rootBlockEntityOptions) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const keys = Reflect.getMetadata(`keys:rootBlock`, (entity as any).prototype) || [];
+                const keys = Reflect.getMetadata(ROOT_BLOCK_KEYS_METADATA_KEY, (entity as any).prototype) || [];
                 for (const key of keys) {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const block = Reflect.getMetadata(`data:rootBlock`, (entity as any).prototype, key);
+                    const block = Reflect.getMetadata(ROOT_BLOCK_METADATA_KEY, (entity as any).prototype, key);
                     ret.push({
                         repository: this.orm.em.getRepository(entity),
                         metadata: metadataStorage.get(entity.name),

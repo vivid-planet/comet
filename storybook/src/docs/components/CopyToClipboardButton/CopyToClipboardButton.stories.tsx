@@ -21,7 +21,13 @@ export const Basic = {
         return (
             <Grid container spacing={4}>
                 {copyTexts.map((text, index) => (
-                    <Grid key={index} item xs={12} md={6}>
+                    <Grid
+                        key={index}
+                        size={{
+                            xs: 12,
+                            md: 6,
+                        }}
+                    >
                         <Card>
                             <CardContent sx={{ textAlign: "center" }}>
                                 <Typography>Copy to the clipboard:</Typography>

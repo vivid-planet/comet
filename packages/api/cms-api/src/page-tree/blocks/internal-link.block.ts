@@ -1,19 +1,11 @@
-import {
-    AnnotationBlockMeta,
-    BlockData,
-    BlockField,
-    BlockIndexData,
-    BlockInput,
-    BlockMetaField,
-    BlockMetaFieldKind,
-    createBlock,
-    inputToData,
-} from "@comet/blocks-api";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
+import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
+import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageExists } from "../validators/page-exists.validator";
 import { InternalLinkBlockTransformerService } from "./internal-link-block-transformer.service";
+import { InternalLinkBlockWarningsService } from "./internal-link-block-warnings.service";
 
 class InternalLinkBlockData extends BlockData {
     targetPageId?: string;
@@ -39,6 +31,10 @@ class InternalLinkBlockData extends BlockData {
             ],
         };
     }
+
+    warnings() {
+        return InternalLinkBlockWarningsService;
+    }
 }
 
 class InternalLinkBlockInput extends BlockInput {
@@ -54,7 +50,7 @@ class InternalLinkBlockInput extends BlockInput {
     targetPageAnchor?: string;
 
     transformToBlockData(): InternalLinkBlockData {
-        return inputToData(InternalLinkBlockData, this);
+        return blockInputToData(InternalLinkBlockData, this);
     }
 }
 

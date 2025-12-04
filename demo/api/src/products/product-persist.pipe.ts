@@ -1,14 +1,13 @@
-import { BlockDataInterface } from "@comet/blocks-api";
-import { DamImageBlock, ImporterPipe } from "@comet/cms-api";
-import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
-import { LoggerService } from "@nestjs/common";
-import { Transform, TransformCallback } from "stream";
+import { type BlockDataInterface, DamImageBlock, type ImporterPipe } from "@comet/cms-api";
+import { type Connection, type EntityManager, type FilterQuery, type IDatabaseDriver, type Reference } from "@mikro-orm/core";
+import { type LoggerService } from "@nestjs/common";
+import { Transform, type TransformCallback } from "stream";
 import { v4 } from "uuid";
 
 import { Product } from "./entities/product.entity";
-import { ProductCategory } from "./entities/product-category.entity";
+import { type ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
-import { ProductImporterInput } from "./product-importer.input";
+import { type ProductImporterInput } from "./product-importer.input";
 
 type ProductData = Omit<ProductImporterInput, "image"> & {
     id: string;
@@ -28,7 +27,10 @@ export class ProductPersistPipe implements ImporterPipe {
 class ProductPersist extends Transform {
     private persistedEntitiesAmount = 0;
 
-    constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>, private readonly logger: LoggerService) {
+    constructor(
+        private readonly em: EntityManager<IDatabaseDriver<Connection>>,
+        private readonly logger: LoggerService,
+    ) {
         super({ writableObjectMode: true, objectMode: true });
     }
 
@@ -46,7 +48,7 @@ class ProductPersist extends Transform {
             const { colors: colorString, category, colors: colorCollection, ...productData } = data;
 
             const updateQuery: FilterQuery<object> | undefined = { slug: data.slug };
-            const record: Product | null = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
+            const record = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
 
             productData.image = DamImageBlock.blockInputFactory({
                 activeType: "pixelImage",
@@ -91,7 +93,7 @@ class ProductPersist extends Transform {
             let colorsArray: { hex: string; name: string }[] = [];
             try {
                 colorsArray = JSON.parse(colorString);
-            } catch (error) {
+            } catch {
                 await this.logger.warn(`Invalid JSON string for colors: "${colorString}". Defaulting to an empty array.`);
             }
 

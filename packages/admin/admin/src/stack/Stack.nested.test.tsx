@@ -1,8 +1,8 @@
-/* eslint-disable @calm/react-intl/missing-formatted-message */
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { useContext } from "react";
+import { IntlProvider } from "react-intl";
 import { Router } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
@@ -59,11 +59,13 @@ test("StackNested basic test", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
 
     fireEvent.click(rendered.getByText("activate page2"));

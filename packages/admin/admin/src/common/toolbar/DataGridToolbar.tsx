@@ -1,22 +1,30 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentsOverrides, Paper, type PaperProps } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type GridDensity, useGridApiContext } from "@mui/x-data-grid";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { Toolbar, ToolbarProps } from "./Toolbar";
 
-export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
+export type DataGridToolbarClassKey = "root" | GridDensity;
 
-export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
-    ThemedComponentBaseProps<{
-        root: typeof Toolbar;
-    }>;
+export type DataGridToolbarProps = PaperProps;
 
 type OwnerState = {
-    density: "standard" | "comfortable";
+    density: GridDensity;
 };
 
-const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
+export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
+    const { elevation = 1, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+    const apiRef = useGridApiContext();
+    const gridDensity = apiRef.current.state.density;
+
+    const ownerState: OwnerState = {
+        density: gridDensity,
+    };
+
+    return <Root ownerState={ownerState} elevation={elevation} {...restProps} />;
+};
+
+const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
     classesResolver(ownerState) {
@@ -24,43 +32,22 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     },
 })(
     ({ ownerState, theme }) => css`
-        [class*="MuiDataGrid-toolbarQuickFilter"] {
-            width: 120px;
-
-            ${theme.breakpoints.up("sm")} {
-                width: 150px;
-            }
-
-            ${theme.breakpoints.up("md")} {
-                width: "auto";
-            }
-        }
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+        padding: ${theme.spacing(2)};
 
         ${ownerState.density === "comfortable" &&
         css`
-            min-height: 80px;
-
             ${theme.breakpoints.up("sm")} {
-                min-height: 80px;
-            }
-
-            // necessary to override strange MUI default styling
-            @media (min-width: 0px) and (orientation: landscape) {
-                min-height: 80px;
+                padding-top: ${theme.spacing(4)};
+                padding-bottom: ${theme.spacing(4)};
             }
         `}
     `,
 );
-
-export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
-    const { density = "standard", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
-
-    const ownerState: OwnerState = {
-        density,
-    };
-
-    return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} />;
-};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

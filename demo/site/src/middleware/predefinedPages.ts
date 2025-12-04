@@ -1,12 +1,12 @@
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-nextjs";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
 import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { memoryCache } from "./cache";
-import { CustomMiddleware } from "./chain";
-import { GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
+import { type CustomMiddleware } from "./chain";
+import { type GQLPredefinedPagesQuery, type GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
 
 async function getPredefinedPageRedirect(domain: string, pathname: string): Promise<string | undefined> {
     const pages = await fetchPredefinedPages(domain);
@@ -49,7 +49,7 @@ const predefinedPagesQuery = gql`
     }
 `;
 
-const graphQLFetch = createGraphQLFetch();
+const graphQLFetch = createGraphQLFetchMiddleware();
 
 async function fetchPredefinedPages(domain: string) {
     const key = `predefinedPages-${domain}`;
@@ -96,7 +96,7 @@ export function withPredefinedPagesMiddleware(middleware: CustomMiddleware) {
         const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
 
         if (predefinedPageRewrite) {
-            return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+            request.nextUrl.pathname = predefinedPageRewrite; //don't use NextResponse.rewrite, as domainRewrite middleware does this (and uses the modified pathname)
         }
 
         return middleware(request);

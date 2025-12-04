@@ -1,10 +1,14 @@
 "use client";
-import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
-import { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
-import { ImageProps as NextImageProps } from "next/image";
+import { PixelImageBlock, PreviewSkeleton, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
+import { type DamImageBlockData, type PixelImageBlockData, type SvgImageBlockData } from "@src/blocks.generated";
+import { type ImageProps as NextImageProps } from "next/image";
 
 type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & {
     aspectRatio: string | "inherit";
+    /**
+     * Do not set an `alt` attribute. The alt text is set in the DAM.
+     */
+    alt?: never;
 };
 
 export const DamImageBlock = withPreview(

@@ -1,4 +1,4 @@
-import { ValidateIf, ValidationOptions } from "class-validator";
+import { ValidateIf, type ValidationOptions } from "class-validator";
 
 export function IsNullable(options?: ValidationOptions): PropertyDecorator {
     return function IsNullableDecorator(prototype: object, propertyKey: string | symbol): void {

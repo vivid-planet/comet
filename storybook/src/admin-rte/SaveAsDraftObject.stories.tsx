@@ -1,6 +1,6 @@
-import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
+import { type IMakeRteApiProps, makeRteApi, type OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
+import { convertFromRaw, convertToRaw, type RawDraftContentState } from "draft-js";
 import { useState } from "react";
 
 import { PrintAnything } from "./helper";

@@ -49,6 +49,10 @@ export const AllFieldComponents = {
             { value: "chocolate", label: "Chocolate" },
             { value: "strawberry", label: "Strawberry" },
             { value: "vanilla", label: "Vanilla" },
+            {
+                value: "fruit salad",
+                label: "Strawberries, Raspberries, Bananas, Mangos, Pineapples, Apples, Pears, Melons, Grapes, Blueberries, Peaches",
+            },
         ];
 
         const initalValues = useMemo(() => ({ multiSelect: [] }), []);
@@ -96,15 +100,23 @@ export const AllFieldComponents = {
                                 <AsyncAutocompleteField
                                     name="asyncAutocomplete"
                                     label="Async Autocomplete"
-                                    loadOptions={async () => {
-                                        return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
+                                    loadOptions={async (search) => {
+                                        return new Promise<typeof options>((resolve) =>
+                                            setTimeout(() => {
+                                                return resolve(
+                                                    options.filter((value) => {
+                                                        return value.label.toLowerCase().includes(search?.toLowerCase() ?? "");
+                                                    }),
+                                                );
+                                            }, 1000),
+                                        );
                                     }}
                                     getOptionLabel={(option: Option) => option.label}
                                     isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                                     variant={fieldVariant}
                                     fullWidth
                                 />
-                                <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
+                                <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} fieldLabel="Switch" variant={fieldVariant} />
                             </FieldSet>
                             <FieldSet title="Checkboxes">
                                 <FormSection title="Individual Checkboxes">

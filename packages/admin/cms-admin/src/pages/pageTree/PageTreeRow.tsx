@@ -1,22 +1,24 @@
-import { IEditDialogApi, useStackSwitchApi } from "@comet/admin";
+import { type IEditDialogApi, useStackSwitchApi } from "@comet/admin";
 import { Checkbox } from "@mui/material";
-import { CSSProperties, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { type CSSProperties, type Dispatch, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { DebouncedState } from "use-debounce/lib/useDebouncedCallback";
+import { type DebouncedState } from "use-debounce";
 
+import { InsertInBetweenAction } from "../../common/InsertInBetweenAction";
+import { InsertInBetweenActionButton } from "../../common/InsertInBetweenActionButton";
+import { serializeInitialValues } from "../../form/serializeInitialValues";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
-import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
-import { useButtonHoverStates } from "./InsertInBetweenAction/useButtonHoverStates";
 import PageActions from "./PageActions";
 import PageInfo from "./PageInfo";
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeRow.sc";
 import { PageTreeRowDivider } from "./PageTreeRowDivider";
-import PageTreeService, { DropInfo } from "./PageTreeService";
+import { type DropInfo, type PageTreeService } from "./PageTreeService";
 import PageVisibility from "./PageVisibility";
-import { PageTreePage } from "./usePageTree";
-import { usePageTreeContext } from "./usePageTreeContext";
+import { useButtonHoverStates } from "./useButtonHoverStates";
+import { type PageTreePage } from "./usePageTree";
 
 export type DropTarget = "ADD_BEFORE" | "ADD_AFTER" | "ADD_AS_CHILD";
 export type DropTargetBeforeAfter = Extract<DropTarget, "ADD_BEFORE" | "ADD_AFTER">;
@@ -39,7 +41,7 @@ interface PageTreeRowProps {
     selectedPages: PageTreePage[];
 }
 
-export interface PageTreeTableRowElement extends HTMLTableRowElement {
+interface PageTreeTableRowElement extends HTMLTableRowElement {
     previousElementSibling: HTMLTableRowElement | null;
     nextElementSibling: HTMLTableRowElement | null;
 }
@@ -66,7 +68,7 @@ const PageTreeRow = ({
 
     const [hoverState, setHoverState] = useState<DropInfo | undefined>();
     const { activatePage } = useStackSwitchApi();
-    const { documentTypes } = usePageTreeContext();
+    const { documentTypes } = usePageTreeConfig();
     const isEditable = !!(page.visibility !== "Archived" && documentTypes[page.documentType].editComponent);
 
     const { top: topInBetweenButtonHovered, bottom: bottomInBetweenButtonHovered, defaultHandler: inBetweenButtonHandle } = useButtonHoverStates();
@@ -244,20 +246,23 @@ const PageTreeRow = ({
             {hover && (
                 <sc.AddContainer>
                     <InsertInBetweenAction
+                        addOffsetForUnevenBorders
                         top={
-                            <InsertInBetweenAction.Button
-                                editDialogApi={editDialogApi}
-                                position={insertInBetweenTopPosition}
-                                onMouseOverButton={inBetweenButtonHandle.mouseOverTop}
-                                onMouseOutButton={inBetweenButtonHandle.mouseOutTop}
+                            <InsertInBetweenActionButton
+                                onClick={() => {
+                                    editDialogApi.openAddDialog(serializeInitialValues(insertInBetweenTopPosition));
+                                }}
+                                onMouseOver={inBetweenButtonHandle.mouseOverTop}
+                                onMouseOut={inBetweenButtonHandle.mouseOutTop}
                             />
                         }
                         bottom={
-                            <InsertInBetweenAction.Button
-                                editDialogApi={editDialogApi}
-                                position={insertInBetweenBottomPosition}
-                                onMouseOverButton={inBetweenButtonHandle.mouseOverBottom}
-                                onMouseOutButton={inBetweenButtonHandle.mouseOutBottom}
+                            <InsertInBetweenActionButton
+                                onClick={() => {
+                                    editDialogApi.openAddDialog(serializeInitialValues(insertInBetweenBottomPosition));
+                                }}
+                                onMouseOver={inBetweenButtonHandle.mouseOverBottom}
+                                onMouseOut={inBetweenButtonHandle.mouseOutBottom}
                             />
                         }
                     />

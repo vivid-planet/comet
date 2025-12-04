@@ -1,12 +1,12 @@
 import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { Alert as MuiAlert, AlertProps, ComponentsOverrides, Typography } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { Component, ErrorInfo, PropsWithChildren, ReactNode } from "react";
+import { Alert as MuiAlert, type AlertProps, type ComponentsOverrides, Typography } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { Component, type ErrorInfo, type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type ErrorBoundaryClassKey =
     | "alert"
@@ -196,7 +196,7 @@ class CoreErrorBoundary extends Component<ErrorBoundaryProps, IErrorBoundaryStat
                                     {error != null && error.toString()}
                                 </ExceptionSummaryTitle>
                             </ExceptionSummary>
-                            <ExceptionStackTrace {...slotProps?.exceptionStackTrace}>{errorInfo.componentStack}__</ExceptionStackTrace>
+                            <ExceptionStackTrace {...slotProps?.exceptionStackTrace}>{errorInfo.componentStack}</ExceptionStackTrace>
                         </ExceptionDetails>
                     )}
                 </Alert>

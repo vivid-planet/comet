@@ -1,10 +1,13 @@
 import { Clear } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { ButtonBase, type ButtonBaseProps, type ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 
+/**
+ * @deprecated Use `ClearInputAdornment` directly as the InputAdornment
+ */
 export type ClearInputButtonClassKey = "root" | "focusVisible";
 
 const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
@@ -30,10 +33,16 @@ const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
     `,
 );
 
+/**
+ * @deprecated Use `ClearInputAdornment` directly as the InputAdornment
+ */
 export interface ClearInputButtonProps extends ButtonBaseProps {
     icon?: ReactNode;
 }
 
+/**
+ * @deprecated Use `ClearInputAdornment` directly as the InputAdornment
+ */
 export function ClearInputButton(inProps: ClearInputButtonProps) {
     const { icon = <Clear />, ...restProps } = useThemeProps({
         props: inProps,
@@ -45,10 +54,6 @@ export function ClearInputButton(inProps: ClearInputButtonProps) {
         </Root>
     );
 }
-
-/**
- * @deprecated Use `ClearInputAdornment` directly as the InputAdornment instead
- */
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

@@ -1,12 +1,7 @@
-import { Field, FieldProps } from "../Field";
-import { FinalFormAsyncSelect } from "../FinalFormAsyncSelect";
+import { Field, type FieldProps } from "../Field";
+import { FinalFormAsyncSelect, type FinalFormAsyncSelectProps } from "../FinalFormAsyncSelect";
 
-export interface AsyncSelectFieldProps<Option> extends FieldProps<Option, HTMLSelectElement> {
-    loadOptions: () => Promise<Option[]>;
-    getOptionLabel?: (option: Option) => string;
-    getOptionValue?: (option: Option) => string;
-    clearable?: boolean;
-}
+export type AsyncSelectFieldProps<Option> = FieldProps<Option, HTMLSelectElement> & FinalFormAsyncSelectProps<Option>;
 
 export function AsyncSelectField<Option>(props: AsyncSelectFieldProps<Option>) {
     return <Field component={FinalFormAsyncSelect} {...props} />;

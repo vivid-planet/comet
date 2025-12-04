@@ -1,21 +1,21 @@
 import { registerEnumType } from "@nestjs/graphql";
 
 export enum ProductType {
-    Cap = "Cap",
-    Shirt = "Shirt",
-    Tie = "Tie",
-    Pants = "Pants",
-    Jacket = "Jacket",
-    Shoes = "Shoes",
-    Socks = "Socks",
-    Mug = "Mug",
-    Pen = "Pen",
-    Calendar = "Calendar",
-    Notebook = "Notebook",
-    Bag = "Bag",
-    Watch = "Watch",
-    Sunglasses = "Sunglasses",
-    Wallet = "Wallet",
+    cap = "cap",
+    shirt = "shirt",
+    tie = "tie",
+    pants = "pants",
+    jacket = "jacket",
+    shoes = "shoes",
+    socks = "socks",
+    mug = "mug",
+    pen = "pen",
+    calendar = "calendar",
+    notebook = "notebook",
+    bag = "bag",
+    watch = "watch",
+    sunglasses = "sunglasses",
+    wallet = "wallet",
 }
 
 registerEnumType(ProductType, {

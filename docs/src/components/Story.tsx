@@ -1,8 +1,7 @@
-import { createCometTheme } from "@comet/admin-theme";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import CodeBlock from "@theme/CodeBlock";
 import type { Props as PlaygroundProps } from "@theme/Playground";
-import React from "react";
+import { useEffect, useState } from "react";
 import { IntlProvider } from "react-intl";
 import { transform } from "sucrase";
 
@@ -16,10 +15,9 @@ const importStory = async (name: string) => {
 };
 
 export const Story = ({ path, ...props }: StoryProps) => {
-    const theme = createCometTheme();
-    const [code, setCode] = React.useState("");
+    const [code, setCode] = useState("");
 
-    React.useEffect(() => {
+    useEffect(() => {
         importStory(path).then(setCode);
     }, [path]);
 
@@ -27,14 +25,18 @@ export const Story = ({ path, ...props }: StoryProps) => {
         <BrowserOnly>
             {() => {
                 // https://docusaurus.io/docs/docusaurus-core/#browseronly
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const { MuiThemeProvider } = require("@comet/admin");
+
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
+                const { createCometTheme, MuiThemeProvider } = require("@comet/admin");
+
+                const theme = createCometTheme();
 
                 return (
                     <IntlProvider locale="en">
                         <MuiThemeProvider theme={theme}>
                             <CodeBlock
                                 language="tsx"
+                                // @ts-expect-error live prop is missing in the types
                                 live
                                 transformCode={(code) => {
                                     const compiledCode = transform(code, {

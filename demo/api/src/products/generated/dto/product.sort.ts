@@ -3,7 +3,6 @@
 import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
-
 export enum ProductSortField {
     title = "title",
     status = "status",
@@ -20,17 +19,42 @@ export enum ProductSortField {
     updatedAt = "updatedAt",
     manufacturer = "manufacturer",
     priceList = "priceList",
+    id = "id",
+    statistics_views = "statistics_views",
+    statistics_createdAt = "statistics_createdAt",
+    statistics_updatedAt = "statistics_updatedAt",
+    category_title = "category_title",
+    category_slug = "category_slug",
+    category_position = "category_position",
+    category_type = "category_type",
+    category_createdAt = "category_createdAt",
+    category_updatedAt = "category_updatedAt",
+    manufacturer_name = "manufacturer_name",
+    manufacturer_addressAsEmbeddable_street = "manufacturer_addressAsEmbeddable_street",
+    manufacturer_addressAsEmbeddable_streetNumber = "manufacturer_addressAsEmbeddable_streetNumber",
+    manufacturer_addressAsEmbeddable_zip = "manufacturer_addressAsEmbeddable_zip",
+    manufacturer_addressAsEmbeddable_country = "manufacturer_addressAsEmbeddable_country",
+    manufacturer_addressAsEmbeddable_alternativeAddress_street = "manufacturer_addressAsEmbeddable_alternativeAddress_street",
+    manufacturer_addressAsEmbeddable_alternativeAddress_streetNumber = "manufacturer_addressAsEmbeddable_alternativeAddress_streetNumber",
+    manufacturer_addressAsEmbeddable_alternativeAddress_zip = "manufacturer_addressAsEmbeddable_alternativeAddress_zip",
+    manufacturer_addressAsEmbeddable_alternativeAddress_country = "manufacturer_addressAsEmbeddable_alternativeAddress_country",
+    manufacturer_updatedAt = "manufacturer_updatedAt",
+    priceList_id = "priceList_id",
+    priceList_name = "priceList_name",
+    priceList_mimetype = "priceList_mimetype",
+    priceList_contentHash = "priceList_contentHash",
+    priceList_createdAt = "priceList_createdAt",
+    priceList_updatedAt = "priceList_updatedAt",
+    priceList_expiresAt = "priceList_expiresAt"
 }
 registerEnumType(ProductSortField, {
     name: "ProductSortField",
 });
-
 @InputType()
 export class ProductSort {
     @Field(() => ProductSortField)
     @IsEnum(ProductSortField)
     field: ProductSortField;
-
     @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
     @IsEnum(SortDirection)
     direction: SortDirection = SortDirection.ASC;

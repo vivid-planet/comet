@@ -1,19 +1,27 @@
 import { createMock } from "@golevelup/ts-jest";
-import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
+import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
-import { AffectedEntityMeta } from "../decorators/affected-entity.decorator";
-import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
-import { ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
+import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "../decorators/affected-entity.decorator";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
 import { CurrentUser } from "../dto/current-user";
+import { Permission } from "../user-permissions.types";
 import { UserPermissionsGuard } from "./user-permissions.guard";
 
+const permissions = {
+    p1: "p1" as Permission,
+    "p1.write": "p1.write" as Permission,
+    p2: "p2" as Permission,
+    p3: "p3" as Permission,
+};
+
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey()
     id: number;
 }
@@ -35,10 +43,10 @@ describe("UserPermissionsGuard", () => {
         disableCometGuards?: boolean;
     }) => {
         reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
-            if (decorator === "requiredPermission") return annotations.requiredPermission;
-            if (decorator === "affectedEntities") return annotations.affectedEntities;
-            if (decorator === "scopedEntity") return annotations.scopedEntity;
-            if (decorator === "disableCometGuards") return annotations.disableCometGuards;
+            if (decorator === REQUIRED_PERMISSION_METADATA_KEY) return annotations.requiredPermission;
+            if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
+            if (decorator === SCOPED_ENTITY_METADATA_KEY) return annotations.scopedEntity;
+            if (decorator === DISABLE_COMET_GUARDS_METADATA_KEY) return annotations.disableCometGuards;
             return false;
         });
     };
@@ -95,14 +103,14 @@ describe("UserPermissionsGuard", () => {
     it("allows user with exact permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: true },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [] }],
                 }),
             ),
         ).toBe(true);
@@ -111,7 +119,7 @@ describe("UserPermissionsGuard", () => {
     it("allows user with at least one permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: true },
             },
         });
@@ -119,8 +127,8 @@ describe("UserPermissionsGuard", () => {
             await guard.canActivate(
                 mockContext({
                     userPermissions: [
-                        { permission: "p2", contentScopes: [] },
-                        { permission: "p1", contentScopes: [] },
+                        { permission: permissions.p2, contentScopes: [] },
+                        { permission: permissions.p1, contentScopes: [] },
                     ],
                 }),
             ),
@@ -130,14 +138,14 @@ describe("UserPermissionsGuard", () => {
     it("denies user with a wrong permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: true },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p2", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions.p2, contentScopes: [] }],
                 }),
             ),
         ).toBe(false);
@@ -146,14 +154,14 @@ describe("UserPermissionsGuard", () => {
     it("denies user with only a partial permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: true },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1.write", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions["p1.write"], contentScopes: [] }],
                 }),
             ),
         ).toBe(false);
@@ -162,14 +170,14 @@ describe("UserPermissionsGuard", () => {
     it("denies user with empty permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: true },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "", contentScopes: [] }],
+                    userPermissions: [{ permission: "" as Permission, contentScopes: [] }],
                 }),
             ),
         ).toBe(false);
@@ -178,7 +186,7 @@ describe("UserPermissionsGuard", () => {
     it("denies user without permissions", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: true },
             },
         });
@@ -194,30 +202,30 @@ describe("UserPermissionsGuard", () => {
     it("allows user with at least one of the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1", "p2"], // One of the permissions is required
+                requiredPermission: [permissions.p1, permissions.p2], // One of the permissions is required
                 options: { skipScopeCheck: true },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [] }],
                 }),
             ),
         ).toBe(true);
     });
 
-    it("denies user without one the the required permissions", async () => {
+    it("denies user without one of the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1", "p2"], // One of the permissions is required
+                requiredPermission: [permissions.p1, permissions.p2], // One of the permissions is required
                 options: { skipScopeCheck: true },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p3", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions.p3, contentScopes: [] }],
                 }),
             ),
         ).toBe(false);
@@ -226,14 +234,14 @@ describe("UserPermissionsGuard", () => {
     it("allows user with scope", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { scope: { a: "a" } },
                 }),
             ),
@@ -243,14 +251,14 @@ describe("UserPermissionsGuard", () => {
     it("allows user with scope when submitted scope is partial", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a", b: "b" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a", b: "b" }] }],
                     args: { scope: { a: "a" } },
                 }),
             ),
@@ -260,14 +268,14 @@ describe("UserPermissionsGuard", () => {
     it("allows user with scope when submitted scope is empty", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { scope: {} },
                 }),
             ),
@@ -277,14 +285,14 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { scope: { a: "b" } },
                 }),
             ),
@@ -294,14 +302,14 @@ describe("UserPermissionsGuard", () => {
     it("denies user with a partial scope", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
         });
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { scope: { a: "a", b: "b" } },
                 }),
             ),
@@ -311,7 +319,7 @@ describe("UserPermissionsGuard", () => {
     it("allows user by affected entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -323,7 +331,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { id: 1 },
                 }),
             ),
@@ -333,7 +341,7 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope by affected entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -345,7 +353,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "b" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "b" }] }],
                     args: { id: 1 },
                 }),
             ),
@@ -355,7 +363,7 @@ describe("UserPermissionsGuard", () => {
     it("allows user by multiple affected entities", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -367,7 +375,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }, { a: "b" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }, { a: "b" }] }],
                     args: { id: [1, 2] },
                 }),
             ),
@@ -377,7 +385,7 @@ describe("UserPermissionsGuard", () => {
     it("denies user without all requried scopes by multiple affected entities", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -389,7 +397,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { id: [1, 2] },
                 }),
             ),
@@ -399,7 +407,7 @@ describe("UserPermissionsGuard", () => {
     it("allows user by scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -409,7 +417,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { id: 1 },
                 }),
             ),
@@ -419,7 +427,7 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope by scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -429,7 +437,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "b" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "b" }] }],
                     args: { id: 1 },
                 }),
             ),
@@ -439,7 +447,7 @@ describe("UserPermissionsGuard", () => {
     it("allows user by multiple scopes from one scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -449,7 +457,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: { id: 1 },
                 }),
             ),
@@ -459,7 +467,7 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope by multiple scopes from one scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
@@ -469,7 +477,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "c" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "c" }] }],
                     args: { id: 1 },
                 }),
             ),
@@ -481,7 +489,7 @@ describe("UserPermissionsGuard", () => {
         expect(async () =>
             guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [] }],
                 }),
             ),
         ).rejects.toThrowError("RequiredPermission decorator is missing");
@@ -497,7 +505,7 @@ describe("UserPermissionsGuard", () => {
         expect(async () =>
             guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [] }],
                 }),
             ),
         ).rejects.toThrowError("RequiredPermission decorator has empty permissions");
@@ -506,14 +514,14 @@ describe("UserPermissionsGuard", () => {
     it("fails when Content Scope cannot be acquired", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
+                requiredPermission: [permissions.p1],
                 options: { skipScopeCheck: false },
             },
         });
         expect(async () =>
             guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "p1", contentScopes: [{ a: "a" }] }],
+                    userPermissions: [{ permission: permissions.p1, contentScopes: [{ a: "a" }] }],
                     args: {},
                 }),
             ),

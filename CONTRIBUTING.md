@@ -83,7 +83,7 @@ Example for a good changeset:
 
 ````md
 ---
-"@comet/cms-site": minor
+"@comet/site-nextjs": minor
 ---
 
 Add `ErrorHandlerProvider`
@@ -110,7 +110,7 @@ The `ErrorHandler` receives the errors in the application and can report them to
 ```tsx
 "use client";
 
-import { ErrorHandlerProvider } from "@comet/cms-site";
+import { ErrorHandlerProvider } from "@comet/site-nextjs";
 import { PropsWithChildren } from "react";
 
 export function ErrorHandler({ children }: PropsWithChildren) {

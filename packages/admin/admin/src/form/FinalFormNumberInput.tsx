@@ -1,17 +1,31 @@
-import { InputBase, InputBaseProps } from "@mui/material";
-import { ChangeEvent, FocusEvent, useCallback, useEffect, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { InputBase, type InputBaseProps } from "@mui/material";
+import { type ChangeEvent, type FocusEvent, useCallback, useEffect, useState } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 
-export type FinalFormNumberInputProps = InputBaseProps &
-    FieldRenderProps<number> & {
-        clearable?: boolean;
-        decimals?: number;
-    };
+export type FinalFormNumberInputProps = InputBaseProps & {
+    clearable?: boolean;
+    decimals?: number;
+};
 
-export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdornment, decimals = 0, ...props }: FinalFormNumberInputProps) {
+type FinalFormNumberInputInternalProps = FieldRenderProps<number>;
+
+/**
+ * Final Form-compatible NumberInput component.
+ *
+ * @see {@link NumberField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
+export function FinalFormNumberInput({
+    meta,
+    input,
+    innerRef,
+    clearable,
+    endAdornment,
+    decimals = 0,
+    ...props
+}: FinalFormNumberInputProps & FinalFormNumberInputInternalProps) {
     const intl = useIntl();
 
     const [formattedNumberValue, setFormattedNumberValue] = useState("");

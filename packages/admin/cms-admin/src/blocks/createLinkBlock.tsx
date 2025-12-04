@@ -1,51 +1,63 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import {
-    AdminComponentSection,
-    BlockInterface,
-    BlocksFinalForm,
-    createOneOfBlock,
-    CreateOneOfBlockOptions,
-    LinkBlockInterface,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/system";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
-import { LinkBlockData } from "../blocks.generated";
+import { type LinkBlockData } from "../blocks.generated";
+import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
+import { createOneOfBlock, type CreateOneOfBlockOptions } from "./factories/createOneOfBlock";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { InternalLinkBlock } from "./InternalLinkBlock";
+import { type BlockInterface, type LinkBlockInterface } from "./types";
 
 interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, "name" | "supportedBlocks"> {
     name?: string;
     supportedBlocks?: Record<string, BlockInterface & LinkBlockInterface>;
+    tags?: Array<MessageDescriptor | string>;
 }
 
-function createLinkBlock({
-    name = "Link",
-    displayName = <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
-    supportedBlocks = { internal: InternalLinkBlock, external: ExternalLinkBlock },
-    allowEmpty = false,
-    ...oneOfBlockOptions
-}: CreateLinkBlockOptions): BlockInterface & LinkBlockInterface {
-    const OneOfBlock = createOneOfBlock({
-        name,
-        displayName,
-        supportedBlocks,
-        allowEmpty,
-        ...oneOfBlockOptions,
-    });
+function createLinkBlock(
+    {
+        name = "Link",
+        displayName = <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
+        supportedBlocks = { internal: InternalLinkBlock, external: ExternalLinkBlock },
+        allowEmpty = false,
+        tags,
+        ...oneOfBlockOptions
+    }: CreateLinkBlockOptions,
+    override?: (block: BlockInterface & LinkBlockInterface) => BlockInterface & LinkBlockInterface,
+): BlockInterface & LinkBlockInterface {
+    const OneOfBlock = createOneOfBlock(
+        {
+            name,
+            displayName,
+            supportedBlocks,
+            allowEmpty,
+            tags,
+            ...oneOfBlockOptions,
+        },
+        override,
+    );
+
+    const childTags = Object.values(supportedBlocks).reduce<Array<MessageDescriptor | string>>((acc, block) => {
+        if (block.tags) {
+            return [...acc, ...block.tags];
+        }
+        return acc;
+    }, []);
 
     return {
         ...OneOfBlock,
         defaultValues: () => ({ ...OneOfBlock.defaultValues(), title: undefined }),
         AdminComponent: ({ state, updateState }) => {
-            const isInPaper = useAdminComponentPaper();
+            const isInPaper = useBlockAdminComponentPaper();
 
             return (
                 <>
                     <OneOfBlock.AdminComponent state={state} updateState={updateState} />
-                    <Box padding={isInPaper ? 3 : 0} paddingTop={0}>
-                        <AdminComponentSection>
+                    <Box padding={isInPaper ? 3 : 0} paddingTop={isInPaper ? 0 : 3}>
+                        <BlockAdminComponentSection>
                             <BlocksFinalForm<Pick<LinkBlockData, "title">>
                                 onSubmit={({ title }) => {
                                     updateState({ ...state, title });
@@ -59,7 +71,7 @@ function createLinkBlock({
                                     fullWidth
                                 />
                             </BlocksFinalForm>
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
                     </Box>
                 </>
             );
@@ -76,6 +88,7 @@ function createLinkBlock({
 
             return false;
         },
+        tags: tags ? tags : childTags,
     };
 }
 

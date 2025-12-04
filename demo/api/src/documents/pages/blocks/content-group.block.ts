@@ -1,48 +1,48 @@
 import {
+    AnchorBlock,
     BlockData,
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     createBlocksBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { AnchorBlock } from "@comet/cms-api";
+} from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
-import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
+import { StandaloneRichTextBlock } from "@src/common/blocks/standalone-rich-text.block";
 import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
 import { IsEnum } from "class-validator";
 
-const ContentBlock = createBlocksBlock(
+export const ContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
             accordion: AccordionBlock,
             anchor: AnchorBlock,
-            space: SpaceBlock,
-            teaser: TeaserBlock,
-            richtext: RichTextBlock,
-            heading: StandaloneHeadingBlock,
-            columns: ColumnsBlock,
             callToActionList: StandaloneCallToActionListBlock,
+            columns: ColumnsBlock,
+            heading: StandaloneHeadingBlock,
             keyFacts: KeyFactsBlock,
             media: StandaloneMediaBlock,
             mediaGallery: MediaGalleryBlock,
+            richtext: StandaloneRichTextBlock,
+            space: SpaceBlock,
+            teaser: TeaserBlock,
         },
     },
     { name: "ContentGroupContent" },
 );
 
-enum BackgroundColor {
+export enum BackgroundColor {
     default = "default",
     lightGray = "lightGray",
     darkGray = "darkGray",
@@ -65,7 +65,7 @@ class ContentGroupBlockInput extends BlockInput {
     backgroundColor: BackgroundColor;
 
     transformToBlockData(): ContentGroupBlockData {
-        return inputToData(ContentGroupBlockData, this);
+        return blockInputToData(ContentGroupBlockData, this);
     }
 }
 

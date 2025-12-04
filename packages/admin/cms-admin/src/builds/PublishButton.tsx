@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -14,7 +14,7 @@ export const PublishButton = () => {
 
     return (
         <Root>
-            <Button variant="contained" color="primary" onClick={handlePublishClick} disabled={process.env.NODE_ENV === "development"} fullWidth>
+            <Button onClick={handlePublishClick} disabled={process.env.NODE_ENV === "development"} fullWidth>
                 <FormattedMessage id="comet.pages.publisher.build" defaultMessage="Start builds" />
             </Button>
             <StartBuildsDialog

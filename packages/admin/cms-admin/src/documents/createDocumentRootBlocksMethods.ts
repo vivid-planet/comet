@@ -1,6 +1,5 @@
-import { BlockDependency, BlockInterface } from "@comet/blocks-admin";
-
-import { DocumentInterface } from "./types";
+import { type BlockDependency, type BlockInterface } from "../blocks/types";
+import { type DocumentInterface } from "./types";
 
 export function createDocumentRootBlocksMethods<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,

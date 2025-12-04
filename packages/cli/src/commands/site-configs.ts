@@ -3,14 +3,12 @@ import { Command } from "commander";
 import fs from "fs";
 import { resolve } from "path";
 
-import { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "../site-configs.types";
+import { type BaseSiteConfig, type ExtractPrivateSiteConfig, type ExtractPublicSiteConfig } from "../site-configs.types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .description("Inject site-configs into a file")
     .requiredOption("-i, --in-file <file>", "The filename of a template file to inject.")
     .requiredOption("-o, --out-file <file>", "Write the injected template to a file.")
-    .option("-d --dotenv", "dotenv compatibility") // https://github.com/motdotla/dotenv/issues/521#issuecomment-999016064
     .option("--base64", "use base64 encoding")
     .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
@@ -52,13 +50,11 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 console.error(`inject-site-configs: ERROR: type must be ${Object.keys(replacerFunctions).join("|")} (got ${type})`);
                 return substr;
             }
-            const str = replacerFunctions[type](siteConfigs, env);
+            const ret = JSON.stringify(replacerFunctions[type](siteConfigs, env));
             if (options.base64) {
-                return Buffer.from(JSON.stringify(str)).toString("base64");
+                return Buffer.from(ret).toString("base64");
             }
-            const ret = JSON.stringify(str).replace(/\\/g, "\\\\");
-            if (options.dotenv) return ret.replace(/\$/g, "\\$");
-            return ret;
+            return ret.replace(/\\/g, "\\\\");
         });
 
         str = str.replace(/"({{ site:\/\/domains\/.*\/.* }})"/g, "$1"); // remove quotes in array

@@ -33,8 +33,11 @@ export class PageTreeService {
 
     async createNode(input: PageTreeNodeBaseCreateInput, category: PageTreeNodeCategory, scope?: ScopeInterface): Promise<PageTreeNodeInterface> {
         // TODO: check for unique id
-        // TODO: check ParentId
         const readApi = this.createReadApi({ visibility: "all" });
+
+        if (input.id && input.parentId && input.id === input.parentId) {
+            throw new CometValidationException("A page cannot be its own parent");
+        }
 
         const path = await this.pathForParentAndSlug(input.parentId || null, input.slug);
 
@@ -60,9 +63,10 @@ export class PageTreeService {
 
         // insert newly created nodes at the last position
         const pos = siblingNodeWithHighestPosition ? siblingNodeWithHighestPosition.pos + 1 : 1;
-
+        const parent = parentId ? await this.pageTreeRepository.findOneOrFail(parentId) : undefined;
         const newNode = this.pageTreeRepository.create({
             ...restInput,
+            parent,
             parentId,
             pos,
             visibility: input.slug === "home" ? Visibility.Published : Visibility.Unpublished,
@@ -112,7 +116,7 @@ export class PageTreeService {
             throw new CometValidationException("Slug leads to duplicate path");
         }
 
-        const { attachedDocument: attachedDocumentInput, ...restInput } = input;
+        const { attachedDocument: attachedDocumentInput, createAutomaticRedirectsOnSlugChange, ...restInput } = input;
 
         existingNode.assign(restInput);
 
@@ -159,7 +163,7 @@ export class PageTreeService {
             const slug = node.slug;
 
             let slugIncrement = 0;
-            // eslint-disable-next-line no-constant-condition
+
             while (true) {
                 const nextSlugToTest = slugIncrement ? `${slug}-${slugIncrement}` : slug;
 
@@ -185,6 +189,18 @@ export class PageTreeService {
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
+        if (input.parentId) {
+            let currentParentId: string | null = input.parentId;
+            while (currentParentId !== null) {
+                if (currentParentId === id) {
+                    throw new CometValidationException("A page cannot be its own parent or be moved under one of its descendants");
+                }
+                const parentNode = await readApi.getNode(currentParentId);
+                if (!parentNode) break;
+                currentParentId = parentNode.parentId;
+            }
+        }
+
         const requestedPath = await this.pathForParentAndSlug(input.parentId, existingNode.slug);
 
         if (this.config.reservedPaths.includes(requestedPath)) {
@@ -200,7 +216,8 @@ export class PageTreeService {
         const parentId = input.parentId;
 
         if (input.pos !== existingNode.pos || input.parentId !== existingNode.parentId) {
-            await this.entityManager.persistAndFlush(existingNode.assign({ parentId, pos: input.pos, slug: newSlug ?? existingNode.slug }));
+            const parent = parentId ? await this.pageTreeRepository.findOneOrFail(parentId) : null;
+            await this.entityManager.persistAndFlush(existingNode.assign({ parent, parentId, pos: input.pos, slug: newSlug ?? existingNode.slug }));
 
             const qb = this.pageTreeRepository
                 .createQueryBuilder()
@@ -270,7 +287,7 @@ export class PageTreeService {
         // 0 is added to avoid negative infinity for empty array
         const lastPosition = Math.max(0, ...rootNodes.map((node) => node.pos)) + 1;
 
-        await this.entityManager.persistAndFlush(node.assign({ category, parentId: null, pos: lastPosition }));
+        await this.entityManager.persistAndFlush(node.assign({ category, parent: null, parentId: null, pos: lastPosition }));
     }
 
     async delete(pageTreeNode: PageTreeNodeInterface): Promise<boolean> {

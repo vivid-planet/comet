@@ -1,12 +1,13 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, Grid, Typography } from "@mui/material";
-import { AnyObject } from "final-form";
-import { Component, ReactNode } from "react";
-import { Form, FormProps, FormRenderProps } from "react-final-form";
+import { Grid, Typography } from "@mui/material";
+import { type AnyObject } from "final-form";
+import { Component, type ReactNode } from "react";
+import { Form, type FormProps, type FormRenderProps, type RenderableProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { renderFinalFormChildren } from "../renderFinalFormChildren";
-import { IFilterApi } from "./useTableQueryFilter";
+import { type IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
     headline?: ReactNode;
@@ -42,17 +43,17 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
             <form onSubmit={formRenderProps.handleSubmit}>
                 <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                     {(this.props.headline || this.props.resetButton) && (
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                                 {this.props.headline && (
-                                    <Grid item>
+                                    <Grid>
                                         <Typography variant="h4">{this.props.headline}</Typography>
                                     </Grid>
                                 )}
                                 {this.props.resetButton && (
-                                    <Grid item>
+                                    <Grid>
                                         <Button
-                                            variant="text"
+                                            variant="textDark"
                                             startIcon={<Clear />}
                                             onClick={() => {
                                                 formRenderProps.form.reset();
@@ -65,9 +66,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
                             </Grid>
                         </Grid>
                     )}
-                    <Grid item xs={12}>
-                        {renderFinalFormChildren(this.props, formRenderProps)}
-                    </Grid>
+                    <Grid size={12}>{renderFinalFormChildren(this.props as RenderableProps<FormRenderProps<FilterValues>>, formRenderProps)}</Grid>
                 </Grid>
             </form>
         );

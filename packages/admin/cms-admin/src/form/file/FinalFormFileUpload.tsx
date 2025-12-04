@@ -1,11 +1,18 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
+import {
+    commonFileErrorMessages,
+    type ErrorFileSelectItem,
+    FileSelect,
+    type FileSelectProps,
+    type LoadingFileSelectItem,
+    type ValidFileSelectItem,
+} from "@comet/admin";
 import { useMemo, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import { useCometConfig } from "../../config/CometConfigContext";
+import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
     fragment FinalFormFileUpload on FileUpload {
@@ -42,38 +49,54 @@ type FailedApiResponse = {
     error?: string;
 };
 
-type FinalFormFileUploadSingleFileProps = FieldRenderProps<
-    GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment,
-    HTMLInputElement
-> & {
+type FinalFormFileUploadSingleFileProps = {
     multiple?: false;
     maxFiles?: 1;
 };
 
-type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<
-    Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>,
+type FinalFormFileUploadSingleFilesInternalProps = FieldRenderProps<
+    GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment,
     HTMLInputElement
-> & {
+>;
+
+type FinalFormFileUploadMultipleFilesProps = {
     multiple: true;
     maxFiles?: number;
 };
 
+type FinalFormFileUploadMultipleFilesInternalProps = FieldRenderProps<
+    Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>,
+    HTMLInputElement
+>;
+
+type FinalFormFileUploadInternalProps<Multiple extends boolean | undefined> = Multiple extends true
+    ? FinalFormFileUploadMultipleFilesInternalProps
+    : FinalFormFileUploadSingleFilesInternalProps;
+
 export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
     ? FinalFormFileUploadMultipleFilesProps
     : FinalFormFileUploadSingleFileProps) &
-    Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>>;
+    Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>> & {
+        uploadEndpoint?: string;
+        /**
+         * The duration in seconds after which the file will be deleted.
+         * Leaving it undefined will take the default value from the module configuration in the API
+         * If both the default configuration and expiresIn are undefined, the file will never be deleted.
+         */
+        expiresIn?: number;
+    };
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
+    expiresIn,
     maxFiles,
+    uploadEndpoint,
     ...restProps
-}: FinalFormFileUploadProps<Multiple>) => {
+}: FinalFormFileUploadProps<Multiple> & FinalFormFileUploadInternalProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
-    const {
-        damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
-    } = useCmsBlockContext();
+    const { apiUrl } = useCometConfig();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
     const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>[]>(() => {
@@ -140,7 +163,10 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
-                    const response = await fetch(`${apiUrl}/file-uploads/upload`, {
+                    if (expiresIn) {
+                        formData.append("expiresIn", expiresIn.toString());
+                    }
+                    const response = await fetch(uploadEndpoint ?? `${apiUrl}/file-uploads/upload`, {
                         method: "POST",
                         body: formData,
                     });

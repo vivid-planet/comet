@@ -1,11 +1,11 @@
 import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
-import { SvgIconProps, useTheme } from "@mui/material";
+import { type SvgIconProps, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ContentScopeInterface, useContentScope } from "./Provider";
+import { type ContentScope, useContentScope } from "./Provider";
 
 const capitalizeString = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -13,7 +13,7 @@ const capitalizeString = (string: string) => {
 
 interface ContentScopeIndicatorProps {
     global?: boolean;
-    scope?: ContentScopeInterface;
+    scope?: ContentScope;
 }
 
 export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: PropsWithChildren<ContentScopeIndicatorProps>) => {
@@ -21,12 +21,11 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
     const { scope: contentScope, values } = useContentScope();
     const scope = passedScope ?? contentScope;
 
-    const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
+    const findLabelForScopePart = (scopePart: keyof ContentScope) => {
         const label = values.find((value) => {
-            return value[scopePart] && value[scopePart]?.value === scope[scopePart];
-        })?.[scopePart].label;
-
-        return label ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
+            return value.scope[scopePart] === scope[scopePart];
+        })?.label;
+        return (label && label[scopePart]) ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
     };
 
     let content: ReactNode;
@@ -42,7 +41,7 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
         <Wrapper>
             <ScopeIndicator global={global}>
                 <DomainIcon />
-                {children ?? content}
+                <TextContainer>{children ?? content}</TextContainer>
             </ScopeIndicator>
             <Triangle fill={global ? theme.palette.primary.dark : theme.palette.grey.A100} />
         </Wrapper>
@@ -62,6 +61,7 @@ interface ScopeIndicatorProps {
 
 const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<ScopeIndicatorProps>`
     display: flex;
+    max-width: 150px;
     height: 24px;
     padding: 0 5px 0 12px;
     align-items: center;
@@ -75,6 +75,16 @@ const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "gl
     font-weight: ${({ global }) => (global ? 600 : 400)};
     line-height: 16px;
     text-transform: ${({ global }) => (global ? "uppercase" : "none")};
+
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        max-width: none;
+    }
+`;
+
+const TextContainer = styled("div")`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const DomainIcon = styled(Domain)`

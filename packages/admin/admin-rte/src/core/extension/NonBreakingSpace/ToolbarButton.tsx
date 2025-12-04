@@ -1,11 +1,12 @@
 import { RteNonBreakingSpace } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
-import { MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
-import { IControlProps } from "../../types";
+import { type IControlProps } from "../../types";
 
 const NO_BREAK_SPACE_UNICODE_CHAR = 0x00a0;
 

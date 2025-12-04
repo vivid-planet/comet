@@ -1,14 +1,14 @@
 import { DragHandle } from "@comet/admin-icons";
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { ReactNode, useCallback, useRef } from "react";
-import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
+import { type ReactNode, useCallback, useRef } from "react";
+import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dnd";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type IRow, type ITableProps, type ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
 
 export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
@@ -41,7 +41,7 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
             ({
                 id: props.row.id,
                 index: props.index,
-            } as DragItem),
+            }) as DragItem,
         collect: (monitor: any) => ({
             isDragging: monitor.isDragging(),
         }),

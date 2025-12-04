@@ -1,8 +1,8 @@
-import { ClearInputAdornment, InputWithPopperComponents, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, type InputWithPopperComponents, type InputWithPopperProps } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { ComponentsOverrides, InputBaseProps, Typography } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { ChangeEvent, ComponentType, FocusEvent, HTMLAttributes, ReactNode, useEffect, useState } from "react";
+import { type ComponentsOverrides, type InputBaseProps, Typography } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type ChangeEvent, type ComponentType, type FocusEvent, type HTMLAttributes, type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import tinycolor from "tinycolor2";
 import { useDebouncedCallback } from "use-debounce";
@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 import {
     ColorPalette,
     ColorPaletteItem,
-    ColorPickerClassKey,
+    type ColorPickerClassKey,
     ColorPickerWrapper,
     Footer,
     FooterClearButton,
@@ -22,11 +22,11 @@ import {
     PopperRoot,
     Preview,
     PreviewIndicator,
-    PreviewIndicatorColorProps,
-    PreviewIndicatorEmptyOrInvalidProps,
+    type PreviewIndicatorColorProps,
+    type PreviewIndicatorEmptyOrInvalidProps,
     RgbaStringColorPicker,
     Root,
-    SlotProps,
+    type SlotProps,
 } from "./ColorPicker.slots";
 
 export interface ColorPickerColorPreviewProps extends Omit<HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}
@@ -57,7 +57,6 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     fullWidth?: boolean;
     startAdornment?: InputBaseProps["startAdornment"];
     endAdornment?: InputBaseProps["endAdornment"];
-    invalidIndicatorCharacter?: string;
     required?: boolean;
     titleText?: ReactNode;
     clearButtonText?: ReactNode;
@@ -104,7 +103,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
      * Debouncing those events ensures the picker is always responsive and prevents it from sometimes crashing.
      */
     const debouncedOnChange = useDebouncedCallback((color) => {
-        onChange && onChange(color);
+        onChange?.(color);
     }, 250);
 
     const onChangeColor = (color: string) => {
@@ -164,7 +163,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                 setDisplayValue(e.currentTarget.value);
             }}
             onBlur={(e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                onBlur && onBlur(e);
+                onBlur?.(e);
                 onChangeColor(displayValue);
             }}
             components={inputWithPopperComponents}

@@ -1,16 +1,19 @@
-import { transformToSave, transformToSaveIndex } from "@comet/blocks-api";
-import { Connection } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
+import { Connection, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import isEqual from "lodash.isequal";
 
 import { DiscoverService } from "../dependencies/discover.service";
+import { transformToBlockSave } from "./block";
+import { transformToBlockSaveIndex } from "./transformToBlockSaveIndex/transformToBlockSaveIndex";
 
 @Injectable()
 export class BlockMigrateService {
     private connection: Connection;
 
-    constructor(entityManager: EntityManager, private readonly discoverEntitiesService: DiscoverService) {
+    constructor(
+        entityManager: EntityManager,
+        private readonly discoverEntitiesService: DiscoverService,
+    ) {
         this.connection = entityManager.getConnection();
     }
     async migrateBlocks(): Promise<void> {
@@ -52,8 +55,8 @@ export class BlockMigrateService {
                     if (!blockData) {
                         console.error(blockData, row[column]);
                     }
-                    const blockDataJson = transformToSave(blockData);
-                    const blockIndex = transformToSaveIndex(block, blockData);
+                    const blockDataJson = transformToBlockSave(blockData);
+                    const blockIndex = transformToBlockSaveIndex(block, blockData);
                     statistics.blocks += blockIndex.length;
 
                     let needsUpdate = false;

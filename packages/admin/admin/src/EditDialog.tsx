@@ -1,22 +1,30 @@
 import {
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
-    DialogActionsProps,
-    DialogContent,
-    DialogContentProps,
-    DialogProps,
+    type DialogActionsProps,
+    type DialogProps,
     DialogTitle,
-    DialogTitleProps,
+    type DialogTitleProps,
 } from "@mui/material";
-import { ComponentType, forwardRef, PropsWithChildren, ReactNode, RefForwardingComponent, useCallback, useImperativeHandle, useMemo } from "react";
+import {
+    type ComponentType,
+    forwardRef,
+    type ForwardRefRenderFunction,
+    type PropsWithChildren,
+    type ReactNode,
+    useCallback,
+    useImperativeHandle,
+    useMemo,
+} from "react";
 import { useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
-import { CloseDialogOptions, IEditDialogApi } from "./EditDialogApiContext";
+import { type CloseDialogOptions, type IEditDialogApi } from "./EditDialogApiContext";
 import { messages } from "./messages";
 import { SaveBoundary } from "./saveBoundary/SaveBoundary";
 import { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
-import { ISelectionApi } from "./SelectionApi";
+import { type ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {
@@ -27,16 +35,15 @@ interface ITitle {
 interface EditDialogComponentsProps {
     dialog?: Omit<Partial<DialogProps>, "open" | "onClose">;
     dialogActions?: Partial<DialogActionsProps>;
-    dialogContent?: Partial<DialogContentProps>;
     dialogTitle?: Partial<DialogTitleProps>;
 }
 
-interface EditDialogProps {
+type EditDialogProps = PropsWithChildren<{
     title?: ITitle | string;
     disableCloseAfterSave?: boolean;
     onAfterSave?: () => void;
     componentsProps?: EditDialogComponentsProps;
-}
+}>;
 
 export function useEditDialog(): [ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
@@ -131,7 +138,7 @@ const EditDialogInner = ({
         setTimeout(() => {
             // TODO DirtyHandler removal: do we need a onReset functionality here?
             if (!disableCloseAfterSave) {
-                api.closeDialog({ delay: true });
+                api.closeDialog();
             }
         });
         onAfterSave?.();
@@ -145,7 +152,7 @@ const EditDialogInner = ({
                 <DialogTitle {...componentsProps?.dialogTitle}>
                     {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
                 </DialogTitle>
-                <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
+                {children}
                 <DialogActions {...componentsProps?.dialogActions}>
                     <CancelButton onClick={handleCancelClick} />
                     <SaveBoundarySaveButton disabled={false} />
@@ -155,11 +162,11 @@ const EditDialogInner = ({
     );
 };
 
-interface IEditDialogHooklessProps extends EditDialogProps {
+interface IEditDialogHooklessProps extends Omit<EditDialogProps, "children"> {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => ReactNode;
 }
 
-const EditDialogHooklessInner: RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+const EditDialogHooklessInner: ForwardRefRenderFunction<IEditDialogApi, IEditDialogHooklessProps> = (
     { children, title, onAfterSave, componentsProps },
     ref,
 ) => {

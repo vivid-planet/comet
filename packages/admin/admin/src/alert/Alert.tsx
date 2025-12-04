@@ -1,11 +1,11 @@
 import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton, Typography } from "@mui/material";
+import { Alert as MuiAlert, alertClasses, AlertTitle, IconButton, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { forwardRef, ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface AlertProps
     extends ThemedComponentBaseProps<{
@@ -15,10 +15,31 @@ export interface AlertProps
         action: "div";
         closeIcon: typeof IconButton;
     }> {
+    /**
+     * The severity level of the alert
+     * - 'info' (default): For general information or neutral messages
+     * - 'success': For successful operations or positive feedback
+     * - 'warning': For warnings that require attention but aren't critical
+     * - 'error': For critical issues or failed operations
+     */
     severity?: "info" | "warning" | "error" | "success";
     title?: ReactNode;
     children?: ReactNode;
+
+    /**
+     * Callback fired when the close icon is clicked.
+     *
+     * If `onClose` is provided, a close icon button will be displayed in the alert.
+     */
     onClose?: () => void;
+
+    /**
+     * The action to display in the alert.
+     *
+     * This can be used to provide additional actions for the user to take, such as buttons or links.
+     *
+     * If the title is provided, the action will be displayed below the title and text. If no title is provided, the action will be displayed to the right of the text.
+     */
     action?: ReactNode;
 }
 
@@ -29,6 +50,15 @@ type OwnerState = {
     renderAsSingleRow: boolean;
 };
 
+/**
+ * The Alert component is used to display important messages to the user. It provides different severity levels
+ * and custom content, actions and close functionality to communicate various types of information.
+ *
+ * - Use for feedback messages, notifications, or status updates
+ *
+ * @see {@link https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-alert-alert--docs|Storybook}
+ * @see {@link https://mui.com/material-ui/react-alert/|MUI Documentation}
+ */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
     const {
         severity = "info",
@@ -86,11 +116,7 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
         css`
             position: relative;
             align-items: flex-start;
-            padding: ${theme.spacing(4, 6, "8px", 3)};
-
-            & .${buttonClasses.text} {
-                margin-left: -15px;
-            }
+            padding: ${theme.spacing(4, 6, 4, 4)};
 
             & .${alertClasses.message} {
                 flex-direction: column;
@@ -102,7 +128,7 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
         css`
             display: flex;
             align-items: center;
-            padding: ${theme.spacing(2, "12px", 2, 4)};
+            padding: ${theme.spacing(2, 4, 2, 4)};
         `}
     `,
 );
@@ -143,6 +169,11 @@ const CloseIcon = createComponentSlot(IconButton)<AlertClassKey, OwnerState>({
             position: absolute;
             right: 2px;
             top: 2px;
+        `}
+
+        ${ownerState.renderAsSingleRow &&
+        css`
+            padding: 10px;
         `}
     `,
 );

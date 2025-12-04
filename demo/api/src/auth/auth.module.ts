@@ -1,6 +1,15 @@
-import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrategy, createStaticCredentialsBasicStrategy } from "@comet/cms-api";
+import {
+    CometAuthGuard,
+    createAuthGuardProviders,
+    createAuthResolver,
+    createBasicAuthService,
+    createJwtAuthService,
+    createSitePreviewAuthService,
+    createStaticUserAuthService,
+} from "@comet/cms-api";
 import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
+import { JwtModule } from "@nestjs/jwt";
 import { Config } from "@src/config/config";
 
 import { AccessControlService } from "./access-control.service";
@@ -14,24 +23,45 @@ export class AuthModule {
     static forRoot(config: Config): DynamicModule {
         return {
             module: AuthModule,
+            imports: [JwtModule],
             providers: [
-                createStaticCredentialsBasicStrategy({
-                    username: SYSTEM_USER_NAME,
-                    password: config.auth.systemUserPassword,
-                    strategyName: "system-user",
+                createAuthResolver({
+                    postLogoutRedirectUri: config.auth.postLogoutRedirectUri,
+                    endSessionEndpoint: config.auth.idpEndSessionEndpoint,
                 }),
-                createStaticAuthedUserStrategy({
-                    staticAuthedUser: staticUsers[0],
-                }),
-                createAuthResolver(),
-                {
-                    provide: APP_GUARD,
-                    useClass: createCometAuthGuard(["system-user", "static-authed-user"]),
-                },
                 UserService,
                 AccessControlService,
+                {
+                    provide: APP_GUARD,
+                    useClass: CometAuthGuard,
+                },
+                ...createAuthGuardProviders(
+                    ...[
+                        createBasicAuthService({
+                            username: SYSTEM_USER_NAME,
+                            password: config.auth.systemUserPassword,
+                        }),
+                        createSitePreviewAuthService({ sitePreviewSecret: config.sitePreviewSecret }),
+                        createJwtAuthService({
+                            verifyOptions: {
+                                audience: config.auth.idpClientId,
+                            },
+                            jwksOptions: {
+                                jwksUri: config.auth.idpJwksUri,
+                            },
+                            convertJwtToUser: (jwt) => ({
+                                id: jwt.sub,
+                                name: jwt.name,
+                                email: jwt.email,
+                                isAdmin: jwt.isAdmin,
+                            }),
+                        }),
+                        // Additionally, set a static user as fallback that is always authenticated. Used when bypassing OAuth2-Proxy through http://localhost:8001.
+                        createStaticUserAuthService({ staticUser: staticUsers[0] }),
+                    ],
+                ),
             ],
-            exports: [UserService, AccessControlService],
+            exports: [AccessControlService, UserService],
         };
     }
 }

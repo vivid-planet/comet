@@ -12,9 +12,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 <summary>Changes handled by @comet/upgrade</summary>
 
--   Disabling GraphQL field suggestions
--   Importing the types of `@comet/admin-theme` in `vendors.d.ts`
--   Replacing the Roboto font with Roboto Flex
+- Disabling GraphQL field suggestions
+- Importing the types of `@comet/admin-theme` in `vendors.d.ts`
+- Replacing the Roboto font with Roboto Flex
 
 </details>
 
@@ -26,9 +26,9 @@ The following dependencies used to be peer dependencies of Comet.
 They are no longer required.
 You can remove them **if you don't use them in your project**:
 
--   `@aws-sdk/client-s3`
--   `@azure/storage-blob`
--   `pg-error-constants`
+- `@aws-sdk/client-s3`
+- `@azure/storage-blob`
+- `pg-error-constants`
 
 ### Upgrade `@mikro-orm/core`, `@mikro-orm/migrations`, and `@mikro-orm/postgresql`
 
@@ -236,7 +236,7 @@ DamModule.register({
 })
 ```
 
-#### How to migrate (only required if CDN is used):
+#### How to migrate (only required if CDN is used with `DAM_CDN_ORIGIN_HEADER`):
 
 Remove the following env vars from the API
 
@@ -288,37 +288,18 @@ If you want to enable the origin check:
     + }
     ```
 
-3. Adjust `site/server.js`
-
-```diff
-// site/server.js
-
-- const cdnEnabled = process.env.CDN_ENABLED === "true";
-- const disableCdnOriginHeaderCheck = process.env.DISABLE_CDN_ORIGIN_HEADER_CHECK === "true";
-- const cdnOriginHeader = process.env.CDN_ORIGIN_HEADER;
-+ const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
-
-// ...
-
-- if (cdnEnabled && !disableCdnOriginHeaderCheck) {
--    const incomingCdnOriginHeader = req.headers["x-cdn-origin-check"];
--    if (cdnOriginHeader !== incomingCdnOriginHeader) {
-+ if (cdnOriginCheckSecret) {
-+    if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
-```
-
-4. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+3. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
 
 ### API Generator: Remove support for `visible` boolean, use `status` enum instead
 
 Replace the `visible` boolean field with a `status` enum field.
 Recommended enum values are (depending on the use case):
 
--   Published/Unpublished
--   Published/Unpublished/Archived
--   Published/Unpublished/Deleted
--   Active/Deleted
--   Active/Archived
+- Published/Unpublished
+- Published/Unpublished/Archived
+- Published/Unpublished/Deleted
+- Active/Deleted
+- Active/Archived
 
 The `update{Entity}Visibility` mutation is also removed.
 Use the generic `update{Entity}` mutation instead.
@@ -355,7 +336,7 @@ The public uploads module was unintentionally added to the Starter. If you don't
 
 This requires the following changes:
 
--   In `comet-config.json` rename `publicUploads` to `fileUploads`.
+- In `comet-config.json` rename `publicUploads` to `fileUploads`.
 
     ```diff
     {
@@ -366,7 +347,7 @@ This requires the following changes:
     }
     ```
 
--   In `app.module.ts` change the import from `PublicUploadModule` to `FileUploadsModule`.
+- In `app.module.ts` change the import from `PublicUploadModule` to `FileUploadsModule`.
 
     ```diff
     - PublicUploadModule.register({
@@ -378,9 +359,9 @@ This requires the following changes:
     })
     ```
 
--   Change all usages of the `PublicUpload` entity to `FileUpload`.
--   Change all usages of the `PublicUploadsService` to `FileUploadsService`.
--   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`.
+- Change all usages of the `PublicUpload` entity to `FileUpload`.
+- Change all usages of the `PublicUploadsService` to `FileUploadsService`.
+- In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`.
 
 ### Make file uploads upload endpoint public
 
@@ -507,9 +488,9 @@ You must remove `@mui/styles` from your project too:
 
 This has multiple implications:
 
--   Comet Admin components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
--   Individual elements (slots) of a component can now be styled using the `slotProps` and `sx` props
--   The `$` syntax in the theme's `styleOverrides` is no longer supported, see: [MUI Docs](https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion):
+- Comet Admin components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
+- Individual elements (slots) of a component can now be styled using the `slotProps` and `sx` props
+- The `$` syntax in the theme's `styleOverrides` is no longer supported, see: [MUI Docs](https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion):
 
 ```diff
  const theme = createCometTheme({
@@ -536,7 +517,7 @@ This has multiple implications:
  });
 ```
 
--   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+- Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
 
 ```diff
 -import { withStyles } from "@mui/styles";
@@ -568,7 +549,7 @@ This has multiple implications:
 +/>
 ```
 
--   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+- The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
 
 ```diff
 -declare module "@mui/styles/defaultTheme" {
@@ -577,36 +558,36 @@ This has multiple implications:
 -}
 ```
 
--   Some props and class keys of certain components were removed or renamed
+- Some props and class keys of certain components were removed or renamed
 
 <details>
 
 <summary>Expand for details</summary>
 
--   `Alert`: Remove the `message` class key (use `.MuiAlert-message` instead)
--   `AppHeaderButton`: Remove class keys `disabled` and `focusVisible` (use the `:disabled` or `:focus` selectors instead)
--   `AppHeaderButton`: Rename the `inner` class key to `content`
--   `AppHeaderDropdown`: Remove the `popoverPaper` class key
--   `AppHeaderDropdown`: Replace `popoverProps` with `slotProps.popover`
--   `AppHeaderDropdown`: Rename the `popoverRoot` class key to `popover`
--   `ClearInputButton`: Remove the `disabled` class key (use the `:disabled` selector instead)
--   `CopyToClipboardButton`: Remove `components` prop. Use `copyIcon` and `successIcon` instead
--   `CopyToClipboardButton`: Replace `componentProps` with `slotProps`
--   `FieldSet`: Replace `componentsProps` with `slotProps`
--   `FinalFormSelect`: Remove the `endAdornment` prop
--   `InputWithPopper`: Replace `componentsProps` with `slotProps`
--   `Menu`: Replace `temporaryDrawerProps`, `permanentDrawerProps`, `temporaryDrawerPaperProps` and `permanentDrawerPaperProps` props (use `slotProps` instead)
--   `Menu`: Rename `permanent` class key to `permanentDrawer` and `temporary` class key to `temporaryDrawer`
--   `MenuCollapsibleItem`: Remove the `listItem` class key
--   `MenuCollapsibleItem`: Replace `openedIcon` and `closedIcon` props with `iconMapping`
--   `MenuItem`: No longer supports props of `ListItem`. Instead supports the props of `ListItemButton`
+- `Alert`: Remove the `message` class key (use `.MuiAlert-message` instead)
+- `AppHeaderButton`: Remove class keys `disabled` and `focusVisible` (use the `:disabled` or `:focus` selectors instead)
+- `AppHeaderButton`: Rename the `inner` class key to `content`
+- `AppHeaderDropdown`: Remove the `popoverPaper` class key
+- `AppHeaderDropdown`: Replace `popoverProps` with `slotProps.popover`
+- `AppHeaderDropdown`: Rename the `popoverRoot` class key to `popover`
+- `ClearInputButton`: Remove the `disabled` class key (use the `:disabled` selector instead)
+- `CopyToClipboardButton`: Remove `components` prop. Use `copyIcon` and `successIcon` instead
+- `CopyToClipboardButton`: Replace `componentProps` with `slotProps`
+- `FieldSet`: Replace `componentsProps` with `slotProps`
+- `FinalFormSelect`: Remove the `endAdornment` prop
+- `InputWithPopper`: Replace `componentsProps` with `slotProps`
+- `Menu`: Replace `temporaryDrawerProps`, `permanentDrawerProps`, `temporaryDrawerPaperProps` and `permanentDrawerPaperProps` props (use `slotProps` instead)
+- `Menu`: Rename `permanent` class key to `permanentDrawer` and `temporary` class key to `temporaryDrawer`
+- `MenuCollapsibleItem`: Remove the `listItem` class key
+- `MenuCollapsibleItem`: Replace `openedIcon` and `closedIcon` props with `iconMapping`
+- `MenuItem`: No longer supports props of `ListItem`. Instead supports the props of `ListItemButton`
 
 </details>
 
 ### Rearrange components in `App.tsx`
 
--   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
--   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
+- `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
+- `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
 
 The resulting order should look something like this:
 
@@ -632,10 +613,9 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
 
 ### Change the structure of `MasterMenuData`
 
--   You must add an `icon` to all top level menu items
--   You must add a `type` to all items. There are four types available:
-
-    -   `route`
+- You must add an `icon` to all top level menu items
+- You must add a `type` to all items. There are four types available:
+    - `route`
 
         ```diff
         {
@@ -649,7 +629,7 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
         },
         ```
 
-    -   `externalLink`
+    - `externalLink`
 
         ```diff
         {
@@ -660,7 +640,7 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
         },
         ```
 
-    -   `collapsible`
+    - `collapsible`
 
         ```diff
         {
@@ -674,7 +654,7 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
         },
         ```
 
-    -   `group` (new)
+    - `group` (new)
 
         ```diff
         {
@@ -743,9 +723,9 @@ The content scope controls were changed to display all available combinations in
 
 The Toolbar was reworked. Now there are three Toolbar components:
 
--   `Toolbar`
--   `StackToolbar`
--   `DataGridToolbar`
+- `Toolbar`
+- `StackToolbar`
+- `DataGridToolbar`
 
 Following steps are necessary to correctly use the new Toolbar:
 
@@ -817,7 +797,6 @@ Following steps are necessary to correctly use the new Toolbar:
 4. Page: Correctly configure the `ContentScopeIndicator`
 
     There are three cases:
-
     1. The entity uses the normal `ContentScope`
 
         Do nothing. The `ContentScopeIndicator` uses the scope provided by `useContentScope()` by default.
@@ -971,8 +950,8 @@ Check if the styling still looks as intended in your application.
 
 Colors in all palettes were changed. The most notable changes are
 
--   The grey palette (neutrals) was completely reworked. Almost all color values changed
--   The secondary palette is now grey instead of green
+- The grey palette (neutrals) was completely reworked. Almost all color values changed
+- The secondary palette is now grey instead of green
 
 Check if the styling still looks as intended in your application.
 
@@ -984,8 +963,8 @@ Check if the styling still looks as intended in your application.
 
 <summary>Expand for details</summary>
 
--   `ColorPicker`: Replace `componentsProps` with `slotProps`
--   `ColorPicker`: Remove the `clearable` prop. The clear button will be shown automatically for optional fields
+- `ColorPicker`: Replace `componentsProps` with `slotProps`
+- `ColorPicker`: Remove the `clearable` prop. The clear button will be shown automatically for optional fields
 
 </details>
 
@@ -1022,37 +1001,32 @@ The code that handles values from these components needs to be adjusted.
 
 <summary>Expand for details</summary>
 
--   `DatePicker`:
+- `DatePicker`:
+    - Replace the `componentsProps` prop with `slotProps`
+    - Remove the `DatePickerComponentsProps` type
+    - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
-    -   Replace the `componentsProps` prop with `slotProps`
-    -   Remove the `DatePickerComponentsProps` type
-    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
+- `DateRangePicker`:
+    - Replace the `componentsProps` prop with `slotProps`
+    - Remove the `DateRangePickerComponentsProps` type
+    - Rename the `calendar` class-key to `dateRange`
+    - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
--   `DateRangePicker`:
+- `DateTimePicker`:
+    - Replace the `componentsProps` prop with `slotProps`
+    - Remove the `DateTimePickerComponentsProps` type
+    - Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
+    - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
-    -   Replace the `componentsProps` prop with `slotProps`
-    -   Remove the `DateRangePickerComponentsProps` type
-    -   Rename the `calendar` class-key to `dateRange`
-    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
+- `TimePicker`:
+    - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
--   `DateTimePicker`:
-
-    -   Replace the `componentsProps` prop with `slotProps`
-    -   Remove the `DateTimePickerComponentsProps` type
-    -   Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
-    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
-
--   `TimePicker`:
-
-    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
-
--   `TimeRangePicker`:
-
-    -   Replace the `componentsProps` prop with `slotProps`
-    -   Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
-    -   Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
-    -   Replace the `timePicker` class-key with two separate class-keys: `startTimePicker` and `endTimePicker`
-    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
+- `TimeRangePicker`:
+    - Replace the `componentsProps` prop with `slotProps`
+    - Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
+    - Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
+    - Replace the `timePicker` class-key with two separate class-keys: `startTimePicker` and `endTimePicker`
+    - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 </details>
 
@@ -1062,9 +1036,9 @@ The code that handles values from these components needs to be adjusted.
 
 You must upgrade
 
--   Next.js to v14 (Migration Guides: [12 -> 13](https://nextjs.org/docs/pages/building-your-application/upgrading/version-13), [13 -> 14](https://nextjs.org/docs/pages/building-your-application/upgrading/version-14))
--   React to v18 (Migration Guide: [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide))
--   Styled Components to v6 (Migration Guide: [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6))
+- Next.js to v14 (Migration Guides: [12 -> 13](https://nextjs.org/docs/pages/building-your-application/upgrading/version-13), [13 -> 14](https://nextjs.org/docs/pages/building-your-application/upgrading/version-14))
+- React to v18 (Migration Guide: [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide))
+- Styled Components to v6 (Migration Guide: [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6))
 
 Make sure to upgrade to Next 14.2.0 or later.
 Enable `optimizePackageImports` for `@comet/cms-site` in `next.config.js`:
@@ -1078,6 +1052,25 @@ const nextConfig = {
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
+```
+
+### Adjust CDN config in `site/server.js`
+
+```diff
+// site/server.js
+
+- const cdnEnabled = process.env.CDN_ENABLED === "true";
+- const disableCdnOriginHeaderCheck = process.env.DISABLE_CDN_ORIGIN_HEADER_CHECK === "true";
+- const cdnOriginHeader = process.env.CDN_ORIGIN_HEADER;
++ const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
+
+// ...
+
+- if (cdnEnabled && !disableCdnOriginHeaderCheck) {
+-    const incomingCdnOriginHeader = req.headers["x-cdn-origin-check"];
+-    if (cdnOriginHeader !== incomingCdnOriginHeader) {
++ if (cdnOriginCheckSecret) {
++    if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
 ```
 
 ### Add a custom `InternalLinkBlock`
@@ -1154,7 +1147,7 @@ Example:
 
 Remove the `layout` prop from the block as it can lead to errors with the default implementation (`layout="responsive"` is not compatible with the new `fill` prop).
 
--   `layout={"responsive" | "inherit"}` can safely be removed
+- `layout={"responsive" | "inherit"}` can safely be removed
 
     ```diff
     <PixelImageBlock
@@ -1165,7 +1158,7 @@ Remove the `layout` prop from the block as it can lead to errors with the defaul
     />
     ```
 
--   `layout={"fill"}` can be replaced with `fill={true}`
+- `layout={"fill"}` can be replaced with `fill={true}`
 
     ```diff
     <PixelImageBlock
@@ -1289,8 +1282,8 @@ export default SitePreviewApiHandler;
 `YouTubeVideoBlock` and `DamVideoBlock` now support a preview image.
 If you are not using the `YouTubeVideoBlock` and `DamVideoBlock` provided by `@comet/cms-site`, you should
 
--   either switch to the `@comet/cms-site` implementation
--   or implement the preview image in your project
+- either switch to the `@comet/cms-site` implementation
+- or implement the preview image in your project
 
 Otherwise, the admin interface will confuse users.
 

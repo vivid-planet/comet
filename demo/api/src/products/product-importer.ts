@@ -1,7 +1,7 @@
-import { ImporterCsvParseAndTransformPipes, ImporterDataStream, ImporterEndPipe, ImporterInputClass } from "@comet/cms-api";
-import { EntityManager } from "@mikro-orm/core";
+import { ImporterCsvParseAndTransformPipes, type ImporterDataStream, ImporterEndPipe, type ImporterInputClass } from "@comet/cms-api";
+import { type EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
-import { pipeline, Readable, Transform } from "stream";
+import { pipeline, type Readable, Transform } from "stream";
 
 import { ProductImporterInput } from "./product-importer.input";
 import { ProductPersistPipe } from "./product-persist.pipe";

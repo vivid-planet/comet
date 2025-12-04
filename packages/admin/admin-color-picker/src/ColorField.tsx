@@ -1,8 +1,8 @@
-import { Field, FieldProps } from "@comet/admin";
+import { Field, type FieldProps } from "@comet/admin";
 
-import { FinalFormColorPicker } from "./FinalFormColorPicker";
+import { FinalFormColorPicker, type FinalFormColorPickerProps } from "./FinalFormColorPicker";
 
-export type ColorFieldProps = FieldProps<string, HTMLInputElement>;
+export type ColorFieldProps = FieldProps<string, HTMLInputElement> & FinalFormColorPickerProps;
 
 export const ColorField = ({ ...restProps }: ColorFieldProps) => {
     return <Field component={FinalFormColorPicker} {...restProps} />;

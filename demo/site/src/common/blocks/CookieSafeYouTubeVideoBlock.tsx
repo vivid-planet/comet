@@ -1,18 +1,19 @@
 "use client";
-import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
-import { YouTubeVideoBlockData } from "@src/blocks.generated";
+import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/site-nextjs";
 import { cookieIds } from "@src/util/cookieIds";
-import styled from "styled-components";
+import { type ComponentProps } from "react";
 
 import { FallbackCookiePlaceholder, LoadingCookiePlaceholder } from "../helpers/CookiePlaceholders";
+import styles from "./CookieSafeYouTubeVideoBlock.module.scss";
 
+// TODO: use aspect ratio from props
 const aspectRatio = "16x9";
 
-export const CookieSafeYouTubeVideoBlock = (props: PropsWithData<YouTubeVideoBlockData>) => {
+export const CookieSafeYouTubeVideoBlock = (props: ComponentProps<typeof YouTubeVideoBlock>) => {
     const { consentedCookies } = useCookieApi();
 
     return (
-        <Root $aspectRatio={aspectRatio.replace("x", "/")}>
+        <div className={styles.root} style={{ aspectRatio: aspectRatio.replace("x", "/") }}>
             <CookieSafe
                 consented={consentedCookies.includes(cookieIds.thirdParty)}
                 fallback={<FallbackCookiePlaceholder />}
@@ -20,11 +21,6 @@ export const CookieSafeYouTubeVideoBlock = (props: PropsWithData<YouTubeVideoBlo
             >
                 <YouTubeVideoBlock aspectRatio={aspectRatio} {...props} />
             </CookieSafe>
-        </Root>
+        </div>
     );
 };
-
-const Root = styled.div<{ $aspectRatio: React.CSSProperties["aspectRatio"] }>`
-    position: relative;
-    aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
-`;

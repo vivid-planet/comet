@@ -1,13 +1,10 @@
-import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
-import { Injectable, Logger, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
-import { ModuleRef } from "@nestjs/core";
+import { AnyEntity, Connection, EntityManager, EntityRepository, Knex, QueryOrder } from "@mikro-orm/postgresql";
+import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
-import { EntityInfoGetter, EntityInfoServiceInterface } from "./decorators/entity-info.decorator";
+import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { DiscoverService } from "./discover.service";
 import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
@@ -29,13 +26,18 @@ export class DependenciesService {
     constructor(
         @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
+        private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
-        private readonly moduleRef: ModuleRef,
     ) {
         this.connection = entityManager.getConnection();
     }
 
     async createViews(): Promise<void> {
+        await this.createDependenciesView();
+        await this.createBlockIndexView();
+    }
+
+    private async createDependenciesView(): Promise<void> {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
 
@@ -93,20 +95,51 @@ export class DependenciesService {
         console.timeEnd("creating block dependency materialized view index");
     }
 
+    private async createBlockIndexView(): Promise<void> {
+        const indexSelects: string[] = [];
+
+        for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
+            const { metadata, column, graphqlObjectType } = rootBlockEntity;
+            const primary = metadata.primaryKeys[0];
+
+            const select = `SELECT
+                            "${metadata.tableName}"."${primary}"  "rootId",
+                            '${metadata.name}'                    "rootEntityName",
+                            '${graphqlObjectType}'                "rootGraphqlObjectType",
+                            '${metadata.tableName}'               "rootTableName",
+                            '${column}'                           "rootColumnName",
+                            '${primary}'                          "rootPrimaryKey",
+                            indexObj->>'blockname'                "blockname",
+                            indexObj->>'jsonPath'                 "jsonPath",
+                            (indexObj->>'visible')::boolean       "visible"
+                        FROM "${metadata.tableName}",
+                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj`;
+
+            indexSelects.push(select);
+        }
+
+        const viewSql = indexSelects.join("\n UNION ALL \n");
+
+        console.time("creating block index view");
+        await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
+        await this.connection.execute(`CREATE VIEW block_index AS ${viewSql}`);
+        console.timeEnd("creating block index view");
+    }
+
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
-            const uuid = v4();
+            const id = uuid();
             // Before forking the entity manager, race conditions occurred frequently
             // when executing the refresh asynchronous
             const forkedEntityManager = this.entityManager.fork();
-            console.time(`refresh materialized block dependency ${uuid}`);
+            console.time(`refresh materialized block dependency ${id}`);
             const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
             await forkedEntityManager.persistAndFlush(blockIndexRefresh);
 
             await forkedEntityManager.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
-            await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: subMinutes(new Date(), 5) }));
-            console.timeEnd(`refresh materialized block dependency ${uuid}`);
+            await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
+            console.timeEnd(`refresh materialized block dependency ${id}`);
         };
 
         const abortActiveRefreshes = async (activeRefreshes: PGStatActivity[]) => {
@@ -203,7 +236,7 @@ export class DependenciesService {
 
             let dependency: Dependency = result;
             if (instance) {
-                const entityInfo = await this.getEntityInfo(instance);
+                const entityInfo = await this.entityInfoService.getEntityInfo(instance);
                 dependency = { ...dependency, ...entityInfo };
             }
             ret.push(dependency);
@@ -245,7 +278,7 @@ export class DependenciesService {
 
             let dependency: Dependency = result;
             if (instance) {
-                const entityInfo = await this.getEntityInfo(instance);
+                const entityInfo = await this.entityInfoService.getEntityInfo(instance);
                 dependency = { ...dependency, ...entityInfo };
             }
             ret.push(dependency);
@@ -255,31 +288,6 @@ export class DependenciesService {
         const totalCount = countResult[0]?.count ?? 0;
 
         return new PaginatedDependencies(ret, Number(totalCount));
-    }
-
-    private async getEntityInfo(instance: object) {
-        const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(`data:entityInfo`, instance.constructor);
-
-        if (entityInfoGetter === undefined) {
-            this.logger.warn(
-                `Warning: ${instance.constructor.name} doesn't provide any entity info. You should add a @EntityInfo() decorator to the class. Otherwise it won't be displayed correctly as a dependency.`,
-            );
-            return {};
-        }
-
-        if (this.isService(entityInfoGetter)) {
-            const service = this.moduleRef.get(entityInfoGetter, { strict: false });
-            const { name, secondaryInformation } = await service.getEntityInfo(instance);
-            return { name, secondaryInformation };
-        } else {
-            const { name, secondaryInformation } = await entityInfoGetter(instance);
-            return { name, secondaryInformation };
-        }
-    }
-
-    private isService(entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> {
-        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
     }
 
     private getQueryBuilderWithFilters(

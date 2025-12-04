@@ -1,10 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
-import { GraphQLFieldResolver } from "graphql";
+import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
-import { ResponseResolver, rest } from "msw";
-import { RestContext } from "msw/lib/types/handlers/RestHandler";
+import { http, HttpResponse } from "msw";
+
+import { currentUserHandler } from "./currentUserHandler";
+import { fileUploadsHandler } from "./handler/fileUploads";
+import { folderHandler, subfolderHandler } from "./handler/folders";
 
 type StringFilter = {
     contains: string;
@@ -18,10 +21,11 @@ type DateFilter = {
 type LaunchesPastFilter = {
     launch_date_local: DateFilter;
     mission_name: StringFilter;
-    or: LaunchesPastFilter[];
+    or?: LaunchesPastFilter[];
+    and?: LaunchesPastFilter[];
 };
 
-export type Launch = {
+type Launch = {
     id: string;
     mission_name: string;
     launch_date_local: Date;
@@ -46,9 +50,9 @@ const allLaunches: Launch[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allLaunches.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         mission_name: faker.word.adjective(),
-        launch_date_local: faker.datatype.datetime(),
+        launch_date_local: faker.date.past(),
     });
 }
 
@@ -59,6 +63,7 @@ schema {
 
 scalar Date
 scalar DateTime
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Launch {
     id: ID!
@@ -96,6 +101,7 @@ input LaunchesPastFilter {
     launch_date_local: DateFilter
     mission_name: StringFilter
     or: [LaunchesPastFilter!]
+    and: [LaunchesPastFilter!]
 }
 
 type Manufacturer {
@@ -110,11 +116,66 @@ type Product {
     manufacturer: Manufacturer!
 }
 
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: UserPermissionsUser
+  permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [ContentScopeWithLabel!]!
+}
+
+type CurrentUserPermission {
+  permission: Permission!
+  contentScopes: [JSONObject!]!
+}
+
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  news
+  products
+  manufacturers
+}
+
+type UserPermissionsUser {
+  id: String!
+  name: String!
+  email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
+  impersonationAllowed: Boolean!
+}
+
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
+
+type Folder {
+  id: ID!
+  name: String!
+}
+
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
-    manufacturers: [Manufacturer!]!
+    manufacturers(search: String): [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
+    currentUser: CurrentUser!
+    folder(id: ID): Folder
+    subfolder(id: ID): [Folder!]!
 }
 `;
 
@@ -161,8 +222,25 @@ const launchesPastResult: GraphQLFieldResolver<
                 }
             }
 
-            if (filter.or.length > 0) {
+            if (filter.or != null && filter.or.length > 0) {
                 return filter.or.some((f) => {
+                    if (f.mission_name) {
+                        if (f.mission_name.equal) {
+                            return launch.mission_name === f.mission_name.equal;
+                        }
+                        if (f.mission_name.contains) {
+                            return launch.mission_name.includes(f.mission_name.contains);
+                        }
+                    }
+                    if (f.launch_date_local) {
+                        if (f.launch_date_local.equal) {
+                            return launch.launch_date_local === f.launch_date_local.equal;
+                        }
+                    }
+                });
+            }
+            if (filter.and != null && filter.and.length > 0) {
+                return filter.and.every((f) => {
                     if (f.mission_name) {
                         if (f.mission_name.equal) {
                             return launch.mission_name === f.mission_name.equal;
@@ -207,9 +285,9 @@ const launchesPastPagePaging: GraphQLFieldResolver<unknown, unknown, { page?: nu
     };
 };
 
-const launchesPastRest: ResponseResolver = (req, res, ctx: RestContext) => {
-    return res(ctx.status(200), ctx.json(allLaunches));
-};
+const launchesPastRest = http.get("/launches", (info) => {
+    return HttpResponse.json(allLaunches);
+});
 
 export type Manufacturer = {
     id: string;
@@ -220,16 +298,18 @@ const allManufacturers: Manufacturer[] = [];
 
 for (let i = 0; i < 10; i += 1) {
     allManufacturers.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.company.name(),
     });
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const manufacturers: GraphQLFieldResolver<unknown, unknown> = async () => {
+const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, args, context, info) => {
     await sleep(500);
-    return allManufacturers;
+    return allManufacturers.filter((manufacturer) => {
+        return !args.search || manufacturer.name.toLowerCase().includes(args.search.toLowerCase());
+    });
 };
 
 export type Product = {
@@ -242,7 +322,7 @@ const allProducts: Product[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allProducts.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.commerce.product(),
         manufacturer: faker.helpers.arrayElement(allManufacturers),
     });
@@ -265,6 +345,9 @@ const graphqlHandler = new GraphQLHandler({
             launchesPastPagePaging,
             manufacturers,
             products,
+            currentUser: currentUserHandler,
+            folder: folderHandler,
+            subfolder: subfolderHandler,
         },
     },
 
@@ -273,4 +356,4 @@ const graphqlHandler = new GraphQLHandler({
     },
 });
 
-export const handlers = [rest.post("/graphql", mswResolver(graphqlHandler)), rest.get("/launches", launchesPastRest)];
+export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), fileUploadsHandler, launchesPastRest];

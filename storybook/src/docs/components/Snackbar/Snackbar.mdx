@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
 import dedent from "ts-dedent";
 
 import * as SnackbarStories from "./Snackbar.stories";
@@ -56,8 +56,8 @@ Only `open` is not available since the `SnackbarProvider` manages the open state
 The `UndoSnackbar` is a convenience component since undo is a common use case for the snackbar.
 It has three distinctions compared to the vanilla `Snackbar`:
 
--   a non-removable undo button
--   a `payload` prop. After a change, the previous state should be passed as payload
--   a `onUndoClick` prop. This method is called once the user clicks on the undo button. The method receives the payload as parameter and can utilize it to restore the previous state
+- a non-removable undo button
+- a `payload` prop. After a change, the previous state should be passed as payload
+- a `onUndoClick` prop. This method is called once the user clicks on the undo button. The method receives the payload as parameter and can utilize it to restore the previous state
 
 <Canvas of={SnackbarStories.Undo} />

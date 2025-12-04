@@ -1,11 +1,23 @@
-import { Alert } from "@comet/admin";
+import { Alert, Button } from "@comet/admin";
 import { Duplicate, Forward, Save } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
+import {
+    Box,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Fragment } from "react";
+import { Fragment, type VoidFunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FilenameData } from "./ManualDuplicatedFilenamesHandler";
+import { type FilenameData } from "./ManualDuplicatedFilenamesHandler";
 
 const StyledList = styled(List)`
     margin-top: ${({ theme }) => theme.spacing(4)};
@@ -25,7 +37,7 @@ interface DuplicateFilenameDialogProps {
     onReplace: () => void;
 }
 
-export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
+export const ManuallyHandleDuplicatedFilenamesDialog: VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
     open,
     filenameData,
     onSkip,
@@ -57,7 +69,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.skipDescription"
                                 defaultMessage="<strong>Skip:</strong> Skip uploading duplicates. All other files will be uploaded as usual."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
 
@@ -65,7 +77,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.replaceDescription"
                                 defaultMessage="<strong>Replace:</strong> Replace existing files with duplicates. <strong>Attention:</strong> This will not affect image cropping settings."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
 
@@ -73,7 +85,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.saveAsCopyDescription"
                                 defaultMessage="<strong>Save as copy:</strong> Upload duplicates as new files with “copy” added to the end of the file names."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
                     </Typography>
@@ -95,7 +107,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
             </DialogContent>
             <DialogActions>
                 <Box display="flex" justifyContent="space-between" width="100%">
-                    <Button variant="text" color="secondary" onClick={onSkip} startIcon={<Forward />}>
+                    <Button variant="textDark" onClick={onSkip} startIcon={<Forward />}>
                         <FormattedMessage
                             id="comet.dam.duplicateFilenameDialog.action.skip"
                             defaultMessage="Skip {count, plural, one {file} other {files}}"
@@ -114,7 +126,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                                 }}
                             />
                         </Button>
-                        <Button variant="contained" color="primary" onClick={onUpload} startIcon={<Save />}>
+                        <Button onClick={onUpload} startIcon={<Save />}>
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.action.uploadAsCopy"
                                 defaultMessage="Upload as {count, plural, one {copy} other {copies}}"

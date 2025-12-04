@@ -1,5 +1,5 @@
+import { useDamConfig } from "./damConfig";
 import { damDefaultAcceptedMimeTypes } from "./damDefaultAcceptedMimeTypes";
-import { useDamConfig } from "./useDamConfig";
 
 const isSvgImage = (mimeType: string): boolean => {
     return mimeType === "image/svg+xml";
@@ -30,6 +30,7 @@ interface UseDamAcceptedMimeTypesApi {
         video: string[];
         document: string[];
         pdf: string[];
+        captions: string[];
     };
 }
 
@@ -40,12 +41,13 @@ export const useDamAcceptedMimeTypes = (): UseDamAcceptedMimeTypesApi => {
     return {
         allAcceptedMimeTypes,
         filteredAcceptedMimeTypes: {
-            svgImage: ["image/svg+xml"],
+            svgImage: allAcceptedMimeTypes.filter((mimetype) => mimetype === "image/svg+xml"),
             pixelImage: allAcceptedMimeTypes.filter(isPixelImage),
             audio: allAcceptedMimeTypes.filter(isAudio),
             video: allAcceptedMimeTypes.filter(isVideo),
             document: allAcceptedMimeTypes.filter(isDocument),
-            pdf: ["application/pdf"],
+            pdf: allAcceptedMimeTypes.filter((mimetype) => mimetype === "application/pdf"),
+            captions: allAcceptedMimeTypes.filter((mimetype) => mimetype === "text/vtt"),
         },
     };
 };

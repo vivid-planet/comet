@@ -8,11 +8,12 @@ import { Observable, throwError } from "rxjs";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { FileValidationService } from "../../file-utils/file-validation.service";
+import { FILE_UPLOAD_FIELD } from "../../file-utils/files.constants";
+import { removeMulterTempFile } from "../../file-utils/files.utils";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
-import { FileValidationService } from "./file-validation.service";
-import { removeMulterTempFile } from "./files.utils";
 
-export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
+export function DamUploadFileInterceptor(fieldName: string = FILE_UPLOAD_FIELD): Type<NestInterceptor> {
     @Injectable()
     class Interceptor implements NestInterceptor {
         fileInterceptor: NestInterceptor;

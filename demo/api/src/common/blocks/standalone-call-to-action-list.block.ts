@@ -3,16 +3,16 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { CallToActionListBlock } from "@src/common/blocks/call-to-action-list.block";
 import { IsEnum } from "class-validator";
 
-enum Alignment {
+export enum Alignment {
     left = "left",
     center = "center",
     right = "right",
@@ -35,7 +35,7 @@ class StandaloneCallToActionListBlockInput extends BlockInput {
     alignment: Alignment;
 
     transformToBlockData(): StandaloneCallToActionListBlockData {
-        return inputToData(StandaloneCallToActionListBlockData, this);
+        return blockInputToData(StandaloneCallToActionListBlockData, this);
     }
 }
 

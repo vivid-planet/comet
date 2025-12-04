@@ -1,17 +1,18 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem, Tooltip } from "@comet/admin";
 import { List } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { JobRuntime } from "./JobRuntime";
 import {
-    GQLKubernetesCronJobQuery,
-    GQLKubernetesCronJobQueryVariables,
-    GQLKubernetesJobsQuery,
-    GQLKubernetesJobsQueryVariables,
+    type GQLKubernetesCronJobQuery,
+    type GQLKubernetesCronJobQueryVariables,
+    type GQLKubernetesJobsQuery,
+    type GQLKubernetesJobsQueryVariables,
 } from "./JobsGrid.generated";
 import { JobStatus } from "./JobStatus";
 
@@ -49,7 +50,7 @@ function JobsToolbar(props: { cronJobName: string }) {
     const { data } = useQuery<GQLKubernetesCronJobQuery, GQLKubernetesCronJobQueryVariables>(cronJobQuery, { variables: { name: cronJob } });
 
     return (
-        <Toolbar>
+        <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
             <ToolbarBackButton />
             <ToolbarTitleItem>
                 <FormattedMessage
@@ -81,63 +82,70 @@ export function JobsGrid(props: JobsGridProps) {
         pollInterval: 10 * 1000,
     });
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.kubernetesJobs ?? [];
 
     return (
-        <MainContent disablePadding fullHeight>
-            <DataGrid
-                rows={rows}
-                loading={loading}
-                error={error}
-                hideFooterPagination
-                columns={[
-                    {
-                        field: "name",
-                        headerName: intl.formatMessage({ id: "comet.pages.jobs.name", defaultMessage: "Name" }),
-                        flex: 2,
-                        ...disableFieldOptions,
-                    },
-                    {
-                        field: "status",
-                        headerName: intl.formatMessage({ id: "comet.pages.publisher.status", defaultMessage: "Status" }),
-                        flex: 1,
-                        ...disableFieldOptions,
-                        renderCell: ({ row }) => <JobStatus status={row.status}>{row.status}</JobStatus>,
-                    },
-                    {
-                        field: "runtime",
-                        headerName: intl.formatMessage({ id: "comet.pages.jobs.runtime", defaultMessage: "Runtime" }),
-                        flex: 1,
-                        ...disableFieldOptions,
-                        valueGetter: ({ row }) => {
-                            return {
-                                startTime: row.startTime,
-                                completionTime: row.completionTime,
-                            };
+        <>
+            <JobsToolbar cronJobName={cronJob} />
+            <MainContent fullHeight>
+                <DataGrid
+                    rows={rows}
+                    loading={loading}
+                    hideFooterPagination
+                    columns={[
+                        {
+                            field: "name",
+                            headerName: intl.formatMessage({ id: "comet.pages.jobs.name", defaultMessage: "Name" }),
+                            flex: 2,
+                            ...disableFieldOptions,
                         },
-                        renderCell: ({ value }) => {
-                            return (
-                                <JobRuntime
-                                    startTime={value.startTime ? parseISO(value.startTime) : undefined}
-                                    completionTime={value.completionTime ? parseISO(value.completionTime) : undefined}
-                                />
-                            );
+                        {
+                            field: "status",
+                            headerName: intl.formatMessage({ id: "comet.pages.publisher.status", defaultMessage: "Status" }),
+                            flex: 1,
+                            ...disableFieldOptions,
+                            renderCell: ({ row }) => <JobStatus status={row.status}>{row.status}</JobStatus>,
                         },
-                    },
-                    {
-                        field: "actions",
-                        headerName: "",
-                        renderCell: ({ row }) => (
-                            <IconButton component={StackLink} pageName="logs" payload={row.name}>
-                                <List color="primary" />
-                            </IconButton>
-                        ),
-                        ...disableFieldOptions,
-                    },
-                ]}
-                disableColumnSelector
-                components={{ Toolbar: () => <JobsToolbar cronJobName={cronJob} /> }}
-            />
-        </MainContent>
+                        {
+                            field: "runtime",
+                            headerName: intl.formatMessage({ id: "comet.pages.jobs.runtime", defaultMessage: "Runtime" }),
+                            flex: 1,
+                            ...disableFieldOptions,
+                            valueGetter: (params, row) => {
+                                return {
+                                    startTime: row.startTime,
+                                    completionTime: row.completionTime,
+                                };
+                            },
+                            renderCell: ({ value }) => {
+                                return (
+                                    <JobRuntime
+                                        startTime={value.startTime ? parseISO(value.startTime) : undefined}
+                                        completionTime={value.completionTime ? parseISO(value.completionTime) : undefined}
+                                    />
+                                );
+                            },
+                        },
+                        {
+                            field: "actions",
+                            type: "actions",
+                            headerName: "",
+                            renderCell: ({ row }) => (
+                                <Tooltip title={<FormattedMessage id="comet.pages.jobs.showLogs" defaultMessage="Show logs" />}>
+                                    <IconButton component={StackLink} pageName="logs" payload={row.name}>
+                                        <List color="primary" />
+                                    </IconButton>
+                                </Tooltip>
+                            ),
+                            ...disableFieldOptions,
+                        },
+                    ]}
+                    disableColumnSelector
+                />
+            </MainContent>
+        </>
     );
 }
