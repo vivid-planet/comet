@@ -6,7 +6,7 @@ import { render } from "../../../testing/testUtils";
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
 import { TableBlockGrid } from "../TableBlockGrid";
 
-const getRenderedTableBlock = (initialState: TableBlockData) => {
+const renderTableBlock = (initialState: TableBlockData) => {
     const Component = () => {
         const [state, setState] = useState<TableBlockData>(initialState);
         return <TableBlockGrid state={state} updateState={setState} />;
@@ -16,7 +16,7 @@ const getRenderedTableBlock = (initialState: TableBlockData) => {
 
 describe("TableBlock: Insert a new row", () => {
     it("should insert a new, empty row at the top of the table", async () => {
-        const rendered = getRenderedTableBlock(mockTableData);
+        const rendered = renderTableBlock(mockTableData);
 
         const rowOptionsButtons = rendered.getAllByLabelText(/row options/i);
         const firstRowOptionsButton = rowOptionsButtons[0];
@@ -41,9 +41,8 @@ describe("TableBlock: Insert a new row", () => {
                     expect(cell.textContent).toBe("");
                 } else {
                     const rowIndexBeforeInsertingNewRow = rowIndex - 1;
-                    const valueOfCellAboveTheCurrentBeforeInsertingNewRow =
-                        mockTableData.rows[rowIndexBeforeInsertingNewRow].cellValues[cellIndex].value;
-                    expect(cell.textContent).toBe(valueOfCellAboveTheCurrentBeforeInsertingNewRow);
+                    const cellValueBeforeInsertingNewRow = mockTableData.rows[rowIndexBeforeInsertingNewRow].cellValues[cellIndex].value;
+                    expect(cell.textContent).toBe(cellValueBeforeInsertingNewRow);
                 }
             });
         });
