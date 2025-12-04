@@ -2,9 +2,7 @@
 "@comet/cms-api": minor
 ---
 
-Adds Importer Module
+Add Importer Module
 
-It supports importing CSV files for now.
-An example can be found in the demo.
-
-Docs: https://docs.comet-dxp.com/docs/features-modules/importer/
+The module can be used to import data (e.g., from a CSV file) into applications.
+Review the [docs](https://docs.comet-dxp.com/docs/features-modules/importer/) for more information on how to use it.
