@@ -853,6 +853,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
     imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
     imports.push({ name: "gqlSortToMikroOrmOrderBy", importPath: "@comet/cms-api" });
+    if (generatorOptions.requestContextVisibilityFilter) {
+        imports.push({ name: "RequestContext", importPath: "@comet/cms-api" });
+        imports.push({ name: "RequestContextInterface", importPath: "@comet/cms-api" });
+    }
 
     const resolverOut = `import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
@@ -932,11 +936,20 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 .map(([key]) => key)
                 .join(", ")}}: ${argsClassName}
             ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+
+            ${generatorOptions.requestContextVisibilityFilter ? `, @RequestContext() { includeInvisiblePages }: RequestContextInterface` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
                     ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.entityManager.getMetadata(${metadata.className}));`
                     : `: ObjectQuery<${metadata.className}> = {}`
+            }
+            ${
+                generatorOptions.requestContextVisibilityFilter
+                    ? `if (!includeInvisiblePages) { ${Object.entries(generatorOptions.requestContextVisibilityFilter)
+                          .map(([key, value]) => `where.${key} = ${JSON.stringify(value)}; `)
+                          .join("")} }`
+                    : ""
             }
             ${scopeProp ? `where.scope = scope;` : ""}
             ${dedicatedResolverArgProps

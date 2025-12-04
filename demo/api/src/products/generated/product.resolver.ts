@@ -8,7 +8,7 @@ import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, FileUpload, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, BlocksTransformerService, DamImageBlock, FileUpload, RequestContext, RequestContextInterface, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
@@ -39,8 +39,13 @@ export class ProductResolver {
     @Args()
     { search, filter, sort, offset, limit }: ProductsArgs, 
     @Info()
-    info: GraphQLResolveInfo): Promise<PaginatedProducts> {
+    info: GraphQLResolveInfo, 
+    @RequestContext()
+    { includeInvisiblePages }: RequestContextInterface): Promise<PaginatedProducts> {
         const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Product));
+        if (!includeInvisiblePages) {
+            where.visible = true;
+        }
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
         if (fields.includes("category")) {
