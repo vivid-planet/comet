@@ -20,14 +20,14 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
             <button className={styles.mobileHomeButton} onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded} aria-controls={listId}>
                 {name}
                 <SvgUse
-                    className={clsx(styles.mobileChevron, isExpanded && styles.mobileChevronExpanded)}
+                    className={clsx(styles.mobileChevron, isExpanded && styles["mobileChevron--expanded"])}
                     href="/assets/icons/chevron-down.svg#root"
                     width={16}
                     height={16}
                 />
             </button>
             {parentNodes.length > 0 && (
-                <ReactFocusLock className={clsx(styles.listContainer, isExpanded && styles.listContainerExpanded)} disabled={!isExpanded}>
+                <ReactFocusLock className={clsx(styles.listContainer, isExpanded && styles["listContainer--expanded"])} disabled={!isExpanded}>
                     <ol className={styles.list} id={listId}>
                         <li className={styles.mobileNavigationListElements}>
                             <button className={styles.mobileBackButton} onClick={() => setIsExpanded(false)}>

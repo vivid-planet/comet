@@ -1,10 +1,11 @@
 import { EntityManager } from "@mikro-orm/postgresql";
-import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { rimraf } from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { FileUploadInput } from "../file-utils/file-upload.input";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { FileUploadBody } from "./dto/file-upload.body";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
@@ -26,8 +27,8 @@ export function createFileUploadsUploadController(options: { public: boolean }):
 
         @Post("upload")
         @UseInterceptors(FileUploadsFileInterceptor())
-        async upload(@UploadedFile() file: FileUploadInput): Promise<FileUploadsUploadResponse> {
-            const fileUpload = await this.fileUploadsService.upload(file);
+        async upload(@UploadedFile() file: FileUploadInput, @Body() body: FileUploadBody): Promise<FileUploadsUploadResponse> {
+            const fileUpload = await this.fileUploadsService.upload(file, body.expiresIn);
 
             await this.entityManager.flush();
 

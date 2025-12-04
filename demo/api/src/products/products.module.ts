@@ -27,6 +27,8 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
+import { ProductImporterCommand } from "./product-importer.command";
+import { ProductImporterService } from "./product-importer.service";
 import { ProductPublishedMail } from "./product-published.mail";
 
 @Module({
@@ -57,6 +59,8 @@ import { ProductPublishedMail } from "./product-published.mail";
         ManufacturerResolver,
         ManufacturerCountryResolver,
         ProductToTagResolver,
+        ProductImporterCommand,
+        ProductImporterService,
         ProductColorResolver,
         CustomProductResolver,
         ProductHighlightResolver,

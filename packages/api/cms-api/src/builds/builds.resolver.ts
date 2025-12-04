@@ -5,7 +5,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
+import { KubernetesAuthenticationGuard } from "../kubernetes/kubernetes-authentication.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
@@ -18,7 +18,7 @@ import { SkipBuild } from "./skip-build.decorator";
 
 @Resolver(() => Build)
 @RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in code
-@UseGuards(PreventLocalInvocationGuard)
+@UseGuards(KubernetesAuthenticationGuard)
 export class BuildsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,

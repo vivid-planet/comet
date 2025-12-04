@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "8.7.1",
+    "version": "8.9.0",
     "description": "A set of ESLint configurations for Comet projects",
     "repository": {
         "directory": "packages/eslint-config",
@@ -28,6 +28,7 @@
     },
     "scripts": {
         "lint": "run-p lint:prettier lint:eslint",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 *.json ",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'"
     },

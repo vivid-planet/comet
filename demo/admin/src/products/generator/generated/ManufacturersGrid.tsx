@@ -68,7 +68,6 @@ export function ManufacturersGrid() {
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(() => [
         { ...dataGridIdColumn, field: "id",
             headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
-            sortable: false,
             flex: 1,
             minWidth: 150, },
         { field: "name",
