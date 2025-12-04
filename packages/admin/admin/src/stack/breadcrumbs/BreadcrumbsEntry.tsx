@@ -58,7 +58,7 @@ export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }:
                     <IconButton component={BreadcrumbLink} to={backButtonUrl} {...slotProps?.backButton}>
                         <LevelUp />
                     </IconButton>
-                    {item && <BackButtonSeparator {...slotProps?.backButtonSeparator} />}
+                    <BackButtonSeparator {...slotProps?.backButtonSeparator} />
                 </>
             )}
             {item &&
