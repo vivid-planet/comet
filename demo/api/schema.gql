@@ -2,6 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ActionLog {
+  createdAt: DateTime!
+  entityId: ID!
+  entityName: String!
+  id: ID!
+  scope: [JSONObject!]
+  snapshot: JSONObject
+  userId: ID!
+  version: Int!
+}
+
+input ActionLogSort {
+  direction: SortDirection! = ASC
+  field: ActionLogSortField!
+}
+
+enum ActionLogSortField {
+  createdAt
+  userId
+  version
+}
+
 type Address {
   alternativeAddress: AlternativeAddress
   country: String!
@@ -521,6 +543,8 @@ input MainMenuItemInput {
 }
 
 type Manufacturer {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   coordinates: Coordinates
@@ -692,6 +716,8 @@ type Mutation {
 }
 
 type News {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
   category: NewsCategory!
   comments: [NewsComment!]!
   content: NewsContentBlockData!
@@ -926,6 +952,11 @@ enum PageTreeNodeVisibility {
   Unpublished
 }
 
+type PaginatedActionLogs {
+  nodes: [ActionLog!]!
+  totalCount: Int!
+}
+
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -1052,6 +1083,8 @@ enum PredefinedPageType {
 }
 
 type Product {
+  actionLog(id: ID!): ActionLog!
+  actionLogs(limit: Int! = 25, offset: Int! = 0, sort: [ActionLogSort!]): PaginatedActionLogs!
   additionalTypes: [ProductType!]!
   articleNumbers: [String!]!
   availableSince: LocalDate

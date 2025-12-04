@@ -1,6 +1,8 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
+export { ActionLogs } from "./action-logs/action-logs.decorator";
+export { ActionLogsModule } from "./action-logs/action-logs.module";
 export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { CometAuthGuard } from "./auth/guards/comet.guard";
@@ -282,5 +284,6 @@ export {
     UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
+export { UserPermissionsStorageService } from "./user-permissions/user-permissions-storage.service";
 export { CreateWarnings } from "./warnings/decorators/create-warnings.decorator";
 export { WarningsModule } from "./warnings/warning.module";
