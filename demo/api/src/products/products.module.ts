@@ -27,6 +27,7 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
+import { ProductService } from "./product.service";
 import { ProductPublishedMail } from "./product-published.mail";
 
 @Module({
@@ -62,6 +63,7 @@ import { ProductPublishedMail } from "./product-published.mail";
         ProductHighlightResolver,
         ProductPublishedMail,
         ProductCategoryTypeResolver,
+        ProductService,
     ],
     exports: [],
 })
