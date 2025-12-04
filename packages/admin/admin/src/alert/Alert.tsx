@@ -53,11 +53,10 @@ type OwnerState = {
 /**
  * The Alert component is used to display important messages to the user. It provides different severity levels
  * and custom content, actions and close functionality to communicate various types of information.
+ * Use for feedback messages, notifications, or status updates.
  *
- * - Use for feedback messages, notifications, or status updates
- *
- * @see {@link https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-alert-alert--docs|Storybook}
- * @see {@link https://mui.com/material-ui/react-alert/|MUI Documentation}
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-alert-alert--docs)
+ * - [MUI Documentation](https://mui.com/material-ui/react-alert/)
  */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
     const {
