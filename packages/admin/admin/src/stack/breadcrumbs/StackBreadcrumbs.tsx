@@ -2,6 +2,7 @@ import { ChevronRight } from "@comet/admin-icons";
 import { css, type Typography, useTheme, useThemeProps } from "@mui/material";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { type Link } from "react-router-dom";
+import { useStackApi } from "stack/Api";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -101,59 +102,15 @@ export const StackBreadcrumbs: React.FC<StackBreadcrumbsProps> = (inProps: Stack
         props: inProps,
         name: "CometAdminStackBreadcrumbs",
     });
-    // Testdaten für Breadcrumbs (angepasst an BreadcrumbItem)
-    const breadcrumbItems = [
-        { id: "1", title: "Home", url: "/", parentId: "" },
-        { id: "2", title: "Produkte", url: "/produkte", parentId: "1" },
-        { id: "3", title: "Elektronik", url: "/produkte/elektronik", parentId: "2" },
-        { id: "4", title: "Laptops", url: "/produkte/elektronik/laptops", parentId: "3" },
-        { id: "5", title: "Gaming", url: "/produkte/elektronik/laptops/gaming", parentId: "4" },
-        { id: "6", title: "High-End", url: "/produkte/elektronik/laptops/gaming/high-end", parentId: "5" },
-        { id: "7", title: "2025", url: "/produkte/elektronik/laptops/gaming/high-end/2025", parentId: "6" },
-        { id: "8", title: "Ultra", url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra", parentId: "7" },
-        { id: "9", title: "Special Edition", url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special", parentId: "8" },
-        { id: "10", title: "Collector's", url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special/collectors", parentId: "9" },
-        {
-            id: "11",
-            title: "Anniversary",
-            url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special/collectors/anniversary",
-            parentId: "10",
-        },
-        {
-            id: "12",
-            title: "Limited",
-            url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special/collectors/anniversary/limited",
-            parentId: "11",
-        },
-        {
-            id: "13",
-            title: "Gold",
-            url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special/collectors/anniversary/limited/gold",
-            parentId: "12",
-        },
-        {
-            id: "14",
-            title: "Platinum",
-            url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special/collectors/anniversary/limited/gold/platinum",
-            parentId: "13",
-        },
-        {
-            id: "15",
-            title: "Diamond",
-            url: "/produkte/elektronik/laptops/gaming/high-end/2025/ultra/special/collectors/anniversary/limited/gold/platinum/diamond",
-            parentId: "14",
-        },
-    ];
 
-    // Breadcrumbs aus Stack-API oder Testdaten
-    // const stackApi = useStackApi();
+    const stackApi = useStackApi();
 
     const { palette } = useTheme();
     const breadcrumbsRef = useRef<HTMLDivElement>(null);
     const containerWidth = useObservedWidth(breadcrumbsRef);
     const [itemWidths, setItemWidths] = useState<number[] | undefined>();
 
-    // const breadcrumbItems = stackApi?.breadCrumbs ?? [];
+    const breadcrumbItems = stackApi?.breadCrumbs ?? [];
     const combinedTitlesOfBreadcrumbs = breadcrumbItems.map(({ title }) => title).join("");
 
     useEffect(() => {
