@@ -173,4 +173,33 @@ describe("generateGrid", () => {
 
         expect(result.code).toMatchSnapshot();
     });
+
+    it("should generate custom text for delete action in crudContextMenu", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "books",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+            crudContextMenu: {
+                deleteText: "Extinguish",
+            },
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
 });

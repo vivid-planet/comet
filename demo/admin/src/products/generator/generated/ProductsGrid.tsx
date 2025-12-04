@@ -226,7 +226,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                             mutation: deleteProductMutation,
                             variables: { id: params.row.id },
                         });
-                    }} refetchQueries={[productsQuery]}/>
+                    }} refetchQueries={[productsQuery]} messagesMapping={{ delete: <FormattedMessage id="product.crudContextMenu.delete" defaultMessage="Extinguish"/> }}/>
                                     
                                 </>);
             }, }
