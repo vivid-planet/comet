@@ -2,11 +2,11 @@ import { ChevronRight } from "@comet/admin-icons";
 import { css, type Typography, useTheme, useThemeProps } from "@mui/material";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { type Link } from "react-router-dom";
-import { useStackApi } from "stack/Api";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useObservedWidth } from "../../utils/useObservedWidth";
+import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender } from "./utils";
 
 export type StackBreadcrumbsClassKey =
