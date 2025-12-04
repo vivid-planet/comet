@@ -15,24 +15,24 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { tenantFormFragment } from "./TenantsForm.gql";
-import { GQLTenantsFormFragment } from "./TenantsForm.gql.generated";
-import { tenantQuery } from "./TenantsForm.gql";
-import { GQLTenantQuery } from "./TenantsForm.gql.generated";
-import { GQLTenantQueryVariables } from "./TenantsForm.gql.generated";
-import { createTenantMutation } from "./TenantsForm.gql";
-import { GQLCreateTenantMutation } from "./TenantsForm.gql.generated";
-import { GQLCreateTenantMutationVariables } from "./TenantsForm.gql.generated";
-import { updateTenantMutation } from "./TenantsForm.gql";
-import { GQLUpdateTenantMutation } from "./TenantsForm.gql.generated";
-import { GQLUpdateTenantMutationVariables } from "./TenantsForm.gql.generated";
+import { tenantFormFragment } from "./TenantForm.gql";
+import { GQLTenantFormFragment } from "./TenantForm.gql.generated";
+import { tenantQuery } from "./TenantForm.gql";
+import { GQLTenantQuery } from "./TenantForm.gql.generated";
+import { GQLTenantQueryVariables } from "./TenantForm.gql.generated";
+import { createTenantMutation } from "./TenantForm.gql";
+import { GQLCreateTenantMutation } from "./TenantForm.gql.generated";
+import { GQLCreateTenantMutationVariables } from "./TenantForm.gql.generated";
+import { updateTenantMutation } from "./TenantForm.gql";
+import { GQLUpdateTenantMutation } from "./TenantForm.gql.generated";
+import { GQLUpdateTenantMutationVariables } from "./TenantForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = GQLTenantsFormFragment;
+type FormValues = GQLTenantFormFragment;
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
 }
-export function TenantsForm({ onCreate, id }: FormProps) {
+export function TenantForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -40,7 +40,7 @@ export function TenantsForm({ onCreate, id }: FormProps) {
     const { data, error, loading, refetch } = useQuery<GQLTenantQuery, GQLTenantQueryVariables>(tenantQuery, id ? { variables: { id } } : { skip: true });
     const initialValues = useMemo<Partial<FormValues>>(() => data?.tenant
         ? {
-            ...filterByFragment<GQLTenantsFormFragment>(tenantFormFragment, data.tenant),
+            ...filterByFragment<GQLTenantFormFragment>(tenantFormFragment, data.tenant),
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({

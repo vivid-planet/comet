@@ -14,7 +14,7 @@ import {
 import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
-import { TenantsForm } from "./generated/TenantsForm";
+import { TenantForm } from "./generated/TenantForm";
 import { TenantsGrid } from "./generated/TenantsGrid";
 
 const FormToolbar = () => (
@@ -46,7 +46,7 @@ export function TenantsPage() {
                         <SaveBoundary>
                             <FormToolbar />
                             <MainContent>
-                                <TenantsForm id={selectedTenantId} />
+                                <TenantForm id={selectedTenantId} />
                             </MainContent>
                         </SaveBoundary>
                     )}
@@ -55,7 +55,7 @@ export function TenantsPage() {
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <TenantsForm />
+                            <TenantForm />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>

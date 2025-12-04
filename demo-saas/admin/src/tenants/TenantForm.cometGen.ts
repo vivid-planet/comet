@@ -4,7 +4,7 @@ import { type GQLTenant } from "@src/graphql.generated";
 export default defineConfig<GQLTenant>({
     type: "form",
     gqlType: "Tenant",
-    fragmentName: "TenantsForm",
+    fragmentName: "TenantForm",
     fields: [
         {
             type: "text",

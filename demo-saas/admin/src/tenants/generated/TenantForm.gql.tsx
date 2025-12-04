@@ -2,14 +2,14 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql } from "@apollo/client";
 export const tenantFormFragment = gql`
-        fragment TenantsForm on Tenant {
+        fragment TenantForm on Tenant {
             name
         }
     `;
 export const tenantQuery = gql`
     query Tenant($id: ID!) {
         tenant(id: $id) {
-            id updatedAt ...TenantsForm
+            id updatedAt ...TenantForm
         }
     }
     ${tenantFormFragment}
@@ -17,7 +17,7 @@ export const tenantQuery = gql`
 export const createTenantMutation = gql`
     mutation CreateTenant($input: TenantInput!) {
         createTenant(input: $input) {
-            id updatedAt ...TenantsForm
+            id updatedAt ...TenantForm
         }
     }
     ${tenantFormFragment}
@@ -25,7 +25,7 @@ export const createTenantMutation = gql`
 export const updateTenantMutation = gql`
     mutation UpdateTenant($id: ID!, $input: TenantUpdateInput!) {
         updateTenant(id: $id, input: $input) {
-            id updatedAt ...TenantsForm
+            id updatedAt ...TenantForm
         }
     }
     ${tenantFormFragment}
