@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix overwriting api sort-default
+muiGridSortToGql: Prevent overwriting the default value defined in the GraphQL schema
