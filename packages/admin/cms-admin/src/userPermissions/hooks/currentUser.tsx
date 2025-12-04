@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
-import omit from "lodash.omit";
 import { createContext, type PropsWithChildren, useContext } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -82,8 +81,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                 permission: p.permission as Permission,
                 contentScopes: p.contentScopes,
             })),
-            authenticatedUser: data.currentUser.authenticatedUser && omit(data.currentUser.authenticatedUser, "__typename"),
-            allowedContentScopes: data.currentUser.allowedContentScopes.map((acs) => omit(acs, "__typename")),
+            authenticatedUser: data.currentUser.authenticatedUser
+                ? { name: data.currentUser.authenticatedUser.name, email: data.currentUser.authenticatedUser.email }
+                : null,
+            allowedContentScopes: data.currentUser.allowedContentScopes.map((acs) => ({ scope: acs.scope, label: acs.label })),
             impersonated: !!data.currentUser.impersonated,
         },
         isAllowed:

@@ -17,9 +17,12 @@ const adminPackagesHotReloadPlugin: Plugin = {
         this.addWatchFile("../../packages/admin/admin/src");
         this.addWatchFile("../../packages/admin/admin-color-picker/src");
         this.addWatchFile("../../packages/admin/admin-date-time/src");
+<<<<<<< HEAD
         this.addWatchFile("../../packages/admin/admin-react-select/src");
+=======
+        this.addWatchFile("../../packages/admin/admin-icons/src");
+>>>>>>> main
         this.addWatchFile("../../packages/admin/admin-rte/src");
-        this.addWatchFile("../../packages/admin/blocks-admin/src");
         this.addWatchFile("../../packages/admin/cms-admin/src");
     },
     async handleHotUpdate({ file, server }) {
@@ -79,6 +82,11 @@ export default defineConfig(({ mode }) => {
             cors: false,
             proxy: process.env.API_URL_INTERNAL
                 ? {
+                      "/api": {
+                          target: new URL(process.env.API_URL_INTERNAL).origin,
+                          changeOrigin: true,
+                          secure: false,
+                      },
                       "/dam": {
                           target: process.env.API_URL_INTERNAL,
                           changeOrigin: true,
@@ -99,7 +107,18 @@ export default defineConfig(({ mode }) => {
                     global: "globalThis",
                 },
             },
+<<<<<<< HEAD
             include: ["@comet/admin", "@comet/admin-rte", "@comet/admin-date-time", "@comet/cms-admin"],
+=======
+            include: [
+                "@comet/admin",
+                "@comet/admin-color-picker",
+                "@comet/admin-date-time",
+                "@comet/admin-icons",
+                "@comet/admin-rte",
+                "@comet/cms-admin",
+            ],
+>>>>>>> main
         },
         resolve: {
             alias: {

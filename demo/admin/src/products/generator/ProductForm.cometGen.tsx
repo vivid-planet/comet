@@ -25,6 +25,7 @@ export default defineConfig<GQLProduct>({
                     name: "title",
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
                     required: true, // default is inferred from gql schema
+                    initialValue: "New Product",
                     validate: (value: string) =>
                         value.length < 3 ? (
                             <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />
@@ -51,6 +52,7 @@ export default defineConfig<GQLProduct>({
                     required: true,
                     inputType: "radio",
                     values: productTypeValues,
+                    initialValue: "cap",
                 },
                 { type: "staticSelect", name: "additionalTypes" },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
@@ -62,6 +64,7 @@ export default defineConfig<GQLProduct>({
                     maxValue: 500,
                     disableSlider: true,
                     startAdornment: "€",
+                    initialValue: { min: 10, max: 100 },
                 },
                 {
                     type: "optionalNestedFields",
@@ -90,13 +93,13 @@ export default defineConfig<GQLProduct>({
                     },
                     startAdornment: { icon: "Location" },
                 },
-                { type: "boolean", name: "inStock" },
-                { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
+                { type: "boolean", name: "inStock", initialValue: true },
+                { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" }, initialValue: "2025-01-01" },
                 { type: "component", component: FutureProductNotice },
                 { type: "block", name: "image", label: "Image", block: DamImageBlock },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4, download: false },
-                { type: "dateTime", name: "lastCheckedAt", label: "Last checked at" },
+                { type: "dateTime", name: "lastCheckedAt", label: "Last checked at", initialValue: new Date("2018-01-12T00:00:00Z") },
             ],
         },
     ],

@@ -40,7 +40,7 @@
         opacity 0.2s ease-out,
         transform 0.2s ease-out;
 
-    &Expanded {
+    &--expanded {
         transform: translateY(0);
         opacity: 1;
         pointer-events: auto;
@@ -76,7 +76,7 @@
     color: var(--brand-grey-700);
     transition: transform 0.4s ease;
 
-    &Expanded {
+    &--expanded {
         transform: rotate(180deg);
     }
 }

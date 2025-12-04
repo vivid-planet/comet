@@ -3,6 +3,7 @@ import { useContext } from "react";
 
 import { useCometConfig } from "../../config/CometConfigContext";
 import { useDamBasePath } from "../../dam/config/damConfig";
+import { usePageTreeScope } from "../../pages/config/usePageTreeScope";
 import { type BlockContext, CustomBlockContext } from "./BlockContext";
 
 export function useBlockContext(): BlockContext {
@@ -10,6 +11,7 @@ export function useBlockContext(): BlockContext {
     const damBasePath = useDamBasePath();
     const apolloClient = useApolloClient();
     const customContext = useContext(CustomBlockContext);
+    const pageTreeScope = usePageTreeScope();
 
-    return { ...customContext, apiUrl, apolloClient, damBasePath };
+    return { ...customContext, apiUrl, apolloClient, damBasePath, pageTreeScope };
 }

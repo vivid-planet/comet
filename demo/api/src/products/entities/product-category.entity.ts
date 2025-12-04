@@ -21,7 +21,7 @@ export class ProductCategory extends BaseEntity {
     @Field()
     title: string;
 
-    @Property()
+    @Property({ unique: true })
     @Field()
     slug: string;
 

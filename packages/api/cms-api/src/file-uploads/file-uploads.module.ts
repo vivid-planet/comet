@@ -5,6 +5,7 @@ import { BlobStorageModule } from "../blob-storage/blob-storage.module";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { FileUpload } from "./entities/file-upload.entity";
+import { FileUploadExpirationSubscriber } from "./file-upload-expiration.subscriber";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG, FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
 import { FileUploadsResolver } from "./file-uploads.resolver";
@@ -30,7 +31,12 @@ export class FileUploadsModule {
         };
 
         const controllers = [createFileUploadsUploadController(options.upload ?? { public: false })];
-        const providers: Provider[] = [fileUploadsConfigProvider, FileUploadsService, fileUploadsFileValidatorProvider];
+        const providers: Provider[] = [
+            fileUploadsConfigProvider,
+            FileUploadsService,
+            fileUploadsFileValidatorProvider,
+            FileUploadExpirationSubscriber,
+        ];
 
         if (options.download) {
             if (options.download.secret.length < 16) {

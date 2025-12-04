@@ -1,5 +1,4 @@
-import { type ComponentNameToClassKey, type ComponentsPropsList, type Theme } from "@mui/material/styles";
-import { type OverridesStyleRules } from "@mui/material/styles/overrides";
+import { type ComponentNameToClassKey, type ComponentsPropsList, type Interpolation, type Theme } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
 
 type OwnerState<PropsName extends keyof ComponentsPropsList> = PropsName extends keyof ComponentsPropsList
@@ -9,6 +8,24 @@ type OwnerState<PropsName extends keyof ComponentsPropsList> = PropsName extends
 type OverrideProps<PropsName extends keyof ComponentsPropsList> = OwnerState<PropsName> & { theme: Theme } & Record<string, unknown>;
 
 type ClassKey<ClassesName extends keyof ComponentNameToClassKey> = ComponentNameToClassKey[ClassesName];
+
+// Copied from https://github.com/mui/material-ui/blob/d70a45a3f2cc87521b5822bbe2b40b9b054c22f9/packages/mui-material/src/styles/overrides.ts#L121-L139.
+type OverridesStyleRules<ClassKey extends string = string, ComponentName = keyof ComponentsPropsList, Theme = unknown> = Record<
+    ClassKey,
+    Interpolation<
+        // Record<string, unknown> is for other props that the slot receive internally
+        // Documenting all ownerStates could be a huge work, let's wait until we have a real needs from developers.
+        (ComponentName extends keyof ComponentsPropsList
+            ? ComponentsPropsList[ComponentName] &
+                  Record<string, unknown> & {
+                      ownerState: ComponentsPropsList[ComponentName] & Record<string, unknown>;
+                  }
+            : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+              {}) & {
+            theme: Theme;
+        } & Record<string, unknown>
+    >
+>;
 
 type StyleOverrideInterpolation<ClassKey extends string = string, ComponentName = keyof ComponentsPropsList, Theme = unknown> = OverridesStyleRules<
     ClassKey,
