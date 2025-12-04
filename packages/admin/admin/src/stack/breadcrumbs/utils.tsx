@@ -22,19 +22,30 @@ const useNumberOfItemsToBeHidden = (
         let allVisibleItemsFitIntoContainer = false;
         let newNumberOfItemsToBeHidden = 0;
 
-        const minimumNumberOfVisibleItems = 3; // First item, overflow menu & last item
+        const minimumNumberOfVisibleItems = 3;
         const maximumNumberOfHiddenItems = items.length - minimumNumberOfVisibleItems + 1;
 
-        while (!allVisibleItemsFitIntoContainer && newNumberOfItemsToBeHidden < maximumNumberOfHiddenItems) {
+        while (!allVisibleItemsFitIntoContainer && newNumberOfItemsToBeHidden <= maximumNumberOfHiddenItems) {
             let totalWidthOfVisibleItems = 0;
+
+            if (showBackButton) {
+                totalWidthOfVisibleItems += 32; // Width of back button including margin
+            }
 
             itemWidths?.forEach((itemWidth, index) => {
                 const isOverflowMenu = index === NUMBER_OF_ITEMS_BEFORE_OVERFLOW_MENU;
                 const overflowMenuWillBeShown = newNumberOfItemsToBeHidden > 0;
-                const linkItemWillBeShown =
-                    index === 0 || // Always show first item
-                    index === itemWidths.length - 1 || // Alawys show last item
-                    index > newNumberOfItemsToBeHidden + minimumNumberOfVisibleItems - 2;
+
+                let linkItemWillBeShown = false;
+
+                if (newNumberOfItemsToBeHidden < items.length - 2) {
+                    linkItemWillBeShown =
+                        index === 0 || // Always show first item
+                        index === itemWidths.length - 1 || // Always show last item
+                        index > newNumberOfItemsToBeHidden + minimumNumberOfVisibleItems - 2;
+                } else {
+                    linkItemWillBeShown = index === itemWidths.length - 1; // Only last item visible
+                }
 
                 if ((isOverflowMenu && overflowMenuWillBeShown) || (!isOverflowMenu && linkItemWillBeShown)) {
                     totalWidthOfVisibleItems += itemWidth;
@@ -76,13 +87,20 @@ export const useItemsToRender = (
 
     const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenu.length);
 
-    const firstItemWithBackButton = (
-        <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} slotProps={slotProps} />
-    );
+    const firstItemIsInOverflow =
+        !renderAllItemsToAllowCalculatingWidths && numberOfItemsToBeHidden !== undefined && numberOfItemsToBeHidden >= items.length - 2;
+
+    const showBackButtonEntry = !!backButtonUrl;
+    let firstItemWithBackButton = null;
+    if (!firstItemIsInOverflow || showBackButtonEntry) {
+        firstItemWithBackButton = (
+            <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} slotProps={slotProps} />
+        );
+    }
     const overflowMenu = <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} slotProps={slotProps} />;
     const remainingItems = itemsAfterOverflowMenu.map((item, index) => (
         <BreadcrumbsEntry key={item.id} item={item} isLastItem={index === itemsAfterOverflowMenu.length - 1} slotProps={slotProps} />
     ));
 
-    return [firstItemWithBackButton, showOverflowMenu && overflowMenu, ...remainingItems].filter((item) => item !== false);
+    return [firstItemWithBackButton, showOverflowMenu && overflowMenu, ...remainingItems].filter((item) => item !== false && item !== null);
 };
