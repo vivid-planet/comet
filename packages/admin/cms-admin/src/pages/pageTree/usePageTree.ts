@@ -30,7 +30,11 @@ interface PageTreePageAdditionalFieldsForUi {
     level: number;
     matches: PageSearchMatch[];
 }
-export type PageTreePage = GQLPageTreePageFragment & PageTreePageAdditionalFieldsForUi;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface AdditionalPageTreeNodeFragment {}
+
+export type PageTreePage = GQLPageTreePageFragment & AdditionalPageTreeNodeFragment & PageTreePageAdditionalFieldsForUi;
 
 interface UsePageTreeProps {
     pages: GQLPageTreePageFragment[];
