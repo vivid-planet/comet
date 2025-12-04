@@ -31,6 +31,7 @@
         "dev:oidc-provider": "dotenv -- dev-oidc-provider",
         "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
+        "lint:ci": "pnpm lint:root && pnpm --recursive run lint:ci && pnpm lint:knip",
         "lint:root": "pnpm exec prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && pnpm cspell .changeset/*.md",
         "lint:eslint": "pnpm --recursive run lint:eslint",
         "lint:tsc": "pnpm --recursive run lint:tsc",
