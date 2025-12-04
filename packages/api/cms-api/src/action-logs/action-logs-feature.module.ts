@@ -6,4 +6,4 @@ import { ActionLogsService } from "./action-logs.service";
     providers: [ActionLogsService],
     exports: [ActionLogsService],
 })
-export class ActionLogsCommonModule {}
+export class ActionLogsFeatureModule {}
