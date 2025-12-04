@@ -28,6 +28,7 @@
     },
     "scripts": {
         "lint": "run-p lint:prettier lint:eslint",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 *.json ",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'"
     },
