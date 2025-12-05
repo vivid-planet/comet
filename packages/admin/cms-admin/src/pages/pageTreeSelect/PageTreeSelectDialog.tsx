@@ -31,10 +31,10 @@ import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { type PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { usePageTreeConfig } from "../pageTreeConfig";
-import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
+import { type GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
-export { GQLSelectedPageFragment };
+export type { GQLSelectedPageFragment };
 
 export const selectedPageFragment = gql`
     fragment SelectedPage on PageTreeNode {

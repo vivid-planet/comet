@@ -35,7 +35,7 @@ import {
 import { useSubmitMutation } from "./submitMutation";
 
 export { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
-export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
+export type { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
 
 interface Props {
     id?: string;

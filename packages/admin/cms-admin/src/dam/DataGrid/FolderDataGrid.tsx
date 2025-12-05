@@ -59,7 +59,7 @@ import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 export { damFolderQuery } from "./FolderDataGrid.gql";
 export { moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
-export {
+export type {
     GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,

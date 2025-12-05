@@ -13,6 +13,12 @@ const config = [
                     allowedStrings: ["…", "€", "$", "?", "–", "—", "/", "(", ")", "%"],
                 },
             ],
+            "@typescript-eslint/consistent-type-exports": [
+                "error",
+                {
+                    fixMixedExportsWithInlineTypeSpecifier: true,
+                },
+            ],
         },
     },
 ];

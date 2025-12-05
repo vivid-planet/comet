@@ -14,7 +14,7 @@ import { DamPathLazy } from "./DamPathLazy";
 import { damFileFieldFileQuery } from "./FileField.gql";
 import { type GQLDamFileFieldFileFragment, type GQLDamFileFieldFileQuery, type GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
 
-export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
+export type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
 interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
