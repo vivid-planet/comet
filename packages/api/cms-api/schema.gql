@@ -202,7 +202,7 @@ type KubernetesCronJob {
   """
   label: String
   schedule: String!
-  suspend: Boolean!
+  suspended: Boolean!
   lastScheduledAt: DateTime
   lastJobRun: KubernetesJob
 }
