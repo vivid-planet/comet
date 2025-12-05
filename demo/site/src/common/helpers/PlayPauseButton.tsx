@@ -16,7 +16,7 @@ export const PlayPauseButton = ({ isPlaying, onClick }: PlayPauseButtonProps) =>
                     : intl.formatMessage({ id: "playPauseButton.play", defaultMessage: "Play" })
             }
         >
-            <div className={clsx(styles.animatedPlayPause, !isPlaying && styles.animatedPlayPausePaused)} />
+            <div className={clsx(styles.animatedPlayPause, isPlaying && styles.animatedPlayPausePaused)} />
         </button>
     );
 };
