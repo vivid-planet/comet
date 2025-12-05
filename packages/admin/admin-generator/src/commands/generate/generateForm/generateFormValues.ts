@@ -107,7 +107,7 @@ export function generateFormValuesType({
     gqlType: string;
 }) {
     const tree = formValuesConfigToTree({ formValuesConfig, gqlIntrospection, gqlType });
-    return `type FormValues = ${generateFormValuesTypeFromTree(tree, filterByFragmentType, false)};`;
+    return `export type FormValues = ${generateFormValuesTypeFromTree(tree, filterByFragmentType, false)};`;
 }
 
 function generateInitialValuesFromTree(
@@ -278,10 +278,10 @@ export function generateFormValuesToGqlInput({
         hasChildDestruct ? "formValuesRest" : "formValues",
     );
     if (code.length) {
-        return `const output = { ...${hasChildDestruct ? "formValuesRest" : "formValues"}, ${code} };`;
+        return `{ ...${hasChildDestruct ? "formValuesRest" : "formValues"}, ${code} }`;
     } else if (hasChildDestruct) {
-        return `const output = formValuesRest;`;
+        return `formValuesRest`;
     } else {
-        return `const output = formValues;`;
+        return `formValues`;
     }
 }

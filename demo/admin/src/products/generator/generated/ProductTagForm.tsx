@@ -27,7 +27,10 @@ import { updateProductTagMutation } from "./ProductTagForm.gql";
 import { GQLUpdateProductTagMutation } from "./ProductTagForm.gql.generated";
 import { GQLUpdateProductTagMutationVariables } from "./ProductTagForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = GQLProductTagFormFragment;
+export type FormValues = GQLProductTagFormFragment;
+export function formValuesToOutput(formValues: FormValues) {
+    return formValues;
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -56,14 +59,13 @@ export function ProductTagForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = formValues;
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id)
                 throw new Error();
-            const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductTagMutation, GQLUpdateProductTagMutationVariables>({
                 mutation: updateProductTagMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         }
         else {
