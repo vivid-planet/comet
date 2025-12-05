@@ -1,0 +1,36 @@
+import { CrudField, CrudGenerator, RootBlockEntity } from "@comet/cms-api";
+import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { v4 } from "uuid";
+
+import { TenantScope } from "./tenant-scope.entity";
+
+@Entity()
+@ObjectType()
+@RootBlockEntity()
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["tenantAdministration"], delete: false })
+export class Tenant extends BaseEntity {
+    [OptionalProps]?: "createdAt" | "updatedAt";
+
+    @PrimaryKey({ type: "uuid" })
+    @Field(() => ID)
+    id: string = v4();
+
+    @Property()
+    @Field()
+    createdAt: Date = new Date();
+
+    @Property({ onUpdate: () => new Date() })
+    @Field()
+    updatedAt: Date = new Date();
+
+    @Property({ type: "text" })
+    @Field()
+    name: string;
+
+    @OneToMany(() => TenantScope, (scope) => scope.tenant, { orphanRemoval: true })
+    @CrudField({
+        input: false,
+    })
+    scopes = new Collection<TenantScope>(this);
+}

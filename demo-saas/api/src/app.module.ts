@@ -35,6 +35,7 @@ import { UserService } from "./auth/user.service";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { ProductsModule } from "./products/products.module";
 import { StatusModule } from "./status/status.module";
+import { TenantsModule } from "./tenant/tenants.module";
 
 @Module({})
 export class AppModule {
@@ -82,13 +83,7 @@ export class AppModule {
                 authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        // TODO: Replace with dynamic content scopes
-                        availableContentScopes: [
-                            {
-                                scope: { domain: "main", language: "en" },
-                                label: { domain: "Main" },
-                            },
-                        ],
+                        availableContentScopes: () => accessControlService.getAvailableContentScopes(),
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],
@@ -150,6 +145,7 @@ export class AppModule {
                 OpenTelemetryModule,
                 DependenciesModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
+                TenantsModule,
             ],
         };
     }

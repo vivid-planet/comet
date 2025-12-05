@@ -363,6 +363,8 @@ type Mutation {
   createProductHighlight(input: ProductHighlightInput!): ProductHighlight!
   createProductTag(input: ProductTagInput!): ProductTag!
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
+  createTenant(input: TenantInput!): Tenant!
+  createTenantScope(input: TenantScopeInput!, tenant: ID!): TenantScope!
   currentUserSignOut: String!
   deleteManufacturer(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
@@ -380,6 +382,8 @@ type Mutation {
   updateProductHighlight(id: ID!, input: ProductHighlightUpdateInput!): ProductHighlight!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
+  updateTenant(id: ID!, input: TenantUpdateInput!): Tenant!
+  updateTenantScope(id: ID!, input: TenantScopeUpdateInput!): TenantScope!
   userPermissionsCreatePermission(input: UserPermissionInput!, userId: String!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateContentScopes(input: UserContentScopesInput!, userId: String!): Boolean!
@@ -445,6 +449,16 @@ type PaginatedProducts {
   totalCount: Int!
 }
 
+type PaginatedTenantScopes {
+  nodes: [TenantScope!]!
+  totalCount: Int!
+}
+
+type PaginatedTenants {
+  nodes: [Tenant!]!
+  totalCount: Int!
+}
+
 enum Permission {
   blockPreview
   builds
@@ -459,6 +473,7 @@ enum Permission {
   prelogin
   products
   sitePreview
+  tenantAdministration
   translation
   userPermissions
   warnings
@@ -1004,6 +1019,10 @@ type Query {
   productVariant(id: ID!): ProductVariant!
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
+  tenant(id: ID!): Tenant!
+  tenantScope(id: ID!): TenantScope!
+  tenantScopes(filter: TenantScopeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantScopeSort!], tenant: ID!): PaginatedTenantScopes!
+  tenants(filter: TenantFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantSort!]): PaginatedTenants!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(skipManual: Boolean, userId: String!): [JSONObject!]!
@@ -1028,6 +1047,88 @@ input StringFilter {
   notContains: String
   notEqual: String
   startsWith: String
+}
+
+type Tenant {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  scopes: [TenantScope!]!
+  updatedAt: DateTime!
+}
+
+input TenantFilter {
+  and: [TenantFilter!]
+  createdAt: DateTimeFilter
+  id: IdFilter
+  name: StringFilter
+  or: [TenantFilter!]
+  scopes: OneToManyFilter
+  updatedAt: DateTimeFilter
+}
+
+input TenantInput {
+  name: String!
+}
+
+type TenantScope {
+  createdAt: DateTime!
+  domain: String!
+  id: ID!
+  language: String!
+  tenant: Tenant!
+  updatedAt: DateTime!
+}
+
+input TenantScopeFilter {
+  and: [TenantScopeFilter!]
+  createdAt: DateTimeFilter
+  domain: StringFilter
+  id: IdFilter
+  language: StringFilter
+  or: [TenantScopeFilter!]
+  updatedAt: DateTimeFilter
+}
+
+input TenantScopeInput {
+  domain: String!
+  language: String!
+}
+
+input TenantScopeSort {
+  direction: SortDirection! = ASC
+  field: TenantScopeSortField!
+}
+
+enum TenantScopeSortField {
+  createdAt
+  domain
+  language
+  tenant
+  tenant_createdAt
+  tenant_name
+  tenant_updatedAt
+  updatedAt
+}
+
+input TenantScopeUpdateInput {
+  domain: String
+  language: String
+}
+
+input TenantSort {
+  direction: SortDirection! = ASC
+  field: TenantSortField!
+}
+
+enum TenantSortField {
+  createdAt
+  name
+  updatedAt
+}
+
+input TenantUpdateInput {
+  name: String
 }
 
 input UserContentScopesInput {
