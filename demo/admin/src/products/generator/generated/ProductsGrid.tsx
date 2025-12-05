@@ -107,7 +107,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const theme = useTheme();
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => [
         { field: "overview",
-            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            headerName: intl.formatMessage({ id: "product.overview.headerName", defaultMessage: "Over-view" }),
             filterable: false,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
