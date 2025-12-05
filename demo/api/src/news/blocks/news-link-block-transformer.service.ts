@@ -25,7 +25,7 @@ export class NewsLinkBlockTransformerService implements BlockTransformerServiceI
             return {};
         }
 
-        const news = await this.entityManager.findOneOrFail(News, block.id);
+        const news = await this.entityManager.findOneOrFail<News>("News", block.id);
 
         return {
             news: {

@@ -11,6 +11,8 @@ import {
 } from "@comet/cms-api";
 import { IsOptional, IsUUID } from "class-validator";
 
+import { NewsLinkBlockTransformerService } from "./news-link-block-transformer.service";
+
 class NewsLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
     id?: string;
@@ -31,7 +33,6 @@ class NewsLinkBlockData extends BlockData {
     }
 
     async transformToPlain() {
-        const { NewsLinkBlockTransformerService } = await import("./news-link-block-transformer.service");
         return NewsLinkBlockTransformerService;
     }
 }
