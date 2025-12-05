@@ -2,14 +2,12 @@ import {
     AttachedDocument,
     PageTreeNodeVisibility,
     RedirectGenerationType,
-    RedirectInterface,
     REDIRECTS_LINK_BLOCK,
     RedirectsLinkBlock,
     RedirectSourceTypeValues,
 } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";
@@ -25,10 +23,6 @@ import { SeoBlockFixtureService } from "./seo-block-fixture.service";
 export class RedirectsFixtureService {
     constructor(
         @Inject(REDIRECTS_LINK_BLOCK) private readonly redirectsLinkBlock: RedirectsLinkBlock,
-        @InjectRepository("Redirect") private readonly redirectsRepository: EntityRepository<RedirectInterface>,
-        @InjectRepository(PageTreeNode) private readonly pageTreeNodesRepository: EntityRepository<PageTreeNode>,
-        @InjectRepository(AttachedDocument) private readonly attachedDocumentsRepository: EntityRepository<AttachedDocument>,
-        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         private readonly seoBlockFixtureService: SeoBlockFixtureService,
         private readonly entityManager: EntityManager,
     ) {}
@@ -45,7 +39,7 @@ export class RedirectsFixtureService {
                 const pageId = faker.string.uuid();
 
                 this.entityManager.persist(
-                    this.pagesRepository.create({
+                    this.entityManager.create(Page, {
                         id: pageId,
                         content: PageContentBlock.blockInputFactory({ blocks: [] }).transformToBlockData(),
                         stage: StageBlock.blockInputFactory({ blocks: [] }).transformToBlockData(),
@@ -53,7 +47,7 @@ export class RedirectsFixtureService {
                     }),
                 );
                 this.entityManager.persist(
-                    this.pageTreeNodesRepository.create({
+                    this.entityManager.create(PageTreeNode, {
                         id: pageTreeNodeId,
                         parentId: level > 0 ? faker.helpers.arrayElement(pages[level - 1]) : null,
                         name: `Page ${i}`,
@@ -66,7 +60,7 @@ export class RedirectsFixtureService {
                         category: PageTreeNodeCategory.mainNavigation,
                     }),
                 );
-                this.entityManager.persist(this.attachedDocumentsRepository.create({ pageTreeNodeId, documentId: pageId, type: "Page" }));
+                this.entityManager.persist(this.entityManager.create(AttachedDocument, { pageTreeNodeId, documentId: pageId, type: "Page" }));
 
                 pagesForLevel.push(pageTreeNodeId);
             }
@@ -76,7 +70,7 @@ export class RedirectsFixtureService {
         }
 
         for (let i = 0; i < 7000; i++) {
-            this.redirectsRepository.create({
+            this.entityManager.create("Redirect", {
                 generationType: RedirectGenerationType.manual,
                 source: `/redirect-${i}`,
                 target: this.redirectsLinkBlock

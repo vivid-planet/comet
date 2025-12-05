@@ -1,7 +1,6 @@
 import { PageTreeNodeBaseCreateInput, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";
@@ -27,12 +26,11 @@ interface GeneratePageInput {
 @Injectable()
 export class DocumentGeneratorService {
     constructor(
+        private readonly entityManager: EntityManager,
         private readonly pageTreeService: PageTreeService,
-        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         private readonly pageContentBlockFixtureService: PageContentBlockFixtureService,
         private readonly stageBlockFixtureService: StageBlockFixtureService,
         private readonly seoBlockFixtureService: SeoBlockFixtureService,
-        private readonly entityManager: EntityManager,
     ) {}
 
     async generatePage({
@@ -62,7 +60,7 @@ export class DocumentGeneratorService {
         await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
 
         await this.entityManager.persistAndFlush(
-            this.pagesRepository.create({
+            this.entityManager.create(Page, {
                 id,
                 content: PageContentBlock.blockInputFactory(
                     await this.pageContentBlockFixtureService.generateBlockInput(blockCategory),

@@ -1,6 +1,5 @@
 import { AffectedEntity, RequiredPermission } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 
 import { News } from "./entities/news.entity";
@@ -8,12 +7,12 @@ import { News } from "./entities/news.entity";
 @Resolver(() => News)
 @RequiredPermission("news")
 export class ExtendedNewsResolver {
-    constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+    constructor(private readonly entityManager: EntityManager) {}
 
     @Query(() => [News])
     @AffectedEntity(News, { idArg: "ids" })
     async newsListByIds(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<News[]> {
-        const newsList = await this.repository.find({ id: { $in: ids } });
+        const newsList = await this.entityManager.find(News, { id: { $in: ids } });
 
         if (newsList.length !== ids.length) {
             throw new Error("Failed to load all requested news");

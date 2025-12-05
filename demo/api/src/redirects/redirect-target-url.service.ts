@@ -6,8 +6,7 @@ import {
     RedirectsLinkBlock,
     RedirectTargetUrlServiceInterface,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
@@ -20,9 +19,9 @@ import { type PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope"
 @Injectable({ scope: Scope.REQUEST })
 export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
     constructor(
-        private readonly pageTreeReadApi: PageTreeReadApiService,
         @Inject(CONFIG) private readonly config: Config,
-        @InjectRepository(News) private readonly newsRepository: EntityRepository<News>,
+        private readonly entityManager: EntityManager,
+        private readonly pageTreeReadApi: PageTreeReadApiService,
         private readonly predefinedPagesService: PredefinedPagesService,
     ) {}
 
@@ -47,7 +46,7 @@ export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterfa
         } else {
             const newsId = (target.props as ExtractBlockData<typeof NewsLinkBlock>).id;
             if (newsId) {
-                const news = await this.newsRepository.findOne(newsId);
+                const news = await this.entityManager.findOne(News, newsId);
 
                 if (!news) {
                     return undefined;
