@@ -35,7 +35,7 @@ import { UserService } from "./auth/user.service";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { ProductsModule } from "./products/products.module";
 import { StatusModule } from "./status/status.module";
-import { TenantModule } from "./tenant/tenant.module";
+import { TenantsModule } from "./tenant/tenants.module";
 
 @Module({})
 export class AppModule {
@@ -151,7 +151,7 @@ export class AppModule {
                 OpenTelemetryModule,
                 DependenciesModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
-                TenantModule,
+                TenantsModule,
             ],
         };
     }

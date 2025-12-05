@@ -22,7 +22,7 @@ export class Tenant extends BaseEntity {
     @Field()
     updatedAt: Date = new Date();
 
-    @Property()
+    @Property({ type: "text" })
     @Field()
     name: string;
 }

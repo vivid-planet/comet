@@ -8,4 +8,4 @@ import { TenantResolver } from "./generated/tenant.resolver";
     imports: [MikroOrmModule.forFeature([Tenant])],
     providers: [TenantResolver],
 })
-export class TenantModule {}
+export class TenantsModule {}
