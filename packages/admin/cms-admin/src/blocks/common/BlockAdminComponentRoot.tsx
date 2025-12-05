@@ -1,4 +1,5 @@
 import { Stack, StackBreadcrumbs } from "@comet/admin";
+import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
@@ -13,15 +14,16 @@ const BlockAdminComponentRoot = (props: PropsWithChildren<Props>) => {
     return (
         <Stack topLevelTitle={title}>
             <StackBreadcrumbs
+                showBackButton
                 sx={({ palette, spacing }) => ({
                     paddingTop: 0,
-                    paddingBottom: spacing(4),
                     position: "sticky",
                     zIndex: 15,
                     backgroundColor: palette.background.default,
                     top: 0,
                 })}
             />
+            <Divider style={{ marginBottom: "16px" }} />
             <ChildrenContainer>{children}</ChildrenContainer>
         </Stack>
     );
