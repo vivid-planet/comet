@@ -12,7 +12,7 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
-import { useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { TenantForm } from "./generated/TenantForm";
 import { TenantsGrid } from "./generated/TenantsGrid";
@@ -29,11 +29,10 @@ const FormToolbar = () => (
 );
 
 export function TenantsPage() {
-    const intl = useIntl();
     useContentScopeConfig({ redirectPathAfterChange: "/administration/tenants" });
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "tenants.tenants", defaultMessage: "Tenants" })}>
+        <Stack topLevelTitle={<FormattedMessage id="tenants.tenants" defaultMessage="Tenants" />}>
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
@@ -41,7 +40,7 @@ export function TenantsPage() {
                         <TenantsGrid />
                     </MainContent>
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "tenants.tenants", defaultMessage: "Edit Tenants" })}>
+                <StackPage name="edit" title={<FormattedMessage id="tenants.tenants" defaultMessage="Edit Tenants" />}>
                     {(selectedTenantId) => (
                         <SaveBoundary>
                             <FormToolbar />
@@ -51,7 +50,7 @@ export function TenantsPage() {
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "tenants.tenants", defaultMessage: "Add Tenants" })}>
+                <StackPage name="add" title={<FormattedMessage id="tenants.tenants" defaultMessage="Add Tenants" />}>
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
