@@ -24,5 +24,11 @@ export { default as findEntityInCurrentSelection } from "./core/utils/findEntity
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";
 export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneBlock";
-export { default as createFinalFormRte } from "./field/createFinalFormRte";
+export {
+    /**
+     * @deprecated use `createRteField` instead - the resulting `RteField` can be used directly, instead of combining it with a `Field` component.
+     */
+    default as createFinalFormRte,
+} from "./field/createFinalFormRte";
+export { createRteField, type RteFieldProps } from "./field/createRteField";
 export { requiredValidator } from "./utils/requiredValidator";

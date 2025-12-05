@@ -6,7 +6,7 @@ import makeRteApi, { type IMakeRteApiProps, type OnDebouncedContentChangeFn } fr
 import { type IOptions as RteOptions, Rte, type RteProps } from "../core/Rte";
 import RteReadOnlyBase from "../core/RteReadOnly";
 
-interface IConfig<T = any> {
+export interface IConfig<T = any> {
     rteApiOptions?: IMakeRteApiProps<T>;
     rteOptions?: RteOptions;
 }
