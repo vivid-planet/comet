@@ -59,6 +59,12 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     iconMapping?: {
         error?: ReactNode;
     };
+    /**
+     * Whether to hide the helper text with maximum file information.
+     * Only applies when multiple is false (single file upload).
+     * @default false
+     */
+    hideMaxFilesHelperText?: boolean;
 } & ThemeProps;
 
 export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>(inProps: FileSelectProps<AdditionalValidFileValues>) => {
@@ -78,6 +84,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         files,
         error,
         layout = "list",
+        hideMaxFilesHelperText = false,
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -187,7 +194,9 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                     </ErrorMessage>
                 </Error>
             )}
-            {Boolean(filesInfoText && !readOnly) && <FilesInfoText {...slotProps?.filesInfoText}>{filesInfoText}</FilesInfoText>}
+            {Boolean(filesInfoText && !readOnly && (multiple || !hideMaxFilesHelperText)) && (
+                <FilesInfoText {...slotProps?.filesInfoText}>{filesInfoText}</FilesInfoText>
+            )}
         </Root>
     );
 };

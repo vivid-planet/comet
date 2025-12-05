@@ -84,6 +84,38 @@ export const DefaultWithInitializedImage: Story = {
 };
 
 /**
+ * Example of a single file upload with the `Maximum 1 file` info text not shown.
+ *
+ */
+export const DefaultWithNoMaxFilesHelperText: Story = {
+    render: () => {
+        interface FormValues {
+            value: GQLFinalFormFileUploadFragment;
+        }
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" hideMaxFilesHelperText />
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
  * Example of a multi file upload
  *
  * Its important to set `maxFiles` when using `multiple`, otherwise the user could upload an unlimited number of files.
