@@ -83,13 +83,7 @@ export class AppModule {
                 authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        // TODO: Replace with dynamic content scopes
-                        availableContentScopes: [
-                            {
-                                scope: { domain: "main", language: "en" },
-                                label: { domain: "Main" },
-                            },
-                        ],
+                        availableContentScopes: () => accessControlService.getAvailableContentScopes(),
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],
