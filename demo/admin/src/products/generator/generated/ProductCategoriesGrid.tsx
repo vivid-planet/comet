@@ -55,7 +55,7 @@ function ProductCategoriesGridToolbar() {
     return (<DataGridToolbar>
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="productCategory.productCategoriesGrid.newEntry" defaultMessage={`New Product Category`}/>
+        <FormattedMessage id="productCategory.productCategoriesGrid.newEntry" defaultMessage="New Product Category"/>
     </Button>
             </DataGridToolbar>);
 }
