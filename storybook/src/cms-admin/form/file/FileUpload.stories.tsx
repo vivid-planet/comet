@@ -103,7 +103,7 @@ export const DefaultWithNoMaxFilesHelperText: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" showMaxFilesHelperText={false} />
+                            <FileUploadField name="value" label="File Upload Field" fullWidth variant="horizontal" hideMaxFilesHelperText />
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>
