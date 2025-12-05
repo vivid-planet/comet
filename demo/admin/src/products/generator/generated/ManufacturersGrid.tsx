@@ -55,7 +55,7 @@ function ManufacturersGridToolbar() {
                 <GridFilterButton />
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage={`Add Manufacturer`}/>
+        <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer"/>
     </Button>
             </DataGridToolbar>);
 }

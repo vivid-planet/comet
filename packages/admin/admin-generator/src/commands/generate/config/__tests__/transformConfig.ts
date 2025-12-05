@@ -237,4 +237,24 @@ describe("transformConfig", () => {
             expect(importedIdentifiers).toEqual(new Map([["debounce", { defaultImport: true, name: "debounce", import: "p-debounce" }]]));
         });
     });
+
+    it("parses FormattedMessage", () => {
+        const config = parseString(`
+            import { FormattedMessage } from "react-intl";
+            import { defineConfig } from "@comet/admin-generator";
+            import { GQLProduct } from "@src/graphql.generated";
+
+            export default defineConfig<GQLProduct>({
+                type: "grid",
+                newEntryText: <FormattedMessage id="product.newEntryText" defaultMessage="Create new product" />,
+                columns: [
+                    {
+                        name: "foo",
+                    }
+                ]
+            });
+        `);
+        expect(config).toContain('type: "grid"');
+        expect(config).toContain('newEntryText: { formattedMessageId: "product.newEntryText", defaultMessage: "Create new product" }');
+    });
 });

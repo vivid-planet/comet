@@ -4,6 +4,7 @@ import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { type Imports } from "../utils/generateImportsCode";
+import { generateFormattedMessage } from "../utils/intl";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
@@ -97,9 +98,11 @@ export function generateFormField({
             ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` +
-                      `"${formattedMessageRootId}.${name}.helperText" ` +
-                      `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={${generateFormattedMessage({
+                          config: config.helperText,
+                          id: `${formattedMessageRootId}.${name}.helperText`,
+                          type: "jsx",
+                      })}}`
                     : ""
             }
             ${validateCode}
