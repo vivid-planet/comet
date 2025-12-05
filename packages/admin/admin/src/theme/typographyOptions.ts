@@ -127,6 +127,17 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyVar
         paddingTop: 4,
         paddingBottom: 4,
     },
+    button: {
+        fontFamily,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: 250,
+        textTransform: "none",
+
+        [breakpoints.up("md")]: {
+            lineHeight: "16px",
+        },
+    },
 });
 
 declare module "@mui/material/styles" {
