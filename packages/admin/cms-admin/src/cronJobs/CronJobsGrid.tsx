@@ -36,7 +36,7 @@ const cronJobsQuery = gql`
             name
             label
             schedule
-            suspend
+            suspended
             lastScheduledAt
             lastJobRun {
                 id
@@ -104,7 +104,7 @@ export function CronJobsGrid() {
                         ...disableFieldOptions,
                     },
                     {
-                        field: "suspend",
+                        field: "suspended",
                         headerName: intl.formatMessage({ id: "comet.pages.cronJobs.status", defaultMessage: "Status" }),
                         flex: 1,
                         ...disableFieldOptions,

@@ -17,7 +17,7 @@ export class CronJob {
     schedule: string;
 
     @Field()
-    suspend: boolean;
+    suspended: boolean;
 
     @Field({ nullable: true })
     lastScheduledAt?: Date;
