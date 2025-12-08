@@ -2167,7 +2167,7 @@ importers:
         specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.26)
       '@vitejs/plugin-react':
-        specifier: ^4.6.0
+        specifier: ^4.7.0
         version: 4.7.0(vite@5.4.21(@types/node@24.10.1)(sass@1.93.0)(terser@5.43.1))
       chokidar-cli:
         specifier: ^3.0.0
@@ -2261,7 +2261,7 @@ importers:
         specifier: ^18.3.23
         version: 18.3.26
       '@vitejs/plugin-react':
-        specifier: ^4.6.0
+        specifier: ^4.7.0
         version: 4.7.0(vite@5.4.21(@types/node@24.10.1)(sass@1.93.0)(terser@5.43.1))
       chokidar-cli:
         specifier: ^3.0.0
@@ -6098,6 +6098,7 @@ packages:
   '@koa/router@14.0.0':
     resolution: {integrity: sha512-LBSu5K0qAaaQcXX/0WIB9PGDevyCxxpnc1uq13vV/CgObaVxuis5hKl3Eboq/8gcb6ebnkAStW9NB/Em2eYyFA==}
     engines: {node: '>= 20'}
+    deprecated: Please upgrade to v15 or higher. All reported bugs in this version are fixed in newer releases, dependencies have been updated, and security has been improved.
 
   '@kubernetes/client-node@1.3.0':
     resolution: {integrity: sha512-IE0yrIpOT97YS5fg2QpzmPzm8Wmcdf4ueWMn+FiJSI3jgTTQT1u+LUhoYpdfhdHAVxdrNsaBg2C0UXSnOgMoCQ==}
