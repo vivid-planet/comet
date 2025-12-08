@@ -1162,7 +1162,7 @@ importers:
         specifier: ^9.5.0
         version: 9.5.0
       glob:
-        specifier: ^11.0.0
+        specifier: ^11.1.0
         version: 11.1.0
       graphql:
         specifier: ^16.11.0
