@@ -39,7 +39,7 @@ export function FinalFormInput({
                 endAdornment={
                     (endAdornment || !required || isTranslatable) && (
                         <>
-                            {!required && (
+                            {!required && !props.disabled && !props.readOnly && (
                                 <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                             )}
                             {isTranslatable && (

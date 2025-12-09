@@ -97,7 +97,7 @@ export function FinalFormNumberInput({
             endAdornment={
                 (endAdornment || !required) && (
                     <>
-                        {!required && (
+                        {!required && !props.disabled && !props.readOnly && (
                             <ClearInputAdornment
                                 position="end"
                                 hasClearableContent={typeof input.value === "number"}
