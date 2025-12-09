@@ -39,10 +39,10 @@ import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
 
-import { EditPageNode } from "./EditPageNode";
+import { EditPageNode, type GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
+export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any, GQLPageTreeNodeAdditionalFieldsFragment>> = {
     Page,
     Link,
     PredefinedPage,
@@ -79,7 +79,8 @@ export const masterMenuData: MasterMenuData = [
                 return (
                     <PagesPage
                         path={`/pages/pagetree/${match.params.category}`}
-                        documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        documentTypes={(category): Record<DocumentType, DocumentInterface<any, any, GQLPageTreeNodeAdditionalFieldsFragment>> => {
                             if (category === "TopMenu") {
                                 return {
                                     Page,

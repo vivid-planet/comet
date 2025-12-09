@@ -4,12 +4,7 @@ import { createEditPageNode } from "@comet/cms-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode.generated";
-
-declare module "@comet/cms-admin" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface AdditionalPageTreeNodeFragment extends GQLPageTreeNodeAdditionalFieldsFragment {}
-}
+export type { GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode.generated"; //re-export
 
 const userGroupOptions = [
     {

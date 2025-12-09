@@ -178,7 +178,6 @@ export { createUsePage } from "./pages/createUsePage";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
 export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
-export type { AdditionalPageTreeNodeFragment } from "./pages/pageTree/usePageTree";
 export { resolveHasSaveConflict } from "./pages/resolveHasSaveConflict";
 export { useSaveConflict } from "./pages/useSaveConflict";
 export { useSaveConflictQuery } from "./pages/useSaveConflictQuery";

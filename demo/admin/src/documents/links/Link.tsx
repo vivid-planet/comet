@@ -4,6 +4,7 @@ import { Link as LinkIcon } from "@comet/admin-icons";
 import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { type GQLLink, type GQLLinkInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import { FormattedMessage } from "react-intl";
@@ -14,7 +15,7 @@ const rootBlocks = {
     content: LinkBlock,
 };
 
-export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & DependencyInterface = {
+export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput, GQLPageTreeNodeAdditionalFieldsFragment> & DependencyInterface = {
     displayName: <FormattedMessage {...messages.link} />,
     editComponent: EditLink,
     getQuery: gql`
