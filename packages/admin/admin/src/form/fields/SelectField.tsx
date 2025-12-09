@@ -23,14 +23,33 @@ export interface SelectFieldProps<Value extends string | number> extends SelectF
     componentsProps?: {
         finalFormSelect?: Partial<ComponentProps<typeof FinalFormSelect<Value>>>;
     };
+    dataTestid?: string;
 }
 
-export function SelectField<Value extends string | number>({ componentsProps = {}, children, options, ...restProps }: SelectFieldProps<Value>) {
+export function SelectField<Value extends string | number>({
+    componentsProps = {},
+    children,
+    options,
+    dataTestid,
+    ...restProps
+}: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
+
+    // Merge dataTestid into inputProps if provided
+    const mergedFinalFormSelectProps = dataTestid
+        ? {
+              ...finalFormSelectProps,
+              inputProps: {
+                  ...finalFormSelectProps?.inputProps,
+                  "data-testid": dataTestid,
+              },
+          }
+        : finalFormSelectProps;
+
     return (
         <Field {...restProps}>
             {(props) => (
-                <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
+                <FinalFormSelect<Value> {...props} {...mergedFinalFormSelectProps}>
                     {children
                         ? children
                         : options?.map(({ label, value, disabled }) => (
