@@ -82,23 +82,25 @@ type AsyncSelectFilter =
       };
 
 export type FormFieldConfig<T> = (
-    | ({ type: "text"; name: UsableFormFields<T>; multiline?: boolean } & InputBaseFieldConfig)
-    | ({ type: "number"; name: UsableFormFields<T>; decimals?: number } & InputBaseFieldConfig)
+    | ({ type: "text"; name: UsableFormFields<T>; multiline?: boolean; initialValue?: string } & InputBaseFieldConfig)
+    | ({ type: "number"; name: UsableFormFields<T>; decimals?: number; initialValue?: number } & InputBaseFieldConfig)
     | ({
           type: "numberRange";
           name: UsableFormFields<T>;
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
+          initialValue?: { min: number; max: number };
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: UsableFormFields<T> }
-    | ({ type: "date"; name: UsableFormFields<T> } & InputBaseFieldConfig)
-    | ({ type: "dateTime"; name: UsableFormFields<T> } & InputBaseFieldConfig)
+    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean }
+    | ({ type: "date"; name: UsableFormFields<T>; initialValue?: string } & InputBaseFieldConfig)
+    | ({ type: "dateTime"; name: UsableFormFields<T>; initialValue?: Date } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
           name: UsableFormFields<T>;
           values?: StaticSelectValue[];
           inputType?: "select" | "radio";
+          initialValue?: string;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelect";

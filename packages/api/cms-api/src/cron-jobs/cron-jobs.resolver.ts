@@ -7,7 +7,7 @@ import { SkipBuild } from "../builds/skip-build.decorator";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
+import { KubernetesAuthenticationGuard } from "../kubernetes/kubernetes-authentication.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
@@ -19,7 +19,7 @@ import { JobsService } from "./jobs.service";
 
 @Resolver(() => CronJob)
 @RequiredPermission(["cronJobs"], { skipScopeCheck: true })
-@UseGuards(PreventLocalInvocationGuard)
+@UseGuards(KubernetesAuthenticationGuard)
 export class CronJobsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,
