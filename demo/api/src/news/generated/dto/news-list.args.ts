@@ -3,9 +3,9 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
-import { OffsetBasedPaginationArgs } from "@comet/cms-api";
+import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
 import { NewsFilter } from "./news.filter";
-import { NewsSort } from "./news.sort";
+import { NewsSort, NewsSortField } from "./news.sort";
 import { NewsContentScope } from "../../entities/news.entity";
 @ArgsType()
 export class NewsListArgs extends OffsetBasedPaginationArgs {
@@ -22,9 +22,8 @@ export class NewsListArgs extends OffsetBasedPaginationArgs {
     @Type(() => NewsFilter)
     @IsOptional()
     filter?: NewsFilter;
-    @Field(() => [NewsSort], { nullable: true })
+    @Field(() => [NewsSort], { defaultValue: [{ field: NewsSortField.createdAt, direction: SortDirection.ASC }] })
     @ValidateNested({ each: true })
     @Type(() => NewsSort)
-    @IsOptional()
-    sort?: NewsSort[];
+    sort: NewsSort[];
 }

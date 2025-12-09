@@ -1,5 +1,29 @@
 # @comet/eslint-config
 
+## 8.10.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- f8bf3f5: Detect React version in `@comet/eslint-config/react.js` and `@comet/eslint-config/nextjs.js`
+
+    Removes the `React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration.` warning.
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.8.0
+
 ## 8.7.1
 
 ### Patch Changes

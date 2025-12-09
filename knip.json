@@ -2,13 +2,12 @@
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
         ".": {
-            "entry": ["dev-pm.config.ts", "site-configs.ts"],
+            "entry": ["dev-pm.config.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["dotenv-cli", "cspell", "open-cli"],
+            "ignoreDependencies": ["open-cli"],
             "ignoreBinaries": ["oauth2-proxy"]
         },
         "packages/cli": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/eslint-config": {
@@ -32,55 +31,45 @@
             "ignore": ["*"]
         },
         "packages/eslint-plugin": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-icons": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
+            "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-date-time": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-rte": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/cms-admin": {
-            "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts"]
         },
         "packages/admin/admin-generator": {
-            "entry": ["./src/adminGenerator.ts", "./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/cms-api": {
-            "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./src/**/migrations/*.ts"],
+            "entry": ["./src/**/migrations/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@sentry/node"]
         },
         "packages/api/api-generator": {
-            "entry": ["./src/apiGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/site/site-react": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]
         },
         "packages/site/site-nextjs": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]
         },
@@ -93,7 +82,6 @@
         "demo/api": {
             "entry": [
                 "./src/main.ts",
-                "./src/console.ts",
                 "./src/content-scope/content-scope.interface.ts",
                 "./src/repl.ts",
                 "./src/db/ormconfig.cli.ts",
@@ -103,29 +91,19 @@
                 "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit", "@as-integrations/express5"],
+            "ignoreDependencies": ["@as-integrations/express5"],
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": [
-                "./src/app/**",
-                "./cache-handler.ts",
-                "./server.ts",
-                "./opentelemetry-metrics.ts",
-                "./src/webpack/gql-hash-loader.ts",
-                "./src/proxy.ts"
-            ],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/proxy.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
         },
         "storybook": {
-            "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
-            "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"],
+            "entry": ["./src/**/*.stories.tsx"],
+            "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["ts-dedent"]
         }
-    },
-    "rules": {
-        "enumMembers": "off"
     }
 }
