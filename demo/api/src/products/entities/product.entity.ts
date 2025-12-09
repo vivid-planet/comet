@@ -1,4 +1,14 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import {
+    ActionLogs,
+    BlockDataInterface,
+    CrudField,
+    CrudGenerator,
+    DamImageBlock,
+    FileUpload,
+    RootBlock,
+    RootBlockEntity,
+    RootBlockType,
+} from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -79,6 +89,7 @@ export class ProductPriceRange {
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+@ActionLogs()
 export class Product extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
