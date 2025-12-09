@@ -1,4 +1,4 @@
-import { Dashboard, Snips, Wrench } from "@comet/admin-icons";
+import { Company, Dashboard, Snips, SwitchUser, Wrench } from "@comet/admin-icons";
 import { CronJobsPage, MasterMenu, type MasterMenuData, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
@@ -13,6 +13,7 @@ import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/Ma
 import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
+import { TenantsPage } from "@src/tenants/TenantsPage";
 import { FormattedMessage } from "react-intl";
 
 export const masterMenuData: MasterMenuData = [
@@ -49,16 +50,6 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "cronJobs",
             },
         ],
-    },
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
-        icon: <Snips />,
-        route: {
-            path: "/user-permissions",
-            component: UserPermissionsPage,
-        },
-        requiredPermission: ["userPermissions", "impersonation"],
     },
     {
         type: "group",
@@ -176,6 +167,32 @@ export const masterMenuData: MasterMenuData = [
             },
         ],
         requiredPermission: "products",
+    },
+    {
+        type: "group",
+        title: <FormattedMessage id="menu.administration" defaultMessage="Administration" />,
+        items: [
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.tenants" defaultMessage="Tenants" />,
+                icon: <Company />,
+                route: {
+                    path: "/administration/tenants",
+                    component: TenantsPage,
+                },
+                requiredPermission: "tenantAdministration",
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.users" defaultMessage="Users" />,
+                icon: <SwitchUser />,
+                route: {
+                    path: "/administration/users",
+                    component: UserPermissionsPage,
+                },
+                requiredPermission: ["userPermissions", "impersonation"],
+            },
+        ],
     },
 ];
 
