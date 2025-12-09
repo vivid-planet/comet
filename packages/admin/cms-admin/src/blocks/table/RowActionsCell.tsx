@@ -2,7 +2,7 @@ import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardTe
 import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@comet/admin-icons";
 import { Divider, Snackbar } from "@mui/material";
 import { type Dispatch, type SetStateAction } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
@@ -24,9 +24,10 @@ type Props = {
     addToRecentlyPastedIds: (id: string) => void;
 };
 
-export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
+export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
+    const intl = useIntl();
 
     const insertRow = (where: "above" | "below") => {
         updateState((state) => {
@@ -156,7 +157,17 @@ export const ActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }:
 
     return (
         <RowActionsMenu>
-            <RowActionsMenu>
+            <RowActionsMenu
+                componentsProps={{
+                    rowActionsIconItem: {
+                        componentsProps: {
+                            iconButton: {
+                                "aria-label": intl.formatMessage({ id: "comet.tableBlock.openRowOptions", defaultMessage: "Open row options" }),
+                            },
+                        },
+                    },
+                }}
+            >
                 <RowActionsItem
                     icon={stateRow?.highlighted ? <Remove /> : <Add />}
                     onClick={() => {
