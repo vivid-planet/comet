@@ -1,6 +1,5 @@
 import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 
@@ -12,14 +11,13 @@ import { PredefinedPage } from "./entities/predefined-page.entity";
 export class PredefinedPagesResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        @InjectRepository(PredefinedPage) private readonly repository: EntityRepository<PredefinedPage>,
         private readonly pageTreeService: PageTreeService,
     ) {}
 
     @Query(() => PredefinedPage)
     @AffectedEntity(PredefinedPage)
     async predefinedPage(@Args("id", { type: () => ID }) id: string): Promise<PredefinedPage> {
-        const predefinedPage = await this.repository.findOneOrFail(id);
+        const predefinedPage = await this.entityManager.findOneOrFail(PredefinedPage, id);
         return predefinedPage;
     }
 
@@ -38,7 +36,7 @@ export class PredefinedPagesResolver {
             throw new UnauthorizedException("Archived Structured Content cannot be updated");
         }
 
-        let predefinedPage = await this.repository.findOne(id);
+        let predefinedPage = await this.entityManager.findOne(PredefinedPage, id);
 
         if (predefinedPage) {
             if (lastUpdatedAt) {
@@ -49,7 +47,7 @@ export class PredefinedPagesResolver {
                 type: input.type,
             });
         } else {
-            predefinedPage = this.repository.create({
+            predefinedPage = this.entityManager.create(PredefinedPage, {
                 id,
                 type: input.type,
             });
