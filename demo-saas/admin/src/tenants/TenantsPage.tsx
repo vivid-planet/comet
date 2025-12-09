@@ -18,7 +18,7 @@ import {
     useStackSwitch,
 } from "@comet/admin";
 import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { TenantForm } from "./generated/TenantForm";
 import { TenantsGrid } from "./generated/TenantsGrid";
@@ -37,10 +37,12 @@ const FormToolbar = () => (
 );
 
 export function TenantsPage() {
+    const intl = useIntl();
     useContentScopeConfig({ redirectPathAfterChange: "/administration/tenants" });
     const [TenantsStackSwitch, tenantsStackSwitchApi] = useStackSwitch();
     const [TenantScopesStackSwitch, tenantScopesStackSwitchApi] = useStackSwitch();
     const client = useApolloClient();
+
     return (
         <Stack topLevelTitle={<FormattedMessage id="tenants.tenants" defaultMessage="Tenants" />}>
             <TenantsStackSwitch>
@@ -79,7 +81,8 @@ export function TenantsPage() {
                                                 </StackPage>
                                                 <StackPage
                                                     name="edit"
-                                                    title={<FormattedMessage id="tenants.editTenantScope" defaultMessage="Edit Tenant Scope" />}
+                                                    // Has to be intl.formatMessage, because otherwise there is an error (maximum update depth exceeded)
+                                                    title={intl.formatMessage({ id: "tenants.editTenantScope", defaultMessage: "Edit Tenant Scope" })}
                                                 >
                                                     {(selectedTenantScopeId) => (
                                                         <SaveBoundary>
@@ -101,7 +104,8 @@ export function TenantsPage() {
                                                 </StackPage>
                                                 <StackPage
                                                     name="add"
-                                                    title={<FormattedMessage id="tenants.addTenantScope" defaultMessage="Add Tenant Scope" />}
+                                                    // Has to be intl.formatMessage, because otherwise there is an error (maximum update depth exceeded)
+                                                    title={intl.formatMessage({ id: "tenants.addTenantScope", defaultMessage: "Add Tenant Scope" })}
                                                 >
                                                     <SaveBoundary>
                                                         <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
