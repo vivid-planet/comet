@@ -1,6 +1,6 @@
 import { Button, type ButtonProps } from "@comet/admin";
 import { Add, ArrowRight, Favorite, Wrench } from "@comet/admin-icons";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
 import { type ReactNode } from "react";
 
 export default {
@@ -66,65 +66,6 @@ export const Default = {
                     responsive={responsive}
                 >
                     This is a button
-                </Button>
-            </Box>
-        );
-    },
-};
-
-export const ButtonUsingTypography = {
-    parameters: {
-        layout: "fullscreen",
-    },
-    args: {
-        variant: "primary",
-        responsive: false,
-        disabled: false,
-        startIcon: true,
-        endIcon: false,
-    },
-    argTypes: {
-        variant: {
-            name: "Variant",
-            control: "select",
-            options: ["primary", "secondary", "outlined", "destructive", "success", "textLight", "textDark"],
-        },
-        responsive: {
-            name: "Responsive",
-            control: "boolean",
-        },
-        disabled: {
-            name: "Disabled",
-            control: "boolean",
-        },
-        startIcon: {
-            name: "Start Icon",
-            control: "boolean",
-        },
-        endIcon: {
-            name: "End Icon",
-            control: "boolean",
-        },
-    },
-
-    render: ({ startIcon, endIcon, disabled, variant, responsive }: DefaultStoryArgs) => {
-        const showDarkBackground = variant === "textLight";
-
-        return (
-            <Box py={10} px={8} bgcolor={showDarkBackground ? "#333" : "transparent"}>
-                <Button
-                    onClick={() => {
-                        alert("Button clicked");
-                    }}
-                    startIcon={startIcon ? <Wrench /> : undefined}
-                    endIcon={endIcon ? <Favorite /> : undefined}
-                    disabled={disabled}
-                    variant={variant}
-                    responsive={responsive}
-                >
-                    <Typography variant="button" component="span">
-                        This is a button
-                    </Typography>
                 </Button>
             </Box>
         );
