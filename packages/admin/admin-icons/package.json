@@ -7,30 +7,31 @@
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
-    "type": "module",
-    "exports": {
-        ".": "./dist/index.js"
-    },
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "files": [
-        "dist"
-    ],
+    "type": "commonjs",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "scripts": {
-        "build": "pnpm run generate-icons && pnpm exec tsdown",
+        "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
+        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
+        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
+        "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
-        "start": "pnpm run generate-icons && pnpm exec tsdown --watch"
+        "start": "pnpm run generate-icons && run-p start:babel start:types",
+        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
         "use-constant": "^1.1.1",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.28.0",
+        "@babel/core": "^7.28.0",
+        "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.2.0",
         "@types/cli-progress": "^3.11.6",
@@ -45,8 +46,8 @@
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
+        "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
-        "tsdown": "^0.16.7",
         "typescript": "5.9.3"
     },
     "peerDependencies": {

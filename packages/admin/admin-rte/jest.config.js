@@ -4,5 +4,4 @@ module.exports = {
     testEnvironment: "node",
     reporters: ["default", "jest-junit"],
     rootDir: "./src",
-    setupFilesAfterEnv: ["<rootDir>/../setupTests.ts"],
 };
