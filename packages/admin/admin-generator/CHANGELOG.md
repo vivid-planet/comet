@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.10.0
+
+### Minor Changes
+
+- 6570d03: Grid headerName: don't generate FormattedMessage for empty header (empty string)
+
 ## 8.9.0
 
 ## 8.8.0
