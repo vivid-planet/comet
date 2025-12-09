@@ -118,5 +118,6 @@
     ],
     "lockFileMaintenance": { "enabled": true },
     "labels": ["dependencies"],
-    "baseBranches": ["main"]
+    "baseBranches": ["main"],
+    "postUpdateOptions": ["pnpmDedupe"]
 }
