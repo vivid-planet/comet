@@ -148,4 +148,4 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
     return { updateClipboardContent, getClipboardContent };
 }
 
-export { ClipboardContent, useBlockClipboard };
+export { type ClipboardContent, useBlockClipboard };
