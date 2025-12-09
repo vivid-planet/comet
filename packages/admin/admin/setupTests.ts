@@ -5,20 +5,3 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
     unobserve: jest.fn(),
     disconnect: jest.fn(),
 }));
-
-// TODO remove this once `@comet/admin` is ESM
-jest.mock("@comet/admin-icons", () => ({
-    Add: jest.fn(),
-    ArrowLeft: jest.fn(),
-    ChevronDown: jest.fn(),
-    ChevronRight: jest.fn(),
-    ChevronUp: jest.fn(),
-    Clear: jest.fn(),
-    Close: jest.fn(),
-    Delete: jest.fn(),
-    Edit: jest.fn(),
-    LevelUp: jest.fn(),
-    Save: jest.fn(),
-    ThreeDotSaving: jest.fn(),
-    Warning: jest.fn(),
-}));

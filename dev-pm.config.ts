@@ -1,19 +1,19 @@
 import { defineConfig } from "@comet/dev-process-manager";
 
-const packageEntryMapping = {
-    "@comet/admin": "packages/admin/admin/lib/index.d.ts",
-    "@comet/admin-color-picker": "packages/admin/admin-color-picker/lib/index.d.ts",
-    "@comet/admin-date-time": "packages/admin/admin-date-time/lib/index.d.ts",
-    "@comet/admin-icons": "packages/admin/admin-icons/dist/index.d.ts",
-    "@comet/admin-rte": "packages/admin/admin-rte/lib/index.d.ts",
-    "@comet/cms-admin": "packages/admin/cms-admin/lib/index.d.ts",
-    "@comet/cms-api": "packages/api/cms-api/lib/index.d.ts",
-    "@comet/site-nextjs": "packages/site/site-nextjs/lib/index.d.ts",
-    "@comet/site-react": "packages/site/site-react/lib/index.d.ts",
+const packageFolderMapping = {
+    "@comet/admin": "packages/admin/admin",
+    "@comet/admin-color-picker": "packages/admin/admin-color-picker",
+    "@comet/admin-date-time": "packages/admin/admin-date-time",
+    "@comet/admin-icons": "packages/admin/admin-icons",
+    "@comet/admin-rte": "packages/admin/admin-rte",
+    "@comet/cms-admin": "packages/admin/cms-admin",
+    "@comet/cms-api": "packages/api/cms-api",
+    "@comet/site-nextjs": "packages/site/site-nextjs",
+    "@comet/site-react": "packages/site/site-react",
 };
 
-const waitOnPackages = (...packages: (keyof typeof packageEntryMapping)[]) => {
-    return packages.map((packageName) => packageEntryMapping[packageName]);
+const waitOnPackages = (...packages: (keyof typeof packageFolderMapping)[]) => {
+    return packages.map((packageName) => `${packageFolderMapping[packageName]}/lib/index.d.ts`);
 };
 
 export default defineConfig({
