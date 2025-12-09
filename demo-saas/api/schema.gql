@@ -364,6 +364,7 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
   createTenant(input: TenantInput!): Tenant!
+  createTenantScope(input: TenantScopeInput!, tenant: ID!): TenantScope!
   currentUserSignOut: String!
   deleteManufacturer(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
@@ -372,7 +373,6 @@ type Mutation {
   deleteProductHighlight(id: ID!): Boolean!
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
-  deleteTenant(id: ID!): Boolean!
   publishAllProducts: Boolean!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
@@ -383,6 +383,7 @@ type Mutation {
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
   updateTenant(id: ID!, input: TenantUpdateInput!): Tenant!
+  updateTenantScope(id: ID!, input: TenantScopeUpdateInput!): TenantScope!
   userPermissionsCreatePermission(input: UserPermissionInput!, userId: String!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateContentScopes(input: UserContentScopesInput!, userId: String!): Boolean!
@@ -445,6 +446,11 @@ type PaginatedProductVariants {
 
 type PaginatedProducts {
   nodes: [Product!]!
+  totalCount: Int!
+}
+
+type PaginatedTenantScopes {
+  nodes: [TenantScope!]!
   totalCount: Int!
 }
 
@@ -1014,6 +1020,8 @@ type Query {
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
   tenant(id: ID!): Tenant!
+  tenantScope(id: ID!): TenantScope!
+  tenantScopes(filter: TenantScopeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantScopeSort!], tenant: ID!): PaginatedTenantScopes!
   tenants(filter: TenantFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantSort!]): PaginatedTenants!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   userPermissionsAvailablePermissions: [String!]!
@@ -1045,6 +1053,7 @@ type Tenant {
   createdAt: DateTime!
   id: ID!
   name: String!
+  scopes: [TenantScope!]!
   updatedAt: DateTime!
 }
 
@@ -1054,11 +1063,57 @@ input TenantFilter {
   id: IdFilter
   name: StringFilter
   or: [TenantFilter!]
+  scopes: OneToManyFilter
   updatedAt: DateTimeFilter
 }
 
 input TenantInput {
   name: String!
+}
+
+type TenantScope {
+  createdAt: DateTime!
+  domain: String!
+  id: ID!
+  language: String!
+  tenant: Tenant!
+  updatedAt: DateTime!
+}
+
+input TenantScopeFilter {
+  and: [TenantScopeFilter!]
+  createdAt: DateTimeFilter
+  domain: StringFilter
+  id: IdFilter
+  language: StringFilter
+  or: [TenantScopeFilter!]
+  updatedAt: DateTimeFilter
+}
+
+input TenantScopeInput {
+  domain: String!
+  language: String!
+}
+
+input TenantScopeSort {
+  direction: SortDirection! = ASC
+  field: TenantScopeSortField!
+}
+
+enum TenantScopeSortField {
+  createdAt
+  domain
+  language
+  tenant
+  tenant_createdAt
+  tenant_name
+  tenant_updatedAt
+  updatedAt
+}
+
+input TenantScopeUpdateInput {
+  domain: String
+  language: String
 }
 
 input TenantSort {

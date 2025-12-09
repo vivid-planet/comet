@@ -3,9 +3,9 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { DateTimeFilter, IdFilter, StringFilter } from "@comet/cms-api";
 @InputType()
-export class TenantFilter {
+export class TenantScopeFilter {
     @Field(() => IdFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -25,20 +25,20 @@ export class TenantFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => StringFilter)
-    name?: StringFilter;
-    @Field(() => OneToManyFilter, { nullable: true })
+    domain?: StringFilter;
+    @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => OneToManyFilter)
-    scopes?: OneToManyFilter;
-    @Field(() => [TenantFilter], { nullable: true })
-    @Type(() => TenantFilter)
+    @Type(() => StringFilter)
+    language?: StringFilter;
+    @Field(() => [TenantScopeFilter], { nullable: true })
+    @Type(() => TenantScopeFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    and?: TenantFilter[];
-    @Field(() => [TenantFilter], { nullable: true })
-    @Type(() => TenantFilter)
+    and?: TenantScopeFilter[];
+    @Field(() => [TenantScopeFilter], { nullable: true })
+    @Type(() => TenantScopeFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    or?: TenantFilter[];
+    or?: TenantScopeFilter[];
 }
