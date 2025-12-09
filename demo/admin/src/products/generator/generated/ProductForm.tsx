@@ -172,14 +172,50 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                 }
             ]}/>
         <SelectField required fullWidth variant={"horizontal"} name="additionalTypes" label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types"/>} multiple options={[{
+                    value: "bag",
+                    label: <FormattedMessage id="product.additionalTypes.bag" defaultMessage="Bag"/>
+                }, {
+                    value: "calendar",
+                    label: <FormattedMessage id="product.additionalTypes.calendar" defaultMessage="Calendar"/>
+                }, {
                     value: "cap",
                     label: <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap"/>
+                }, {
+                    value: "jacket",
+                    label: <FormattedMessage id="product.additionalTypes.jacket" defaultMessage="Jacket"/>
+                }, {
+                    value: "mug",
+                    label: <FormattedMessage id="product.additionalTypes.mug" defaultMessage="Mug"/>
+                }, {
+                    value: "notebook",
+                    label: <FormattedMessage id="product.additionalTypes.notebook" defaultMessage="Notebook"/>
+                }, {
+                    value: "pants",
+                    label: <FormattedMessage id="product.additionalTypes.pants" defaultMessage="Pants"/>
+                }, {
+                    value: "pen",
+                    label: <FormattedMessage id="product.additionalTypes.pen" defaultMessage="Pen"/>
                 }, {
                     value: "shirt",
                     label: <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt"/>
                 }, {
+                    value: "shoes",
+                    label: <FormattedMessage id="product.additionalTypes.shoes" defaultMessage="Shoes"/>
+                }, {
+                    value: "socks",
+                    label: <FormattedMessage id="product.additionalTypes.socks" defaultMessage="Socks"/>
+                }, {
+                    value: "sunglasses",
+                    label: <FormattedMessage id="product.additionalTypes.sunglasses" defaultMessage="Sunglasses"/>
+                }, {
                     value: "tie",
                     label: <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie"/>
+                }, {
+                    value: "wallet",
+                    label: <FormattedMessage id="product.additionalTypes.wallet" defaultMessage="Wallet"/>
+                }, {
+                    value: "watch",
+                    label: <FormattedMessage id="product.additionalTypes.watch" defaultMessage="Watch"/>
                 }]}/>
         <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({

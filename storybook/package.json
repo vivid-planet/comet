@@ -10,6 +10,7 @@
     "scripts": {
         "build-storybook": "storybook build",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json .storybook/ --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
@@ -49,7 +50,7 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.0",
+        "@babel/cli": "^7.28.3",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@faker-js/faker": "^10.1.0",
