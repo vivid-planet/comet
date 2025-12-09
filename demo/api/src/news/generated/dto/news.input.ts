@@ -19,7 +19,7 @@ export class NewsInput {
     title: string;
     @IsNotEmpty()
     @IsEnum(NewsStatus)
-    @Field(() => NewsStatus, { defaultValue: NewsStatus.active, })
+    @Field(() => NewsStatus, { defaultValue: NewsStatus.active })
     status: NewsStatus;
     @IsNotEmpty()
     @IsDate()
@@ -41,5 +41,4 @@ export class NewsInput {
     content: BlockInputInterface;
 }
 @InputType()
-export class NewsUpdateInput extends PartialType(NewsInput) {
-}
+export class NewsUpdateInput extends PartialType(NewsInput) {}

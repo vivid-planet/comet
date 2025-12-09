@@ -21,5 +21,4 @@ export class ProductTagInput {
     productsWithStatus: ProductTagNestedProductToTagInput[];
 }
 @InputType()
-export class ProductTagUpdateInput extends PartialType(ProductTagInput) {
-}
+export class ProductTagUpdateInput extends PartialType(ProductTagInput) {}
