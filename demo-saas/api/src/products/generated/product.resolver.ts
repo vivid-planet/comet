@@ -6,9 +6,9 @@ import { GraphQLResolveInfo } from "graphql";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
+import { AffectedEntity, FileUpload, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, FileUpload, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
@@ -18,7 +18,7 @@ import { Product } from "../entities/product.entity";
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
-    constructor(protected readonly entityManager: EntityManager, private readonly blocksTransformer: BlocksTransformerService) { }
+    constructor(protected readonly entityManager: EntityManager) { }
     @Query(() => Product)
     @AffectedEntity(Product)
     async product(
@@ -43,6 +43,9 @@ export class ProductResolver {
         const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Product));
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
+        if (fields.includes("image")) {
+            populate.push("image");
+        }
         if (fields.includes("category")) {
             populate.push("category");
         }
@@ -82,11 +85,10 @@ export class ProductResolver {
     async createProduct(
     @Args("input", { type: () => ProductInput })
     input: ProductInput): Promise<Product> {
-        const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, image: imageInput, ...assignInput } = input;
+        const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, image: imageInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, ...assignInput } = input;
         const product = this.entityManager.create(Product, {
             ...assignInput,
-            category: categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined, manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined, priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
-            image: imageInput.transformToBlockData(),
+            image: imageInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, imageInput)) : undefined, category: categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined, manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined, priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
         });
         if (colorsInput) {
             await product.colors.loadItems();
@@ -137,7 +139,7 @@ export class ProductResolver {
     @Args("input", { type: () => ProductUpdateInput })
     input: ProductUpdateInput): Promise<Product> {
         const product = await this.entityManager.findOneOrFail(Product, id);
-        const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, image: imageInput, ...assignInput } = input;
+        const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, image: imageInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, ...assignInput } = input;
         product.assign({
             ...assignInput,
         });
@@ -179,6 +181,12 @@ export class ProductResolver {
                 ...statisticsInput,
             });
         }
+        if (imageInput !== undefined) {
+            product.image =
+                imageInput ?
+                    Reference.create(await this.entityManager.findOneOrFail(FileUpload, imageInput))
+                    : undefined;
+        }
         if (categoryInput !== undefined) {
             product.category =
                 categoryInput ?
@@ -197,9 +205,6 @@ export class ProductResolver {
                     Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput))
                     : undefined;
         }
-        if (imageInput) {
-            product.image = imageInput.transformToBlockData();
-        }
         await this.entityManager.flush();
         return product;
     }
@@ -212,6 +217,12 @@ export class ProductResolver {
         this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;
+    }
+    @ResolveField(() => FileUpload, { nullable: true })
+    async image(
+    @Parent()
+    product: Product): Promise<FileUpload | undefined> {
+        return product.image?.loadOrFail();
     }
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(
@@ -266,11 +277,5 @@ export class ProductResolver {
     @Parent()
     product: Product): Promise<ProductStatistics | undefined> {
         return product.statistics?.loadOrFail();
-    }
-    @ResolveField(() => RootBlockDataScalar(DamImageBlock))
-    async image(
-    @Parent()
-    product: Product): Promise<object> {
-        return this.blocksTransformer.transformToPlain(product.image);
     }
 }

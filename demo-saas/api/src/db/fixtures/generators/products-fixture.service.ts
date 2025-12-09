@@ -1,4 +1,4 @@
-import { DamImageBlock } from "@comet/cms-api";
+import { FileUpload } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
@@ -106,10 +106,9 @@ export class ProductsFixtureService {
                 inStock: faker.datatype.boolean(),
                 soldCount: faker.number.int({ min: 0, max: 100 }),
                 availableSince: format(faker.date.past(), "yyyy-MM-dd"),
-                image: DamImageBlock.blockInputFactory({
-                    attachedBlocks: [{ type: "pixelImage", props: {} }],
-                    activeType: "pixelImage",
-                }).transformToBlockData(),
+                image: await this.entityManager.findOneOrFail(FileUpload, {
+                    mimetype: "image/jpeg",
+                }),
                 manufacturer: faker.helpers.arrayElement(manufacturers),
             });
 

@@ -1,5 +1,4 @@
 import { defineConfig } from "@comet/admin-generator";
-import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProductVariant } from "@src/graphql.generated";
 
 export default defineConfig<GQLProductVariant>({
@@ -9,6 +8,6 @@ export default defineConfig<GQLProductVariant>({
     navigateOnCreate: false,
     fields: [
         { type: "text", name: "name" },
-        { type: "block", name: "image", label: "Image", block: DamImageBlock },
+        { type: "fileUpload", name: "image", label: "Image", maxFileSize: 1024 * 1024 * 4, download: true },
     ],
 });

@@ -3,7 +3,6 @@
 import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
-import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
@@ -11,14 +10,13 @@ import { Loading } from "@comet/admin";
 import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
-import { BlockState } from "@comet/cms-admin";
-import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
 import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
+import { FileUploadField } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { DamImageBlock } from "@comet/cms-admin";
+import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { productVariantFormFragment } from "./ProductVariantForm.gql";
 import { GQLProductVariantFormFragment } from "./ProductVariantForm.gql.generated";
 import { productVariantQuery } from "./ProductVariantForm.gql";
@@ -31,12 +29,10 @@ import { updateProductVariantMutation } from "./ProductVariantForm.gql";
 import { GQLUpdateProductVariantMutation } from "./ProductVariantForm.gql.generated";
 import { GQLUpdateProductVariantMutationVariables } from "./ProductVariantForm.gql.generated";
 import isEqual from "lodash.isequal";
-const rootBlocks = {
-    image: DamImageBlock
+type ProductVariantFormFragment = Omit<GQLProductVariantFormFragment, "image"> & {
+    image: GQLFinalFormFileUploadDownloadableFragment | null;
 };
-type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
-    image: BlockState<typeof rootBlocks.image>;
-};
+type FormValues = ProductVariantFormFragment;
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -50,12 +46,9 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const { data, error, loading, refetch } = useQuery<GQLProductVariantQuery, GQLProductVariantQueryVariables>(productVariantQuery, id ? { variables: { id } } : { skip: true });
     const initialValues = useMemo<Partial<FormValues>>(() => data?.productVariant
         ? {
-            ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
-            image: rootBlocks.image.input2State(data.productVariant.image),
+            ...filterByFragment<ProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
         }
-        : {
-            image: rootBlocks.image.defaultValues(),
-        }, [data]);
+        : {}, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "productVariant", id);
@@ -69,7 +62,7 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
+        const output = { ...formValues, image: formValues.image ? formValues.image.id : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -106,9 +99,7 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
                         <>
                             
         <TextField required variant="horizontal" fullWidth name="name" label={<FormattedMessage id="productVariant.name" defaultMessage="Name"/>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="productVariant.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
+        <FileUploadField name="image" label={<FormattedMessage id="productVariant.image" defaultMessage="Image"/>} variant="horizontal" maxFileSize={4194304}/>
                         </>
                     </>)}
             </FinalForm>);

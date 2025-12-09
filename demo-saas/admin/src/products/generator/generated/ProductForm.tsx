@@ -18,8 +18,6 @@ import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
 import { Lock } from "@comet/admin-icons";
-import { BlockState } from "@comet/cms-admin";
-import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
 import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
@@ -27,7 +25,6 @@ import { FileUploadField } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { Future_DatePickerField } from "@comet/admin";
@@ -60,21 +57,18 @@ import { updateProductMutation } from "./ProductForm.gql";
 import { GQLUpdateProductMutation } from "./ProductForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 import isEqual from "lodash.isequal";
-const rootBlocks = {
-    image: DamImageBlock
-};
-type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
+type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "image" | "priceList" | "datasheets"> & {
+    image: GQLFinalFormFileUploadDownloadableFragment | null;
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "lastCheckedAt"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "lastCheckedAt"> & {
     dimensions: Omit<NonNullable<ProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
     };
     dimensionsEnabled: boolean;
-    image: BlockState<typeof rootBlocks.image>;
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
@@ -91,10 +85,10 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
             ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
-            dimensions: data.product.dimensions ? { ...data.product.dimensions, width: String(data.product.dimensions.width), height: String(data.product.dimensions.height), depth: String(data.product.dimensions.depth), } : undefined, dimensionsEnabled: !!data.product.dimensions, image: rootBlocks.image.input2State(data.product.image), lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
+            dimensions: data.product.dimensions ? { ...data.product.dimensions, width: String(data.product.dimensions.width), height: String(data.product.dimensions.height), depth: String(data.product.dimensions.depth), } : undefined, dimensionsEnabled: !!data.product.dimensions, lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
         }
         : {
-            inStock: false, image: rootBlocks.image.defaultValues(),
+            inStock: false,
         }, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -109,7 +103,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     const handleSubmit = async ({ dimensionsEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
+        const output = { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: formValuesRest.image ? formValuesRest.image.id : null, priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
@@ -244,9 +238,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
 
             <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
         <FutureProductNotice />
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
+        <FileUploadField name="image" label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" maxFileSize={4194304}/>
         <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304}/>
         <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304}/>
         <DateTimePickerField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>

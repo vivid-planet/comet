@@ -9,7 +9,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { type BlockState, createFinalFormBlock, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { FileUploadField, type GQLFinalFormFileUploadFragment, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
@@ -23,7 +23,7 @@ import {
 import {
     type GQLCreateProductVariantMutation,
     type GQLCreateProductVariantMutationVariables,
-    type GQLProductVariantFormFragment,
+    type GQLProductVariantFormManualFragment,
     type GQLProductVariantFormQuery,
     type GQLProductVariantFormQueryVariables,
     type GQLUpdateProductVariantMutation,
@@ -35,13 +35,12 @@ interface FormProps {
     productId: string;
 }
 
-const rootBlocks = {
-    image: DamImageBlock,
+// Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
+type ProductVariantFormManualFragment = Omit<GQLProductVariantFormManualFragment, "image"> & {
+    image: GQLFinalFormFileUploadFragment | null;
 };
 
-type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
-    image: BlockState<typeof rootBlocks.image>;
-};
+type FormValues = ProductVariantFormManualFragment;
 
 export function ProductVariantForm({ id, productId }: FormProps) {
     const client = useApolloClient();
@@ -56,12 +55,9 @@ export function ProductVariantForm({ id, productId }: FormProps) {
 
     const initialValues: Partial<FormValues> = data?.productVariant
         ? {
-              ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
-              image: rootBlocks.image.input2State(data.productVariant.image),
+              ...filterByFragment<ProductVariantFormManualFragment>(productVariantFormFragment, data.productVariant),
           }
-        : {
-              image: rootBlocks.image.defaultValues(),
-          };
+        : {};
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -78,7 +74,7 @@ export function ProductVariantForm({ id, productId }: FormProps) {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
+            image: formValues.image ? formValues.image.id : null,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -127,9 +123,12 @@ export function ProductVariantForm({ id, productId }: FormProps) {
                         component={FinalFormInput}
                         label={<FormattedMessage id="productVariant.name" defaultMessage="Name" />}
                     />
-                    <Field name="image" isEqual={isEqual} fullWidth>
-                        {createFinalFormBlock(rootBlocks.image)}
-                    </Field>
+                    <FileUploadField
+                        label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                        name="image"
+                        maxFileSize={1024 * 1024 * 4} // 4 MB
+                        fullWidth
+                    />
                 </>
             )}
         </FinalForm>

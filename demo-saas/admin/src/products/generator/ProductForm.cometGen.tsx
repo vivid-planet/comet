@@ -1,5 +1,4 @@
 import { defineConfig } from "@comet/admin-generator";
-import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
@@ -81,7 +80,7 @@ export default defineConfig<GQLProduct>({
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
                 { type: "component", component: FutureProductNotice },
-                { type: "block", name: "image", label: "Image", block: DamImageBlock },
+                { type: "fileUpload", name: "image", label: "Image", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4, download: false },
                 { type: "dateTime", name: "lastCheckedAt", label: "Last checked at" },

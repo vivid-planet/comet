@@ -3,7 +3,6 @@
 import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { useQuery } from "@apollo/client";
-import { Field } from "@comet/admin";
 import { filterByFragment } from "@comet/admin";
 import { FinalForm } from "@comet/admin";
 import { FinalFormSubmitEvent } from "@comet/admin";
@@ -12,16 +11,15 @@ import { TextField } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
 import { Lock } from "@comet/admin-icons";
-import { BlockState } from "@comet/cms-admin";
-import { createFinalFormBlock } from "@comet/cms-admin";
 import { queryUpdatedAt } from "@comet/cms-admin";
 import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
+import { FileUploadField } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { GQLProductType } from "@src/graphql.generated";
-import { DamImageBlock } from "@comet/cms-admin";
+import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { productFormFragment } from "./IdFieldInForm.gql";
 import { GQLIdFieldInFormFragment } from "./IdFieldInForm.gql.generated";
 import { productQuery } from "./IdFieldInForm.gql";
@@ -34,12 +32,10 @@ import { updateProductMutation } from "./IdFieldInForm.gql";
 import { GQLUpdateProductMutation } from "./IdFieldInForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./IdFieldInForm.gql.generated";
 import isEqual from "lodash.isequal";
-const rootBlocks = {
-    image: DamImageBlock
+type IdFieldInFormFragment = Omit<GQLIdFieldInFormFragment, "image"> & {
+    image: GQLFinalFormFileUploadDownloadableFragment | null;
 };
-type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
-    image: BlockState<typeof rootBlocks.image>;
-};
+type FormValues = IdFieldInFormFragment;
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -54,12 +50,9 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, id ? { variables: { id } } : { skip: true });
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
-            ...filterByFragment<GQLIdFieldInFormFragment>(productFormFragment, data.product),
-            image: rootBlocks.image.input2State(data.product.image),
+            ...filterByFragment<IdFieldInFormFragment>(productFormFragment, data.product),
         }
-        : {
-            image: rootBlocks.image.defaultValues(),
-        }, [data]);
+        : {}, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "product", id);
@@ -73,7 +66,7 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
+        const output = { ...formValues, image: formValues.image ? formValues.image.id : null, };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
@@ -113,9 +106,7 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
         <TextField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="id" label={<FormattedMessage id="product.id" defaultMessage="ID"/>}/>
 
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title"/>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
+        <FileUploadField name="image" label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" maxFileSize={4194304}/>
                         </>
                     </>)}
             </FinalForm>);

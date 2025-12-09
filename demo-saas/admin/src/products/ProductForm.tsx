@@ -15,16 +15,7 @@ import {
     useFormApiRef,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
-import {
-    type BlockState,
-    createFinalFormBlock,
-    DamImageBlock,
-    FileUploadField,
-    type GQLFinalFormFileUploadFragment,
-    queryUpdatedAt,
-    resolveHasSaveConflict,
-    useFormSaveConflict,
-} from "@comet/cms-admin";
+import { FileUploadField, type GQLFinalFormFileUploadFragment, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
 import { type GQLProductType } from "@src/graphql.generated";
 import {
@@ -62,18 +53,14 @@ interface FormProps {
     onCreate?: (id: string) => void;
 }
 
-const rootBlocks = {
-    image: DamImageBlock,
-};
-
 // Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
-type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets"> & {
+type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "image" | "priceList" | "datasheets"> & {
+    image: GQLFinalFormFileUploadFragment | null;
     priceList: GQLFinalFormFileUploadFragment | null;
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
-    image: BlockState<typeof rootBlocks.image>;
+type FormValues = Omit<ProductFormManualFragment, "lastCheckedAt"> & {
     manufacturerCountry?: { id: string; label: string };
     lastCheckedAt?: Date | null;
 };
@@ -97,7 +84,6 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
-                image: rootBlocks.image.defaultValues(),
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
@@ -106,7 +92,6 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         }
         return {
             ...filteredData,
-            image: rootBlocks.image.input2State(filteredData.image),
             manufacturerCountry: filteredData.manufacturer
                 ? {
                       id: filteredData.manufacturer?.addressAsEmbeddable.country,
@@ -134,7 +119,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         const output = {
             ...formValues,
             description: formValues.description ?? null,
-            image: rootBlocks.image.state2Output(formValues.image),
+            image: formValues.image ? formValues.image.id : null,
             type: formValues.type as GQLProductType,
             category: formValues.category ? formValues.category.id : null,
             tags: formValues.tags.map((i) => i.id),
@@ -338,9 +323,12 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                         getOptionLabel={(option) => option.title}
                     />
                     <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
-                    <Field name="image" isEqual={isEqual}>
-                        {createFinalFormBlock(rootBlocks.image)}
-                    </Field>
+                    <FileUploadField
+                        label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                        name="image"
+                        maxFileSize={1024 * 1024 * 4} // 4 MB
+                        fullWidth
+                    />
                     <FileUploadField
                         label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
                         name="priceList"
