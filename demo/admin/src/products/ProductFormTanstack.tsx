@@ -32,6 +32,7 @@ import {
 const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
 /*
 todo:
+- wenn defaultValues so wie jetzt implementiert sind ist nicht sichergestellt dass defaultValue auf leeren string für text inputs ist
 - mehr fields implementieren
 - checkForConflict
 - fields in library: wo soll createFormHook liegen? (library od. app?)

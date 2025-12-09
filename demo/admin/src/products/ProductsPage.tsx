@@ -2,6 +2,7 @@ import {
     FieldSet,
     FillSpace,
     FullHeightContent,
+    Loading,
     RouterTab,
     RouterTabs,
     SaveBoundary,
@@ -17,10 +18,11 @@ import {
     useStackSwitch,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Suspense } from "react";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
-import { ProductFormTanstack } from "./ProductFormTanstack";
+import { ProductFormRHF } from "./ProductFormRHF";
 import { ProductPriceForm } from "./ProductPriceForm";
 import { ProductsGrid } from "./ProductsGrid";
 import { ProductVariantForm } from "./ProductVariantForm";
@@ -66,6 +68,7 @@ const ProductsPage = () => {
                                             <ProductForm id={selectedProductId} />
                                         </FieldSet>
                                     </RouterTab>
+                                    {/*
                                     <RouterTab
                                         forceRender={true}
                                         path="/tanstack"
@@ -73,6 +76,18 @@ const ProductsPage = () => {
                                     >
                                         <FieldSet>
                                             <ProductFormTanstack id={selectedProductId} />
+                                        </FieldSet>
+                                    </RouterTab>
+                                    */}
+                                    <RouterTab
+                                        forceRender={true}
+                                        path="/rhf"
+                                        label={intl.formatMessage({ id: "products.productRHF", defaultMessage: "Product RHF" })}
+                                    >
+                                        <FieldSet>
+                                            <Suspense fallback={<Loading behavior="fillPageHeight" />}>
+                                                <ProductFormRHF id={selectedProductId} />
+                                            </Suspense>
                                         </FieldSet>
                                     </RouterTab>
                                     <RouterTab
@@ -151,7 +166,7 @@ const ProductsPage = () => {
                         <FormToolbar />
                         <StackMainContent>
                             <FieldSet>
-                                <ProductFormTanstack
+                                <ProductForm
                                     onCreate={(id) => {
                                         productsStackSwitchApi.activatePage("edit", id);
                                     }}
