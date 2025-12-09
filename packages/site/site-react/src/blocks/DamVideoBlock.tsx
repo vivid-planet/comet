@@ -41,6 +41,7 @@ export const DamVideoBlock = withPreview(
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
         const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
@@ -48,15 +49,17 @@ export const DamVideoBlock = withPreview(
 
         const handleInView = useCallback(
             (inView: boolean) => {
-                if (autoplay && videoElement && isPlaying) {
-                    if (inView) {
+                if (!isHandledManually && videoElement) {
+                    if (inView && autoplay) {
                         videoElement.play();
+                        setIsPlaying(true);
                     } else {
                         videoElement.pause();
+                        setIsPlaying(false);
                     }
                 }
             },
-            [autoplay, isPlaying, videoElement],
+            [autoplay, isHandledManually, videoElement],
         );
 
         useIsElementInViewport({ current: videoElement }, handleInView);
@@ -64,6 +67,7 @@ export const DamVideoBlock = withPreview(
         const handlePlayPauseClick = () => {
             if (isPlaying) {
                 setIsPlaying(false);
+                setIsHandledManually(true);
                 videoElement?.pause();
             } else {
                 setIsPlaying(true);

@@ -56,6 +56,7 @@ export const VimeoVideoBlock = withPreview(
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
         const iframeRef = setIframeElement;
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
 
         const pauseVimeoVideo = useCallback(() => {
             iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
@@ -67,15 +68,17 @@ export const VimeoVideoBlock = withPreview(
 
         const handleInView = useCallback(
             (isVisible: boolean) => {
-                if (isPlaying) {
+                if (!isHandledManually) {
                     if (isVisible && autoplay) {
                         playVimeoVideo();
+                        setIsPlaying(true);
                     } else {
                         pauseVimeoVideo();
+                        setIsPlaying(false);
                     }
                 }
             },
-            [autoplay, isPlaying, playVimeoVideo, pauseVimeoVideo],
+            [autoplay, isHandledManually, playVimeoVideo, pauseVimeoVideo],
         );
 
         useIsElementInViewport(inViewRef, handleInView);
@@ -103,6 +106,7 @@ export const VimeoVideoBlock = withPreview(
         const handlePlayPauseClick = () => {
             if (isPlaying) {
                 setIsPlaying(false);
+                setIsHandledManually(true);
                 pauseVimeoVideo();
             } else {
                 setIsPlaying(true);

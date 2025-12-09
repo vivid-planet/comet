@@ -49,6 +49,7 @@ export const YouTubeVideoBlock = withPreview(
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
         const iframeRef = setIframeElement;
@@ -64,15 +65,17 @@ export const YouTubeVideoBlock = withPreview(
 
         const handleInView = useCallback(
             (inView: boolean) => {
-                if (isPlaying) {
+                if (!isHandledManually) {
                     if (inView && autoplay) {
                         playYouTubeVideo();
+                        setIsPlaying(true);
                     } else {
                         pauseYouTubeVideo();
+                        setIsPlaying(false);
                     }
                 }
             },
-            [isPlaying, autoplay, playYouTubeVideo, pauseYouTubeVideo],
+            [autoplay, isHandledManually, playYouTubeVideo, pauseYouTubeVideo],
         );
 
         useIsElementInViewport(inViewRef, handleInView);
@@ -104,6 +107,8 @@ export const YouTubeVideoBlock = withPreview(
         const handlePlayPauseClick = () => {
             if (isPlaying) {
                 setIsPlaying(false);
+                setIsHandledManually(true);
+
                 pauseYouTubeVideo();
             } else {
                 setIsPlaying(true);
