@@ -14,6 +14,7 @@
         "generate-component-docs:running-storybook": "FETCH_FROM_RUNNING_STORYBOOK=true ts-node --project tsconfig.ts-node.json src/utils/generateComponentDocs.ts",
         "generate-component-docs:static-storybook": "ts-node --project tsconfig.ts-node.json src/utils/generateComponentDocs.ts",
         "lint": "run-p lint:prettier lint:eslint lint:spelling",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:spelling": "pnpm cspell docs/**",
@@ -39,7 +40,7 @@
     },
     "dependencies": {
         "@algolia/client-search": "^5.32.0",
-        "@apollo/client": "^3.13.8",
+        "@apollo/client": "^3.14.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
@@ -53,7 +54,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@fontsource/roboto": "^5.2.6",
-        "@mdx-js/react": "^3.1.0",
+        "@mdx-js/react": "^3.1.1",
         "@mui/material": "^7.3.5",
         "@mui/system": "^7.3.5",
         "@mui/x-data-grid": "^7.29.8",
@@ -75,7 +76,7 @@
         "search-insights": "^2.17.3"
     },
     "devDependencies": {
-        "@babel/core": "^7.28.0",
+        "@babel/core": "^7.28.5",
         "@comet/eslint-config": "workspace:*",
         "@docusaurus/module-type-aliases": "^3.8.1",
         "@docusaurus/tsconfig": "^3.8.1",
@@ -88,7 +89,7 @@
         "eslint": "^9.30.1",
         "npm-run-all2": "^8.0.0",
         "prettier": "^3.6.2",
-        "sucrase": "^3.35.0",
+        "sucrase": "^3.35.1",
         "ts-morph": "^25.0.1",
         "ts-node": "^10.9.2",
         "typescript": "5.9.3",

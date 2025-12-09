@@ -96,7 +96,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
             dimensions: data.product.dimensions ? { ...data.product.dimensions, width: String(data.product.dimensions.width), height: String(data.product.dimensions.height), depth: String(data.product.dimensions.depth), } : undefined, dimensionsEnabled: !!data.product.dimensions, image: rootBlocks.image.input2State(data.product.image), lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
         }
         : {
-            inStock: false, image: rootBlocks.image.defaultValues(),
+            title: "New Product", type: "cap", priceRange: { "min": 10, "max": 100 }, inStock: true, availableSince: "2025-01-01", image: rootBlocks.image.defaultValues(), lastCheckedAt: new Date("2018-01-12T00:00:00.000Z"),
             ...passedInitialValues,
         }, [data]);
     const saveConflict = useFormSaveConflict({
@@ -174,14 +174,50 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                 }
             ]}/>
         <SelectField required fullWidth variant={"horizontal"} name="additionalTypes" label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types"/>} multiple options={[{
+                    value: "bag",
+                    label: <FormattedMessage id="product.additionalTypes.bag" defaultMessage="Bag"/>
+                }, {
+                    value: "calendar",
+                    label: <FormattedMessage id="product.additionalTypes.calendar" defaultMessage="Calendar"/>
+                }, {
                     value: "cap",
                     label: <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap"/>
+                }, {
+                    value: "jacket",
+                    label: <FormattedMessage id="product.additionalTypes.jacket" defaultMessage="Jacket"/>
+                }, {
+                    value: "mug",
+                    label: <FormattedMessage id="product.additionalTypes.mug" defaultMessage="Mug"/>
+                }, {
+                    value: "notebook",
+                    label: <FormattedMessage id="product.additionalTypes.notebook" defaultMessage="Notebook"/>
+                }, {
+                    value: "pants",
+                    label: <FormattedMessage id="product.additionalTypes.pants" defaultMessage="Pants"/>
+                }, {
+                    value: "pen",
+                    label: <FormattedMessage id="product.additionalTypes.pen" defaultMessage="Pen"/>
                 }, {
                     value: "shirt",
                     label: <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt"/>
                 }, {
+                    value: "shoes",
+                    label: <FormattedMessage id="product.additionalTypes.shoes" defaultMessage="Shoes"/>
+                }, {
+                    value: "socks",
+                    label: <FormattedMessage id="product.additionalTypes.socks" defaultMessage="Socks"/>
+                }, {
+                    value: "sunglasses",
+                    label: <FormattedMessage id="product.additionalTypes.sunglasses" defaultMessage="Sunglasses"/>
+                }, {
                     value: "tie",
                     label: <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie"/>
+                }, {
+                    value: "wallet",
+                    label: <FormattedMessage id="product.additionalTypes.wallet" defaultMessage="Wallet"/>
+                }, {
+                    value: "watch",
+                    label: <FormattedMessage id="product.additionalTypes.watch" defaultMessage="Watch"/>
                 }]}/>
         <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({

@@ -805,9 +805,12 @@ export function generateGrid<T extends { __typename?: string }>(
                                     </>
                                 )`
                             : undefined,
-                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                            column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })`,
+                        headerName:
+                            column.headerName === ""
+                                ? `""`
+                                : `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
+                                      column.headerName || camelCaseToHumanReadable(column.name)
+                                  }" })`,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
                         sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
