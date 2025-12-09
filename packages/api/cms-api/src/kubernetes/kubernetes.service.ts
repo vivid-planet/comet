@@ -1,5 +1,5 @@
 import { BatchV1Api, CoreV1Api, KubeConfig, V1CronJob, V1Job, V1ObjectMeta, V1Pod } from "@kubernetes/client-node";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
@@ -11,7 +11,9 @@ import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
 export class KubernetesService {
-    localMode: boolean;
+    private readonly logger = new Logger(KubernetesService.name);
+
+    isAuthenticated: boolean = false;
 
     namespace: string;
 
@@ -19,27 +21,30 @@ export class KubernetesService {
     coreApi: CoreV1Api;
 
     constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
-        const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
-        this.localMode = !fs.existsSync(path);
-
-        if (!this.localMode) {
-            this.namespace = fs.readFileSync(path, "utf8");
-
-            const kc = new KubeConfig();
-            kc.loadFromCluster();
-            this.batchApi = kc.makeApiClient(BatchV1Api);
-            this.coreApi = kc.makeApiClient(CoreV1Api);
-        }
-        // DEBUG-Code if used locally, you need to be logged in (e.g. by using oc login)
-        /*else {
-            this.namespace = "comet-demo";
+        if ("namespace" in this.config) {
+            // Local mode, used for development and testing
+            this.namespace = this.config.namespace;
 
             const kc = new KubeConfig();
             kc.loadFromDefault();
             this.batchApi = kc.makeApiClient(BatchV1Api);
             this.coreApi = kc.makeApiClient(CoreV1Api);
-            this.localMode = false;
-        }*/
+            this.isAuthenticated = true;
+        } else {
+            // Cluster mode
+            const namespaceFilePath = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
+            if (fs.existsSync(namespaceFilePath)) {
+                this.namespace = fs.readFileSync(namespaceFilePath, "utf8");
+
+                const kc = new KubeConfig();
+                kc.loadFromCluster();
+                this.batchApi = kc.makeApiClient(BatchV1Api);
+                this.coreApi = kc.makeApiClient(CoreV1Api);
+                this.isAuthenticated = true;
+            } else {
+                this.logger.warn("Namespace file not found, cannot connect to Kubernetes API. KubernetesService will not work.");
+            }
+        }
     }
 
     get helmRelease(): string {

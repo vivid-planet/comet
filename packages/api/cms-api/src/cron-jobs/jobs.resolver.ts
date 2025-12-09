@@ -3,7 +3,7 @@ import { Args, Query, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
+import { KubernetesAuthenticationGuard } from "../kubernetes/kubernetes-authentication.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
@@ -13,7 +13,7 @@ import { JobsService } from "./jobs.service";
 
 @Resolver(() => Job)
 @RequiredPermission(["cronJobs"], { skipScopeCheck: true })
-@UseGuards(PreventLocalInvocationGuard)
+@UseGuards(KubernetesAuthenticationGuard)
 export class JobsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,
