@@ -1,6 +1,5 @@
 import { PageTreeNodeInterface, PageTreeReadApiService, RequiredPermission } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
@@ -13,8 +12,8 @@ import { MainMenuItem } from "./entities/main-menu-item.entity";
 @RequiredPermission("pageTree")
 export class MenusResolver {
     constructor(
+        private readonly entityManager: EntityManager,
         private readonly pageTreeReadApi: PageTreeReadApiService,
-        @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
     ) {}
 
     @Query(() => MainMenuObject)
@@ -28,12 +27,12 @@ export class MenusResolver {
 
         const items = await Promise.all(
             rootNodes.map<Promise<MainMenuItem>>(async (node) => {
-                const item = await this.mainMenuItemRepository.findOne({
+                const item = await this.entityManager.findOne(MainMenuItem, {
                     node: node as unknown as PageTreeNode,
                 });
                 return (
                     item ??
-                    this.mainMenuItemRepository.create({
+                    this.entityManager.create(MainMenuItem, {
                         node: node as PageTreeNode,
                         content: null,
                     })

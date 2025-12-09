@@ -7,8 +7,7 @@ import {
     PageTreeService,
 } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
+import { CreateRequestContext, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
@@ -54,16 +53,15 @@ export class FixturesCommand extends CommandRunner {
 
     constructor(
         @Inject(CONFIG) private readonly config: Config,
+        private readonly orm: MikroORM,
+        private readonly entityManager: EntityManager,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly documentGeneratorService: DocumentGeneratorService,
         private readonly dependenciesService: DependenciesService,
-        private readonly entityManager: EntityManager,
         private readonly productsFixtureService: ProductsFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
-        private readonly orm: MikroORM,
-        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         private readonly pageTreeService: PageTreeService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
@@ -163,7 +161,7 @@ export class FixturesCommand extends CommandRunner {
                     const pageInput = getDefaultPageInput();
 
                     await this.entityManager.persistAndFlush(
-                        this.pagesRepository.create({
+                        this.entityManager.create(Page, {
                             id: pageId,
                             content: pageInput.content.transformToBlockData(),
                             seo: pageInput.seo.transformToBlockData(),

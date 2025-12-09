@@ -43,6 +43,7 @@ export function buildSortProps(metadata: EntityMetadata<any>) {
                 (prop) =>
                     hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
                     !prop.name.startsWith("scope_") &&
+                    !prop.primary &&
                     (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
                     (prop.type === "string" ||
                         prop.type === "text" ||

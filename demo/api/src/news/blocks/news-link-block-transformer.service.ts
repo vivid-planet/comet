@@ -1,9 +1,8 @@
 import { BlockTransformerServiceInterface } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
-import type { News } from "../entities/news.entity";
+import { News } from "../entities/news.entity";
 import { NewsLinkBlockData } from "./news-link.block";
 
 type TransformResponse = {
@@ -19,14 +18,14 @@ type TransformResponse = {
 
 @Injectable()
 export class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
-    constructor(@InjectRepository("News") private readonly repository: EntityRepository<News>) {}
+    constructor(private readonly entityManager: EntityManager) {}
 
     async transformToPlain(block: NewsLinkBlockData) {
         if (!block.id) {
             return {};
         }
 
-        const news = await this.repository.findOneOrFail(block.id);
+        const news = await this.entityManager.findOneOrFail<News>("News", block.id);
 
         return {
             news: {
