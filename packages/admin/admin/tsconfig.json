@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "baseUrl": "src",
-        "outDir": "lib",
+        "outDir": "dist",
         "paths": {
             "test-utils": ["./utils/test-utils"]
         },

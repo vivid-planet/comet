@@ -8,24 +8,28 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js"
+    },
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
-        "lib"
+        "dist"
     ],
     "scripts": {
         "build": "pnpm run clean && run-p build:babel build:types",
         "build-storybook": "storybook build",
-        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
+        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d dist",
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
+        "clean": "rimraf dist/",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
-        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d dist -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "storybook": "storybook dev -p 26646 --no-open",
         "test": "jest",
