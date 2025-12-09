@@ -13,6 +13,11 @@ export interface IConfig<T = any> {
 
 const defaultConfig: IConfig = {};
 
+/**
+ * Used to create a Final Form-compatible RTE component.
+ *
+ * @see {@link createRteField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
     const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
