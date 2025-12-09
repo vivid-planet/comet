@@ -1423,7 +1423,7 @@ importers:
         specifier: workspace:*
         version: link:../admin-rte
       axios:
-        specifier: ^0.30.0
+        specifier: ^0.30.2
         version: 0.30.2
       change-case:
         specifier: ^4.1.2
