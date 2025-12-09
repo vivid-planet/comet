@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add variant `button` to typography
+Style the `button` typography variant
