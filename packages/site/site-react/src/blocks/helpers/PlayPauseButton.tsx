@@ -12,7 +12,7 @@ export interface PlayPauseButtonProps {
 export const PlayPauseButton = ({ isPlaying, onClick, ariaLabelPlay, ariaLabelPause }: PlayPauseButtonProps) => {
     return (
         <button className={clsx(styles.button)} onClick={onClick} aria-label={isPlaying ? (ariaLabelPause ?? "Pause") : (ariaLabelPlay ?? "Play")}>
-            <div className={clsx(styles.animatedPlayPause, !isPlaying && styles.animatedPlayPausePaused)} />
+            <div className={clsx(styles.animatedPlayPause, isPlaying && styles.animatedPlayPausePaused)} />
         </button>
     );
 };

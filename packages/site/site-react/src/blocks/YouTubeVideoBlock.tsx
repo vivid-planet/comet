@@ -48,7 +48,8 @@ export const YouTubeVideoBlock = withPreview(
         playPauseButton: PlayPauseButtonComponent,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
-        const [isHandledManually, setIsHandledManually] = useState(autoplay ?? false);
+        const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
         const iframeRef = setIframeElement;
@@ -64,12 +65,13 @@ export const YouTubeVideoBlock = withPreview(
 
         const handleInView = useCallback(
             (inView: boolean) => {
-                if (autoplay) {
-                    if (inView && isHandledManually) {
+                if (!isHandledManually) {
+                    if (inView && autoplay) {
                         playYouTubeVideo();
-                        setIsHandledManually(true);
+                        setIsPlaying(true);
                     } else {
                         pauseYouTubeVideo();
+                        setIsPlaying(false);
                     }
                 }
             },
@@ -103,12 +105,14 @@ export const YouTubeVideoBlock = withPreview(
         youtubeUrl.search = searchParams.toString();
 
         const handlePlayPauseClick = () => {
-            if (isHandledManually) {
-                pauseYouTubeVideo();
-                setIsHandledManually(false);
-            } else {
-                playYouTubeVideo();
+            if (isPlaying) {
+                setIsPlaying(false);
                 setIsHandledManually(true);
+
+                pauseYouTubeVideo();
+            } else {
+                setIsPlaying(true);
+                playYouTubeVideo();
             }
         };
 
@@ -132,10 +136,10 @@ export const YouTubeVideoBlock = withPreview(
                     >
                         {!showControls &&
                             (PlayPauseButtonComponent ? (
-                                <PlayPauseButtonComponent isPlaying={!isHandledManually} onClick={handlePlayPauseClick} />
+                                <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />
                             ) : (
                                 <PlayPauseButton
-                                    isPlaying={!isHandledManually}
+                                    isPlaying={isPlaying}
                                     onClick={handlePlayPauseClick}
                                     ariaLabelPlay={playButtonAriaLabel}
                                     ariaLabelPause={pauseButtonAriaLabel}
