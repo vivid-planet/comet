@@ -19,13 +19,7 @@ type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputE
  * @see {@link SearchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps & FinalFormSearchTextFieldInternalProps) {
-    const {
-        icon = <Search />,
-        placeholder,
-        endAdornment,
-        required,
-        ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
+    const { icon = <Search />, placeholder, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
     const intl = useIntl();
 
     return (
@@ -37,9 +31,7 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
                     {icon}
                 </InputAdornment>
             }
-            endAdornment={endAdornment}
             disableContentTranslation={true}
-            required={required}
         />
     );
 }
