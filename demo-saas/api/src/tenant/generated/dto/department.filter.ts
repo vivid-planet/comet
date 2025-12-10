@@ -5,7 +5,7 @@ import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
 import { DateTimeFilter, IdFilter, StringFilter } from "@comet/cms-api";
 @InputType()
-export class TenantScopeFilter {
+export class DepartmentFilter {
     @Field(() => IdFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -25,20 +25,15 @@ export class TenantScopeFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => StringFilter)
-    domain?: StringFilter;
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => StringFilter)
-    language?: StringFilter;
-    @Field(() => [TenantScopeFilter], { nullable: true })
-    @Type(() => TenantScopeFilter)
+    name?: StringFilter;
+    @Field(() => [DepartmentFilter], { nullable: true })
+    @Type(() => DepartmentFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    and?: TenantScopeFilter[];
-    @Field(() => [TenantScopeFilter], { nullable: true })
-    @Type(() => TenantScopeFilter)
+    and?: DepartmentFilter[];
+    @Field(() => [DepartmentFilter], { nullable: true })
+    @Type(() => DepartmentFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    or?: TenantScopeFilter[];
+    or?: DepartmentFilter[];
 }

@@ -175,6 +175,46 @@ input DateTimeFilter {
   notEqual: DateTime
 }
 
+type Department {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  tenant: Tenant!
+  updatedAt: DateTime!
+}
+
+input DepartmentFilter {
+  and: [DepartmentFilter!]
+  createdAt: DateTimeFilter
+  id: IdFilter
+  name: StringFilter
+  or: [DepartmentFilter!]
+  updatedAt: DateTimeFilter
+}
+
+input DepartmentInput {
+  name: String!
+}
+
+input DepartmentSort {
+  direction: SortDirection! = ASC
+  field: DepartmentSortField!
+}
+
+enum DepartmentSortField {
+  createdAt
+  name
+  tenant
+  tenant_createdAt
+  tenant_name
+  tenant_updatedAt
+  updatedAt
+}
+
+input DepartmentUpdateInput {
+  name: String
+}
+
 type Dependency {
   jsonPath: String!
   name: String
@@ -356,6 +396,7 @@ input ManyToOneFilter {
 
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
+  createDepartment(input: DepartmentInput!, tenant: ID!): Department!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   createProduct(input: ProductInput!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
@@ -364,7 +405,6 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
   createTenant(input: TenantInput!): Tenant!
-  createTenantScope(input: TenantScopeInput!, tenant: ID!): TenantScope!
   currentUserSignOut: String!
   deleteManufacturer(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
@@ -375,6 +415,7 @@ type Mutation {
   deleteProductVariant(id: ID!): Boolean!
   publishAllProducts: Boolean!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
+  updateDepartment(id: ID!, input: DepartmentUpdateInput!): Department!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
@@ -383,7 +424,6 @@ type Mutation {
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
   updateTenant(id: ID!, input: TenantUpdateInput!): Tenant!
-  updateTenantScope(id: ID!, input: TenantScopeUpdateInput!): TenantScope!
   userPermissionsCreatePermission(input: UserPermissionInput!, userId: String!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateContentScopes(input: UserContentScopesInput!, userId: String!): Boolean!
@@ -407,6 +447,11 @@ input OneToManyFilter {
   contains: ID
   isAnyOf: [ID!]
   search: String
+}
+
+type PaginatedDepartments {
+  nodes: [Department!]!
+  totalCount: Int!
 }
 
 type PaginatedManufacturerCountries {
@@ -446,11 +491,6 @@ type PaginatedProductVariants {
 
 type PaginatedProducts {
   nodes: [Product!]!
-  totalCount: Int!
-}
-
-type PaginatedTenantScopes {
-  nodes: [TenantScope!]!
   totalCount: Int!
 }
 
@@ -997,6 +1037,8 @@ type Query {
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   currentUser: CurrentUser!
+  department(id: ID!): Department!
+  departments(filter: DepartmentFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DepartmentSort!], tenant: ID!): PaginatedDepartments!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesJob(name: String!): KubernetesJob!
@@ -1020,8 +1062,6 @@ type Query {
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
   tenant(id: ID!): Tenant!
-  tenantScope(id: ID!): TenantScope!
-  tenantScopes(filter: TenantScopeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantScopeSort!], tenant: ID!): PaginatedTenantScopes!
   tenants(filter: TenantFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantSort!]): PaginatedTenants!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   userPermissionsAvailablePermissions: [String!]!
@@ -1051,69 +1091,24 @@ input StringFilter {
 
 type Tenant {
   createdAt: DateTime!
+  departments: [Department!]!
   id: ID!
   name: String!
-  scopes: [TenantScope!]!
   updatedAt: DateTime!
 }
 
 input TenantFilter {
   and: [TenantFilter!]
   createdAt: DateTimeFilter
+  departments: OneToManyFilter
   id: IdFilter
   name: StringFilter
   or: [TenantFilter!]
-  scopes: OneToManyFilter
   updatedAt: DateTimeFilter
 }
 
 input TenantInput {
   name: String!
-}
-
-type TenantScope {
-  createdAt: DateTime!
-  domain: String!
-  id: ID!
-  language: String!
-  tenant: Tenant!
-  updatedAt: DateTime!
-}
-
-input TenantScopeFilter {
-  and: [TenantScopeFilter!]
-  createdAt: DateTimeFilter
-  domain: StringFilter
-  id: IdFilter
-  language: StringFilter
-  or: [TenantScopeFilter!]
-  updatedAt: DateTimeFilter
-}
-
-input TenantScopeInput {
-  domain: String!
-  language: String!
-}
-
-input TenantScopeSort {
-  direction: SortDirection! = ASC
-  field: TenantScopeSortField!
-}
-
-enum TenantScopeSortField {
-  createdAt
-  domain
-  language
-  tenant
-  tenant_createdAt
-  tenant_name
-  tenant_updatedAt
-  updatedAt
-}
-
-input TenantScopeUpdateInput {
-  domain: String
-  language: String
 }
 
 input TenantSort {

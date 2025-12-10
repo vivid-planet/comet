@@ -4,16 +4,12 @@ import { Field, InputType } from "@nestjs/graphql";
 import { IsString, IsNotEmpty } from "class-validator";
 import { PartialType } from "@comet/cms-api";
 @InputType()
-export class TenantScopeInput {
+export class DepartmentInput {
     @IsNotEmpty()
     @IsString()
     @Field()
-    domain: string;
-    @IsNotEmpty()
-    @IsString()
-    @Field()
-    language: string;
+    name: string;
 }
 @InputType()
-export class TenantScopeUpdateInput extends PartialType(TenantScopeInput) {
+export class DepartmentUpdateInput extends PartialType(DepartmentInput) {
 }

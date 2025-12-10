@@ -20,10 +20,10 @@ import {
 import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DepartmentForm } from "./departments/generated/DepartmentForm";
+import { DepartmentsGrid } from "./departments/generated/DepartmentsGrid";
 import { TenantForm } from "./generated/TenantForm";
 import { TenantsGrid } from "./generated/TenantsGrid";
-import { TenantScopeForm } from "./tenantScope/generated/TenantScopeForm";
-import { TenantScopesGrid } from "./tenantScope/generated/TenantScopesGrid";
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -40,7 +40,7 @@ export function TenantsPage() {
     const intl = useIntl();
     useContentScopeConfig({ redirectPathAfterChange: "/administration/tenants" });
     const [TenantsStackSwitch, tenantsStackSwitchApi] = useStackSwitch();
-    const [TenantScopesStackSwitch, tenantScopesStackSwitchApi] = useStackSwitch();
+    const [DepartmentsStackSwitch, departmentsStackSwitchApi] = useStackSwitch();
     const client = useApolloClient();
 
     return (
@@ -70,21 +70,21 @@ export function TenantsPage() {
                                         </RouterTab>
                                         <RouterTab
                                             forceRender={true}
-                                            path="/scope"
-                                            label={<FormattedMessage id="tenants.scopes" defaultMessage="Scopes" />}
+                                            path="/department"
+                                            label={<FormattedMessage id="tenants.departments" defaultMessage="Departments" />}
                                         >
-                                            <TenantScopesStackSwitch initialPage="table">
+                                            <DepartmentsStackSwitch initialPage="table">
                                                 <StackPage name="table">
                                                     <FullHeightContent>
-                                                        <TenantScopesGrid tenant={selectedTenantId} />
+                                                        <DepartmentsGrid tenant={selectedTenantId} />
                                                     </FullHeightContent>
                                                 </StackPage>
                                                 <StackPage
                                                     name="edit"
                                                     // Has to be intl.formatMessage, because otherwise there is an error (maximum update depth exceeded)
-                                                    title={intl.formatMessage({ id: "tenants.editTenantScope", defaultMessage: "Edit Tenant Scope" })}
+                                                    title={intl.formatMessage({ id: "tenants.editDepartment", defaultMessage: "Edit Department" })}
                                                 >
-                                                    {(selectedTenantScopeId) => (
+                                                    {(selectedDepartmentId) => (
                                                         <SaveBoundary>
                                                             <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                                                                 <ToolbarBackButton />
@@ -96,7 +96,7 @@ export function TenantsPage() {
                                                             </StackToolbar>
                                                             <StackMainContent>
                                                                 <FieldSet>
-                                                                    <TenantScopeForm id={selectedTenantScopeId} tenant={selectedTenantId} />
+                                                                    <DepartmentForm id={selectedDepartmentId} tenant={selectedTenantId} />
                                                                 </FieldSet>
                                                             </StackMainContent>
                                                         </SaveBoundary>
@@ -105,7 +105,7 @@ export function TenantsPage() {
                                                 <StackPage
                                                     name="add"
                                                     // Has to be intl.formatMessage, because otherwise there is an error (maximum update depth exceeded)
-                                                    title={intl.formatMessage({ id: "tenants.addTenantScope", defaultMessage: "Add Tenant Scope" })}
+                                                    title={intl.formatMessage({ id: "tenants.addDepartment", defaultMessage: "Add Department" })}
                                                 >
                                                     <SaveBoundary>
                                                         <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -118,9 +118,9 @@ export function TenantsPage() {
                                                         </StackToolbar>
                                                         <StackMainContent>
                                                             <FieldSet>
-                                                                <TenantScopeForm
+                                                                <DepartmentForm
                                                                     onCreate={async (id) => {
-                                                                        tenantScopesStackSwitchApi.activatePage("edit", id);
+                                                                        departmentsStackSwitchApi.activatePage("edit", id);
                                                                         client.refetchQueries({
                                                                             include: ["CurrentUser"],
                                                                         });
@@ -131,7 +131,7 @@ export function TenantsPage() {
                                                         </StackMainContent>
                                                     </SaveBoundary>
                                                 </StackPage>
-                                            </TenantScopesStackSwitch>
+                                            </DepartmentsStackSwitch>
                                         </RouterTab>
                                     </RouterTabs>
                                 </StackMainContent>

@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { ObjectType } from "@nestjs/graphql";
 import { PaginatedResponseFactory } from "@comet/cms-api";
-import { TenantScope } from "../../entities/tenant-scope.entity";
+import { Department } from "../../entities/department.entity";
 @ObjectType()
-export class PaginatedTenantScopes extends PaginatedResponseFactory.create(TenantScope) {
+export class PaginatedDepartments extends PaginatedResponseFactory.create(Department) {
 }

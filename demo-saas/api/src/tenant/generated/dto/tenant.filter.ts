@@ -30,7 +30,7 @@ export class TenantFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => OneToManyFilter)
-    scopes?: OneToManyFilter;
+    departments?: OneToManyFilter;
     @Field(() => [TenantFilter], { nullable: true })
     @Type(() => TenantFilter)
     @ValidateNested({ each: true })

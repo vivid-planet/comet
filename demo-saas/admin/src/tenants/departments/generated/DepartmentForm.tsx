@@ -15,39 +15,39 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { tenantScopeFormFragment } from "./TenantScopeForm.gql";
-import { GQLTenantScopeFormFragment } from "./TenantScopeForm.gql.generated";
-import { tenantScopeQuery } from "./TenantScopeForm.gql";
-import { GQLTenantScopeQuery } from "./TenantScopeForm.gql.generated";
-import { GQLTenantScopeQueryVariables } from "./TenantScopeForm.gql.generated";
-import { createTenantScopeMutation } from "./TenantScopeForm.gql";
-import { GQLCreateTenantScopeMutation } from "./TenantScopeForm.gql.generated";
-import { GQLCreateTenantScopeMutationVariables } from "./TenantScopeForm.gql.generated";
-import { updateTenantScopeMutation } from "./TenantScopeForm.gql";
-import { GQLUpdateTenantScopeMutation } from "./TenantScopeForm.gql.generated";
-import { GQLUpdateTenantScopeMutationVariables } from "./TenantScopeForm.gql.generated";
+import { departmentFormFragment } from "./DepartmentForm.gql";
+import { GQLDepartmentFormFragment } from "./DepartmentForm.gql.generated";
+import { departmentQuery } from "./DepartmentForm.gql";
+import { GQLDepartmentQuery } from "./DepartmentForm.gql.generated";
+import { GQLDepartmentQueryVariables } from "./DepartmentForm.gql.generated";
+import { createDepartmentMutation } from "./DepartmentForm.gql";
+import { GQLCreateDepartmentMutation } from "./DepartmentForm.gql.generated";
+import { GQLCreateDepartmentMutationVariables } from "./DepartmentForm.gql.generated";
+import { updateDepartmentMutation } from "./DepartmentForm.gql";
+import { GQLUpdateDepartmentMutation } from "./DepartmentForm.gql.generated";
+import { GQLUpdateDepartmentMutationVariables } from "./DepartmentForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = GQLTenantScopeFormFragment;
+type FormValues = GQLDepartmentFormFragment;
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
     tenant: string;
 }
-export function TenantScopeForm({ onCreate, id, tenant }: FormProps) {
+export function DepartmentForm({ onCreate, id, tenant }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLTenantScopeQuery, GQLTenantScopeQueryVariables>(tenantScopeQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.tenantScope
+    const { data, error, loading, refetch } = useQuery<GQLDepartmentQuery, GQLDepartmentQueryVariables>(departmentQuery, id ? { variables: { id } } : { skip: true });
+    const initialValues = useMemo<Partial<FormValues>>(() => data?.department
         ? {
-            ...filterByFragment<GQLTenantScopeFormFragment>(tenantScopeFormFragment, data.tenantScope),
+            ...filterByFragment<GQLDepartmentFormFragment>(departmentFormFragment, data.department),
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
-            const updatedAt = await queryUpdatedAt(client, "tenantScope", id);
-            return resolveHasSaveConflict(data?.tenantScope.updatedAt, updatedAt);
+            const updatedAt = await queryUpdatedAt(client, "department", id);
+            return resolveHasSaveConflict(data?.department.updatedAt, updatedAt);
         },
         formApiRef,
         loadLatestVersion: async () => {
@@ -62,19 +62,19 @@ export function TenantScopeForm({ onCreate, id, tenant }: FormProps) {
             if (!id)
                 throw new Error();
             const { ...updateInput } = output;
-            await client.mutate<GQLUpdateTenantScopeMutation, GQLUpdateTenantScopeMutationVariables>({
-                mutation: updateTenantScopeMutation,
+            await client.mutate<GQLUpdateDepartmentMutation, GQLUpdateDepartmentMutationVariables>({
+                mutation: updateDepartmentMutation,
                 variables: { id, input: updateInput },
             });
         }
         else {
-            const { data: mutationResponse } = await client.mutate<GQLCreateTenantScopeMutation, GQLCreateTenantScopeMutationVariables>({
-                mutation: createTenantScopeMutation,
+            const { data: mutationResponse } = await client.mutate<GQLCreateDepartmentMutation, GQLCreateDepartmentMutationVariables>({
+                mutation: createDepartmentMutation,
                 variables: {
                     input: output, tenant
                 },
             });
-            const id = mutationResponse?.createTenantScope.id;
+            const id = mutationResponse?.createDepartment.id;
             if (id) {
                 setTimeout(() => {
                     onCreate?.(id);
@@ -96,9 +96,7 @@ export function TenantScopeForm({ onCreate, id, tenant }: FormProps) {
                         {saveConflict.dialogs}
                         <>
                             
-        <TextField required variant="horizontal" fullWidth name="domain" label={<FormattedMessage id="tenantScope.domain" defaultMessage="Domain"/>}/>
-
-        <TextField required variant="horizontal" fullWidth name="language" label={<FormattedMessage id="tenantScope.language" defaultMessage="Language"/>}/>
+        <TextField required variant="horizontal" fullWidth name="name" label={<FormattedMessage id="department.name" defaultMessage="Name"/>}/>
                         </>
                     </>)}
             </FinalForm>);

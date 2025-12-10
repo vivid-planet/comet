@@ -4,10 +4,10 @@ import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, IsString, ValidateNested, IsUUID } from "class-validator";
 import { OffsetBasedPaginationArgs } from "@comet/cms-api";
-import { TenantScopeFilter } from "./tenant-scope.filter";
-import { TenantScopeSort } from "./tenant-scope.sort";
+import { DepartmentFilter } from "./department.filter";
+import { DepartmentSort } from "./department.sort";
 @ArgsType()
-export class TenantScopesArgs extends OffsetBasedPaginationArgs {
+export class DepartmentsArgs extends OffsetBasedPaginationArgs {
     @Field(() => ID)
     @IsUUID()
     tenant: string;
@@ -15,14 +15,14 @@ export class TenantScopesArgs extends OffsetBasedPaginationArgs {
     @IsOptional()
     @IsString()
     search?: string;
-    @Field(() => TenantScopeFilter, { nullable: true })
+    @Field(() => DepartmentFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => TenantScopeFilter)
+    @Type(() => DepartmentFilter)
     @IsOptional()
-    filter?: TenantScopeFilter;
-    @Field(() => [TenantScopeSort], { nullable: true })
+    filter?: DepartmentFilter;
+    @Field(() => [DepartmentSort], { nullable: true })
     @ValidateNested({ each: true })
-    @Type(() => TenantScopeSort)
+    @Type(() => DepartmentSort)
     @IsOptional()
-    sort?: TenantScopeSort[];
+    sort?: DepartmentSort[];
 }

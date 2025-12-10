@@ -6,7 +6,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { TenantInput, TenantUpdateInput } from "./dto/tenant.input";
 import { PaginatedTenants } from "./dto/paginated-tenants";
 import { TenantsArgs } from "./dto/tenants.args";
-import { TenantScope } from "../entities/tenant-scope.entity";
+import { Department } from "../entities/department.entity";
 import { Tenant } from "../entities/tenant.entity";
 import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Tenant)
@@ -30,8 +30,8 @@ export class TenantResolver {
         const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Tenant));
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
-        if (fields.includes("scopes")) {
-            populate.push("scopes");
+        if (fields.includes("departments")) {
+            populate.push("departments");
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<Tenant, any> = { offset, limit, populate };
@@ -65,10 +65,10 @@ export class TenantResolver {
         await this.entityManager.flush();
         return tenant;
     }
-    @ResolveField(() => [TenantScope])
-    async scopes(
+    @ResolveField(() => [Department])
+    async departments(
     @Parent()
-    tenant: Tenant): Promise<TenantScope[]> {
-        return tenant.scopes.loadItems();
+    tenant: Tenant): Promise<Department[]> {
+        return tenant.departments.loadItems();
     }
 }

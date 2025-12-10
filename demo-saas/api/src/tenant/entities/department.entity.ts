@@ -9,7 +9,7 @@ import { Tenant } from "./tenant.entity";
 @ObjectType()
 @RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["tenantAdministration"], delete: false })
-export class TenantScope extends BaseEntity {
+export class Department extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -26,11 +26,7 @@ export class TenantScope extends BaseEntity {
 
     @Property()
     @Field()
-    domain: string;
-
-    @Property()
-    @Field()
-    language: string;
+    name: string;
 
     @ManyToOne(() => Tenant, { ref: true })
     @CrudField({

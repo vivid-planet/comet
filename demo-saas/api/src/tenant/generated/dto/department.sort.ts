@@ -3,24 +3,23 @@
 import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
-export enum TenantScopeSortField {
+export enum DepartmentSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
-    domain = "domain",
-    language = "language",
+    name = "name",
     tenant = "tenant",
     tenant_createdAt = "tenant_createdAt",
     tenant_updatedAt = "tenant_updatedAt",
     tenant_name = "tenant_name"
 }
-registerEnumType(TenantScopeSortField, {
-    name: "TenantScopeSortField",
+registerEnumType(DepartmentSortField, {
+    name: "DepartmentSortField",
 });
 @InputType()
-export class TenantScopeSort {
-    @Field(() => TenantScopeSortField)
-    @IsEnum(TenantScopeSortField)
-    field: TenantScopeSortField;
+export class DepartmentSort {
+    @Field(() => DepartmentSortField)
+    @IsEnum(DepartmentSortField)
+    field: DepartmentSortField;
     @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
     @IsEnum(SortDirection)
     direction: SortDirection = SortDirection.ASC;

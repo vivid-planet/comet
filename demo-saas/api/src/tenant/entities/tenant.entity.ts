@@ -3,7 +3,7 @@ import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, P
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 } from "uuid";
 
-import { TenantScope } from "./tenant-scope.entity";
+import { Department } from "./department.entity";
 
 @Entity()
 @ObjectType()
@@ -28,9 +28,9 @@ export class Tenant extends BaseEntity {
     @Field()
     name: string;
 
-    @OneToMany(() => TenantScope, (scope) => scope.tenant, { orphanRemoval: true })
+    @OneToMany(() => Department, (department) => department.tenant, { orphanRemoval: true })
     @CrudField({
         input: false,
     })
-    scopes = new Collection<TenantScope>(this);
+    departments = new Collection<Department>(this);
 }

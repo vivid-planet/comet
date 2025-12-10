@@ -9,7 +9,7 @@ import {
 } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
-import { TenantScope } from "@src/tenant/entities/tenant-scope.entity";
+import { Department } from "@src/tenant/entities/department.entity";
 
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {
@@ -29,16 +29,15 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allContentScopes;
         } else {
-            return [{ domain: "main", language: "en" }];
+            return [{ department: "main" }];
         }
     }
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
-        const tenantScopes = await this.entityManager.find(TenantScope, {});
+        const departments = await this.entityManager.find(Department, {});
 
-        return tenantScopes.map((scope) => ({
-            domain: scope.domain,
-            language: scope.language,
+        return departments.map((department) => ({
+            department: department.name,
         }));
     }
 }
