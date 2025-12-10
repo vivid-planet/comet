@@ -61,6 +61,7 @@ describe("staticInitialValue", () => {
             gqlIntrospection: introspection,
             formValuesConfig: formOutput.formValuesConfig,
             gqlType: "Product",
+            initialValuesAsProp: false,
         });
         expect(initialValuesCode).toMatchSnapshot();
     });
