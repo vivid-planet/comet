@@ -24,7 +24,9 @@ const config: CodegenConfig = {
             config: {
                 avoidOptionals: {
                     field: true,
+                    inputValue:true
                 },
+                maybeValue: "T | null | undefined",
                 enumsAsTypes: true,
                 namingConvention: "keep",
                 scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string", LocalDate: "string" }),
@@ -48,7 +50,7 @@ const config: CodegenConfig = {
                 scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string", LocalDate: "string" }),
                 typesPrefix: "GQL",
                 skipDocumentsValidation: {
-                    ignoreRules: ["KnownFragmentNamesRule"], 
+                    ignoreRules: ["KnownFragmentNamesRule"],
                 }
             },
             plugins: [
