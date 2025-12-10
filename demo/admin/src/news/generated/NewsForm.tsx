@@ -42,7 +42,7 @@ export type FormValues = Omit<GQLNewsFormFragment, "image" | "content"> & {
     image: BlockState<typeof rootBlocks.image>;
     content: BlockState<typeof rootBlocks.content>;
 };
-export function formValuesToOutput(formValues: FormValues) {
+function formValuesToOutput(formValues: FormValues) {
     return { ...formValues, image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content), };
 }
 interface FormProps {

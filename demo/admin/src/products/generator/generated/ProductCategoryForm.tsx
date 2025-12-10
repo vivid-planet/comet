@@ -32,7 +32,7 @@ import { GQLUpdateProductCategoryMutation } from "./ProductCategoryForm.gql.gene
 import { GQLUpdateProductCategoryMutationVariables } from "./ProductCategoryForm.gql.generated";
 import isEqual from "lodash.isequal";
 export type FormValues = GQLProductCategoryFormFragment;
-export function formValuesToOutput(formValues: FormValues) {
+function formValuesToOutput(formValues: FormValues) {
     return { ...formValues, type: formValues.type ? formValues.type.id : null, };
 }
 interface FormProps {

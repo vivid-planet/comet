@@ -1,10 +1,10 @@
 import { MailerService, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Args, Field, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Args, Field, InputType, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { IsString } from "class-validator";
 
 import { Product, ProductStatus } from "./entities/product.entity";
-import { ProductInput } from "./generated/dto/product.input";
 import { ProductPublishedMail } from "./product-published.mail";
 
 @ObjectType()
@@ -14,6 +14,13 @@ class ValidationResponse {
 
     @Field({ nullable: true })
     errorCode?: string;
+}
+
+@InputType()
+export class ValidateProductInput {
+    @IsString()
+    @Field()
+    title: string;
 }
 
 @Resolver(() => Product)
@@ -40,8 +47,9 @@ export class CustomProductResolver {
     }
 
     @Query(() => ValidationResponse)
-    async validateProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<ValidationResponse> {
+    async validateProduct(@Args("input", { type: () => ValidateProductInput }) input: ValidateProductInput): Promise<ValidationResponse> {
         if (input.title.length < 3) {
+            // in a real world scenario, this would be implemented as class-validator constraint + client side validation
             return { ok: false, errorCode: "TITLE_TOO_SHORT" };
         }
         return { ok: true };

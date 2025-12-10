@@ -40,7 +40,7 @@ const rootBlocks = {
 export type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
-export function formValuesToOutput({ id, ...formValuesRest }: FormValues) {
+function formValuesToOutput({ id, ...formValuesRest }: FormValues) {
     return { ...formValuesRest, image: rootBlocks.image.state2Output(formValuesRest.image), };
 }
 interface FormProps {
@@ -78,6 +78,8 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
             throw new Error("Conflicts detected");
         const output = formValuesToOutput(formValues);
         if (mode === "edit") {
+            if (!id)
+                throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: output },

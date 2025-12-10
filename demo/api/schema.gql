@@ -345,6 +345,11 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   downloadUrl: String!
+
+  """
+  The date and time the file will be deleted. If undefined, the file will never be deleted.
+  """
+  expiresAt: DateTime
   id: ID!
   imageUrl(resizeWidth: Int!): String
   mimetype: String!
@@ -1628,7 +1633,7 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsUserById(id: String!): UserPermissionsUser!
   userPermissionsUsers(filter: UserPermissionsUserFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
-  validateProduct(input: ProductInput!): ValidationResponse!
+  validateProduct(input: ValidateProductInput!): ValidationResponse!
   warning(id: ID!): Warning!
   warnings(filter: WarningFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [WarningSort!], status: [WarningStatus!]! = [open]): PaginatedWarnings!
 }
@@ -1842,6 +1847,10 @@ enum UserPermissionsUserSortField {
   email
   name
   status
+}
+
+input ValidateProductInput {
+  title: String!
 }
 
 type ValidationResponse {

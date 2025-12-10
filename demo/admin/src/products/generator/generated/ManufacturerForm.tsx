@@ -48,7 +48,7 @@ export type FormValues = Omit<GQLManufacturerFormFragment, "address" | "addressA
         };
     };
 };
-export function formValuesToOutput({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues) {
+function formValuesToOutput({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues) {
     return { ...formValuesRest, address: { ...formValuesAddressRest, streetNumber: parseFloat(formValuesAddressRest.streetNumber), alternativeAddress: alternativeAddressEnabled && formValuesAddressRest.alternativeAddress ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ? parseFloat(formValuesAddressRest.alternativeAddress.streetNumber) : null, } : null, }, addressAsEmbeddable: { ...formValuesRest.addressAsEmbeddable, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.streetNumber), alternativeAddress: { ...formValuesRest.addressAsEmbeddable.alternativeAddress, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.alternativeAddress.streetNumber), }, }, };
 }
 interface FormProps {

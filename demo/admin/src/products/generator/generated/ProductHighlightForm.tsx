@@ -46,7 +46,7 @@ export type FormValues = GQLProductHighlightFormDetailsFragment & {
         title: string;
     };
 };
-export function formValuesToOutput({ productCategoryType, productCategory, ...formValuesRest }: FormValues) {
+function formValuesToOutput({ productCategoryType, productCategory, ...formValuesRest }: FormValues) {
     return { ...formValuesRest, product: formValuesRest.product?.id, };
 }
 interface FormProps {

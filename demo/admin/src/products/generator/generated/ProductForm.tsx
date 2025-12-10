@@ -60,7 +60,6 @@ import { GQLCreateProductMutationVariables } from "./ProductForm.gql.generated";
 import { updateProductMutation } from "./ProductForm.gql";
 import { GQLUpdateProductMutation } from "./ProductForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
-import { formValuesToOutput } from "../generated/ProductForm";
 import { GQLValidateProductQuery } from "../ProductForm.cometGen.generated";
 import { GQLValidateProductQueryVariables } from "../ProductForm.cometGen.generated";
 import { FORM_ERROR } from "final-form";
@@ -82,7 +81,7 @@ export type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image"
     image: BlockState<typeof rootBlocks.image>;
     lastCheckedAt?: Date | null;
 };
-export function formValuesToOutput({ createdAt, dimensionsEnabled, ...formValuesRest }: FormValues) {
+function formValuesToOutput({ createdAt, dimensionsEnabled, ...formValuesRest }: FormValues) {
     return { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), dimensions: dimensionsEnabled && formValuesRest.dimensions ? { ...formValuesRest.dimensions, width: parseFloat(formValuesRest.dimensions.width), height: parseFloat(formValuesRest.dimensions.height), depth: parseFloat(formValuesRest.dimensions.depth), } : null, manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
 }
 interface FormProps {
@@ -148,17 +147,17 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     }
     return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
      subscription={{ values: true }} validate={async (formValues: FormValues) => {
-            const output = formValuesToOutput(formValues);
+            // this just demonstrates record level validation via api call, in real world scenario this could be done as client side field validation
             const validateResponse = await client.query<GQLValidateProductQuery, GQLValidateProductQueryVariables>({
                 query: gql`
-                query ValidateProduct($input: ProductInput!) {
+                query ValidateProduct($input: ValidateProductInput!) {
                     validateProduct(input: $input) {
                         ok
                         errorCode
                     }
                 }
             `,
-                variables: { input: output },
+                variables: { input: { title: formValues.title } },
             });
             const validationResult = validateResponse.data.validateProduct;
             if (!validationResult.ok) {

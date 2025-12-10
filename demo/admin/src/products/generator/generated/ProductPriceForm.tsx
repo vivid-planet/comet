@@ -26,7 +26,7 @@ import isEqual from "lodash.isequal";
 export type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
     price?: string;
 };
-export function formValuesToOutput(formValues: FormValues) {
+function formValuesToOutput(formValues: FormValues) {
     return { ...formValues, price: formValues.price ? parseFloat(formValues.price) : null, };
 }
 interface FormProps {

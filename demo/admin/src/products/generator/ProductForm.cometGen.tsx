@@ -6,7 +6,7 @@ import { FORM_ERROR } from "final-form";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
-import { type FormValues, formValuesToOutput } from "./generated/ProductForm";
+import { type FormValues } from "./generated/ProductForm";
 import { type GQLValidateProductQuery, type GQLValidateProductQueryVariables } from "./ProductForm.cometGen.generated";
 import { productTypeValues } from "./productTypeValues";
 import { validateProductSlug } from "./validateProductSlug";
@@ -18,17 +18,17 @@ export default defineConfig<GQLProduct>({
     navigateOnCreate: false,
 
     validate: injectFormVariables(({ client }: InjectedFormVariables) => async (formValues: FormValues) => {
-        const output = formValuesToOutput(formValues);
+        // this just demonstrates record level validation via api call, in real world scenario this could be done as client side field validation
         const validateResponse = await client.query<GQLValidateProductQuery, GQLValidateProductQueryVariables>({
             query: gql`
-                query ValidateProduct($input: ProductInput!) {
+                query ValidateProduct($input: ValidateProductInput!) {
                     validateProduct(input: $input) {
                         ok
                         errorCode
                     }
                 }
             `,
-            variables: { input: output },
+            variables: { input: { title: formValues.title } },
         });
         const validationResult = validateResponse.data.validateProduct;
         if (!validationResult.ok) {

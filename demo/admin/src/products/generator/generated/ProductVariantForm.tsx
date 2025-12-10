@@ -37,7 +37,7 @@ const rootBlocks = {
 export type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
-export function formValuesToOutput(formValues: FormValues) {
+function formValuesToOutput(formValues: FormValues) {
     return { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
 }
 interface FormProps {

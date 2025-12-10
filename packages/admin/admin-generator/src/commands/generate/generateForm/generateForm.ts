@@ -339,7 +339,7 @@ export function generateForm(
 
     ${generateFormValuesType({ formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
 
-    export function formValuesToOutput(${generateDestructFormValueForInput({
+    function formValuesToOutput(${generateDestructFormValueForInput({
         formValuesConfig,
         gqlIntrospection,
         gqlType,
@@ -395,7 +395,7 @@ export function generateForm(
                 ${
                     editMode
                         ? `
-                ${readOnlyFields.some((field) => field.name === "id") ? "" : "if (!id) throw new Error();"}
+                if (!id) throw new Error();
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
                     variables: { id, input: output },

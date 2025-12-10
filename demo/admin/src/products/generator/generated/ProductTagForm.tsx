@@ -28,7 +28,7 @@ import { GQLUpdateProductTagMutation } from "./ProductTagForm.gql.generated";
 import { GQLUpdateProductTagMutationVariables } from "./ProductTagForm.gql.generated";
 import isEqual from "lodash.isequal";
 export type FormValues = GQLProductTagFormFragment;
-export function formValuesToOutput(formValues: FormValues) {
+function formValuesToOutput(formValues: FormValues) {
     return formValues;
 }
 interface FormProps {

@@ -34,7 +34,7 @@ const rootBlocks = {
 export type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
-export function formValuesToOutput(formValues: FormValues) {
+function formValuesToOutput(formValues: FormValues) {
     return { ...formValues, description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), };
 }
 interface FormProps {
