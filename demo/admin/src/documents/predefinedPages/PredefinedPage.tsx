@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { FileData, FileDataNotMenu } from "@comet/admin-icons";
 import { type DocumentInterface } from "@comet/cms-admin";
 import { Chip } from "@mui/material";
-import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { type GQLPredefinedPage, type GQLPredefinedPageInput } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
@@ -24,7 +23,7 @@ const predefinedPageInfoTagQuery = gql`
     }
 `;
 
-export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, GQLPredefinedPageInput, GQLPageTreeNodeAdditionalFieldsFragment> = {
+export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, GQLPredefinedPageInput> = {
     displayName: <FormattedMessage id="predefinedPages.displayName" defaultMessage="Predefined Page" />,
     editComponent: EditPredefinedPage,
     getQuery: gql`

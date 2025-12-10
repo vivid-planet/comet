@@ -40,8 +40,7 @@ import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 interface Props {
     category: string;
     path: string;
-    documentTypes: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Record<DocumentType, DocumentInterface<any, any, any>> | ((category: string) => Record<DocumentType, DocumentInterface<any, any, any>>);
+    documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScope) => ReactNode;
 }

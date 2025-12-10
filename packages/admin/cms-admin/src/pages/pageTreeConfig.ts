@@ -6,8 +6,7 @@ import { type AllCategories } from "./pageTree/PageTreeContext";
 
 export interface PageTreeConfig {
     categories: AllCategories;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    documentTypes: Record<DocumentType, DocumentInterface<any, any, any>>;
+    documentTypes: Record<DocumentType, DocumentInterface>;
     additionalPageTreeNodeFragment?: {
         name: string;
         fragment: DocumentNode;

@@ -1,7 +1,13 @@
 import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
+import {
+    createDocumentDependencyMethods,
+    createDocumentRootBlocksMethods,
+    type DependencyInterface,
+    type DocumentInterface,
+    type InfoTagProps,
+} from "@comet/cms-admin";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
@@ -15,7 +21,7 @@ const rootBlocks = {
     content: LinkBlock,
 };
 
-export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput, GQLPageTreeNodeAdditionalFieldsFragment> & DependencyInterface = {
+export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & DependencyInterface = {
     displayName: <FormattedMessage {...messages.link} />,
     editComponent: EditLink,
     getQuery: gql`
@@ -47,7 +53,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput, GQL
             }
         }
     `,
-    InfoTag: ({ page }) => {
+    InfoTag: ({ page }: InfoTagProps<GQLPageTreeNodeAdditionalFieldsFragment>) => {
         if (page.userGroup !== "all") {
             return <Chip size="small" label={page.userGroup} />;
         }

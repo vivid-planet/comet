@@ -36,7 +36,6 @@ export interface GQLDocument extends GQLDocumentInterface {
 export interface DocumentInterface<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,
     DocumentOutput extends Record<string, unknown> = Record<string, unknown>,
-    PageTreeNodeAdditionalFields = object,
 > {
     displayName: ReactNode;
     getQuery?: TypedDocumentNode<GQLPageQuery, GQLPageQueryVariables>; // TODO better typing (see createUsePage.tsx)
@@ -45,9 +44,13 @@ export interface DocumentInterface<
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => ReactNode;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => ReactNode;
-    InfoTag?: ComponentType<{ page: PageTreePage<PageTreeNodeAdditionalFields> }>;
+    InfoTag?: ComponentType<InfoTagProps>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
     hasNoSitePreview?: true;
 }
+
+export type InfoTagProps<PageTreeNodeAdditionalFields extends object = object> = {
+    page: PageTreePage<PageTreeNodeAdditionalFields>;
+};
