@@ -403,7 +403,6 @@ const productsFragment = gql`
         type
         additionalTypes
         inStock
-        image
         status
         category {
             id

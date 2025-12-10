@@ -1,4 +1,4 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, FileUpload, RootBlockEntity } from "@comet/cms-api";
 import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
@@ -25,9 +25,9 @@ export class ProductVariant extends BaseEntity {
     @Field()
     name: string;
 
-    @Property({ type: new RootBlockType(DamImageBlock) })
-    @RootBlock(DamImageBlock)
-    image: BlockDataInterface;
+    @ManyToOne(() => FileUpload, { nullable: true, ref: true })
+    @Field(() => FileUpload, { nullable: true })
+    image?: Ref<FileUpload> = undefined;
 
     @Property({ columnType: "integer" })
     @Field(() => Int)

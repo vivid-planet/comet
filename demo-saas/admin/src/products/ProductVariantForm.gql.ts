@@ -1,10 +1,14 @@
 import { gql } from "@apollo/client";
+import { finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 
 export const productVariantFormFragment = gql`
-    fragment ProductVariantForm on ProductVariant {
+    fragment ProductVariantFormManual on ProductVariant {
         name
-        image
+        image {
+            ...FinalFormFileUploadDownloadable
+        }
     }
+    ${finalFormFileUploadDownloadableFragment}
 `;
 
 export const productVariantFormQuery = gql`
@@ -12,7 +16,7 @@ export const productVariantFormQuery = gql`
         productVariant(id: $id) {
             id
             updatedAt
-            ...ProductVariantForm
+            ...ProductVariantFormManual
         }
     }
     ${productVariantFormFragment}
@@ -23,7 +27,7 @@ export const createProductVariantFormMutation = gql`
         createProductVariant(product: $product, input: $input) {
             id
             updatedAt
-            ...ProductVariantForm
+            ...ProductVariantFormManual
         }
     }
     ${productVariantFormFragment}
@@ -34,7 +38,7 @@ export const updateProductVariantFormMutation = gql`
         updateProductVariant(id: $id, input: $input) {
             id
             updatedAt
-            ...ProductVariantForm
+            ...ProductVariantFormManual
         }
     }
     ${productVariantFormFragment}

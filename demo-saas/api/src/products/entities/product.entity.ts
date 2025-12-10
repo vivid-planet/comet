@@ -1,4 +1,4 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, FileUpload, RootBlockEntity } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -143,9 +143,9 @@ export class Product extends BaseEntity {
     @Field({ nullable: true })
     lastCheckedAt?: Date = undefined;
 
-    @Property({ type: new RootBlockType(DamImageBlock) })
-    @RootBlock(DamImageBlock)
-    image: BlockDataInterface;
+    @ManyToOne(() => FileUpload, { nullable: true, ref: true })
+    @Field(() => FileUpload, { nullable: true })
+    image?: Ref<FileUpload> = undefined;
 
     @Property({ type: "json" })
     @Field(() => [ProductDiscounts])

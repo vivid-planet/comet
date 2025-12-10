@@ -19,6 +19,7 @@ export enum ProductHighlightSortField {
     product_soldCount = "product_soldCount",
     product_availableSince = "product_availableSince",
     product_lastCheckedAt = "product_lastCheckedAt",
+    product_image = "product_image",
     product_category = "product_category",
     product_createdAt = "product_createdAt",
     product_updatedAt = "product_updatedAt",

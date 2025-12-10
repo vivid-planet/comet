@@ -7,13 +7,13 @@ import { ProductVariantsService } from "./product-variants.service";
 import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-variant.input";
 import { PaginatedProductVariants } from "./dto/paginated-product-variants";
 import { ProductVariantsArgs } from "./dto/product-variants.args";
+import { AffectedEntity, FileUpload, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { Product } from "../entities/product.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
-    constructor(protected readonly entityManager: EntityManager, protected readonly productVariantsService: ProductVariantsService, private readonly blocksTransformer: BlocksTransformerService) { }
+    constructor(protected readonly entityManager: EntityManager, protected readonly productVariantsService: ProductVariantsService) { }
     @Query(() => ProductVariant)
     @AffectedEntity(ProductVariant)
     async productVariant(
@@ -33,6 +33,9 @@ export class ProductVariantResolver {
         where.product = product;
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
+        if (fields.includes("image")) {
+            populate.push("image");
+        }
         if (fields.includes("product")) {
             populate.push("product");
         }
@@ -64,7 +67,7 @@ export class ProductVariantResolver {
             ...assignInput,
             position,
             product: Reference.create(await this.entityManager.findOneOrFail(Product, product)),
-            image: imageInput.transformToBlockData(),
+            image: imageInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, imageInput)) : undefined,
         });
         await this.entityManager.flush();
         return productVariant;
@@ -93,8 +96,11 @@ export class ProductVariantResolver {
         productVariant.assign({
             ...assignInput,
         });
-        if (imageInput) {
-            productVariant.image = imageInput.transformToBlockData();
+        if (imageInput !== undefined) {
+            productVariant.image =
+                imageInput ?
+                    Reference.create(await this.entityManager.findOneOrFail(FileUpload, imageInput))
+                    : undefined;
         }
         await this.entityManager.flush();
         return productVariant;
@@ -110,16 +116,16 @@ export class ProductVariantResolver {
         await this.entityManager.flush();
         return true;
     }
+    @ResolveField(() => FileUpload, { nullable: true })
+    async image(
+    @Parent()
+    productVariant: ProductVariant): Promise<FileUpload | undefined> {
+        return productVariant.image?.loadOrFail();
+    }
     @ResolveField(() => Product)
     async product(
     @Parent()
     productVariant: ProductVariant): Promise<Product> {
         return productVariant.product.loadOrFail();
-    }
-    @ResolveField(() => RootBlockDataScalar(DamImageBlock))
-    async image(
-    @Parent()
-    productVariant: ProductVariant): Promise<object> {
-        return this.blocksTransformer.transformToPlain(productVariant.image);
     }
 }

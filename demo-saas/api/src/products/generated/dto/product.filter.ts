@@ -77,6 +77,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => DateTimeFilter)
     lastCheckedAt?: DateTimeFilter;
+    @Field(() => ManyToOneFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToOneFilter)
+    image?: ManyToOneFilter;
     @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

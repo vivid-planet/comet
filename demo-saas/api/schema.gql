@@ -132,12 +132,6 @@ type CurrentUserPermission {
   permission: Permission!
 }
 
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""DamImage root block input"""
-scalar DamImageBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type DamMediaAlternative {
   id: ID!
   language: String!
@@ -491,7 +485,7 @@ type Product {
   dimensions: ProductDimensions
   discounts: [ProductDiscounts!]!
   id: ID!
-  image: DamImageBlockData!
+  image: FileUpload
   inStock: Boolean!
   lastCheckedAt: DateTime
   manufacturer: Manufacturer
@@ -638,6 +632,7 @@ input ProductFilter {
   datasheets: ManyToManyFilter
   description: StringFilter
   id: IdFilter
+  image: ManyToOneFilter
   inStock: BooleanFilter
   lastCheckedAt: DateTimeFilter
   manufacturer: ManyToOneFilter
@@ -692,6 +687,7 @@ enum ProductHighlightSortField {
   product_category
   product_createdAt
   product_description
+  product_image
   product_inStock
   product_lastCheckedAt
   product_manufacturer
@@ -721,7 +717,7 @@ input ProductInput {
   description: String = null
   dimensions: ProductDimensionsInput
   discounts: [ProductDiscountsInput!]! = []
-  image: DamImageBlockInput!
+  image: ID = null
   inStock: Boolean! = true
   lastCheckedAt: DateTime = null
   manufacturer: ID = null
@@ -778,6 +774,13 @@ enum ProductSortField {
   category_updatedAt
   createdAt
   description
+  image
+  image_contentHash
+  image_createdAt
+  image_id
+  image_mimetype
+  image_name
+  image_updatedAt
   inStock
   lastCheckedAt
   manufacturer
@@ -910,7 +913,7 @@ input ProductUpdateInput {
   description: String
   dimensions: ProductDimensionsInput
   discounts: [ProductDiscountsInput!]
-  image: DamImageBlockInput
+  image: ID
   inStock: Boolean
   lastCheckedAt: DateTime
   manufacturer: ID
@@ -929,7 +932,7 @@ input ProductUpdateInput {
 type ProductVariant {
   createdAt: DateTime!
   id: ID!
-  image: DamImageBlockData!
+  image: FileUpload
   name: String!
   position: Int!
   product: Product!
@@ -940,13 +943,14 @@ input ProductVariantFilter {
   and: [ProductVariantFilter!]
   createdAt: DateTimeFilter
   id: IdFilter
+  image: ManyToOneFilter
   name: StringFilter
   or: [ProductVariantFilter!]
   updatedAt: DateTimeFilter
 }
 
 input ProductVariantInput {
-  image: DamImageBlockInput!
+  image: ID = null
   name: String!
   position: Int
 }
@@ -958,6 +962,13 @@ input ProductVariantSort {
 
 enum ProductVariantSortField {
   createdAt
+  image
+  image_contentHash
+  image_createdAt
+  image_id
+  image_mimetype
+  image_name
+  image_updatedAt
   name
   position
   product
@@ -966,6 +977,7 @@ enum ProductVariantSortField {
   product_category
   product_createdAt
   product_description
+  product_image
   product_inStock
   product_lastCheckedAt
   product_manufacturer
@@ -981,7 +993,7 @@ enum ProductVariantSortField {
 }
 
 input ProductVariantUpdateInput {
-  image: DamImageBlockInput
+  image: ID
   name: String
   position: Int
 }
