@@ -12,10 +12,12 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -70,6 +72,15 @@ export function ProductTagsGrid() {
         }),
         ...usePersistentColumnState("ProductTagsGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
+
+    const handleRowPrimaryAction = useCallback(
+        (row: GQLProductTagsGridFragment) => {
+            stackSwitchApi.activatePage("edit", row.id);
+        },
+        [stackSwitchApi],
+    );
+
     const columns: GridColDef<GQLProductTagsGridFragment>[] = [
         { field: "title", headerName: intl.formatMessage({ id: "productTag.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
         {
@@ -84,7 +95,7 @@ export function ProductTagsGrid() {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <IconButton color="primary" onClick={() => handleRowPrimaryAction(params.row)}>
                             <EditIcon />
                         </IconButton>
                         <CrudContextMenu
@@ -121,6 +132,7 @@ export function ProductTagsGrid() {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
+            onRowClick={(params) => handleRowPrimaryAction(params.row)}
             slots={{
                 toolbar: ProductTagsGridToolbar as GridSlotsComponent["toolbar"],
             }}
