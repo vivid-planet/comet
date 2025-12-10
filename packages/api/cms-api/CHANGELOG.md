@@ -1,5 +1,40 @@
 # @comet/cms-api
 
+## 8.10.0
+
+### Minor Changes
+
+- 5f025a9: Add Importer Module
+
+    The module can be used to import data (e.g., from a CSV file) into applications.
+    Review the [docs](https://docs.comet-dxp.com/docs/features-modules/importer/) for more information on how to use it.
+
+## 8.9.0
+
+### Minor Changes
+
+- 5cf497f: Allow Easier Local Usage of the Kubernetes Module
+
+    As projects increasingly use the Kubernetes API, local testing and debugging have become necessary.
+    Previously, if you wanted to use the Kubernetes service locally (outside of a cluster), you had to overwrite the Kubernetes service inside the node_modules folder.
+    Now, you can instantiate the Kubernetes module with a fixed namespace and Helm release, and the module will attempt to authenticate you using local credentials.
+    The change in the configuration was made with backwards compatibility in mind.
+    This update also renames the guard to be more descriptive.
+    This update also adds the Kubernetes service to the public API.
+
+    Example:
+
+    ```app.module.ts
+    KubernetesModule.register({
+        helmRelease: "comet-test",
+        namespace: "comet-test",
+    }),
+    ```
+
+### Patch Changes
+
+- ef30d93: Fix FileUploadModule: The `setInterval` for cleaning expired files was blocking application bootstrap. Moved interval initialization to the NestJS lifecycle hook `onApplicationBootstrap` and added cleanup in `beforeApplicationShutdown` to properly clear the interval.
+
 ## 8.8.0
 
 ### Minor Changes

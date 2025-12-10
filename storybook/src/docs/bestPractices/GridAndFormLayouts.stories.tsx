@@ -622,47 +622,45 @@ export const NestedGridsAndFormsWithTabs = {
         );
 
         return (
-            <>
-                <StackSwitch>
-                    <StackPage name="grid">
-                        <StackToolbar>
-                            <ToolbarBackButton />
-                            <ToolbarAutomaticTitleItem />
-                        </StackToolbar>
-                        <StackMainContent fullHeight>
-                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
-                        </StackMainContent>
-                    </StackPage>
-                    <StackPage name="edit">
-                        {(id) => {
-                            return (
-                                <SaveBoundary>
-                                    <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
-                                    <StackMainContent>
-                                        <RouterTabs>
-                                            <RouterTab path="" label="Details Form">
-                                                <FieldSet>
-                                                    <Form id={id} />
-                                                </FieldSet>
-                                            </RouterTab>
-                                            <RouterTab path="/child-items" label="Child items in Grid">
-                                                <FullHeightContent>
-                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
-                                                </FullHeightContent>
-                                            </RouterTab>
-                                        </RouterTabs>
-                                    </StackMainContent>
-                                </SaveBoundary>
-                            );
-                        }}
-                    </StackPage>
-                </StackSwitch>
-                <EditDialog title="Add new item">
-                    <DialogContent>
-                        <Form />
-                    </DialogContent>
-                </EditDialog>
-            </>
+            <StackSwitch>
+                <StackPage name="grid">
+                    <StackToolbar>
+                        <ToolbarBackButton />
+                        <ToolbarAutomaticTitleItem />
+                    </StackToolbar>
+                    <StackMainContent fullHeight>
+                        <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                    </StackMainContent>
+                    <EditDialog title="Add new item">
+                        <DialogContent>
+                            <Form />
+                        </DialogContent>
+                    </EditDialog>
+                </StackPage>
+                <StackPage name="edit">
+                    {(id) => {
+                        return (
+                            <SaveBoundary>
+                                <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
+                                <StackMainContent>
+                                    <RouterTabs>
+                                        <RouterTab path="" label="Details Form">
+                                            <FieldSet>
+                                                <Form id={id} />
+                                            </FieldSet>
+                                        </RouterTab>
+                                        <RouterTab path="/child-items" label="Child items in Grid">
+                                            <FullHeightContent>
+                                                <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
+                                            </FullHeightContent>
+                                        </RouterTab>
+                                    </RouterTabs>
+                                </StackMainContent>
+                            </SaveBoundary>
+                        );
+                    }}
+                </StackPage>
+            </StackSwitch>
         );
     },
 };

@@ -1,5 +1,4 @@
-import { type PaletteColor, type SimplePaletteColorOptions } from "@mui/material/styles";
-import { type ColorPartial } from "@mui/material/styles/createPalette";
+import { type Color, type PaletteColor, type SimplePaletteColorOptions } from "@mui/material/styles";
 
 export const primaryPalette: PaletteColor = {
     light: "#53C4F7",
@@ -37,6 +36,9 @@ export const successPalette: SimplePaletteColorOptions = {
     dark: "#0E8E23",
     contrastText: "#000000",
 };
+
+// Copied from https://github.com/mui/material-ui/blob/d70a45a3f2cc87521b5822bbe2b40b9b054c22f9/packages/mui-material/src/styles/createPalette.d.ts#L27
+type ColorPartial = Partial<Color>;
 
 export const greyPalette: ColorPartial = {
     50: "#F2F2F2",
