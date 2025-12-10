@@ -1,5 +1,6 @@
 // Inspired by https://testing-library.com/docs/react-testing-library/setup/#custom-render
 import { createTheme } from "@mui/material";
+// eslint-disable-next-line no-restricted-imports
 import { render, type RenderOptions, type RenderResult } from "@testing-library/react";
 import { type ReactElement, type ReactNode } from "react";
 import { IntlProvider } from "react-intl";
@@ -24,5 +25,6 @@ function customRender(ui: ReactElement, options?: Omit<RenderOptions, "queries">
     return render(ui, { wrapper: DefaultWrapper, ...options });
 }
 
+// eslint-disable-next-line no-restricted-imports
 export * from "@testing-library/react";
 export { customRender as render };

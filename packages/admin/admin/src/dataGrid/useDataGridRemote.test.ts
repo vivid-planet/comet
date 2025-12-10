@@ -11,7 +11,7 @@ jest.mock("react-router", () => ({
 
 import { type GridSortDirection } from "@mui/x-data-grid";
 import { type GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
-import { renderHook } from "@testing-library/react";
+import { renderHook } from "test-utils";
 
 import { useDataGridRemote } from "./useDataGridRemote";
 

@@ -4,6 +4,10 @@ import storybook from "eslint-plugin-storybook";
 
 import cometPlugin from "@comet/eslint-plugin";
 
+const importedObjectWithNoRestrictedImports = eslintConfigReact.find((config) => config.rules?.["no-restricted-imports"]);
+const [importedNoRestrictedImportsType, importedNoRestrictedImportsPathsObject] =
+    importedObjectWithNoRestrictedImports.rules["no-restricted-imports"];
+
 /** @type {import('eslint')} */
 const config = [
     {
@@ -15,6 +19,19 @@ const config = [
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-non-null-assertion": "off",
             "@comet/no-other-module-relative-import": "off",
+            "no-restricted-imports": [
+                importedNoRestrictedImportsType,
+                {
+                    ...importedNoRestrictedImportsPathsObject,
+                    paths: [
+                        ...importedNoRestrictedImportsPathsObject.paths,
+                        {
+                            name: "@testing-library/react",
+                            message: 'Please import from "test-utils" instead.',
+                        },
+                    ],
+                },
+            ],
         },
     },
     {
