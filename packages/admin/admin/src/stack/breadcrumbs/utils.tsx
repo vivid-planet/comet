@@ -22,19 +22,26 @@ const useNumberOfItemsToBeHidden = (
         let allVisibleItemsFitIntoContainer = false;
         let newNumberOfItemsToBeHidden = 0;
 
-        const minimumNumberOfVisibleItems = 3; // First item, overflow menu & last item
+        const minimumNumberOfVisibleItems = 3;
         const maximumNumberOfHiddenItems = items.length - minimumNumberOfVisibleItems + 1;
 
-        while (!allVisibleItemsFitIntoContainer && newNumberOfItemsToBeHidden < maximumNumberOfHiddenItems) {
+        while (!allVisibleItemsFitIntoContainer && newNumberOfItemsToBeHidden <= maximumNumberOfHiddenItems) {
             let totalWidthOfVisibleItems = 0;
 
             itemWidths?.forEach((itemWidth, index) => {
                 const isOverflowMenu = index === NUMBER_OF_ITEMS_BEFORE_OVERFLOW_MENU;
                 const overflowMenuWillBeShown = newNumberOfItemsToBeHidden > 0;
-                const linkItemWillBeShown =
-                    index === 0 || // Always show first item
-                    index === itemWidths.length - 1 || // Alawys show last item
-                    index > newNumberOfItemsToBeHidden + minimumNumberOfVisibleItems - 2;
+
+                let linkItemWillBeShown = false;
+
+                if (newNumberOfItemsToBeHidden < items.length - 2) {
+                    linkItemWillBeShown =
+                        index === 0 || // Always show first item
+                        index === itemWidths.length - 1 || // Always show last item
+                        index > newNumberOfItemsToBeHidden + minimumNumberOfVisibleItems - 2;
+                } else {
+                    linkItemWillBeShown = index === itemWidths.length - 1; // Only last item visible
+                }
 
                 if ((isOverflowMenu && overflowMenuWillBeShown) || (!isOverflowMenu && linkItemWillBeShown)) {
                     totalWidthOfVisibleItems += itemWidth;
@@ -72,17 +79,40 @@ export const useItemsToRender = (
         ? items.slice(NUMBER_OF_ITEMS_BEFORE_OVERFLOW_MENU)
         : items.slice(NUMBER_OF_ITEMS_BEFORE_OVERFLOW_MENU, items.length);
 
-    const itemsInsideOverflowMenu = renderAllItemsToAllowCalculatingWidths ? [] : itemsAfterOverflowMenu.splice(0, numberOfItemsToBeHidden);
+    const itemsInsideOverflowMenuWithoutFirst = renderAllItemsToAllowCalculatingWidths
+        ? []
+        : itemsAfterOverflowMenu.splice(0, numberOfItemsToBeHidden);
 
-    const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenu.length);
+    const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenuWithoutFirst.length);
 
-    const firstItemWithBackButton = (
+    const firstItemIsInOverflow =
+        !renderAllItemsToAllowCalculatingWidths && numberOfItemsToBeHidden !== undefined && numberOfItemsToBeHidden >= items.length - 2;
+
+    const showBackButtonEntry = !!backButtonUrl;
+
+    const firstItem = !firstItemIsInOverflow ? (
         <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} slotProps={slotProps} />
-    );
-    const overflowMenu = <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} slotProps={slotProps} />;
+    ) : null;
+
+    // If first item is in overflow, add it to the overflow menu items
+    const itemsInsideOverflowMenu = firstItemIsInOverflow ? [items[0], ...itemsInsideOverflowMenuWithoutFirst] : itemsInsideOverflowMenuWithoutFirst;
+
+    const backButtonWithOverflow =
+        firstItemIsInOverflow && showBackButtonEntry ? (
+            <>
+                <BreadcrumbsEntry backButtonUrl={backButtonUrl} slotProps={slotProps} />
+                {showOverflowMenu && <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} slotProps={slotProps} />}
+            </>
+        ) : null;
+
+    const overflowMenuStandalone =
+        showOverflowMenu && (!firstItemIsInOverflow || !showBackButtonEntry) ? (
+            <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} slotProps={slotProps} />
+        ) : null;
+
     const remainingItems = itemsAfterOverflowMenu.map((item, index) => (
         <BreadcrumbsEntry key={item.id} item={item} isLastItem={index === itemsAfterOverflowMenu.length - 1} slotProps={slotProps} />
     ));
 
-    return [firstItemWithBackButton, showOverflowMenu && overflowMenu, ...remainingItems].filter((item) => item !== false);
+    return [firstItem, backButtonWithOverflow, overflowMenuStandalone, ...remainingItems].filter((item) => item !== null);
 };
