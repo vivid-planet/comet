@@ -1,5 +1,5 @@
 import { defineConfig } from "@comet/dev-oidc-provider";
-import { staticUsers } from "./demo/api/src/auth/static-users";
+import { staticUsers } from "./api/src/auth/static-users";
 
 export default defineConfig({
     userProvider: () => staticUsers,
