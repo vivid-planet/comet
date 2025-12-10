@@ -1,8 +1,7 @@
-import { fireEvent, within } from "@testing-library/react";
 import { useState } from "react";
+import { fireEvent, render, within } from "test-utils";
 
 import { type TableBlockData } from "../../../blocks.generated";
-import { render } from "../../../testing/testUtils";
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
 import { TableBlockGrid } from "../TableBlockGrid";
 
