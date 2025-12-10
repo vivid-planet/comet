@@ -23,14 +23,14 @@ export interface SelectFieldProps<Value extends string | number> extends SelectF
     componentsProps?: {
         finalFormSelect?: Partial<ComponentProps<typeof FinalFormSelect<Value>>>;
     };
-    dataTestid?: string;
+    "data-testid"?: string;
 }
 
 export function SelectField<Value extends string | number>({
     componentsProps = {},
     children,
     options,
-    dataTestid,
+    "data-testid": dataTestid,
     ...restProps
 }: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;

@@ -10,7 +10,7 @@ describe("SelectField", () => {
                 {() => (
                     <SelectField
                         name="test"
-                        dataTestid="test-select"
+                        data-testid="test-select"
                         options={[
                             { label: "Option 1", value: "1" },
                             { label: "Option 2", value: "2" },
