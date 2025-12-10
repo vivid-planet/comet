@@ -22,6 +22,7 @@ describe("SelectField", () => {
 
         const selectField = screen.getByTestId("test-select");
         expect(selectField).toBeInTheDocument();
+        expect(selectField.tagName).toBe("INPUT");
     });
 
     it("should render data-testid on the component when setting it in the componentsProps", () => {
@@ -44,5 +45,6 @@ describe("SelectField", () => {
 
         const selectField = screen.getByTestId("test-select");
         expect(selectField).toBeInTheDocument();
+        expect(selectField.tagName).toBe("INPUT");
     });
 });
