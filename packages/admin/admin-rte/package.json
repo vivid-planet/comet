@@ -8,9 +8,13 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": "./lib/index.js"
+    },
+    "main": "./lib/index.js",
+    "module": "./lib/index.js",
+    "types": "./lib/index.d.ts",
     "files": [
         "lib"
     ],

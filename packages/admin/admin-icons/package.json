@@ -7,9 +7,16 @@
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": "./lib/index.js"
+    },
+    "main": "./lib/index.js",
+    "module": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
     "scripts": {
         "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
