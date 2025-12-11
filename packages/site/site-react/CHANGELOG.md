@@ -1,5 +1,11 @@
 # @comet/site-react
 
+## 8.10.0
+
+### Patch Changes
+
+- 37ecc3b: Fix play/pause behavior for the `PlayPauseButton` in `DamVideoBlock`, `VimeoVideoBlock` and `YoutubeVideoBlock`
+
 ## 8.9.0
 
 ## 8.8.0

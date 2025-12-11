@@ -224,7 +224,7 @@ export default defineConfig({
         {
             name: "storybook-comet-admin",
             script: "pnpm --filter @comet/admin run storybook",
-            group: ["storybook"],
+            group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
         },
     ],
