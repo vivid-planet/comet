@@ -1,8 +1,22 @@
-import { AbstractAccessControlService, ContentScopesForUser, Permission, PermissionsForUser, User, UserPermissions } from "@comet/cms-api";
+import {
+    AbstractAccessControlService,
+    ContentScopesForUser,
+    ContentScopeWithLabel,
+    Permission,
+    PermissionsForUser,
+    User,
+    UserPermissions,
+} from "@comet/cms-api";
+import { EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
+import { Department } from "@src/department/entities/department.entity";
 
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {
+    constructor(private readonly entityManager: EntityManager) {
+        super();
+    }
+
     getPermissionsForUser(user: User, availablePermissions: Permission[]): PermissionsForUser {
         if (user.isAdmin) {
             return UserPermissions.allPermissions;
@@ -15,7 +29,17 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allContentScopes;
         } else {
-            return [{ domain: "main", language: "en" }];
+            return [{ department: "main" }];
         }
+    }
+
+    async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
+        const departments = await this.entityManager.find(Department, {});
+
+        return departments.map((department) => ({
+            department: department.id,
+            scope: { department: department.id },
+            label: { department: department.name },
+        }));
     }
 }

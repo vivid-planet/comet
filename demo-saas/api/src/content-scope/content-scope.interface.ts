@@ -2,8 +2,7 @@
 import { ContentScope } from "@comet/cms-api";
 
 export type BaseContentScope = {
-    domain: string;
-    language: string;
+    department: string;
 };
 
 declare module "@comet/cms-api" {

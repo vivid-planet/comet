@@ -1,14 +1,14 @@
 import { CrudField, CrudGenerator, RootBlockEntity } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Department } from "@src/department/entities/department.entity";
+import { Tenant } from "@src/tenant/entities/tenant.entity";
 import { v4 } from "uuid";
 
 @Entity()
 @ObjectType()
 @RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["tenantAdministration"], delete: false })
-export class Tenant extends BaseEntity {
+export class Department extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -23,13 +23,13 @@ export class Tenant extends BaseEntity {
     @Field()
     updatedAt: Date = new Date();
 
-    @Property({ type: "text" })
+    @Property()
     @Field()
     name: string;
 
-    @OneToMany(() => Department, (department) => department.tenant, { orphanRemoval: true })
+    @ManyToOne(() => Tenant, { ref: true })
     @CrudField({
-        input: false,
+        dedicatedResolverArg: true,
     })
-    departments = new Collection<Department>(this);
+    tenant: Ref<Tenant>;
 }
