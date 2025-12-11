@@ -5,7 +5,7 @@
     "description": "Comet Admin Demo Server Application",
     "type": "commonjs",
     "dependencies": {
-        "compression": "^1.8.0",
+        "compression": "^1.8.1",
         "express": "^4.21.2",
         "helmet": "^7.2.0",
         "http-proxy-middleware": "^3.0.5"

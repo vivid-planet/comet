@@ -262,7 +262,7 @@ importers:
   demo/admin/server:
     dependencies:
       compression:
-        specifier: ^1.8.0
+        specifier: ^1.8.1
         version: 1.8.1
       express:
         specifier: ^4.21.2
@@ -355,7 +355,7 @@ importers:
         specifier: ^3.12.0
         version: 3.12.0
       compression:
-        specifier: ^1.8.0
+        specifier: ^1.8.1
         version: 1.8.1
       cookie-parser:
         specifier: ^1.4.7
