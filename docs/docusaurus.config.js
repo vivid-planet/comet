@@ -113,8 +113,7 @@ const config = {
             },
         }),
 
-    themes: ["@docusaurus/theme-live-codeblock", "@docusaurus/theme-mermaid"],
-    plugins: ["./src/plugins/extend-webpack-config"],
+    themes: ["@docusaurus/theme-mermaid"],
     markdown: {
         mermaid: true,
     },
