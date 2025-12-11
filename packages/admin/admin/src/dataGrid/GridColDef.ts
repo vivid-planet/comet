@@ -26,7 +26,7 @@ type GridColDefExtension<R extends GridValidRowModel = any> = {
      * Media query to define when the column is visible.
      * Requires DataGridPro or DataGridPremium.
      */
-    visible?: string;
+    visible?: string | false;
     /**
      * Requires DataGridPro or DataGridPremium.
      */
