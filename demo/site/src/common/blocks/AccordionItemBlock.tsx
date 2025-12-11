@@ -1,4 +1,4 @@
-import { BlocksBlock, PreviewSkeleton, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks, usePreview, withPreview } from "@comet/site-nextjs";
 import { type AccordionContentBlockData, type AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
@@ -36,6 +36,7 @@ export const AccordionItemBlock = withPreview(
     ({ data: { title, content, titleHtmlTag }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const headlineId = useId();
         const contentId = useId();
+        const { previewType } = usePreview();
 
         return (
             <>
@@ -43,21 +44,22 @@ export const AccordionItemBlock = withPreview(
                     <div className={styles.iconWrapper}>
                         <SvgUse href={isExpanded ? "/assets/icons/minus.svg#root" : "/assets/icons/plus.svg#root"} width={16} height={16} />
                     </div>
-                    <Typography variant="h350" as={titleHtmlTag}>
+                    <Typography variant="headline350" as={titleHtmlTag}>
                         {title}
                     </Typography>
                 </button>
-                <section
-                    id={contentId}
-                    aria-labelledby={headlineId}
-                    className={clsx(styles.contentWrapper, isExpanded && styles["contentWrapper--expanded"])}
-                >
-                    <div className={styles.contentWrapperInner}>
-                        <PreviewSkeleton hasContent={isExpanded}>
+                {/* In block preview, render content only when expanded to prevent overlapping overlays  */}
+                {(previewType !== "BlockPreview" || isExpanded) && (
+                    <section
+                        id={contentId}
+                        aria-labelledby={headlineId}
+                        className={clsx(styles.contentWrapper, isExpanded && styles["contentWrapper--expanded"])}
+                    >
+                        <div className={styles.contentWrapperInner}>
                             <AccordionContentBlock data={content} />
-                        </PreviewSkeleton>
-                    </div>
-                </section>
+                        </div>
+                    </section>
+                )}
             </>
         );
     },

@@ -1,6 +1,5 @@
 import { AffectedEntity } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Resolver } from "@nestjs/graphql";
 
 import { NewsCommentInput } from "./dto/news-comment.input";
@@ -9,11 +8,7 @@ import { NewsComment } from "./entities/news-comment.entity";
 
 @Resolver(() => NewsComment)
 export class NewsCommentResolver {
-    constructor(
-        @InjectRepository(NewsComment) private readonly newsCommentRepository: EntityRepository<NewsComment>,
-        @InjectRepository(News) private readonly newsRepository: EntityRepository<News>,
-        private readonly entityManager: EntityManager,
-    ) {}
+    constructor(private readonly entityManager: EntityManager) {}
 
     @Mutation(() => NewsComment)
     @AffectedEntity(News, { idArg: "newsId" })
@@ -21,9 +16,9 @@ export class NewsCommentResolver {
         @Args("newsId", { type: () => ID }) newsId: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
     ): Promise<NewsComment> {
-        const news = await this.newsRepository.findOneOrFail(newsId);
+        const news = await this.entityManager.findOneOrFail(News, newsId);
 
-        const newsComment = this.newsCommentRepository.create({
+        const newsComment = this.entityManager.create(NewsComment, {
             ...input,
             news,
         });
@@ -38,7 +33,7 @@ export class NewsCommentResolver {
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
     ): Promise<NewsComment> {
-        const newsComment = await this.newsCommentRepository.findOneOrFail(id);
+        const newsComment = await this.entityManager.findOneOrFail(NewsComment, id);
         newsComment.assign({
             ...input,
         });

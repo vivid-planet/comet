@@ -1,22 +1,21 @@
 import { createFileUploadInputFromUrl, FileInterface, FilesService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { EntityManager } from "@mikro-orm/postgresql";
+import { Injectable, Logger } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
-import { DamFile } from "@src/dam/entities/dam-file.entity";
 import * as fs from "fs/promises";
 import path from "path";
 
 @Injectable()
 export class ImageFixtureService {
+    private readonly logger = new Logger(ImageFixtureService.name);
+
     private pixelImageFiles: FileInterface[] = [];
     private svgImageFiles: FileInterface[] = [];
 
     constructor(
-        private readonly filesService: FilesService,
-        @InjectRepository(DamFile) readonly filesRepository: EntityRepository<FileInterface>,
         private readonly entityManager: EntityManager,
+        private readonly filesService: FilesService,
     ) {}
 
     public getRandomPixelImage() {
@@ -68,10 +67,10 @@ export class ImageFixtureService {
     }
 
     public async generateImages(maximumImageCount: number, scope: DamScope): Promise<void> {
-        console.log("Generate Pixel Images ...");
+        this.logger.log("Generate Pixel Images ...");
         await this.generatePixelImages(maximumImageCount, scope);
 
-        console.log("Generate SVG Images ...");
+        this.logger.log("Generate SVG Images ...");
         await this.generateSvgImages(maximumImageCount, scope);
     }
 }

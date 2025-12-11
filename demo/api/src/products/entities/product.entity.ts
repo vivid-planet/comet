@@ -1,4 +1,14 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import {
+    BlockDataInterface,
+    CrudField,
+    CrudGenerator,
+    DamImageBlock,
+    FileUpload,
+    ImportTargetInterface,
+    RootBlock,
+    RootBlockEntity,
+    RootBlockType,
+} from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -80,7 +90,7 @@ export class ProductPriceRange {
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"], hooksService: ProductService })
-export class Product extends BaseEntity {
+export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -101,7 +111,7 @@ export class Product extends BaseEntity {
     @Field(() => ProductStatus)
     status: ProductStatus = ProductStatus.Unpublished;
 
-    @Property()
+    @Property({ unique: true })
     @Field()
     slug: string;
 
@@ -129,7 +139,7 @@ export class Product extends BaseEntity {
     @Field()
     inStock: boolean = true;
 
-    @Property({ type: types.decimal, nullable: true })
+    @Property({ type: types.integer, nullable: true })
     @Field(() => Int, { nullable: true })
     @CrudField({
         input: false,
