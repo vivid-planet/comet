@@ -9,10 +9,11 @@ import { TenantsArgs } from "./dto/tenants.args";
 import { Department } from "../../department/entities/department.entity";
 import { Tenant } from "../entities/tenant.entity";
 import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { InjectEntityManager } from "@mikro-orm/nestjs";
 @Resolver(() => Tenant)
 @RequiredPermission(["tenantAdministration"], { skipScopeCheck: true })
 export class TenantResolver {
-    constructor(protected readonly entityManager: EntityManager) { }
+    constructor(protected readonly entityManager: EntityManager, @InjectEntityManager('admin') private readonly adminEntityManager: EntityManager) { }
     @Query(() => Tenant)
     @AffectedEntity(Tenant)
     async tenant(
@@ -27,7 +28,7 @@ export class TenantResolver {
     { search, filter, sort, offset, limit }: TenantsArgs, 
     @Info()
     info: GraphQLResolveInfo): Promise<PaginatedTenants> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Tenant));
+        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.adminEntityManager.getMetadata(Tenant));
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
         if (fields.includes("departments")) {

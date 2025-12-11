@@ -9,7 +9,7 @@ import { TenantResolver } from "./generated/tenant.resolver";
 import { TenantUserResolver } from "./generated/tenant-user.resolver";
 
 @Module({
-    imports: [MikroOrmModule.forFeature([Tenant, TenantUser])],
+    imports: [MikroOrmModule.forFeature([Tenant, TenantUser]), MikroOrmModule.forFeature([Tenant], "admin")],
     providers: [TenantResolver, TenantUserResolver, CustomTenantUserResolver, UserService],
 })
 export class TenantsModule {}
