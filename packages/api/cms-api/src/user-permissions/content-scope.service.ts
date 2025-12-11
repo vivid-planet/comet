@@ -9,6 +9,7 @@ import { PageTreeService } from "../page-tree/page-tree.service";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
+import { AFFECTED_SCOPE_METADATA_KEY, AffectedScopeMeta } from "./decorators/affected-scope.decorator";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
@@ -33,13 +34,23 @@ export class ContentScopeService {
         const args = await this.getArgs(context);
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
+        // AffectedEntities
         const affectedEntities = this.reflector.getAllAndOverride<AffectedEntityMeta[]>(AFFECTED_ENTITY_METADATA_KEY, [context.getHandler()]) || [];
         for (const affectedEntity of affectedEntities) {
             contentScopes.push(...(await this.getContentScopesFromEntity(affectedEntity, args, location)));
         }
+
+        // AffectedScope
+        const affectedScope = this.reflector.getAllAndOverride<AffectedScopeMeta>(AFFECTED_SCOPE_METADATA_KEY, [context.getHandler()]) || undefined;
+        if (affectedScope) {
+            contentScopes.push([affectedScope.argsToScope(args) as ContentScope]);
+        }
+
+        // Scope arg
         if (args.scope) {
             contentScopes.push([args.scope as ContentScope]);
         }
+
         return contentScopes;
     }
 
