@@ -93,6 +93,7 @@ export function FinalFormNumberInput({
         <InputBase
             {...input}
             {...props}
+            required={required}
             value={formattedNumberValue}
             onChange={handleChange}
             onBlur={handleBlur}

@@ -88,6 +88,7 @@ export const FinalFormAutocomplete = <
                     {...restInput}
                     {...params}
                     {...params.InputProps}
+                    required={required}
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}

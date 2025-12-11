@@ -38,6 +38,7 @@ export function FinalFormInput({
             <InputBase
                 {...input}
                 {...props}
+                required={required}
                 endAdornment={
                     (endAdornment || clearable || isTranslatable) && (
                         <>
