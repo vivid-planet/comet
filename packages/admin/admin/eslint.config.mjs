@@ -1,12 +1,8 @@
-import eslintConfigReact from "@comet/eslint-config/future/react.js";
+import eslintConfigReact, { restrictedImportPaths } from "@comet/eslint-config/future/react.js";
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import storybook from "eslint-plugin-storybook";
 
 import cometPlugin from "@comet/eslint-plugin";
-
-const importedObjectWithNoRestrictedImports = eslintConfigReact.find((config) => config.rules?.["no-restricted-imports"]);
-const [importedNoRestrictedImportsType, importedNoRestrictedImportsPathsObject] =
-    importedObjectWithNoRestrictedImports.rules["no-restricted-imports"];
 
 /** @type {import('eslint')} */
 const config = [
@@ -19,12 +15,17 @@ const config = [
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-non-null-assertion": "off",
             "@comet/no-other-module-relative-import": "off",
+        },
+    },
+    {
+        files: ["**/*.test.ts", "**/*.test.tsx"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
             "no-restricted-imports": [
-                importedNoRestrictedImportsType,
+                "error",
                 {
-                    ...importedNoRestrictedImportsPathsObject,
                     paths: [
-                        ...importedNoRestrictedImportsPathsObject.paths,
+                        ...restrictedImportPaths,
                         {
                             name: "@testing-library/react",
                             message: 'Please import from "test-utils" instead.',
@@ -32,12 +33,6 @@ const config = [
                     ],
                 },
             ],
-        },
-    },
-    {
-        files: ["**/*.test.ts", "**/*.test.tsx"],
-        rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
         },
     },
     {
