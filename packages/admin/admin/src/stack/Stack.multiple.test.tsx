@@ -1,8 +1,8 @@
 import { createTheme } from "@mui/material/styles";
-import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { IntlProvider } from "react-intl";
 import { Router } from "react-router";
+import { fireEvent, render, waitFor } from "test-utils";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, useSubRoutePrefix } from "../router/SubRoute";
