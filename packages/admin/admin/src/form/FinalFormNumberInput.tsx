@@ -22,6 +22,8 @@ export function FinalFormNumberInput({
     innerRef,
     endAdornment,
     required,
+    disabled,
+    readOnly,
     decimals = 0,
     ...props
 }: FinalFormNumberInputProps & FinalFormNumberInputInternalProps) {
@@ -87,13 +89,15 @@ export function FinalFormNumberInput({
         updateFormattedNumberValue(input.value);
     }, [updateFormattedNumberValue, input]);
 
-    const clearable = !required && !props.disabled && !props.readOnly;
+    const clearable = !required && !disabled && !readOnly;
 
     return (
         <InputBase
             {...input}
             {...props}
             required={required}
+            disabled={disabled}
+            readOnly={readOnly}
             value={formattedNumberValue}
             onChange={handleChange}
             onBlur={handleBlur}

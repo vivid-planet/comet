@@ -43,6 +43,8 @@ export const FinalFormAutocomplete = <
     loadingError,
     isAsync = false,
     required,
+    disabled,
+    readOnly,
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
@@ -50,7 +52,7 @@ export const FinalFormAutocomplete = <
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
-    const clearable = value !== null && !required && !rest.disabled && !rest.readOnly;
+    const clearable = value !== null && !required && !disabled && !readOnly;
 
     return (
         <Autocomplete

@@ -22,6 +22,8 @@ export function FinalFormInput({
     endAdornment,
     disableContentTranslation,
     required,
+    disabled,
+    readOnly,
     ...props
 }: FinalFormInputProps & FinalFormInputInternalProps) {
     const type = props.type ?? input.type ?? "text";
@@ -31,7 +33,7 @@ export function FinalFormInput({
     const [open, setOpen] = useState<boolean>(false);
     const [pendingTranslation, setPendingTranslation] = useState<string | undefined>(undefined);
 
-    const clearable = !required && !props.disabled && !props.readOnly;
+    const clearable = !required && !disabled && !readOnly;
 
     return (
         <>
