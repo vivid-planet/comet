@@ -31,11 +31,18 @@ export class DependenciesService {
     }
 
     async createViews(): Promise<void> {
-        await this.createDependenciesViews();
+        await this.dropViews();
+
         await this.createBlockIndexViews();
         await this.createEntityInfoView();
+        await this.createDependenciesViews();
     }
 
+    async dropViews(): Promise<void> {
+        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
+        await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
+        await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
+    }
     private async createDependenciesViews(): Promise<void> {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
@@ -65,21 +72,25 @@ export class DependenciesService {
                             '${primary}'                          "rootPrimaryKey",
                             indexObj->>'blockname'                "blockname",
                             indexObj->>'jsonPath'                 "jsonPath",
-                            (indexObj->>'visible')::boolean       "visible",
+                            ((indexObj->>'visible')::boolean AND COALESCE("EntityInfo"."visible", true)) "visible",
                             targetTableData->>'entityName'        "targetEntityName",
                             targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
                             targetTableData->>'tableName'         "targetTableName",
                             targetTableData->>'primary'           "targetPrimaryKey",
-                            dependenciesObj->>'id' "targetId"
-                        FROM "${metadata.tableName}",
-                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
-                            json_array_elements(indexObj->'dependencies') dependenciesObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
+                            dependenciesObj->>'id'                "targetId"
+                        FROM "${metadata.tableName}"
+                        CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
+                        CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
+                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
+                        LEFT JOIN "EntityInfo" ON "EntityInfo"."id" = "${metadata.tableName}"."${primary}"::text 
+                            AND "EntityInfo"."entityName" = '${metadata.name}'`;
 
             indexSelects.push(select);
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
+
+        console.log(`CREATE MATERIALIZED VIEW block_index_dependencies AS ${viewSql}`);
 
         console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
@@ -167,7 +178,7 @@ export class DependenciesService {
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "pageTreeNodeId"::text "id", "type" "entityName"
+        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
             FROM "PageTreeNodeDocument"
             JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
         `);
