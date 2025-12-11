@@ -45,12 +45,12 @@
         "@types/react-dom": "^18.3.7",
         "@types/tinycolor2": "^1.4.6",
         "eslint": "^9.30.1",
-        "final-form": "^4.20.10",
+        "final-form": "^5.0.0",
         "npm-run-all2": "^8.0.0",
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "react-final-form": "^6.5.9",
+        "react-final-form": "^7.0.0",
         "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
         "typescript": "5.9.3"
@@ -59,7 +59,7 @@
         "@mui/material": "^7.0.0",
         "react": "^17.0.0 || ^18.0.0",
         "react-dom": "^17.0.0 || ^18.0.0",
-        "react-final-form": "^6.3.1",
+        "react-final-form": "^6.3.1 || ^7.0.0",
         "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
     },
     "engines": {

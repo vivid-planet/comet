@@ -226,7 +226,7 @@ export function generateAsyncSelect({
                       );
                   }
 
-                  filterVar = `values.${filterField.type === "asyncSelect" || filterField.type === "asyncSelectFilter" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
+                  filterVar = `values?.${filterField.type === "asyncSelect" || filterField.type === "asyncSelectFilter" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
 
                   if (!rootQueryArg) {
                       rootQueryArg = config.filter.formFieldName;

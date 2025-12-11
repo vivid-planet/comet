@@ -1,6 +1,6 @@
 import { type FieldValidator } from "final-form";
 import { type ComponentType, createElement, type ReactNode, useRef } from "react";
-import { Field as FinalFormField, type FieldMetaState, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
+import { Field as FinalFormField, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { FieldContainer, type FieldContainerProps } from "./FieldContainer";
@@ -23,15 +23,20 @@ export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElemen
     label?: ReactNode;
     helperText?: ReactNode;
     component?: ComponentType<any> | string;
-    children?: (props: FieldRenderProps<FieldValue, T>) => ReactNode;
+    children?: (
+        props: FieldRenderProps<FieldValue, T> & {
+            disabled?: boolean;
+            required?: boolean;
+        },
+    ) => ReactNode;
     required?: boolean;
     disabled?: boolean;
     validate?: FieldValidator<FieldValue>;
     validateWarning?: FieldValidator<FieldValue>;
     variant?: FieldContainerProps["variant"];
-    shouldScrollTo?: (meta: FieldMetaState<FieldValue>) => boolean;
-    shouldShowError?: (meta: FieldMetaState<FieldValue>) => boolean;
-    shouldShowWarning?: (meta: FieldMetaState<FieldValue>) => boolean;
+    shouldScrollTo?: (meta: FieldRenderProps<FieldValue>["meta"]) => boolean;
+    shouldShowError?: (meta: FieldRenderProps<FieldValue>["meta"]) => boolean;
+    shouldShowWarning?: (meta: FieldRenderProps<FieldValue>["meta"]) => boolean;
     [otherProp: string]: any;
 }
 
@@ -67,7 +72,12 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
         meta,
         fieldContainerProps,
         ...rest
-    }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
+    }: FieldRenderProps<FieldValue, FieldElement> & {
+        warning?: string;
+        disabled?: boolean;
+        required?: boolean;
+        fieldContainerProps?: Partial<FieldContainerProps>;
+    }) {
         function render() {
             if (component) {
                 return createElement(component, { ...rest, input, meta });
@@ -98,12 +108,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 
     return (
         <>
-            <FinalFormField<FieldValue, FieldElement, FieldValue, FieldRenderProps<FieldValue, FieldElement>>
-                name={name}
-                validate={validateError}
-                required={required}
-                {...otherProps}
-            >
+            <FinalFormField<FieldValue, FieldElement> name={name} validate={validateError} required={required} {...otherProps}>
                 {renderField}
             </FinalFormField>
             {validateWarning && (
@@ -114,6 +119,10 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                             console.warn(
                                 `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
                             );
+                            return;
+                        }
+
+                        if (!values?.[name]) {
                             return;
                         }
 

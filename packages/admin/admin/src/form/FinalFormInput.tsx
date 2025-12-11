@@ -19,7 +19,6 @@ type FinalFormInputInternalProps = FieldRenderProps<string, HTMLInputElement | H
 export function FinalFormInput({
     meta,
     input,
-    innerRef,
     endAdornment,
     clearable,
     disableContentTranslation,

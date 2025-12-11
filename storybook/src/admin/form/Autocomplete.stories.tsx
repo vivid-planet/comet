@@ -48,7 +48,6 @@ export const AutocompleteAsyncSelect = {
                 <p>Furthermore FinalFormSelect can also be used like FinalFormAutocomplete (e.g. when no search field is needed).</p>
                 <div style={{ width: "300px" }}>
                     <Form
-                        mode="edit"
                         onSubmit={(values) => {
                             alert(JSON.stringify(values, null, 4));
                         }}

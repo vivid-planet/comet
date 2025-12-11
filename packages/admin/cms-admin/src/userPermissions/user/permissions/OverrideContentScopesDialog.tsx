@@ -120,7 +120,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 type="checkbox"
                                 disabled={disabled}
                             />
-                            {values.overrideContentScopes && (
+                            {values?.overrideContentScopes && (
                                 <Field name="contentScopes" fullWidth>
                                     {(props) => {
                                         return (

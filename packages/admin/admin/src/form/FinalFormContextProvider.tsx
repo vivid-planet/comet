@@ -1,10 +1,10 @@
 import { createContext, type ReactNode, useContext } from "react";
-import { type FieldMetaState } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 
 export interface FinalFormContext {
-    shouldScrollToField: (fieldMeta: FieldMetaState<any>) => boolean;
-    shouldShowFieldError: (fieldMeta: FieldMetaState<any>) => boolean;
-    shouldShowFieldWarning: (fieldMeta: FieldMetaState<any>) => boolean;
+    shouldScrollToField: (fieldMeta: FieldRenderProps["meta"]) => boolean;
+    shouldShowFieldError: (fieldMeta: FieldRenderProps["meta"]) => boolean;
+    shouldShowFieldWarning: (fieldMeta: FieldRenderProps["meta"]) => boolean;
 }
 
 const defaultFinalFormContext: FinalFormContext = {
