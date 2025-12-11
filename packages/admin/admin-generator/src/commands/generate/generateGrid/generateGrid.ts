@@ -960,6 +960,7 @@ export function generateGrid<T extends { __typename?: string }>(
                            hideFooterPagination`
                         : ""
                 }
+                ${config.density ? `density="${config.density}"` : ""}
             />
         );
     }

@@ -306,6 +306,7 @@ export type GridConfig<T extends { __typename?: string }> = {
      * @default false
      */
     scopeAsProp?: boolean;
+    density?: "comfortable" | "compact" | "standard";
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
