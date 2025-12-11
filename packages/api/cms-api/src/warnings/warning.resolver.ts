@@ -6,7 +6,6 @@ import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { EntityInfoObject } from "../common/entityInfo/entity-info.object";
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
@@ -21,7 +20,6 @@ import { Warning } from "./entities/warning.entity";
 export class WarningResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        private readonly entityInfoService: EntityInfoService,
         @InjectRepository(Warning) private readonly repository: EntityRepository<Warning>,
     ) {}
 
@@ -109,8 +107,8 @@ export class WarningResolver {
         const instance = await repository.findOne({ [warning.sourceInfo.rootPrimaryKey]: warning.sourceInfo.targetId });
 
         if (instance) {
-            const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-            return entityInfo;
+            // const entityInfo = await this.entityInfoService.getEntityInfo(instance);
+            // return entityInfo;
         }
 
         return undefined;

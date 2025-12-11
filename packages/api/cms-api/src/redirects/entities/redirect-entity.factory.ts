@@ -31,7 +31,7 @@ export class RedirectEntityFactory {
     static create({ linkBlock, Scope: RedirectScope }: { linkBlock: Block; Scope?: Type<RedirectScopeInterface> }): Type<RedirectInterface> {
         @Entity({ abstract: true })
         @ObjectType({ isAbstract: true })
-        @EntityInfo<RedirectInterface>((redirect) => ({ name: redirect.source, secondaryInformation: redirect.comment }))
+        @EntityInfo<RedirectInterface>({ name: "source", secondaryInformation: "comment" })
         class RedirectBase implements RedirectInterface {
             [OptionalProps]?: "createdAt" | "updatedAt" | "active";
 
