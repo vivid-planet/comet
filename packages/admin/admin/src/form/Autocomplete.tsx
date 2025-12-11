@@ -52,7 +52,7 @@ export const FinalFormAutocomplete = <
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
-    const clearable = value !== null && !required && !disabled && !readOnly;
+    const clearable = !required && !disabled && !readOnly;
 
     return (
         <Autocomplete
