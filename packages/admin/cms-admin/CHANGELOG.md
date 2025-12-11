@@ -1,5 +1,39 @@
 # @comet/cms-admin
 
+## 8.11.0
+
+### Minor Changes
+
+- 89db54c: Improve `InfoTag` type in `DocumentType`
+
+    Add a new `InfoTagProps` type that can be used to properly type additional page tree node fields:
+
+    ```tsx
+    const Page: DocumentInterface = {
+        InfoTag: ({ page }: InfoTagProps<{ userGroup: GQLUserGroup }>) => {
+            // page now has the userGroup field
+            if (page.userGroup !== "all") {
+                return <Chip size="small" label={page.userGroup} />;
+            }
+            return null;
+        },
+    };
+    ```
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- f34b750: Add Status to CronJob
+
+### Patch Changes
+
+- Updated dependencies [8d7a90c]
+- Updated dependencies [cc727d1]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+    - @comet/admin-rte@8.11.0
+    - @comet/admin-date-time@8.11.0
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

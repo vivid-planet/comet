@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 8.11.0
+
+### Minor Changes
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- 5337c20: Style the `button` typography variant
+
+### Patch Changes
+
+- @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

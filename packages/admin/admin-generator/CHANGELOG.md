@@ -1,5 +1,12 @@
 # @comet/admin-generator
 
+## 8.11.0
+
+### Minor Changes
+
+- 0998531: Grid: add support for density setting to specify grid density programmatically
+- 52006d2: Allow usage of `<FormattedMessage>` for user visible stings in config to allow customizing message ids
+
 ## 8.10.0
 
 ### Minor Changes
