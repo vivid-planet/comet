@@ -102,7 +102,7 @@ export function FinalFormNumberInput({
             onChange={handleChange}
             onBlur={handleBlur}
             endAdornment={
-                (endAdornment || !required) && (
+                (endAdornment || clearable) && (
                     <>
                         {clearable && (
                             <ClearInputAdornment
