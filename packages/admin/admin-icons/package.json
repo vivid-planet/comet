@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "8.9.0",
+    "version": "8.10.0",
     "description": "A collection of icons for Comet Admin",
     "repository": {
         "directory": "packages/admin/admin-icons",
@@ -47,7 +47,7 @@
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "ts-node": "^10.9.2",
         "typescript": "5.9.3"
     },

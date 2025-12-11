@@ -55,7 +55,8 @@ export const VimeoVideoBlock = withPreview(
         const inViewRef = useRef<HTMLDivElement>(null);
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
         const iframeRef = setIframeElement;
-        const [isHandledManually, setIsHandledManually] = useState(!autoplay);
+        const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
 
         const pauseVimeoVideo = useCallback(() => {
             iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
@@ -70,8 +71,10 @@ export const VimeoVideoBlock = withPreview(
                 if (!isHandledManually) {
                     if (isVisible && autoplay) {
                         playVimeoVideo();
+                        setIsPlaying(true);
                     } else {
                         pauseVimeoVideo();
+                        setIsPlaying(false);
                     }
                 }
             },
@@ -101,17 +104,14 @@ export const VimeoVideoBlock = withPreview(
         vimeoUrl.search = searchParams.toString();
 
         const handlePlayPauseClick = () => {
-            setIsHandledManually((prev) => {
-                const next = !prev;
-                if (iframeElement) {
-                    if (next) {
-                        playVimeoVideo();
-                    } else {
-                        pauseVimeoVideo();
-                    }
-                }
-                return next;
-            });
+            if (isPlaying) {
+                setIsPlaying(false);
+                setIsHandledManually(true);
+                pauseVimeoVideo();
+            } else {
+                setIsPlaying(true);
+                playVimeoVideo();
+            }
         };
 
         return (
@@ -135,10 +135,10 @@ export const VimeoVideoBlock = withPreview(
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
                         {!showControls &&
                             (PlayPauseButtonComponent ? (
-                                <PlayPauseButtonComponent isPlaying={isHandledManually} onClick={handlePlayPauseClick} />
+                                <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />
                             ) : (
                                 <PlayPauseButton
-                                    isPlaying={isHandledManually}
+                                    isPlaying={isPlaying}
                                     onClick={handlePlayPauseClick}
                                     ariaLabelPlay={playButtonAriaLabel}
                                     ariaLabelPause={pauseButtonAriaLabel}

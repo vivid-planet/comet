@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "8.9.0",
+    "version": "8.10.0",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -36,7 +36,7 @@
         "@graphql-tools/load": "^7.8.14",
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
-        "glob": "^11.0.0",
+        "glob": "^11.1.0",
         "graphql": "^16.11.0",
         "object-path": "^0.11.8",
         "pluralize": "^8.0.0",
@@ -62,7 +62,7 @@
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-intl": "^7.1.11",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "ts-jest": "^29.4.0",
         "typescript": "5.9.3"
     },

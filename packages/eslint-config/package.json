@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "8.9.0",
+    "version": "8.10.0",
     "description": "A set of ESLint configurations for Comet projects",
     "repository": {
         "directory": "packages/eslint-config",
@@ -35,7 +35,7 @@
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
         "@comet/eslint-plugin": "workspace:*",
-        "@eslint/eslintrc": "^3.3.1",
+        "@eslint/eslintrc": "^3.3.3",
         "@eslint/js": "^9.30.1",
         "@next/eslint-plugin-next": "^15.3.5",
         "eslint-config-next": "^15.3.5",

@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "8.9.0",
+    "version": "8.10.0",
     "description": "Comet Admin package",
     "repository": {
         "directory": "packages/admin/admin",
@@ -99,7 +99,7 @@
         "react-intl": "^7.1.11",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "storybook": "^9.1.10",
         "storybook-addon-tag-badges": "^2.0.1",
         "ts-jest": "^29.4.0",
