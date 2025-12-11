@@ -170,7 +170,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 minHeight: getDensityHeightValue(ownerState?.density),
             },
         }),
-
+        row: ({ ownerState }) => ({
+            cursor: ownerState?.onRowClick ? "pointer" : undefined,
+        }),
         iconSeparator: {
             backgroundColor: palette.grey[100],
             width: "2px",
