@@ -609,7 +609,7 @@ importers:
   docs:
     dependencies:
       '@algolia/client-search':
-        specifier: ^5.32.0
+        specifier: ^5.46.0
         version: 5.46.0
       '@docusaurus/core':
         specifier: ^3.9.2
