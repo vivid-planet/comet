@@ -1725,7 +1725,7 @@ importers:
         specifier: ^1.54.0
         version: 1.54.0
       multer:
-        specifier: ^2.0.1
+        specifier: ^2.0.2
         version: 2.0.2
       nodemailer:
         specifier: ^7.0.0
