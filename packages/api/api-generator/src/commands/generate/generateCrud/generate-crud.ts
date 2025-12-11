@@ -12,6 +12,7 @@ import { generateImportsCode, type Imports } from "../utils/generate-imports-cod
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
+import { generateServiceHookCall } from "./generate-service-hook-call";
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
@@ -1006,7 +1007,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
                 ${hooksService?.validateCreateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
         ): Promise<${metadata.className}> {
-            ${hooksService?.validateCreateInput ? `await this.${instanceNameSingular}Service.validateCreateInput(input, { ${hooksService.validateCreateInput.options?.includes("currentUser") ? `currentUser: user` : ""} })` : ""}
+            ${generateServiceHookCall("validateCreateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
+
             ${
                 // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
@@ -1067,8 +1069,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
             ${hooksService?.validateUpdateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
         ): Promise<${metadata.className}> {
-            ${hooksService?.validateUpdateInput ? `await this.${instanceNameSingular}Service.validateUpdateInput(input, { ${hooksService.validateUpdateInput.options?.includes("currentUser") ? `currentUser: user` : ""} })` : ""}
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
+            ${generateServiceHookCall("validateUpdateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
 
             ${
                 hasPositionProp

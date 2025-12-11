@@ -8,7 +8,7 @@ import { testPermission } from "../test-helper";
 
 class TestEntityService implements CrudGeneratorHooksService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async validateCreateInput(input: any, options: { currentUser: CurrentUser }): Promise<void> {
+    async validateCreateInput(input: any, options: { currentUser: CurrentUser; args: { xxx: string } }): Promise<void> {
         // no-op
     }
 }
@@ -47,6 +47,7 @@ describe("find-hooks-service", () => {
         expect(hooksService.imports).toEqual([]);
         expect(hooksService.validateCreateInput).toBeDefined();
         expect(hooksService.validateCreateInput?.options).toContain("currentUser");
+        expect(hooksService.validateCreateInput?.options).toContain("args");
         expect(hooksService.validateUpdateInput).toBeNull();
 
         await orm.close();

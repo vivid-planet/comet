@@ -8,12 +8,13 @@ import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-va
 import { PaginatedProductVariants } from "./dto/paginated-product-variants";
 import { ProductVariantsArgs } from "./dto/product-variants.args";
 import { Product } from "../entities/product.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, BlocksTransformerService, CurrentUser, DamImageBlock, GetCurrentUser, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
+import { ProductVariantService } from "../product-variant.service";
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
-    constructor(protected readonly entityManager: EntityManager, protected readonly productVariantsService: ProductVariantsService, private readonly blocksTransformer: BlocksTransformerService) { }
+    constructor(protected readonly entityManager: EntityManager, protected readonly productVariantsService: ProductVariantsService, private readonly blocksTransformer: BlocksTransformerService, protected readonly productVariantService: ProductVariantService) { }
     @Query(() => ProductVariant)
     @AffectedEntity(ProductVariant)
     async productVariant(
@@ -50,7 +51,10 @@ export class ProductVariantResolver {
     @Args("product", { type: () => ID })
     product: string, 
     @Args("input", { type: () => ProductVariantInput })
-    input: ProductVariantInput): Promise<ProductVariant> {
+    input: ProductVariantInput, 
+    @GetCurrentUser()
+    user: CurrentUser): Promise<ProductVariant> {
+        await this.productVariantService.validateCreateInput(input, { currentUser: user, product, args: {} });
         const lastPosition = await this.productVariantsService.getLastPosition({ product });
         let position = input.position;
         if (position !== undefined && position < lastPosition + 1) {
@@ -75,8 +79,11 @@ export class ProductVariantResolver {
     @Args("id", { type: () => ID })
     id: string, 
     @Args("input", { type: () => ProductVariantUpdateInput })
-    input: ProductVariantUpdateInput): Promise<ProductVariant> {
+    input: ProductVariantUpdateInput, 
+    @GetCurrentUser()
+    user: CurrentUser): Promise<ProductVariant> {
         const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
+        await this.productVariantService.validateUpdateInput(input, { currentUser: user, entity: productVariant });
         if (input.position !== undefined) {
             const lastPosition = await this.productVariantsService.getLastPosition({ product: productVariant.product.id });
             if (input.position > lastPosition) {
