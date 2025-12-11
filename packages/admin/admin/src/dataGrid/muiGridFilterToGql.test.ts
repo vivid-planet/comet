@@ -1,7 +1,6 @@
-import { GridLogicOperator } from "@mui/x-data-grid";
-import { type GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
+import { type GridFilterModel, GridLogicOperator } from "@mui/x-data-grid";
 
-import { type GridColDef } from "./GridColDef";
+import type { GridColDef } from "./GridColDef";
 import { muiGridFilterToGql } from "./muiGridFilterToGql";
 
 const columns: GridColDef<{ tag: string }>[] = [{ field: "tag" }];

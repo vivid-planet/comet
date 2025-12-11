@@ -1,20 +1,21 @@
-import type { JestConfigWithTsJest } from "ts-jest";
+import type {Config} from 'jest';
+import { createDefaultEsmPreset } from 'ts-jest'
 
-const jestConfig: JestConfigWithTsJest = {
-    preset: "ts-jest",
-    testEnvironment: "jsdom",
-    testPathIgnorePatterns: ["/node_modules/", "/lib/"],
-    setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
-    transform: {
-        "^.+\\.tsx?$": [
-            "ts-jest",
-            {
-                tsconfig: "tsconfig.test.json",
-            },
-        ],
-    },
-    // See https://testing-library.com/docs/react-testing-library/setup/#configuring-jest-with-test-utils
-    moduleDirectories: ["node_modules", "utils", __dirname],
+const defaultPreset = createDefaultEsmPreset({
+  tsconfig: 'tsconfig.test.json',
+})
+
+const config: Config = {
+  ...defaultPreset,
+  
+
+  testEnvironment: "jsdom",
+      setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
+
+  moduleNameMapper: {
+    '^test-utils$': '<rootDir>/src/utils/test-utils.tsx',
+     '^@apollo/client$': '@apollo/client/index.js',
+  },
 };
 
-module.exports = jestConfig;
+export default config;
