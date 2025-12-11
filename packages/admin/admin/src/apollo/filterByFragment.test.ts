@@ -1,5 +1,6 @@
 // Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/__tests__/utilities.ts
 
+// https://github.com/apollographql/apollo-feature-requests/issues/287#issuecomment-1192993207
 import { disableFragmentWarnings, gql } from "@apollo/client";
 
 // Turn off warnings for repeated fragment names

@@ -2,13 +2,12 @@
     "compilerOptions": {
         "baseUrl": "src",
         "outDir": "lib",
+        "rootDir": "src",
+        "typeRoots": ["node_modules/@types", "node_modules/@testing-library"],
         "paths": {
             "test-utils": ["./utils/test-utils"]
-        },
-        "rootDir": "src",
-        "typeRoots": ["node_modules/@types", "node_modules/@testing-library"]
+        }
     },
-    "exclude": [],
     "extends": "../tsconfig.base.json",
     "include": ["./src"]
 }

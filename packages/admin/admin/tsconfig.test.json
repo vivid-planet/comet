@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "target": "ES6"
+        "esModuleInterop": true,
+        "isolatedModules": true
     },
     "extends": "./tsconfig.json"
 }
