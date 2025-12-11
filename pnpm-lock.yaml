@@ -527,8 +527,8 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2
       swiper:
-        specifier: ^11.2.10
-        version: 11.2.10
+        specifier: ^12.0.3
+        version: 12.0.3
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@18.3.1)
@@ -16399,8 +16399,8 @@ packages:
   swap-case@2.0.2:
     resolution: {integrity: sha512-kc6S2YS/2yXbtkSMunBtKdah4VFETZ8Oh6ONSmSd9bRxhqTrtARUCBUiWXH3xVPpvR7tz2CSnkuXVE42EcGnMw==}
 
-  swiper@11.2.10:
-    resolution: {integrity: sha512-RMeVUUjTQH+6N3ckimK93oxz6Sn5la4aDlgPzB+rBrG/smPdCTicXyhxa+woIpopz+jewEloiEE3lKo1h9w2YQ==}
+  swiper@12.0.3:
+    resolution: {integrity: sha512-BHd6U1VPEIksrXlyXjMmRWO0onmdNPaTAFduzqR3pgjvi7KfmUCAm/0cj49u2D7B0zNjMw02TSeXfinC1hDCXg==}
     engines: {node: '>= 4.7.0'}
 
   symbol-observable@1.2.0:
@@ -35674,7 +35674,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  swiper@11.2.10: {}
+  swiper@12.0.3: {}
 
   symbol-observable@1.2.0: {}
 
