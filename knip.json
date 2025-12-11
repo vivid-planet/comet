@@ -21,11 +21,8 @@
             "project": []
         },
         "docs": {
-            "ignore": ["*"],
-            "entry": [],
-            "project": [],
-            "ignoreDependencies": [".*"],
-            "ignoreUnresolved": [".*"]
+            "ignore": ["./docs/**/*.mdx", "./src/components/StorybookAdminComponentDocsIframe.tsx"],
+            "ignoreDependencies": ["@algolia/client-search", "search-insights"]
         },
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]

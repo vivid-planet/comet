@@ -25,3 +25,4 @@ export { default as findTextInCurrentSelection } from "./core/utils/findTextInCu
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";
 export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneBlock";
 export { default as createFinalFormRte } from "./field/createFinalFormRte";
+export { requiredValidator } from "./utils/requiredValidator";

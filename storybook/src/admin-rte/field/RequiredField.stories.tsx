@@ -1,9 +1,7 @@
 import { Button, Field, FieldSet, TextField } from "@comet/admin";
-import { createFinalFormRte } from "@comet/admin-rte";
+import { createFinalFormRte, requiredValidator } from "@comet/admin-rte";
 import { Box, Grid } from "@mui/material";
-import { convertFromRaw } from "draft-js";
 import { Form } from "react-final-form";
-import { FormattedMessage } from "react-intl";
 
 const { RteField } = createFinalFormRte();
 
@@ -16,15 +14,6 @@ type FormValues = {
     rteContentRequired: string;
     plainText: string;
     plainTextRequired: string;
-};
-
-const richTextRequiredValidator = (value: string) => {
-    const rawDraftContentState = convertFromRaw(JSON.parse(value));
-    const hasText = rawDraftContentState.hasText();
-
-    if (!hasText) {
-        return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
-    }
 };
 
 export const RequiredRichTextField = () => {
@@ -49,7 +38,7 @@ export const RequiredRichTextField = () => {
                                         component={RteField}
                                         fullWidth
                                         required
-                                        validate={richTextRequiredValidator}
+                                        validate={requiredValidator}
                                     />
                                     <TextField name="plainTextRequired" label="TextField for comparison (required)" fullWidth required />
                                 </Grid>
