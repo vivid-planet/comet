@@ -54,7 +54,7 @@ export class ProductVariantResolver {
     input: ProductVariantInput, 
     @GetCurrentUser()
     user: CurrentUser): Promise<ProductVariant> {
-        await this.productVariantService.validateCreateInput(input, { currentUser: user, product, args: {} });
+        await this.productVariantService.validateCreateInput(input, { currentUser: user, args: { product } });
         const lastPosition = await this.productVariantsService.getLastPosition({ product });
         let position = input.position;
         if (position !== undefined && position < lastPosition + 1) {

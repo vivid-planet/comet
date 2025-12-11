@@ -38,7 +38,7 @@ export function generateServiceHookCall(
             throw new Error(`${type} hook expects args, but no dedicatedResolverArgProps found`);
         }
         const argsCode = dedicatedResolverArgProps.map((prop) => {
-            options.push(prop.name);
+            return prop.name;
         });
         options.push(`args: { ${argsCode.join(", ")} }`);
     }
