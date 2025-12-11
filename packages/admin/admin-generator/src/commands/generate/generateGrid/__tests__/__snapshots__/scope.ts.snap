@@ -169,6 +169,7 @@ renderCell: (params) => {
                             }}
                             
                 
+                
             />
         );
     }
@@ -342,6 +343,7 @@ renderCell: (params) => {
                                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
                             }}
                             
+                
                 
             />
         );
