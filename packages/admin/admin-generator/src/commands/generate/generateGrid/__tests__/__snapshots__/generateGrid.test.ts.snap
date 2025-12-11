@@ -102,7 +102,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
                 <GridFilterButton />
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -309,7 +309,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         ]}
     />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -532,7 +532,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         ]}
     />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );

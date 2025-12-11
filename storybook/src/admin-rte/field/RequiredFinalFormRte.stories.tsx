@@ -16,7 +16,7 @@ type FormValues = {
     plainTextRequired: string;
 };
 
-export const RequiredRichTextField = () => {
+export const RequiredFinalFormRte = () => {
     return (
         <Box maxWidth={800} p={4}>
             <FieldSet>

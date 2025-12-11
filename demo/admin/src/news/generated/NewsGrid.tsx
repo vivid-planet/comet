@@ -56,7 +56,7 @@ function NewsGridToolbar() {
                 <GridFilterButton />
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="news.newsGrid.newEntry" defaultMessage={`New News`}/>
+        <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News"/>
     </Button>
             </DataGridToolbar>);
 }
