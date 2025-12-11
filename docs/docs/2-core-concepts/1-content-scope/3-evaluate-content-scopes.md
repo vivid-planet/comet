@@ -75,3 +75,24 @@ It's also possible to pass a function which returns the content scope to the `@S
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
 export class PredefinedPage extends BaseEntity implements DocumentInterface {
 ```
+
+### Operations that require a content scope independently of a specific entity
+
+**@AffectedScope**
+
+Use this decorator in following cases:
+
+- You don't have an entity to check with `@AffectedEntity`
+- You want to check for a combination of content scope values.
+
+Example:
+
+```ts
+@Query([Product])
+@AffectedScope((args) => ({ country: args.country, department: args.department }))
+async products(@Args("country", { type: () => string }) id: string, @Args("department", { type: () => string }): Promise<Product[]> {
+    // Note: you can trust "country" and "department" being in a valid scope in the sense that the user must have a content scope which is a combination of these dimensions:
+    // [{ country: "AT", department: "main" }]; // ok
+    // [{ country: "AT" }, { department: "main" }]; // not sufficient
+}
+```
