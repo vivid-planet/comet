@@ -87,6 +87,8 @@ export function FinalFormNumberInput({
         updateFormattedNumberValue(input.value);
     }, [updateFormattedNumberValue, input]);
 
+    const clearable = !required && !props.disabled && !props.readOnly;
+
     return (
         <InputBase
             {...input}
@@ -97,7 +99,7 @@ export function FinalFormNumberInput({
             endAdornment={
                 (endAdornment || !required) && (
                     <>
-                        {!required && !props.disabled && !props.readOnly && (
+                        {clearable && (
                             <ClearInputAdornment
                                 position="end"
                                 hasClearableContent={typeof input.value === "number"}

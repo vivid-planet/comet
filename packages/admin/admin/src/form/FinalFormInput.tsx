@@ -31,15 +31,17 @@ export function FinalFormInput({
     const [open, setOpen] = useState<boolean>(false);
     const [pendingTranslation, setPendingTranslation] = useState<string | undefined>(undefined);
 
+    const clearable = !required && !props.disabled && !props.readOnly;
+
     return (
         <>
             <InputBase
                 {...input}
                 {...props}
                 endAdornment={
-                    (endAdornment || !required || isTranslatable) && (
+                    (endAdornment || clearable || isTranslatable) && (
                         <>
-                            {!required && !props.disabled && !props.readOnly && (
+                            {clearable && (
                                 <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                             )}
                             {isTranslatable && (

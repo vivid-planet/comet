@@ -50,6 +50,8 @@ export const FinalFormAutocomplete = <
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+    const clearable = value !== null && !required && !rest.disabled && !rest.readOnly;
+
     return (
         <Autocomplete
             popupIcon={popupIcon}
@@ -89,9 +91,7 @@ export const FinalFormAutocomplete = <
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
-                            {value !== null && !required && !rest.disabled && !rest.readOnly && (
-                                <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
-                            )}
+                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
                             {loadingError && <Error color="error" />}
                             {params.InputProps.endAdornment}
                         </InputAdornment>
