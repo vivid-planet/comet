@@ -41,6 +41,8 @@ export function FinalFormInput({
                 {...input}
                 {...props}
                 required={required}
+                disabled={disabled}
+                readOnly={readOnly}
                 endAdornment={
                     (endAdornment || clearable || isTranslatable) && (
                         <>

@@ -91,6 +91,8 @@ export const FinalFormAutocomplete = <
                     {...params}
                     {...params.InputProps}
                     required={required}
+                    disabled={disabled}
+                    readOnly={readOnly}
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
