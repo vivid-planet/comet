@@ -50,7 +50,7 @@ function ProductTagsGridToolbar() {
                 <GridFilterButton />
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="productTag.productTagsGrid.newEntry" defaultMessage={`New Product Tag`}/>
+        <FormattedMessage id="productTag.productTagsGrid.newEntry" defaultMessage="New Product Tag"/>
     </Button>
             </DataGridToolbar>);
 }
