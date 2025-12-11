@@ -9,7 +9,7 @@ import {
 } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
-import { Department } from "@src/tenant/entities/department.entity";
+import { Department } from "@src/department/entities/department.entity";
 
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {

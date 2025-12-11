@@ -6,7 +6,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { DepartmentInput, DepartmentUpdateInput } from "./dto/department.input";
 import { PaginatedDepartments } from "./dto/paginated-departments";
 import { DepartmentsArgs } from "./dto/departments.args";
-import { Tenant } from "../entities/tenant.entity";
+import { Tenant } from "../../tenant/entities/tenant.entity";
 import { Department } from "../entities/department.entity";
 import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Department)

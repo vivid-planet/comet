@@ -1,9 +1,8 @@
 import { CrudField, CrudGenerator, RootBlockEntity } from "@comet/cms-api";
 import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Department } from "@src/department/entities/department.entity";
 import { v4 } from "uuid";
-
-import { Department } from "./department.entity";
 
 @Entity()
 @ObjectType()
