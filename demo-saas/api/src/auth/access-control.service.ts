@@ -1,7 +1,7 @@
 import {
     AbstractAccessControlService,
-    ContentScope,
     ContentScopesForUser,
+    ContentScopeWithLabel,
     Permission,
     PermissionsForUser,
     User,
@@ -33,11 +33,13 @@ export class AccessControlService extends AbstractAccessControlService {
         }
     }
 
-    async getAvailableContentScopes(): Promise<ContentScope[]> {
+    async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         const departments = await this.entityManager.find(Department, {});
 
         return departments.map((department) => ({
-            department: department.name,
+            department: department.id,
+            scope: { department: department.id },
+            label: { department: department.name },
         }));
     }
 }
