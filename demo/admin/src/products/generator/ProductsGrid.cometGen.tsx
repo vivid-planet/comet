@@ -38,7 +38,7 @@ export default defineConfig<GQLProduct>({
             type: "virtual",
             name: "overview",
             queryFields: ["category.title"],
-            headerName: "Overview",
+            headerName: <FormattedMessage id="product.overview.headerName" defaultMessage="Over-view" />,
             minWidth: 200,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {

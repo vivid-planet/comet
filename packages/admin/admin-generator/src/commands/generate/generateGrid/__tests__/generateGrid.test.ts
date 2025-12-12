@@ -201,6 +201,31 @@ describe("generateGrid", () => {
 
         expect(result.code).toMatch(/field: "title",\s*headerName: "",/);
     });
+    it("should generate a grid with density setting", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            density: "compact",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toContain('density="compact"');
+    });
 
     it("should generate custom text for delete action in crudContextMenu", () => {
         const config: GridConfig<Book> = {

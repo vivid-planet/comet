@@ -3,8 +3,6 @@ title: Customization and Styling
 sidebar_position: 1
 ---
 
-import { Story } from "../../src/components/Story";
-
 Comet Admin components are designed to be used similarly to MUI components.
 The APIs for styling, theming, overriding props, and replacing icons are similar to MUI.
 
@@ -31,8 +29,6 @@ See [MUIs `sx` documentation](https://mui.com/system/getting-started/the-sx-prop
 <ContentOverflow sx={{ backgroundColor: "lime" }}>{/* ... */}</ContentOverflow>
 ```
 
-<Story path="customization-and-styling/StylingAComponentsRootElement.tsx" />
-
 ### Overriding the props of a slot
 
 The props of a slot can be accessed using the `slotProps` prop.
@@ -50,8 +46,6 @@ We can disable the button by setting the `disabled` prop to `true` on the slot.
     {/* ... */}
 </ContentOverflow>
 ```
-
-<Story path="customization-and-styling/OverridingThePropsOfASlot.tsx" />
 
 ### Styling a slot
 
@@ -73,8 +67,6 @@ Since the icon's size and color are inherited from the parent, we can override t
     {/* ... */}
 </ContentOverflow>
 ```
-
-<Story path="customization-and-styling/StylingASlot.tsx" />
 
 ## Customizing components globally
 
@@ -101,8 +93,6 @@ const theme = createCometTheme({
 });
 ```
 
-<Story path="customization-and-styling/OverridingStylesOfAComponentGlobally.tsx" />
-
 ### Setting default props of a component
 
 Overriding the default props of a component can be done in the theme using the component's `defaultProps`.
@@ -121,5 +111,3 @@ const theme = createCometTheme({
     },
 });
 ```
-
-<Story path="customization-and-styling/SettingDefaultPropsOfAComponent.tsx" />
