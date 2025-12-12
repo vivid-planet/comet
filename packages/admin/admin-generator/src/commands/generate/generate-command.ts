@@ -21,7 +21,8 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import type { ComponentType } from "react";
+import type { ComponentType, ReactElement } from "react";
+import type { FormattedMessage, MessageDescriptor } from "react-intl";
 import { promisify } from "util";
 
 import { parseConfig } from "./config/parseConfig";
@@ -32,6 +33,8 @@ import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 const exec = promisify(execCallback);
+
+export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
     name: IconName;
@@ -147,10 +150,10 @@ export type FormFieldConfig<T> = (
           "maxFileSize" | "readOnly" | "layout" | "accept"
       >)
 ) & {
-    label?: string;
+    label?: string | FormattedMessageElement;
     required?: boolean;
     validate?: FieldValidator<unknown>;
-    helperText?: string;
+    helperText?: string | FormattedMessageElement;
     readOnly?: boolean;
 };
 
@@ -161,14 +164,14 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 type OptionalNestedFieldsConfig<T> = {
     type: "optionalNestedFields";
     name: UsableFormFields<T>; // object name containing fields
-    checkboxLabel?: string;
+    checkboxLabel?: string | FormattedMessageElement;
     fields: FormFieldConfig<any>[];
 };
 export type FormLayoutConfig<T> =
     | {
           type: "fieldSet";
           name: string;
-          title?: string;
+          title?: string | FormattedMessageElement;
           supportText?: string; // can contain field-placeholder
           collapsible?: boolean; // default true
           initiallyExpanded?: boolean; // default false
@@ -210,15 +213,16 @@ export function injectFormVariables<T>(fn: (injectedVariables: InjectedFormVaria
     return fn({} as any);
 }
 
-type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
-    headerInfoTooltip?: string;
+type BaseColumnConfig = Pick<GridColDef, "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
+    headerName?: string | FormattedMessageElement;
+    headerInfoTooltip?: string | FormattedMessageElement;
     visible?: ColumnVisibleOption;
     fieldName?: string; // this can be used to overwrite field-prop of column-config
 };
 
 export type GridColumnStaticSelectLabelCellContent = {
-    primaryText?: string;
-    secondaryText?: string;
+    primaryText?: string | FormattedMessageElement;
+    secondaryText?: string | FormattedMessageElement;
     icon?: Icon;
 };
 
@@ -226,7 +230,7 @@ export type GridColumnStaticSelectValue =
     | StaticSelectValue
     | {
           value: string | number | boolean;
-          label: string | GridColumnStaticSelectLabelCellContent;
+          label: string | FormattedMessageElement | GridColumnStaticSelectLabelCellContent;
       }
     | number
     | boolean;
@@ -298,7 +302,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
-    newEntryText?: string;
+    newEntryText?: string | FormattedMessageElement;
     rowActionProp?: boolean;
     selectionProps?: "multiSelect" | "singleSelect";
     rowReordering?: {
@@ -310,6 +314,7 @@ export type GridConfig<T extends { __typename?: string }> = {
      * @default false
      */
     scopeAsProp?: boolean;
+    density?: "comfortable" | "compact" | "standard";
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;

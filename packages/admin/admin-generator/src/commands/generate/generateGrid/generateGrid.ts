@@ -12,6 +12,7 @@ import { type ReactNode } from "react";
 
 import {
     type ActionsGridColumnConfig,
+    type FormattedMessageElement,
     type GeneratorReturn,
     type GQLDocumentConfigMap,
     type GridColumnConfig,
@@ -26,7 +27,8 @@ import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
-import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { generateFormattedMessage } from "../utils/intl";
+import { isGeneratorConfigCode, isGeneratorConfigFormattedMessage, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { detectMuiXGridVariant } from "./detectMuiXVersion";
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
@@ -100,40 +102,66 @@ type LabelData = {
     gridCellContent?: ReactNode;
 };
 
-const getValueOptionsLabelData = (messageId: string, label: string | GridColumnStaticSelectLabelCellContent): LabelData => {
-    if (typeof label === "string") {
+const getValueOptionsLabelData = (messageId: string, label: string | FormattedMessageElement | GridColumnStaticSelectLabelCellContent): LabelData => {
+    if (typeof label === "string" || isGeneratorConfigFormattedMessage(label)) {
         return {
-            textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
+            textLabel: generateFormattedMessage({
+                config: label as FormattedMessageElement | string,
+                id: messageId,
+                type: "intlCall",
+            }),
         };
     }
 
     const textLabelParts: string[] = [];
     const gridCellContentProps: Record<string, string> = {};
 
-    if (label.primaryText) {
+    if ("primaryText" in label && label.primaryText) {
         const primaryMessageId = `${messageId}.primary`;
-        textLabelParts.push(`intl.formatMessage({ id: "${primaryMessageId}", defaultMessage: "${label.primaryText}" })`);
-        gridCellContentProps.primaryText = `<FormattedMessage id="${primaryMessageId}" defaultMessage="${label.primaryText}" />`;
+        textLabelParts.push(
+            generateFormattedMessage({
+                config: label.primaryText,
+                id: primaryMessageId,
+                type: "intlCall",
+            }),
+        );
+        gridCellContentProps.primaryText = generateFormattedMessage({
+            config: label.primaryText,
+            id: primaryMessageId,
+            type: "jsx",
+        });
     }
 
-    if (label.secondaryText) {
+    if ("secondaryText" in label && label.secondaryText) {
         const secondaryMessageId = `${messageId}.secondary`;
-        textLabelParts.push(`intl.formatMessage({ id: "${secondaryMessageId}", defaultMessage: "${label.secondaryText}" })`);
-        gridCellContentProps.secondaryText = `<FormattedMessage id="${secondaryMessageId}" defaultMessage="${label.secondaryText}" />`;
+        textLabelParts.push(
+            generateFormattedMessage({
+                config: label.secondaryText,
+                id: secondaryMessageId,
+                type: "intlCall",
+            }),
+        );
+        gridCellContentProps.secondaryText = generateFormattedMessage({
+            config: label.secondaryText,
+            id: secondaryMessageId,
+            type: "jsx",
+        });
     }
 
-    if (typeof label.icon === "string") {
-        gridCellContentProps.icon = `<${label.icon}Icon />`;
-    } else if (typeof label.icon === "object") {
-        if ("import" in label.icon) {
-            gridCellContentProps.icon = `<${label.icon.name} />`;
-        } else {
-            const { name, ...iconProps } = label.icon;
-            gridCellContentProps.icon = `<${name}Icon
+    if ("icon" in label) {
+        if (typeof label.icon === "string") {
+            gridCellContentProps.icon = `<${label.icon}Icon />`;
+        } else if (typeof label.icon === "object") {
+            if ("import" in label.icon) {
+                gridCellContentProps.icon = `<${label.icon.name} />`;
+            } else {
+                const { name, ...iconProps } = label.icon;
+                gridCellContentProps.icon = `<${name}Icon
                 ${Object.entries(iconProps)
                     .map(([key, value]) => `${key}="${value}"`)
                     .join("\n")}
             />`;
+            }
         }
     }
 
@@ -460,7 +488,7 @@ export function generateGrid<T extends { __typename?: string }>(
             ) as IntrospectionEnumType | undefined;
 
             column.values?.forEach((value) => {
-                if (typeof value === "object" && typeof value.label === "object" && typeof value.label.icon !== "undefined") {
+                if (typeof value === "object" && typeof value.label === "object" && "icon" in value.label) {
                     if (typeof value.label.icon === "string") {
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
@@ -789,16 +817,19 @@ export function generateGrid<T extends { __typename?: string }>(
                         renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
-                                        <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
-                                            column.name
-                                        }",   defaultMessage: "${
-                                            column.headerName || camelCaseToHumanReadable(column.name)
-                                        }"})} columnWidth= {${tooltipColumnWidth}}
+                                        <GridColumnHeaderTitle label={${generateFormattedMessage({
+                                            config: column.headerName,
+                                            id: `${instanceGqlType}.${column.name}`,
+                                            defaultMessage: camelCaseToHumanReadable(column.name),
+                                            type: "intlCall",
+                                        })}} columnWidth= {${tooltipColumnWidth}}
                               />
                                         <Tooltip
-                                            title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
-                                                column.headerInfoTooltip
-                                            }" />}
+                                            title={${generateFormattedMessage({
+                                                config: column.headerInfoTooltip,
+                                                id: `${instanceGqlType}.${column.name}.tooltip`,
+                                                type: "jsx",
+                                            })}}
                                         >
                                             <InfoIcon sx={{ marginLeft: 1 }} />
                                         </Tooltip>
@@ -808,9 +839,12 @@ export function generateGrid<T extends { __typename?: string }>(
                         headerName:
                             column.headerName === ""
                                 ? `""`
-                                : `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                                      column.headerName || camelCaseToHumanReadable(column.name)
-                                  }" })`,
+                                : generateFormattedMessage({
+                                      config: column.headerName,
+                                      id: `${instanceGqlType}.${column.name}`,
+                                      defaultMessage: camelCaseToHumanReadable(column.name),
+                                      type: "intlCall",
+                                  }),
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
                         sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
@@ -844,7 +878,11 @@ export function generateGrid<T extends { __typename?: string }>(
                         ? tsCodeRecordToString({
                               field: '"actions"',
                               headerName: actionsColumnHeaderName
-                                  ? `intl.formatMessage({ id: "${instanceGqlType}.actions", defaultMessage: "${actionsColumnHeaderName}" })`
+                                  ? generateFormattedMessage({
+                                        config: actionsColumnHeaderName,
+                                        id: `${instanceGqlType}.actions`,
+                                        type: "intlCall",
+                                    })
                                   : `""`,
                               sortable: "false",
                               filterable: "false",
@@ -854,6 +892,13 @@ export function generateGrid<T extends { __typename?: string }>(
                               width: forwardRowAction ? "actionsColumnWidth" : actionsColumnWidth,
                               visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
+                              headerInfoTooltip: restActionsColumnConfig.headerInfoTooltip
+                                  ? generateFormattedMessage({
+                                        config: restActionsColumnConfig.headerInfoTooltip,
+                                        id: `${instanceGqlType}.actions`,
+                                        type: "intlCall",
+                                    })
+                                  : undefined,
                               disableExport: config.excelExport ? "true" : undefined,
                               renderCell: `(params) => {
                             return (
@@ -960,6 +1005,7 @@ export function generateGrid<T extends { __typename?: string }>(
                            hideFooterPagination`
                         : ""
                 }
+                ${config.density ? `density="${config.density}"` : ""}
             />
         );
     }

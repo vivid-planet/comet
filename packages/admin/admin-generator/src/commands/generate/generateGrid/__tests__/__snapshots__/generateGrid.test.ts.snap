@@ -102,7 +102,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
                 <GridFilterButton />
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -180,6 +180,7 @@ renderCell: (params) => {
                                 toolbar: BooksGridToolbar as GridSlotsComponent["toolbar"],
                             }}
                             
+                
                 
             />
         );
@@ -308,7 +309,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         ]}
     />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -402,6 +403,7 @@ renderCell: (params) => {
                             slotProps={{
         toolbar: {                exportApi,    } as BooksGridToolbarToolbarProps  
     }}
+                
                 
             />
         );
@@ -530,7 +532,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         ]}
     />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -629,6 +631,7 @@ renderCell: (params) => {
                             slotProps={{
         toolbar: {                exportApi,    } as BooksGridToolbarToolbarProps  
     }}
+                
                 
             />
         );

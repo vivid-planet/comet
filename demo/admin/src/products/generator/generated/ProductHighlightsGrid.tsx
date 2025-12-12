@@ -60,7 +60,7 @@ function ProductHighlightsGridToolbar() {
             <GridFilterButton />
             <FillSpace />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                <FormattedMessage id="productHighlight.productHighlightsForm.newEntry" defaultMessage={`New Product Highlight`} />
+                <FormattedMessage id="productHighlight.productHighlightsForm.newEntry" defaultMessage="New Product Highlight" />
             </Button>
         </DataGridToolbar>
     );

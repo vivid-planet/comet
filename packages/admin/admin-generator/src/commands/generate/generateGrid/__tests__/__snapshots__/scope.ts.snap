@@ -98,7 +98,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
             <DataGridToolbar>
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="product.productsForm.newEntry" defaultMessage={\`New Product\`}  />
+        <FormattedMessage id="product.productsForm.newEntry" defaultMessage="New Product" />
     </Button>
             </DataGridToolbar>
         );
@@ -168,6 +168,7 @@ renderCell: (params) => {
                                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
                             }}
                             
+                
                 
             />
         );
@@ -274,7 +275,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
             <DataGridToolbar>
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="product.productsForm.newEntry" defaultMessage={\`New Product\`}  />
+        <FormattedMessage id="product.productsForm.newEntry" defaultMessage="New Product" />
     </Button>
             </DataGridToolbar>
         );
@@ -342,6 +343,7 @@ renderCell: (params) => {
                                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
                             }}
                             
+                
                 
             />
         );
