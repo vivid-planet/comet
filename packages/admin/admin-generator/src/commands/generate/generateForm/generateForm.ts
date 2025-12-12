@@ -141,7 +141,6 @@ export function generateForm(
         }
     });
 
-    const readOnlyFields = formFields.filter((field) => field.readOnly);
     const fileFields = formFields.filter((field) => field.type == "fileUpload");
 
     if (fileFields.length > 0) {
