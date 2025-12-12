@@ -23,6 +23,7 @@ import {
     useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
@@ -35,7 +36,7 @@ import {
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import { ProductCategoryFilterOperators } from "@src/products/ProductCategoryFilter";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
@@ -125,7 +126,15 @@ export function ProductsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const theme = useTheme();
+    const stackSwitchApi = useStackSwitchApi();
     const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+
+    const handleRowPrimaryAction = useCallback(
+        (row: GQLProductsListManualFragment) => {
+            stackSwitchApi.activatePage("edit", row.id);
+        },
+        [stackSwitchApi],
+    );
 
     const columns = useMemo((): GridColDef<GQLProductsListManualFragment>[] => {
         return [
@@ -319,7 +328,7 @@ export function ProductsGrid() {
                     return (
                         <>
                             <ProductsGridPreviewAction {...params} />
-                            <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <IconButton color="primary" onClick={() => handleRowPrimaryAction(params.row)}>
                                 <Edit />
                             </IconButton>
                             <CrudContextMenu
@@ -337,7 +346,7 @@ export function ProductsGrid() {
                 disableExport: true,
             },
         ];
-    }, [client, intl, theme]);
+    }, [client, intl, theme, handleRowPrimaryAction]);
 
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
@@ -377,6 +386,7 @@ export function ProductsGrid() {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
+            onRowClick={(params) => handleRowPrimaryAction(params.row)}
             slots={{
                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
