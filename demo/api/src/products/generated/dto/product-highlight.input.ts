@@ -15,5 +15,4 @@ export class ProductHighlightInput {
     product: string;
 }
 @InputType()
-export class ProductHighlightUpdateInput extends PartialType(ProductHighlightInput) {
-}
+export class ProductHighlightUpdateInput extends PartialType(ProductHighlightInput) {}
