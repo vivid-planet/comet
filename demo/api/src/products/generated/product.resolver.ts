@@ -8,17 +8,18 @@ import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, FileUpload, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, BlocksTransformerService, CurrentUser, DamImageBlock, FileUpload, GetCurrentUser, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { Product } from "../entities/product.entity";
+import { ProductService } from "../product.service";
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
-    constructor(protected readonly entityManager: EntityManager, private readonly blocksTransformer: BlocksTransformerService) { }
+    constructor(protected readonly entityManager: EntityManager, private readonly blocksTransformer: BlocksTransformerService, protected readonly productService: ProductService) { }
     @Query(() => Product)
     @AffectedEntity(Product)
     async product(
@@ -81,7 +82,10 @@ export class ProductResolver {
     @Mutation(() => Product)
     async createProduct(
     @Args("input", { type: () => ProductInput })
-    input: ProductInput): Promise<Product> {
+    input: ProductInput, 
+    @GetCurrentUser()
+    user: CurrentUser): Promise<Product> {
+        await this.productService.validateCreateInput(input, { currentUser: user });
         const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, image: imageInput, ...assignInput } = input;
         const product = this.entityManager.create(Product, {
             ...assignInput,

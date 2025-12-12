@@ -122,6 +122,7 @@ export {
     CrudField,
     CrudFieldOptions,
     CrudGenerator,
+    CrudGeneratorHooksService,
     CrudGeneratorOptions,
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
