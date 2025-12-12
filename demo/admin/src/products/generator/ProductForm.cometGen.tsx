@@ -1,9 +1,13 @@
+import { gql } from "@apollo/client";
 import { defineConfig, type InjectedFormVariables, injectFormVariables } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
+import { FORM_ERROR } from "final-form";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
+import { type FormValues } from "./generated/ProductForm";
+import { type GQLValidateProductQuery, type GQLValidateProductQueryVariables } from "./ProductForm.cometGen.generated";
 import { productTypeValues } from "./productTypeValues";
 import { validateProductSlug } from "./validateProductSlug";
 
@@ -12,6 +16,34 @@ export default defineConfig<GQLProduct>({
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
     navigateOnCreate: false,
+
+    validate: injectFormVariables(({ client }: InjectedFormVariables) => async (formValues: FormValues) => {
+        // this just demonstrates record level validation via api call, in real world scenario this could be done as client side field validation
+        const validateResponse = await client.query<GQLValidateProductQuery, GQLValidateProductQueryVariables>({
+            query: gql`
+                query ValidateProduct($input: ValidateProductInput!) {
+                    validateProduct(input: $input) {
+                        ok
+                        errorCode
+                    }
+                }
+            `,
+            variables: { input: { title: formValues.title } },
+        });
+        const validationResult = validateResponse.data.validateProduct;
+        if (!validationResult.ok) {
+            if (validationResult.errorCode === "TITLE_TOO_SHORT") {
+                return {
+                    title: <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />,
+                };
+            } else {
+                return {
+                    [FORM_ERROR]: <FormattedMessage id="product.validate.unknownValidationError" defaultMessage="Unknown validation error" />,
+                };
+            }
+        }
+    }),
+
     fields: [
         {
             type: "fieldSet",
