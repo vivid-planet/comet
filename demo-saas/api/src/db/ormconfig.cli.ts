@@ -1,9 +1,8 @@
+import { createOrmConfig } from "@comet/cms-api";
 import { type Options } from "@mikro-orm/postgresql";
 
-import { ormConfig } from "./ormconfig";
-
 const config: Options = {
-    ...ormConfig,
+    ...createOrmConfig({ user: process.env.POSTGRESQL_USER, password: process.env.POSTGRESQL_PWD }),
     entities: ["./dist/**/*.entity.js"],
     entitiesTs: ["./src/**/*.entity.ts"],
 };

@@ -1,12 +1,14 @@
-import { CrudGenerator, RootBlockEntity } from "@comet/cms-api";
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { CrudField, CrudGenerator } from "@comet/cms-api";
+import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Department } from "@src/department/entities/department.entity";
 import { v4 } from "uuid";
+
+import { TenantUser } from "./tenant-user.entity";
 
 @Entity()
 @ObjectType()
-@RootBlockEntity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["tenantAdministration"] })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["tenantAdministration"], delete: false })
 export class Tenant extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
@@ -25,4 +27,21 @@ export class Tenant extends BaseEntity {
     @Property({ type: "text" })
     @Field()
     name: string;
+
+    @OneToMany(() => Department, (department) => department.tenant, { orphanRemoval: true })
+    @CrudField({
+        input: false,
+    })
+    departments = new Collection<Department>(this);
+
+    @OneToMany(() => TenantUser, (user) => user.tenant, { orphanRemoval: true })
+    // TODO: check what I need here
+    @CrudField({
+        input: false,
+        resolveField: false,
+        filter: false,
+        sort: false,
+        search: false,
+    })
+    users = new Collection<TenantUser>(this);
 }

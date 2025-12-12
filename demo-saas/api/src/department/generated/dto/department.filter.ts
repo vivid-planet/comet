@@ -3,9 +3,9 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { DateTimeFilter, IdFilter, StringFilter } from "@comet/cms-api";
 @InputType()
-export class TenantFilter {
+export class DepartmentFilter {
     @Field(() => IdFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -26,19 +26,14 @@ export class TenantFilter {
     @IsOptional()
     @Type(() => StringFilter)
     name?: StringFilter;
-    @Field(() => OneToManyFilter, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => OneToManyFilter)
-    departments?: OneToManyFilter;
-    @Field(() => [TenantFilter], { nullable: true })
-    @Type(() => TenantFilter)
+    @Field(() => [DepartmentFilter], { nullable: true })
+    @Type(() => DepartmentFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    and?: TenantFilter[];
-    @Field(() => [TenantFilter], { nullable: true })
-    @Type(() => TenantFilter)
+    and?: DepartmentFilter[];
+    @Field(() => [DepartmentFilter], { nullable: true })
+    @Type(() => DepartmentFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    or?: TenantFilter[];
+    or?: DepartmentFilter[];
 }
