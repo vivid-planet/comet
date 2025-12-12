@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.11.0
+
+### Minor Changes
+
+- f34b750: Add Status to CronJob
+
 ## 8.10.0
 
 ### Minor Changes

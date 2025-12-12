@@ -1,5 +1,15 @@
 # @comet/eslint-config
 
+## 8.11.0
+
+### Minor Changes
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
