@@ -17,6 +17,7 @@ exports[`staticInitialValue should generate simple date field with LocalType sca
             }
             : {
                 title: "Default Product Title", 
+                
             }
         , [data]);"
 `;

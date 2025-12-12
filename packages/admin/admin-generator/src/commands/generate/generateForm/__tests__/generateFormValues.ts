@@ -73,6 +73,7 @@ describe("generateFormValues", () => {
             filterByFragmentType: "GQLProductFormFragment",
             gqlIntrospection: introspection,
             gqlType: "Product",
+            initialValuesAsProp: false,
         });
         expect(initialValues.replace(/\s+/g, " ")).toEqual(
             `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { } , [data]);`,
@@ -211,6 +212,7 @@ describe("generateFormValues", () => {
             filterByFragmentType: "GQLProductFormFragment",
             gqlIntrospection: introspection,
             gqlType: "Product",
+            initialValuesAsProp: false,
         });
         expect(initialValues.replace(/\s+/g, " ")).toEqual(
             `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), price: String(data.product.price), } : { } , [data]);`,
@@ -311,6 +313,7 @@ describe("generateFormValues", () => {
                 filterByFragmentType: "GQLProductFormFragment",
                 gqlIntrospection: introspection,
                 gqlType: "Product",
+                initialValuesAsProp: false,
             });
             expect(initialValues.replace(/\s+/g, " ")).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { } , [data]);`,
@@ -371,6 +374,7 @@ describe("generateFormValues", () => {
                 filterByFragmentType: "GQLProductFormFragment",
                 gqlIntrospection: introspection,
                 gqlType: "Product",
+                initialValuesAsProp: false,
             });
             expect(initialValues.replace(/\s+/g, " ")).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), address: { ...data.product.address, zip: String(data.product.address.zip), }, } : { } , [data]);`,
@@ -676,6 +680,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { } , [data]);`,
@@ -693,6 +698,7 @@ describe("generateFormValues", () => {
                     mode: "add",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(`const initialValues = { };`);
         });
@@ -709,6 +715,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), foo: String(data.product.foo), } : { } , [data]);`,
@@ -727,6 +734,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { foo: true, } , [data]);`,
@@ -745,6 +753,7 @@ describe("generateFormValues", () => {
                     mode: "add",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(`const initialValues = { foo: true, };`);
         });
@@ -761,6 +770,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { bar: { foo: true, }, } , [data]);`,
@@ -779,6 +789,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), bar: { ...data.product.bar, foo: String(data.product.bar.foo), }, } : { } , [data]);`,
@@ -812,6 +823,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), bar: data.product.bar ? { ...data.product.bar, foo: String(data.product.bar.foo), } : undefined, } : { } , [data]);`,
@@ -848,6 +860,7 @@ describe("generateFormValues", () => {
                     mode: "all",
                     gqlIntrospection: introspection,
                     gqlType: "Product",
+                    initialValuesAsProp: false,
                 }).replace(/\s+/g, " "),
             ).toEqual(
                 `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ?
