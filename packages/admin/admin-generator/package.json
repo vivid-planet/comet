@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "8.7.1",
+    "version": "8.10.0",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -23,6 +23,7 @@
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
@@ -35,14 +36,14 @@
         "@graphql-tools/load": "^7.8.14",
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
-        "glob": "^11.0.0",
+        "glob": "^11.1.0",
         "graphql": "^16.11.0",
         "object-path": "^0.11.8",
         "pluralize": "^8.0.0",
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@apollo/client": "^3.7.0",
+        "@apollo/client": "^3.14.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
@@ -61,7 +62,7 @@
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-intl": "^7.1.11",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "ts-jest": "^29.4.0",
         "typescript": "5.9.3"
     },

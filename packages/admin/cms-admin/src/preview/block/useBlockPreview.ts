@@ -20,4 +20,4 @@ function useBlockPreview(): BlockPreviewApi {
     return { device, setDevice, showOnlyVisible, setShowOnlyVisible, minimized, setMinimized };
 }
 
-export { BlockPreviewApi, useBlockPreview };
+export { type BlockPreviewApi, useBlockPreview };

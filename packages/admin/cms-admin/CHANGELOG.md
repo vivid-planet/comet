@@ -1,5 +1,43 @@
 # @comet/cms-admin
 
+## 8.10.0
+
+### Patch Changes
+
+- Updated dependencies [294b35a]
+- Updated dependencies [1918d88]
+    - @comet/admin-rte@8.10.0
+    - @comet/admin@8.10.0
+    - @comet/admin-date-time@8.10.0
+    - @comet/admin-icons@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- 1af3c93: User permissions form: Fix an issue where clearing input values would not update the value when saving
+    - @comet/admin@8.9.0
+    - @comet/admin-date-time@8.9.0
+    - @comet/admin-icons@8.9.0
+    - @comet/admin-rte@8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- e62d6bd: Add support for temporary file uploads with configurable expiration times. The `expiresIn` duration can be set as a default value in the module configuration, and can be overridden by setting the value when using the `FileUploadsService` or sending the request to the upload endpoint.
+
+    Files are automatically validated for expiration when accessed, and expired files are cleared every minute in the background.
+
+    The `FileUploadField` also supports overriding the `expiresIn` property.
+
+### Patch Changes
+
+- @comet/admin@8.8.0
+- @comet/admin-date-time@8.8.0
+- @comet/admin-icons@8.8.0
+- @comet/admin-rte@8.8.0
+
 ## 8.7.1
 
 ### Patch Changes

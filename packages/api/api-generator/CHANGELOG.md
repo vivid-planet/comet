@@ -1,5 +1,36 @@
 # @comet/api-generator
 
+## 8.10.0
+
+### Patch Changes
+
+- Updated dependencies [5f025a9]
+    - @comet/cms-api@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- 1231050: Fix id default value for sort if sort is disabled
+- 0839ae8: Fix generated sort DTO to avoid duplicate `id` field
+- Updated dependencies [ef30d93]
+- Updated dependencies [5cf497f]
+    - @comet/cms-api@8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- e16e1f9: list query: add default value for sort if there is a position column
+- 6898b95: Add default sort order: position (if exists), createdAt (if exists), id
+
+### Patch Changes
+
+- Updated dependencies [d328dac]
+- Updated dependencies [e62d6bd]
+- Updated dependencies [b79687c]
+    - @comet/cms-api@8.8.0
+
 ## 8.7.1
 
 ### Patch Changes

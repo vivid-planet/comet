@@ -10,13 +10,14 @@
     "scripts": {
         "build-storybook": "storybook build",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json .storybook/ --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "storybook": "storybook dev -p 26638 --no-version-updates"
     },
     "dependencies": {
-        "@apollo/client": "^3.13.8",
+        "@apollo/client": "^3.14.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
@@ -49,16 +50,16 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.0",
+        "@babel/cli": "^7.28.3",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@faker-js/faker": "^10.0.0",
+        "@faker-js/faker": "^10.1.0",
         "@graphql-mocks/network-msw": "^0.4.4",
         "@storybook/addon-docs": "^9.0.16",
         "@storybook/addon-webpack5-compiler-babel": "^3.0.6",
         "@storybook/react": "^9.0.16",
         "@storybook/react-webpack5": "^9.0.16",
-        "@types/draft-js": "^0.11.18",
+        "@types/draft-js": "^0.11.20",
         "@types/history": "^4.7.11",
         "@types/qs": "^6.14.0",
         "@types/react": "^18.3.23",

@@ -2448,7 +2448,19 @@
                 "enum": [
                     "cap",
                     "shirt",
-                    "tie"
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
                 ],
                 "nullable": false,
                 "array": true
@@ -2461,7 +2473,19 @@
                 "enum": [
                     "cap",
                     "shirt",
-                    "tie"
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
                 ],
                 "nullable": false,
                 "array": true
