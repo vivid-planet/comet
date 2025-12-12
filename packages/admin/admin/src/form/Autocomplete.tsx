@@ -23,6 +23,9 @@ export type FinalFormAutocompleteProps<
 > = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
         errorText?: ReactNode;
+        required?: boolean;
+        disabled?: boolean;
+        readOnly?: boolean;
     };
 
 type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
@@ -84,15 +87,15 @@ export const FinalFormAutocomplete = <
             }}
             value={value ? (value as T) : (null as any)}
             {...rest}
+            disabled={disabled}
+            readOnly={readOnly}
             multiple={multiple as Multiple}
             renderInput={(params: AutocompleteRenderInputParams) => (
                 <InputBase
+                    required={required}
                     {...restInput}
                     {...params}
                     {...params.InputProps}
-                    required={required}
-                    disabled={disabled}
-                    readOnly={readOnly}
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
