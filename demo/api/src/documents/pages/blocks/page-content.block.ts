@@ -1,5 +1,6 @@
 import { AnchorBlock, BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, DamImageBlock } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
+import { ContactFormBlock } from "@src/common/blocks/contact-form.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { PageTreeIndexBlock } from "@src/common/blocks/page-tree-index.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
@@ -47,6 +48,7 @@ const supportedBlocks = {
     fullWidthImage: FullWidthImageBlock,
     productList: ProductListBlock,
     pageTreeIndex: PageTreeIndexBlock,
+    contactForm: ContactFormBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
