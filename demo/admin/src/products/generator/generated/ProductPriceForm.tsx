@@ -23,9 +23,7 @@ import { updateProductMutation } from "./ProductPriceForm.gql";
 import { GQLUpdateProductMutation } from "./ProductPriceForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductPriceForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
-    price?: string;
-};
+type FormValues = GQLProductPriceFormDetailsFragment;
 interface FormProps {
     onCreate?: (id: string) => void;
     id: string;
@@ -37,7 +35,6 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.product
         ? {
             ...filterByFragment<GQLProductPriceFormDetailsFragment>(productFormFragment, data.product),
-            price: data.product.price ? String(data.product.price) : undefined,
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
@@ -53,7 +50,7 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValues, price: formValues.price ? parseFloat(formValues.price) : null, };
+        const output = { ...formValues, price: formValues.price ?? null, };
         if (!id)
             throw new Error();
         const { ...updateInput } = output;

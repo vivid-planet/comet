@@ -33,19 +33,9 @@ import { updateManufacturerMutation } from "./ManufacturerForm.gql";
 import { GQLUpdateManufacturerMutation } from "./ManufacturerForm.gql.generated";
 import { GQLUpdateManufacturerMutationVariables } from "./ManufacturerForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = Omit<GQLManufacturerFormFragment, "address" | "addressAsEmbeddable"> & {
-    address: Omit<NonNullable<GQLManufacturerFormFragment["address"]>, "streetNumber" | "alternativeAddress"> & {
-        streetNumber: string;
-        alternativeAddress: Omit<NonNullable<NonNullable<GQLManufacturerFormFragment["address"]>["alternativeAddress"]>, "streetNumber"> & {
-            streetNumber?: string;
-        };
+type FormValues = Omit<GQLManufacturerFormFragment, "address"> & {
+    address: GQLManufacturerFormFragment["address"] & {
         alternativeAddressEnabled: boolean;
-    };
-    addressAsEmbeddable: Omit<GQLManufacturerFormFragment["addressAsEmbeddable"], "streetNumber" | "alternativeAddress"> & {
-        streetNumber: string;
-        alternativeAddress: Omit<GQLManufacturerFormFragment["addressAsEmbeddable"]["alternativeAddress"], "streetNumber"> & {
-            streetNumber: string;
-        };
     };
 };
 interface FormProps {
@@ -61,7 +51,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
     const initialValues = useMemo<Partial<FormValues>>(() => data?.manufacturer
         ? {
             ...filterByFragment<GQLManufacturerFormFragment>(manufacturerFormFragment, data.manufacturer),
-            address: data.manufacturer.address ? { ...data.manufacturer.address, streetNumber: String(data.manufacturer.address.streetNumber), alternativeAddress: data.manufacturer.address.alternativeAddress ? { ...data.manufacturer.address.alternativeAddress, streetNumber: data.manufacturer.address.alternativeAddress.streetNumber ? String(data.manufacturer.address.alternativeAddress.streetNumber) : undefined, } : undefined, alternativeAddressEnabled: !!data.manufacturer.address.alternativeAddress, } : undefined, addressAsEmbeddable: { ...data.manufacturer.addressAsEmbeddable, streetNumber: String(data.manufacturer.addressAsEmbeddable.streetNumber), alternativeAddress: { ...data.manufacturer.addressAsEmbeddable.alternativeAddress, streetNumber: String(data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber), }, },
+            address: data.manufacturer.address ? { ...data.manufacturer.address, alternativeAddressEnabled: !!data.manufacturer.address.alternativeAddress, } : undefined,
         }
         : {}, [data]);
     const saveConflict = useFormSaveConflict({
@@ -77,7 +67,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
     const handleSubmit = async ({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, address: { ...formValuesAddressRest, streetNumber: parseFloat(formValuesAddressRest.streetNumber), alternativeAddress: alternativeAddressEnabled && formValuesAddressRest.alternativeAddress ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ? parseFloat(formValuesAddressRest.alternativeAddress.streetNumber) : null, } : null, }, addressAsEmbeddable: { ...formValuesRest.addressAsEmbeddable, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.streetNumber), alternativeAddress: { ...formValuesRest.addressAsEmbeddable.alternativeAddress, streetNumber: parseFloat(formValuesRest.addressAsEmbeddable.alternativeAddress.streetNumber), }, }, };
+        const output = { ...formValuesRest, address: { ...formValuesAddressRest, alternativeAddress: alternativeAddressEnabled && formValuesAddressRest.alternativeAddress ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ?? null, } : null, }, };
         if (mode === "edit") {
             if (!id)
                 throw new Error();
