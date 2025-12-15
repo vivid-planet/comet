@@ -3,5 +3,6 @@
         "inlineSources": true,
         "sourceRoot": "/dist"
     },
+    "exclude": ["**/__stories__/**", "**/*.stories.js", "**/*.stories.tsx", "**/*.stories.ts", ".storybook"],
     "extends": "./tsconfig.json"
 }

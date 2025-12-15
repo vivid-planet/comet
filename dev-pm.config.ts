@@ -227,5 +227,10 @@ export default defineConfig({
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
         },
+        {
+            name: "storybook-demo-api",
+            script: "pnpm --filter comet-demo-api run storybook",
+            group: ["storybook", "docs"],
+        },
     ],
 });
