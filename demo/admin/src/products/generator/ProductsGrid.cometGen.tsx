@@ -30,6 +30,9 @@ export default defineConfig<GQLProduct>({
     initialFilter: {
         items: [{ field: "type", operator: "is", value: "shirt" }],
     },
+    crudContextMenu: {
+        deleteText: "Extinguish",
+    },
     columns: [
         {
             type: "virtual",
