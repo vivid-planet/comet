@@ -62,7 +62,7 @@
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@parcel/watcher": "^2.5.1",
         "@types/node": "^24.9.1",
-        "@types/react": "^18.3.23",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
