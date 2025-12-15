@@ -18,10 +18,10 @@ import {
     useStackSwitch,
 } from "@comet/admin";
 import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
+import { DepartmentForm } from "@src/departments/generated/DepartmentForm";
+import { DepartmentsGrid } from "@src/departments/generated/DepartmentsGrid";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DepartmentForm } from "./departments/generated/DepartmentForm";
-import { DepartmentsGrid } from "./departments/generated/DepartmentsGrid";
 import { TenantForm } from "./generated/TenantForm";
 import { TenantsGrid } from "./generated/TenantsGrid";
 
