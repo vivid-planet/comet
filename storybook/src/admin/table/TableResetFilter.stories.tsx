@@ -88,7 +88,6 @@ export const ResetFilter = () => {
                                         { label: "Ervin Howell", value: "Ervin Howell" },
                                         { label: "Clementine Bauch", value: "Clementine Bauch" },
                                     ]}
-                                    clearable
                                     fullWidth
                                 />
                             </Grid>
