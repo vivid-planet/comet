@@ -9,6 +9,12 @@ const isValidUrlStructure = (value: string): boolean => {
     return domainPattern.test(value) || ipPattern.test(value);
 };
 
+const isEmail = (value: string): boolean => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return emailPattern.test(value);
+};
+
 export const ensureUrlHasProtocol = (value: string): string => {
     const trimmedValue = value.trim();
 
@@ -26,6 +32,10 @@ export const ensureUrlHasProtocol = (value: string): string => {
         if (hasAuthority || !isLikelyPort) {
             return trimmedValue;
         }
+    }
+
+    if (isEmail(trimmedValue)) {
+        return `mailto:${trimmedValue}`;
     }
 
     const sanitizedValue = trimmedValue.replace(/^\/\//, "");

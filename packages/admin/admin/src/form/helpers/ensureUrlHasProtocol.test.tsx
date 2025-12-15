@@ -40,7 +40,8 @@ describe("ensureUrlHasProtocol", () => {
         expect(ensureUrlHasProtocol("single")).toBe("single");
     });
 
-    it("does not add https protocol to email addresses without protocol", () => {
-        expect(ensureUrlHasProtocol("test@example.com")).toBe("test@example.com");
+    it("adds mailto protocol to email addresses without protocol", () => {
+        expect(ensureUrlHasProtocol("test@example.com")).toBe("mailto:test@example.com");
+        expect(ensureUrlHasProtocol("info@subdomain.example.co.uk")).toBe("mailto:info@subdomain.example.co.uk");
     });
 });
