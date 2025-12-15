@@ -37,7 +37,6 @@ export class AccessControlService extends AbstractAccessControlService {
         const departments = await this.entityManager.find(Department, {});
 
         return departments.map((department) => ({
-            department: department.id,
             scope: { department: department.id },
             label: { department: department.name },
         }));
