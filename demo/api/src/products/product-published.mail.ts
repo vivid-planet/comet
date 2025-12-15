@@ -1,10 +1,17 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
+import { css } from "@comet/mail";
 import { TranslationService } from "@src/translation/translation.service";
 
 type MailProps = {
     recipient: { name: string; email: string; language: string };
     countProductPublished: "all" | number;
 };
+
+const mailStyles = css`
+    body {
+        font-family: Arial, sans-serif;
+    }
+`;
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
@@ -34,7 +41,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
                     countProductPublished: props.countProductPublished,
                 },
             ),
-            html: intl.formatMessage(
+            html: `<head><style>${mailStyles}</style></head>${intl.formatMessage(
                 {
                     id: "product-published-mail.html-message",
                     defaultMessage:
@@ -51,7 +58,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
                     countProductPublished: props.countProductPublished,
                     p: (...chunks) => `<p>${chunks.join("")}</p>`,
                 },
-            ),
+            )}`,
         };
     }
 
