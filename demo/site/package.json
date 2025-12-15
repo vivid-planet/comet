@@ -10,7 +10,7 @@
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "css:types": "typed-scss-modules src --nameFormat none --exportType default --aliasPrefixes.@src src",
         "css:types:watch": "pnpm run css:types --watch",
-        "dev": "pnpm check-node-version && run-s intl:compile && run-p gql:types generate-block-types css:types build-server && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node --inspect=localhost:9230 --max-old-space-size=512 dist/server.js",
+        "dev": "pnpm check-node-version && run-s intl:compile && run-p gql:types generate-block-types css:types build-server && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node --inspect=localhost:9230 --max-old-space-size=150 dist/server.js",
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
