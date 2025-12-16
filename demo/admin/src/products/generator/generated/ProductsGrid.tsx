@@ -107,7 +107,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const theme = useTheme();
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = useMemo(() => [
         { field: "overview",
-            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            headerName: intl.formatMessage({ id: "product.overview.headerName", defaultMessage: "Over-view" }),
             filterable: false,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
@@ -226,7 +226,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                             mutation: deleteProductMutation,
                             variables: { id: params.row.id },
                         });
-                    }} refetchQueries={[productsQuery]}/>
+                    }} refetchQueries={[productsQuery]} messagesMapping={{ delete: <FormattedMessage id="product.crudContextMenu.delete" defaultMessage="Extinguish"/> }}/>
                                     
                                 </>);
             }, }

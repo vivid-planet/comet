@@ -6,8 +6,7 @@ import {
     RequiredPermission,
     validateNotModified,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
@@ -19,15 +18,14 @@ import { Link } from "./entities/link.entity";
 @RequiredPermission(["pageTree"])
 export class LinksResolver {
     constructor(
-        @InjectRepository(Link) readonly repository: EntityRepository<Link>,
-        private readonly pageTreeService: PageTreeService,
         private readonly entityManager: EntityManager,
+        private readonly pageTreeService: PageTreeService,
     ) {}
 
     @Query(() => Link, { nullable: true })
     @AffectedEntity(Link)
     async link(@Args("id", { type: () => ID }) id: string): Promise<Link | null> {
-        return this.repository.findOne(id);
+        return this.entityManager.findOne(Link, id);
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
@@ -51,7 +49,7 @@ export class LinksResolver {
             }
         }
 
-        let link = await this.repository.findOne(id);
+        let link = await this.entityManager.findOne(Link, id);
 
         if (link) {
             if (lastUpdatedAt) {
@@ -60,7 +58,7 @@ export class LinksResolver {
 
             link.assign({ content: input.content.transformToBlockData() });
         } else {
-            link = this.repository.create({
+            link = this.entityManager.create(Link, {
                 id,
                 content: input.content.transformToBlockData(),
             });

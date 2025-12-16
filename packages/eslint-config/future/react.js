@@ -13,8 +13,15 @@ const config = [
                     allowedStrings: ["…", "€", "$", "?", "–", "—", "/", "(", ")", "%"],
                 },
             ],
+            "@typescript-eslint/consistent-type-exports": [
+                "error",
+                {
+                    fixMixedExportsWithInlineTypeSpecifier: true,
+                },
+            ],
         },
     },
 ];
 
 export default config;
+export { restrictedImportPaths } from "../react.js";

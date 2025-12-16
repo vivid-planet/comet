@@ -1,7 +1,6 @@
 import { PageTreeNodeBaseCreateInput, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
@@ -20,11 +19,10 @@ import { SvgImageFileFixtureService } from "./svg-image-file-fixture.service";
 @Injectable()
 export class ManyImagesTestPageFixtureService {
     constructor(
+        private readonly entityManager: EntityManager,
         private readonly pageTreeService: PageTreeService,
-        @InjectRepository(Page) private readonly pagesRespository: EntityRepository<Page>,
         private readonly imageFileFixtureService: ImageFileFixtureService,
         private readonly svgImageFileFixtureService: SvgImageFileFixtureService,
-        private readonly entityManager: EntityManager,
     ) {}
 
     async execute(): Promise<void> {
@@ -77,7 +75,7 @@ export class ManyImagesTestPageFixtureService {
         pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
 
         await this.entityManager.persistAndFlush(
-            this.pagesRespository.create({
+            this.entityManager.create(Page, {
                 id: uuidDocument,
                 content: pageInput.content.transformToBlockData(),
                 seo: pageInput.seo.transformToBlockData(),

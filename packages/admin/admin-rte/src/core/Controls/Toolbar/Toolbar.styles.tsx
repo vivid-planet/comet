@@ -15,7 +15,7 @@ export const Root = createComponentSlot("div")<RteToolbarClassKey>({
         z-index: 2;
         display: flex;
         flex-wrap: wrap;
-        border-top: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.border};
+        border-top: 1px solid var(--comet-admin-rte-outer-border-color);
         background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.toolbarBackground};
         padding-left: 6px;
         padding-right: 6px;

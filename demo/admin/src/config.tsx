@@ -16,7 +16,7 @@ export function createConfig() {
     }
     return {
         ...cometConfig,
-        apiUrl: "/api",
+        apiUrl: `${window.location.origin}/api`,
         adminUrl: environmentVariables.ADMIN_URL,
         siteConfigs: JSON.parse(atob(environmentVariables.PUBLIC_SITE_CONFIGS)) as PublicSiteConfig[],
         buildDate: environmentVariables.BUILD_DATE,
