@@ -1,0 +1,57 @@
+.checkboxWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.checkboxInput {
+    appearance: none;
+    cursor: pointer;
+    content: "";
+    top: 2px;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin: 0;
+    border-radius: 4px;
+    border: 1px solid var(--contact-form-checkbox-border);
+    background-color: var(--contact-form-checkbox-bg-default);
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 4%);
+
+    &:hover {
+        border: 1px solid var(--contact-form-checkbox-border-hover);
+        background-color: var(--contact-form-checkbox-bg-hover);
+        box-shadow: 0 8px 16px 0 rgb(0 0 0 / 8%);
+    }
+
+    &:focus {
+        border: 2px solid var(--contact-form-checkbox-border-focus);
+        background-color: var(--contact-form-checkbox-bg-default);
+        outline: none;
+    }
+
+    &:checked {
+        background-color: var(--contact-form-checkbox-bg-selected);
+        background-image: url("/assets/checked.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px 16px;
+        box-shadow: none;
+
+        &:hover {
+            background-color: var(--contact-form-checkbox-bg-selected-hover);
+        }
+    }
+}
+
+.checkboxLabel {
+    width: 100%;
+    height: 100%;
+    padding-left: 12px;
+}
+
+.helperText {
+    color: var(--contact-form-text-helper-text);
+    margin-top: var(--spacing-s200);
+}

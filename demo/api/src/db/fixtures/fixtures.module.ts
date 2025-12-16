@@ -33,6 +33,7 @@ import { YouTubeVideoBlockFixtureService } from "./generators/blocks/media/youtu
 import { AnchorBlockFixtureService } from "./generators/blocks/navigation/anchor-block-fixture.service";
 import { CallToActionBlockFixtureService } from "./generators/blocks/navigation/call-to-action-block-fixture.service";
 import { CallToActionListBlockFixtureService } from "./generators/blocks/navigation/call-to-action-list-block.service";
+import { ContactFormBlockFixtureService } from "./generators/blocks/navigation/contact-form-block-fixture.service";
 import { LinkBlockFixtureService } from "./generators/blocks/navigation/link-block-fixture.service";
 import { LinkListBlockFixtureService } from "./generators/blocks/navigation/link-list-block-fixture.service";
 import { PageTreeIndexBlockFixtureService } from "./generators/blocks/navigation/page-tree-index-block-fixture.service";
@@ -79,6 +80,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         CallToActionBlockFixtureService,
         CallToActionListBlockFixtureService,
         ColumnsBlockFixtureService,
+        ContactFormBlockFixtureService,
         ContentGroupBlockFixtureService,
         DamImageBlockFixtureService,
         DamVideoBlockFixtureService,
