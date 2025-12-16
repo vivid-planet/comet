@@ -102,6 +102,16 @@ type BuildTemplate {
   name: String!
 }
 
+input ContactFormArgs {
+  company: String
+  email: String!
+  message: String!
+  name: String!
+  phone: String
+  privacyConsent: Boolean!
+  subject: String!
+}
+
 type ContentScopeWithLabel {
   label: JSONObject!
   scope: JSONObject!
@@ -671,6 +681,7 @@ type Mutation {
   saveLink(attachedPageTreeNodeId: ID, id: ID!, input: LinkInput!, lastUpdatedAt: DateTime): Link!
   savePage(attachedPageTreeNodeId: ID, input: PageInput!, lastUpdatedAt: DateTime, pageId: ID!): Page!
   savePredefinedPage(attachedPageTreeNodeId: ID!, id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime): PredefinedPage!
+  submitContactForm(input: ContactFormArgs!): Boolean!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
