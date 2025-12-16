@@ -89,7 +89,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             <BreadcrumbsItem key={item.id} component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
                                 {item.title}
                             </BreadcrumbsItem>
-                            <Separator {...slotProps?.separator} />
+                            <Separator key={`separator-${item.url}`} {...slotProps?.separator} />
                         </>
                     );
                 })}
