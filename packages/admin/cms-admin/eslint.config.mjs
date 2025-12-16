@@ -1,8 +1,4 @@
-import eslintConfigReact from "@comet/eslint-config/future/react.js";
-
-const importedObjectWithNoRestrictedImports = eslintConfigReact.find((config) => config.rules?.["no-restricted-imports"]);
-const [importedNoRestrictedImportsType, importedNoRestrictedImportsPathsObject] =
-    importedObjectWithNoRestrictedImports.rules["no-restricted-imports"];
+import eslintConfigReact, { restrictedImportPaths } from "@comet/eslint-config/future/react.js";
 
 /** @type {import('eslint')} */
 const config = [
@@ -13,12 +9,17 @@ const config = [
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
+        },
+    },
+    {
+        files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
             "no-restricted-imports": [
-                importedNoRestrictedImportsType,
+                "error",
                 {
-                    ...importedNoRestrictedImportsPathsObject,
                     paths: [
-                        ...importedNoRestrictedImportsPathsObject.paths,
+                        ...restrictedImportPaths,
                         {
                             name: "@testing-library/react",
                             message: 'Please import from "test-utils" instead.',
