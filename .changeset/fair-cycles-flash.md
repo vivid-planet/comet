@@ -2,4 +2,8 @@
 "@comet/eslint-config": minor
 ---
 
-Introduce a new future/nestjs.js configuration that bans importing `node-cache`
+Future: Ban `node-cache` because it's unmaintained
+
+Introduce a new rule in `future/nestjs` and `future/nextjs` that bans importing `node-cache` and recommends `cache-manager` / `@nestjs/cache-manager` instead.
+
+This rule is now in the future configs and will be enforced generally in v9.
