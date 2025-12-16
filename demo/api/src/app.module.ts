@@ -39,6 +39,7 @@ import { Request } from "express";
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
+import { ContactFormModule } from "./contact-form/contact-form.module";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
@@ -219,6 +220,7 @@ export class AppModule {
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,
+                ContactFormModule,
             ],
         };
     }
