@@ -49,19 +49,14 @@ const BreadcrumbsItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
         color: ${theme.palette.grey[900]};
         white-space: nowrap;
 
-        &:hover {
+        &:not(:last-child):hover {
             color: ${theme.palette.primary.main};
         }
 
         &:last-child {
-            text-decoration: none;
             font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
-
-            &:hover {
-                color: ${theme.palette.grey[900]};
-            }
         }
     `,
 ) as typeof Typography;
@@ -81,21 +76,21 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                 {items.map((item, index) => {
                     const isCurrentPage = index === items.length - 1;
 
+                    if (isCurrentPage) {
+                        return (
+                            <BreadcrumbsItem key={item.id} {...slotProps?.breadcrumbsItem}>
+                                {item.title}
+                            </BreadcrumbsItem>
+                        );
+                    }
+
                     return (
                         <>
-                            {isCurrentPage ? (
-                                <BreadcrumbsItem key={item.id} {...slotProps?.breadcrumbsItem}>
-                                    {item.title}
-                                </BreadcrumbsItem>
-                            ) : (
-                                <>
-                                    {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                                    <BreadcrumbsItem key={item.id} component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
-                                        {item.title}
-                                    </BreadcrumbsItem>
-                                    <Separator {...slotProps?.separator} />
-                                </>
-                            )}
+                            {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+                            <BreadcrumbsItem key={item.id} component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
+                                {item.title}
+                            </BreadcrumbsItem>
+                            <Separator {...slotProps?.separator} />
                         </>
                     );
                 })}
