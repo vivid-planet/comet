@@ -32,6 +32,7 @@ import { Request } from "express";
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
+import { DepartmentsModule } from "./department/departments.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { ProductsModule } from "./products/products.module";
 import { StatusModule } from "./status/status.module";
@@ -83,13 +84,7 @@ export class AppModule {
                 authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        // TODO: Replace with dynamic content scopes
-                        availableContentScopes: [
-                            {
-                                scope: { domain: "main", language: "en" },
-                                label: { domain: "Main" },
-                            },
-                        ],
+                        availableContentScopes: () => accessControlService.getAvailableContentScopes(),
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],
@@ -152,6 +147,7 @@ export class AppModule {
                 DependenciesModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 TenantsModule,
+                DepartmentsModule,
             ],
         };
     }

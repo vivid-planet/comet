@@ -169,6 +169,46 @@ input DateTimeFilter {
   notEqual: DateTime
 }
 
+type Department {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  tenant: Tenant!
+  updatedAt: DateTime!
+}
+
+input DepartmentFilter {
+  and: [DepartmentFilter!]
+  createdAt: DateTimeFilter
+  id: IdFilter
+  name: StringFilter
+  or: [DepartmentFilter!]
+  updatedAt: DateTimeFilter
+}
+
+input DepartmentInput {
+  name: String!
+}
+
+input DepartmentSort {
+  direction: SortDirection! = ASC
+  field: DepartmentSortField!
+}
+
+enum DepartmentSortField {
+  createdAt
+  name
+  tenant
+  tenant_createdAt
+  tenant_name
+  tenant_updatedAt
+  updatedAt
+}
+
+input DepartmentUpdateInput {
+  name: String
+}
+
 type Dependency {
   jsonPath: String!
   name: String
@@ -350,6 +390,7 @@ input ManyToOneFilter {
 
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
+  createDepartment(input: DepartmentInput!, tenant: ID!): Department!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   createProduct(input: ProductInput!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
@@ -366,9 +407,9 @@ type Mutation {
   deleteProductHighlight(id: ID!): Boolean!
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
-  deleteTenant(id: ID!): Boolean!
   publishAllProducts: Boolean!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
+  updateDepartment(id: ID!, input: DepartmentUpdateInput!): Department!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
@@ -400,6 +441,11 @@ input OneToManyFilter {
   contains: ID
   isAnyOf: [ID!]
   search: String
+}
+
+type PaginatedDepartments {
+  nodes: [Department!]!
+  totalCount: Int!
 }
 
 type PaginatedManufacturerCountries {
@@ -1003,6 +1049,8 @@ type Query {
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   currentUser: CurrentUser!
+  department(id: ID!): Department!
+  departments(filter: DepartmentFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DepartmentSort!], tenant: ID!): PaginatedDepartments!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesJob(name: String!): KubernetesJob!
@@ -1055,6 +1103,7 @@ input StringFilter {
 
 type Tenant {
   createdAt: DateTime!
+  departments: [Department!]!
   id: ID!
   name: String!
   updatedAt: DateTime!
@@ -1063,6 +1112,7 @@ type Tenant {
 input TenantFilter {
   and: [TenantFilter!]
   createdAt: DateTimeFilter
+  departments: OneToManyFilter
   id: IdFilter
   name: StringFilter
   or: [TenantFilter!]
