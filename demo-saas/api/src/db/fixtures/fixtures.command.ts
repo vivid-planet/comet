@@ -9,6 +9,7 @@ import { Command, CommandRunner } from "nest-commander";
 
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
+import { TenantFixtureService } from "./generators/tenant-fixture.service";
 
 @Command({
     name: "fixtures",
@@ -27,6 +28,7 @@ export class FixturesCommand extends CommandRunner {
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly productsFixtureService: ProductsFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
+        private readonly tenantFixtureService: TenantFixtureService,
         private readonly orm: MikroORM,
     ) {
         super();
@@ -61,6 +63,7 @@ export class FixturesCommand extends CommandRunner {
         this.logger.log("Generate File Uploads...");
         await this.fileUploadsFixtureService.generateFileUploads();
 
+        await this.tenantFixtureService.generate();
         await this.productsFixtureService.generate();
 
         multiBar.stop();

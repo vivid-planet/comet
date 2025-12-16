@@ -311,6 +311,7 @@ type Manufacturer {
   coordinates: Coordinates
   id: ID!
   name: String!
+  tenant: Tenant!
   updatedAt: DateTime!
 }
 
@@ -551,6 +552,7 @@ type Product {
   status: ProductStatus!
   tags: [ProductTag!]!
   tagsWithStatus: [ProductToTag!]!
+  tenant: Tenant!
   title: String!
   type: ProductType!
   updatedAt: DateTime!

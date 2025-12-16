@@ -3,6 +3,7 @@ import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { Config } from "@src/config/config";
+import { AsyncLocalStorage } from "async_hooks";
 
 import { AccessControlService } from "./access-control.service";
 import { UserService } from "./user.service";
@@ -16,6 +17,10 @@ export class AuthModule {
             module: AuthModule,
             imports: [JwtModule],
             providers: [
+                {
+                    provide: AsyncLocalStorage,
+                    useValue: new AsyncLocalStorage<{ tenantId?: string }>(),
+                },
                 createAuthResolver({
                     postLogoutRedirectUri: config.auth.postLogoutRedirectUri,
                     endSessionEndpoint: config.auth.idpEndSessionEndpoint,
@@ -49,7 +54,7 @@ export class AuthModule {
                     ],
                 ),
             ],
-            exports: [AccessControlService, UserService],
+            exports: [AccessControlService, UserService, AsyncLocalStorage],
         };
     }
 }

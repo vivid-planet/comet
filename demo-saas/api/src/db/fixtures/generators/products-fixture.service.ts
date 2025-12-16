@@ -8,6 +8,7 @@ import { Product, ProductStatus } from "@src/products/entities/product.entity";
 import { ProductCategory } from "@src/products/entities/product-category.entity";
 import { ProductCategoryType } from "@src/products/entities/product-category-type.entity";
 import { ProductType } from "@src/products/entities/product-type.enum";
+import { Tenant } from "@src/tenant/entities/tenant.entity";
 import { format } from "date-fns";
 
 @Injectable()
@@ -26,6 +27,7 @@ export class ProductsFixtureService {
         this.logger.log("Generating manufacturers...");
 
         const manufacturers: Manufacturer[] = [];
+        const tenants = await this.entityManager.findAll(Tenant, {});
 
         for (let i = 0; i < 10; i++) {
             const manufacturer = this.manufacturersRepository.create({
@@ -55,6 +57,7 @@ export class ProductsFixtureService {
                         country: faker.location.country(),
                     },
                 },
+                tenant: faker.helpers.arrayElement(tenants),
             });
 
             this.entityManager.persist(manufacturer);
@@ -93,6 +96,7 @@ export class ProductsFixtureService {
         for (let i = 0; i < 100; i++) {
             const title = faker.commerce.productName();
 
+            const manufacturer = faker.helpers.arrayElement(manufacturers);
             const product = this.productsRepository.create({
                 id: faker.string.uuid(),
                 title: faker.commerce.productName(),
@@ -109,7 +113,8 @@ export class ProductsFixtureService {
                 image: await this.entityManager.findOneOrFail(FileUpload, {
                     mimetype: "image/jpeg",
                 }),
-                manufacturer: faker.helpers.arrayElement(manufacturers),
+                manufacturer,
+                tenant: manufacturer.tenant,
             });
 
             this.entityManager.persist(product);

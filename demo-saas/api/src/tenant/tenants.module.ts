@@ -7,9 +7,10 @@ import { Tenant } from "./entities/tenant.entity";
 import { TenantUser } from "./entities/tenant-user.entity";
 import { TenantResolver } from "./generated/tenant.resolver";
 import { TenantUserResolver } from "./generated/tenant-user.resolver";
+import { TenantSubscriber } from "./tenants.subscriber";
 
 @Module({
-    imports: [MikroOrmModule.forFeature([Tenant, TenantUser])],
-    providers: [TenantResolver, TenantUserResolver, CustomTenantUserResolver, UserService],
+    imports: [MikroOrmModule.forFeature([Tenant, TenantUser]), MikroOrmModule.forFeature([Tenant], "admin")],
+    providers: [TenantResolver, TenantUserResolver, CustomTenantUserResolver, UserService, TenantSubscriber],
 })
 export class TenantsModule {}

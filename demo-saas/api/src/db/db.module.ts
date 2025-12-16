@@ -1,12 +1,11 @@
-import { MikroOrmModule } from "@comet/cms-api";
 import { Module } from "@nestjs/common";
 import { FixturesModule } from "@src/db/fixtures/fixtures.module";
 
 import { MigrateCommand } from "./migrate.command";
-import { ormConfig } from "./ormconfig";
+import { createOrmModules } from "./orm-modules.factory";
 
 @Module({
-    imports: [MikroOrmModule.forRoot({ ormConfig }), FixturesModule],
+    imports: [...createOrmModules(), FixturesModule],
     providers: [MigrateCommand],
 })
 export class DbModule {}
