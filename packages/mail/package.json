@@ -1,7 +1,7 @@
 {
     "name": "@comet/mail",
     "version": "8.10.0",
-    "description": "Helper functions for building HTML emails with React",
+    "description": "Utilities for building HTML emails with React",
     "type": "commonjs",
     "main": "lib/index.js",
     "scripts": {
