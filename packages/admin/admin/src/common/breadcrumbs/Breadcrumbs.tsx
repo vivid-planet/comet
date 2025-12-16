@@ -9,7 +9,6 @@ import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBase
 export type BreadcrumbsClassKey = "root" | "breadcrumbsList" | "breadcrumbsItem" | "separator";
 
 export interface BreadcrumbsItemProps {
-    id: string;
     url: string;
     title: ReactNode;
 }
@@ -78,7 +77,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
 
                     if (isCurrentPage) {
                         return (
-                            <BreadcrumbsItem key={item.id} {...slotProps?.breadcrumbsItem}>
+                            <BreadcrumbsItem key={item.url} {...slotProps?.breadcrumbsItem}>
                                 {item.title}
                             </BreadcrumbsItem>
                         );
