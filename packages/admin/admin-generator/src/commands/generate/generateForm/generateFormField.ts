@@ -65,6 +65,7 @@ export function generateFormField({
 
     const formValueConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         fieldName: nameWithPrefix,
+        destructFromFormValues: !!config.readOnly,
     };
 
     const gqlDocuments: GQLDocumentConfigMap = {};

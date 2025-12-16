@@ -23,9 +23,12 @@ import { updateProductMutation } from "./ProductPriceForm.gql";
 import { GQLUpdateProductMutation } from "./ProductPriceForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductPriceForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
+export type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
     price?: string;
 };
+function formValuesToOutput(formValues: FormValues) {
+    return { ...formValues, price: formValues.price ? parseFloat(formValues.price) : null, };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id: string;
@@ -53,13 +56,12 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValues, price: formValues.price ? parseFloat(formValues.price) : null, };
+        const output = formValuesToOutput(formValues);
         if (!id)
             throw new Error();
-        const { ...updateInput } = output;
         await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
             mutation: updateProductMutation,
-            variables: { id, input: updateInput },
+            variables: { id, input: output },
         });
     };
     if (error)

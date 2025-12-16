@@ -31,7 +31,10 @@ import { updateProductCategoryMutation } from "./ProductCategoryForm.gql";
 import { GQLUpdateProductCategoryMutation } from "./ProductCategoryForm.gql.generated";
 import { GQLUpdateProductCategoryMutationVariables } from "./ProductCategoryForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = GQLProductCategoryFormFragment;
+export type FormValues = GQLProductCategoryFormFragment;
+function formValuesToOutput(formValues: FormValues) {
+    return { ...formValues, type: formValues.type ? formValues.type.id : null, };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -60,14 +63,13 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts())
             throw new Error("Conflicts detected");
-        const output = { ...formValues, type: formValues.type ? formValues.type.id : null, };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id)
                 throw new Error();
-            const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         }
         else {

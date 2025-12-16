@@ -5,6 +5,7 @@ const supportedImportPaths = [
     "[type=grid].columns.block",
     "[type=grid].columns.component",
     // TODO implement in generator "[type=grid].columns.renderCell",
+    "[type=form].validate",
 
     //support in up to 5 levels of nested fields (eg. fieldSet)
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
@@ -14,6 +15,7 @@ const supportedImportPaths = [
 const supportedInlineCodePaths = [
     // TODO implement in generator "[type=grid].columns.filterOperators",
     "[type=grid].columns.renderCell",
+    "[type=form].validate",
 
     //support in up to 5 levels of nested fields (eg. fieldSet)
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
@@ -52,8 +54,8 @@ export function transformConfigFile(fileName: string, sourceText: string) {
             const visit = (node: ts.Node, path: string): ts.Node => {
                 if (ts.isCallExpression(node)) {
                     if (node.expression.getText() === "injectFormVariables") {
-                        if (!path.startsWith("[type=form].fields")) {
-                            throw new Error(`injectFormVariables can only be used in form field definitions: ${path}`);
+                        if (!path.startsWith("[type=form]")) {
+                            throw new Error(`injectFormVariables can only be used in form definition: ${path}`);
                         }
                         if (node.arguments.length !== 1) {
                             throw new Error(`injectFormVariables expects exactly one argument`);
