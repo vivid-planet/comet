@@ -1,7 +1,7 @@
 // Copied from https://github.com/final-form/react-final-form-listeners/blob/master/src/OnChange.test.js
-import { cleanup, fireEvent, render } from "@testing-library/react";
 import { Fragment } from "react";
 import { Field, Form } from "react-final-form";
+import { cleanup, fireEvent, render } from "test-utils";
 
 import { OnChangeField } from "./OnChangeField";
 

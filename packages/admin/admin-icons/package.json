@@ -37,7 +37,7 @@
         "@mui/material": "^7.3.5",
         "@types/cli-progress": "^3.11.6",
         "@types/node": "^24.9.1",
-        "@types/react": "^18.3.23",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "change-case": "^4.1.2",
         "cli-progress": "^3.12.0",
