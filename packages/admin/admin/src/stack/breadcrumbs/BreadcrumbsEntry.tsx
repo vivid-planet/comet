@@ -31,9 +31,9 @@ const DisabledLink = createComponentSlot(Typography)<StackBreadcrumbsClassKey>({
     ({ theme }) => css`
         font-size: 13px;
         line-height: 14px;
-        font-weight: ${theme.typography.fontWeightMedium};
+        font-weight: ${theme.typography.fontWeightBold};
         text-decoration-color: currentColor;
-        color: ${theme.palette.text.disabled};
+        color: ${theme.palette.grey[900]};
     `,
 );
 
@@ -43,7 +43,7 @@ const IconButton = createComponentSlot(MuiIconButton)<StackBreadcrumbsClassKey>(
 })() as typeof MuiIconButton;
 
 interface BreadcrumbsEntryProps {
-    item: BreadcrumbItem;
+    item?: BreadcrumbItem;
     isLastItem?: boolean;
     backButtonUrl?: string;
     slotProps: StackBreadcrumbsProps["slotProps"];
@@ -61,15 +61,16 @@ export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }:
                     <BackButtonSeparator {...slotProps?.backButtonSeparator} />
                 </>
             )}
-            {isLastItem ? (
-                <DisabledLink {...slotProps?.disabledLink} variant="body2">
-                    {item.title}
-                </DisabledLink>
-            ) : (
-                <Link to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
-                    {item.title}
-                </Link>
-            )}
+            {item &&
+                (isLastItem ? (
+                    <DisabledLink {...slotProps?.disabledLink} variant="body2">
+                        {item.title}
+                    </DisabledLink>
+                ) : (
+                    <Link to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
+                        {item.title}
+                    </Link>
+                ))}
         </>
     );
 };
