@@ -55,7 +55,7 @@ describe("buildOptions", () => {
             );
 
             const sortProps = buildSortProps(orm.em.getMetadata().get("TestEntity1"));
-            expect(sortProps).toEqual(["foo"]);
+            expect(sortProps).toEqual(["foo", "id"]);
 
             await orm.close();
         });
@@ -73,7 +73,7 @@ describe("buildOptions", () => {
             const metadata = orm.em.getMetadata().get("TestEntity2");
 
             const sortProps = buildSortProps(metadata);
-            expect(sortProps).toEqual(["nested", "nested.foo"]);
+            expect(sortProps).toEqual(["nested", "id", "nested.foo"]);
 
             const sortDto = generateSortDto({ generatorOptions: { targetDirectory: __dirname, requiredPermission: testPermission }, metadata });
             expect(sortDto).toMatchSnapshot();
@@ -92,7 +92,7 @@ describe("buildOptions", () => {
             );
 
             const sortProps = buildSortProps(orm.em.getMetadata().get("TestEntity3"));
-            expect(sortProps).toEqual(["nested.foo"]);
+            expect(sortProps).toEqual(["id", "nested.foo"]);
 
             await orm.close();
         });

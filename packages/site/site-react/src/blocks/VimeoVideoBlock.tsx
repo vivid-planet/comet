@@ -1,10 +1,11 @@
 "use client";
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ComponentType, type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -33,6 +34,8 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    pauseButtonAriaLabel?: string;
+    playPauseButton?: ComponentType<PlayPauseButtonProps>;
 }
 
 export const VimeoVideoBlock = withPreview(
@@ -44,20 +47,41 @@ export const VimeoVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        pauseButtonAriaLabel,
+        playPauseButton: PlayPauseButtonComponent,
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef<HTMLDivElement>(null);
-        const iframeRef = useRef<HTMLIFrameElement>(null);
+        const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
+        const iframeRef = setIframeElement;
+        const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
 
-        const handleVisibilityChange = (isVisible: boolean) => {
-            iframeRef.current?.contentWindow?.postMessage(
-                JSON.stringify({ method: isVisible && autoplay ? "play" : "pause" }),
-                "https://player.vimeo.com",
-            );
-        };
+        const pauseVimeoVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
+        }, [iframeElement]);
 
-        useIsElementInViewport(inViewRef, handleVisibilityChange);
+        const playVimeoVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
+        }, [iframeElement]);
+
+        const handleInView = useCallback(
+            (isVisible: boolean) => {
+                if (!isHandledManually) {
+                    if (isVisible && autoplay) {
+                        playVimeoVideo();
+                        setIsPlaying(true);
+                    } else {
+                        pauseVimeoVideo();
+                        setIsPlaying(false);
+                    }
+                }
+            },
+            [autoplay, isHandledManually, playVimeoVideo, pauseVimeoVideo],
+        );
+
+        useIsElementInViewport(inViewRef, handleInView);
 
         if (!vimeoIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -79,6 +103,17 @@ export const VimeoVideoBlock = withPreview(
         const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
         vimeoUrl.search = searchParams.toString();
 
+        const handlePlayPauseClick = () => {
+            if (isPlaying) {
+                setIsPlaying(false);
+                setIsHandledManually(true);
+                pauseVimeoVideo();
+            } else {
+                setIsPlaying(true);
+                playVimeoVideo();
+            }
+        };
+
         return (
             <>
                 {hasPreviewImage && showPreviewImage ? (
@@ -98,6 +133,17 @@ export const VimeoVideoBlock = withPreview(
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                        {!showControls &&
+                            (PlayPauseButtonComponent ? (
+                                <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />
+                            ) : (
+                                <PlayPauseButton
+                                    isPlaying={isPlaying}
+                                    onClick={handlePlayPauseClick}
+                                    ariaLabelPlay={playButtonAriaLabel}
+                                    ariaLabelPause={pauseButtonAriaLabel}
+                                />
+                            ))}
                     </div>
                 )}
             </>

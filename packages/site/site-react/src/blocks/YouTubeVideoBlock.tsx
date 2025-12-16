@@ -1,11 +1,12 @@
 "use client";
 
 import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ComponentType, type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -22,6 +23,7 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
 
     return youtubeId ?? undefined;
 };
+
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
@@ -29,6 +31,8 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     fill?: boolean;
     previewImageIcon?: ReactNode;
     playButtonAriaLabel?: string;
+    pauseButtonAriaLabel?: string;
+    playPauseButton?: ComponentType<PlayPauseButtonProps>;
 }
 
 export const YouTubeVideoBlock = withPreview(
@@ -40,29 +44,41 @@ export const YouTubeVideoBlock = withPreview(
         fill,
         previewImageIcon,
         playButtonAriaLabel,
+        pauseButtonAriaLabel,
+        playPauseButton: PlayPauseButtonComponent,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
+        const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
+        const [isHandledManually, setIsHandledManually] = useState(false);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
-        const iframeRef = useRef<HTMLIFrameElement>(null);
+        const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
+        const iframeRef = setIframeElement;
         const inViewRef = useRef<HTMLDivElement>(null);
 
-        const pauseYouTubeVideo = () => {
-            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
-        };
+        const pauseYouTubeVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
+        }, [iframeElement]);
 
-        const playYouTubeVideo = () => {
-            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
-        };
+        const playYouTubeVideo = useCallback(() => {
+            iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
+        }, [iframeElement]);
 
-        useIsElementInViewport(inViewRef, (inView: boolean) => {
-            if (autoplay) {
-                if (inView) {
-                    playYouTubeVideo();
-                } else {
-                    pauseYouTubeVideo();
+        const handleInView = useCallback(
+            (inView: boolean) => {
+                if (!isHandledManually) {
+                    if (inView && autoplay) {
+                        playYouTubeVideo();
+                        setIsPlaying(true);
+                    } else {
+                        pauseYouTubeVideo();
+                        setIsPlaying(false);
+                    }
                 }
-            }
-        });
+            },
+            [autoplay, isHandledManually, playYouTubeVideo, pauseYouTubeVideo],
+        );
+
+        useIsElementInViewport(inViewRef, handleInView);
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -75,7 +91,7 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("enablejsapi", "1");
 
         // start playing the video when the preview image has been hidden
-        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
+        if ((hasPreviewImage && !showPreviewImage) || !hasPreviewImage) searchParams.append("autoplay", "1");
 
         if (autoplay) searchParams.append("mute", "1");
 
@@ -87,6 +103,18 @@ export const YouTubeVideoBlock = withPreview(
         const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
         const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
         youtubeUrl.search = searchParams.toString();
+
+        const handlePlayPauseClick = () => {
+            if (isPlaying) {
+                setIsPlaying(false);
+                setIsHandledManually(true);
+
+                pauseYouTubeVideo();
+            } else {
+                setIsPlaying(true);
+                playYouTubeVideo();
+            }
+        };
 
         return (
             <>
@@ -106,6 +134,17 @@ export const YouTubeVideoBlock = withPreview(
                         className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
+                        {!showControls &&
+                            (PlayPauseButtonComponent ? (
+                                <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />
+                            ) : (
+                                <PlayPauseButton
+                                    isPlaying={isPlaying}
+                                    onClick={handlePlayPauseClick}
+                                    ariaLabelPlay={playButtonAriaLabel}
+                                    ariaLabelPause={pauseButtonAriaLabel}
+                                />
+                            ))}
                         <iframe
                             ref={iframeRef}
                             className={styles.youtubeContainer}

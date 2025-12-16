@@ -8,6 +8,7 @@ exports[`buildOptions buildSortProps nested m:1 relation string field should be 
 
     export enum TestEntity2SortField {
         nested = "nested",
+id = "id",
 nested_foo = "nested_foo",
     }
     registerEnumType(TestEntity2SortField, {

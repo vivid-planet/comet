@@ -225,14 +225,20 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps, hasPositionProp } = buildOptions(
-        metadata,
-        generatorOptions,
-    );
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps, hasPositionProp, crudSortProps } =
+        buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
     }
+
+    let defaultSortField: null | string = metadata.props.find((prop) => prop.primary)?.name || "id";
+    if (hasPositionProp) {
+        defaultSortField = "position";
+    } else if (metadata.props.some((prop) => prop.name === "createdAt" && prop.type === "Date")) {
+        defaultSortField = "createdAt";
+    }
+    if (!crudSortProps.includes(defaultSortField)) defaultSortField = null;
 
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
@@ -297,11 +303,11 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasSortArg
                 ? `
-        @Field(() => [${classNameSingular}Sort], { ${hasPositionProp ? `defaultValue: [{ field: ${classNameSingular}SortField.position, direction: SortDirection.ASC }]` : `nullable: true`} })
+        @Field(() => [${classNameSingular}Sort], { ${defaultSortField === null ? "nullable: true" : `defaultValue: [{ field: ${classNameSingular}SortField.${defaultSortField}, direction: SortDirection.ASC }]`} })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
-        ${!hasPositionProp ? `@IsOptional()` : ""}
-        sort${!hasPositionProp ? `?` : ""}: ${classNameSingular}Sort[];
+        ${defaultSortField === null ? "@IsOptional()" : ""}
+        sort${defaultSortField === null ? "?" : ""}: ${classNameSingular}Sort[];
         `
                 : ""
         }
