@@ -4,13 +4,14 @@ interface CheckboxFieldProps {
     required?: boolean;
 }
 
-export function CheckboxField({ label, helperText }: CheckboxFieldProps): React.ReactElement {
+export function CheckboxField({ label, helperText, required = false }: CheckboxFieldProps): React.ReactElement {
     return (
         <div>
-            <div>
-                <input type="checkbox" />
+            <label>
+                <input type="checkbox" required={required} />
                 {label}
-            </div>
+                {required && <span>*</span>}
+            </label>
             {helperText && <div>{helperText}</div>}
         </div>
     );

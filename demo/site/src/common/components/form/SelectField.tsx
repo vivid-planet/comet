@@ -1,5 +1,6 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 interface SelectFieldProps {
     label: React.ReactNode;
@@ -35,10 +36,14 @@ export function SelectField({
 
     return (
         <div>
-            <div>
+            <label>
                 {label}
-                {!required && <span>(optional)</span>}
-            </div>
+                {!required && (
+                    <span>
+                        <FormattedMessage id="inputField.optional" defaultMessage="(optional)" />
+                    </span>
+                )}
+            </label>
             <div>
                 <button type="button" onClick={handleToggle}>
                     <span>{selectedOption?.label || placeholder}</span>
