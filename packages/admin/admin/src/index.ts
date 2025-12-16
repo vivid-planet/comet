@@ -11,7 +11,6 @@ export { AppHeaderMenuButton, type AppHeaderMenuButtonClassKey, type AppHeaderMe
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
 export { readClipboardText } from "./clipboard/readClipboardText";
 export { writeClipboardText } from "./clipboard/writeClipboardText";
-export { Breadcrumbs, type BreadcrumbsClassKey, type BreadcrumbsItemProps, type BreadcrumbsProps } from "./common/breadcrumbs/Breadcrumbs";
 export { Button, type ButtonClassKey, type ButtonProps } from "./common/buttons/Button";
 export { CancelButton, type CancelButtonClassKey, type CancelButtonProps } from "./common/buttons/cancel/CancelButton";
 export { ClearInputButton, type ClearInputButtonClassKey, type ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
