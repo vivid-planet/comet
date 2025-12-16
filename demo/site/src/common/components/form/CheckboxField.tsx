@@ -7,10 +7,8 @@ interface CheckboxFieldProps {
 export function CheckboxField({ label, helperText }: CheckboxFieldProps): React.ReactElement {
     return (
         <div>
-            <div>
-                <input type="checkbox" />
-                {label}
-            </div>
+            <input type="checkbox" />
+            <label>{label}</label>
             {helperText && <div>{helperText}</div>}
         </div>
     );
