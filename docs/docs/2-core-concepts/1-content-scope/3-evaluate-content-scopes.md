@@ -29,7 +29,7 @@ async product(@Args("id", { type: () => ID }) id: string): Promise<Product> {
 ```
 
 ```ts
-@Query([Product])
+@Query(() => [Product])
 @AffectedEntity(Dealer, { idArg: "dealerId" })
 async products(@Args("dealerId", { type: () => ID }) dealerId: string): Promise<Product[]> {
     // Note: you can trust "dealerId" being in a valid scope, but you need to make sure that your business code restricts this query to the given dealer
@@ -88,7 +88,7 @@ Use this decorator in following cases:
 Example:
 
 ```ts
-@Query([Product])
+@Query(() => [Product])
 @AffectedScope((args) => ({ country: args.country, department: args.department }))
 async products(@Args("country", { type: () => string }) id: string, @Args("department", { type: () => string }): Promise<Product[]> {
     // Note: you can trust "country" and "department" being in a valid scope in the sense that the user must have a content scope which is a combination of these dimensions:
