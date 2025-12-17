@@ -8,6 +8,6 @@ export type AffectedScopeMeta = {
 
 export const AFFECTED_SCOPE_METADATA_KEY = "affectedScope";
 
-export const AffectedScope = (argsToScope: AffectedScopeMeta["argsToScope"]): MethodDecorator => {
-    return SetMetadata<string, AffectedScopeMeta>(AFFECTED_SCOPE_METADATA_KEY, { argsToScope });
+export const AffectedScope = <T>(argsToScope: (args: T) => ContentScope): MethodDecorator => {
+    return SetMetadata<string, AffectedScopeMeta>(AFFECTED_SCOPE_METADATA_KEY, { argsToScope: argsToScope as AffectedScopeMeta["argsToScope"] });
 };
