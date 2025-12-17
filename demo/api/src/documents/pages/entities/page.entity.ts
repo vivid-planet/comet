@@ -1,8 +1,6 @@
 import {
     BlockDataInterface,
     DocumentInterface,
-    EntityInfo,
-    PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
     RootBlock,
     RootBlockDataScalar,
@@ -18,7 +16,6 @@ import { PageContentBlock } from "../blocks/page-content.block";
 import { SeoBlock } from "../blocks/seo.block";
 import { StageBlock } from "../blocks/stage.block";
 
-@EntityInfo(PageTreeNodeDocumentEntityInfoService)
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],

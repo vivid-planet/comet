@@ -3,7 +3,6 @@ import {
     CrudField,
     CrudGenerator,
     DamImageBlock,
-    EntityInfo,
     RootBlock,
     RootBlockDataScalar,
     RootBlockEntity,
@@ -47,7 +46,6 @@ export class NewsContentScope {
     language: string;
 }
 
-@EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
 @RootBlockEntity()
 @ObjectType()
 @Entity()

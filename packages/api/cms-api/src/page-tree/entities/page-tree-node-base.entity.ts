@@ -2,11 +2,9 @@ import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, 
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfo } from "../../common/entityInfo/entity-info.decorator";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
-@EntityInfo<PageTreeNodeBase>((pageTreeNode) => ({ name: pageTreeNode.name, secondaryInformation: pageTreeNode.slug }))
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
 export abstract class PageTreeNodeBase extends BaseEntity {

@@ -4,7 +4,6 @@ import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { DiscoverService } from "./discover.service";
 import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
@@ -26,7 +25,6 @@ export class DependenciesService {
     constructor(
         @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
-        private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
     ) {
         this.connection = entityManager.getConnection();
@@ -231,14 +229,14 @@ export class DependenciesService {
         const ret: Dependency[] = [];
 
         for (const result of results) {
-            const repository = this.entityManager.getRepository(result.rootEntityName);
-            const instance = await repository.findOne({ [result.rootPrimaryKey]: result.rootId });
+            // const repository = this.entityManager.getRepository(result.rootEntityName);
+            // const instance = await repository.findOne({ [result.rootPrimaryKey]: result.rootId });
 
-            let dependency: Dependency = result;
-            if (instance) {
-                const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-                dependency = { ...dependency, ...entityInfo };
-            }
+            const dependency: Dependency = result;
+            // if (instance) {
+            //     const entityInfo = await this.entityInfoService.getEntityInfo(instance);
+            //     dependency = { ...dependency, ...entityInfo };
+            // }
             ret.push(dependency);
         }
 
@@ -273,14 +271,14 @@ export class DependenciesService {
         const ret: Dependency[] = [];
 
         for (const result of results) {
-            const repository = this.entityManager.getRepository(result.targetEntityName);
-            const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
+            // const repository = this.entityManager.getRepository(result.targetEntityName);
+            // const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
 
-            let dependency: Dependency = result;
-            if (instance) {
-                const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-                dependency = { ...dependency, ...entityInfo };
-            }
+            const dependency: Dependency = result;
+            // if (instance) {
+            //     const entityInfo = await this.entityInfoService.getEntityInfo(instance);
+            //     dependency = { ...dependency, ...entityInfo };
+            // }
             ret.push(dependency);
         }
 
