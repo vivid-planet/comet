@@ -210,6 +210,7 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     slotName: "inputContainer",
 })(
     ({ ownerState }) => css`
+        overflow-x: hidden;
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
         css`
