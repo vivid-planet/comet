@@ -146,6 +146,9 @@ export function TenantsPage() {
                             <TenantForm
                                 onCreate={(id) => {
                                     tenantsStackSwitchApi.activatePage("edit", id);
+                                    client.refetchQueries({
+                                        include: ["TenantControlsTenants"],
+                                    });
                                 }}
                             />
                         </MainContent>

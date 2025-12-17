@@ -3,7 +3,15 @@ import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import { CometConfigProvider, type ContentScope, ContentScopeProvider, CurrentUserProvider, MasterMenuRoutes, SitePreview } from "@comet/cms-admin";
+import {
+    CometConfigProvider,
+    type ContentScope,
+    ContentScopeProvider,
+    type ContentScopeValues,
+    CurrentUserProvider,
+    MasterMenuRoutes,
+    SitePreview,
+} from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -22,6 +30,7 @@ import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, masterMenuData } from "./common/MasterMenu";
 import { type GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
+import { TenantProvider } from "./tenants/TenantProvider";
 
 const GlobalStyle = () => (
     <Global
@@ -64,30 +73,44 @@ export function App() {
                                     <CurrentUserProvider>
                                         <RouterBrowserRouter>
                                             <GlobalStyle />
-                                            <ContentScopeProvider>
-                                                {({ match }) => (
-                                                    <Switch>
-                                                        <Route
-                                                            path={`${match.path}/preview`}
-                                                            render={(props) => (
-                                                                <SitePreview
-                                                                    resolvePath={(path: string, scope) => {
-                                                                        return `/${scope.language}${path}`;
-                                                                    }}
-                                                                    {...props}
+                                            <TenantProvider>
+                                                {({ tenantId }) => (
+                                                    <ContentScopeProvider
+                                                        location={{
+                                                            createPath: (scope: ContentScopeValues) => {
+                                                                return `/:tenantId/:department`;
+                                                            },
+                                                            createUrl: (scope: ContentScope) => {
+                                                                return `${tenantId}/${scope.department}`;
+                                                            },
+                                                        }}
+                                                        excludedScopeKeys={["tenantId"]}
+                                                    >
+                                                        {({ match }) => (
+                                                            <Switch>
+                                                                <Route
+                                                                    path={`${match.path}/preview`}
+                                                                    render={(props) => (
+                                                                        <SitePreview
+                                                                            resolvePath={(path: string, scope) => {
+                                                                                return `/${scope.language}${path}`;
+                                                                            }}
+                                                                            {...props}
+                                                                        />
+                                                                    )}
                                                                 />
-                                                            )}
-                                                        />
-                                                        <Route
-                                                            render={() => (
-                                                                <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                    <MasterMenuRoutes menu={masterMenuData} />
-                                                                </MasterLayout>
-                                                            )}
-                                                        />
-                                                    </Switch>
+                                                                <Route
+                                                                    render={() => (
+                                                                        <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                            <MasterMenuRoutes menu={masterMenuData} />
+                                                                        </MasterLayout>
+                                                                    )}
+                                                                />
+                                                            </Switch>
+                                                        )}
+                                                    </ContentScopeProvider>
                                                 )}
-                                            </ContentScopeProvider>
+                                            </TenantProvider>
                                         </RouterBrowserRouter>
                                     </CurrentUserProvider>
                                 </SnackbarProvider>
