@@ -28,7 +28,7 @@ import { ProductListBlockFixtureService } from "./blocks/text-and-content/produc
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
 
-export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent";
+export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent" | "form";
 
 @Injectable()
 export class PageContentBlockFixtureService {
@@ -84,7 +84,7 @@ export class PageContentBlockFixtureService {
             richtext: ["textAndContent", this.standaloneRichTextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
             productList: ["textAndContent", this.productListBlockFixtureService],
-            contactForm: ["textAndContent", this.contactFormBlockFixtureService],
+            contactForm: ["form", this.contactFormBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)
