@@ -1,3 +1,4 @@
+// Inspired by https://testing-library.com/docs/react-testing-library/setup/#custom-render
 import { MuiThemeProvider, SnackbarProvider } from "@comet/admin";
 import { createTheme } from "@mui/material";
 import { render as testingLibraryRender, type RenderOptions, type RenderResult } from "@testing-library/react";
@@ -17,6 +18,9 @@ function DefaultWrapper({ children }: { children?: ReactNode }) {
     );
 }
 
-export function render(ui: ReactElement, options?: Omit<RenderOptions, "queries">): RenderResult {
+function customRender(ui: ReactElement, options?: Omit<RenderOptions, "queries">): RenderResult {
     return testingLibraryRender(ui, { wrapper: DefaultWrapper, ...options });
 }
+
+export * from "@testing-library/react";
+export { customRender as render };

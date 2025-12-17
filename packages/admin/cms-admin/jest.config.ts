@@ -28,6 +28,7 @@ export default {
     testPathIgnorePatterns: ["/node_modules/"],
 
     moduleNameMapper: {
+        "^test-utils$": "<rootDir>/testing/test-utils",
         "^react-dnd$": "<rootDir>/testing/stub-file.ts",
         "@mui/material/styles/createPalette": "<rootDir>/testing/stub-file.ts",
         "@mui/material/styles/createTypography": "<rootDir>/testing/stub-file.ts",
