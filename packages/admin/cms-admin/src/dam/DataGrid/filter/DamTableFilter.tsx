@@ -27,7 +27,6 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                 <Field
                     name="searchText"
                     component={FinalFormSearchTextField}
-                    clearable
                     disableContentTranslation
                     fieldContainerProps={{ fieldMargin: "never" }}
                 />
