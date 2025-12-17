@@ -311,6 +311,7 @@ type Manufacturer {
   coordinates: Coordinates
   id: ID!
   name: String!
+  tenant: Tenant!
   updatedAt: DateTime!
 }
 
@@ -389,6 +390,7 @@ input ManyToOneFilter {
 }
 
 type Mutation {
+  assignTenantUser(tenant: ID!, userId: String!): TenantUser!
   createBuilds(input: CreateBuildsInput!): Boolean!
   createDepartment(input: DepartmentInput!, tenant: ID!): Department!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
@@ -407,6 +409,7 @@ type Mutation {
   deleteProductHighlight(id: ID!): Boolean!
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
+  deleteTenantUser(id: ID!): Boolean!
   publishAllProducts: Boolean!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   updateDepartment(id: ID!, input: DepartmentUpdateInput!): Department!
@@ -488,6 +491,11 @@ type PaginatedProducts {
   totalCount: Int!
 }
 
+type PaginatedTenantUsers {
+  nodes: [TenantUser!]!
+  totalCount: Int!
+}
+
 type PaginatedTenants {
   nodes: [Tenant!]!
   totalCount: Int!
@@ -544,6 +552,7 @@ type Product {
   status: ProductStatus!
   tags: [ProductTag!]!
   tagsWithStatus: [ProductToTag!]!
+  tenant: Tenant!
   title: String!
   type: ProductType!
   updatedAt: DateTime!
@@ -1074,6 +1083,8 @@ type Query {
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
   tenant(id: ID!): Tenant!
+  tenantUser(id: ID!): TenantUser!
+  tenantUsers(filter: TenantUserFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantUserSort!], tenant: ID!): PaginatedTenantUsers!
   tenants(filter: TenantFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [TenantSort!]): PaginatedTenants!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   userPermissionsAvailablePermissions: [String!]!
@@ -1136,6 +1147,33 @@ enum TenantSortField {
 
 input TenantUpdateInput {
   name: String
+}
+
+type TenantUser {
+  id: ID!
+  tenant: Tenant!
+  userId: String!
+  userName: String!
+}
+
+input TenantUserFilter {
+  and: [TenantUserFilter!]
+  id: IdFilter
+  or: [TenantUserFilter!]
+  userId: StringFilter
+}
+
+input TenantUserSort {
+  direction: SortDirection! = ASC
+  field: TenantUserSortField!
+}
+
+enum TenantUserSortField {
+  tenant
+  tenant_createdAt
+  tenant_name
+  tenant_updatedAt
+  userId
 }
 
 input UserContentScopesInput {

@@ -4,6 +4,9 @@ import { CommandFactory } from "nest-commander";
 
 import { createConfig } from "./config/config";
 
+// Set flag to indicate this is running from CLI (must be set before AppModule is created)
+process.env.CALLED_FROM_CLI = "true";
+
 const config = createConfig(process.env);
 const appModule = AppModule.forRoot(config);
 

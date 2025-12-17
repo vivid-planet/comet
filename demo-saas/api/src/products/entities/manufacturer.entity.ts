@@ -1,6 +1,7 @@
-import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
-import { BaseEntity, Embeddable, Embedded, Entity, IType, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { CrudField, CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
+import { BaseEntity, Embeddable, Embedded, Entity, IType, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Tenant } from "@src/tenant/entities/tenant.entity";
 import { IsNumber, IsObject, IsString } from "class-validator";
 import { v4 as uuid } from "uuid";
 
@@ -82,7 +83,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 @ObjectType()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["manufacturers"] })
 export class Manufacturer extends BaseEntity {
-    [OptionalProps]?: "updatedAt";
+    [OptionalProps]?: "updatedAt" | "tenant";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
@@ -107,4 +108,11 @@ export class Manufacturer extends BaseEntity {
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    @ManyToOne(() => Tenant, { nullable: false, ref: true })
+    @Field(() => Tenant)
+    @CrudField({
+        input: false,
+    })
+    tenant: Ref<Tenant>;
 }

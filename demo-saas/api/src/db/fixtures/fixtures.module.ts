@@ -10,9 +10,10 @@ import { ProductCategoryType } from "@src/products/entities/product-category-typ
 
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
+import { TenantFixtureService } from "./generators/tenant-fixture.service";
 
 @Module({
     imports: [ConfigModule, MikroOrmModule.forFeature([Product, ProductCategory, ProductCategoryType, Manufacturer, AttachedDocument])],
-    providers: [FixturesCommand, FileUploadsFixtureService, ProductsFixtureService],
+    providers: [FixturesCommand, FileUploadsFixtureService, ProductsFixtureService, TenantFixtureService],
 })
 export class FixturesModule {}

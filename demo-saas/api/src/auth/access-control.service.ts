@@ -7,13 +7,17 @@ import {
     User,
     UserPermissions,
 } from "@comet/cms-api";
-import { EntityManager } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Department } from "@src/department/entities/department.entity";
+import { AsyncLocalStorage } from "async_hooks";
 
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {
-    constructor(private readonly entityManager: EntityManager) {
+    constructor(
+        private readonly entityManager: EntityManager,
+        private readonly asyncLocalStorage: AsyncLocalStorage<{ tenantId?: string }>,
+    ) {
         super();
     }
 
@@ -29,9 +33,8 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allContentScopes;
         } else {
-            // TODO: instead of randomly taking one, take the departments the user is assigned to
-            // Needs to be implemented when user assignment is implemented
-            const departments = await this.entityManager.find(Department, {}, { limit: 1 });
+            // TODO: when RLS is implemented, set tenant id from header
+            const departments = await this.entityManager.findAll(Department);
             if (departments.length > 0) {
                 return [{ department: departments[0].id }];
             }
@@ -40,11 +43,19 @@ export class AccessControlService extends AbstractAccessControlService {
     }
 
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
-        const departments = await this.entityManager.find(Department, {});
+        const store = this.asyncLocalStorage.getStore();
 
-        return departments.map((department) => ({
-            scope: { department: department.id },
-            label: { department: department.name },
-        }));
+        return this.entityManager.transactional(async (entityManager) => {
+            if (store?.tenantId) {
+                await entityManager.execute(`SELECT set_config('app.tenant', '${store.tenantId}', TRUE)`);
+            }
+
+            const departments = await this.entityManager.findAll(Department, { where: { tenant: { id: store?.tenantId } } });
+            return departments.map((department) => ({
+                department: department.id,
+                scope: { department: department.id },
+                label: { department: department.name },
+            }));
+        });
     }
 }

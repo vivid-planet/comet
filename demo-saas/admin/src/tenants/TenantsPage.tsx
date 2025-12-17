@@ -1,5 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import {
+    Button,
     FieldSet,
     FillSpace,
     FullHeightContent,
@@ -17,13 +18,18 @@ import {
     ToolbarBackButton,
     useStackSwitch,
 } from "@comet/admin";
+import { Add } from "@comet/admin-icons";
 import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
+import { AssignDialog } from "@src/common/AssignDialog";
 import { DepartmentForm } from "@src/departments/generated/DepartmentForm";
 import { DepartmentsGrid } from "@src/departments/generated/DepartmentsGrid";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { TenantForm } from "./generated/TenantForm";
 import { TenantsGrid } from "./generated/TenantsGrid";
+import { AssignTenantUser } from "./users/AssignTenantUser";
+import { TenantUsersGrid } from "./users/generated/TenantUsersGrid";
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -42,6 +48,7 @@ export function TenantsPage() {
     const [TenantsStackSwitch, tenantsStackSwitchApi] = useStackSwitch();
     const [DepartmentsStackSwitch, departmentsStackSwitchApi] = useStackSwitch();
     const client = useApolloClient();
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     return (
         <Stack topLevelTitle={<FormattedMessage id="tenants.tenants" defaultMessage="Tenants" />}>
@@ -132,6 +139,26 @@ export function TenantsPage() {
                                                     </SaveBoundary>
                                                 </StackPage>
                                             </DepartmentsStackSwitch>
+                                        </RouterTab>
+                                        <RouterTab path="/users" label={<FormattedMessage id="tenants.users" defaultMessage="Users" />}>
+                                            <FullHeightContent>
+                                                <TenantUsersGrid
+                                                    tenant={selectedTenantId}
+                                                    toolbarAction={
+                                                        <Button responsive startIcon={<Add />} onClick={() => setDialogOpen(true)}>
+                                                            <FormattedMessage id="tenants.user.assign" defaultMessage="Assign user" />
+                                                        </Button>
+                                                    }
+                                                />
+                                            </FullHeightContent>
+                                            <AssignDialog
+                                                title={<FormattedMessage id="tenants.assignUsers.dialog.title" defaultMessage="Assign Users" />}
+                                                apolloCacheName="tenantUsers"
+                                                onDialogClose={() => setDialogOpen(false)}
+                                                open={dialogOpen}
+                                            >
+                                                <AssignTenantUser tenantId={selectedTenantId} onDialogClose={() => setDialogOpen(false)} />
+                                            </AssignDialog>
                                         </RouterTab>
                                     </RouterTabs>
                                 </StackMainContent>

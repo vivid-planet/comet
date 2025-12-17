@@ -18,8 +18,8 @@ import {
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
-import { DynamicModule, Module } from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
+import { DynamicModule, MiddlewareConsumer, Module } from "@nestjs/common";
+import { APP_INTERCEPTOR, ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { AppPermission } from "@src/auth/app-permission.enum";
 import { Config } from "@src/config/config";
@@ -27,7 +27,8 @@ import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
 import { TranslationModule } from "@src/translation/translation.module";
-import { Request } from "express";
+import { AsyncLocalStorage } from "async_hooks";
+import { NextFunction, Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
@@ -36,14 +37,23 @@ import { DepartmentsModule } from "./department/departments.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { ProductsModule } from "./products/products.module";
 import { StatusModule } from "./status/status.module";
+import { TenantInterceptor } from "./tenant/tenant.interceptor";
 import { TenantsModule } from "./tenant/tenants.module";
 
 @Module({})
 export class AppModule {
+    constructor(private readonly asyncLocalStorage: AsyncLocalStorage<{ tenantId?: string }>) {}
+
     static forRoot(config: Config): DynamicModule {
         const authModule = AuthModule.forRoot(config);
 
         return {
+            providers: [
+                {
+                    provide: APP_INTERCEPTOR,
+                    useClass: TenantInterceptor,
+                },
+            ],
             module: AppModule,
             imports: [
                 ConfigModule.forRoot(config),
@@ -83,13 +93,18 @@ export class AppModule {
                 }),
                 authModule,
                 UserPermissionsModule.forRootAsync({
-                    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
+                    useFactory: (
+                        userService: UserService,
+                        accessControlService: AccessControlService,
+                        asyncLocalStorage: AsyncLocalStorage<{ tenantId?: string }>,
+                    ) => ({
                         availableContentScopes: () => accessControlService.getAvailableContentScopes(),
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],
+                        asyncLocalStorage,
                     }),
-                    inject: [UserService, AccessControlService],
+                    inject: [UserService, AccessControlService, AsyncLocalStorage<{ tenantId?: string }>],
                     imports: [authModule],
                     AppPermission,
                 }),
@@ -150,5 +165,16 @@ export class AppModule {
                 DepartmentsModule,
             ],
         };
+    }
+
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply((req: Request, res: Response, next: NextFunction) => {
+                const tenantIdHeader = req.headers["x-tenant-id"];
+                const tenantId = typeof tenantIdHeader === "string" ? tenantIdHeader : undefined;
+                const store: { tenantId?: string } = tenantId ? { tenantId } : {};
+                this.asyncLocalStorage.run(store, () => next());
+            })
+            .forRoutes("*path");
     }
 }
