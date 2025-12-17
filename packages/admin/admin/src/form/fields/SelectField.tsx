@@ -23,25 +23,30 @@ export interface SelectFieldProps<Value extends string | number> extends SelectF
     componentsProps?: {
         finalFormSelect?: Partial<ComponentProps<typeof FinalFormSelect<Value>>>;
     };
-    "data-testid"?: string;
+
+    /**
+     * data-testid for the underlying/hidden input (useful for raw value assertions).
+     * Keep separate from "data-testid" to avoid duplicate testids in the DOM.
+     */
+    "input-testid"?: string;
 }
 
 export function SelectField<Value extends string | number>({
     componentsProps = {},
     children,
     options,
-    "data-testid": dataTestid,
+    "input-testid": inputTestId,
     ...restProps
 }: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
 
-    // Merge dataTestid into inputProps if provided
-    const mergedFinalFormSelectProps = dataTestid
+    // Merge input-testid into inputProps if provided
+    const mergedFinalFormSelectProps = inputTestId
         ? {
               ...finalFormSelectProps,
               inputProps: {
                   ...finalFormSelectProps?.inputProps,
-                  "data-testid": dataTestid,
+                  "data-testid": inputTestId,
               },
           }
         : finalFormSelectProps;
