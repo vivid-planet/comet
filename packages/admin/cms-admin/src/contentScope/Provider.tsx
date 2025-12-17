@@ -24,6 +24,7 @@ interface ContentScopeContext {
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     values: ContentScopeValues;
     location: ContentScopeLocation;
+    excludedScopeKeys?: string[];
 }
 
 const defaultContentScopeContext: ContentScopeContext = {
@@ -63,8 +64,11 @@ const Context = createContext<ContentScopeContext>(defaultContentScopeContext);
 
 const NullValueAsString = "-"; // used to represent null-values in the url
 
-function parseScopeFromRouterMatchParams(params: NonNullRecord<ContentScope>): ContentScope {
+function parseScopeFromRouterMatchParams(params: NonNullRecord<ContentScope>, excludedKeys?: string[]): ContentScope {
     return Object.entries(params).reduce((a, [key, value]) => {
+        if (excludedKeys?.includes(key)) {
+            return a;
+        }
         return {
             ...a,
             [key]: !value || value === NullValueAsString ? null : value,
@@ -97,7 +101,11 @@ export function useContentScope(): UseContentScopeApi {
     const match = matchContextScope || matchDefault;
 
     const matchParamsString = JSON.stringify(match.params); // convert matchParams to string, like this we can memoize or callbacks more easily
-    const scope = useMemo(() => parseScopeFromRouterMatchParams(JSON.parse(matchParamsString)), [matchParamsString]);
+
+    const scope = useMemo(
+        () => parseScopeFromRouterMatchParams(JSON.parse(matchParamsString), context.excludedScopeKeys),
+        [matchParamsString, context.excludedScopeKeys],
+    );
     const redirectPath = context.redirectPathAfterChange;
     const setScope = useCallback(
         (action: SetContentScopeAction) => {
@@ -132,6 +140,12 @@ export interface ContentScopeProviderProps {
      * @default <NoContentScopeFallback />
      */
     noContentScopeFallback?: ReactNode;
+
+    /**
+     * Array of scope parameter keys to exclude from the parsed scope.
+     * These keys will be filtered out when parsing scope from router match params.
+     */
+    excludedScopeKeys?: string[];
 }
 
 export function ContentScopeProvider({
@@ -140,7 +154,9 @@ export function ContentScopeProvider({
     values,
     location = defaultContentScopeLocation,
     noContentScopeFallback = <NoContentScopeFallback />,
+    excludedScopeKeys,
 }: ContentScopeProviderProps) {
+    console.log("teeest");
     const user = useCurrentUser();
     if (values === undefined) {
         values = user.allowedContentScopes;
@@ -175,6 +191,7 @@ export function ContentScopeProvider({
                 setRedirectPathAfterChange,
                 values,
                 location: location as ContentScopeLocation,
+                excludedScopeKeys,
             }}
         >
             <Switch>

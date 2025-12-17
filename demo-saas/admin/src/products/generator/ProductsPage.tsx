@@ -19,7 +19,7 @@ import {
     useStackSwitch,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/generator/generated/ProductVariantsGrid";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -44,6 +44,7 @@ export function ProductsPage() {
     const intl = useIntl();
     const [ProductsStackSwitch, productsStackSwitchApi] = useStackSwitch();
     const [ProductVariantsStackSwitch, productVariantsStackSwitchApi] = useStackSwitch();
+    useContentScopeConfig({ redirectPathAfterChange: "/products" });
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
