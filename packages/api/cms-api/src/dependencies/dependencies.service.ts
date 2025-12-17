@@ -64,20 +64,22 @@ export class DependenciesService {
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            "${metadata.tableName}"."${primary}"  "rootId",
-                            '${metadata.name}'                    "rootEntityName",
-                            '${graphqlObjectType}'                "rootGraphqlObjectType",
-                            '${metadata.tableName}'               "rootTableName",
-                            '${column}'                           "rootColumnName",
-                            '${primary}'                          "rootPrimaryKey",
-                            indexObj->>'blockname'                "blockname",
-                            indexObj->>'jsonPath'                 "jsonPath",
+                            "${metadata.tableName}"."${primary}"    "rootId",
+                            '${metadata.name}'                     "rootEntityName",
+                            '${graphqlObjectType}'                  "rootGraphqlObjectType",
+                            '${metadata.tableName}'                 "rootTableName",
+                            '${column}'                             "rootColumnName",
+                            '${primary}'                            "rootPrimaryKey",
+                            indexObj->>'blockname'                  "blockname",
+                            indexObj->>'jsonPath'                   "jsonPath",
+                            indexObj->>'visible'                    "blockVisible",
+                            COALESCE("EntityInfo"."visible", true)  "entityVisible",
                             ((indexObj->>'visible')::boolean AND COALESCE("EntityInfo"."visible", true)) "visible",
-                            targetTableData->>'entityName'        "targetEntityName",
-                            targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
-                            targetTableData->>'tableName'         "targetTableName",
-                            targetTableData->>'primary'           "targetPrimaryKey",
-                            dependenciesObj->>'id'                "targetId"
+                            targetTableData->>'entityName'          "targetEntityName",
+                            targetTableData->>'graphqlObjectType'   "targetGraphqlObjectType",
+                            targetTableData->>'tableName'           "targetTableName",
+                            targetTableData->>'primary'             "targetPrimaryKey",
+                            dependenciesObj->>'id'                  "targetId"
                         FROM "${metadata.tableName}"
                         CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
                         CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
