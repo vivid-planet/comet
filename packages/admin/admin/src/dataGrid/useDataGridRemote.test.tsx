@@ -41,7 +41,7 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote(), { wrapper: ({ children }) => <Router history={history}>{children}</Router> });
 
-        expect(result.current.paginationModel?.page).toBe(mockedPage);
+        expect(result.current.paginationModel?.page).toEqual(mockedPage);
     });
 
     it("reads pageSize param from URL and returns correct value", () => {
@@ -49,7 +49,7 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote(), { wrapper: ({ children }) => <Router history={history}>{children}</Router> });
 
-        expect(result.current.paginationModel?.pageSize).toBe(mockedPageSize);
+        expect(result.current.paginationModel?.pageSize).toEqual(mockedPageSize);
     });
 
     it("writes sort param to URL", () => {
@@ -63,7 +63,7 @@ describe("useDataGridRemote", () => {
             });
         });
 
-        expect(history.location.search).toBe(`?${queryString.stringify({ sort: `${mockedSortField}:${mockedSort}` })}`);
+        expect(history.location.search).toEqual(`?${queryString.stringify({ sort: `${mockedSortField}:${mockedSort}` })}`);
     });
 
     it("writes filter param to URL", () => {
@@ -77,7 +77,7 @@ describe("useDataGridRemote", () => {
             });
         });
 
-        expect(history.location.search).toBe(`?${queryString.stringify({ filter: JSON.stringify(mockedFilterModel) })}`);
+        expect(history.location.search).toEqual(`?${queryString.stringify({ filter: JSON.stringify(mockedFilterModel) })}`);
     });
 
     it("writes page param to URL", () => {
@@ -94,7 +94,7 @@ describe("useDataGridRemote", () => {
             );
         });
 
-        expect(history.location.search).toBe(`?${queryString.stringify({ page: mockedPage, pageSize: 25 })}`);
+        expect(history.location.search).toEqual(`?${queryString.stringify({ page: mockedPage, pageSize: 25 })}`);
     });
 
     it("writes pageSize param to URL", () => {
@@ -106,7 +106,7 @@ describe("useDataGridRemote", () => {
             result.current.onPaginationModelChange?.({ page: 0, pageSize: mockedPageSize }, { api: mockedApi });
         });
 
-        expect(history.location.search).toBe(`?${queryString.stringify({ pageSize: mockedPageSize, page: 0 })}`);
+        expect(history.location.search).toEqual(`?${queryString.stringify({ pageSize: mockedPageSize, page: 0 })}`);
     });
 
     it("uses queryParamsPrefix when reading params from URL", () => {
@@ -129,8 +129,8 @@ describe("useDataGridRemote", () => {
 
         expect(result.current.sortModel).toEqual([{ field: mockedSortField, sort: mockedSort }]);
         expect(result.current.filterModel).toEqual(mockedFilterModel);
-        expect(result.current.paginationModel?.page).toBe(mockedPage);
-        expect(result.current.paginationModel?.pageSize).toBe(mockedPageSize);
+        expect(result.current.paginationModel?.page).toEqual(mockedPage);
+        expect(result.current.paginationModel?.pageSize).toEqual(mockedPageSize);
     });
 
     it("adds queryParamsPrefix when writing to URL if queryParamsPrefix is set", () => {
@@ -168,7 +168,7 @@ describe("useDataGridRemote", () => {
             wrapper: ({ children }) => <Router history={history}>{children}</Router>,
         });
 
-        expect(result.current.paginationModel?.pageSize).toBe(mockedInitialPageSize);
+        expect(result.current.paginationModel?.pageSize).toEqual(mockedInitialPageSize);
     });
 
     it("doesn't use initial default pageSize if a pageSize is set in the URL", () => {
@@ -181,7 +181,7 @@ describe("useDataGridRemote", () => {
             wrapper: ({ children }) => <Router history={history}>{children}</Router>,
         });
 
-        expect(result.current.paginationModel?.pageSize).toBe(mockedUrlPageSize);
+        expect(result.current.paginationModel?.pageSize).toEqual(mockedUrlPageSize);
     });
 
     it("uses initial sort if no sort is set in the URL", () => {
@@ -193,7 +193,7 @@ describe("useDataGridRemote", () => {
             wrapper: ({ children }) => <Router history={history}>{children}</Router>,
         });
 
-        expect(result.current.sortModel).toBe(mockedInitialSort);
+        expect(result.current.sortModel).toEqual(mockedInitialSort);
     });
 
     it("doesn't use initial default sort if sort is set in the URL", () => {
@@ -226,7 +226,7 @@ describe("useDataGridRemote", () => {
             wrapper: ({ children }) => <Router history={history}>{children}</Router>,
         });
 
-        expect(result.current.filterModel).toBe(mockedFilterModel);
+        expect(result.current.filterModel).toEqual(mockedFilterModel);
     });
 
     it("doesn't use initial default filter if filter is set in the URL", () => {
