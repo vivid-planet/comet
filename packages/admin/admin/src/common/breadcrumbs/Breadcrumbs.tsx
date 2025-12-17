@@ -1,7 +1,7 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -84,13 +84,13 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                     }
 
                     return (
-                        <>
+                        <Fragment key={item.url}>
                             {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                            <BreadcrumbsItem key={item.id} component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
+                            <BreadcrumbsItem component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
                                 {item.title}
                             </BreadcrumbsItem>
-                            <Separator key={`separator-${item.url}`} {...slotProps?.separator} />
-                        </>
+                            <Separator {...slotProps?.separator} />
+                        </Fragment>
                     );
                 })}
             </BreadcrumbsList>
