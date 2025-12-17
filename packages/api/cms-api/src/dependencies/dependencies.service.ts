@@ -92,19 +92,17 @@ export class DependenciesService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        console.log(`CREATE MATERIALIZED VIEW block_index_dependencies AS ${viewSql}`);
-
-        console.time("creating block dependency materialized view");
+        console.time("creating block_index_dependencies materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
         await this.connection.execute(`CREATE MATERIALIZED VIEW block_index_dependencies AS ${viewSql}`);
         await this.connection.execute(
             `CREATE UNIQUE INDEX ON block_index_dependencies ("rootId", "rootTableName", "rootColumnName", "blockname", "jsonPath", "targetTableName", "targetId")`,
         );
-        console.timeEnd("creating block dependency materialized view");
+        console.timeEnd("creating block_index_dependencies materialized view");
 
-        console.time("creating block dependency materialized view index");
+        console.time("creating block_index_dependencies materialized view index");
         await this.connection.execute(`CREATE INDEX block_index_dependencies_targetId ON block_index_dependencies ("targetId")`);
-        console.timeEnd("creating block dependency materialized view index");
+        console.timeEnd("creating block_index_dependencies materialized view index");
     }
 
     private async createBlockIndexViews(): Promise<void> {
@@ -132,10 +130,10 @@ export class DependenciesService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        console.time("creating block dependency materialized view");
+        console.time("creating block_index view");
         await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
         await this.connection.execute(`CREATE VIEW block_index AS ${viewSql}`);
-        console.timeEnd("creating block dependency materialized view");
+        console.timeEnd("creating block block_index view");
     }
 
     async createEntityInfoView(): Promise<void> {
