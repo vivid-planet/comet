@@ -6,14 +6,14 @@ import { Fragment, type ReactNode } from "react";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
-export type BreadcrumbsClassKey = "root" | "breadcrumbsList" | "breadcrumbsItem" | "separator";
+type BreadcrumbsClassKey = "root" | "breadcrumbsList" | "breadcrumbsItem" | "separator";
 
 export interface BreadcrumbsItemProps {
     url: string;
     title: ReactNode;
 }
 
-export interface BreadcrumbsProps
+interface BreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         breadcrumbsList: "div";
