@@ -89,6 +89,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
+                data-testid={otherProps["data-testid"]}
                 {...fieldContainerProps}
             >
                 {render()}
