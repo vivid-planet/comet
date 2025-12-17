@@ -16,6 +16,7 @@ import { FullWidthImageBlockFixtureService } from "./blocks/media/full-width-ima
 import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
+import { ContactFormBlockFixtureService } from "./blocks/navigation/contact-form-block-fixture.service";
 import { LinkListBlockFixtureService } from "./blocks/navigation/link-list-block-fixture.service";
 import { PageTreeIndexBlockFixtureService } from "./blocks/navigation/page-tree-index-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./blocks/navigation/standalone-call-to-action-list-block-fixture.service";
@@ -27,7 +28,7 @@ import { ProductListBlockFixtureService } from "./blocks/text-and-content/produc
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
 
-export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent";
+export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent" | "form";
 
 @Injectable()
 export class PageContentBlockFixtureService {
@@ -53,6 +54,7 @@ export class PageContentBlockFixtureService {
         private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
         private readonly productListBlockFixtureService: ProductListBlockFixtureService,
         private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
+        private readonly contactFormBlockFixtureService: ContactFormBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -82,6 +84,7 @@ export class PageContentBlockFixtureService {
             richtext: ["textAndContent", this.standaloneRichTextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
             productList: ["textAndContent", this.productListBlockFixtureService],
+            contactForm: ["form", this.contactFormBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)
