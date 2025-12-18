@@ -225,7 +225,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}
-            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            error={tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles ? maxFiles : 1) : undefined}
             getDownloadUrl={(file) => (isDownloadableFile(file) && file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />
