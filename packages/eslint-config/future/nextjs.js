@@ -1,7 +1,12 @@
-import nextjsConfig from "../nextjs.js";
+import nextjsConfig, { restrictedImportPaths as baseRestrictedImportPaths } from "../nextjs.js";
 
-const parentRestrictedImportsRule = nextjsConfig.find((config) => config.rules?.["no-restricted-imports"]);
-const parentPaths = parentRestrictedImportsRule?.rules?.["no-restricted-imports"]?.[1]?.paths || [];
+export const restrictedImportPaths = [
+    ...baseRestrictedImportPaths,
+    {
+        name: "node-cache",
+        message: "node-cache is abandonware. Use cache-manager or @cacheable/node-cache instead",
+    },
+];
 
 /** @type {import('eslint')} */
 const config = [
@@ -11,13 +16,7 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        ...parentPaths,
-                        {
-                            name: "node-cache",
-                            message: "node-cache is abandonware. Use cache-manager or @cacheable/node-cache instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
                 },
             ],
         },

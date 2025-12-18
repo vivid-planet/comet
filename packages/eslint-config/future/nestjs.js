@@ -1,5 +1,12 @@
 import nestjsConfig from "../nestjs.js";
 
+export const restrictedImportPaths = [
+    {
+        name: "node-cache",
+        message: "node-cache is abandonware. Use @nestjs/cache-manager instead",
+    },
+];
+
 /** @type {import('eslint')} */
 const config = [
     ...nestjsConfig,
@@ -8,12 +15,7 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        {
-                            name: "node-cache",
-                            message: "node-cache is abandonware. Use @nestjs/cache-manager instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
                 },
             ],
         },
