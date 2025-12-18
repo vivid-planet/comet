@@ -18,7 +18,7 @@ services:
         image: darthsim/imgproxy:v3
         pull_policy: weekly
         volumes:
-            - ./demo/uploads:/uploads:ro
+            - ./uploads:/uploads:ro
         ports:
             - "127.0.0.1:${IMGPROXY_PORT}:8080"
         environment:
@@ -45,15 +45,6 @@ services:
             COLLECTOR_OTLP_ENABLED: "true"
             COLLECTOR_OTLP_HTTP_HOST_PORT: 0.0.0.0:4318
 
-    redis:
-        image: redis:7
-        pull_policy: weekly
-        command: redis-server --maxmemory 256M --maxmemory-policy allkeys-lru --loglevel warning --requirepass ${REDIS_PASSWORD}
-        ports:
-            - "127.0.0.1:${REDIS_PORT}:6379"
-        networks:
-            - redis
-
     mailpit:
         image: axllent/mailpit
         pull_policy: weekly
@@ -63,8 +54,6 @@ services:
 
 networks:
     postgres:
-        driver: bridge
-    redis:
         driver: bridge
 
 volumes:
