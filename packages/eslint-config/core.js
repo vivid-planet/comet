@@ -51,7 +51,7 @@ const config = [
         rules: {
             "import/no-duplicates": ["error", { "prefer-inline": true }],
             "import/newline-after-import": "error",
-            "import/no-extraneous-dependencies": "error",
+            "import/no-extraneous-dependencies": ["error", { devDependencies: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"] }],
         },
     },
     ...eslintPluginJsonc["flat/recommended-with-json"],

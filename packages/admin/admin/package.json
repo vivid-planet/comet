@@ -110,6 +110,7 @@
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/material": "^7.0.0",
+        "@mui/system": "^7.0.0",
         "@mui/x-data-grid": "^7.0.0",
         "@mui/x-data-grid-premium": "^7.0.0",
         "@mui/x-data-grid-pro": "^7.0.0",
