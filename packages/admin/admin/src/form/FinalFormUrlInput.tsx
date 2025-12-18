@@ -3,7 +3,7 @@ import { type FocusEvent } from "react";
 import { type FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { ensureUrlHasProtocol } from "./helpers/ensureUrlHasProtocol";
+import { ensureUrlHasProtocol } from "./helpers/urlProtocol";
 
 export type FinalFormUrlInputProps = InputBaseProps & {
     clearable?: boolean;

@@ -1,6 +1,6 @@
 import { Field, type FieldProps } from "../Field";
 import { FinalFormUrlInput, type FinalFormUrlInputProps } from "../FinalFormUrlInput";
-import { validateUrlHasProtocol } from "../helpers/validateUrlHasProtocol";
+import { validateUrlHasProtocol } from "../helpers/urlProtocol";
 
 export type UrlFieldProps = FieldProps<string, HTMLInputElement> & FinalFormUrlInputProps;
 
