@@ -44,8 +44,8 @@ async function getDomainRedirectTarget(domain: string, host: string): Promise<Re
     const normalizeHost = (value: string) => {
         return value.replace(/^https?:\/\//, "");
     };
-    const matching = redirectsArray.find((redirct) => {
-        return redirct.sourceType === "domain" && normalizeHost(redirct.source) === normalizeHost(host);
+    const matching = redirectsArray.find((redirect) => {
+        return redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host);
     });
     if (matching) {
         return matching.target;
