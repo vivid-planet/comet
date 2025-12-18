@@ -1,3 +1,6 @@
+import { isValidElement } from "react";
+import { FormattedMessage } from "react-intl";
+
 import { validateUrlHasProtocol } from "./validateUrlHasProtocol";
 
 describe("validateUrlHasProtocol", () => {
@@ -26,19 +29,51 @@ describe("validateUrlHasProtocol", () => {
     });
 
     it("returns error message for URLs without protocol", () => {
-        expect(validateUrlHasProtocol("example.com")).toBe("URL must include a protocol (e.g., https://, http://, mailto:)");
+        const result = validateUrlHasProtocol("example.com");
+        expect(isValidElement(result)).toBe(true);
+        expect(result).toMatchObject({
+            type: FormattedMessage,
+            props: {
+                id: "comet.validateUrlHasProtocol.missingProtocol",
+                defaultMessage: "URL must include a protocol (e.g., https://, http://, mailto:, tel:)",
+            },
+        });
     });
 
     it("returns error message for URLs with only slashes", () => {
-        expect(validateUrlHasProtocol("//example.com")).toBe("URL must include a protocol (e.g., https://, http://, mailto:)");
+        const result = validateUrlHasProtocol("//example.com");
+        expect(isValidElement(result)).toBe(true);
+        expect(result).toMatchObject({
+            type: FormattedMessage,
+            props: {
+                id: "comet.validateUrlHasProtocol.missingProtocol",
+                defaultMessage: "URL must include a protocol (e.g., https://, http://, mailto:, tel:)",
+            },
+        });
     });
 
     it("returns error message for plain text", () => {
-        expect(validateUrlHasProtocol("just some text")).toBe("URL must include a protocol (e.g., https://, http://, mailto:)");
+        const result = validateUrlHasProtocol("just some text");
+        expect(isValidElement(result)).toBe(true);
+        expect(result).toMatchObject({
+            type: FormattedMessage,
+            props: {
+                id: "comet.validateUrlHasProtocol.missingProtocol",
+                defaultMessage: "URL must include a protocol (e.g., https://, http://, mailto:, tel:)",
+            },
+        });
     });
 
     it("handles whitespace correctly", () => {
         expect(validateUrlHasProtocol("  https://example.com  ")).toBeUndefined();
-        expect(validateUrlHasProtocol("  example.com  ")).toBe("URL must include a protocol (e.g., https://, http://, mailto:)");
+        const result = validateUrlHasProtocol("  example.com  ");
+        expect(isValidElement(result)).toBe(true);
+        expect(result).toMatchObject({
+            type: FormattedMessage,
+            props: {
+                id: "comet.validateUrlHasProtocol.missingProtocol",
+                defaultMessage: "URL must include a protocol (e.g., https://, http://, mailto:, tel:)",
+            },
+        });
     });
 });
