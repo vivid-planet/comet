@@ -96,3 +96,11 @@ async products(@Args("country", { type: () => string }) id: string, @Args("depar
     // [{ country: "AT" }, { department: "main" }]; // not sufficient
 }
 ```
+
+:::info
+Type annotation can either be achieved via generics (`@AffectedScope<ArgsType>((args) => args)`) or by type assignment (`@AffectedScope((args: ArgsType) => args)`)
+:::
+
+:::info
+If a scope value is `undefined` the dimension will be removed before checking.
+:::
