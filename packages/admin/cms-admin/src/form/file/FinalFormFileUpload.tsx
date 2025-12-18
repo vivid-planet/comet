@@ -131,6 +131,10 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 const tooManyFilesWereDropped = rejectedFiles.some((rejection) => rejection.errors.some((error) => error.code === "too-many-files"));
                 setTooManyFilesSelected(tooManyFilesWereDropped);
 
+                if (tooManyFilesWereDropped || !acceptedFiles.length) {
+                    return;
+                }
+
                 rejectedFiles.map((rejection) => {
                     const failedFile: ErrorFileSelectItem = {
                         name: rejection.file.name,
@@ -150,10 +154,6 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
 
                 if (singleFile) {
                     onChange(undefined);
-                }
-
-                if (tooManyFilesWereDropped || !acceptedFiles.length) {
-                    return;
                 }
 
                 setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
