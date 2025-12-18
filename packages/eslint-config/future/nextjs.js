@@ -15,7 +15,7 @@ const config = [
                         ...parentPaths,
                         {
                             name: "node-cache",
-                            message: "node-cache is abandonware. Use cache-manager instead",
+                            message: "node-cache is abandonware. Use cache-manager or @cacheable/node-cache instead",
                         },
                     ],
                 },
