@@ -153,6 +153,7 @@ export { SwitchField, type SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, type TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, type TextFieldProps } from "./form/fields/TextField";
 export { ToggleButtonGroupField, type ToggleButtonGroupFieldProps } from "./form/fields/ToggleButtonGroupField";
+export { UrlField, type UrlFieldProps } from "./form/fields/UrlField";
 export { commonErrorMessages as commonFileErrorMessages } from "./form/file/commonErrorMessages";
 export { FileDropzone, type FileDropzoneClassKey, type FileDropzoneProps } from "./form/file/FileDropzone";
 export { FileSelect, type FileSelectClassKey, type FileSelectProps } from "./form/file/FileSelect";
@@ -173,6 +174,7 @@ export { FinalFormRangeInput, type FinalFormRangeInputClassKey, type FinalFormRa
 export { FinalFormSearchTextField, type FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, type FinalFormSelectProps } from "./form/FinalFormSelect";
 export { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from "./form/FinalFormToggleButtonGroup";
+export { FinalFormUrlInput, type FinalFormUrlInputProps } from "./form/FinalFormUrlInput";
 export { FormSection, type FormSectionClassKey, type FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, type FinalFormRadioProps } from "./form/Radio";

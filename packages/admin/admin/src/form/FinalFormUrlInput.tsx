@@ -1,0 +1,55 @@
+import { InputBase, type InputBaseProps } from "@mui/material";
+import { type FocusEvent } from "react";
+import { type FieldRenderProps } from "react-final-form";
+
+import { ClearInputAdornment } from "../common/ClearInputAdornment";
+import { ensureUrlHasProtocol } from "./helpers/urlProtocol";
+
+export type FinalFormUrlInputProps = InputBaseProps & {
+    clearable?: boolean;
+};
+
+type FinalFormUrlInputInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
+
+/**
+ * Final Form-compatible UrlInput component.
+ *
+ * @see {@link UrlField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
+export function FinalFormUrlInput({
+    meta,
+    input,
+    innerRef,
+    endAdornment,
+    clearable,
+    ...props
+}: FinalFormUrlInputProps & FinalFormUrlInputInternalProps) {
+    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+        const formattedValue = ensureUrlHasProtocol(event.target.value);
+
+        if (formattedValue !== event.target.value) {
+            input.onChange(formattedValue);
+        }
+
+        input.onBlur(event);
+    };
+
+    return (
+        <InputBase
+            {...input}
+            {...props}
+            onBlur={handleBlur}
+            type="url"
+            endAdornment={
+                (endAdornment || clearable) && (
+                    <>
+                        {clearable && (
+                            <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
+                        )}
+                        {endAdornment}
+                    </>
+                )
+            }
+        />
+    );
+}
