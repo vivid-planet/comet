@@ -217,6 +217,171 @@ If you're using Knip, you may need to add `proxy.ts` as entry point:
 
 :::
 
+### Domain Redirects
+
+Domain redirects can now be set in the admin. To enable domain-based redirects, you need to:
+
+1. **Add the relevant domains** to the `additional` array in your site config, so that the middleware can recognize and handle them.
+
+2. **Adapt your middleware** to handle the new `domain` source type for redirects. Check for domain-based redirects and perform the appropriate redirect by updating your previous `redirectToMainHost` middleware.
+
+#### Example: Site Config
+
+```ts title="site-configs/main.ts"
+export default ((env) => {
+    return {
+        //...
+        domains: {
+            main: envToDomainMap[env],
+            additional: ["test.localhost:3000"], // Add your additional domains here
+        },
+        //...
+    };
+}) satisfies GetSiteConfig;
+```
+
+#### Example: Middleware Usage
+
+Update your middleware—most likely the `redirectToMainHost` middleware—to handle domain redirects. For example:
+
+```ts title="site/src/middleware/redirectToMainHost.ts"
+const domainRedirectsQuery = gql`
+    query DomainRedirects($scope: RedirectScopeInput!) {
+        paginatedRedirects(scope: $scope) {
+            nodes {
+                id
+                source
+                target
+                sourceType
+            }
+        }
+    }
+`;
+
+async function fetchDomainRedirects(domain: string) {
+    const key = `domainRedirects-${domain}`;
+    return memoryCache.wrap(key, async () => {
+        const graphQLFetch = createGraphQLFetch();
+        const data = await graphQLFetch<
+            {
+                paginatedRedirects: {
+                    nodes: {
+                        id: string;
+                        source: string;
+                        target: RedirectsLinkBlockData;
+                        sourceType: string;
+                    }[];
+                };
+            },
+            { scope: { domain: string } }
+        >(domainRedirectsQuery, {
+            scope: { domain },
+        });
+
+        return data?.paginatedRedirects?.nodes || [];
+    });
+}
+
+async function getDomainRedirectTarget(
+    domain: string,
+    host: string,
+): Promise<RedirectsLinkBlockData | undefined> {
+    const redirects = await fetchDomainRedirects(domain);
+    const redirectsArray = Array.isArray(redirects) ? redirects : [redirects];
+    const normalizeHost = (value: string) => {
+        return value.replace(/^https?:\/\//, "");
+    };
+    const matching = redirectsArray.find((redirect) => {
+        return (
+            redirect.sourceType === "domain" &&
+            normalizeHost(redirect.source) === normalizeHost(host)
+        );
+    });
+    if (matching) {
+        return matching.target;
+    }
+    return undefined;
+}
+
+const matchesHostWithAdditionalDomain = (siteConfig: PublicSiteConfig, host: string) => {
+    if (siteConfig.domains.main === host) return true;
+    if (siteConfig.domains.additional?.includes(host)) return true;
+    return false;
+};
+
+const matchesHostWithPattern = (siteConfig: PublicSiteConfig, host: string) => {
+    if (!siteConfig.domains.pattern) return false;
+    return new RegExp(siteConfig.domains.pattern).test(host);
+};
+
+export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
+    return async (request: NextRequest) => {
+        const headers = request.headers;
+        const host = getHostByHeaders(headers);
+        const siteConfig = await getSiteConfigForHost(host);
+
+        if (!siteConfig) {
+            const redirectSiteConfig =
+                getSiteConfigs().find((siteConfig) =>
+                    matchesHostWithAdditionalDomain(siteConfig, host),
+                ) ||
+                getSiteConfigs().find((siteConfig) => matchesHostWithPattern(siteConfig, host));
+
+            if (redirectSiteConfig) {
+                const { scope } = redirectSiteConfig;
+
+                const domainRedirectTarget = await getDomainRedirectTarget(scope.domain, host);
+
+                if (domainRedirectTarget) {
+                    let destination: string | undefined;
+                    if (
+                        typeof domainRedirectTarget === "object" &&
+                        domainRedirectTarget.block !== undefined
+                    ) {
+                        switch (domainRedirectTarget.block.type) {
+                            case "internal": {
+                                const internalLink = domainRedirectTarget.block
+                                    .props as InternalLinkBlockData;
+                                if (internalLink.targetPage) {
+                                    destination = createSitePath({
+                                        path: internalLink.targetPage.path,
+                                        scope: internalLink.targetPage.scope as Pick<
+                                            GQLPageTreeNodeScope,
+                                            "language"
+                                        >,
+                                    });
+                                    if (destination && destination.startsWith("/")) {
+                                        destination = `http://${host}${destination}`;
+                                    }
+                                }
+                                break;
+                            }
+                            case "external":
+                                destination = (
+                                    domainRedirectTarget.block.props as ExternalLinkBlockData
+                                ).targetUrl;
+                                break;
+                        }
+                    }
+                    if (destination) {
+                        return NextResponse.redirect(destination, { status: 301 });
+                    }
+                }
+            }
+
+            return NextResponse.json({ error: `Cannot resolve domain: ${host}` }, { status: 404 });
+        }
+        return middleware(request);
+    };
+}
+```
+
+#### Admin UI
+
+In the admin, you can now select `domain` as the source type when creating a redirect. Enter the full domain (e.g., `https://mydomain.com`) as the source, and specify the target as usual.
+
+**Note:** Domain redirects only work if the DNS entry for the domain points to your web server.
+
 ### Add `cache: "force-cache"` to GraphQL fetch
 
 Next.js no longer caches `fetch` requests by default.
