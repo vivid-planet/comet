@@ -1,4 +1,4 @@
-import { Field, type FieldProps, FinalFormInput, Loading, messages, SelectField } from "@comet/admin";
+import { Field, type FieldProps, FinalFormInput, Loading, messages, SelectField, UrlField } from "@comet/admin";
 import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -10,7 +10,6 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
 import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
-import { validateUrl } from "../validation/validateUrl";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSectionGroup } from "./common/BlockAdminComponentSectionGroup";
@@ -284,12 +283,11 @@ export function createSeoBlock(
                                                             />
                                                         </Grid>
                                                         <Grid size="grow">
-                                                            <Field
+                                                            <UrlField
                                                                 label={<FormattedMessage {...messages.url} />}
                                                                 name={`${link}.url`}
-                                                                component={FinalFormInput}
                                                                 fullWidth
-                                                                validate={(url) => validateUrl(url)}
+                                                                // validate={(url) => validateUrl(url)} // TODO: keep this validation?
                                                             />
                                                         </Grid>
                                                         <Grid alignSelf="flex-start">

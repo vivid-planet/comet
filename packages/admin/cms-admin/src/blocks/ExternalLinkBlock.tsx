@@ -1,9 +1,8 @@
-import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
+import { CheckboxField, UrlField } from "@comet/admin";
 import { FormattedMessage } from "react-intl";
 
 import { type ExternalLinkBlockData, type ExternalLinkBlockInput } from "../blocks.generated";
 import { isLinkTarget } from "../validation/isLinkTarget";
-import { validateLinkTarget } from "../validation/validateLinkTarget";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
@@ -64,13 +63,11 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                     }}
                     initialValues={state}
                 >
-                    <Field
+                    <UrlField
                         label={<FormattedMessage id="comet.blocks.link.external.targetUrl" defaultMessage="URL" />}
                         name="targetUrl"
-                        component={FinalFormInput}
                         fullWidth
-                        validate={(url) => validateLinkTarget(url)}
-                        disableContentTranslation
+                        // validate={(url) => validateLinkTarget(url)} // TODO: keep this validation?
                     />
                     <CheckboxField
                         label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
