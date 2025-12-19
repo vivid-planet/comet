@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
+import { isEmail, isURL } from "validator";
 
 const patterns = {
     domain: /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|^localhost(:[0-9]+)?$/,
@@ -17,18 +18,27 @@ const hasProtocol = (value: string): boolean => {
         return false;
     }
 
+    const protocol = schemeMatch[1];
     const rest = schemeMatch[2];
     const hasAuthority = rest.startsWith("//");
-    const isLikelyPort = /^[0-9]/.test(rest); // to handle edge cases like localhost:3000 where localhost isn't the protocol
+    const isLikelyPort = protocol !== "tel" && /^[0-9]/.test(rest); // to handle edge cases like localhost:3000 where localhost isn't the protocol
 
     return hasAuthority || !isLikelyPort;
 };
 
+const cleanPhoneNumber = (value: string): string => value.replace(patterns.phoneFormatChars, "");
+
 /**
- * Validates that a URL has a protocol. Returns an error message if the protocol is missing.
+ * Validates that a URL has a protocol. Returns an error message if the protocol is missing or invalid.
  * Used for form validation in UrlField.
+ *
+ * Validation rules:
+ * - mailto: validates the email part using validator.isEmail
+ * - tel: validates the phone part using the phone regex
+ * - https/http: validates using validator.isURL
+ * - other protocols: just checks if a protocol is present
  */
-export const validateUrlHasProtocol = (value: string | undefined): ReactNode | undefined => {
+export const validateUrl = (value: string | undefined): ReactNode | undefined => {
     if (!value || value.trim() === "") {
         return undefined;
     }
@@ -44,10 +54,57 @@ export const validateUrlHasProtocol = (value: string | undefined): ReactNode | u
         );
     }
 
+    // Extract protocol and the rest of the URL
+    const protocolMatch = /^([a-zA-Z][a-zA-Z\d+.-]*):(.*)$/.exec(trimmedValue);
+    if (!protocolMatch) {
+        return (
+            <FormattedMessage
+                id="comet.validateUrlHasProtocol.missingProtocol"
+                defaultMessage="URL must include a protocol (e.g., https://, http://, mailto:, tel:)"
+            />
+        );
+    }
+
+    const protocol = protocolMatch[1].toLowerCase();
+    const rest = protocolMatch[2];
+
+    // Validate mailto:
+    if (protocol === "mailto") {
+        const emailPart = rest.replace(/^\/\//, ""); // Remove optional //
+        if (!isEmail(emailPart)) {
+            return <FormattedMessage id="comet.validateUrlHasProtocol.invalidEmail" defaultMessage="Invalid email address" />;
+        }
+        return undefined;
+    }
+
+    // Validate tel:
+    if (protocol === "tel") {
+        const phonePart = rest.replace(/^\/\//, ""); // Remove optional //
+        const cleaned = cleanPhoneNumber(phonePart);
+        if (!patterns.phone.test(cleaned)) {
+            return <FormattedMessage id="comet.validateUrlHasProtocol.invalidPhone" defaultMessage="Invalid phone number" />;
+        }
+        return undefined;
+    }
+
+    // Validate https, http:
+    if (protocol === "https" || protocol === "http") {
+        const urlPart = rest.replace(/^\/\//, ""); // Remove optional //
+        if (
+            !isURL(trimmedValue, {
+                protocols: ["https", "http"],
+                require_protocol: true,
+                require_tld: !urlPart.startsWith("localhost"),
+            })
+        ) {
+            return <FormattedMessage id="comet.validateUrlHasProtocol.invalidUrl" defaultMessage="Invalid URL" />;
+        }
+        return undefined;
+    }
+
+    // For all other protocols, just check that a protocol is present (already verified above)
     return undefined;
 };
-
-const cleanPhoneNumber = (value: string): string => value.replace(patterns.phoneFormatChars, "");
 
 const isValidUrlStructure = (value: string): boolean => {
     // Check for domain-like structure: at least one dot or localhost
@@ -56,7 +113,7 @@ const isValidUrlStructure = (value: string): boolean => {
     return patterns.domain.test(value) || patterns.ip.test(value);
 };
 
-const isEmail = (value: string): boolean => patterns.email.test(value);
+const isEmailPattern = (value: string): boolean => patterns.email.test(value);
 
 const isPhoneNumber = (value: string): boolean => {
     // Check if it starts with + (international format) or is all digits
@@ -84,7 +141,7 @@ export const ensureUrlHasProtocol = (value: string): string => {
     }
 
     // Check for email first (contains @)
-    if (isEmail(trimmedValue)) {
+    if (isEmailPattern(trimmedValue)) {
         return `mailto:${trimmedValue}`;
     }
 
