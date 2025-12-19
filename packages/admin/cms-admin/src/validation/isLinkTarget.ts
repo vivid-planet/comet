@@ -1,4 +1,4 @@
-import { isEmail, isURL } from "class-validator";
+import { isEmail, isURL } from "validator";
 
 import { isPhoneNumber } from "./isPhoneNumber";
 

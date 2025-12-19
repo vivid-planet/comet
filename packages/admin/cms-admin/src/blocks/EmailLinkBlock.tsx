@@ -1,6 +1,6 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { isEmail } from "class-validator";
 import { FormattedMessage } from "react-intl";
+import { isEmail } from "validator";
 
 import { type EmailLinkBlockData, type EmailLinkBlockInput } from "../blocks.generated";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
