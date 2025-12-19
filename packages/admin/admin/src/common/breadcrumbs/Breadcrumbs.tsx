@@ -8,7 +8,7 @@ import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBase
 
 type BreadcrumbsClassKey = "root" | "breadcrumbsList" | "breadcrumbsItem" | "separator";
 
-export interface BreadcrumbsItemProps {
+export interface BreadcrumbsProps {
     url: string;
     title: ReactNode;
 }
@@ -26,11 +26,6 @@ interface BreadcrumbsProps
 const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "root",
-})();
-
-const BreadcrumbsList = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "breadcrumbsList",
 })(
     ({ theme }) => css`
         display: flex;
@@ -71,29 +66,27 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
     const { items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <BreadcrumbsList {...slotProps?.breadcrumbsList}>
-                {items.map((item, index) => {
-                    const isCurrentPage = index === items.length - 1;
+            {items.map((item, index) => {
+                const isCurrentPage = index === items.length - 1;
 
-                    if (isCurrentPage) {
-                        return (
-                            <BreadcrumbsItem key={item.url} {...slotProps?.breadcrumbsItem}>
-                                {item.title}
-                            </BreadcrumbsItem>
-                        );
-                    }
-
+                if (isCurrentPage) {
                     return (
-                        <Fragment key={item.url}>
-                            {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                            <BreadcrumbsItem component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
-                                {item.title}
-                            </BreadcrumbsItem>
-                            <Separator {...slotProps?.separator} />
-                        </Fragment>
+                        <BreadcrumbsItem key={item.url} {...slotProps?.breadcrumbsItem}>
+                            {item.title}
+                        </BreadcrumbsItem>
                     );
-                })}
-            </BreadcrumbsList>
+                }
+
+                return (
+                    <Fragment key={item.url}>
+                        {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+                        <BreadcrumbsItem component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
+                            {item.title}
+                        </BreadcrumbsItem>
+                        <Separator {...slotProps?.separator} />
+                    </Fragment>
+                );
+            })}
         </Root>
     );
 };
