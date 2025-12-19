@@ -1,18 +1,18 @@
-import { Breadcrumbs, type BreadcrumbsItemProps } from "../Breadcrumbs";
+import { Breadcrumbs, type BreadcrumbsItem } from "../Breadcrumbs";
 
 export default {
     title: "components/breadcrumbs/Breadcrumbs",
 };
 
-const singleItem: BreadcrumbsItemProps[] = [{ url: "/one", title: "Breadcrumb One" }];
-const twoItems: BreadcrumbsItemProps[] = [...singleItem, { url: "/two", title: "BC 2" }];
-const threeItems: BreadcrumbsItemProps[] = [...twoItems, { url: "/three", title: "BrdCrmb 3" }];
-const fiveItems: BreadcrumbsItemProps[] = [
+const singleItem: BreadcrumbsItem[] = [{ url: "/one", title: "Breadcrumb One" }];
+const twoItems: BreadcrumbsItem[] = [...singleItem, { url: "/two", title: "BC 2" }];
+const threeItems: BreadcrumbsItem[] = [...twoItems, { url: "/three", title: "BrdCrmb 3" }];
+const fiveItems: BreadcrumbsItem[] = [
     ...threeItems,
     { url: "/four", title: "Really long Breadcrumb Number Four" },
     { url: "/five", title: "Breadcrumb Five" },
 ];
-const sevenItems: BreadcrumbsItemProps[] = [...fiveItems, { url: "/six", title: "Breadcrumb Six" }, { url: "/seven", title: "Breadcrumb Seven" }];
+const sevenItems: BreadcrumbsItem[] = [...fiveItems, { url: "/six", title: "Breadcrumb Six" }, { url: "/seven", title: "Breadcrumb Seven" }];
 
 export const Single = () => {
     return <Breadcrumbs items={singleItem} />;
