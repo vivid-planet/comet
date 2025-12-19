@@ -929,6 +929,7 @@ export function generateGrid<T extends { __typename?: string }>(
                                                     : ""
                                             }
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
+                                            ${config.crudContextMenu?.deleteType ? `deleteType="${config.crudContextMenu.deleteType}"` : ""}
                                             ${config.crudContextMenu?.deleteText ? `messagesMapping={{ delete: <FormattedMessage id="${instanceGqlType}.crudContextMenu.delete" defaultMessage="${config.crudContextMenu.deleteText}" /> }}` : ""}
                                         />
                                     `

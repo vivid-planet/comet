@@ -1,4 +1,4 @@
-import { Delete as DeleteIcon, WarningSolid } from "@comet/admin-icons";
+import { Delete as DeleteIcon, Remove as RemoveIcon,WarningSolid } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -14,31 +14,32 @@ import { FeedbackButton } from "./buttons/feedback/FeedbackButton";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
+    deleteType?: "delete" | "remove";
     onDelete: () => Promise<void>;
     onCancel: () => void;
 }
 
 export const DeleteDialog = (props: DeleteDialogProps) => {
-    const { dialogOpen, onDelete, onCancel } = props;
+    const { dialogOpen, deleteType = "delete", onDelete, onCancel } = props;
 
     return (
         <Dialog open={dialogOpen} onClose={onCancel} maxWidth="sm">
             <DialogTitle>
-                <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Attention. Please confirm." />
+                { deleteType === "delete" ? <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Attention. Please confirm." /> : <FormattedMessage id="comet.common.deleteDialog.titleRemove" defaultMessage="Please confirm." /> }
             </DialogTitle>
             <DialogContent sx={{ gap: (theme) => theme.spacing(2), display: "flex", alignItems: "center" }}>
                 <WarningSolid color="error" />
-                <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="You are about to delete this item permanently." />
+                {deleteType === "delete" ? <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="You are about to delete this item permanently." /> : <FormattedMessage id="comet.common.deleteDialog.contentRemove" defaultMessage="You are about to remove this item." />}
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={onCancel} />
                 <FeedbackButton
-                    startIcon={<DeleteIcon />}
+                    startIcon={deleteType === "delete" ? <DeleteIcon /> : <RemoveIcon />}
                     onClick={onDelete}
                     variant="destructive"
-                    tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
+                    tooltipErrorMessage={deleteType === "delete" ? <FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" /> : <FormattedMessage id="comet.common.removeFailed" defaultMessage="Failed to remove" />}
                 >
-                    <FormattedMessage {...messages.delete} />
+                    <FormattedMessage {...(deleteType === "delete" ? messages.delete : messages.remove)} />
                 </FeedbackButton>
             </DialogActions>
         </Dialog>
