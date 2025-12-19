@@ -1,18 +1,8 @@
-import { useState } from "react";
-import { fireEvent, render, within } from "test-utils";
+import { fireEvent, within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
-import { type TableBlockData } from "../../../blocks.generated";
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
-import { TableBlockGrid } from "../TableBlockGrid";
-
-const renderTableBlock = (initialState: TableBlockData) => {
-    const Component = () => {
-        const [state, setState] = useState<TableBlockData>(initialState);
-        return <TableBlockGrid state={state} updateState={setState} />;
-    };
-    return render(<Component />);
-};
+import { renderTableBlock } from "./utils";
 
 describe("TableBlock: Insert a new row", () => {
     it("should insert a new, empty row at the top of the table", async () => {
