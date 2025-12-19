@@ -16,6 +16,7 @@ import {
     SwitchField,
     TextAreaField,
     TextField,
+    UrlField,
 } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
@@ -70,6 +71,7 @@ export const AllFieldComponents = {
                                 <TextField name="text" label="Text" variant={fieldVariant} fullWidth />
                                 <TextAreaField name="textarea" label="TextArea" variant={fieldVariant} fullWidth />
                                 <SearchField name="search" label="Search" variant={fieldVariant} fullWidth />
+                                <UrlField name="url" label="URL" variant={fieldVariant} fullWidth />
                                 <SelectField name="select" label="Select" variant={fieldVariant} fullWidth>
                                     {options.map((option) => (
                                         <MenuItem key={option.value} value={option.value}>
