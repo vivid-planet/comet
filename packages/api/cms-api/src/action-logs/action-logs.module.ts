@@ -12,7 +12,7 @@ export class ActionLogsModule {
     static forRoot(): DynamicModule {
         return {
             module: ActionLogsModule,
-            imports: [MikroOrmModule.forFeature([ActionLog]), ActionLogsFeatureModule],
+            imports: [MikroOrmModule.forFeature([ActionLog])],
             providers: [ActionLogsSubscriber, ActionLogsService],
         };
     }
