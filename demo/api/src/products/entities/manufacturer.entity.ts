@@ -1,4 +1,4 @@
-import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
+import { ActionLogs, CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
 import { BaseEntity, Embeddable, Embedded, Entity, IType, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsObject, IsString } from "class-validator";
@@ -81,6 +81,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 @Entity()
 @ObjectType()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["manufacturers"] })
+@ActionLogs()
 export class Manufacturer extends BaseEntity {
     [OptionalProps]?: "updatedAt";
 
