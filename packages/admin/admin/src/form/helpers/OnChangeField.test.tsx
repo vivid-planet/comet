@@ -2,6 +2,7 @@
 import { Fragment } from "react";
 import { Field, Form } from "react-final-form";
 import { cleanup, fireEvent, render } from "test-utils";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { OnChangeField } from "./OnChangeField";
 
@@ -13,7 +14,7 @@ describe("OnChangeField", () => {
     afterEach(cleanup);
 
     it("should not call listener on first render", () => {
-        const spy = jest.fn();
+        const spy = vi.fn();
         render(
             <Form onSubmit={onSubmitMock} initialValues={{ foo: "bar" }}>
                 {() => <OnChangeField name="foo">{spy}</OnChangeField>}
@@ -23,7 +24,7 @@ describe("OnChangeField", () => {
     });
 
     it("should call listener when going from uninitialized to value", () => {
-        const spy = jest.fn();
+        const spy = vi.fn();
         const { getByTestId } = render(
             <Form onSubmit={onSubmitMock}>
                 {() => (
@@ -42,7 +43,7 @@ describe("OnChangeField", () => {
     });
 
     it("should call listener when going from initialized to value", () => {
-        const spy = jest.fn();
+        const spy = vi.fn();
         const { getByTestId } = render(
             <Form onSubmit={onSubmitMock} initialValues={{ name: "erik" }}>
                 {() => (
@@ -61,7 +62,7 @@ describe("OnChangeField", () => {
     });
 
     it("should call listener when changing to null", () => {
-        const spy = jest.fn();
+        const spy = vi.fn();
         const { getByTestId } = render(
             <Form onSubmit={onSubmitMock} initialValues={{ name: "erikras" }}>
                 {() => (
