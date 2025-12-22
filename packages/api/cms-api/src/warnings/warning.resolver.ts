@@ -3,9 +3,9 @@ import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgre
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
-import { EntityInfoObject } from "src/common/entityInfo/entity-info.object";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { EntityInfoObject } from "../common/entityInfo/entity-info.object";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
