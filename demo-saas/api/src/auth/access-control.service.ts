@@ -29,9 +29,8 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allContentScopes;
         } else {
-            // TODO: instead of randomly taking one, take the departments the user is assigned to
-            // Needs to be implemented when user assignment is implemented
-            const departments = await this.entityManager.find(Department, {}, { limit: 1 });
+            // TODO: when RLS is implemented, set tenant id from header
+            const departments = await this.entityManager.findAll(Department);
             if (departments.length > 0) {
                 return [{ department: departments[0].id }];
             }
