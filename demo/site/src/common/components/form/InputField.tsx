@@ -5,7 +5,7 @@ interface InputProps {
     label: ReactNode;
     required?: boolean;
     placeholder?: string;
-    helperText?: string;
+    helperText?: ReactNode;
     textArea?: boolean;
 }
 
