@@ -2,12 +2,12 @@ import { gql, useApolloClient } from "@apollo/client";
 import { MainContent, Savable } from "@comet/admin";
 import { useState } from "react";
 
-import { type GQLAssignTenantUserMutation, type GQLAssignTenantUserMutationVariables } from "./AssignTenantUser.generated";
+import { type GQLAssignTenantUsersMutation, type GQLAssignTenantUsersMutationVariables } from "./AssignTenantUser.generated";
 import { UserPermissionsUsersGrid } from "./generated/AssignUsersGrid";
 
-const assignTenantUserQuery = gql`
-    mutation AssignTenantUser($tenant: ID!, $userId: String!) {
-        assignTenantUser(tenant: $tenant, userId: $userId) {
+const assignTenantUsersQuery = gql`
+    mutation AssignTenantUsers($tenant: ID!, $userIds: [String!]!) {
+        assignTenantUsers(tenant: $tenant, userIds: $userIds) {
             id
         }
     }
@@ -26,12 +26,11 @@ export const AssignTenantUser = ({ tenantId, onDialogClose }: AssignTenantUserPr
         <>
             <Savable
                 doSave={async () => {
-                    for (const userId of values) {
-                        await client.mutate<GQLAssignTenantUserMutation, GQLAssignTenantUserMutationVariables>({
-                            mutation: assignTenantUserQuery,
-                            variables: { tenant: tenantId, userId },
-                        });
-                    }
+                    await client.mutate<GQLAssignTenantUsersMutation, GQLAssignTenantUsersMutationVariables>({
+                        mutation: assignTenantUsersQuery,
+                        variables: { tenant: tenantId, userIds: values },
+                    });
+
                     return true;
                 }}
                 hasChanges={values.length > 0}

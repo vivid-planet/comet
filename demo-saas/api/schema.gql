@@ -389,7 +389,7 @@ input ManyToOneFilter {
 }
 
 type Mutation {
-  assignTenantUser(tenant: ID!, userId: String!): TenantUser!
+  assignTenantUsers(tenant: ID!, userIds: [String!]!): [TenantUser!]!
   createBuilds(input: CreateBuildsInput!): Boolean!
   createDepartment(input: DepartmentInput!, tenant: ID!): Department!
   createManufacturer(input: ManufacturerInput!): Manufacturer!

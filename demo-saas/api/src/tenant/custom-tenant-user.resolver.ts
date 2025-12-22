@@ -15,22 +15,23 @@ export class CustomTenantUserResolver {
         private readonly entityManager: EntityManager,
     ) {}
 
-    @Mutation(() => TenantUser)
-    async assignTenantUser(
+    @Mutation(() => [TenantUser])
+    async assignTenantUsers(
         @Args("tenant", { type: () => ID }) tenant: string,
-        @Args("userId", { type: () => String }) userId: string,
-    ): Promise<TenantUser> {
-        const tenantUser = this.entityManager.upsert(
+        @Args("userIds", { type: () => [String] }) userIds: string[],
+    ): Promise<TenantUser[]> {
+        const tenantReference = Reference.create(await this.entityManager.findOneOrFail(Tenant, tenant));
+        const tenantUsers = await this.entityManager.upsertMany(
             TenantUser,
-            {
+            userIds.map((userId) => ({
                 id: v4(),
-                tenant: Reference.create(await this.entityManager.findOneOrFail(Tenant, tenant)),
+                tenant: tenantReference,
                 userId,
-            },
+            })),
             { onConflictFields: ["tenant", "userId"], onConflictExcludeFields: ["id"] },
         );
         await this.entityManager.flush();
-        return tenantUser;
+        return tenantUsers;
     }
 
     @ResolveField(() => String)
