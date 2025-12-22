@@ -11,14 +11,15 @@ import { memoryCache } from "./cache";
 import { type CustomMiddleware } from "./chain";
 
 const domainRedirectsQuery = gql`
-    query DomainRedirects($scope: RedirectScopeInput!) {
-        paginatedRedirects(scope: $scope) {
+    query DomainRedirects($scope: RedirectScopeInput!, $offset: Int, $limit: Int) {
+        paginatedRedirects(scope: $scope, offset: $offset, limit: $limit) {
             nodes {
                 id
                 source
                 target
                 sourceType
             }
+            totalCount
         }
     }
 `;
@@ -27,14 +28,31 @@ async function fetchDomainRedirects(domain: string) {
     const key = `domainRedirects-${domain}`;
     return memoryCache.wrap(key, async () => {
         const graphQLFetch = createGraphQLFetch();
-        const data = await graphQLFetch<
-            { paginatedRedirects: { nodes: { id: string; source: string; target: RedirectsLinkBlockData; sourceType: string }[] } },
-            { scope: { domain: string } }
-        >(domainRedirectsQuery, {
-            scope: { domain },
-        });
+        const limit = 50;
+        let totalCount = 0;
+        let currentCount = 0;
+        let allNodes: { id: string; source: string; target: RedirectsLinkBlockData; sourceType: string }[] = [];
 
-        return data?.paginatedRedirects?.nodes || [];
+        do {
+            const data = await graphQLFetch<
+                {
+                    paginatedRedirects: {
+                        nodes: { id: string; source: string; target: RedirectsLinkBlockData; sourceType: string }[];
+                        totalCount: number;
+                    };
+                },
+                { scope: { domain: string }; offset: number; limit: number }
+            >(domainRedirectsQuery, {
+                scope: { domain },
+                offset: currentCount,
+                limit,
+            });
+            const nodes = data?.paginatedRedirects?.nodes || [];
+            totalCount = data?.paginatedRedirects?.totalCount || 0;
+            currentCount += nodes.length;
+            allNodes = allNodes.concat(nodes);
+        } while (currentCount < totalCount);
+        return allNodes;
     });
 }
 
