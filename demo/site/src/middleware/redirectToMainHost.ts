@@ -1,8 +1,7 @@
 import { gql } from "@comet/site-nextjs";
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
-import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
+import { type RedirectsLinkBlockData } from "@src/blocks.generated";
 import type { PublicSiteConfig } from "@src/site-configs";
-import { createSitePath } from "@src/util/createSitePath";
+import { getRedirectTargetUrl } from "@src/util/getRedirectTargetUrl";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
@@ -103,24 +102,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 if (domainRedirectTarget) {
                     let destination: string | undefined;
                     if (typeof domainRedirectTarget === "object" && domainRedirectTarget.block !== undefined) {
-                        switch (domainRedirectTarget.block.type) {
-                            case "internal": {
-                                const internalLink = domainRedirectTarget.block.props as InternalLinkBlockData;
-                                if (internalLink.targetPage) {
-                                    destination = createSitePath({
-                                        path: internalLink.targetPage.path,
-                                        scope: internalLink.targetPage.scope as Pick<GQLPageTreeNodeScope, "language">,
-                                    });
-                                    if (destination && destination.startsWith("/")) {
-                                        destination = `http://${host}${destination}`;
-                                    }
-                                }
-                                break;
-                            }
-                            case "external":
-                                destination = (domainRedirectTarget.block.props as ExternalLinkBlockData).targetUrl;
-                                break;
-                        }
+                        destination = getRedirectTargetUrl(domainRedirectTarget.block, host);
                     }
                     if (destination) {
                         return NextResponse.redirect(destination, { status: 301 });
