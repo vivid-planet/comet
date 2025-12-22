@@ -48,13 +48,8 @@
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@types/jest": "^29.5.14",
-<<<<<<< HEAD
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
-=======
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
->>>>>>> main
         "@vitejs/plugin-react": "^4.7.0",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
