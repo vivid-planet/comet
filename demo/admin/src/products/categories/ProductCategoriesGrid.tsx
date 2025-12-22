@@ -9,11 +9,12 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
@@ -78,6 +79,14 @@ export function ProductCategoriesGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote({ queryParamsPrefix: "productCategories" }), ...usePersistentColumnState("ProductCategoriesGrid") };
+    const stackSwitchApi = useStackSwitchApi();
+
+    const handleRowPrimaryAction = useCallback(
+        (row: GQLProductCategoriesGridHandmadeFragment) => {
+            stackSwitchApi.activatePage("edit", row.id);
+        },
+        [stackSwitchApi],
+    );
 
     const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
         await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
@@ -129,7 +138,7 @@ export function ProductCategoriesGrid() {
                 renderCell: (params) => {
                     return (
                         <>
-                            <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <IconButton color="primary" onClick={() => handleRowPrimaryAction(params.row)}>
                                 <EditIcon />
                             </IconButton>
                             <CrudContextMenu
@@ -146,7 +155,7 @@ export function ProductCategoriesGrid() {
                 },
             },
         ];
-    }, [client, intl]);
+    }, [client, intl, handleRowPrimaryAction]);
 
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
@@ -166,11 +175,11 @@ export function ProductCategoriesGrid() {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
+            onRowClick={(params) => handleRowPrimaryAction(params.row)}
             slots={{
                 toolbar: ProductCategoriesGridToolbar as GridSlotsComponent["toolbar"],
             }}
