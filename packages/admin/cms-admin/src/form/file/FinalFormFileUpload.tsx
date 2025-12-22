@@ -131,6 +131,10 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 const tooManyFilesWereDropped = rejectedFiles.some((rejection) => rejection.errors.some((error) => error.code === "too-many-files"));
                 setTooManyFilesSelected(tooManyFilesWereDropped);
 
+                if (tooManyFilesWereDropped || !acceptedFiles.length) {
+                    return;
+                }
+
                 rejectedFiles.map((rejection) => {
                     const failedFile: ErrorFileSelectItem = {
                         name: rejection.file.name,
@@ -150,10 +154,6 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
 
                 if (singleFile) {
                     onChange(undefined);
-                }
-
-                if (tooManyFilesWereDropped || !acceptedFiles.length) {
-                    return;
                 }
 
                 setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
@@ -225,7 +225,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}
-            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            error={tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles ? maxFiles : 1) : undefined}
             getDownloadUrl={(file) => (isDownloadableFile(file) && file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />

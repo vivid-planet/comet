@@ -24,3 +24,4 @@ const config = [
 ];
 
 export default config;
+export { restrictedImportPaths } from "../react.js";

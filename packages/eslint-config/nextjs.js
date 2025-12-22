@@ -3,6 +3,18 @@ import react from "eslint-plugin-react";
 import globals from "globals";
 import nextPlugin from "@next/eslint-plugin-next";
 
+export const restrictedImportPaths = [
+    {
+        name: "react",
+        importNames: ["default"],
+    },
+    {
+        name: "next/image",
+        importNames: ["default"],
+        message: "Please use Image from @comet/site-nextjs instead",
+    },
+];
+
 /** @type {import('eslint')} */
 const config = [
     ...coreConfig,
@@ -16,17 +28,7 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        {
-                            name: "react",
-                            importNames: ["default"],
-                        },
-                        {
-                            name: "next/image",
-                            importNames: ["default"],
-                            message: "Please use Image from @comet/site-nextjs instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
                 },
             ],
         },
