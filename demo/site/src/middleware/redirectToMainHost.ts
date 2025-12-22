@@ -53,9 +53,11 @@ async function getDomainRedirectTarget(domain: string, host: string): Promise<Re
     return undefined;
 }
 
+const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
+
 const matchesHostWithAdditionalDomain = (siteConfig: PublicSiteConfig, host: string) => {
-    if (siteConfig.domains.main === host) return true;
-    if (siteConfig.domains.additional?.includes(host)) return true;
+    if (normalizeDomain(siteConfig.domains.main) === normalizeDomain(host)) return true; // non-www redirect
+    if (siteConfig.domains.additional?.map(normalizeDomain).includes(normalizeDomain(host))) return true;
     return false;
 };
 
