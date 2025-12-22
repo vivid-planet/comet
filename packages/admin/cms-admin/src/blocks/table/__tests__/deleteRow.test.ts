@@ -1,4 +1,5 @@
 import { within } from "test-utils";
+import { describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";

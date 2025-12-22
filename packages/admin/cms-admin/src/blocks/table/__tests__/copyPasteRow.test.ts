@@ -1,5 +1,6 @@
 import { userEvent } from "@testing-library/user-event";
 import { waitFor, within } from "test-utils";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
