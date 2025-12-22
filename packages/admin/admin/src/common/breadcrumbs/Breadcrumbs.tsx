@@ -6,7 +6,7 @@ import { Fragment, type ReactNode } from "react";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
-type BreadcrumbsClassKey = "root" | "breadcrumbsItem" | "separator";
+type BreadcrumbsClassKey = "root" | "item" | "separator";
 
 export interface Breadcrumb {
     url: string;
@@ -16,7 +16,7 @@ export interface Breadcrumb {
 interface BreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        breadcrumbsItem: typeof Typography;
+        item: typeof Typography;
         separator: typeof ChevronRight;
     }> {
     items: Breadcrumb[];
@@ -34,9 +34,9 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
     `,
 );
 
-const BreadcrumbsItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
-    slotName: "breadcrumbsItem",
+    slotName: "item",
 })(
     ({ theme }) => css`
         color: ${theme.palette.grey[900]};
@@ -70,18 +70,18 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
 
                 if (isCurrentPage) {
                     return (
-                        <BreadcrumbsItem key={item.url} {...slotProps?.breadcrumbsItem}>
+                        <Item key={item.url} {...slotProps?.item}>
                             {item.title}
-                        </BreadcrumbsItem>
+                        </Item>
                     );
                 }
 
                 return (
                     <Fragment key={item.url}>
                         {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                        <BreadcrumbsItem component="a" href={item.url} {...slotProps?.breadcrumbsItem}>
+                        <Item component="a" href={item.url} {...slotProps?.item}>
                             {item.title}
-                        </BreadcrumbsItem>
+                        </Item>
                         <Separator {...slotProps?.separator} />
                     </Fragment>
                 );
