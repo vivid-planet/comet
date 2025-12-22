@@ -6,7 +6,7 @@ interface CheckboxFieldProps {
     required?: boolean;
 }
 
-export function CheckboxField({ label, helperText }: CheckboxFieldProps): React.ReactElement {
+export function CheckboxField({ label, helperText }: CheckboxFieldProps) {
     return (
         <div>
             <input type="checkbox" />
