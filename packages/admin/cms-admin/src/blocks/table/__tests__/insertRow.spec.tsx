@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { fireEvent, render, within } from "test-utils";
+import { describe, expect, it } from "vitest";
 
 import { type TableBlockData } from "../../../blocks.generated";
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";

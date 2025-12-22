@@ -2,6 +2,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { RouterMemoryRouter } from "@comet/admin";
 import { type ReactNode } from "react";
 import { renderHook } from "test-utils";
+import { describe, expect, it } from "vitest";
 
 import { type CometConfig, CometConfigProvider } from "../../config/CometConfigContext";
 import { ContentScopeProvider } from "../../contentScope/Provider";
