@@ -13,12 +13,12 @@ const eyebrowRenderers: Renderers = {
 const getHeadlineRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers => ({
     inline: defaultRichTextInlineStyleMap,
     blocks: {
-        "header-one": createTextBlockRenderFn({ variant: "h600", as: htmlTag, bottomSpacing: true }),
-        "header-two": createTextBlockRenderFn({ variant: "h550", as: htmlTag, bottomSpacing: true }),
-        "header-three": createTextBlockRenderFn({ variant: "h500", as: htmlTag, bottomSpacing: true }),
-        "header-four": createTextBlockRenderFn({ variant: "h450", as: htmlTag, bottomSpacing: true }),
-        "header-five": createTextBlockRenderFn({ variant: "h400", as: htmlTag, bottomSpacing: true }),
-        "header-six": createTextBlockRenderFn({ variant: "h350", as: htmlTag, bottomSpacing: true }),
+        "header-one": createTextBlockRenderFn({ variant: "headline600", as: htmlTag, bottomSpacing: true }),
+        "header-two": createTextBlockRenderFn({ variant: "headline550", as: htmlTag, bottomSpacing: true }),
+        "header-three": createTextBlockRenderFn({ variant: "headline500", as: htmlTag, bottomSpacing: true }),
+        "header-four": createTextBlockRenderFn({ variant: "headline450", as: htmlTag, bottomSpacing: true }),
+        "header-five": createTextBlockRenderFn({ variant: "headline400", as: htmlTag, bottomSpacing: true }),
+        "header-six": createTextBlockRenderFn({ variant: "headline350", as: htmlTag, bottomSpacing: true }),
     },
 });
 
@@ -40,14 +40,14 @@ export const HeadingBlock = withPreview(
         return (
             <>
                 {hasRichTextBlockContent(eyebrow) && (
-                    <Typography variant="h400" as="p" bottomSpacing>
+                    <Typography variant="headline400" as="p" bottomSpacing>
                         <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
                     </Typography>
                 )}
                 <PreviewSkeleton
                     hasContent={hasRichTextBlockContent(headline)}
                     title={
-                        <Typography variant="h550" as="span">
+                        <Typography variant="headline550" as="span">
                             Headline
                         </Typography>
                     }

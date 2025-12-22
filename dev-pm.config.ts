@@ -209,26 +209,6 @@ export default defineConfig({
             group: ["demo-site", "demo"],
         },
 
-        //group demo site pages
-        {
-            name: "demo-site-pages",
-            script: "pnpm --filter comet-demo-site-pages run dev",
-            group: ["demo-site-pages", "demo"],
-            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
-        },
-        {
-            name: "demo-site-pages-codegen",
-            script: "pnpm --filter comet-demo-site-pages run gql:watch",
-            group: ["demo-site-pages", "demo"],
-            waitOn: ["tcp:$API_PORT"],
-        },
-        {
-            name: "demo-site-pages-block-codegen",
-            script: "pnpm --filter comet-demo-site-pages run generate-block-types:watch",
-            group: ["demo-site-pages", "demo"],
-            waitOn: ["tcp:$API_PORT"],
-        },
-
         // group docs
         {
             name: "storybook",
@@ -244,7 +224,7 @@ export default defineConfig({
         {
             name: "storybook-comet-admin",
             script: "pnpm --filter @comet/admin run storybook",
-            group: ["storybook"],
+            group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
         },
     ],

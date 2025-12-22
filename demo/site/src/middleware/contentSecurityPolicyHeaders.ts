@@ -9,6 +9,7 @@ type ContentSecurityPolicyDirective = {
 
 const contentSecurityPolicyDirectives: ContentSecurityPolicyDirective[] = [
     { directive: "default-src", values: ["'none'"] }, // Restrict any content not explicitly allowed
+    { directive: "connect-src", values: ["'self'"] },
     { directive: "style-src-elem", values: ["'self'", "'unsafe-inline'"] },
     { directive: "script-src-elem", values: ["'self'", "'unsafe-inline'"] },
     { directive: "img-src", values: ["'self'", "data:", process.env.ADMIN_URL] },
@@ -20,7 +21,7 @@ const contentSecurityPolicyDirectives: ContentSecurityPolicyDirective[] = [
 ];
 
 if (process.env.NODE_ENV === "development") {
-    contentSecurityPolicyDirectives.push({ directive: "connect-src", values: ["ws:"] });
+    contentSecurityPolicyDirectives[1].values.push("ws:"); // add to connect-src
     contentSecurityPolicyDirectives.push({ directive: "script-src", values: ["'unsafe-eval'"] });
 } else {
     contentSecurityPolicyDirectives.push({ directive: "upgrade-insecure-requests", values: [] });

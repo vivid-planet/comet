@@ -1,7 +1,6 @@
-import { withContentSecurityPolicyHeadersMiddleware } from "@src/middleware/contentSecurityPolicyHeaders";
-
 import { withAdminRedirectMiddleware } from "./middleware/adminRedirect";
 import { chain } from "./middleware/chain";
+import { withContentSecurityPolicyHeadersMiddleware } from "./middleware/contentSecurityPolicyHeaders";
 import { withDamRewriteMiddleware } from "./middleware/damRewrite";
 import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";

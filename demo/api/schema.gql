@@ -345,6 +345,11 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   downloadUrl: String!
+
+  """
+  The date and time the file will be deleted. If undefined, the file will never be deleted.
+  """
+  expiresAt: DateTime
   id: ID!
   imageUrl(resizeWidth: Int!): String
   mimetype: String!
@@ -445,6 +450,7 @@ type KubernetesCronJob {
   lastScheduledAt: DateTime
   name: String!
   schedule: String!
+  suspended: Boolean!
 }
 
 type KubernetesJob {
@@ -580,6 +586,7 @@ enum ManufacturerSortField {
   addressAsEmbeddable_street
   addressAsEmbeddable_streetNumber
   addressAsEmbeddable_zip
+  id
   name
   updatedAt
 }
@@ -780,6 +787,7 @@ enum NewsSortField {
   category
   createdAt
   date
+  id
   slug
   status
   title
@@ -1120,6 +1128,7 @@ input ProductCategorySort {
 
 enum ProductCategorySortField {
   createdAt
+  id
   position
   slug
   title
@@ -1153,6 +1162,7 @@ input ProductCategoryTypeSort {
 }
 
 enum ProductCategoryTypeSortField {
+  id
   title
 }
 
@@ -1217,7 +1227,6 @@ input ProductFilter {
   price: NumberFilter
   priceList: ManyToOneFilter
   slug: StringFilter
-  soldCount: NumberFilter
   status: ProductStatusEnumFilter
   tags: ManyToManyFilter
   tagsWithStatus: OneToManyFilter
@@ -1258,6 +1267,7 @@ input ProductHighlightSort {
 enum ProductHighlightSortField {
   createdAt
   description
+  id
   product
   product_additionalTypes
   product_availableSince
@@ -1270,7 +1280,6 @@ enum ProductHighlightSortField {
   product_price
   product_priceList
   product_slug
-  product_soldCount
   product_status
   product_title
   product_type
@@ -1350,6 +1359,7 @@ enum ProductSortField {
   category_updatedAt
   createdAt
   description
+  id
   inStock
   lastCheckedAt
   manufacturer
@@ -1367,12 +1377,11 @@ enum ProductSortField {
   priceList
   priceList_contentHash
   priceList_createdAt
-  priceList_id
+  priceList_expiresAt
   priceList_mimetype
   priceList_name
   priceList_updatedAt
   slug
-  soldCount
   statistics_createdAt
   statistics_updatedAt
   statistics_views
@@ -1439,6 +1448,7 @@ input ProductTagSort {
 
 enum ProductTagSortField {
   createdAt
+  id
   title
   updatedAt
 }
@@ -1457,9 +1467,21 @@ type ProductToTag {
 }
 
 enum ProductType {
+  bag
+  calendar
   cap
+  jacket
+  mug
+  notebook
+  pants
+  pen
   shirt
+  shoes
+  socks
+  sunglasses
   tie
+  wallet
+  watch
 }
 
 input ProductTypeEnumFilter {
@@ -1530,6 +1552,7 @@ input ProductVariantSort {
 
 enum ProductVariantSortField {
   createdAt
+  id
   name
   position
   product
@@ -1544,7 +1567,6 @@ enum ProductVariantSortField {
   product_price
   product_priceList
   product_slug
-  product_soldCount
   product_status
   product_title
   product_type
@@ -1588,10 +1610,10 @@ type Query {
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   manufacturer(id: ID!): Manufacturer!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
-  manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]): PaginatedManufacturers!
+  manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]! = [{direction: ASC, field: id}]): PaginatedManufacturers!
   news(id: ID!): News!
   newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
-  newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]): PaginatedNews!
+  newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]! = [{direction: ASC, field: createdAt}]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
@@ -1603,18 +1625,18 @@ type Query {
   predefinedPage(id: ID!): PredefinedPage!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]): PaginatedProductCategories!
+  productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]! = [{direction: ASC, field: position}]): PaginatedProductCategories!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategoryType(id: ID!): ProductCategoryType!
-  productCategoryTypes(filter: ProductCategoryTypeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategoryTypeSort!]): PaginatedProductCategoryTypes!
+  productCategoryTypes(filter: ProductCategoryTypeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategoryTypeSort!]! = [{direction: ASC, field: id}]): PaginatedProductCategoryTypes!
   productHighlight(id: ID!): ProductHighlight!
-  productHighlights(filter: ProductHighlightFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductHighlightSort!]): PaginatedProductHighlights!
+  productHighlights(filter: ProductHighlightFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductHighlightSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProductHighlights!
   productTag(id: ID!): ProductTag!
-  productTags(filter: ProductTagFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductTagSort!]): PaginatedProductTags!
+  productTags(filter: ProductTagFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductTagSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!
-  productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]): PaginatedProductVariants!
-  products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
+  productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]! = [{direction: ASC, field: position}]): PaginatedProductVariants!
+  products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProducts!
   redirect(id: ID!): Redirect!
   redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
@@ -1648,6 +1670,7 @@ type Redirect {
 }
 
 input RedirectFilter {
+  activatedAt: DateTimeFilter
   active: BooleanFilter
   and: [RedirectFilter!]
   createdAt: DateTimeFilter

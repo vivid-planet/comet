@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.6.0",
+    "version": "8.10.0",
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
@@ -23,6 +23,7 @@
         "clean": "rimraf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
@@ -37,24 +38,24 @@
         "pluralize": "^8.0.0",
         "ts-morph": "^25.0.1",
         "ts-node": "^10.9.2",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
         "@mikro-orm/cli": "^6.4.16",
         "@mikro-orm/core": "^6.4.16",
         "@mikro-orm/postgresql": "^6.4.16",
-        "@nestjs/graphql": "^13.1.0",
+        "@nestjs/graphql": "^13.2.0",
         "@types/jest": "^29.5.14",
         "@types/node": "^24.9.1",
         "@types/pluralize": "^0.0.33",
-        "class-validator": "^0.14.2",
+        "class-validator": "^0.14.3",
         "eslint": "^9.30.1",
         "jest": "^29.7.0",
         "npm-run-all2": "^8.0.0",
         "prettier": "^3.6.2",
         "reflect-metadata": "^0.2.2",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "ts-jest": "^29.4.0",
         "uuid": "^11.1.0"
     },

@@ -1,5 +1,37 @@
 # @comet/admin
 
+## 8.10.0
+
+### Patch Changes
+
+- 1918d88: muiGridSortToGql: Prevent overwriting the default value defined in the GraphQL schema
+    - @comet/admin-icons@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @comet/admin-icons@8.9.0
+
+## 8.8.0
+
+### Patch Changes
+
+- @comet/admin-icons@8.8.0
+
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- a8e8132: Prevent `StackPageTitle` rerender loop when passing a React element as `title`
+    - @comet/admin-icons@8.7.0
+
 ## 8.6.0
 
 ### Patch Changes

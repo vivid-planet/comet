@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "8.6.0",
+    "version": "8.10.0",
     "description": "Comet Admin Rich Text Editor component",
     "repository": {
         "directory": "packages/admin/admin-rte",
@@ -20,6 +20,7 @@
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
@@ -39,14 +40,14 @@
         "immutable": "~3.8.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.0",
-        "@babel/core": "^7.28.0",
+        "@babel/cli": "^7.28.3",
+        "@babel/core": "^7.28.5",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.2.0",
-        "@types/draft-js": "^0.11.18",
+        "@mui/material": "^7.3.5",
+        "@types/draft-js": "^0.11.20",
         "@types/jest": "^29.5.14",
-        "@types/react": "^18.3.23",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "draft-js": "^0.11.7",
         "eslint": "^9.30.1",
@@ -59,9 +60,9 @@
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "ts-jest": "^29.4.0",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",

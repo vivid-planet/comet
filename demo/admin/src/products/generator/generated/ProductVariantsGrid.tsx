@@ -73,7 +73,7 @@ function ProductVariantsGridToolbar({ exportApi }: ProductVariantsGridToolbarToo
             }
         ]}/>
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage={`New Product Variant`}/>
+        <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant"/>
     </Button>
             </DataGridToolbar>);
 }

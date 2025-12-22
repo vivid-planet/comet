@@ -1,6 +1,6 @@
 {
     "name": "@comet/cli",
-    "version": "8.6.0",
+    "version": "8.10.0",
     "description": "A collection of CLI tools for Comet projects",
     "repository": {
         "directory": "packages/cli",
@@ -23,6 +23,7 @@
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc"
@@ -38,8 +39,8 @@
         "@types/node": "^24.9.1",
         "eslint": "^9.30.1",
         "npm-run-all2": "^8.0.0",
-        "rimraf": "^6.0.1",
-        "typescript": "5.8.3"
+        "rimraf": "^6.1.2",
+        "typescript": "5.9.3"
     },
     "engines": {
         "node": ">=22.0.0"

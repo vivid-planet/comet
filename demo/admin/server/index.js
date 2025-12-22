@@ -31,7 +31,7 @@ app.use(
                 "style-src-attr": ["'unsafe-inline'"],
                 "font-src": ["'self'", "data:"],
                 "connect-src": ["'self'"],
-                "img-src": ["'self'", "data:"],
+                "img-src": ["'self'", "data:", "blob:"],
                 "media-src": ["'self'", "data:"],
                 "frame-src": [process.env.PREVIEW_URL],
                 upgradeInsecureRequests: process.env.NODE_ENV === "development" ? undefined : [], // Upgrade all requests to HTTPS on production

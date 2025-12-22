@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "8.6.0",
+    "version": "8.10.0",
     "description": "A collection of icons for Comet Admin",
     "repository": {
         "directory": "packages/admin/admin-icons",
@@ -17,6 +17,7 @@
         "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
@@ -25,18 +26,18 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "use-constant": "^1.1.1",
+        "use-constant": "^2.0.0",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.0",
-        "@babel/core": "^7.28.0",
+        "@babel/cli": "^7.28.3",
+        "@babel/core": "^7.28.5",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.2.0",
+        "@mui/material": "^7.3.5",
         "@types/cli-progress": "^3.11.6",
         "@types/node": "^24.9.1",
-        "@types/react": "^18.3.23",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "change-case": "^4.1.2",
         "cli-progress": "^3.12.0",
@@ -46,9 +47,9 @@
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "ts-node": "^10.9.2",
-        "typescript": "5.8.3"
+        "typescript": "5.9.3"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",

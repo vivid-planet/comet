@@ -47,13 +47,6 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/site/lang/comet-demo-lang"
 
-            - name: "Demo Site Pages: Clone translations"
-              uses: actions/checkout@v5
-              with:
-                  repository: vivid-planet/comet-demo-lang
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  path: "demo/site-pages/lang/comet-demo-lang"
-
             - name: "Demo Api: Clone translations"
               uses: actions/checkout@v4
               with:
@@ -80,7 +73,7 @@ jobs:
 
             - name: Lint
               run: |
-                  pnpm run lint
+                  pnpm run lint:ci
                   # check for duplicate ids of formatted messages
                   pnpm run intl:extract
                   # check if schema files are up to date

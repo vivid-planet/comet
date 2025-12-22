@@ -12,6 +12,7 @@ import { type ReactNode } from "react";
 
 import {
     type ActionsGridColumnConfig,
+    type FormattedMessageElement,
     type GeneratorReturn,
     type GQLDocumentConfigMap,
     type GridColumnConfig,
@@ -26,7 +27,9 @@ import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
-import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { generateFormattedMessage } from "../utils/intl";
+import { isGeneratorConfigCode, isGeneratorConfigFormattedMessage, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { detectMuiXGridVariant } from "./detectMuiXVersion";
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
@@ -99,40 +102,66 @@ type LabelData = {
     gridCellContent?: ReactNode;
 };
 
-const getValueOptionsLabelData = (messageId: string, label: string | GridColumnStaticSelectLabelCellContent): LabelData => {
-    if (typeof label === "string") {
+const getValueOptionsLabelData = (messageId: string, label: string | FormattedMessageElement | GridColumnStaticSelectLabelCellContent): LabelData => {
+    if (typeof label === "string" || isGeneratorConfigFormattedMessage(label)) {
         return {
-            textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
+            textLabel: generateFormattedMessage({
+                config: label as FormattedMessageElement | string,
+                id: messageId,
+                type: "intlCall",
+            }),
         };
     }
 
     const textLabelParts: string[] = [];
     const gridCellContentProps: Record<string, string> = {};
 
-    if (label.primaryText) {
+    if ("primaryText" in label && label.primaryText) {
         const primaryMessageId = `${messageId}.primary`;
-        textLabelParts.push(`intl.formatMessage({ id: "${primaryMessageId}", defaultMessage: "${label.primaryText}" })`);
-        gridCellContentProps.primaryText = `<FormattedMessage id="${primaryMessageId}" defaultMessage="${label.primaryText}" />`;
+        textLabelParts.push(
+            generateFormattedMessage({
+                config: label.primaryText,
+                id: primaryMessageId,
+                type: "intlCall",
+            }),
+        );
+        gridCellContentProps.primaryText = generateFormattedMessage({
+            config: label.primaryText,
+            id: primaryMessageId,
+            type: "jsx",
+        });
     }
 
-    if (label.secondaryText) {
+    if ("secondaryText" in label && label.secondaryText) {
         const secondaryMessageId = `${messageId}.secondary`;
-        textLabelParts.push(`intl.formatMessage({ id: "${secondaryMessageId}", defaultMessage: "${label.secondaryText}" })`);
-        gridCellContentProps.secondaryText = `<FormattedMessage id="${secondaryMessageId}" defaultMessage="${label.secondaryText}" />`;
+        textLabelParts.push(
+            generateFormattedMessage({
+                config: label.secondaryText,
+                id: secondaryMessageId,
+                type: "intlCall",
+            }),
+        );
+        gridCellContentProps.secondaryText = generateFormattedMessage({
+            config: label.secondaryText,
+            id: secondaryMessageId,
+            type: "jsx",
+        });
     }
 
-    if (typeof label.icon === "string") {
-        gridCellContentProps.icon = `<${label.icon}Icon />`;
-    } else if (typeof label.icon === "object") {
-        if ("import" in label.icon) {
-            gridCellContentProps.icon = `<${label.icon.name} />`;
-        } else {
-            const { name, ...iconProps } = label.icon;
-            gridCellContentProps.icon = `<${name}Icon
+    if ("icon" in label) {
+        if (typeof label.icon === "string") {
+            gridCellContentProps.icon = `<${label.icon}Icon />`;
+        } else if (typeof label.icon === "object") {
+            if ("import" in label.icon) {
+                gridCellContentProps.icon = `<${label.icon.name} />`;
+            } else {
+                const { name, ...iconProps } = label.icon;
+                gridCellContentProps.icon = `<${name}Icon
                 ${Object.entries(iconProps)
                     .map(([key, value]) => `${key}="${value}"`)
                     .join("\n")}
             />`;
+            }
         }
     }
 
@@ -163,6 +192,7 @@ export function generateGrid<T extends { __typename?: string }>(
         throw new Error("gqlType is required in grid config");
     }
 
+    const muiXGridVariant = detectMuiXGridVariant();
     const gqlTypePlural = plural(gqlType);
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -213,14 +243,15 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "ListItemIcon", importPath: "@mui/material" },
         { name: "ListItemText", importPath: "@mui/material" },
         { name: "CircularProgress", importPath: "@mui/material" },
-        { name: "DataGridPro", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridLogicOperator", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridRenderCellParams", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridSlotsComponent", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridToolbarProps", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridColumnHeaderTitle", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridToolbarQuickFilter", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridRowOrderChangeParams", importPath: "@mui/x-data-grid-pro" },
+        { name: muiXGridVariant.gridComponent, importPath: muiXGridVariant.package },
+        { name: `${muiXGridVariant.gridComponent}Props`, importPath: muiXGridVariant.package },
+        { name: "GridLogicOperator", importPath: muiXGridVariant.package },
+        { name: "GridRenderCellParams", importPath: muiXGridVariant.package },
+        { name: "GridSlotsComponent", importPath: muiXGridVariant.package },
+        { name: "GridToolbarProps", importPath: muiXGridVariant.package },
+        { name: "GridColumnHeaderTitle", importPath: muiXGridVariant.package },
+        { name: "GridToolbarQuickFilter", importPath: muiXGridVariant.package },
+        { name: "GridRowOrderChangeParams", importPath: muiXGridVariant.package },
         { name: "useMemo", importPath: "react" },
     ];
 
@@ -337,16 +368,21 @@ export function generateGrid<T extends { __typename?: string }>(
     const hasSort = !!sortArg;
     let sortFields: string[] = [];
     if (sortArg) {
-        if (sortArg.type.kind !== "LIST") {
+        let sortArgType = sortArg.type;
+        if (sortArgType.kind === "NON_NULL") {
+            sortArgType = sortArgType.ofType;
+        }
+
+        if (sortArgType.kind !== "LIST") {
             throw new Error("Sort argument must be LIST");
         }
-        if (sortArg.type.ofType.kind !== "NON_NULL") {
+        if (sortArgType.ofType.kind !== "NON_NULL") {
             throw new Error("Sort argument must be LIST->NON_NULL");
         }
-        if (sortArg.type.ofType.ofType.kind !== "INPUT_OBJECT") {
+        if (sortArgType.ofType.ofType.kind !== "INPUT_OBJECT") {
             throw new Error("Sort argument must be LIST->NON_NULL->INPUT_OBJECT");
         }
-        const sortTypeName = sortArg.type.ofType.ofType.name;
+        const sortTypeName = sortArgType.ofType.ofType.name;
         const sortType = gqlIntrospection.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === sortTypeName) as
             | IntrospectionInputObjectType
             | undefined;
@@ -452,7 +488,7 @@ export function generateGrid<T extends { __typename?: string }>(
             ) as IntrospectionEnumType | undefined;
 
             column.values?.forEach((value) => {
-                if (typeof value === "object" && typeof value.label === "object" && typeof value.label.icon !== "undefined") {
+                if (typeof value === "object" && typeof value.label === "object" && "icon" in value.label) {
                     if (typeof value.label.icon === "string") {
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
@@ -605,15 +641,14 @@ export function generateGrid<T extends { __typename?: string }>(
     }
 
     if (config.selectionProps) {
-        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
             name: "rowSelectionModel",
-            type: `DataGridProProps["rowSelectionModel"]`,
+            type: `${muiXGridVariant.gridComponent}Props["rowSelectionModel"]`,
             optional: true,
         });
         props.push({
             name: "onRowSelectionModelChange",
-            type: `DataGridProProps["onRowSelectionModelChange"]`,
+            type: `${muiXGridVariant.gridComponent}Props["onRowSelectionModelChange"]`,
             optional: true,
         });
     }
@@ -782,25 +817,34 @@ export function generateGrid<T extends { __typename?: string }>(
                         renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
-                                        <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
-                                            column.name
-                                        }",   defaultMessage: "${
-                                            column.headerName || camelCaseToHumanReadable(column.name)
-                                        }"})} columnWidth= {${tooltipColumnWidth}}
+                                        <GridColumnHeaderTitle label={${generateFormattedMessage({
+                                            config: column.headerName,
+                                            id: `${instanceGqlType}.${column.name}`,
+                                            defaultMessage: camelCaseToHumanReadable(column.name),
+                                            type: "intlCall",
+                                        })}} columnWidth= {${tooltipColumnWidth}}
                               />
                                         <Tooltip
-                                            title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
-                                                column.headerInfoTooltip
-                                            }" />}
+                                            title={${generateFormattedMessage({
+                                                config: column.headerInfoTooltip,
+                                                id: `${instanceGqlType}.${column.name}.tooltip`,
+                                                type: "jsx",
+                                            })}}
                                         >
                                             <InfoIcon sx={{ marginLeft: 1 }} />
                                         </Tooltip>
                                     </>
                                 )`
                             : undefined,
-                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                            column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })`,
+                        headerName:
+                            column.headerName === ""
+                                ? `""`
+                                : generateFormattedMessage({
+                                      config: column.headerName,
+                                      id: `${instanceGqlType}.${column.name}`,
+                                      defaultMessage: camelCaseToHumanReadable(column.name),
+                                      type: "intlCall",
+                                  }),
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
                         sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
@@ -834,7 +878,11 @@ export function generateGrid<T extends { __typename?: string }>(
                         ? tsCodeRecordToString({
                               field: '"actions"',
                               headerName: actionsColumnHeaderName
-                                  ? `intl.formatMessage({ id: "${instanceGqlType}.actions", defaultMessage: "${actionsColumnHeaderName}" })`
+                                  ? generateFormattedMessage({
+                                        config: actionsColumnHeaderName,
+                                        id: `${instanceGqlType}.actions`,
+                                        type: "intlCall",
+                                    })
                                   : `""`,
                               sortable: "false",
                               filterable: "false",
@@ -844,6 +892,13 @@ export function generateGrid<T extends { __typename?: string }>(
                               width: forwardRowAction ? "actionsColumnWidth" : actionsColumnWidth,
                               visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
+                              headerInfoTooltip: restActionsColumnConfig.headerInfoTooltip
+                                  ? generateFormattedMessage({
+                                        config: restActionsColumnConfig.headerInfoTooltip,
+                                        id: `${instanceGqlType}.actions`,
+                                        type: "intlCall",
+                                    })
+                                  : undefined,
                               disableExport: config.excelExport ? "true" : undefined,
                               renderCell: `(params) => {
                             return (
@@ -874,6 +929,7 @@ export function generateGrid<T extends { __typename?: string }>(
                                                     : ""
                                             }
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
+                                            ${config.crudContextMenu?.deleteText ? `messagesMapping={{ delete: <FormattedMessage id="${instanceGqlType}.crudContextMenu.delete" defaultMessage="${config.crudContextMenu.deleteText}" /> }}` : ""}
                                         />
                                     `
                                         : ""
@@ -929,7 +985,7 @@ export function generateGrid<T extends { __typename?: string }>(
         ${generateGridExportApi(config.excelExport, gqlTypePlural, instanceGqlTypePlural, gridQuery, gqlArgs)}
 
         return (
-            <DataGridPro
+            <${muiXGridVariant.gridComponent}
                 {...dataGridProps}
                 rows={rows}
                 rowCount={rowCount}
@@ -950,6 +1006,7 @@ export function generateGrid<T extends { __typename?: string }>(
                            hideFooterPagination`
                         : ""
                 }
+                ${config.density ? `density="${config.density}"` : ""}
             />
         );
     }

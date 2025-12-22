@@ -1,5 +1,3 @@
-import helmet from "helmet";
-
 if (process.env.TRACING == "production") {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("./tracing.production");
@@ -18,6 +16,7 @@ import { useContainer } from "class-validator";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import { json } from "express";
+import helmet from "helmet";
 
 import { createConfig } from "./config/config";
 
@@ -56,12 +55,15 @@ async function bootstrap(): Promise<void> {
 
     app.use(
         helmet({
-            contentSecurityPolicy: {
-                directives: {
-                    "default-src": ["'none'"],
-                },
-                useDefaults: false, // Disable default directives
-            },
+            contentSecurityPolicy:
+                process.env.NODE_ENV !== "production"
+                    ? false
+                    : {
+                          directives: {
+                              "default-src": ["'none'"],
+                          },
+                          useDefaults: false, // Disable default directives
+                      },
             xFrameOptions: false, // Disable non-standard header
             strictTransportSecurity: {
                 // Enable HSTS

@@ -1084,6 +1084,11 @@
                 "nullable": false
             },
             {
+                "name": "caption",
+                "kind": "String",
+                "nullable": false
+            },
+            {
                 "name": "linkList",
                 "kind": "Block",
                 "block": "LinkList",
@@ -1106,6 +1111,11 @@
                 "name": "image",
                 "kind": "Block",
                 "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "caption",
+                "kind": "String",
                 "nullable": false
             },
             {
@@ -2438,7 +2448,19 @@
                 "enum": [
                     "cap",
                     "shirt",
-                    "tie"
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
                 ],
                 "nullable": false,
                 "array": true
@@ -2451,7 +2473,19 @@
                 "enum": [
                     "cap",
                     "shirt",
-                    "tie"
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
                 ],
                 "nullable": false,
                 "array": true
