@@ -7,7 +7,7 @@ interface SelectFieldProps {
     required?: boolean;
     helperText?: ReactNode;
     options: Array<{ value: string; label: string }>;
-    placeholder?: string;
+    placeholder?: ReactNode;
 }
 
 export function SelectField({
@@ -15,7 +15,7 @@ export function SelectField({
     required = false,
     helperText,
     options,
-    placeholder = "Select an option",
+    placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
 }: SelectFieldProps): React.ReactElement {
     return (
         <div>
