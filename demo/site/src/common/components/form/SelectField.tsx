@@ -1,10 +1,11 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SelectFieldProps {
-    label: React.ReactNode;
+    label: ReactNode;
     required?: boolean;
-    helperText?: string;
+    helperText?: ReactNode;
     options: Array<{ value: string; label: string }>;
     placeholder?: string;
 }
