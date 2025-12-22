@@ -45,7 +45,8 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-rte": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["jsdom"]
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
