@@ -16,7 +16,6 @@ export interface BreadcrumbsItem {
 interface BreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        breadcrumbsList: "div";
         breadcrumbsItem: typeof Typography;
         separator: typeof ChevronRight;
     }> {
