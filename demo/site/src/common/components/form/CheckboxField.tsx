@@ -1,5 +1,7 @@
+import { type ReactNode } from "react";
+
 interface CheckboxFieldProps {
-    label: React.ReactNode;
+    label: ReactNode;
     helperText?: string;
     required?: boolean;
 }

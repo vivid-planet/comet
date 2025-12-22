@@ -1,7 +1,8 @@
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface InputProps {
-    label: React.ReactNode;
+    label: ReactNode;
     required?: boolean;
     placeholder?: string;
     helperText?: string;
