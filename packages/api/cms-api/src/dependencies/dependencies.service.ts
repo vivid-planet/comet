@@ -6,7 +6,6 @@ import { v4 as uuid } from "uuid";
 
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../common/entityInfo/entity-info.decorator";
 import { DiscoverService } from "./discover.service";
-import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
@@ -280,27 +279,19 @@ export class DependenciesService {
                 targetId: target.id,
             },
             paginationArgs,
-        );
+        ).join("EntityInfo", (join) => {
+            join.on("idx.rootEntityName", "EntityInfo.entityName").andOn(
+                "EntityInfo.id",
+                this.entityManager.getKnex("read").raw('"idx"."rootId"::text'),
+            );
+        });
 
-        const results: BaseDependencyInterface[] = await qb;
-        const ret: Dependency[] = [];
-
-        for (const result of results) {
-            // const repository = this.entityManager.getRepository(result.rootEntityName);
-            // const instance = await repository.findOne({ [result.rootPrimaryKey]: result.rootId });
-
-            const dependency: Dependency = result;
-            // if (instance) {
-            //     const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-            //     dependency = { ...dependency, ...entityInfo };
-            // }
-            ret.push(dependency);
-        }
+        const results: Dependency[] = await qb;
 
         const countResult = await this.withCount(qb).select("targetId").groupBy(["targetId", "targetEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(ret, Number(totalCount));
+        return new PaginatedDependencies(results, Number(totalCount));
     }
 
     async getDependencies(
@@ -322,27 +313,19 @@ export class DependenciesService {
                 rootId: root.id,
             },
             paginationArgs,
-        );
+        ).join("EntityInfo", (join) => {
+            join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
+                "EntityInfo.id",
+                this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
+            );
+        });
 
-        const results: BaseDependencyInterface[] = await qb;
-        const ret: Dependency[] = [];
-
-        for (const result of results) {
-            // const repository = this.entityManager.getRepository(result.targetEntityName);
-            // const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
-
-            const dependency: Dependency = result;
-            // if (instance) {
-            //     const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-            //     dependency = { ...dependency, ...entityInfo };
-            // }
-            ret.push(dependency);
-        }
+        const results: Dependency[] = await qb;
 
         const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(ret, Number(totalCount));
+        return new PaginatedDependencies(results, Number(totalCount));
     }
 
     private getQueryBuilderWithFilters(
