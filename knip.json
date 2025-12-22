@@ -49,7 +49,8 @@
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts"]
+            "ignore": ["**/*.generated.ts"],
+            "ignoreDependencies": ["jsdom"]
         },
         "packages/admin/admin-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
