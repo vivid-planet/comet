@@ -6,10 +6,9 @@ interface InputProps {
     required?: boolean;
     placeholder?: string;
     helperText?: ReactNode;
-    textArea?: boolean;
 }
 
-export function InputField({ label, required = false, placeholder, helperText, textArea = false }: InputProps): React.ReactElement {
+export function TextareaField({ label, required = false, placeholder, helperText }: InputProps): React.ReactElement {
     return (
         <div>
             <label>
@@ -20,7 +19,7 @@ export function InputField({ label, required = false, placeholder, helperText, t
                     </span>
                 )}
             </label>
-            {textArea ? <textarea required={required} placeholder={placeholder} /> : <input required={required} placeholder={placeholder} />}
+            <textarea required={required} placeholder={placeholder} />
             {helperText && <div>{helperText}</div>}
         </div>
     );

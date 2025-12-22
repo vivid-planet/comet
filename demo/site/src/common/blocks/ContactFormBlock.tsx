@@ -5,8 +5,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
-import { InputField } from "../components/form/InputField";
 import { SelectField } from "../components/form/SelectField";
+import { TextareaField } from "../components/form/TextareaField";
+import { TextField } from "../components/form/TextField";
 
 const subjectOptions = [
     { value: "Option 1", label: "Option 1" },
@@ -19,21 +20,21 @@ export const ContactFormBlock = withPreview(
         const intl = useIntl();
         return (
             <>
-                <InputField
+                <TextField
                     label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
                     placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
                     required
                 />
-                <InputField
+                <TextField
                     label={intl.formatMessage({ id: "contactForm.company.label", defaultMessage: "Company" })}
                     placeholder={intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" })}
                 />
-                <InputField
+                <TextField
                     label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
                     placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
                     required
                 />
-                <InputField
+                <TextField
                     label={intl.formatMessage({ id: "contactForm.phoneNumber.label", defaultMessage: "Phone Number" })}
                     placeholder={intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" })}
                     helperText={intl.formatMessage({
@@ -47,10 +48,9 @@ export const ContactFormBlock = withPreview(
                     placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
                     options={subjectOptions}
                 />
-                <InputField
+                <TextareaField
                     label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
                     placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
-                    textArea
                     required
                 />
                 <CheckboxField
