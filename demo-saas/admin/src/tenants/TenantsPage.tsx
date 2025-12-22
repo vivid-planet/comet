@@ -153,8 +153,10 @@ export function TenantsPage() {
                                             </FullHeightContent>
                                             <AssignDialog
                                                 title={<FormattedMessage id="tenants.assignUsers.dialog.title" defaultMessage="Assign Users" />}
-                                                apolloCacheName="tenantUsers"
-                                                onDialogClose={() => setDialogOpen(false)}
+                                                onDialogClose={() => {
+                                                    setDialogOpen(false);
+                                                    client.cache.evict({ fieldName: "tenantUsers" });
+                                                }}
                                                 open={dialogOpen}
                                             >
                                                 <AssignTenantUser tenantId={selectedTenantId} onDialogClose={() => setDialogOpen(false)} />
