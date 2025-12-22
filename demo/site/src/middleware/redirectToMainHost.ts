@@ -9,6 +9,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { memoryCache } from "./cache";
 import { type CustomMiddleware } from "./chain";
 
+type Redirect = { source: string; target: RedirectsLinkBlockData; sourceType: string };
+
 const domainRedirectsQuery = gql`
     query DomainRedirects($scope: RedirectScopeInput!, $offset: Int, $limit: Int) {
         paginatedRedirects(scope: $scope, offset: $offset, limit: $limit) {
@@ -23,20 +25,20 @@ const domainRedirectsQuery = gql`
     }
 `;
 
-async function fetchDomainRedirects(domain: string) {
+async function fetchDomainRedirects(domain: string): Promise<Redirect[]> {
     const key = `domainRedirects-${domain}`;
     return memoryCache.wrap(key, async () => {
         const graphQLFetch = createGraphQLFetch();
         const limit = 50;
         let totalCount = 0;
         let currentCount = 0;
-        let allNodes: { id: string; source: string; target: RedirectsLinkBlockData; sourceType: string }[] = [];
+        let allNodes: Redirect[] = [];
 
         do {
             const data = await graphQLFetch<
                 {
                     paginatedRedirects: {
-                        nodes: { id: string; source: string; target: RedirectsLinkBlockData; sourceType: string }[];
+                        nodes: Redirect[];
                         totalCount: number;
                     };
                 },
@@ -55,19 +57,18 @@ async function fetchDomainRedirects(domain: string) {
     });
 }
 
+function normalizeHost(value: string): string {
+    return value.replace(/^https?:\/\//, "");
+}
+
+function findDomainRedirectTarget(redirects: Redirect[], host: string): RedirectsLinkBlockData | undefined {
+    const matching = redirects.find((redirect) => redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host));
+    return matching ? matching.target : undefined;
+}
+
 async function getDomainRedirectTarget(domain: string, host: string): Promise<RedirectsLinkBlockData | undefined> {
     const redirects = await fetchDomainRedirects(domain);
-    const redirectsArray = Array.isArray(redirects) ? redirects : [redirects];
-    const normalizeHost = (value: string) => {
-        return value.replace(/^https?:\/\//, "");
-    };
-    const matching = redirectsArray.find((redirect) => {
-        return redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host);
-    });
-    if (matching) {
-        return matching.target;
-    }
-    return undefined;
+    return findDomainRedirectTarget(redirects, host);
 }
 
 const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
