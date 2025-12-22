@@ -8,7 +8,7 @@ import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBase
 
 type BreadcrumbsClassKey = "root" | "breadcrumbsItem" | "separator";
 
-export interface BreadcrumbsItem {
+export interface Breadcrumb {
     url: string;
     title: ReactNode;
 }
@@ -19,7 +19,7 @@ interface BreadcrumbsProps
         breadcrumbsItem: typeof Typography;
         separator: typeof ChevronRight;
     }> {
-    items: BreadcrumbsItem[];
+    items: Breadcrumb[];
 }
 
 const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
