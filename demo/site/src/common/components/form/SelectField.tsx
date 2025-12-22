@@ -23,7 +23,7 @@ export function SelectField({
                 {label}
                 {!required && (
                     <span>
-                        <FormattedMessage id="inputField.optional" defaultMessage="(optional)" />
+                        <FormattedMessage id="selectField.optional" defaultMessage="(optional)" />
                     </span>
                 )}
             </label>
