@@ -62,8 +62,13 @@
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@parcel/watcher": "^2.5.1",
         "@types/node": "^24.9.1",
+<<<<<<< HEAD
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
+=======
+        "@types/react": "^18.3.27",
+        "@types/react-dom": "^18.3.7",
+>>>>>>> main
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",

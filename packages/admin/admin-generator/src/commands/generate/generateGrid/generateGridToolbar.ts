@@ -1,7 +1,8 @@
 import { camelCase } from "change-case";
 
+import { type FormattedMessageElement } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
-import { getFormattedMessageNode } from "../utils/intl";
+import { generateFormattedMessage } from "../utils/intl";
 
 type Options = {
     componentName: string;
@@ -12,7 +13,7 @@ type Options = {
     allowAdding: boolean;
     instanceGqlType: string;
     gqlType: string;
-    newEntryText: string | undefined;
+    newEntryText: string | FormattedMessageElement | undefined;
     fragmentName: string;
 };
 
@@ -37,10 +38,12 @@ export const generateGridToolbar = ({
                 <FillSpace />
                 ${renderToolbarActions({
                     forwardToolbarAction,
-                    addItemText: getFormattedMessageNode(
-                        `${instanceGqlType}.${camelCase(fragmentName)}.newEntry`,
-                        newEntryText ?? `New ${camelCaseToHumanReadable(gqlType)}`,
-                    ),
+                    addItemText: generateFormattedMessage({
+                        config: newEntryText,
+                        id: `${instanceGqlType}.${camelCase(fragmentName)}.newEntry`,
+                        defaultMessage: `New ${camelCaseToHumanReadable(gqlType)}`,
+                        type: "jsx",
+                    }),
                     excelExport,
                     allowAdding,
                 })}
@@ -80,7 +83,7 @@ const getGridToolbarProps = (componentName: string, toolbarAction: boolean, expo
 
 type RenderToolbarActionsOptions = {
     forwardToolbarAction: boolean | undefined;
-    addItemText: string;
+    addItemText: string | FormattedMessageElement;
     excelExport: boolean | undefined;
     allowAdding: boolean | undefined;
 };
