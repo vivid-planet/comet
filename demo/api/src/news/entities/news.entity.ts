@@ -3,6 +3,7 @@ import {
     CrudField,
     CrudGenerator,
     DamImageBlock,
+    EntityInfo,
     RootBlock,
     RootBlockDataScalar,
     RootBlockEntity,
@@ -46,6 +47,7 @@ export class NewsContentScope {
     language: string;
 }
 
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
 @RootBlockEntity()
 @ObjectType()
 @Entity()

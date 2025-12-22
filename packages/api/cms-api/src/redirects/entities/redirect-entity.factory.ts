@@ -8,6 +8,7 @@ import { Block, BlockDataInterface } from "../../blocks/block";
 import { RootBlock } from "../../blocks/decorators/root-block";
 import { RootBlockEntity } from "../../blocks/decorators/root-block-entity";
 import { RootBlockType } from "../../blocks/root-block-type";
+import { EntityInfo } from "../../common/entityInfo/entity-info.decorator";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { RedirectScopeInterface } from "../types";
 
@@ -28,6 +29,7 @@ export interface RedirectInterface {
 
 export class RedirectEntityFactory {
     static create({ linkBlock, Scope: RedirectScope }: { linkBlock: Block; Scope?: Type<RedirectScopeInterface> }): Type<RedirectInterface> {
+        @EntityInfo<RedirectInterface>({ name: "source", secondaryInformation: "comment" })
         @Entity({ abstract: true })
         @ObjectType({ isAbstract: true })
         class RedirectBase implements RedirectInterface {

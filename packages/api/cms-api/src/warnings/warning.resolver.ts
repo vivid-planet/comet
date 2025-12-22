@@ -3,6 +3,7 @@ import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgre
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
+import { EntityInfoObject } from "src/common/entityInfo/entity-info.object";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
@@ -100,8 +101,8 @@ export class WarningResolver {
         return new PaginatedWarnings(entities, totalCount);
     }
 
-    @ResolveField(() => undefined, { nullable: true })
-    async entityInfo(@Parent() warning: Warning): Promise<undefined> {
+    @ResolveField(() => EntityInfoObject, { nullable: true })
+    async entityInfo(@Parent() warning: Warning): Promise<EntityInfoObject | undefined> {
         // const repository = this.entityManager.getRepository(warning.sourceInfo.rootEntityName);
         // const instance = await repository.findOne({ [warning.sourceInfo.rootPrimaryKey]: warning.sourceInfo.targetId });
         //

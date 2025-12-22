@@ -128,6 +128,7 @@ export {
 } from "./common/decorators/crud-generator.decorator";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
+export { EntityInfo } from "./common/entityInfo/entity-info.decorator";
 export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
