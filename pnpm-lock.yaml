@@ -285,9 +285,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
-      '@comet/mail':
+      '@comet/mail-react':
         specifier: workspace:*
-        version: link:../../packages/mail
+        version: link:../../packages/mail-react
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.1.0
@@ -2055,7 +2055,7 @@ importers:
         specifier: ^8.24.1
         version: 8.46.4(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.3)
 
-  packages/mail:
+  packages/mail-react:
     devDependencies:
       '@comet/eslint-config':
         specifier: workspace:*

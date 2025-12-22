@@ -70,7 +70,7 @@
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]
         },
-        "packages/mail": {
+        "packages/mail-react": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "demo/admin": {

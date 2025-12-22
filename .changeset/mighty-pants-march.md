@@ -1,5 +1,5 @@
 ---
-"@comet/mail": minor
+"@comet/mail-react": minor
 ---
 
 Add the `css` helper function

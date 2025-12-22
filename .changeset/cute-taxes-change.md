@@ -1,5 +1,5 @@
 ---
-"@comet/mail": minor
+"@comet/mail-react": minor
 ---
 
-The new `@comet/mail` package provides utilities for building HTML emails with React
+The new `@comet/mail-react` package provides utilities for building HTML emails with React

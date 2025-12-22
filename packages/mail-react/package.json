@@ -1,5 +1,5 @@
 {
-    "name": "@comet/mail",
+    "name": "@comet/mail-react",
     "version": "8.10.0",
     "description": "Utilities for building HTML emails with React",
     "type": "commonjs",

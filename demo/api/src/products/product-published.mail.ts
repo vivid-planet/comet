@@ -1,5 +1,5 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
-import { css } from "@comet/mail";
+import { css } from "@comet/mail-react";
 import { TranslationService } from "@src/translation/translation.service";
 
 type MailProps = {
