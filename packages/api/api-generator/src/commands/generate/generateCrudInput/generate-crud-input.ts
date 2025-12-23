@@ -224,6 +224,7 @@ export async function generateCrudInput(
                 decorators.push("@IsInt()");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
+                continue;
             }
         } else if (prop.kind == "1:m") {
             if (prop.orphanRemoval) {
