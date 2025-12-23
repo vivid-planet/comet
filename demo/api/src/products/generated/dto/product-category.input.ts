@@ -18,18 +18,16 @@ export class ProductCategoryInput {
     @IsOptional()
     @Min(1)
     @IsInt()
-    @Field(() => Int, { nullable: true, })
+    @Field(() => Int, { nullable: true })
     position?: number;
     @Field(() => [ID], { defaultValue: [] })
     @IsArray()
     @IsUUID(undefined, { each: true })
     products: string[];
     @IsNullable()
-    @Field(() => ID, { nullable: true,
-        defaultValue: null, })
+    @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     type?: string;
 }
 @InputType()
-export class ProductCategoryUpdateInput extends PartialType(ProductCategoryInput) {
-}
+export class ProductCategoryUpdateInput extends PartialType(ProductCategoryInput) {}
