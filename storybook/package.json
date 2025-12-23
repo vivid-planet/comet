@@ -75,7 +75,7 @@
         "graphql-mocks": "^0.10.0",
         "immutable": "^3.8.2",
         "msw": "^2.0.0",
-        "npm-run-all2": "^8.0.0",
+        "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",
