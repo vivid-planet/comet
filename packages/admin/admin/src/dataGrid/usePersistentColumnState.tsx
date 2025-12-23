@@ -36,8 +36,7 @@ const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefi
                     if (typeof column.visible === "string") {
                         const mediaQuery = column.visible.replace("@media", "").trim();
                         visibilityModel[column.field] = window.matchMedia(mediaQuery).matches;
-                    } else {
-                        // visible is false
+                    } else if (column.visible == false) {
                         visibilityModel[column.field] = column.visible;
                     }
                 }

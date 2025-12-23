@@ -24,6 +24,7 @@ type GridColDefExtension<R extends GridValidRowModel = any> = {
     valueOptions?: Array<ValueOption> | ((params: GridValueOptionsParams<R>) => Array<ValueOption>);
     /**
      * Media query to define when the column is visible.
+     * Set to false to initially hide the column.
      * Requires DataGridPro or DataGridPremium.
      */
     visible?: string | false;
