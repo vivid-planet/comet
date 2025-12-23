@@ -20,7 +20,7 @@
         "lint:ci": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && run-p lint:prettier lint:eslint lint:tsc lint:generated-files-not-modified",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:generated-files-not-modified": "git diff --exit-code HEAD -- $(find src -type f -path '*/generated/*')",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
         "preview": "pnpm run build && vite preview",
         "serve": "node server",

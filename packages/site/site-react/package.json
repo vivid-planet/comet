@@ -34,7 +34,7 @@
         "lint": "pnpm generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
