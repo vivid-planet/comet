@@ -68,12 +68,7 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "image" | "lastCheckedAt"> & {
-    dimensions: Omit<NonNullable<ProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
-        width: string;
-        height: string;
-        depth: string;
-    };
+type FormValues = Omit<ProductFormDetailsFragment, "image" | "lastCheckedAt"> & {
     dimensionsEnabled: boolean;
     image: BlockState<typeof rootBlocks.image>;
     lastCheckedAt?: Date | null;
@@ -97,14 +92,6 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             data?.product
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
-                      dimensions: data.product.dimensions
-                          ? {
-                                ...data.product.dimensions,
-                                width: String(data.product.dimensions.width),
-                                height: String(data.product.dimensions.height),
-                                depth: String(data.product.dimensions.depth),
-                            }
-                          : undefined,
                       dimensionsEnabled: !!data.product.dimensions,
                       image: rootBlocks.image.input2State(data.product.image),
                       lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
@@ -137,15 +124,6 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             description: formValuesRest.description ?? null,
             category: formValuesRest.category ? formValuesRest.category.id : null,
             tags: formValuesRest.tags.map((item) => item.id),
-            dimensions:
-                dimensionsEnabled && formValuesRest.dimensions
-                    ? {
-                          ...formValuesRest.dimensions,
-                          width: parseFloat(formValuesRest.dimensions.width),
-                          height: parseFloat(formValuesRest.dimensions.height),
-                          depth: parseFloat(formValuesRest.dimensions.depth),
-                      }
-                    : null,
             manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null,
             availableSince: formValuesRest.availableSince ?? null,
             image: rootBlocks.image.state2Output(formValuesRest.image),

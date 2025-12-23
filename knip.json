@@ -35,7 +35,7 @@
         },
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw", "jsdom"],
             "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
@@ -45,11 +45,13 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-rte": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["jsdom"]
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts"]
+            "ignore": ["**/*.generated.ts"],
+            "ignoreDependencies": ["jsdom"]
         },
         "packages/admin/admin-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
@@ -69,6 +71,9 @@
         "packages/site/site-nextjs": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]
+        },
+        "packages/mail-react": {
+            "project": ["./src/**/*.{ts,tsx}"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],

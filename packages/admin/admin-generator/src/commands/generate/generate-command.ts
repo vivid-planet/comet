@@ -315,6 +315,9 @@ export type GridConfig<T extends { __typename?: string }> = {
      */
     scopeAsProp?: boolean;
     density?: "comfortable" | "compact" | "standard";
+    crudContextMenu?: {
+        deleteText?: string;
+    };
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;

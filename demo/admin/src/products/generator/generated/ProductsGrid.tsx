@@ -342,6 +342,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                     });
                                 }}
                                 refetchQueries={[productsQuery]}
+                                messagesMapping={{ delete: <FormattedMessage id="product.crudContextMenu.delete" defaultMessage="Extinguish" /> }}
                             />
                         </>
                     );
