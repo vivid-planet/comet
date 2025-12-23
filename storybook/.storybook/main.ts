@@ -1,6 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
 import remarkGfm from "remark-gfm";
-import { type StorybookConfigRaw } from "storybook/internal/types";
 
 const config: StorybookConfig = {
     framework: "@storybook/react-webpack5",
@@ -25,21 +24,12 @@ const config: StorybookConfig = {
     }),
     staticDirs: ["../public"],
     refs: (config, { configType }) => {
-        const refs: StorybookConfigRaw["refs"] = {
+        return {
             "@comet/admin": {
                 title: "@comet/admin",
                 url: configType === "DEVELOPMENT" ? "http://localhost:26646/" : "https://main--68e7b70f15b8f51dac492af6.chromatic.com", // TODO: support pull request previews,
             },
         };
-
-        if (configType === "DEVELOPMENT") {
-            refs["demo/api"] = {
-                title: "demo/api",
-                url: "http://localhost:4004/",
-            };
-        }
-
-        return refs;
     },
 };
 
