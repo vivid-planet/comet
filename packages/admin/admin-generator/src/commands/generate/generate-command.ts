@@ -312,6 +312,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     scopeAsProp?: boolean;
     density?: "comfortable" | "compact" | "standard";
     crudContextMenu?: {
+        deleteType?: "delete" | "remove";
         deleteText?: string;
     };
 };

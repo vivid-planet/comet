@@ -122,7 +122,7 @@ export function ProductCategoriesGrid() {
                             mutation: deleteProductCategoryMutation,
                             variables: { id: params.row.id },
                         });
-                    }} refetchQueries={[productCategoriesQuery]}/>
+                    }} refetchQueries={[productCategoriesQuery]} deleteType="remove"/>
                                     
                                 </>);
             }, }
