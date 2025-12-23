@@ -1,5 +1,5 @@
 import { type ApolloClient, type RefetchQueriesOptions, useApolloClient } from "@apollo/client";
-import { Copy, Delete as DeleteIcon, Remove as RemoveIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
+import { Copy, Delete as DeleteIcon, Domain, Paste, Remove as RemoveIcon, ThreeDotSaving } from "@comet/admin-icons";
 import { type ComponentsOverrides, Divider, Snackbar, type Theme, useThemeProps } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
