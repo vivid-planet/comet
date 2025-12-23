@@ -15,5 +15,4 @@ export class ManufacturerCountryInput {
     used: number;
 }
 @InputType()
-export class ManufacturerCountryUpdateInput extends PartialType(ManufacturerCountryInput) {
-}
+export class ManufacturerCountryUpdateInput extends PartialType(ManufacturerCountryInput) {}

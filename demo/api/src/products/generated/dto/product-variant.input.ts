@@ -19,9 +19,8 @@ export class ProductVariantInput {
     @IsOptional()
     @Min(1)
     @IsInt()
-    @Field(() => Int, { nullable: true, })
+    @Field(() => Int, { nullable: true })
     position?: number;
 }
 @InputType()
-export class ProductVariantUpdateInput extends PartialType(ProductVariantInput) {
-}
+export class ProductVariantUpdateInput extends PartialType(ProductVariantInput) {}

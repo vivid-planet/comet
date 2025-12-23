@@ -29,5 +29,4 @@ export class ManufacturerInput {
     coordinates?: Coordinates;
 }
 @InputType()
-export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {
-}
+export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {}

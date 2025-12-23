@@ -15,5 +15,4 @@ export class ProductCategoryTypeInput {
     categories: string[];
 }
 @InputType()
-export class ProductCategoryTypeUpdateInput extends PartialType(ProductCategoryTypeInput) {
-}
+export class ProductCategoryTypeUpdateInput extends PartialType(ProductCategoryTypeInput) {}
