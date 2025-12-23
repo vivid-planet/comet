@@ -1,4 +1,4 @@
-import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@comet/cms-admin";
+import { AnchorBlock, createBlocksBlock, DamImageBlock, TableBlock } from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
@@ -48,6 +48,7 @@ export const PageContentBlock = createBlocksBlock({
         layout: LayoutBlock,
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
+        table: TableBlock,
         productList: ProductListBlock,
         pageTreeIndex: PageTreeIndexBlock,
     },
