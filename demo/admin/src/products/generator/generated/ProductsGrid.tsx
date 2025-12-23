@@ -290,6 +290,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 field: "createdAt",
                 headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
                 width: 170,
+                visible: false,
             },
             {
                 field: "manufacturer",
