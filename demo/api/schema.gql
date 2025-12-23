@@ -836,6 +836,7 @@ input OneToManyFilter {
 type Page implements DocumentInterface {
   content: PageContentBlockData!
   createdAt: DateTime!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   id: ID!
   pageTreeNode: PageTreeNode
   seo: SeoBlockData!
@@ -860,6 +861,7 @@ input PageInput {
 type PageTreeNode {
   category: PageTreeNodeCategory!
   childNodes: [PageTreeNode!]!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   document: PageContentUnion
   documentType: String!

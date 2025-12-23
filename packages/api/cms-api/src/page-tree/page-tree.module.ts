@@ -2,6 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -54,6 +55,7 @@ export class PageTreeModule {
             PageTreeNodeUpdateInput,
         });
         const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
+        const PageTreeDependenciesResolver = DependenciesResolverFactory.create(PageTreeNode);
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,
@@ -81,6 +83,7 @@ export class PageTreeModule {
                 AttachedDocumentLoaderService,
                 PageTreeResolver,
                 PageTreeDependentsResolver,
+                PageTreeDependenciesResolver,
                 repositoryProvider,
                 pageTreeConfigProvider,
                 {
