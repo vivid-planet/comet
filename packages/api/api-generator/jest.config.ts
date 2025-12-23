@@ -8,6 +8,6 @@ module.exports = {
     testTimeout: 20000,
     testPathIgnorePatterns: [
         "/node_modules/",
-        "/__tests__/\\..*"  // Exclude files starting with dot in __tests__ folder
+        "/__tests__/\\..*", // Exclude files starting with dot in __tests__ folder
     ],
 };
