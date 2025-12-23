@@ -1715,6 +1715,7 @@ enum RedirectSortField {
 }
 
 enum RedirectSourceTypeValues {
+  domain
   path
 }
 
