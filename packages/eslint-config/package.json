@@ -56,7 +56,7 @@
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
         "globals": "^15.15.0",
-        "npm-run-all2": "^8.0.0",
+        "npm-run-all2": "^8.0.4",
         "typescript-eslint": "^8.24.1"
     },
     "devDependencies": {
