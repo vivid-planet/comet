@@ -1,5 +1,4 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { AnyEntity, Connection, EntityManager, EntityRepository, Knex, QueryOrder } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, EntityManager, Knex, QueryOrder } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
@@ -23,7 +22,6 @@ export class DependenciesService {
     private readonly logger = new Logger(DependenciesService.name);
 
     constructor(
-        @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
         private entityManager: EntityManager,
     ) {
@@ -187,7 +185,7 @@ export class DependenciesService {
             // when executing the refresh asynchronous
             const forkedEntityManager = this.entityManager.fork();
             console.time(`refresh materialized block dependency ${id}`);
-            const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
+            const blockIndexRefresh = this.entityManager.create(BlockIndexRefresh, { startedAt: new Date() });
             await forkedEntityManager.persistAndFlush(blockIndexRefresh);
 
             await forkedEntityManager.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
@@ -215,7 +213,7 @@ export class DependenciesService {
         if (options?.force) {
             // force refresh -> refresh sync
             await abortActiveRefreshes(activeRefreshes);
-            await this.refreshRepository.qb().truncate();
+            await this.entityManager.qb(BlockIndexRefresh).truncate();
             await refresh();
             return;
         }
@@ -226,7 +224,8 @@ export class DependenciesService {
             return;
         }
 
-        const lastRefreshes = await this.refreshRepository.find(
+        const lastRefreshes = await this.entityManager.find(
+            BlockIndexRefresh,
             {},
             { orderBy: [{ finishedAt: QueryOrder.DESC_NULLS_FIRST }, { startedAt: QueryOrder.DESC }], limit: 1 },
         );
@@ -240,7 +239,7 @@ export class DependenciesService {
 
         if (!refreshIsActive && lastRefresh.finishedAt === null) {
             // faulty DB state -> truncate table
-            await this.refreshRepository.qb().truncate();
+            await this.entityManager.qb(BlockIndexRefresh).truncate();
         }
 
         if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
