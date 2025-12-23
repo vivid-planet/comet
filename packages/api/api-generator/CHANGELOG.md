@@ -1,5 +1,17 @@
 # @comet/api-generator
 
+## 8.11.0
+
+### Minor Changes
+
+- 4bb9e21: Format generated files using prettier
+
+### Patch Changes
+
+- aec3ec2: Skip props with Unsupported Reference Type instead of generating broken input
+- Updated dependencies [f34b750]
+    - @comet/cms-api@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
