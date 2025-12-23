@@ -55,13 +55,21 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductHighlightQuery, GQLProductHighlightQueryVariables>(productHighlightQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.productHighlight
-        ? {
-            ...filterByFragment<GQLProductHighlightFormDetailsFragment>(productHighlightFormFragment, data.productHighlight),
-            productCategoryType: data.productHighlight.product?.category?.type, productCategory: data.productHighlight.product?.category,
-        }
-        : {}, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLProductHighlightQuery, GQLProductHighlightQueryVariables>(
+        productHighlightQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.productHighlight
+                ? {
+                      ...filterByFragment<GQLProductHighlightFormDetailsFragment>(productHighlightFormFragment, data.productHighlight),
+                      productCategoryType: data.productHighlight.product?.category?.type,
+                      productCategory: data.productHighlight.product?.category,
+                  }
+                : {},
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "productHighlight", id);
@@ -72,24 +80,25 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ productCategoryType, productCategory, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, product: formValuesRest.product?.id, };
+    const handleSubmit = async (
+        { productCategoryType, productCategory, ...formValuesRest }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = { ...formValuesRest, product: formValuesRest.product?.id };
         if (mode === "edit") {
-            if (!id)
-                throw new Error();
+            if (!id) throw new Error();
             const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductHighlightMutation, GQLUpdateProductHighlightMutationVariables>({
                 mutation: updateProductHighlightMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductHighlightMutation, GQLCreateProductHighlightMutationVariables>({
                 mutation: createProductHighlightMutation,
                 variables: {
-                    input: output
+                    input: output,
                 },
             });
             const id = mutationResponse?.createProductHighlight.id;
@@ -103,78 +112,129 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{ values: true }}>
-                {({ values, form }) => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <TextField required variant="horizontal" fullWidth name="description" label={<FormattedMessage id="productHighlight.description" defaultMessage="Description"/>}/>
-        <AsyncAutocompleteField required variant="horizontal" fullWidth name="productCategoryType" label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
-                    query: gql`
-    query ProductCategoryTypesSelect($search: String) {
-        productCategoryTypes(search: $search) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        search,
-                    }
-                });
-                return data.productCategoryTypes.nodes;
-            }} getOptionLabel={(option) => option.title}/>
-        <AsyncAutocompleteField required variant="horizontal" fullWidth name="productCategory" label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`
-    query ProductCategoriesSelect($search: String, $filter: ProductCategoryFilter) {
-        productCategories(search: $search, filter: $filter) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        filter: { type: { equal: values.productCategoryType?.id } },
-                        search,
-                    }
-                });
-                return data.productCategories.nodes;
-            }} getOptionLabel={(option) => option.title} disabled={!values?.productCategoryType}/><OnChangeField name="productCategoryType">
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{ values: true }}
+        >
+            {({ values, form }) => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="description"
+                            label={<FormattedMessage id="productHighlight.description" defaultMessage="Description" />}
+                        />
+                        <AsyncAutocompleteField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="productCategoryType"
+                            label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type" />}
+                            loadOptions={async (search?: string) => {
+                                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductCategoryTypesSelect($search: String) {
+                                            productCategoryTypes(search: $search) {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                    variables: {
+                                        search,
+                                    },
+                                });
+                                return data.productCategoryTypes.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
+                        />
+                        <AsyncAutocompleteField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="productCategory"
+                            label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category" />}
+                            loadOptions={async (search?: string) => {
+                                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductCategoriesSelect($search: String, $filter: ProductCategoryFilter) {
+                                            productCategories(search: $search, filter: $filter) {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                    variables: {
+                                        filter: { type: { equal: values.productCategoryType?.id } },
+                                        search,
+                                    },
+                                });
+                                return data.productCategories.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
+                            disabled={!values?.productCategoryType}
+                        />
+                        <OnChangeField name="productCategoryType">
                             {(value, previousValue) => {
-                if (value.id !== previousValue.id) {
-                    form.change("productCategory", undefined);
-                }
-            }}
+                                if (value.id !== previousValue.id) {
+                                    form.change("productCategory", undefined);
+                                }
+                            }}
                         </OnChangeField>
-        <AsyncAutocompleteField required variant="horizontal" fullWidth name="product" label={<FormattedMessage id="productHighlight.product" defaultMessage="Product"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
-                    query: gql`
-    query ProductsSelect($search: String, $filter: ProductFilter) {
-        products(search: $search, filter: $filter) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        filter: { category: { equal: values.productCategory?.id } },
-                        search,
-                    }
-                });
-                return data.products.nodes;
-            }} getOptionLabel={(option) => option.title} disabled={!values?.productCategory}/><OnChangeField name="productCategory">
+                        <AsyncAutocompleteField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="product"
+                            label={<FormattedMessage id="productHighlight.product" defaultMessage="Product" />}
+                            loadOptions={async (search?: string) => {
+                                const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductsSelect($search: String, $filter: ProductFilter) {
+                                            products(search: $search, filter: $filter) {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                    variables: {
+                                        filter: { category: { equal: values.productCategory?.id } },
+                                        search,
+                                    },
+                                });
+                                return data.products.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
+                            disabled={!values?.productCategory}
+                        />
+                        <OnChangeField name="productCategory">
                             {(value, previousValue) => {
-                if (value.id !== previousValue.id) {
-                    form.change("product", undefined);
-                }
-            }}
+                                if (value.id !== previousValue.id) {
+                                    form.change("product", undefined);
+                                }
+                            }}
                         </OnChangeField>
-                        </>
-                    </>)}
-            </FinalForm>);
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }

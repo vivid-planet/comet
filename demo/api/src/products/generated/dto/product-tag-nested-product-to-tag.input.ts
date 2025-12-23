@@ -10,6 +10,6 @@ export class ProductTagNestedProductToTagInput {
     product: string;
     @IsNotEmpty()
     @IsBoolean()
-    @Field({ defaultValue: true, })
+    @Field({ defaultValue: true })
     exampleStatus: boolean;
 }

@@ -9,12 +9,13 @@ import { RequiredPermission, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 @Resolver(() => ManufacturerCountry)
 @RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerCountryResolver {
-    constructor(protected readonly entityManager: EntityManager) { }
+    constructor(protected readonly entityManager: EntityManager) {}
     @Query(() => PaginatedManufacturerCountries)
     async manufacturerCountries(
-    @Args()
-    { search, filter, offset, limit }: ManufacturerCountriesArgs): Promise<PaginatedManufacturerCountries> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(ManufacturerCountry));
+        @Args()
+        { search, filter, offset, limit }: ManufacturerCountriesArgs,
+    ): Promise<PaginatedManufacturerCountries> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(ManufacturerCountry));
         const options: FindOptions<ManufacturerCountry> = { offset, limit };
         const [entities, totalCount] = await this.entityManager.findAndCount(ManufacturerCountry, where, options);
         return new PaginatedManufacturerCountries(entities, totalCount);
