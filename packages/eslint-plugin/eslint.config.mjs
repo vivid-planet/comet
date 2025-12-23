@@ -40,7 +40,7 @@ const config = [
         rules: {
             "import/no-duplicates": "error",
             "import/newline-after-import": "error",
-            "import/no-extraneous-dependencies": "error",
+            "import/no-extraneous-dependencies": ["error", { devDependencies: false }],
         },
     },
     ...eslintPluginJsonc["flat/recommended-with-json"],
