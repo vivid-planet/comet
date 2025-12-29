@@ -2,6 +2,7 @@ import { AnyEntity, Connection, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
+import { ENTITY_INFO_VIEW } from "./entity-info.constants";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
 
@@ -65,17 +66,17 @@ export class EntityInfoService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        console.time("creating EntityInfo view");
-        await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
-        await this.connection.execute(`CREATE VIEW "EntityInfo" AS ${viewSql}`);
-        console.timeEnd("creating EntityInfo view");
+        console.time(`creating ${ENTITY_INFO_VIEW} view`);
+        await this.connection.execute(`DROP VIEW IF EXISTS "${ENTITY_INFO_VIEW}"`);
+        await this.connection.execute(`CREATE VIEW "${ENTITY_INFO_VIEW}" AS ${viewSql}`);
+        console.timeEnd(`creating ${ENTITY_INFO_VIEW} view`);
     }
 
     async getEntityInfo(entityName: string, id: string): Promise<EntityInfoObject | undefined> {
         const qb = this.entityManager
             .getKnex("read")
             .select<EntityInfoObject>(["name", "secondaryInformation"])
-            .from("EntityInfo")
+            .from(ENTITY_INFO_VIEW)
             .where({ id, entityName });
 
         const entityInfo = await qb.first();
