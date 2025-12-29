@@ -3,7 +3,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../common/entityInfo/entity-info.decorator";
+import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
@@ -23,6 +23,7 @@ export class DependenciesService {
 
     constructor(
         private readonly discoverService: DiscoverService,
+        private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
     ) {
         this.connection = entityManager.getConnection();
@@ -31,7 +32,7 @@ export class DependenciesService {
     async createViews(): Promise<void> {
         await this.createDependenciesView();
         await this.createBlockIndexView();
-        await this.createEntityInfoView();
+        await this.entityInfoService.createEntityInfoView();
     }
 
     private async createDependenciesView(): Promise<void> {
@@ -121,61 +122,6 @@ export class DependenciesService {
         await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
         await this.connection.execute(`CREATE VIEW block_index AS ${viewSql}`);
         console.timeEnd("creating block index view");
-    }
-
-    async createEntityInfoView(): Promise<void> {
-        const indexSelects: string[] = [];
-        const targetEntities = this.discoverService.discoverTargetEntities();
-        for (const targetEntity of targetEntities) {
-            const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, targetEntity.entity) as EntityInfo<AnyEntity>;
-            if (entityInfo) {
-                if (typeof entityInfo === "string") {
-                    indexSelects.push(entityInfo);
-                } else {
-                    const { entityName, metadata } = targetEntity;
-                    const primary = metadata.primaryKeys[0];
-
-                    let secondaryInformationSql = "null";
-                    if (entityInfo.secondaryInformation) {
-                        secondaryInformationSql = entityInfo.secondaryInformation;
-                    }
-
-                    let visibleSql = "true";
-                    if (entityInfo.visible) {
-                        const qb = this.entityManager.createQueryBuilder(targetEntity.entity.name, "t");
-                        const query = qb.select("*").where(entityInfo.visible);
-                        const sql = query.getFormattedQuery();
-                        const sqlWhereMatch = sql.match(/^select .*? from .*? where (.*)/);
-                        if (!sqlWhereMatch) {
-                            throw new Error(`Could not extract where clause from query: ${sql}`);
-                        }
-                        visibleSql = sqlWhereMatch[1];
-                    }
-
-                    const select = `SELECT
-                                "${entityInfo.name}" "name",
-                                ${secondaryInformationSql} "secondaryInformation",
-                                ${visibleSql} AS "visible",
-                                t."${primary}"::text "id",
-                                '${entityName}' "entityName"
-                            FROM "${metadata.tableName}" t`;
-                    indexSelects.push(select);
-                }
-            }
-        }
-
-        // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
-            FROM "PageTreeNodeDocument"
-            JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
-        `);
-
-        const viewSql = indexSelects.join("\n UNION ALL \n");
-
-        console.time("creating EntityInfo view");
-        await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
-        await this.connection.execute(`CREATE VIEW "EntityInfo" AS ${viewSql}`);
-        console.timeEnd("creating EntityInfo view");
     }
 
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {

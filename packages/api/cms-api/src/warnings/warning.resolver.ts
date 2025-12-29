@@ -107,8 +107,8 @@ export class WarningResolver {
         // const instance = await repository.findOne({ [warning.sourceInfo.rootPrimaryKey]: warning.sourceInfo.targetId });
         //
         // if (instance) {
-        //     const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-        //     return entityInfo;
+        //     const entity-info = await this.entityInfoService.getEntityInfo(instance);
+        //     return entity-info;
         // }
 
         return undefined;
