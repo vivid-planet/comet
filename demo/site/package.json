@@ -44,7 +44,7 @@
         "next": "^14.2.30",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "react-focus-lock": "^2.13.6",
+        "react-focus-lock": "^2.13.7",
         "react-intl": "^7.1.11",
         "redraft": "^0.10.2",
         "swiper": "^12.0.3",
