@@ -1,19 +1,14 @@
-import { fireEvent, within } from "test-utils";
+import { within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
-import { renderTableBlock } from "./utils";
+import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
 
 describe("TableBlock: Insert a new row", () => {
     it("should insert a new, empty row at the top of the table", async () => {
         const rendered = renderTableBlock(mockTableData);
 
-        const rowOptionsButtons = rendered.getAllByLabelText(/row options/i);
-        const firstRowOptionsButton = rowOptionsButtons[0];
-        fireEvent.click(firstRowOptionsButton);
-
-        const insertRowAboveButton = rendered.getByRole("menuitem", { name: /add row above/i });
-        fireEvent.click(insertRowAboveButton);
+        clickButtonOfRowAtIndex(rendered, 0, /add row above/i);
 
         const rowgroup = rendered.getByRole("rowgroup");
         const rows = within(rowgroup).getAllByRole("row");
