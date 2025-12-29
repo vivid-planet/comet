@@ -3,7 +3,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
+import { EntityInfoService } from "../entity-info/entity-info.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";

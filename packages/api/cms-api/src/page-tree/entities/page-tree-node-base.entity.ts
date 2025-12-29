@@ -2,7 +2,7 @@ import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, 
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfo } from "../../common/entityInfo/entity-info.decorator";
+import { EntityInfo } from "../../entity-info/entity-info.decorator";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 

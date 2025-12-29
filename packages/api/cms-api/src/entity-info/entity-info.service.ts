@@ -1,7 +1,7 @@
 import { AnyEntity, Connection, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
-import { DiscoverService } from "../../dependencies/discover.service";
+import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
 

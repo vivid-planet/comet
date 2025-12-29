@@ -128,7 +128,6 @@ export {
 } from "./common/decorators/crud-generator.decorator";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
-export { EntityInfo } from "./common/entityInfo/entity-info.decorator";
 export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
@@ -205,6 +204,7 @@ export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export { EntityInfo } from "./entity-info/entity-info.decorator";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";

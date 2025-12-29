@@ -8,7 +8,7 @@ import { Block, BlockDataInterface } from "../../blocks/block";
 import { RootBlock } from "../../blocks/decorators/root-block";
 import { RootBlockEntity } from "../../blocks/decorators/root-block-entity";
 import { RootBlockType } from "../../blocks/root-block-type";
-import { EntityInfo } from "../../common/entityInfo/entity-info.decorator";
+import { EntityInfo } from "../../entity-info/entity-info.decorator";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { RedirectScopeInterface } from "../types";
 

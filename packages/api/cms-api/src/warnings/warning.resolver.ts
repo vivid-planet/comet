@@ -5,9 +5,9 @@ import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql
 import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { EntityInfoObject } from "../common/entityInfo/entity-info.object";
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { EntityInfoObject } from "../entity-info/entity-info.object";
+import { EntityInfoService } from "../entity-info/entity-info.service";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
