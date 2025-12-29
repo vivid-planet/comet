@@ -20,3 +20,12 @@ export const clickButtonOfRowAtIndex = (rendered: RenderResult, index: number, b
     const button = rendered.getByRole("menuitem", { name: buttonNameRegex });
     fireEvent.click(button);
 };
+
+export const clickButtonOfColumnAtIndex = (rendered: RenderResult, index: number, buttonNameRegex: RegExp) => {
+    const columnOptionsButtons = rendered.getAllByLabelText(/column options/i);
+    const columnOptionsButton = columnOptionsButtons[index];
+    fireEvent.click(columnOptionsButton);
+
+    const button = rendered.getByRole("menuitem", { name: buttonNameRegex });
+    fireEvent.click(button);
+};
