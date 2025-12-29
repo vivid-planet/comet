@@ -32,9 +32,17 @@ export class DependenciesService {
     }
 
     async createViews(): Promise<void> {
-        await this.createDependenciesView();
+        await this.dropViews();
+
         await this.createBlockIndexView();
         await this.entityInfoService.createEntityInfoView();
+        await this.createDependenciesView();
+    }
+
+    async dropViews(): Promise<void> {
+        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "${BLOCK_INDEX_DEPENDENCIES_VIEW}"`);
+        await this.connection.execute(`DROP VIEW IF EXISTS "${BLOCK_INDEX_VIEW}"`);
+        await this.entityInfoService.dropEntityInfoView();
     }
 
     private async createDependenciesView(): Promise<void> {
@@ -58,24 +66,28 @@ export class DependenciesService {
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            "${metadata.tableName}"."${primary}"  "rootId",
-                            '${metadata.name}'                    "rootEntityName",
-                            '${graphqlObjectType}'                "rootGraphqlObjectType",
-                            '${metadata.tableName}'               "rootTableName",
-                            '${column}'                           "rootColumnName",
-                            '${primary}'                          "rootPrimaryKey",
-                            indexObj->>'blockname'                "blockname",
-                            indexObj->>'jsonPath'                 "jsonPath",
-                            (indexObj->>'visible')::boolean       "visible",
-                            targetTableData->>'entityName'        "targetEntityName",
-                            targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
-                            targetTableData->>'tableName'         "targetTableName",
-                            targetTableData->>'primary'           "targetPrimaryKey",
-                            dependenciesObj->>'id' "targetId"
-                        FROM "${metadata.tableName}",
-                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
-                            json_array_elements(indexObj->'dependencies') dependenciesObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
+                            "${metadata.tableName}"."${primary}"                                "rootId",
+                            '${metadata.name}'                                                  "rootEntityName",
+                            '${graphqlObjectType}'                                              "rootGraphqlObjectType",
+                            '${metadata.tableName}'                                             "rootTableName",
+                            '${column}'                                                         "rootColumnName",
+                            '${primary}'                                                        "rootPrimaryKey",
+                            indexObj->>'blockname'                                              "blockname",
+                            indexObj->>'jsonPath'                                               "jsonPath",
+                            indexObj->>'visible'                                                "blockVisible",
+                            COALESCE(ei."visible", true)                                        "entityVisible",
+                            ((indexObj->>'visible')::boolean AND COALESCE(ei."visible", true))  "visible",
+                            targetTableData->>'entityName'                                      "targetEntityName",
+                            targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
+                            targetTableData->>'tableName'                                       "targetTableName",
+                            targetTableData->>'primary'                                         "targetPrimaryKey",
+                            dependenciesObj->>'id'                                              "targetId"
+                        FROM "${metadata.tableName}"
+                        CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
+                        CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
+                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
+                        LEFT JOIN "${ENTITY_INFO_VIEW}" as ei ON ei."id" = "${metadata.tableName}"."${primary}"::text
+                            AND ei."entityName" = '${metadata.name}'`;
 
             indexSelects.push(select);
         }
@@ -83,15 +95,15 @@ export class DependenciesService {
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
         console.time("creating block dependency materialized view");
-        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS ${BLOCK_INDEX_DEPENDENCIES_VIEW}`);
-        await this.connection.execute(`CREATE MATERIALIZED VIEW ${BLOCK_INDEX_DEPENDENCIES_VIEW} AS ${viewSql}`);
+        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "${BLOCK_INDEX_DEPENDENCIES_VIEW}"`);
+        await this.connection.execute(`CREATE MATERIALIZED VIEW "${BLOCK_INDEX_DEPENDENCIES_VIEW}" AS ${viewSql}`);
         await this.connection.execute(
-            `CREATE UNIQUE INDEX ON ${BLOCK_INDEX_DEPENDENCIES_VIEW} ("rootId", "rootTableName", "rootColumnName", "blockname", "jsonPath", "targetTableName", "targetId")`,
+            `CREATE UNIQUE INDEX ON "${BLOCK_INDEX_DEPENDENCIES_VIEW}" ("rootId", "rootTableName", "rootColumnName", "blockname", "jsonPath", "targetTableName", "targetId")`,
         );
         console.timeEnd("creating block dependency materialized view");
 
         console.time("creating block dependency materialized view index");
-        await this.connection.execute(`CREATE INDEX block_index_dependencies_targetId ON ${BLOCK_INDEX_DEPENDENCIES_VIEW} ("targetId")`);
+        await this.connection.execute(`CREATE INDEX block_index_dependencies_targetId ON "${BLOCK_INDEX_DEPENDENCIES_VIEW}" ("targetId")`);
         console.timeEnd("creating block dependency materialized view index");
     }
 
@@ -121,8 +133,8 @@ export class DependenciesService {
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
         console.time("creating block index view");
-        await this.connection.execute(`DROP VIEW IF EXISTS ${BLOCK_INDEX_VIEW}`);
-        await this.connection.execute(`CREATE VIEW ${BLOCK_INDEX_VIEW} AS ${viewSql}`);
+        await this.connection.execute(`DROP VIEW IF EXISTS "${BLOCK_INDEX_VIEW}"`);
+        await this.connection.execute(`CREATE VIEW "${BLOCK_INDEX_VIEW}" AS ${viewSql}`);
         console.timeEnd("creating block index view");
     }
 
@@ -137,7 +149,7 @@ export class DependenciesService {
             await forkedEntityManager.persistAndFlush(blockIndexRefresh);
 
             await forkedEntityManager.execute(
-                `REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} ${BLOCK_INDEX_DEPENDENCIES_VIEW}`,
+                `REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} "${BLOCK_INDEX_DEPENDENCIES_VIEW}"`,
             );
 
             await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
