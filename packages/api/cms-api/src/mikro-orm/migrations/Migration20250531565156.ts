@@ -27,15 +27,12 @@ WITH RECURSIVE "PageTreeNodePath" AS (
     JOIN "PageTreeNodePath" AS "parent" ON "child"."parentId" = "parent"."id"
 )
 
-SELECT --"PageTreeNodeDocument"."documentId"::text AS "id",
-       --"PageTreeNodeDocument"."type" AS "entityName",
-       "PageTreeNode"."id"::text AS "id",
+SELECT "PageTreeNode"."id"::text AS "id",
        "PageTreeNode"."name",
        "PageTreeNodePath"."path" AS "secondaryInformation",
        "PageTreeNodePath"."inherited_visible" AS "visible"
     FROM "PageTreeNode"
-    JOIN "PageTreeNodePath" ON "PageTreeNode"."id" = "PageTreeNodePath"."id"
-        --RIGHT JOIN "PageTreeNodeDocument" ON "pageTreeNodeId" = "PageTreeNode"."id"`);
+    JOIN "PageTreeNodePath" ON "PageTreeNode"."id" = "PageTreeNodePath"."id"`);
 
         this.addSql(`CREATE OR REPLACE VIEW "DamFileEntityInfo" AS
 WITH RECURSIVE folder_tree AS (
