@@ -5,6 +5,8 @@ export interface MainNavigationContext {
     toggleOpen: () => void;
     drawerVariant: "temporary" | "permanent";
     setDrawerVariant: Dispatch<SetStateAction<"temporary" | "permanent">>;
+    hasMultipleMenuItems: boolean;
+    setHasMultipleMenuItems: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface WithMainNavigation {
@@ -17,6 +19,10 @@ export const MainNavigationContext = createContext<MainNavigationContext>({
     },
     drawerVariant: "permanent",
     setDrawerVariant: () => {
+        // nothing
+    },
+    hasMultipleMenuItems: true,
+    setHasMultipleMenuItems: () => {
         // nothing
     },
 });
