@@ -388,7 +388,7 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       response-time:
-        specifier: ^2.3.3
+        specifier: ^2.3.4
         version: 2.3.4
       rimraf:
         specifier: ^6.1.2
