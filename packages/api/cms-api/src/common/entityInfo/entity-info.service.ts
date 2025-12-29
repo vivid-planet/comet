@@ -1,12 +1,14 @@
 import { AnyEntity, Connection, EntityManager } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
+import { EntityInfoObject } from "./entity-info.object";
 
 @Injectable()
 export class EntityInfoService {
     private connection: Connection;
+    private readonly logger = new Logger(EntityInfoService.name);
 
     constructor(
         private readonly discoverService: DiscoverService,
@@ -67,5 +69,24 @@ export class EntityInfoService {
         await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
         await this.connection.execute(`CREATE VIEW "EntityInfo" AS ${viewSql}`);
         console.timeEnd("creating EntityInfo view");
+    }
+
+    async getEntityInfo(entityName: string, id: string): Promise<EntityInfoObject | undefined> {
+        const qb = this.entityManager
+            .getKnex("read")
+            .select<EntityInfoObject>(["name", "secondaryInformation"])
+            .from("EntityInfo")
+            .where({ id, entityName });
+
+        const entityInfo = await qb.first();
+
+        if (entityInfo === undefined) {
+            this.logger.warn(
+                `Warning: No entity info found for ${entityName}#${id}. Is the @EntityInfo() decorator missing on the ${entityName} class?`,
+            );
+            return undefined;
+        }
+
+        return entityInfo;
     }
 }
