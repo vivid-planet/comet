@@ -71,6 +71,10 @@ export class EntityInfoService {
         console.timeEnd("creating EntityInfo view");
     }
 
+    async dropEntityInfoView() {
+        await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
+    }
+
     async getEntityInfo(entityName: string, id: string): Promise<EntityInfoObject | undefined> {
         const qb = this.entityManager
             .getKnex("read")
