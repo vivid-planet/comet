@@ -1,5 +1,21 @@
 # @comet/admin
 
+## 8.11.0
+
+### Minor Changes
+
+- 2580c61: Set cursor of DataGrid rows to "pointer" if `onRowClick` is set
+- f293762: Grid: Add support for column visible=false (not just breakpoints)
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- 5337c20: Style the `button` typography variant
+
+### Patch Changes
+
+- 198da7b: Fix pagination labels for empty DataGrids
+- 9c091ec: Fix DatePicker from possibly crashing when starting to type a date
+- Updated dependencies [7e34c0b]
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
