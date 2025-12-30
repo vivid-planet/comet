@@ -3,13 +3,7 @@ import { waitFor, within } from "test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
-import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
-
-const waitForClipboardToHaveValue = async () => {
-    await waitFor(() => {
-        expect(navigator.clipboard.readText()).resolves.not.toBe("");
-    });
-};
+import { clickButtonOfRowAtIndex, renderTableBlock, waitForClipboardToHaveValue } from "./utils";
 
 describe("TableBlock: Copy and paste a row", () => {
     beforeEach(() => {
