@@ -23,7 +23,7 @@ export enum ProductHighlightSortField {
     product_createdAt = "product_createdAt",
     product_updatedAt = "product_updatedAt",
     product_manufacturer = "product_manufacturer",
-    product_priceList = "product_priceList"
+    product_priceList = "product_priceList",
 }
 registerEnumType(ProductHighlightSortField, {
     name: "ProductHighlightSortField",

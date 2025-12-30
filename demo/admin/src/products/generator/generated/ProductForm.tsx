@@ -62,7 +62,7 @@ import { GQLUpdateProductMutation } from "./ProductForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
-    image: DamImageBlock
+    image: DamImageBlock,
 };
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
@@ -83,15 +83,30 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
-            dimensionsEnabled: !!data.product.dimensions, image: rootBlocks.image.input2State(data.product.image), lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
-        }
-        : {
-            title: "New Product", type: "cap", priceRange: { "min": 10, "max": 100 }, inStock: true, availableSince: "2025-01-01", image: rootBlocks.image.defaultValues(), lastCheckedAt: new Date("2018-01-12T00:00:00.000Z"),
-        }, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
+        productQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.product
+                ? {
+                      ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
+                      dimensionsEnabled: !!data.product.dimensions,
+                      image: rootBlocks.image.input2State(data.product.image),
+                      lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
+                  }
+                : {
+                      title: "New Product",
+                      type: "cap",
+                      priceRange: { min: 10, max: 100 },
+                      inStock: true,
+                      availableSince: "2025-01-01",
+                      image: rootBlocks.image.defaultValues(),
+                      lastCheckedAt: new Date("2018-01-12T00:00:00.000Z"),
+                  },
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "product", id);
@@ -103,23 +118,31 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
         },
     });
     const handleSubmit = async ({ dimensionsEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, description: formValuesRest.description ?? null, category: formValuesRest.category ? formValuesRest.category.id : null, tags: formValuesRest.tags.map((item) => item.id), manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null, availableSince: formValuesRest.availableSince ?? null, image: rootBlocks.image.state2Output(formValuesRest.image), priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null, datasheets: formValuesRest.datasheets?.map(({ id }) => id), lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null, };
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = {
+            ...formValuesRest,
+            description: formValuesRest.description ?? null,
+            category: formValuesRest.category ? formValuesRest.category.id : null,
+            tags: formValuesRest.tags.map((item) => item.id),
+            manufacturer: formValuesRest.manufacturer ? formValuesRest.manufacturer.id : null,
+            availableSince: formValuesRest.availableSince ?? null,
+            image: rootBlocks.image.state2Output(formValuesRest.image),
+            priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null,
+            datasheets: formValuesRest.datasheets?.map(({ id }) => id),
+            lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null,
+        };
         if (mode === "edit") {
-            if (!id)
-                throw new Error();
+            if (!id) throw new Error();
             const { createdAt, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: {
-                    input: output
+                    input: output,
                 },
             });
             const id = mutationResponse?.createProduct.id;
@@ -130,164 +153,373 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{ values: true }}>
-                {({ values, form }) => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <FieldSet initiallyExpanded={true} title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data"/>} supportText={mode === "edit" && (<FormSpy subscription={{ values: true }}>{({ values }) => (<FormattedMessage id="product.mainData.supportText" defaultMessage="Product: {title}" values={{ ...values }}/>)}</FormSpy>)}>
-            
-        <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Titel"/>} validate={(value: string) => value.length < 3 ? (<FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long"/>) : undefined}/>
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{ values: true }}
+        >
+            {({ values, form }) => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <FieldSet
+                            initiallyExpanded={true}
+                            title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
+                            supportText={
+                                mode === "edit" && (
+                                    <FormSpy subscription={{ values: true }}>
+                                        {({ values }) => (
+                                            <FormattedMessage
+                                                id="product.mainData.supportText"
+                                                defaultMessage="Product: {title}"
+                                                values={{ ...values }}
+                                            />
+                                        )}
+                                    </FormSpy>
+                                )
+                            }
+                        >
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="title"
+                                label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                                validate={(value: string) =>
+                                    value.length < 3 ? (
+                                        <FormattedMessage
+                                            id="product.validate.titleMustBe3CharsLog"
+                                            defaultMessage="Title must be at least 3 characters long"
+                                        />
+                                    ) : undefined
+                                }
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>} validate={(value: string) => {
-                // eslint-disable-next-line no-console
-                console.log(manufacturerCountry);
-                return validateProductSlug({ value, id, client });
-            }}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="slug"
+                                label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
+                                validate={(value: string) => {
+                                    // eslint-disable-next-line no-console
+                                    console.log(manufacturerCountry);
+                                    return validateProductSlug({ value, id, client });
+                                }}
+                            />
 
-            <Future_DatePickerField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
+                            <Future_DatePickerField
+                                readOnly
+                                disabled
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <Lock />
+                                    </InputAdornment>
+                                }
+                                variant="horizontal"
+                                fullWidth
+                                name="createdAt"
+                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                            />
 
-        <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
-        <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={[
-                {
-                    label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap"/>,
-                    value: "cap",
-                }, {
-                    label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt"/>,
-                    value: "shirt",
-                }, {
-                    label: <FormattedMessage id="product.type.tie" defaultMessage="Tie"/>,
-                    value: "tie",
-                }
-            ]}/>
-        <SelectField required fullWidth variant={"horizontal"} name="additionalTypes" label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types"/>} multiple options={[{
-                    value: "bag",
-                    label: <FormattedMessage id="product.additionalTypes.bag" defaultMessage="Bag"/>
-                }, {
-                    value: "calendar",
-                    label: <FormattedMessage id="product.additionalTypes.calendar" defaultMessage="Calendar"/>
-                }, {
-                    value: "cap",
-                    label: <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap"/>
-                }, {
-                    value: "jacket",
-                    label: <FormattedMessage id="product.additionalTypes.jacket" defaultMessage="Jacket"/>
-                }, {
-                    value: "mug",
-                    label: <FormattedMessage id="product.additionalTypes.mug" defaultMessage="Mug"/>
-                }, {
-                    value: "notebook",
-                    label: <FormattedMessage id="product.additionalTypes.notebook" defaultMessage="Notebook"/>
-                }, {
-                    value: "pants",
-                    label: <FormattedMessage id="product.additionalTypes.pants" defaultMessage="Pants"/>
-                }, {
-                    value: "pen",
-                    label: <FormattedMessage id="product.additionalTypes.pen" defaultMessage="Pen"/>
-                }, {
-                    value: "shirt",
-                    label: <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt"/>
-                }, {
-                    value: "shoes",
-                    label: <FormattedMessage id="product.additionalTypes.shoes" defaultMessage="Shoes"/>
-                }, {
-                    value: "socks",
-                    label: <FormattedMessage id="product.additionalTypes.socks" defaultMessage="Socks"/>
-                }, {
-                    value: "sunglasses",
-                    label: <FormattedMessage id="product.additionalTypes.sunglasses" defaultMessage="Sunglasses"/>
-                }, {
-                    value: "tie",
-                    label: <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie"/>
-                }, {
-                    value: "wallet",
-                    label: <FormattedMessage id="product.additionalTypes.wallet" defaultMessage="Wallet"/>
-                }, {
-                    value: "watch",
-                    label: <FormattedMessage id="product.additionalTypes.watch" defaultMessage="Watch"/>
-                }]}/>
-        <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`
-    query ProductCategoriesSelect($search: String) {
-        productCategories(search: $search) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        search,
-                    }
-                });
-                return data.productCategories.nodes;
-            }} getOptionLabel={(option) => option.title}/>
-        <AsyncAutocompleteField required variant="horizontal" fullWidth multiple name="tags" label={<FormattedMessage id="product.tags" defaultMessage="Tags"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
-                    query: gql`
-    query ProductTagsSelect($search: String) {
-        productTags(search: $search) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        search,
-                    }
-                });
-                return data.productTags.nodes;
-            }} getOptionLabel={(option) => option.title}/>
+                            <TextAreaField
+                                variant="horizontal"
+                                fullWidth
+                                name="description"
+                                label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                            />
+                            <RadioGroupField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="type"
+                                label={<FormattedMessage id="product.type" defaultMessage="Type" />}
+                                options={[
+                                    {
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
+                                        value: "cap",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />,
+                                        value: "shirt",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.tie" defaultMessage="Tie" />,
+                                        value: "tie",
+                                    },
+                                ]}
+                            />
+                            <SelectField
+                                required
+                                fullWidth
+                                variant={"horizontal"}
+                                name="additionalTypes"
+                                label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
+                                multiple
+                                options={[
+                                    {
+                                        value: "bag",
+                                        label: <FormattedMessage id="product.additionalTypes.bag" defaultMessage="Bag" />,
+                                    },
+                                    {
+                                        value: "calendar",
+                                        label: <FormattedMessage id="product.additionalTypes.calendar" defaultMessage="Calendar" />,
+                                    },
+                                    {
+                                        value: "cap",
+                                        label: <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap" />,
+                                    },
+                                    {
+                                        value: "jacket",
+                                        label: <FormattedMessage id="product.additionalTypes.jacket" defaultMessage="Jacket" />,
+                                    },
+                                    {
+                                        value: "mug",
+                                        label: <FormattedMessage id="product.additionalTypes.mug" defaultMessage="Mug" />,
+                                    },
+                                    {
+                                        value: "notebook",
+                                        label: <FormattedMessage id="product.additionalTypes.notebook" defaultMessage="Notebook" />,
+                                    },
+                                    {
+                                        value: "pants",
+                                        label: <FormattedMessage id="product.additionalTypes.pants" defaultMessage="Pants" />,
+                                    },
+                                    {
+                                        value: "pen",
+                                        label: <FormattedMessage id="product.additionalTypes.pen" defaultMessage="Pen" />,
+                                    },
+                                    {
+                                        value: "shirt",
+                                        label: <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt" />,
+                                    },
+                                    {
+                                        value: "shoes",
+                                        label: <FormattedMessage id="product.additionalTypes.shoes" defaultMessage="Shoes" />,
+                                    },
+                                    {
+                                        value: "socks",
+                                        label: <FormattedMessage id="product.additionalTypes.socks" defaultMessage="Socks" />,
+                                    },
+                                    {
+                                        value: "sunglasses",
+                                        label: <FormattedMessage id="product.additionalTypes.sunglasses" defaultMessage="Sunglasses" />,
+                                    },
+                                    {
+                                        value: "tie",
+                                        label: <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie" />,
+                                    },
+                                    {
+                                        value: "wallet",
+                                        label: <FormattedMessage id="product.additionalTypes.wallet" defaultMessage="Wallet" />,
+                                    },
+                                    {
+                                        value: "watch",
+                                        label: <FormattedMessage id="product.additionalTypes.watch" defaultMessage="Watch" />,
+                                    },
+                                ]}
+                            />
+                            <AsyncAutocompleteField
+                                variant="horizontal"
+                                fullWidth
+                                name="category"
+                                label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                                loadOptions={async (search?: string) => {
+                                    const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                        query: gql`
+                                            query ProductCategoriesSelect($search: String) {
+                                                productCategories(search: $search) {
+                                                    nodes {
+                                                        id
+                                                        title
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: {
+                                            search,
+                                        },
+                                    });
+                                    return data.productCategories.nodes;
+                                }}
+                                getOptionLabel={(option) => option.title}
+                            />
+                            <AsyncAutocompleteField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                multiple
+                                name="tags"
+                                label={<FormattedMessage id="product.tags" defaultMessage="Tags" />}
+                                loadOptions={async (search?: string) => {
+                                    const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
+                                        query: gql`
+                                            query ProductTagsSelect($search: String) {
+                                                productTags(search: $search) {
+                                                    nodes {
+                                                        id
+                                                        title
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: {
+                                            search,
+                                        },
+                                    });
+                                    return data.productTags.nodes;
+                                }}
+                                getOptionLabel={(option) => option.title}
+                            />
 
-            <Field variant="horizontal" fullWidth name="priceRange" component={FinalFormRangeInput} label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range"/>} min={25} max={500} disableSlider startAdornment={<InputAdornment position="start">€</InputAdornment>}/>
-        <Field fullWidth name="dimensionsEnabled" type="checkbox" label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions"/>}>
-                    {(props) => (<FormControlLabel control={<FinalFormSwitch {...props}/>} label={props.input.checked ? <FormattedMessage {...messages.yes}/> : <FormattedMessage {...messages.no}/>}/>)}
-                </Field>
-                 <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
-                    {({ input: { value } }) => value ? (<>
-                                
-            <NumberField required variant="horizontal" fullWidth name="dimensions.width" label={<FormattedMessage id="product.width" defaultMessage="Width"/>}/>
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            />
+                            <Field
+                                fullWidth
+                                name="dimensionsEnabled"
+                                type="checkbox"
+                                label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions" />}
+                            >
+                                {(props) => (
+                                    <FormControlLabel
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                                    />
+                                )}
+                            </Field>
+                            <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <NumberField
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.width"
+                                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                                            />
 
-            <NumberField required variant="horizontal" fullWidth name="dimensions.height" label={<FormattedMessage id="product.height" defaultMessage="Height"/>}/>
+                                            <NumberField
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.height"
+                                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                                            />
 
-            <NumberField required variant="horizontal" fullWidth name="dimensions.depth" label={<FormattedMessage id="product.depth" defaultMessage="Depth"/>}/>
-                            </>) : null}
-                </Field>
-        </FieldSet>
+                                            <NumberField
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.depth"
+                                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
+                        </FieldSet>
 
-        <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data"/>}>
-            <AsyncAutocompleteField variant="horizontal" fullWidth name="manufacturer" label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer"/>} startAdornment={<InputAdornment position="start"><LocationIcon /></InputAdornment>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
-                    query: gql`
-    query ManufacturersSelect($search: String, $filter: ManufacturerFilter) {
-        manufacturers(search: $search, filter: $filter) {
-            nodes { id name }
-        }
-    }
-    
-    `, variables: {
-                        filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } },
-                        search,
-                    }
-                });
-                return data.manufacturers.nodes;
-            }} getOptionLabel={(option) => option.name}/>
-        <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
+                        <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
+                            <AsyncAutocompleteField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <LocationIcon />
+                                    </InputAdornment>
+                                }
+                                loadOptions={async (search?: string) => {
+                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                        query: gql`
+                                            query ManufacturersSelect($search: String, $filter: ManufacturerFilter) {
+                                                manufacturers(search: $search, filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: {
+                                            filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } },
+                                            search,
+                                        },
+                                    });
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option) => option.name}
+                            />
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
-            <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
-        <FutureProductNotice />
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-        <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304}/>
-        <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304}/>
-        <DateTimePickerField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
-        </FieldSet>
-                        </>
-                    </>)}
-            </FinalForm>);
+                            <Future_DatePickerField
+                                variant="horizontal"
+                                fullWidth
+                                name="availableSince"
+                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
+                            />
+                            <FutureProductNotice />
+                            <Field
+                                name="image"
+                                isEqual={isEqual}
+                                label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                                variant="horizontal"
+                                fullWidth
+                            >
+                                {createFinalFormBlock(rootBlocks.image)}
+                            </Field>
+                            <FileUploadField
+                                name="priceList"
+                                label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                                variant="horizontal"
+                                maxFileSize={4194304}
+                            />
+                            <FileUploadField
+                                name="datasheets"
+                                label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                                variant="horizontal"
+                                multiple
+                                maxFileSize={4194304}
+                            />
+                            <DateTimePickerField
+                                variant="horizontal"
+                                fullWidth
+                                name="lastCheckedAt"
+                                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
+                            />
+                        </FieldSet>
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }
