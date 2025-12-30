@@ -1,5 +1,7 @@
 # @comet/site-react
 
+## 8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
