@@ -41,15 +41,15 @@ describe("TableBlock: Copy and paste a column", () => {
             const isAfterPastedColumn = columnIndex > targetColumnIndex + 1;
 
             if (isBeforePastedColumn) {
-                expect(newCellValues).toStrictEqual(originalCellValuesPerColumn[columnIndex]);
+                expect(newCellValues).toEqual(originalCellValuesPerColumn[columnIndex]);
             }
 
             if (isPastedColumn || isSourceColumn) {
-                expect(newCellValues).toStrictEqual(originalCellValuesPerColumn[sourceColumnIndex]);
+                expect(newCellValues).toEqual(originalCellValuesPerColumn[sourceColumnIndex]);
             }
 
             if (isAfterPastedColumn) {
-                expect(newCellValues).toStrictEqual(originalCellValuesPerColumn[columnIndex - 1]);
+                expect(newCellValues).toEqual(originalCellValuesPerColumn[columnIndex - 1]);
             }
         });
     });

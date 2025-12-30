@@ -32,8 +32,8 @@ export const clickButtonOfColumnAtIndex = (rendered: RenderResult, index: number
 };
 
 export const waitForClipboardToHaveValue = async () => {
-    await waitFor(() => {
-        expect(navigator.clipboard.readText()).resolves.not.toBe("");
+    await waitFor(async () => {
+        await expect(navigator.clipboard.readText()).resolves.not.toBe("");
     });
 };
 
