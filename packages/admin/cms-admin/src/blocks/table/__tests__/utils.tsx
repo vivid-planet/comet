@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fireEvent, render, type RenderResult, waitFor } from "test-utils";
+import { fireEvent, render, type RenderResult, waitFor, within } from "test-utils";
 import { expect } from "vitest";
 
 import { type TableBlockData } from "../../../blocks.generated";
@@ -35,4 +35,31 @@ export const waitForClipboardToHaveValue = async () => {
     await waitFor(() => {
         expect(navigator.clipboard.readText()).resolves.not.toBe("");
     });
+};
+
+export const getCellValuesPerColumn = (rendered: RenderResult) => {
+    const rowgroup = rendered.getByRole("rowgroup");
+    const rows = within(rowgroup).getAllByRole("row");
+
+    const firstRowCells = within(rows[0]).getAllByRole("gridcell");
+    const cellValuesPerColumn: string[][] = [];
+
+    firstRowCells.forEach((_, cellIndex) => {
+        const isDragHandleCell = cellIndex === 0;
+        const isActionsCell = cellIndex === firstRowCells.length - 1;
+        if (isDragHandleCell || isActionsCell) {
+            return;
+        }
+
+        const cellValuesOfColumn: string[] = [];
+
+        rows.forEach((row) => {
+            const rowCells = within(row).getAllByRole("gridcell");
+            cellValuesOfColumn.push(rowCells[cellIndex].textContent);
+        });
+
+        cellValuesPerColumn.push(cellValuesOfColumn);
+    });
+
+    return cellValuesPerColumn;
 };

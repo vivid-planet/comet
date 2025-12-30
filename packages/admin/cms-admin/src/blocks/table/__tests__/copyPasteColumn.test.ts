@@ -1,36 +1,9 @@
 import { userEvent } from "@testing-library/user-event";
-import { type RenderResult, waitFor, within } from "test-utils";
+import { waitFor } from "test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
-import { clickButtonOfColumnAtIndex, renderTableBlock, waitForClipboardToHaveValue } from "./utils";
-
-const getCellValuesPerColumn = (rendered: RenderResult) => {
-    const rowgroup = rendered.getByRole("rowgroup");
-    const rows = within(rowgroup).getAllByRole("row");
-
-    const firstRowCells = within(rows[0]).getAllByRole("gridcell");
-    const cellValuesPerColumn: string[][] = [];
-
-    firstRowCells.forEach((_, cellIndex) => {
-        const isDragHandleCell = cellIndex === 0;
-        const isActionsCell = cellIndex === firstRowCells.length - 1;
-        if (isDragHandleCell || isActionsCell) {
-            return;
-        }
-
-        const cellValuesOfColumn: string[] = [];
-
-        rows.forEach((row) => {
-            const rowCells = within(row).getAllByRole("gridcell");
-            cellValuesOfColumn.push(rowCells[cellIndex].textContent);
-        });
-
-        cellValuesPerColumn.push(cellValuesOfColumn);
-    });
-
-    return cellValuesPerColumn;
-};
+import { clickButtonOfColumnAtIndex, getCellValuesPerColumn, renderTableBlock, waitForClipboardToHaveValue } from "./utils";
 
 describe("TableBlock: Copy and paste a column", () => {
     beforeEach(() => {
