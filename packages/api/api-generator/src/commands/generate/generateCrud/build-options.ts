@@ -115,6 +115,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
 
+    const hasDeletedAtProp = metadata.props.some((prop) => prop.name == "deletedAt");
+
     const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
 
     const positionGroupPropNames: string[] = hasPositionProp
@@ -144,6 +146,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         hasSlugProp,
         hasPositionProp,
         positionGroupProps,
+        hasDeletedAtProp,
         scopeProp,
         skipScopeCheck,
         argsClassName,
