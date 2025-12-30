@@ -41,7 +41,8 @@ export const getCellValuesPerColumn = (rendered: RenderResult) => {
     const rowgroup = rendered.getByRole("rowgroup");
     const rows = within(rowgroup).getAllByRole("row");
 
-    const firstRowCells = within(rows[0]).getAllByRole("gridcell");
+    const rowCells = rows.map((row) => within(row).getAllByRole("gridcell"));
+    const firstRowCells = rowCells[0];
     const cellValuesPerColumn: string[][] = [];
 
     firstRowCells.forEach((_, cellIndex) => {
@@ -53,8 +54,7 @@ export const getCellValuesPerColumn = (rendered: RenderResult) => {
 
         const cellValuesOfColumn: string[] = [];
 
-        rows.forEach((row) => {
-            const rowCells = within(row).getAllByRole("gridcell");
+        rowCells.forEach((rowCells) => {
             cellValuesOfColumn.push(rowCells[cellIndex].textContent);
         });
 
