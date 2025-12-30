@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { fireEvent, render, type RenderResult } from "test-utils";
+import { fireEvent, render, type RenderResult, waitFor } from "test-utils";
+import { expect } from "vitest";
 
 import { type TableBlockData } from "../../../blocks.generated";
 import { TableBlockGrid } from "../TableBlockGrid";
@@ -28,4 +29,10 @@ export const clickButtonOfColumnAtIndex = (rendered: RenderResult, index: number
 
     const button = rendered.getByRole("menuitem", { name: buttonNameRegex });
     fireEvent.click(button);
+};
+
+export const waitForClipboardToHaveValue = async () => {
+    await waitFor(() => {
+        expect(navigator.clipboard.readText()).resolves.not.toBe("");
+    });
 };
