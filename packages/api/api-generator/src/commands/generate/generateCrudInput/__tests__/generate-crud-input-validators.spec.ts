@@ -378,7 +378,6 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 (getImportDeclaration) => getImportDeclaration.getModuleSpecifierValue() === "class-validator",
             );
 
-            console.log(classValidatorImports.map((imp) => imp.getText()));
             expect(classValidatorImports.length).toBe(1);
 
             // check if IsOptional and IsString are imported only once from class-validator
