@@ -1,8 +1,9 @@
 import { userEvent } from "@testing-library/user-event";
-import { waitFor, within } from "test-utils";
-import { beforeEach, describe, expect, it } from "vitest";
+import { cleanup, waitFor, within } from "test-utils";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
+import { type ClipboardRow } from "../RowActionsCell";
 import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
 
 const waitForClipboardToHaveValue = async () => {
@@ -10,6 +11,8 @@ const waitForClipboardToHaveValue = async () => {
         expect(navigator.clipboard.readText()).resolves.not.toBe("");
     });
 };
+
+afterEach(cleanup);
 
 describe("TableBlock: Copy and paste a row", () => {
     beforeEach(() => {
@@ -93,5 +96,125 @@ describe("TableBlock: Copy and paste a row", () => {
         const errorAlert = await waitFor(() => rendered.getByRole("alert"));
         expect(errorAlert).not.toBeNull();
         expect(errorAlert.textContent).toContain("Could not paste the clipboard data");
+    });
+
+    // TODO: Fix pasting rows and enable/complete this test
+    it.skip("should create new columns when pasting a row with more than existing columns", async () => {
+        const rendered = renderTableBlock(mockTableData);
+        const rowGroup = rendered.getByRole("rowgroup");
+
+        const pasteBelowRowIndex = 0;
+
+        const numberOfColumnsInMockData = mockTableData.columns.length;
+        const numberOfAdditionalColumns = 2;
+        const numberOfColumnsInPastingRow = numberOfColumnsInMockData + numberOfAdditionalColumns;
+
+        const newColumnValues = Array.from({ length: numberOfColumnsInPastingRow }).map((_, index) => `Value ${index + 1}`);
+
+        const rowWithMoreColumnsThanInMockData: ClipboardRow = {
+            type: "tableBlockRow",
+            highlighted: false,
+            cellValues: newColumnValues,
+        };
+
+        await navigator.clipboard.writeText(JSON.stringify(rowWithMoreColumnsThanInMockData));
+
+        clickButtonOfRowAtIndex(rendered, pasteBelowRowIndex, /paste/i);
+
+        await waitFor(() => {
+            const rows = within(rowGroup).getAllByRole("row");
+            expect(rows).toHaveLength(mockTableData.rows.length + 1);
+        });
+
+        const rows = within(rowGroup).getAllByRole("row");
+
+        rows.forEach((row, rowIndex) => {
+            const cellElements = within(row).getAllByRole("gridcell");
+            const cellValues = cellElements
+                .map((cell) => cell.textContent)
+                .filter((_, index) => {
+                    const isDragHandleCell = index === 0;
+                    const isActionCell = index === cellElements.length - 1;
+                    return !isDragHandleCell && !isActionCell;
+                });
+
+            expect(cellValues).toHaveLength(numberOfColumnsInPastingRow);
+
+            const isNewlyInsertedRow = rowIndex === pasteBelowRowIndex + 1;
+
+            if (isNewlyInsertedRow) {
+                expect(cellValues).toEqual(newColumnValues);
+            } else {
+                cellValues.forEach((cellValue, cellIndex) => {
+                    const isNewlyCreatedColumn = cellIndex >= numberOfColumnsInMockData;
+                    if (isNewlyCreatedColumn) {
+                        expect(cellValue).toBe("");
+                    } else {
+                        expect(cellValue).toBe(mockTableData.rows[rowIndex].cellValues[cellIndex].value);
+                    }
+                });
+            }
+        });
+    });
+
+    // TODO: Fix pasting rows and enable/complete this test
+    it.skip("should create empty cells for pasted row if it has less values than existing table columns", async () => {
+        const rendered = renderTableBlock(mockTableData);
+        const rowGroup = rendered.getByRole("rowgroup");
+
+        const pasteBelowRowIndex = 0;
+
+        const numberOfColumnsInMockData = mockTableData.columns.length;
+        const numberOfMissingValues = 2;
+        const numberOfValuesInPastingRow = numberOfColumnsInMockData - numberOfMissingValues;
+
+        const newColumnValues = Array.from({ length: numberOfValuesInPastingRow }).map((_, index) => `Value ${index + 1}`);
+
+        const rowWithMoreColumnsThanInMockData: ClipboardRow = {
+            type: "tableBlockRow",
+            highlighted: false,
+            cellValues: newColumnValues,
+        };
+
+        await navigator.clipboard.writeText(JSON.stringify(rowWithMoreColumnsThanInMockData));
+
+        clickButtonOfRowAtIndex(rendered, pasteBelowRowIndex, /paste/i);
+
+        await waitFor(() => {
+            const rows = within(rowGroup).getAllByRole("row");
+            expect(rows).toHaveLength(mockTableData.rows.length + 1);
+        });
+
+        const rows = within(rowGroup).getAllByRole("row");
+
+        rows.forEach((row, rowIndex) => {
+            const cellElements = within(row).getAllByRole("gridcell");
+            const cellValues = cellElements
+                .map((cell) => cell.textContent)
+                .filter((_, index) => {
+                    const isDragHandleCell = index === 0;
+                    const isActionCell = index === cellElements.length - 1;
+                    return !isDragHandleCell && !isActionCell;
+                });
+
+            expect(cellValues).toHaveLength(numberOfValuesInPastingRow);
+
+            const isNewlyInsertedRow = rowIndex === pasteBelowRowIndex + 1;
+
+            if (isNewlyInsertedRow) {
+                cellValues.forEach((cellValue, cellIndex) => {
+                    const shouldHaveAValue = cellIndex < numberOfValuesInPastingRow;
+
+                    if (shouldHaveAValue) {
+                        expect(cellValue).toBe(newColumnValues[cellIndex]);
+                    } else {
+                        expect(cellValue).toBe("");
+                    }
+                });
+            } else {
+                const mockDataRowIndexWithOffsetForNewRow = rowIndex === 0 ? rowIndex : rowIndex - 1;
+                expect(cellValues).toEqual(mockTableData.rows[mockDataRowIndexWithOffsetForNewRow].cellValues.map((cellValue) => cellValue.value));
+            }
+        });
     });
 });

@@ -15,7 +15,7 @@ const clipboardRowSchema = z.object({
     cellValues: z.array(z.string()),
 });
 
-type ClipboardRow = z.infer<typeof clipboardRowSchema>;
+export type ClipboardRow = z.infer<typeof clipboardRowSchema>;
 
 type Props = {
     row: Record<string, unknown> & { id: string };
