@@ -7,7 +7,9 @@ const packageFolderMapping = {
     "@comet/admin-icons": "packages/admin/admin-icons",
     "@comet/admin-rte": "packages/admin/admin-rte",
     "@comet/cms-admin": "packages/admin/cms-admin",
+    "@comet/brevo-admin": "packages/admin/brevo-admin",
     "@comet/cms-api": "packages/api/cms-api",
+    "@comet/brevo-api": "packages/api/brevo-api",
     "@comet/site-nextjs": "packages/site/site-nextjs",
     "@comet/site-react": "packages/site/site-react",
 };
@@ -131,6 +133,38 @@ export default defineConfig({
             name: "mail-react",
             script: "pnpm --filter @comet/mail-react run dev",
             group: ["mail-react"],
+        },
+
+        //group brevo
+        {
+            name: "brevo-api",
+            script: "pnpm --filter @comet/brevo-api run dev",
+            group: ["brevo"],
+            waitOn: waitOnPackages("@comet/cms-api"),
+        },
+        {
+            name: "brevo-api-codegen-schema",
+            script: "pnpm --filter @comet/brevo-api run generate-schema:watch",
+            group: ["brevo"],
+            waitOn: waitOnPackages("@comet/cms-api"),
+        },
+        {
+            name: "brevo-api-codegen-block-meta",
+            script: "pnpm --filter @comet/brevo-api run generate-block-meta:watch",
+            group: ["brevo"],
+            waitOn: waitOnPackages("@comet/cms-api"),
+        },
+        {
+            name: "brevo-admin",
+            script: "pnpm --filter @comet/brevo-admin run start",
+            group: ["brevo"],
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
+        },
+        {
+            name: "brevo-admin-codegen-graphql-types",
+            script: "pnpm --filter @comet/brevo-admin run generate-graphql-types:watch",
+            group: ["brevo"],
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
         },
 
         //group demo admin
