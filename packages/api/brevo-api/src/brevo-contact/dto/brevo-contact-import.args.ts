@@ -6,12 +6,6 @@ import { IsBoolean, IsUUID, ValidateNested } from "class-validator";
 
 import { EmailCampaignScopeInterface } from "../../types";
 
-export interface BrevoContactImportArgsInterface {
-    scope: EmailCampaignScopeInterface;
-    fileId: string;
-    targetGroupIds?: Array<string>;
-}
-
 export class BrevoContactImportArgsFactory {
     static create({ Scope }: { Scope: Type<EmailCampaignScopeInterface> }) {
         @ArgsType()

@@ -2,7 +2,7 @@ import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
 
-export enum TargetGroupSortField {
+enum TargetGroupSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     title = "title",

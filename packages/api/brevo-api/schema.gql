@@ -5,8 +5,26 @@ type UserPermissionsUser {
 }
 
 type CurrentUserPermission {
-  permission: String!
+  permission: Permission!
   contentScopes: [JSONObject!]!
+}
+
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  sitePreview
+  blockPreview
+  brevoNewsletterConfig
+  brevoNewsletter
 }
 
 """
@@ -51,6 +69,42 @@ enum FocalPoint {
   NORTHEAST
   SOUTHWEST
   SOUTHEAST
+}
+
+type WarningSourceInfo {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
+  status: WarningStatus!
+  scope: JSONObject
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum WarningSeverity {
+  high
+  medium
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
 }
 
 type BrevoApiEmailTemplateSender {
@@ -177,11 +231,6 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type PaginatedTargetGroups {
   nodes: [BrevoTargetGroup!]!
   totalCount: Int!
@@ -229,6 +278,14 @@ type BrevoConfig implements DocumentInterface {
   scope: EmailCampaignContentScope!
 }
 
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
 input EmailCampaignContentScopeInput {
   thisScopeHasNoFields____: String
 }
@@ -265,15 +322,20 @@ input DateTimeFilter {
   lowerThanEqual: DateTime
   greaterThanEqual: DateTime
   notEqual: DateTime
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input StringFilter {
   contains: String
+  notContains: String
   startsWith: String
   endsWith: String
   equal: String
   notEqual: String
   isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input BooleanFilter {

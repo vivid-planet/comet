@@ -1,6 +1,17 @@
 {
-    "extends": "./tsconfig.base.json",
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
+        "target": "ES2015",
+        "lib": ["ES2020"],
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "incremental": true,
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": true,
+        "declarationMap": true,
         "outDir": "./lib",
         "baseUrl": "./"
     },

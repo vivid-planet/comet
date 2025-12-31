@@ -64,6 +64,10 @@
         "packages/api/api-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/api/brevo-api": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "packages/site/site-react": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]

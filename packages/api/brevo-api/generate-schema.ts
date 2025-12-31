@@ -1,7 +1,7 @@
-import { createOneOfBlock, createRichTextBlock, ExternalLinkBlock } from "@comet/cms-api";
+import { CorePermission, createOneOfBlock, createRichTextBlock, ExternalLinkBlock } from "@comet/cms-api";
 import { Embeddable } from "@mikro-orm/postgresql";
 import { NestFactory } from "@nestjs/core";
-import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, InputType, ObjectType } from "@nestjs/graphql";
+import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
@@ -20,6 +20,8 @@ import { TargetGroupInputFactory } from "./src/target-group/dto/target-group-inp
 import { createTargetGroupEntity } from "./src/target-group/entity/target-group-entity.factory";
 import { createTargetGroupsResolver } from "./src/target-group/target-group.resolver";
 import { BrevoContactFilterAttributesInterface, EmailCampaignScopeInterface } from "./src/types";
+import { CombinedPermission } from "@comet/cms-api/lib/user-permissions/user-permissions.types";
+import { BrevoPermission } from "./src/permissions/brevo-permission.enum";
 
 @ObjectType("EmailCampaignContentScope")
 @InputType("EmailCampaignContentScopeInput")
@@ -59,6 +61,11 @@ async function generateSchema(): Promise<void> {
         { supportedBlocks: { internal: createRichTextBlock({ link: LinkBlock }) }, allowEmpty: true },
         "EmailCampaignContent",
     );
+
+    Object.entries(BrevoPermission).forEach(([key, value]) => {
+        CombinedPermission[key] = value;
+    });
+    registerEnumType(CombinedPermission, { name: "Permission" });
 
     const gqlSchemaFactory = app.get(GraphQLSchemaFactory);
 

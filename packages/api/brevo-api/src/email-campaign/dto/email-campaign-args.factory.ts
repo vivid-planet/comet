@@ -8,13 +8,6 @@ import { EmailCampaignScopeInterface } from "../../types";
 import { EmailCampaignFilter } from "./email-campaign.filter";
 import { EmailCampaignSort } from "./email-campaign.sort";
 
-export interface PaginatedEmailCampaignsArgsInterface extends OffsetBasedPaginationArgs {
-    scope: EmailCampaignScopeInterface;
-    search?: string;
-    filter?: EmailCampaignFilter;
-    sort?: EmailCampaignFilter[];
-}
-
 export class EmailCampaignArgsFactory {
     static create({ Scope }: { Scope: Type<EmailCampaignScopeInterface> }) {
         @ArgsType()

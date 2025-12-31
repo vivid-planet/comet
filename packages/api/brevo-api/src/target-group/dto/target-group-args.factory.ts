@@ -8,13 +8,6 @@ import { EmailCampaignScopeInterface } from "src/types";
 import { TargetGroupFilter } from "./target-group.filter";
 import { TargetGroupSort } from "./target-group.sort";
 
-export interface PaginatedTargetGroupsArgsInterface extends OffsetBasedPaginationArgs {
-    scope: EmailCampaignScopeInterface;
-    search?: string;
-    filter?: TargetGroupFilter;
-    sort?: TargetGroupSort[];
-}
-
 export class TargetGroupArgsFactory {
     static create({ Scope }: { Scope: Type<EmailCampaignScopeInterface> }) {
         @ArgsType()

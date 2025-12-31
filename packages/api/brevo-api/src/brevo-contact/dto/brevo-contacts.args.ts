@@ -6,12 +6,6 @@ import { IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { EmailCampaignScopeInterface } from "../../types";
 
-export interface BrevoContactsArgsInterface extends OffsetBasedPaginationArgs {
-    scope: EmailCampaignScopeInterface;
-    targetGroupId?: string;
-    email?: string;
-}
-
 export class BrevoContactsArgsFactory {
     static create({ Scope }: { Scope: Type<EmailCampaignScopeInterface> }) {
         @ArgsType()

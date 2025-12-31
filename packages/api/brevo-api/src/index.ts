@@ -7,3 +7,4 @@ export { IsValidRedirectURL } from "./brevo-contact/validator/redirect-url.valid
 export { createBrevoEmailImportLogEntity } from "./brevo-email-import-log/entity/brevo-email-import-log.entity.factory";
 export { BrevoModule } from "./brevo-module";
 export { migrationsList } from "./mikro-orm/migrations/migrations";
+export { BrevoPermission } from "./permissions/brevo-permission.enum";
