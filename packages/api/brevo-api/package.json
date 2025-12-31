@@ -25,7 +25,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
-        "test": "jest",
+        "test": "jest --passWithNoTests",
         "test:watch": "jest --watch"
     },
     "dependencies": {
