@@ -56,12 +56,21 @@
         "packages/admin/admin-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/admin/brevo-admin": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["**/*.generated.ts"]
+        },
         "packages/api/cms-api": {
             "entry": ["./src/**/migrations/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@sentry/node"]
         },
         "packages/api/api-generator": {
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/api/brevo-api": {
+            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/site/site-react": {

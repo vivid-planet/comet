@@ -1,3 +1,4 @@
+import { migrationsList as brevoMigrationsList } from "@comet/brevo-api";
 import { createMigrationsList, createOrmConfig } from "@comet/cms-api";
 import { defineConfig, EntityCaseNamingStrategy } from "@mikro-orm/postgresql";
 import path from "path";
@@ -20,7 +21,7 @@ export const ormConfig = createOrmConfig(
             tableName: "Migrations",
             //  `path` is only used to tell MikroORM where to place newly generated migrations. Available migrations are defined using `migrationsList`.
             path: "./src/db/migrations",
-            migrationsList: createMigrationsList(path.resolve(__dirname, "migrations")),
+            migrationsList: [...brevoMigrationsList, ...createMigrationsList(path.resolve(__dirname, "migrations"))],
             disableForeignKeys: false,
             dropTables: false,
             snapshot: false,

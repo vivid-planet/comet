@@ -31,6 +31,7 @@
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
+        "@comet/brevo-admin": "workspace:*",
         "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",

@@ -20,6 +20,7 @@ const adminPackagesHotReloadPlugin: Plugin = {
         this.addWatchFile("../../packages/admin/admin-icons/src");
         this.addWatchFile("../../packages/admin/admin-rte/src");
         this.addWatchFile("../../packages/admin/cms-admin/src");
+        this.addWatchFile("../../packages/admin/brevo-admin/src");
     },
     async handleHotUpdate({ file, server }) {
         const isChangeInAdminPackage = adminPackagesPathRegex.test(file);
@@ -110,6 +111,7 @@ export default defineConfig(({ mode }) => {
                 "@comet/admin-icons",
                 "@comet/admin-rte",
                 "@comet/cms-admin",
+                "@comet/brevo-admin",
             ],
         },
         resolve: {

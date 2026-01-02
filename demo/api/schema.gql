@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddBrevoContactsInput {
+  brevoContactIds: [Int!]!
+}
+
 type Address {
   alternativeAddress: AlternativeAddress
   country: String!
@@ -77,6 +81,208 @@ input BooleanFilter {
   equal: Boolean
 }
 
+type BrevoApiCampaignStatistics {
+  """Number of total clicks for the campaign"""
+  clickers: Int!
+
+  """Number of complaints (Spam reports) for the campaign"""
+  complaints: Int!
+
+  """Number of delivered emails for the campaign"""
+  delivered: Int!
+
+  """
+  Rate of recipients without any privacy protection option enabled in their email client, applied to all delivered emails
+  """
+  estimatedViews: Int!
+
+  """Number of hardbounces for the campaign"""
+  hardBounces: Int!
+
+  """Number of sent emails for the campaign"""
+  sent: Int!
+
+  """Number of softbounce for the campaign"""
+  softBounces: Int!
+
+  """Number of unique openings for the campaign"""
+  trackableViews: Int!
+
+  """Number of unique clicks for the campaign"""
+  uniqueClicks: Int!
+
+  """Number of unique openings for the campaign"""
+  uniqueViews: Int!
+
+  """Number of unsubscription for the campaign"""
+  unsubscriptions: Int!
+
+  """Number of openings for the campaign"""
+  viewed: Int!
+}
+
+type BrevoApiEmailTemplate {
+  createdAt: String!
+  htmlContent: String!
+  id: ID!
+  isActive: Boolean!
+  modifiedAt: String!
+  name: String!
+  replyTo: String!
+  sender: BrevoApiEmailTemplateSender!
+  subject: String!
+  tag: String!
+  testSent: Boolean!
+  toField: String!
+}
+
+type BrevoApiEmailTemplateSender {
+  email: String!
+  id: String
+  subject: String
+}
+
+type BrevoApiSender {
+  active: Boolean!
+  email: String!
+  id: ID!
+  ips: [BrevoIp!]
+  name: String!
+}
+
+type BrevoConfig implements DocumentInterface {
+  allowedRedirectionUrl: String!
+  createdAt: DateTime!
+  doubleOptInTemplateId: Int!
+  folderId: Int!
+  id: ID!
+  scope: EmailCampaignContentScope!
+  senderMail: String!
+  senderName: String!
+  unsubscriptionPageId: String!
+  updatedAt: DateTime!
+}
+
+input BrevoConfigInput {
+  allowedRedirectionUrl: String!
+  doubleOptInTemplateId: Int!
+  folderId: Int!
+  senderMail: String!
+  senderName: String!
+  unsubscriptionPageId: String!
+}
+
+input BrevoConfigUpdateInput {
+  allowedRedirectionUrl: String
+  doubleOptInTemplateId: Int
+  folderId: Int
+  senderMail: String
+  senderName: String
+  unsubscriptionPageId: String
+}
+
+type BrevoContact {
+  attributes: BrevoContactAttributes!
+  createdAt: String!
+  email: String!
+  emailBlacklisted: Boolean!
+  id: Int!
+  listIds: [Int!]!
+  listUnsubscribed: [Int!]!
+  modifiedAt: String!
+  smsBlacklisted: Boolean!
+}
+
+type BrevoContactAttributes {
+  BRANCH: [BrevoContactBranch!]
+  FIRSTNAME: String!
+  LASTNAME: String!
+  SALUTATION: BrevoContactSalutation
+}
+
+input BrevoContactAttributesInput {
+  BRANCH: [BrevoContactBranch!]
+  FIRSTNAME: String!
+  LASTNAME: String!
+  SALUTATION: BrevoContactSalutation
+}
+
+enum BrevoContactBranch {
+  MARKETING
+  NEWS
+  PRODUCTS
+}
+
+type BrevoContactFilterAttributes {
+  BRANCH: [BrevoContactBranch!]
+  SALUTATION: [BrevoContactSalutation!]
+}
+
+input BrevoContactFilterAttributesInput {
+  BRANCH: [BrevoContactBranch!]
+  SALUTATION: [BrevoContactSalutation!]
+}
+
+input BrevoContactInput {
+  attributes: BrevoContactAttributesInput
+  blocked: Boolean!
+  email: String!
+  redirectionUrl: String!
+  sendDoubleOptIn: Boolean! = true
+}
+
+enum BrevoContactSalutation {
+  FEMALE
+  MALE
+}
+
+input BrevoContactUpdateInput {
+  attributes: BrevoContactAttributesInput
+  blocked: Boolean!
+}
+
+type BrevoEmailCampaign implements DocumentInterface {
+  brevoId: Int
+  brevoTargetGroups: [BrevoTargetGroup!]!
+  content: EmailCampaignContentBlockData!
+  createdAt: DateTime!
+  id: ID!
+  scheduledAt: DateTime
+  scope: EmailCampaignContentScope!
+  sendingState: SendingState!
+  subject: String!
+  targetGroups: [BrevoTargetGroup!]!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type BrevoIp {
+  domain: String!
+  ip: String!
+  weight: Int!
+}
+
+type BrevoTargetGroup implements DocumentInterface {
+  assignedContactsTargetGroupBrevoId: Int
+  brevoId: Int!
+  brevoTotalSubscribers: Int!
+  createdAt: DateTime!
+  filters: BrevoContactFilterAttributes
+  id: ID!
+  isMainList: Boolean!
+  isTestList: Boolean!
+  scope: EmailCampaignContentScope!
+  title: String!
+  totalSubscribers: Int!
+  updatedAt: DateTime!
+}
+
+input BrevoTestContactInput {
+  attributes: BrevoContactAttributesInput
+  blocked: Boolean!
+  email: String!
+}
+
 type Build {
   completionTime: DateTime
   estimatedCompletionTime: DateTime
@@ -129,6 +335,16 @@ input CreateDamFolderInput {
   isInboxFromOtherScope: Boolean! = false
   name: String!
   parentId: ID
+}
+
+type CsvImportInformation {
+  blacklisted: Int!
+  blacklistedColumns: [JSONObject!]
+  created: Int!
+  errorMessage: String
+  failed: Int!
+  failedColumns: [JSONObject!]
+  updated: Int!
 }
 
 type CurrentUser {
@@ -329,6 +545,62 @@ input DependentFilter {
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+}
+
+"""EmailCampaignContent root block data"""
+scalar EmailCampaignContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""EmailCampaignContent root block input"""
+scalar EmailCampaignContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type EmailCampaignContentScope {
+  domain: String!
+  language: String!
+}
+
+input EmailCampaignContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+input EmailCampaignFilter {
+  and: [EmailCampaignFilter!]
+  createdAt: DateTimeFilter
+  or: [EmailCampaignFilter!]
+  scheduledAt: DateTimeFilter
+  sendingState: SendingStateEnumFilter
+  subject: StringFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+}
+
+input EmailCampaignInput {
+  brevoTargetGroups: [ID!]!
+  content: EmailCampaignContentBlockInput!
+  scheduledAt: DateTime
+  subject: String!
+  title: String!
+}
+
+input EmailCampaignSort {
+  direction: SortDirection! = ASC
+  field: EmailCampaignSortField!
+}
+
+enum EmailCampaignSortField {
+  createdAt
+  scheduledAt
+  subject
+  title
+  updatedAt
+}
+
+input EmailCampaignUpdateInput {
+  brevoTargetGroups: [ID!]
+  content: EmailCampaignContentBlockInput
+  scheduledAt: DateTime
+  subject: String
+  title: String
 }
 
 type EntityInfo {
@@ -627,9 +899,15 @@ input MovePageTreeNodesByPosInput {
 }
 
 type Mutation {
+  addBrevoContactsToTargetGroup(id: ID!, input: AddBrevoContactsInput!): Boolean!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
+  createBrevoConfig(input: BrevoConfigInput!, scope: EmailCampaignContentScopeInput!): BrevoConfig!
+  createBrevoContact(input: BrevoContactInput!, scope: EmailCampaignContentScopeInput!): SubscribeResponse!
+  createBrevoEmailCampaign(input: EmailCampaignInput!, scope: EmailCampaignContentScopeInput!): BrevoEmailCampaign!
+  createBrevoTargetGroup(input: TargetGroupInput!, scope: EmailCampaignContentScopeInput!): BrevoTargetGroup!
+  createBrevoTestContact(input: BrevoTestContactInput!, scope: EmailCampaignContentScopeInput!): SubscribeResponse!
   createBuilds(input: CreateBuildsInput!): Boolean!
   createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput!): DamFolder!
   createDamMediaAlternative(alternative: ID!, for: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
@@ -645,6 +923,10 @@ type Mutation {
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
   createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
   currentUserSignOut: String!
+  deleteBrevoContact(id: Int!, scope: EmailCampaignContentScopeInput!): Boolean!
+  deleteBrevoEmailCampaign(id: ID!): Boolean!
+  deleteBrevoTargetGroup(id: ID!): Boolean!
+  deleteBrevoTestContact(id: Int!, scope: EmailCampaignContentScopeInput!): Boolean!
   deleteDamFile(id: ID!): Boolean!
   deleteDamFolder(id: ID!): Boolean!
   deleteDamMediaAlternative(id: ID!): Boolean!
@@ -665,13 +947,22 @@ type Mutation {
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
   publishAllProducts: Boolean!
+  removeBrevoContactFromTargetGroup(id: ID!, input: RemoveBrevoContactInput!): Boolean!
   restoreDamFile(id: ID!): DamFile!
   restoreDamFiles(ids: [ID!]!): [DamFile!]!
   saveFooter(input: FooterInput!, scope: FooterScopeInput!): Footer!
   saveLink(attachedPageTreeNodeId: ID, id: ID!, input: LinkInput!, lastUpdatedAt: DateTime): Link!
   savePage(attachedPageTreeNodeId: ID, input: PageInput!, lastUpdatedAt: DateTime, pageId: ID!): Page!
   savePredefinedPage(attachedPageTreeNodeId: ID!, id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime): PredefinedPage!
+  sendBrevoEmailCampaignNow(id: ID!): Boolean!
+  sendBrevoEmailCampaignToTestEmails(data: SendTestEmailCampaignArgs!, id: ID!): Boolean!
+  startBrevoContactImport(fileId: ID!, scope: EmailCampaignContentScopeInput!, sendDoubleOptIn: Boolean!, targetGroupIds: [ID!]): CsvImportInformation!
+  subscribeBrevoContact(input: SubscribeInput!, scope: EmailCampaignContentScopeInput!): SubscribeResponse!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
+  updateBrevoConfig(id: ID!, input: BrevoConfigUpdateInput!, lastUpdatedAt: DateTime): BrevoConfig!
+  updateBrevoContact(id: Int!, input: BrevoContactUpdateInput!, scope: EmailCampaignContentScopeInput!): BrevoContact!
+  updateBrevoEmailCampaign(id: ID!, input: EmailCampaignUpdateInput!, lastUpdatedAt: DateTime): BrevoEmailCampaign!
+  updateBrevoTargetGroup(id: ID!, input: TargetGroupUpdateInput!, lastUpdatedAt: DateTime): BrevoTargetGroup!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
@@ -934,6 +1225,11 @@ enum PageTreeNodeVisibility {
   Unpublished
 }
 
+type PaginatedBrevoContacts {
+  nodes: [BrevoContact!]!
+  totalCount: Int!
+}
+
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -956,6 +1252,11 @@ type PaginatedDamMediaAlternatives {
 
 type PaginatedDependencies {
   nodes: [Dependency!]!
+  totalCount: Int!
+}
+
+type PaginatedEmailCampaigns {
+  nodes: [BrevoEmailCampaign!]!
   totalCount: Int!
 }
 
@@ -1014,6 +1315,11 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
+type PaginatedTargetGroups {
+  nodes: [BrevoTargetGroup!]!
+  totalCount: Int!
+}
+
 type PaginatedWarnings {
   nodes: [Warning!]!
   totalCount: Int!
@@ -1021,6 +1327,8 @@ type PaginatedWarnings {
 
 enum Permission {
   blockPreview
+  brevoNewsletter
+  brevoNewsletterConfig
   builds
   cronJobs
   dam
@@ -1583,6 +1891,17 @@ input ProductVariantUpdateInput {
 type Query {
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
+  brevoConfig(scope: EmailCampaignContentScopeInput!): BrevoConfig
+  brevoContact(id: Int!, scope: EmailCampaignContentScopeInput!): BrevoContact!
+  brevoContacts(email: String, limit: Int! = 25, offset: Int! = 0, scope: EmailCampaignContentScopeInput!, targetGroupId: ID): PaginatedBrevoContacts!
+  brevoDoubleOptInTemplates(scope: EmailCampaignContentScopeInput!): [BrevoApiEmailTemplate!]
+  brevoEmailCampaign(id: ID!): BrevoEmailCampaign!
+  brevoEmailCampaignStatistics(id: ID!): BrevoApiCampaignStatistics
+  brevoEmailCampaigns(filter: EmailCampaignFilter, limit: Int! = 25, offset: Int! = 0, scope: EmailCampaignContentScopeInput!, search: String, sort: [EmailCampaignSort!]): PaginatedEmailCampaigns!
+  brevoSenders(scope: EmailCampaignContentScopeInput!): [BrevoApiSender!]
+  brevoTargetGroup(id: ID!): BrevoTargetGroup!
+  brevoTargetGroups(filter: TargetGroupFilter, limit: Int! = 25, offset: Int! = 0, scope: EmailCampaignContentScopeInput!, search: String, sort: [TargetGroupSort!]): PaginatedTargetGroups!
+  brevoTestContacts(email: String, limit: Int! = 25, offset: Int! = 0, scope: EmailCampaignContentScopeInput!, targetGroupId: ID): PaginatedBrevoContacts!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   currentUser: CurrentUser!
@@ -1600,6 +1919,7 @@ type Query {
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
   footer(scope: FooterScopeInput!): Footer
+  isBrevoConfigDefined(scope: EmailCampaignContentScopeInput!): Boolean!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesJob(name: String!): KubernetesJob!
@@ -1608,6 +1928,7 @@ type Query {
   link(id: ID!): Link
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
+  manuallyAssignedBrevoContacts(email: String, limit: Int! = 25, offset: Int! = 0, targetGroupId: ID!): PaginatedBrevoContacts!
   manufacturer(id: ID!): Manufacturer!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
   manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]! = [{direction: ASC, field: id}]): PaginatedManufacturers!
@@ -1722,6 +2043,10 @@ input RedirectUpdateActivenessInput {
   active: Boolean!
 }
 
+input RemoveBrevoContactInput {
+  brevoContactId: Int!
+}
+
 """RichText root block data"""
 scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
@@ -1732,6 +2057,22 @@ input ScopeFilter {
   equal: JSONObject
   isAnyOf: [JSONObject!]
   notEqual: JSONObject
+}
+
+input SendTestEmailCampaignArgs {
+  emails: [String!]!
+}
+
+enum SendingState {
+  DRAFT
+  SCHEDULED
+  SENT
+}
+
+input SendingStateEnumFilter {
+  equal: SendingState
+  isAnyOf: [SendingState!]
+  notEqual: SendingState
 }
 
 """Seo root block data"""
@@ -1767,6 +2108,51 @@ input StringFilter {
   notContains: String
   notEqual: String
   startsWith: String
+}
+
+input SubscribeInput {
+  attributes: BrevoContactAttributesInput!
+  email: String!
+  redirectionUrl: String!
+}
+
+enum SubscribeResponse {
+  ERROR_CONTACT_ALREADY_EXISTS
+  ERROR_CONTACT_IS_BLACKLISTED
+  ERROR_CONTAINED_IN_ECG_RTR_LIST
+  ERROR_MAXIMAL_NUMBER_OF_TEST_CONTACTS_REACHED
+  ERROR_UNKNOWN
+  SUCCESSFUL
+}
+
+input TargetGroupFilter {
+  and: [TargetGroupFilter!]
+  createdAt: DateTimeFilter
+  isTestList: BooleanFilter
+  or: [TargetGroupFilter!]
+  title: StringFilter
+  updatedAt: DateTimeFilter
+}
+
+input TargetGroupInput {
+  filters: BrevoContactFilterAttributesInput
+  title: String!
+}
+
+input TargetGroupSort {
+  direction: SortDirection! = ASC
+  field: TargetGroupSortField!
+}
+
+enum TargetGroupSortField {
+  createdAt
+  title
+  updatedAt
+}
+
+input TargetGroupUpdateInput {
+  filters: BrevoContactFilterAttributesInput
+  title: String
 }
 
 input UpdateDamFileInput {

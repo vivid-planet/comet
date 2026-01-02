@@ -27,6 +27,14 @@ const files = [
         targetDir: ["packages/admin/cms-admin"],
     },
     {
+        file: "packages/api/brevo-api/block-meta.json",
+        targetDir: ["packages/admin/brevo-admin"],
+    },
+    {
+        file: "packages/api/brevo-api/schema.gql",
+        targetDir: ["packages/admin/brevo-admin"],
+    },
+    {
         file: "demo/api/block-meta.json",
         targetDir: ["demo/admin", "demo/site"],
     },
