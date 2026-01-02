@@ -18,6 +18,7 @@ import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { type ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
@@ -99,7 +100,7 @@ export function BrevoContactsGrid({
     additionalGridFields?: GridColDef[];
 }): ReactElement {
     const brevoContactsQuery = gql`
-        query BrevoContactsGrid($offset: Int, $limit: Int, $email: String, $scope: EmailCampaignContentScopeInput!) {
+        query BrevoContactsGrid($offset: Int!, $limit: Int!, $email: String, $scope: EmailCampaignContentScopeInput!) {
             brevoContacts(offset: $offset, limit: $limit, email: $email, scope: $scope) {
                 nodes {
                     ...BrevoContactsList
@@ -223,7 +224,7 @@ export function BrevoContactsGrid({
                 columns={columns}
                 loading={loading}
                 slots={{
-                    toolbar: BrevoContactsGridToolbar,
+                    toolbar: BrevoContactsGridToolbar as GridSlotsComponent["toolbar"],
                 }}
                 slotProps={{
                     toolbar: {

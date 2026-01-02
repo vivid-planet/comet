@@ -32,8 +32,8 @@ export type GQLUpdateBrevoContactMutationVariables = Types.Exact<{
 export type GQLUpdateBrevoContactMutation = { __typename?: 'Mutation', updateBrevoContact: { __typename?: 'BrevoContact', id: number } };
 
 export type GQLBrevoContactsGridQueryVariables = Types.Exact<{
-  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
-  limit?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset: Types.Scalars['Int']['input'];
+  limit: Types.Scalars['Int']['input'];
   email?: Types.InputMaybe<Types.Scalars['String']['input']>;
   scope: Types.GQLEmailCampaignContentScopeInput;
 }>;

@@ -172,7 +172,10 @@ export default defineConfig({
             name: "demo-admin",
             script: "pnpm --filter comet-demo-admin run start",
             group: ["demo-admin", "demo"],
-            waitOn: [...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin"), "tcp:$API_PORT"],
+            waitOn: [
+                ...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin", "@comet/brevo-admin"),
+                "tcp:$API_PORT",
+            ],
         },
         {
             name: "demo-admin-codegen",
@@ -203,7 +206,7 @@ export default defineConfig({
             name: "demo-api",
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
-            waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+            waitOn: [...waitOnPackages("@comet/cms-api", "@comet/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
             name: "demo-api-mitmproxy",

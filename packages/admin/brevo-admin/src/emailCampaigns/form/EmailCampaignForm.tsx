@@ -134,7 +134,7 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
         },
     });
 
-    const { saveButton } = useSaveState<{ brevoEmailCampaign: GQLEmailCampaignFormFragment & { id: string } }>({
+    const { saveButton } = useSaveState<Omit<GQLEmailCampaignFormQuery, "__typename">>({
         hasChanges,
         saveConflict,
         mode,
@@ -142,7 +142,7 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
             if (!state) return false;
 
             const validateBlocks = await parallelAsyncEvery(
-                Object.entries(rootBlocks),
+                Object.entries(rootBlocks) as Array<[keyof typeof rootBlocks, BlockInterface]>,
                 async ([key, block]: [keyof typeof rootBlocks, BlockState<BlockInterface>]) => {
                     return block.isValid(state[key]);
                 },

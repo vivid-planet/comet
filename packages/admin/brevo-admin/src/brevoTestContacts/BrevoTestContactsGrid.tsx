@@ -20,6 +20,7 @@ import { Add, Delete, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { Box, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { type ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
@@ -200,7 +201,7 @@ export function BrevoTestContactsGrid({
                 columns={columns}
                 loading={loading}
                 slots={{
-                    toolbar: BrevoTestContactsGridToolbar,
+                    toolbar: BrevoTestContactsGridToolbar as GridSlotsComponent["toolbar"],
                 }}
                 slotProps={{
                     toolbar: {

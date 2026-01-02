@@ -1,9 +1,9 @@
-import eslintConfigReact from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/future/react.js";
 
 /** @type {import('eslint')} */
 const config = [
     {
-        ignores: ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts", "lib/**", "**/*.generated.ts"],
+        ignores: ["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"],
     },
     ...eslintConfigReact,
     {

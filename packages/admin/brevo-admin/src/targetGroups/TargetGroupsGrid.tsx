@@ -130,7 +130,7 @@ export function TargetGroupsGrid({
     }
 
     const targetGroupContactsQuery = gql`
-        query TargetGroupContacts($targetGroupId: ID!, $offset: Int, $limit: Int, $scope: EmailCampaignContentScopeInput!) {
+        query TargetGroupContacts($targetGroupId: ID!, $offset: Int!, $limit: Int!, $scope: EmailCampaignContentScopeInput!) {
             brevoContacts(targetGroupId: $targetGroupId, offset: $offset, limit: $limit, scope: $scope) {               
                  nodes {
                     ...TargetGroupContactItem

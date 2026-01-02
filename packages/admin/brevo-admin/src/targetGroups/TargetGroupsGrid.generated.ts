@@ -47,8 +47,8 @@ export type GQLCreateTargetGroupMutation = { __typename?: 'Mutation', createBrev
 
 export type GQLTargetGroupContactsQueryVariables = Types.Exact<{
   targetGroupId: Types.Scalars['ID']['input'];
-  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
-  limit?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset: Types.Scalars['Int']['input'];
+  limit: Types.Scalars['Int']['input'];
   scope: Types.GQLEmailCampaignContentScopeInput;
 }>;
 

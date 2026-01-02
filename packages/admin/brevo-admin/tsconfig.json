@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "jsx": "react-jsx",
         "outDir": "lib",
-        "rootDir": "src"
+        "rootDir": "src",
+        "strict": true
     },
+    "exclude": [],
     "extends": "../tsconfig.base.json",
     "include": ["./src"]
 }

@@ -20,6 +20,7 @@ import { type ContentScope } from "@comet/cms-admin";
 import { DialogActions, DialogTitle, IconButton, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MemoryRouter } from "react-router";
@@ -259,7 +260,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                 autoHeight
                 loading={assignedContactsLoading}
                 slots={{
-                    toolbar: AssignedContactsGridToolbar,
+                    toolbar: AssignedContactsGridToolbar as GridSlotsComponent["toolbar"],
                 }}
                 slotProps={{
                     toolbar: {

@@ -171,7 +171,7 @@ export function BrevoContactForm({ id, scope, input2State, additionalFormFields,
             errorDialog?.showError({
                 title: "Error",
                 userMessage: <Alert severity="error">{(error as Error).message}</Alert>,
-                error: error,
+                error: String(error),
             });
         }
     };
