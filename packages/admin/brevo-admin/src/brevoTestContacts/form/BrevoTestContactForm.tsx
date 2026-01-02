@@ -1,8 +1,9 @@
 import { type DocumentNode, gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Alert,
+    FillSpace,
     FinalForm,
-    FinalFormSaveSplitButton,
+    FinalFormSaveButton,
     type FinalFormSubmitEvent,
     FormSection,
     Loading,
@@ -10,7 +11,6 @@ import {
     TextField,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
     useFormApiRef,
@@ -178,9 +178,9 @@ export function BrevoTestContactForm({ id, scope, input2State, additionalFormFie
                     <ToolbarTitleItem>
                         <FormattedMessage id="cometBrevoModule.brevoTestContacts.brevoTestContact" defaultMessage="Test contact" />
                     </ToolbarTitleItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
-                        <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                        <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                     </ToolbarActions>
                 </Toolbar>
                 <MainContent>

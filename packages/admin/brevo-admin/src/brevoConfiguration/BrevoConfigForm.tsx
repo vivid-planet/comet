@@ -1,9 +1,10 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormAutocomplete,
-    FinalFormSaveSplitButton,
+    FinalFormSaveButton,
     type FinalFormSubmitEvent,
     Loading,
     MainContent,
@@ -11,7 +12,6 @@ import {
     TextField,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarTitleItem,
     Tooltip,
     useFormApiRef,
@@ -243,9 +243,9 @@ export function BrevoConfigForm({ scope }: FormProps): ReactElement {
                             <ToolbarTitleItem>
                                 <FormattedMessage id="cometBrevoModule.brevoConfig.title" defaultMessage="Brevo config" />
                             </ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
-                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                                <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                             </ToolbarActions>
                         </Toolbar>
                         <MainContent>
