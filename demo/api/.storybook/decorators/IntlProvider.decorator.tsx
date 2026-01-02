@@ -1,36 +1,29 @@
 import { type Decorator } from "@storybook/react-webpack5";
-import { de, enUS } from "date-fns/locale";
-import { IntlProvider } from "react-intl";
+import { IntlProvider, ResolvedIntlConfig } from "react-intl";
+import messages_de from "../../lang-compiled/comet-demo-api/de.json";
+import messages_en from "../../lang-compiled/comet-demo-api/en.json";
+import React from "react";
 
-enum LocaleOption {
-    German = "de",
-    English = "en",
+export enum LocaleOption {
+    DE = "DE",
+    EN = "EN",
 }
 
-function isLocaleOption(value: any): value is LocaleOption {
-    return value === "de" || value === "en";
-}
+export const getMessages = (language: LocaleOption): ResolvedIntlConfig["messages"] => {
+    if (language === LocaleOption.DE) {
+        return messages_de;
+    }
 
-type DateFnsLocale = typeof de;
-const dateFnsLocales: Record<LocaleOption, DateFnsLocale> = {
-    [LocaleOption.German]: de,
-    [LocaleOption.English]: enUS,
-};
-
-// @TODO: use messages from lang-package
-const messages: Record<LocaleOption, Record<string, string>> = {
-    en: {},
-    de: {},
+    return messages_en;
 };
 
 export const IntlDecorator: Decorator = (fn, context) => {
-    const { locale: selectedLocale = LocaleOption.English } = context.globals;
-    const selecteDateFnsLocale = isLocaleOption(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en;
+    const { locale: selectedLocale = LocaleOption.EN } = context.globals;
 
     return (
         <IntlProvider
             locale={selectedLocale}
-            messages={isLocaleOption(selectedLocale) ? messages[selectedLocale] : {}}
+            messages={getMessages(selectedLocale)}
             onError={() => {
                 // disable error logging
             }}
