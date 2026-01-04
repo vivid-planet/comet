@@ -62,7 +62,7 @@
         "rimraf": "^6.1.2",
         "scroll-into-view-if-needed": "^3.1.0",
         "slugify": "^1.6.6",
-        "use-debounce": "^10.0.5",
+        "use-debounce": "^10.0.6",
         "uuid": "^11.1.0"
     },
     "devDependencies": {

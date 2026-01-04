@@ -33,7 +33,7 @@
         "@comet/admin-icons": "workspace:*",
         "react-colorful": "^5.6.1",
         "tinycolor2": "^1.6.0",
-        "use-debounce": "^10.0.5"
+        "use-debounce": "^10.0.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.28.3",
