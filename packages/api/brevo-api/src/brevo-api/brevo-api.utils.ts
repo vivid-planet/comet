@@ -1,25 +1,15 @@
 import { type ErrorModel } from "@getbrevo/brevo";
-import * as http from "http";
+import axios, { type AxiosError } from "axios";
 
-export function isErrorFromBrevo(error: unknown): error is { response: http.IncomingMessage; body: ErrorModel } {
-    return (
-        typeof error === "object" &&
-        error !== null &&
-        "response" in error &&
-        error.response instanceof http.IncomingMessage &&
-        "body" in error &&
-        typeof error.body === "object" &&
-        error.body !== null &&
-        "code" in error.body &&
-        typeof error.body.code === "string" &&
-        "message" in error.body &&
-        typeof error.body.message === "string"
-    );
+type AxiosErrorWithResponse<T = unknown> = AxiosError<T> & { response: NonNullable<AxiosError<T>["response"]> };
+
+export function isErrorFromBrevo(error: unknown): error is AxiosErrorWithResponse<ErrorModel> {
+    return axios.isAxiosError(error) && error.response !== undefined && "code" in error.response.data && "message" in error.response.data;
 }
 
 export function handleBrevoError(error: unknown): never {
     if (isErrorFromBrevo(error)) {
-        throw new Error(error.body.message);
+        throw new Error(error.response.data.message);
     } else {
         throw error;
     }

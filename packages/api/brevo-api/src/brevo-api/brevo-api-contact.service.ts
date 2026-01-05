@@ -176,7 +176,7 @@ export class BrevoApiContactsService {
             return body;
         } catch (error) {
             // Brevo returns a 404 error if no contact is found and a 400 error if an invalid email is provided.
-            if (isErrorFromBrevo(error) && (error.response.statusCode === 404 || error.response.statusCode === 400)) {
+            if (isErrorFromBrevo(error) && (error.status === 404 || error.status === 400)) {
                 return null;
             }
 
@@ -192,7 +192,7 @@ export class BrevoApiContactsService {
             return contact;
         } catch (error) {
             // Brevo returns a 404 error if no contact is found and a 400 error if an invalid email is provided.
-            if (isErrorFromBrevo(error) && (error.response.statusCode === 404 || error.response.statusCode === 400)) {
+            if (isErrorFromBrevo(error) && (error.status === 404 || error.status === 400)) {
                 return null;
             }
             handleBrevoError(error);
