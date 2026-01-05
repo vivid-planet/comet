@@ -31,7 +31,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { validateProductSlug } from "../validateProductSlug";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
@@ -151,7 +151,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                 return validateProductSlug({ value, id, client });
             }}/>
 
-            <Future_DatePickerField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
+            <DatePickerField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
 
         <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
         <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={[
@@ -278,7 +278,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             }} getOptionLabel={(option) => option.name}/>
         <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
 
-            <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
+            <DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
         <FutureProductNotice />
         <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.image)}

@@ -22,7 +22,7 @@ import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generate
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { GQLCreateCapProductFormDetailsFragment } from "./CreateCapProductForm.gql.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import { GQLCreateProductMutation } from "./CreateCapProductForm.gql.generated";
@@ -89,7 +89,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
             }} getOptionLabel={(option) => option.title}/>
         <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
 
-            <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
+            <DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
         <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.image)}
         </Field>

@@ -11,7 +11,7 @@ import { format, parse } from "date-fns";
 import { useState } from "react";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
-import { Future_DatePicker as DatePicker } from "../dateTime/DatePicker";
+import { DatePicker } from "../dateTime/DatePicker";
 
 const dateFormat = "yyyy-MM-dd";
 const dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
