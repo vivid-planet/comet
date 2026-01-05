@@ -4,7 +4,7 @@ import { ButtonBase, Divider, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type GridColumnHeaderParams } from "@mui/x-data-grid";
 import { type Dispatch, type ReactNode, type SetStateAction } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
@@ -40,6 +40,7 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
 
 export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
+    const intl = useIntl();
 
     const handleInsertColumnAtIndex = (newColumnIndex: number) => {
         updateState((state) => {
@@ -128,7 +129,20 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                 <DragIndicator />
             </ColumnHeaderButton>
             <RowActionsMenu>
-                <RowActionsMenu>
+                <RowActionsMenu
+                    componentsProps={{
+                        rowActionsIconItem: {
+                            componentsProps: {
+                                iconButton: {
+                                    "aria-label": intl.formatMessage({
+                                        id: "comet.tableBlock.openColumnOptions",
+                                        defaultMessage: "Open column options",
+                                    }),
+                                },
+                            },
+                        },
+                    }}
+                >
                     <RowActionsMenu
                         text={<FormattedMessage id="comet.tableBlock.columnWidth" defaultMessage="Column width" />}
                         icon={<DensityStandard />}
