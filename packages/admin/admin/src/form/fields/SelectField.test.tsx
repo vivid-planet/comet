@@ -1,12 +1,15 @@
-import { render, screen } from "@testing-library/react";
 import { Form } from "react-final-form";
+import { cleanup, render, screen } from "test-utils";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { SelectField } from "./SelectField";
 
 describe("SelectField", () => {
+    afterEach(cleanup);
+
     it("the prop data-testid should render a data-testid on component root", () => {
         render(
-            <Form onSubmit={jest.fn()}>
+            <Form onSubmit={vi.fn()}>
                 {() => (
                     <SelectField
                         name="test"
@@ -27,7 +30,7 @@ describe("SelectField", () => {
 
     it("the prop input-testid should render a data-testid on component hidden input", () => {
         render(
-            <Form onSubmit={jest.fn()}>
+            <Form onSubmit={vi.fn()}>
                 {() => (
                     <SelectField
                         name="test"
@@ -48,7 +51,7 @@ describe("SelectField", () => {
 
     it("should render data-testid on the component when setting it in the componentsProps", () => {
         render(
-            <Form onSubmit={jest.fn()}>
+            <Form onSubmit={vi.fn()}>
                 {() => (
                     <SelectField
                         name="test"
