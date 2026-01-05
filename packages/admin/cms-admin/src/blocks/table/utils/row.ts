@@ -7,16 +7,31 @@ export const getNewRow = (cellValues: TableBlockData["rows"][number]["cellValues
     return { id: uuid(), highlighted: false, cellValues };
 };
 
-export const clipboardRowSchema = z.object({
-    type: z.literal("tableBlockRow"),
+export const rowInsertSchema = z.object({
     highlighted: z.boolean(),
     cellValues: z.array(z.string()),
 });
 
-export type ClipboardRow = z.infer<typeof clipboardRowSchema>;
+export type RowInsertData = z.infer<typeof rowInsertSchema>;
 
 export const insertRowAtIndex = (state: TableBlockData, newRow: TableBlockData["rows"][number], index: number) => {
     const rowsBeforeIndex = state.rows.slice(0, index);
     const rowsAfterIndex = state.rows.slice(index);
     return { ...state, rows: [...rowsBeforeIndex, newRow, ...rowsAfterIndex] };
+};
+
+export const getInsertDataFromRowById = (state: TableBlockData, rowId: string): RowInsertData | null => {
+    const row = state.rows.find(({ id }) => id === rowId);
+    if (!row) {
+        return null;
+    }
+
+    const cellValuesInOrderOfColumns = state.columns.map((column) => {
+        return row.cellValues.find((cellValue) => cellValue.columnId === column.id)?.value ?? "";
+    });
+
+    return {
+        highlighted: row.highlighted,
+        cellValues: cellValuesInOrderOfColumns,
+    };
 };
