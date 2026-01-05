@@ -70,7 +70,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/brevo-api": {
-            "entry": ["./src/index.ts"],
+            "entry": ["./src/index.ts", "./src/permissions/permissions.interface.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/site/site-react": {

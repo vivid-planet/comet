@@ -29,8 +29,10 @@ import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { AppPermission } from "@src/auth/app-permission.enum";
 import { BlacklistedContacts } from "@src/brevo/blacklisted-contacts/entity/blacklisted-contacts.entity";
+import { BrevoContactSubscribeModule } from "@src/brevo/brevo-contact/brevo-contact-subscribe.module";
 import { BrevoContactAttributes, BrevoContactFilterAttributes } from "@src/brevo/brevo-contact/dto/brevo-contact-attributes";
 import { BrevoEmailImportLog } from "@src/brevo/brevo-email-import-log/entity/brevo-email-import-log.entity";
+import { BrevoTransactionalMailsModule } from "@src/brevo/brevo-transactional-mails/brevo-transactional-mails.module";
 import { EmailCampaignContentBlock } from "@src/brevo/email-campaign/blocks/email-campaign-content.block";
 import { EmailCampaignContentScope } from "@src/brevo/email-campaign/email-campaign-content-scope";
 import { EmailCampaign } from "@src/brevo/email-campaign/entities/email-campaign.entity";
@@ -273,6 +275,8 @@ export class AppModule {
                         },
                     },
                 }),
+                BrevoContactSubscribeModule,
+                BrevoTransactionalMailsModule,
             ],
         };
     }
