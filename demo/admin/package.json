@@ -57,7 +57,7 @@
         "react-intl": "^7.1.11",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "use-debounce": "^10.0.5",
+        "use-debounce": "^10.0.6",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
