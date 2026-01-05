@@ -162,7 +162,7 @@ export default defineConfig({
         },
         {
             name: "brevo-admin-codegen-graphql-types",
-            script: "pnpm --filter @comet/brevo-admin run generate-graphql-types:watch",
+            script: "pnpm --filter @comet/brevo-admin run gql:watch",
             group: ["brevo"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
         },
