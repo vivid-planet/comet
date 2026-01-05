@@ -7,6 +7,7 @@ import { SelectField } from "./SelectField";
 describe("SelectField", () => {
     afterEach(cleanup);
 
+    // Note: These tests describe a feature not only of SelectField but also of other fields using FieldContainer/Field
     it("the prop data-testid should render a data-testid on component root", () => {
         render(
             <Form onSubmit={vi.fn()}>
