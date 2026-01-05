@@ -1,9 +1,10 @@
-import { MjmlImage } from "@luma-team/mjml-react";
+import { MjmlImage } from "@faire/mjml-react";
+import type { ComponentProps } from "react";
 
-import { PixelImageBlockData } from "../blocks.generated";
+import { type PixelImageBlockData } from "../blocks.generated";
 import { calculateInheritAspectRatio, generateImageUrl, getDamAllowedImageWidth } from "./helpers/imageBlockHelpers";
 
-interface Props extends React.ComponentProps<typeof MjmlImage> {
+interface Props extends ComponentProps<typeof MjmlImage> {
     data: PixelImageBlockData;
     desktopRenderWidth?: number;
     contentWidth?: number;
@@ -32,7 +33,7 @@ export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth 
     return (
         <MjmlImage
             src={imageUrl}
-            fluidOnMobile="true"
+            fluidOnMobile={true}
             cssClass="image-block"
             width={desktopRenderWidth}
             height={desktopImageHeight}

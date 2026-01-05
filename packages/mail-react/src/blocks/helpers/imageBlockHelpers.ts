@@ -1,5 +1,3 @@
-import { ImageLoaderProps } from "next/image";
-
 export const validSizes: number[] = (process.env.DAM_ALLOWED_IMAGE_SIZES as string)
     .split(",")
     .map((value) => parseInt(value))
@@ -50,6 +48,6 @@ export function calculateInheritAspectRatio(
     }
 }
 
-export function generateImageUrl({ src, width }: Pick<ImageLoaderProps, "src" | "width">, aspectRatio: number): string {
+export function generateImageUrl({ src, width }: { src: string; width: number }, aspectRatio: number): string {
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }

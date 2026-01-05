@@ -3,7 +3,7 @@ import eslintConfigReact from "@comet/eslint-config/future/react.js";
 /** @type {import('eslint')} */
 const config = [
     {
-        ignores: ["lib/**"],
+        ignores: ["lib/**", "src/**/*.generated.ts", "block-meta.json"],
     },
     ...eslintConfigReact,
     {

@@ -28,7 +28,7 @@ const files = [
     },
     {
         file: "packages/api/brevo-api/block-meta.json",
-        targetDir: ["packages/admin/brevo-admin"],
+        targetDir: ["packages/admin/brevo-admin", "packages/mail-react"],
     },
     {
         file: "packages/api/brevo-api/schema.gql",

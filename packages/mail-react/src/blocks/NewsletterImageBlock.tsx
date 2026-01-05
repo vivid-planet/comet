@@ -1,8 +1,8 @@
-import { PropsWithData } from "@comet/cms-site";
-import { MjmlColumn, MjmlSection } from "@luma-team/mjml-react";
+import { MjmlColumn, MjmlSection } from "@faire/mjml-react";
 
-import { NewsletterImageBlockData } from "../blocks.generated";
+import { type NewsletterImageBlockData } from "../blocks.generated";
 import { CommonImageBlock } from "./CommonImageBlock";
+import { type PropsWithData } from "./helpers/PropsWithData";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {
     desktopRenderWidth?: number;
