@@ -2125,7 +2125,7 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       vite:
-        specifier: ^5.4.19
+        specifier: ^5.4.21
         version: 5.4.21(@types/node@24.10.4)(sass@1.93.0)(terser@5.43.1)
       vite-plugin-dts:
         specifier: ^4.5.4
@@ -2213,7 +2213,7 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       vite:
-        specifier: ^5.4.19
+        specifier: ^5.4.21
         version: 5.4.21(@types/node@24.10.4)(sass@1.93.0)(terser@5.43.1)
       vite-plugin-dts:
         specifier: ^4.5.4
