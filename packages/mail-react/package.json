@@ -25,6 +25,7 @@
         "@faire/mjml-react": "^3.0.0",
         "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
+        "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
         "mjml": "^4.18.0",
         "npm-run-all2": "^8.0.4",
