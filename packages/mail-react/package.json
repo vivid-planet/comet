@@ -21,6 +21,7 @@
         "lint:tsc": "tsc"
     },
     "devDependencies": {
+        "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@faire/mjml-react": "^3.0.0",
         "@types/react": "^18.3.27",
