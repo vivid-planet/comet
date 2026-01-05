@@ -9,12 +9,12 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && tsc",
-        "clean": "rimraf lib",
-        "dev": "tsc --watch",
+        "build": "pnpm run clean && pnpm run generate-block-types && tsc",
+        "clean": "rimraf lib 'src/**/*.generated.ts'",
+        "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint": "pnpm generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
