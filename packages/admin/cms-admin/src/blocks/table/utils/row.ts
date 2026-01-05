@@ -12,7 +12,7 @@ export const rowInsertSchema = z.object({
     cellValues: z.array(z.string()),
 });
 
-export type RowInsertData = z.infer<typeof rowInsertSchema>;
+type RowInsertData = z.infer<typeof rowInsertSchema>;
 
 export const insertRowAtIndex = (state: TableBlockData, newRow: TableBlockData["rows"][number], index: number) => {
     const rowsBeforeIndex = state.rows.slice(0, index);
