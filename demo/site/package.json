@@ -21,7 +21,7 @@
         "lint": "run-s intl:compile && run-p gql:types generate-block-types css:types && run-p lint:prettier lint:eslint lint:tsc lint:style",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml,css,scss}'",
         "lint:style": "pnpm exec stylelint '**/*.{css,scss}'",
         "lint:tsc": "tsc --project .",
         "serve": "NODE_ENV=production node dist/server.js"
