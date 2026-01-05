@@ -2294,7 +2294,7 @@ importers:
         specifier: ^4.10.1
         version: 4.10.1
       qs:
-        specifier: ^6.14.0
+        specifier: ^6.14.1
         version: 6.14.1
       react:
         specifier: ^18.3.1
