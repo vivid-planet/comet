@@ -612,7 +612,7 @@ importers:
   docs:
     dependencies:
       '@algolia/client-search':
-        specifier: ^5.46.1
+        specifier: ^5.46.2
         version: 5.46.2
       '@docusaurus/core':
         specifier: ^3.9.2
