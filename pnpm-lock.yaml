@@ -2125,7 +2125,7 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       vite:
-        specifier: ^5.4.19
+        specifier: ^5.4.21
         version: 5.4.21(@types/node@24.10.4)(sass@1.93.0)(terser@5.43.1)
       vite-plugin-dts:
         specifier: ^4.5.4
@@ -2213,7 +2213,7 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       vite:
-        specifier: ^5.4.19
+        specifier: ^5.4.21
         version: 5.4.21(@types/node@24.10.4)(sass@1.93.0)(terser@5.43.1)
       vite-plugin-dts:
         specifier: ^4.5.4
@@ -17279,6 +17279,7 @@ packages:
   whatwg-encoding@2.0.0:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
