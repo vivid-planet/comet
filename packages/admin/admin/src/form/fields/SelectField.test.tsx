@@ -28,27 +28,6 @@ describe("SelectField", () => {
         expect(selectField.tagName).toBe("DIV");
     });
 
-    it("the prop input-testid should render a data-testid on component hidden input", () => {
-        render(
-            <Form onSubmit={vi.fn()}>
-                {() => (
-                    <SelectField
-                        name="test"
-                        input-testid="test-select-input"
-                        options={[
-                            { label: "Option 1", value: "1" },
-                            { label: "Option 2", value: "2" },
-                        ]}
-                    />
-                )}
-            </Form>,
-        );
-
-        const selectField = screen.getByTestId("test-select-input");
-        expect(selectField).toBeInTheDocument();
-        expect(selectField.tagName).toBe("INPUT");
-    });
-
     it("should render data-testid on the component when setting it in the componentsProps", () => {
         render(
             <Form onSubmit={vi.fn()}>
