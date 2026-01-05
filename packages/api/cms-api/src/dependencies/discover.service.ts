@@ -19,8 +19,7 @@ interface DiscoverRootBlocksResult {
 }
 
 interface DiscoverTargetEntitiesResult {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    entity: AnyEntity<any>;
+    entity: AnyEntity;
     entityName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
