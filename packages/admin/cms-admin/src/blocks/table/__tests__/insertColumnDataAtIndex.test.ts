@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import { describe, expect, it } from "vitest";
 
 import { mockColumnDataWithFiveValues as columnDataToInsert, mockTableData as initialState } from "../__mocks__/TableBlockData.mocks";
-import { insertColumnDataAtIndex } from "../utils";
+import { insertColumnDataAtIndex } from "../utils/column";
 
 describe("insertColumnDataAtIndex", () => {
     it("should insert a column with the specified column id", () => {

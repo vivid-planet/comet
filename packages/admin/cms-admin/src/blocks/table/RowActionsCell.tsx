@@ -4,18 +4,11 @@ import { Divider, Snackbar } from "@mui/material";
 import { type Dispatch, type SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
-import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { getClipboardValueForSchema, getNewColumn, getNewRow, insertRowAtIndex } from "./utils";
-
-const clipboardRowSchema = z.object({
-    type: z.literal("tableBlockRow"),
-    highlighted: z.boolean(),
-    cellValues: z.array(z.string()),
-});
-
-type ClipboardRow = z.infer<typeof clipboardRowSchema>;
+import { getNewColumn } from "./utils/column";
+import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
+import { type ClipboardRow, clipboardRowSchema, getNewRow, insertRowAtIndex } from "./utils/row";
 
 type Props = {
     row: Record<string, unknown> & { id: string };

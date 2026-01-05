@@ -17,7 +17,8 @@ import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
-import { type ColumnSize, useRecentlyPastedIds } from "./utils";
+import { type ColumnSize } from "./utils/column";
+import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,

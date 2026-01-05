@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../../blocks.generated";
-import { type ColumnInsertData } from "../utils";
+import { type ColumnInsertData } from "../utils/column";
 
 const smallHighlightedColumn: TableBlockData["columns"][number] = {
     id: uuid(),

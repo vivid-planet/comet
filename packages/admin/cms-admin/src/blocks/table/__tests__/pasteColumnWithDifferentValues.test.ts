@@ -3,7 +3,7 @@ import { cleanup, waitFor } from "test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { mockTableData } from "../__mocks__/TableBlockData.mocks";
-import { type ColumnInsertData } from "../utils";
+import { type ColumnInsertData } from "../utils/column";
 import { clickButtonOfColumnAtIndex, getCellValuesPerColumn, renderTableBlock } from "./utils";
 
 afterEach(cleanup);
