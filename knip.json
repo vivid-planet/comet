@@ -81,7 +81,8 @@
             "ignore": ["./src/**/*.generated.ts"]
         },
         "packages/mail-react": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
