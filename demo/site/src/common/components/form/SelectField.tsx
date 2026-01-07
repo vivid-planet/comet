@@ -1,0 +1,45 @@
+import { SvgUse } from "@src/common/helpers/SvgUse";
+import { type ReactNode } from "react";
+import { FormattedMessage } from "react-intl";
+
+interface SelectFieldProps {
+    label: ReactNode;
+    required?: boolean;
+    helperText?: ReactNode;
+    options: Array<{ value: string; label: ReactNode }>;
+    placeholder?: ReactNode;
+}
+
+export function SelectField({
+    label,
+    required = false,
+    helperText,
+    options,
+    placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
+}: SelectFieldProps) {
+    return (
+        <div>
+            <label>
+                {label}
+                {!required && (
+                    <span>
+                        <FormattedMessage id="selectField.optional" defaultMessage="(optional)" />
+                    </span>
+                )}
+            </label>
+            <div>
+                <button type="button">
+                    <span>{placeholder}</span>
+                    <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
+                </button>
+
+                <div>
+                    {options.map((option) => (
+                        <div key={option.value}>{option.label}</div>
+                    ))}
+                </div>
+            </div>
+            {helperText && <div>{helperText}</div>}
+        </div>
+    );
+}
