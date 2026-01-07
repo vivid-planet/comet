@@ -9,7 +9,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { BlockCategory, type BlockInterface } from "../types";
 import { TableBlockGrid } from "./TableBlockGrid";
-import { getInitialTableData } from "./utils";
+import { getInitialTableData } from "./utils/getInitialTableData";
 
 export const TableBlock: BlockInterface<TableBlockData, TableBlockData, TableBlockInput> = {
     ...createBlockSkeleton(),

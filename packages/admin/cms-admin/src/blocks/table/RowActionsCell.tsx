@@ -4,18 +4,11 @@ import { Divider, Snackbar } from "@mui/material";
 import { type Dispatch, type SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
-import { z } from "zod";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { getClipboardValueForSchema, getNewColumn, getNewRow, insertRowAtIndex } from "./utils";
-
-const clipboardRowSchema = z.object({
-    type: z.literal("tableBlockRow"),
-    highlighted: z.boolean(),
-    cellValues: z.array(z.string()),
-});
-
-type ClipboardRow = z.infer<typeof clipboardRowSchema>;
+import { getNewColumn } from "./utils/column";
+import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
+import { getInsertDataFromRowById, getNewRow, insertRowAtIndex, rowInsertSchema } from "./utils/row";
 
 type Props = {
     row: Record<string, unknown> & { id: string };
@@ -80,9 +73,9 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         });
     };
 
-    const copyRowToClipboard = () => {
-        const rowToCopy = state.rows.find(({ id }) => id === row.id);
-        if (!rowToCopy) {
+    const handleCopyRowToClipboard = () => {
+        const rowInsertData = getInsertDataFromRowById(state, row.id);
+        if (!rowInsertData) {
             snackbarApi.showSnackbar(
                 <Snackbar autoHideDuration={5000}>
                     <Alert severity="error">
@@ -93,16 +86,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
             return;
         }
 
-        const copyData: ClipboardRow = {
-            type: "tableBlockRow",
-            highlighted: rowToCopy.highlighted,
-            cellValues: state.columns.map(({ id: columnId }) => {
-                const cellValue = rowToCopy.cellValues.find(({ columnId: cellColumnId }) => cellColumnId === columnId);
-                return cellValue ? cellValue.value : "";
-            }),
-        };
-
-        writeClipboardText(JSON.stringify(copyData));
+        writeClipboardText(JSON.stringify(rowInsertData));
     };
 
     const showFailedToParseDataSnackbar = () => {
@@ -116,7 +100,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
     };
 
     const pasteRowFromClipboard = async () => {
-        const clipboardData = await getClipboardValueForSchema(clipboardRowSchema);
+        const clipboardData = await getClipboardValueForSchema(rowInsertSchema);
 
         if (!clipboardData) {
             showFailedToParseDataSnackbar();
@@ -198,7 +182,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                     <FormattedMessage id="comet.tableBlock.addRowBelow" defaultMessage="Add row below" />
                 </RowActionsItem>
                 <Divider />
-                <RowActionsItem icon={<Copy />} onClick={copyRowToClipboard}>
+                <RowActionsItem icon={<Copy />} onClick={handleCopyRowToClipboard}>
                     <FormattedMessage id="comet.tableBlock.copyRow" defaultMessage="Copy" />
                 </RowActionsItem>
                 <RowActionsItem icon={<Paste />} onClick={pasteRowFromClipboard}>

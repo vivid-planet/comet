@@ -11,7 +11,6 @@ import { type TableBlockData } from "../../blocks.generated";
 import {
     columnInsertSchema,
     type ColumnSize,
-    getClipboardValueForSchema,
     getDuplicatedColumnInsertData,
     getInsertDataFromColumnById,
     getNewColumnInsertData,
@@ -19,7 +18,8 @@ import {
     removeColumnFromState,
     setColumnSize,
     toggleColumnHighlight,
-} from "./utils";
+} from "./utils/column";
+import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
