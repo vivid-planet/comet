@@ -6,7 +6,7 @@ interface SelectFieldProps {
     label: ReactNode;
     required?: boolean;
     helperText?: ReactNode;
-    options: Array<{ value: string; label: string }>;
+    options: Array<{ value: string; label: ReactNode }>;
     placeholder?: ReactNode;
 }
 
