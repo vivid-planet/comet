@@ -1620,7 +1620,7 @@ type Query {
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(parentId: ID, scope: PageTreeNodeScopeInput!, slug: String!): SlugAvailability!
-  paginatedPageTreeNodes(category: String, documentType: String, limit: Int! = 25, offset: Int! = 0, scope: PageTreeNodeScopeInput!, sort: [PageTreeNodeSort!]): PaginatedPageTreeNodes!
+  paginatedPageTreeNodes(category: String, documentType: String, limit: Int! = 25, offset: Int! = 0, scope: PageTreeNodeScopeInput!, sort: [PageTreeNodeSort!], visibility: PageTreeNodeVisibility): PaginatedPageTreeNodes!
   paginatedRedirects(filter: RedirectFilter, limit: Int! = 25, offset: Int! = 0, scope: RedirectScopeInput!, search: String, sort: [RedirectSort!]): PaginatedRedirects!
   predefinedPage(id: ID!): PredefinedPage!
   product(id: ID!): Product!
