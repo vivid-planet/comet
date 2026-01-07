@@ -61,7 +61,7 @@ const config = [
             formatjs: formatJs,
         },
         rules: {
-            "formatjs/enforce-default-message": ["error", "literal"],
+            "formatjs/enforce-default-message": "error",
             "formatjs/enforce-placeholders": "error",
         },
     },
