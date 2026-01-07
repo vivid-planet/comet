@@ -1,7 +1,9 @@
-export const validSizes: number[] = (process.env.DAM_ALLOWED_IMAGE_SIZES as string)
-    .split(",")
-    .map((value) => parseInt(value))
-    .sort((a, b) => a - b);
+export const validSizes: number[] =
+    typeof process.env.DAM_ALLOWED_IMAGE_SIZES === "string"
+        ? process.env.DAM_ALLOWED_IMAGE_SIZES.split(",")
+              .map((value) => parseInt(value))
+              .sort((a, b) => a - b)
+        : [];
 
 export const getDamAllowedImageWidth = (minimumWidth: number, contentWidth: number): number => {
     let width: number | null = null;
