@@ -9,7 +9,6 @@ import { Button, Dialog, DialogContent } from "./HelpDialogButton.sc";
 export type HelpDialogButtonClassKey = "button" | "dialog" | "dialogContent";
 
 export type HelpDialogButtonProps = ThemedComponentBaseProps<{
-    root: "div";
     button: typeof IconButton;
     dialog: typeof Dialog;
     dialogContent: typeof DialogContent;
