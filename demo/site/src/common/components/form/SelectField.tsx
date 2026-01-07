@@ -16,7 +16,7 @@ export function SelectField({
     helperText,
     options,
     placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
-}: SelectFieldProps): React.ReactElement {
+}: SelectFieldProps) {
     return (
         <div>
             <label>

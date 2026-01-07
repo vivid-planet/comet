@@ -8,7 +8,7 @@ interface InputProps {
     helperText?: ReactNode;
 }
 
-export function TextareaField({ label, required = false, placeholder, helperText }: InputProps): React.ReactElement {
+export function TextareaField({ label, required = false, placeholder, helperText }: InputProps) {
     return (
         <div>
             <label>
