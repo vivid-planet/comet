@@ -2,9 +2,15 @@
     "name": "@comet/mail-react",
     "version": "8.10.0",
     "description": "Utilities for building HTML emails with React",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "default": "./lib/index.js"
+        }
+    },
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
     "files": [
         "lib/*"
     ],
