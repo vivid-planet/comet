@@ -1,45 +1,51 @@
-import { SvgUse } from "@src/common/helpers/SvgUse";
-import { type ReactNode } from "react";
+import { forwardRef, type ReactNode, type SelectHTMLAttributes } from "react";
 import { FormattedMessage } from "react-intl";
 
-interface SelectFieldProps {
+interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
     label: ReactNode;
     required?: boolean;
     helperText?: ReactNode;
     options: Array<{ value: string; label: ReactNode }>;
     placeholder?: ReactNode;
+    error?: ReactNode;
 }
 
-export function SelectField({
-    label,
-    required = false,
-    helperText,
-    options,
-    placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
-}: SelectFieldProps) {
-    return (
-        <div>
-            <label>
-                {label}
-                {!required && (
-                    <span>
-                        <FormattedMessage id="selectField.optional" defaultMessage="(optional)" />
-                    </span>
-                )}
-            </label>
+export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
+    (
+        {
+            label,
+            required = false,
+            helperText,
+            options,
+            placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
+            error,
+            ...selectProps
+        },
+        ref,
+    ) => {
+        return (
             <div>
-                <button type="button">
-                    <span>{placeholder}</span>
-                    <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
-                </button>
-
-                <div>
+                <label>
+                    {label}
+                    {!required && (
+                        <span>
+                            <FormattedMessage id="selectField.optional" defaultMessage="(optional)" />
+                        </span>
+                    )}
+                </label>
+                <select ref={ref} required={required} defaultValue="" {...selectProps}>
+                    <option value="" disabled selected>
+                        {placeholder}
+                    </option>
                     {options.map((option) => (
-                        <div key={option.value}>{option.label}</div>
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
                     ))}
-                </div>
+                </select>
+                {helperText && <div>{helperText}</div>}
+                {error && <div style={{ color: "red" }}>{error}</div>}
             </div>
-            {helperText && <div>{helperText}</div>}
-        </div>
-    );
-}
+        );
+    },
+);
