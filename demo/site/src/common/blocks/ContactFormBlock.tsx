@@ -32,6 +32,7 @@ export const ContactFormBlock = withPreview(
         const {
             register,
             handleSubmit,
+            setError,
             formState: { errors, isSubmitting },
         } = useForm<ContactFormValues>();
 
@@ -50,6 +51,13 @@ export const ContactFormBlock = withPreview(
                 }
             } catch (error) {
                 console.error("Form submission error:", error);
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactForm.submission.error",
+                        defaultMessage: "An error occurred while submitting the form. Please try again.",
+                    }),
+                });
             }
         };
 
@@ -144,6 +152,7 @@ export const ContactFormBlock = withPreview(
                 <Button type="submit" variant="contained" disabled={isSubmitting}>
                     <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
                 </Button>
+                {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
             </form>
         );
     },
