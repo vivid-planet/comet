@@ -7,7 +7,7 @@ import {
     type IntrospectionObjectType,
     type IntrospectionQuery,
 } from "graphql";
-import { plural, singular } from "pluralize";
+import pluralize from "pluralize";
 import { type ReactNode } from "react";
 
 import {
@@ -19,22 +19,24 @@ import {
     type GridColumnStaticSelectLabelCellContent,
     type GridConfig,
     type VirtualGridColumnConfig,
-} from "../generate-command";
-import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
-import { convertConfigImport } from "../utils/convertConfigImport";
-import { findMutationType } from "../utils/findMutationType";
-import { findQueryTypeOrThrow } from "../utils/findQueryType";
-import { findRootBlocks } from "../utils/findRootBlocks";
-import { generateGqlOperation } from "../utils/generateGqlOperation";
-import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
-import { generateFormattedMessage } from "../utils/intl";
-import { isGeneratorConfigCode, isGeneratorConfigFormattedMessage, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
-import { detectMuiXGridVariant } from "./detectMuiXVersion";
-import { findInputObjectType } from "./findInputObjectType";
-import { generateGqlFieldList } from "./generateGqlFieldList";
-import { generateGridToolbar } from "./generateGridToolbar";
-import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
-import { getPropsForFilterProp } from "./getPropsForFilterProp";
+} from "../generate-command.js";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable.js";
+import { convertConfigImport } from "../utils/convertConfigImport.js";
+import { findMutationType } from "../utils/findMutationType.js";
+import { findQueryTypeOrThrow } from "../utils/findQueryType.js";
+import { findRootBlocks } from "../utils/findRootBlocks.js";
+import { generateGqlOperation } from "../utils/generateGqlOperation.js";
+import { generateImportsCode, type Imports } from "../utils/generateImportsCode.js";
+import { generateFormattedMessage } from "../utils/intl.js";
+import { isGeneratorConfigCode, isGeneratorConfigFormattedMessage, isGeneratorConfigImport } from "../utils/runtimeTypeGuards.js";
+import { detectMuiXGridVariant } from "./detectMuiXVersion.js";
+import { findInputObjectType } from "./findInputObjectType.js";
+import { generateGqlFieldList } from "./generateGqlFieldList.js";
+import { generateGridToolbar } from "./generateGridToolbar.js";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs.js";
+import { getPropsForFilterProp } from "./getPropsForFilterProp.js";
+
+const { plural, singular } = pluralize;
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 

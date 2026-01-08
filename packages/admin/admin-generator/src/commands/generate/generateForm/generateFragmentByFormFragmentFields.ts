@@ -1,4 +1,4 @@
-import { generateGqlQueryTreeFromFields } from "../utils/generateGqlOperation";
+import { generateGqlQueryTreeFromFields } from "../utils/generateGqlOperation.js";
 
 /**
  * Helper function that generates a GraphQL fragment from form fragment fields (array of dot.separated.fields).

@@ -1,8 +1,8 @@
 import { camelCase } from "change-case";
 
-import { type FormattedMessageElement } from "../generate-command";
-import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
-import { generateFormattedMessage } from "../utils/intl";
+import { type FormattedMessageElement } from "../generate-command.js";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable.js";
+import { generateFormattedMessage } from "../utils/intl.js";
 
 type Options = {
     componentName: string;

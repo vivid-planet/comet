@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
-import { collectImports, transformConfigFile } from "../transformConfig";
+import { collectImports, transformConfigFile } from "../transformConfig.js";
 
 describe("transformConfig", () => {
     function parseString(sourceFileText: string) {

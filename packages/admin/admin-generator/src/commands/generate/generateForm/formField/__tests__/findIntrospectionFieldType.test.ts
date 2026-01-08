@@ -1,7 +1,7 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import { findIntrospectionFieldType } from "../findIntrospectionFieldType";
+import { findIntrospectionFieldType } from "../findIntrospectionFieldType.js";
 
 describe("findIntrospectionFieldType", () => {
     it("field is found", () => {

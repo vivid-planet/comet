@@ -1,9 +1,9 @@
-import { type Adornment, type FormConfig, type FormFieldConfig } from "../../generate-command";
-import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import { convertConfigImport } from "../../utils/convertConfigImport";
-import { type Imports } from "../../utils/generateImportsCode";
-import { generateFormattedMessage } from "../../utils/intl";
-import { isGeneratorConfigImport } from "../../utils/runtimeTypeGuards";
+import { type Adornment, type FormConfig, type FormFieldConfig } from "../../generate-command.js";
+import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable.js";
+import { convertConfigImport } from "../../utils/convertConfigImport.js";
+import { type Imports } from "../../utils/generateImportsCode.js";
+import { generateFormattedMessage } from "../../utils/intl.js";
+import { isGeneratorConfigImport } from "../../utils/runtimeTypeGuards.js";
 
 type AdornmentData = {
     adornmentString: string;

@@ -5,4 +5,4 @@ require("ts-node").register({
     transpileOnly: true,
 });
 
-require("../lib/adminGenerator");
+import "../lib/adminGenerator.js";
