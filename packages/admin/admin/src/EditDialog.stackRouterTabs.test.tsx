@@ -6,6 +6,7 @@ import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render, screen, waitFor, within } from "test-utils";
+import { describe, expect, it } from "vitest";
 
 import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";

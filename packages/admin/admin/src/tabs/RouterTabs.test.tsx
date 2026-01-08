@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { IntlProvider } from "react-intl";
 import { Router, useRouteMatch } from "react-router";
 import { fireEvent, render } from "test-utils";
+import { expect, test } from "vitest";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, useSubRoutePrefix } from "../router/SubRoute";
