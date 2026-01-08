@@ -25,22 +25,22 @@ type SlotProps = ThemedComponentBaseProps<{
 }>["slotProps"];
 
 const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "root",
 })();
 
 const StartAdornment = createComponentSlot(InputAdornment)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "startAdornment",
 })();
 
 const TimeOptionsList = createComponentSlot(MenuList)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "timeOptionsList",
 })();
 
 const TimeOptionItem = createComponentSlot(MenuItem)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "timeOptionItem",
 })(
     ({ theme }) => css`
@@ -75,7 +75,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         max = "23:59",
         slotProps,
         ...inputWithPopperProps
-    } = useThemeProps({ props: inProps, name: "CometAdminTimePicker" });
+    } = useThemeProps({ props: inProps, name: "CometAdminLegacyTimePicker" });
     const intl = useIntl();
     const focusedItemRef = useRef<HTMLLIElement>(null);
 
@@ -166,17 +166,17 @@ export const TimePicker = (inProps: TimePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminTimePicker: TimePickerClassKey;
+        CometAdminLegacyTimePicker: TimePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminTimePicker: TimePickerProps;
+        CometAdminLegacyTimePicker: TimePickerProps;
     }
 
     interface Components {
-        CometAdminTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
+        CometAdminLegacyTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyTimePicker"];
         };
     }
 }

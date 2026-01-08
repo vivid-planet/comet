@@ -103,6 +103,9 @@ The legacy components will continue to work as they did previously. The only cha
 Update any use of class-names of the component's slots:
 
 - `CometAdminDatePicker-*` -> `CometAdminLegacyDatePicker-*`
+- `CometAdminDateRangePicker-*` -> `CometAdminLegacyDateRangePicker-*`
+- `CometAdminDateTimePicker-*` -> `CometAdminLegacyDateTimePicker-*`
+- `CometAdminTimePicker-*` -> `CometAdminLegacyTimePicker-*`
 
 ```diff title="Example of updating the class-names"
 const WrapperForStyling = styled(Box)(({ theme }) => ({
@@ -116,6 +119,9 @@ const WrapperForStyling = styled(Box)(({ theme }) => ({
 Update the component-keys when using `defaultProps` or `styleOverrides` in the theme:
 
 - `CometAdminDatePicker` -> `CometAdminLegacyDatePicker`
+- `CometAdminDateRangePicker` -> `CometAdminLegacyDateRangePicker`
+- `CometAdminDateTimePicker` -> `CometAdminLegacyDateTimePicker`
+- `CometAdminTimePicker` -> `CometAdminLegacyTimePicker`
 
 ```diff title="Example of updating the component-keys"
 export const theme = createCometTheme({

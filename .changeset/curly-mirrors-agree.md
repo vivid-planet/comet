@@ -21,7 +21,13 @@ In most cases, the new components will be a drop-in replacement for the legacy c
 Update any use of class-names of the component's slots:
 
 - `CometAdminDatePicker-*` -> `CometAdminLegacyDatePicker-*`
+- `CometAdminDateRangePicker-*` -> `CometAdminLegacyDateRangePicker-*`
+- `CometAdminDateTimePicker-*` -> `CometAdminLegacyDateTimePicker-*`
+- `CometAdminTimePicker-*` -> `CometAdminLegacyTimePicker-*`
 
 Update the component-keys when using `defaultProps` or `styleOverrides` in the theme:
 
 - `CometAdminDatePicker` -> `CometAdminLegacyDatePicker`
+- `CometAdminDateRangePicker` -> `CometAdminLegacyDateRangePicker`
+- `CometAdminDateTimePicker` -> `CometAdminLegacyDateTimePicker`
+- `CometAdminTimePicker` -> `CometAdminLegacyTimePicker`
