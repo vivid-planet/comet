@@ -36,22 +36,13 @@ export const ContactFormBlock = withPreview(
         } = useForm<ContactFormValues>();
 
         const onSubmit = async (formValues: ContactFormValues) => {
-            const values = {
-                name: formValues.name,
-                company: formValues.company,
-                email: formValues.email,
-                phone: formValues.phoneNumber,
-                subject: formValues.subject,
-                message: formValues.message,
-                privacyConsent: formValues.privacyConsent,
-            };
             try {
                 const response = await fetch("/api/contact-form", {
                     method: "POST",
                     headers: {
                         "content-type": "application/json",
                     },
-                    body: JSON.stringify(values),
+                    body: JSON.stringify(formValues),
                 });
 
                 if (!response.ok) {
