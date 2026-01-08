@@ -7,4 +7,5 @@ type MultiValueBrakpointTypes = "between";
 
 export type ColumnVisibleOption =
     | `${SingleValueBrakpointTypes}(${BreakpointKey})`
-    | `${MultiValueBrakpointTypes}(${BreakpointKey}, ${BreakpointKey})`;
+    | `${MultiValueBrakpointTypes}(${BreakpointKey}, ${BreakpointKey})`
+    | false;

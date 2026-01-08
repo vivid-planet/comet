@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { SpaceBlock } from "../../SpaceBlock";
 import { type BlockInputApi, type BlockState } from "../../types";
 import { resolveNewState } from "../../utils";

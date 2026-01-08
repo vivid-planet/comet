@@ -126,6 +126,13 @@ export default defineConfig({
             group: ["site-react", "site-nextjs", "cms"],
         },
 
+        //group mail-react
+        {
+            name: "mail-react",
+            script: "pnpm --filter @comet/mail-react run dev",
+            group: ["mail-react"],
+        },
+
         //group demo admin
         {
             name: "demo-admin",

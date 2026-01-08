@@ -3,6 +3,7 @@ import { createMemoryHistory } from "history";
 import { IntlProvider } from "react-intl";
 import { Router } from "react-router";
 import { fireEvent, render, waitFor } from "test-utils";
+import { expect, test } from "vitest";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, useSubRoutePrefix } from "../router/SubRoute";
