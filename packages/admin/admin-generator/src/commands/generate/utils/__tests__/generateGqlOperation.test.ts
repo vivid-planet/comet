@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { generateGqlOperation } from "../generateGqlOperation";
 
 function normalizeSpaces(str: string) {

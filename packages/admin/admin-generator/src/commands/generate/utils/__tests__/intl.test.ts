@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { type FormattedMessageElement } from "../../generate-command";
 import { generateFormattedMessage } from "../intl";
 

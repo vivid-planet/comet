@@ -1,4 +1,5 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
+import { describe, expect, it } from "vitest";
 
 import { findMutationTypeOrThrow } from "../../utils/findMutationType";
 import { getForwardedGqlArgs } from "../getForwardedGqlArgs";

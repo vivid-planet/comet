@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AsyncSelect filter generates field without filter 1`] = `
+exports[`AsyncSelect filter > generates field without filter 1`] = `
 "<AsyncSelectField
                 required
                 variant="horizontal"
@@ -31,7 +31,7 @@ exports[`AsyncSelect filter generates field without filter 1`] = `
             />"
 `;
 
-exports[`AsyncSelect filter generates filter with value dependent on other field 1`] = `
+exports[`AsyncSelect filter > generates filter with value dependent on other field 1`] = `
 "<AsyncSelectField
                 required
                 variant="horizontal"
@@ -68,7 +68,7 @@ exports[`AsyncSelect filter generates filter with value dependent on other field
                         </OnChangeField>"
 `;
 
-exports[`AsyncSelect filter generates formProp with enum filter as root query arg 1`] = `
+exports[`AsyncSelect filter > generates formProp with enum filter as root query arg 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -263,7 +263,7 @@ id?: string;
     "
 `;
 
-exports[`AsyncSelect filter generates formProp with string filter as root query arg 1`] = `
+exports[`AsyncSelect filter > generates formProp with string filter as root query arg 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -457,7 +457,7 @@ id?: string;
     "
 `;
 
-exports[`AsyncSelect filter with formProp filter with filter arg generates a string filter 1`] = `
+exports[`AsyncSelect filter > with formProp filter with filter arg > generates a string filter 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -651,7 +651,7 @@ id?: string;
     "
 `;
 
-exports[`AsyncSelect filter with formProp filter with filter arg generates an enum filter 1`] = `
+exports[`AsyncSelect filter > with formProp filter with filter arg > generates an enum filter 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";

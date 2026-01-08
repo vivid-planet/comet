@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { generateFragmentByFormFragmentFields } from "../generateFragmentByFormFragmentFields";
 
 const normalize = (str: string) => str.replace(/\s+/g, " ").trim();
