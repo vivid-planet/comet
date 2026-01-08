@@ -1,29 +1,5 @@
-import { gql } from "@comet/site-nextjs";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
-import { type GQLContactFormMutation, type GQLContactFormMutationVariables } from "./route.generated";
-
-const contactFormMutation = gql`
-    mutation ContactForm($input: ContactFormArgs!) {
-        submitContactForm(input: $input)
-    }
-`;
-
-async function submitContactForm(values: GQLContactFormMutationVariables["input"]) {
-    const graphQLFetch = createGraphQLFetch();
-
-    const { submitContactForm } = await graphQLFetch<GQLContactFormMutation, GQLContactFormMutationVariables>(
-        contactFormMutation,
-        {
-            input: values,
-        },
-        { method: "POST" },
-    );
-
-    return { submitContactForm };
-}
 
 const queryValidationSchema = z.object({
     name: z.string(),
@@ -61,11 +37,12 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const data = await submitContactForm(validationResult.data as GQLContactFormMutationVariables["input"]);
-
-        return NextResponse.json(data, {
-            status: 200,
-        });
+        return NextResponse.json(
+            { success: true },
+            {
+                status: 200,
+            },
+        );
     } catch (e) {
         console.error(e);
         return NextResponse.json({ error: "Something went wrong processing the contact form" }, { status: 500 });
