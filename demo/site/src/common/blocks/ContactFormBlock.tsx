@@ -60,7 +60,7 @@ export const ContactFormBlock = withPreview(
                     placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
                     required
                     {...register("name", {
-                        required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Helper Text lorem ipsum dolor sit amet" }),
+                        required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Please enter your name" }),
                     })}
                     error={errors.name?.message}
                 />
@@ -74,7 +74,7 @@ export const ContactFormBlock = withPreview(
                     placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
                     required
                     {...register("email", {
-                        required: intl.formatMessage({ id: "contactForm.email.required", defaultMessage: "Helper Text lorem ipsum dolor sit amet" }),
+                        required: intl.formatMessage({ id: "contactForm.email.required", defaultMessage: "Please enter your email address" }),
                         pattern: {
                             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                             message: intl.formatMessage({ id: "contactForm.email.invalid", defaultMessage: "Invalid email address" }),
@@ -108,7 +108,7 @@ export const ContactFormBlock = withPreview(
                     {...register("subject", {
                         required: intl.formatMessage({
                             id: "contactForm.subject.required",
-                            defaultMessage: "Helper Text lorem ipsum dolor sit amet",
+                            defaultMessage: "Please select a subject",
                         }),
                     })}
                     error={errors.subject?.message}
@@ -120,7 +120,7 @@ export const ContactFormBlock = withPreview(
                     {...register("message", {
                         required: intl.formatMessage({
                             id: "contactForm.message.required",
-                            defaultMessage: "Helper Text lorem ipsum dolor sit amet",
+                            defaultMessage: "Please enter your message",
                         }),
                     })}
                     error={errors.message?.message}
@@ -135,7 +135,7 @@ export const ContactFormBlock = withPreview(
                     {...register("privacyConsent", {
                         required: intl.formatMessage({
                             id: "contactForm.privacyConsent.required",
-                            defaultMessage: "Helper Text lorem ipsum dolor sit amet",
+                            defaultMessage: "You must agree to the privacy policy to continue",
                         }),
                         setValueAs: (value) => Boolean(value),
                     })}
