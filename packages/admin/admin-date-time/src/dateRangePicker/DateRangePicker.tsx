@@ -14,7 +14,7 @@ import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/dateP
 import { DateRange, type DateRangePickerClassKey, Root, type SlotProps, StartAdornment } from "./DateRangePicker.slots";
 
 /**
- * @deprecated `DateRange` from `@comet/admin-date-time` will be replaced by `DateRange` from `@comet/admin` in a future major release.
+ * @deprecated Use `DateRange` from `@comet/admin` instead.
  */
 export type DateRange = {
     start: string;
@@ -73,7 +73,7 @@ const getRangeFromValue = (value: undefined | DateRange): Range => {
 };
 
 /**
- * @deprecated `DateRangePicker` from `@comet/admin-date-time` will be replaced by `DateRangePicker` (currently `Future_DateRangePicker`) from `@comet/admin` in a future major release.
+ * @deprecated Use `DateRangePicker` from `@comet/admin` instead.
  */
 export const DateRangePicker = (inProps: DateRangePickerProps) => {
     const {

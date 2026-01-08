@@ -14,10 +14,20 @@ DatePicker:
 - `Future_DatePickerField` -> `DatePickerField`
 - `Future_DatePickerFieldProps` -> `DatePickerFieldProps`
 
+DateRangePicker:
+
+- `Future_DateRangePicker` -> `DateRangePicker`
+- `Future_DateRangePickerProps` -> `DateRangePickerProps`
+- `Future_DateRangePickerClassKey` -> `DateRangePickerClassKey`
+- `Future_DateRangePickerField` -> `DateRangePickerField`
+- `Future_DateRangePickerFieldProps` -> `DateRangePickerFieldProps`
+
 **If your theme is using `defaultProps` or `styleOverrides` for any of these components, update their component-keys:**
 
 - `CometAdminFutureDatePicker` -> `CometAdminDatePicker`
+- `CometAdminFutureDateRangePicker` -> `CometAdminDateRangePicker`
 
 **If you are using class-names to access these components' slots, update them:**
 
-- `CometAdminFutureDatePicker-*` -> `CometAdminDatePicker-*`
+- `CometAdminFuture_DatePicker-*` -> `CometAdminDatePicker-*`
+- `CometAdminFuture_DateRangePicker-*` -> `CometAdminDateRangePicker-*`

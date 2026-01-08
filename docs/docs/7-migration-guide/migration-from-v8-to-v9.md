@@ -63,11 +63,14 @@ Most components of `@comet/admin-date-time` are now deprecated and are being rep
 
 In most cases, the new components will be a drop-in replacement for the legacy components, so you can simply replace the imports:
 
-| Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`             |
-| ---------------------------------------------- | --------------------------------------------- |
-| `DatePicker`                                   | `DatePicker`                                  |
-| `DateField`                                    | `DatePickerField`                             |
-| `FinalFormDatePicker`                          | `DatePickerField` (without using `<Field />`) |
+| Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`                  |
+| ---------------------------------------------- | -------------------------------------------------- |
+| `DatePicker`                                   | `DatePicker`                                       |
+| `DateField`                                    | `DatePickerField`                                  |
+| `FinalFormDatePicker`                          | `DatePickerField` (without using `<Field />`)      |
+| `DateRangePicker`                              | `DateRangePicker`                                  |
+| `DateRangeField`                               | `DateRangePickerField`                             |
+| `FinalFormDateRangePicker`                     | `DateRangePickerField` (without using `<Field />`) |
 
 ```diff title="Example of replacing DatePicker"
 -import { DatePicker } from "@comet/admin-date-time";
@@ -150,13 +153,23 @@ DatePicker:
 - `Future_DatePickerField` -> `DatePickerField`
 - `Future_DatePickerFieldProps` -> `DatePickerFieldProps`
 
+DateRangePicker:
+
+- `Future_DateRangePicker` -> `DateRangePicker`
+- `Future_DateRangePickerProps` -> `DateRangePickerProps`
+- `Future_DateRangePickerClassKey` -> `DateRangePickerClassKey`
+- `Future_DateRangePickerField` -> `DateRangePickerField`
+- `Future_DateRangePickerFieldProps` -> `DateRangePickerFieldProps`
+
 **If your theme is using `defaultProps` or `styleOverrides` for any of these components, update their component-keys:**
 
 - `CometAdminFutureDatePicker` -> `CometAdminDatePicker`
+- `CometAdminFutureDateRangePicker` -> `CometAdminDateRangePicker`
 
 **If you are using class-names to access these components' slots, update them:**
 
-- `CometAdminFutureDatePicker-*` -> `CometAdminDatePicker-*`
+- `CometAdminFuture_DatePicker-*` -> `CometAdminDatePicker-*`
+- `CometAdminFuture_DateRangePicker-*` -> `CometAdminDateRangePicker-*`
 
 ## Site
 

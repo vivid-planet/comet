@@ -98,13 +98,8 @@ export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DatePicker, type DatePickerClassKey, type DatePickerProps } from "./dateTime/DatePicker";
 export { DatePickerField, type DatePickerFieldProps } from "./dateTime/DatePickerField";
-export {
-    type DateRange,
-    Future_DateRangePicker,
-    type Future_DateRangePickerClassKey,
-    type Future_DateRangePickerProps,
-} from "./dateTime/DateRangePicker";
-export { Future_DateRangePickerField, type Future_DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
+export { type DateRange, DateRangePicker, type DateRangePickerClassKey, type DateRangePickerProps } from "./dateTime/DateRangePicker";
+export { DateRangePickerField, type DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
 export { Future_DateTimePicker, type Future_DateTimePickerClassKey, type Future_DateTimePickerProps } from "./dateTime/DateTimePicker";
 export { Future_DateTimePickerField, type Future_DateTimePickerFieldProps } from "./dateTime/DateTimePickerField";
 export {

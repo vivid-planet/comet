@@ -15,9 +15,9 @@ export type DateRange = {
     end: string | null;
 };
 
-export type Future_DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
+export type DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
-export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
+export type DateRangePickerProps = ThemedComponentBaseProps<{
     root: ComponentType<MuiDateRangePickerProps<Date, true>>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
@@ -36,7 +36,7 @@ const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | n
     return [getDateValue(value?.start), getDateValue(value?.end)];
 };
 
-export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => {
+export const DateRangePicker = (inProps: DateRangePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,
@@ -133,8 +133,8 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
 const LazyRoot = lazy(async () => {
     const module = await import("@mui/x-date-pickers-pro");
 
-    const Root = createComponentSlot(module.DateRangePicker<Date, true>)<Future_DateRangePickerClassKey>({
-        componentName: "Future_DateRangePicker",
+    const Root = createComponentSlot(module.DateRangePicker<Date, true>)<DateRangePickerClassKey>({
+        componentName: "DateRangePicker",
         slotName: "root",
     })(css`
         .${inputLabelClasses.root} {
@@ -153,24 +153,24 @@ const LazyRoot = lazy(async () => {
     };
 });
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DateRangePickerClassKey>({
-    componentName: "Future_DateRangePicker",
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateRangePickerClassKey>({
+    componentName: "DateRangePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFutureDateRangePicker: Future_DateRangePickerProps;
+        CometAdminDateRangePicker: DateRangePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFutureDateRangePicker: Future_DateRangePickerClassKey;
+        CometAdminDateRangePicker: DateRangePickerClassKey;
     }
 
     interface Components {
-        CometAdminFutureDateRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureDateRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureDateRangePicker"];
+        CometAdminDateRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDateRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateRangePicker"];
         };
     }
 }
