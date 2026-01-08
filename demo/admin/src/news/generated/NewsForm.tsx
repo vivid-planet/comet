@@ -22,7 +22,7 @@ import { useMemo } from "react";
 import { useContentScope } from "@comet/cms-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { newsFormFragment } from "./NewsForm.gql";
 import { GQLNewsFormFragment } from "./NewsForm.gql.generated";
 import { newsQuery } from "./NewsForm.gql";
@@ -118,7 +118,7 @@ export function NewsForm({ onCreate, id }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title"/>}/>
 
-            <Future_DatePickerField required variant="horizontal" fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
+            <DatePickerField required variant="horizontal" fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
         <RadioGroupField required variant="horizontal" fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category"/>} options={[
                 {
                     label: <FormattedMessage id="news.category.events" defaultMessage="Events"/>,

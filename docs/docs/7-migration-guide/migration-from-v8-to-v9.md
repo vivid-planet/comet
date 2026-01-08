@@ -55,6 +55,81 @@ The `createHttpClient` function has been removed. Use native fetch instead.
 
 Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
 
+### Replacement of `@comet/admin-date-time`
+
+Most components of `@comet/admin-date-time` are now deprecated and are being replaced by new components in `@comet/admin`.
+
+#### Use the new components from `@comet/admin` (recommended)
+
+In most cases, the new components will be a drop-in replacement for the legacy components, so you can simply replace the imports:
+
+| Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`             |
+| ---------------------------------------------- | --------------------------------------------- |
+| `DatePicker`                                   | `DatePicker`                                  |
+| `DateField`                                    | `DatePickerField`                             |
+| `FinalFormDatePicker`                          | `DatePickerField` (without using `<Field />`) |
+
+```diff title="Example of replacing DatePicker"
+-import { DatePicker } from "@comet/admin-date-time";
++import { DatePicker } from "@comet/admin";
+```
+
+```diff title="Example of replacing DateField"
+-import { DateField } from "@comet/admin-date-time";
++import { DatePickerField } from "@comet/admin";
+```
+
+When using final-form, only the field-components are available for the new components. Therefore, usage of the `FinalForm*` components with `<Field />` must be updated to use the respective `*Field` directly, without using `<Field />`.
+
+```diff title="Example of replacing FinalFormDatePicker"
+-import { Field } from "@comet/admin";
+-import { FinalFormDatePicker } from "@comet/admin-date-time";
++import { DatePickerField } from "@comet/admin";
+
+export const ExampleFields = () => {
+    return (
+        <>
+-           <Field component={FinalFormDatePicker} name="date" label="Date Picker" />
++           <DatePickerField name="date" label="Date Picker" />
+        </>
+    );
+};
+```
+
+#### Continue using the deprecated components
+
+The legacy components will continue to work as they did previously. The only change is that the class-names and theme component-keys are now prefixed with "Legacy".
+
+Update any use of class-names of the component's slots:
+
+- `CometAdminDatePicker-*` -> `CometAdminLegacyDatePicker-*`
+
+```diff title="Example of updating the class-names"
+const WrapperForStyling = styled(Box)(({ theme }) => ({
+-   ".CometAdminDatePicker-calendar": {
++   ".CometAdminLegacyDatePicker-calendar": {
+        backgroundColor: "magenta",
+    },
+}));
+```
+
+Update the component-keys when using `defaultProps` or `styleOverrides` in the theme:
+
+- `CometAdminDatePicker` -> `CometAdminLegacyDatePicker`
+
+```diff title="Example of updating the component-keys"
+export const theme = createCometTheme({
+    components: {
+-       CometAdminDatePicker: {
++       CometAdminLegacyDatePicker: {
+            defaultProps: {
+                startAdornment: <FancyCalendarIcon />,
+            },
+        },
+    },
+});
+```
+
 ## Site
 
 ### 🤖 Upgrade peer dependencies
