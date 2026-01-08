@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`optionalNestedFields generates form for optionalNestedFields 1`] = `
+exports[`optionalNestedFields > generates form for optionalNestedFields 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";

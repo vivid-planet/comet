@@ -1,4 +1,4 @@
-import { type FormConfig, type FormFieldConfig, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
+import { type FormConfig, type FormFieldConfig, isFormFieldConfig, isFormLayoutConfig } from "../generate-command.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function flatFormFieldsFromFormConfig(config: FormConfig<any>): FormFieldConfig<any>[] {

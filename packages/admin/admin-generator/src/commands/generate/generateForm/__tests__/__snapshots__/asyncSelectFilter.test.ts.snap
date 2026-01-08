@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AsyncSelectFilter generates field with filter 1`] = `
+exports[`AsyncSelectFilter > generates field with filter 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -229,7 +229,7 @@ id?: string;
     "
 `;
 
-exports[`AsyncSelectFilter generates filter with value dependent on other field 1`] = `
+exports[`AsyncSelectFilter > generates filter with value dependent on other field 1`] = `
 "<AsyncSelectField
                 required
                 variant="horizontal"
@@ -266,7 +266,7 @@ exports[`AsyncSelectFilter generates filter with value dependent on other field 
                         </OnChangeField>"
 `;
 
-exports[`AsyncSelectFilter generates formProp with enum filter as root query arg 1`] = `
+exports[`AsyncSelectFilter > generates formProp with enum filter as root query arg 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -461,7 +461,7 @@ id?: string;
     "
 `;
 
-exports[`AsyncSelectFilter with formProp filter with filter arg generates a string filter 1`] = `
+exports[`AsyncSelectFilter > with formProp filter with filter arg > generates a string filter 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -655,7 +655,7 @@ id?: string;
     "
 `;
 
-exports[`AsyncSelectFilter with formProp filter with filter arg generates an enum filter 1`] = `
+exports[`AsyncSelectFilter > with formProp filter with filter arg > generates an enum filter 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";

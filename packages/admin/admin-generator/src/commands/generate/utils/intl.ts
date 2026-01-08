@@ -1,5 +1,5 @@
-import { type FormattedMessageElement } from "../generate-command";
-import { isGeneratorConfigFormattedMessage } from "./runtimeTypeGuards";
+import { type FormattedMessageElement } from "../generate-command.js";
+import { isGeneratorConfigFormattedMessage } from "./runtimeTypeGuards.js";
 
 type GenerateFormattedMessageOptions = (
     | { config: string | FormattedMessageElement | undefined; defaultMessage: string }

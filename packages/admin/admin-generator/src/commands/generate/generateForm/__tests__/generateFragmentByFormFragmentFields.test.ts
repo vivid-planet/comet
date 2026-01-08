@@ -1,4 +1,6 @@
-import { generateFragmentByFormFragmentFields } from "../generateFragmentByFormFragmentFields";
+import { describe, expect, it } from "vitest";
+
+import { generateFragmentByFormFragmentFields } from "../generateFragmentByFormFragmentFields.js";
 
 const normalize = (str: string) => str.replace(/\s+/g, " ").trim();
 describe("generateFragmentByFormFragmentFields", () => {

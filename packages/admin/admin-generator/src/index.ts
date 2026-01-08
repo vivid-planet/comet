@@ -7,5 +7,5 @@ export type {
     GridConfig,
     InjectedFormVariables,
     StaticSelectValue,
-} from "./commands/generate/generate-command";
-export { defineConfig, injectFormVariables } from "./commands/generate/generate-command";
+} from "./commands/generate/generate-command.js";
+export { defineConfig, injectFormVariables } from "./commands/generate/generate-command.js";

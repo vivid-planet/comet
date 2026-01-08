@@ -2,9 +2,9 @@ import { promises as fs } from "fs";
 import { createJiti } from "jiti";
 import { basename, dirname } from "path";
 
-import { transformConfigFile } from "./transformConfig";
+import { transformConfigFile } from "./transformConfig.js";
 
-const jiti = createJiti(__dirname);
+const jiti = createJiti(import.meta.url);
 
 export async function parseConfig(file: string) {
     //1. parse config file using TypeScript Complier Api and transform it (replace imports and functions that can't be executed)

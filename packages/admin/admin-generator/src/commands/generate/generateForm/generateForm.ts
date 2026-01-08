@@ -1,16 +1,21 @@
 import { type IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
-import { convertConfigImport } from "../utils/convertConfigImport";
-import { findMutationTypeOrThrow } from "../utils/findMutationType";
-import { generateGqlOperation } from "../utils/generateGqlOperation";
-import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
-import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
-import { flatFormFieldsFromFormConfig } from "./flatFormFieldsFromFormConfig";
-import { generateFields, type GenerateFieldsReturn } from "./generateFields";
-import { generateDestructFormValueForInput, generateFormValuesToGqlInput, generateFormValuesType, generateInitialValues } from "./generateFormValues";
-import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
-import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
+import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command.js";
+import { convertConfigImport } from "../utils/convertConfigImport.js";
+import { findMutationTypeOrThrow } from "../utils/findMutationType.js";
+import { generateGqlOperation } from "../utils/generateGqlOperation.js";
+import { generateImportsCode, type Imports } from "../utils/generateImportsCode.js";
+import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards.js";
+import { flatFormFieldsFromFormConfig } from "./flatFormFieldsFromFormConfig.js";
+import { generateFields, type GenerateFieldsReturn } from "./generateFields.js";
+import {
+    generateDestructFormValueForInput,
+    generateFormValuesToGqlInput,
+    generateFormValuesType,
+    generateInitialValues,
+} from "./generateFormValues.js";
+import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields.js";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs.js";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {

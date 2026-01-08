@@ -1,4 +1,6 @@
-import { generateGridToolbar } from "../generateGridToolbar";
+import { describe, expect, it } from "vitest";
+
+import { generateGridToolbar } from "../generateGridToolbar.js";
 
 describe("generateGridToolbar", () => {
     it("generates toolbar with all features enabled", () => {
