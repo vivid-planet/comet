@@ -1,8 +1,8 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import { findMutationTypeOrThrow } from "../../utils/findMutationType";
-import { getForwardedGqlArgs } from "../getForwardedGqlArgs";
+import { findMutationTypeOrThrow } from "../../utils/findMutationType.js";
+import { getForwardedGqlArgs } from "../getForwardedGqlArgs.js";
 
 describe("getForwardedGqlArgs", () => {
     describe("nested non-nullable object", () => {

@@ -1,6 +1,6 @@
 import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
 
-import { type GenerateFieldsReturn } from "./generateFields";
+import { type GenerateFieldsReturn } from "./generateFields.js";
 
 type FormValuesConfigTreeNode = {
     config?: GenerateFieldsReturn["formValuesConfig"][0];

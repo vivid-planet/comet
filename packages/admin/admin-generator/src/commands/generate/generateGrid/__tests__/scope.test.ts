@@ -1,8 +1,8 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import { type GridConfig } from "../../generate-command";
-import { generateGrid } from "../generateGrid";
+import { type GridConfig } from "../../generate-command.js";
+import { generateGrid } from "../generateGrid.js";
 
 describe("Grid Scope", () => {
     const schema = buildSchema(`
