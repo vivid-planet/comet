@@ -109,8 +109,8 @@ export {
     type DateTimeRangePickerProps,
 } from "./dateTime/DateTimeRangePicker";
 export { DateTimeRangePickerField, type DateTimeRangePickerFieldProps } from "./dateTime/DateTimeRangePickerField";
-export { Future_TimePicker, type Future_TimePickerClassKey, type Future_TimePickerProps } from "./dateTime/TimePicker";
-export { Future_TimePickerField, type Future_TimePickerFieldProps } from "./dateTime/TimePickerField";
+export { TimePicker, type TimePickerClassKey, type TimePickerProps } from "./dateTime/TimePicker";
+export { TimePickerField, type TimePickerFieldProps } from "./dateTime/TimePickerField";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, type IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";

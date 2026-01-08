@@ -6,7 +6,7 @@ export type FinalFormTimePickerProps = TimePickerProps;
 type FinalFormTimePickerInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
 
 /**
- * @deprecated `FinalFormTimePicker` from `@comet/admin-date-time` will be replaced by `TimePickerField` (currently `Future_TimePickerField`) from `@comet/admin` in a future major release.
+ * @deprecated Use `TimePickerField` from `@comet/admin` instead.
  *
  * Final Form-compatible TimePicker component.
  *

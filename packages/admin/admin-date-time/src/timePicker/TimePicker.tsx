@@ -60,7 +60,7 @@ export interface TimePickerProps extends Omit<InputWithPopperProps, "children" |
 }
 
 /**
- * @deprecated `TimePicker` from `@comet/admin-date-time` will be replaced by `TimePicker` (currently `Future_TimePicker`) from `@comet/admin` in a future major release.
+ * @deprecated Use `TimePicker` from `@comet/admin` instead.
  */
 export const TimePicker = (inProps: TimePickerProps) => {
     const {
