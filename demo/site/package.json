@@ -31,6 +31,7 @@
         "@comet/site-nextjs": "workspace:*",
         "@faire/mjml-react": "^3.5.3",
         "@formatjs/cli": "^6.7.2",
+        "@luma-team/mjml-react": "^0.2.1",
         "@next/bundle-analyzer": "^14.2.30",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/auto-instrumentations-node": "^0.66.0",
