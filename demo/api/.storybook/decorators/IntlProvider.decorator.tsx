@@ -1,8 +1,7 @@
-import { type Decorator } from "@storybook/react-webpack5";
-import { IntlProvider, ResolvedIntlConfig } from "react-intl";
+import { type Decorator } from "@storybook/react-vite";
+import { type ResolvedIntlConfig, IntlProvider } from "react-intl";
 import messages_de from "../../lang-compiled/comet-demo-api/de.json";
 import messages_en from "../../lang-compiled/comet-demo-api/en.json";
-import React from "react";
 
 export enum LocaleOption {
     DE = "DE",

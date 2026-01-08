@@ -8,6 +8,16 @@ const config = [
     },
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],
+    {
+        files: ["**/*.stories.{ts,tsx}"],
+        languageOptions: {
+            parserOptions: {
+                projectService: false,
+                project: "./.storybook/tsconfig.json",
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+    },
 ];
 
 export default config;

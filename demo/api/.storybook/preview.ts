@@ -1,22 +1,13 @@
-import type { Preview } from "@storybook/react-webpack5";
-
-import { IntlDecorator } from "./decorators/IntlProvider.decorator";
-import { LocaleOption } from "./decorators/IntlProvider.decorator";
+import { type Preview } from "@storybook/react-vite";
+import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
 import { type GlobalTypes } from "storybook/internal/csf";
 
 const preview: Preview = {
     tags: ["autodocs"],
     decorators: [IntlDecorator],
-
     parameters: {
         docs: {
             codePanel: true,
-        },
-        controls: {
-            matchers: {
-                color: /(background|color)$/i,
-                date: /Date$/i,
-            },
         },
     },
 };

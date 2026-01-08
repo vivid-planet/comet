@@ -21,5 +21,7 @@
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
         "target": "es2017"
-    }
+    },
+    "exclude": ["**/*.stories.tsx", "**/*.stories.ts", ".storybook"],
+    "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

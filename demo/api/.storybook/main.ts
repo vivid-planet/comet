@@ -1,10 +1,9 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
+import { type StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
-    stories: ["../src/**/*.mdx", "../src/**/__stories__/*.stories.@(js|jsx|mjs|ts|tsx)"],
+    stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
     staticDirs: ["./public"],
-
-    addons: ["@storybook/addon-docs", "storybook-addon-tag-badges", "@storybook/addon-webpack5-compiler-babel"],
-    framework: "@storybook/react-webpack5",
+    addons: ["@storybook/addon-docs"],
+    framework: "@storybook/react-vite",
 };
 export default config;
