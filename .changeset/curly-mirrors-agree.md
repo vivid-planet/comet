@@ -10,11 +10,11 @@ This affects the components of which their new counterparts are now considered s
 
 In most cases, the new components will be a drop-in replacement for the legacy components, so you can simply replace the imports:
 
-| Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`                      |
-| ---------------------------------------------- | ------------------------------------------------------ |
-| `DatePicker`                                   | `DatePicker`                                           |
-| `DateField`                                    | `DatePickerField`                                      |
-| `FinalFormDatePicker`                          | `DatePickerField` (without using `Field` as a wrapper) |
+| Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`             |
+| ---------------------------------------------- | --------------------------------------------- |
+| `DatePicker`                                   | `DatePicker`                                  |
+| `DateField`                                    | `DatePickerField`                             |
+| `FinalFormDatePicker`                          | `DatePickerField` (without using `<Field />`) |
 
 **To continue using the existing components, the following changes will need to be made:**
 
