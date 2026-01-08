@@ -1,4 +1,4 @@
-import { FieldContainer, Future_TimePicker as TimePicker, Future_TimePickerField as TimePickerField } from "@comet/admin";
+import { FieldContainer, TimePicker, TimePickerField } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 import { useState } from "react";
