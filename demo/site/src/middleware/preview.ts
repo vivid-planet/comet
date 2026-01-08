@@ -11,6 +11,11 @@ export function withPreviewMiddleware(middleware: CustomMiddleware) {
             return NextResponse.next();
         }
 
+        if (request.nextUrl.pathname.startsWith("/brevo-email-campaign")) {
+            // don't apply any other middlewares
+            return NextResponse.next();
+        }
+
         // Api url for invoking site-preview is always allowed
         if (request.nextUrl.pathname === "/site-preview") {
             // don't apply any other middlewares
