@@ -4,7 +4,7 @@ import { basename, dirname } from "path";
 
 import { transformConfigFile } from "./transformConfig";
 
-const jiti = createJiti(process.cwd());
+const jiti = createJiti(__dirname);
 
 export async function parseConfig(file: string) {
     //1. parse config file using TypeScript Complier Api and transform it (replace imports and functions that can't be executed)
@@ -18,7 +18,7 @@ export async function parseConfig(file: string) {
     let executedConfig;
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        executedConfig = (await jiti.import(`./${tempFileName.replace(/\.tsx?$/, "")}`, { default: true })) as any;
+        executedConfig = (await jiti.import(tempFileName.replace(/\.tsx?$/, ""), { default: true })) as any;
     } catch (e) {
         console.error(e);
         throw new Error(`Error executing config file ${file}: ${e}`);
