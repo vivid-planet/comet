@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { type TableBlockData } from "../../../blocks.generated";
-import { getNewRow, insertRowAtIndex } from "./row";
+import { insertRowDataAtIndex, type RowInsertData } from "./row";
 
 export const getNewColumn = (): TableBlockData["columns"][number] => {
     return { id: uuid(), highlighted: false, size: "standard" };
@@ -68,8 +68,11 @@ export const insertColumnDataAtIndex = (
     const numberOfRowsToBeAdded = columnInsertData.cellValues.length - state.rows.length;
 
     for (let i = 0; i < numberOfRowsToBeAdded; i++) {
-        const newRow = getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" })));
-        state = insertRowAtIndex(state, newRow, state.rows.length);
+        const newRowInsertData: RowInsertData = {
+            highlighted: false,
+            cellValues: state.columns.map(() => ""),
+        };
+        state = insertRowDataAtIndex(state, newRowInsertData, state.rows.length);
     }
 
     const columnsBeforeIndex = state.columns.slice(0, index);
