@@ -1,8 +1,8 @@
 import { MjmlColumn, MjmlSection } from "@faire/mjml-react";
 
-import { type NewsletterImageBlockData } from "../blocks.generated";
-import { CommonImageBlock } from "./CommonImageBlock";
-import { type PropsWithData } from "./helpers/PropsWithData";
+import { type NewsletterImageBlockData } from "../blocks.generated.js";
+import { CommonImageBlock } from "./CommonImageBlock.js";
+import { type PropsWithData } from "./helpers/PropsWithData.js";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {
     desktopRenderWidth?: number;

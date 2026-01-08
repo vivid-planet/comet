@@ -1,8 +1,8 @@
 import { MjmlImage } from "@faire/mjml-react";
 import type { ComponentProps } from "react";
 
-import { type PixelImageBlockData } from "../blocks.generated";
-import { calculateInheritAspectRatio, generateImageUrl, getDamAllowedImageWidth } from "./helpers/imageBlockHelpers";
+import { type PixelImageBlockData } from "../blocks.generated.js";
+import { calculateInheritAspectRatio, generateImageUrl, getDamAllowedImageWidth } from "./helpers/imageBlockHelpers.js";
 
 interface Props extends ComponentProps<typeof MjmlImage> {
     data: PixelImageBlockData;
