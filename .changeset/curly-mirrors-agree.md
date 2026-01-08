@@ -21,6 +21,9 @@ In most cases, the new components will be a drop-in replacement for the legacy c
 | `TimePicker`                                   | `TimePicker`                                       |
 | `TimeField`                                    | `TimePickerField`                                  |
 | `FinalFormTimePicker`                          | `TimePickerField` (without using `<Field />`)      |
+| `DateTimePicker`                               | `DateTimePicker`                                   |
+| `DateTimeField`                                | `DateTimePickerField`                              |
+| `FinalFormDateTimePicker`                      | `DateTimePickerField` (without using `<Field />`)  |
 
 **To continue using the existing components, the following changes will need to be made:**
 

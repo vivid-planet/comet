@@ -100,8 +100,8 @@ export { DatePicker, type DatePickerClassKey, type DatePickerProps } from "./dat
 export { DatePickerField, type DatePickerFieldProps } from "./dateTime/DatePickerField";
 export { type DateRange, DateRangePicker, type DateRangePickerClassKey, type DateRangePickerProps } from "./dateTime/DateRangePicker";
 export { DateRangePickerField, type DateRangePickerFieldProps } from "./dateTime/DateRangePickerField";
-export { Future_DateTimePicker, type Future_DateTimePickerClassKey, type Future_DateTimePickerProps } from "./dateTime/DateTimePicker";
-export { Future_DateTimePickerField, type Future_DateTimePickerFieldProps } from "./dateTime/DateTimePickerField";
+export { DateTimePicker, type DateTimePickerClassKey, type DateTimePickerProps } from "./dateTime/DateTimePicker";
+export { DateTimePickerField, type DateTimePickerFieldProps } from "./dateTime/DateTimePickerField";
 export {
     type DateTimeRange,
     DateTimeRangePicker,
