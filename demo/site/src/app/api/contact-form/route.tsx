@@ -14,15 +14,7 @@ const queryValidationSchema = z.object({
 export async function POST(request: NextRequest) {
     const body = await request.json();
 
-    const validationResult = queryValidationSchema.safeParse({
-        name: body["name"],
-        company: body["company"],
-        email: body["email"],
-        phone: body["phone"],
-        subject: body["subject"],
-        message: body["message"],
-        privacyConsent: body["privacyConsent"],
-    });
+    const validationResult = queryValidationSchema.safeParse(body);
 
     if (!validationResult.success) {
         return NextResponse.json(
