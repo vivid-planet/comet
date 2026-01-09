@@ -23,10 +23,7 @@ const nextConfig = {
     },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
-        serverComponentsExternalPackages: ["mjml", "@luma-team/mjml-react", "react-intl", "@faire/mjml-react", "react-dom"],
-    },
-    env: {
-        DAM_ALLOWED_IMAGE_SIZES: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes].join(","),
+        serverComponentsExternalPackages: ["mjml", "react-intl", "@faire/mjml-react", "react-dom"],
     },
     poweredByHeader: false,
     // https://nextjs.org/docs/advanced-features/security-headers (Content-Security-Policy and CORS are set in middleware/cspHeaders.ts)
