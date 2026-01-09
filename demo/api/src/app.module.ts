@@ -267,7 +267,7 @@ export class AppModule {
                         EmailCampaignContentBlock,
                         Scope: EmailCampaignContentScope,
                         frontend: {
-                            url: `${config.brevo.campaign.url}/brevo-email-campaign`,
+                            url: `${config.brevo.campaign.url}/render-brevo-email-campaign`,
                             basicAuth: {
                                 username: config.brevo.campaign.basicAuth.username,
                                 password: config.brevo.campaign.basicAuth.password,
