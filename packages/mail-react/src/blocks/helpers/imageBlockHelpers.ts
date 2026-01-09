@@ -1,15 +1,10 @@
-export const validSizes: number[] =
-    typeof process.env.DAM_ALLOWED_IMAGE_SIZES === "string"
-        ? process.env.DAM_ALLOWED_IMAGE_SIZES.split(",")
-              .map((value) => parseInt(value))
-              .sort((a, b) => a - b)
-        : [];
+export const getDamAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
+    const sortedValidSizes = validSizes.sort((a, b) => a - b);
 
-export const getDamAllowedImageWidth = (minimumWidth: number, contentWidth: number): number => {
     let width: number | null = null;
-    const largestPossibleWidth = validSizes[validSizes.length - 1];
+    const largestPossibleWidth = sortedValidSizes[sortedValidSizes.length - 1];
 
-    validSizes.forEach((validWidth) => {
+    sortedValidSizes.forEach((validWidth) => {
         if (minimumWidth === contentWidth) {
             width = contentWidth * 2;
         } else if (!width && validWidth >= minimumWidth * 2) {
