@@ -1,6 +1,8 @@
 import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import { generateMjmlMailContent } from "@src/app/brevo-email-campaign/generateMjmlMailContent";
+import { loadMessages } from "@src/util/loadMessages";
 import { type ReactElement } from "react";
+import { z } from "zod";
 
 export const runtime = "nodejs";
 
@@ -10,10 +12,24 @@ async function renderReactToHtml(email: ReactElement) {
     return mjml2html(renderToMjml(email), { validationLevel: "soft" });
 }
 
-export async function POST() {
-    const { html, errors } = await renderReactToHtml(generateMjmlMailContent({ blocks: [] }, { locale: "en", messages: {} }));
+const RequestQueryValidationSchema = z.object({
+    content: z.object({ blocks: z.array(z.any()) }),
+    scope: z.object({ domain: z.string(), language: z.string() }),
+});
 
-    if (errors?.length) {
+export async function POST(request: Request) {
+    const validationResult = RequestQueryValidationSchema.safeParse(await request.json());
+
+    if (!validationResult.success) {
+        return new Response("Sent data not valid", { status: 400 });
+    }
+
+    const params = validationResult.data;
+    const messages = await loadMessages(params.scope.language);
+
+    const { html, errors } = await renderReactToHtml(generateMjmlMailContent(params.content, { locale: params.scope.language, messages }));
+
+    if (errors?.length > 0) {
         return Response.json({ errors }, { status: 400 });
     }
 
@@ -21,30 +37,3 @@ export async function POST() {
         headers: { "Content-Type": "text/html; charset=utf-8" },
     });
 }
-
-// const requestQueryValidationSchema = z.object({
-//     content: z.object({ blocks: z.array(z.any()) }),
-//     title: z.string(),
-//     scope: z.object({ domain: z.string(), language: z.string() }),
-// });
-//
-// export async function POST(request: Request) {
-//     console.log("kdjflkdjfk");
-//
-//     // Add authentication here if needed, else this is a public endpoint
-//     const validationResult = requestQueryValidationSchema.safeParse(request.body);
-//
-//     if (!validationResult.success) {
-//         return new Response("Sent data not valid", { status: 400 });
-//     }
-//
-//     return new Response("Hallo");
-//
-//     const { content, scope } = await request.json();
-//
-//     const messages = await loadMessages(scope.language);
-//     const mjmlContent = generateMjmlMailContent(content, { locale: scope.language, messages });
-//     const { html } = mjml2html(mjmlContent);
-//
-//     return new Response(html);
-// }
