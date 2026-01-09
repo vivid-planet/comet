@@ -33,7 +33,7 @@ export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth 
     return (
         <MjmlImage
             src={imageUrl}
-            fluidOnMobile={true}
+            // fluidOnMobile={true}
             cssClass="image-block"
             width={desktopRenderWidth}
             height={desktopImageHeight}

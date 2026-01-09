@@ -1107,67 +1107,6 @@
         "inputFields": []
     },
     {
-        "name": "EmailCampaignLink",
-        "fields": [
-            {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": {
-                                "external": "ExternalLink"
-                            },
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            },
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": {
-                                "external": "ExternalLink"
-                            },
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": true
-            }
-        ]
-    },
-    {
         "name": "EmailCampaignSalutation",
         "fields": [],
         "inputFields": []

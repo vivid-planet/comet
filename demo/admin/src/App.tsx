@@ -136,7 +136,6 @@ export function App() {
                     scopeParts: ["domain", "language"],
                     apiUrl: config.apiUrl,
                     resolvePreviewUrlForScope: (scope: ContentScope) => {
-                        console.log("config.brevo.campaignUrl ", config.brevo.campaignUrl);
                         return `${config.brevo.campaignUrl}/block-preview/${scope.domain}/${scope.language}/brevo-email-campaign`;
                     },
                     allowAddingContactsWithoutDoi: config.brevo.allowAddingContactsWithoutDoi,
