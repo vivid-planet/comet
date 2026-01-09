@@ -1,6 +1,5 @@
 import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import { generateMjmlMailContent } from "@src/app/brevo-email-campaign/generateMjmlMailContent";
-// import { renderToMjml } from "@luma-team/mjml-react";
 import { type ReactElement } from "react";
 
 export const runtime = "nodejs";
