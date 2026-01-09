@@ -4,26 +4,24 @@ import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignDividerBlock } from "@src/brevo/blocks/EmailCampaignDividerBlock";
 import { EmailCampaignRichTextBlock } from "@src/brevo/blocks/EmailCampaignRichTextBlock";
 import { BlocksBlock } from "@src/brevo/temp/BlocksBlock";
+import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 
 import { EmailCampaignSalutationBlock } from "./EmailCampaignSalutationBlock";
 
-if (process.env.DAM_ALLOWED_IMAGE_SIZES === undefined || process.env.DAM_ALLOWED_IMAGE_SIZES.trim() === "") {
-    throw new Error("Environment variable DAM_ALLOWED_IMAGE_SIZES is not defined");
+function getSupportedBlocks(config: EmailCampaignConfig): SupportedBlocks {
+    return {
+        divider: (data) => <EmailCampaignDividerBlock />,
+        text: (data) => <EmailCampaignRichTextBlock data={data} />,
+        salutation: (data) => <EmailCampaignSalutationBlock data={data} />,
+        image: (data) => <NewsletterImageBlock data={data} validSizes={config.images.validSizes} baseUrl={config.images.baseUrl} />,
+    };
 }
-
-const validSizes = process.env.DAM_ALLOWED_IMAGE_SIZES.split(",").map((value) => parseInt(value));
-
-const supportedBlocks: SupportedBlocks = {
-    divider: (data) => <EmailCampaignDividerBlock />,
-    text: (data) => <EmailCampaignRichTextBlock data={data} />,
-    salutation: (data) => <EmailCampaignSalutationBlock data={data} />,
-    image: (data) => <NewsletterImageBlock data={data} validSizes={validSizes} />,
-};
 
 interface Props {
     content: EmailCampaignContentBlockData;
+    config: EmailCampaignConfig;
 }
 
-export const EmailCampaignContentBlock = ({ content }: Props) => {
-    return <BlocksBlock data={content} supportedBlocks={supportedBlocks} />;
+export const EmailCampaignContentBlock = ({ content, config }: Props) => {
+    return <BlocksBlock data={content} supportedBlocks={getSupportedBlocks(config)} />;
 };

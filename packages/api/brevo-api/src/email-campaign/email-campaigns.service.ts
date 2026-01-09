@@ -45,7 +45,7 @@ export class EmailCampaignsService {
     }
 
     async saveEmailCampaignInBrevo(campaign: EmailCampaignInterface, scheduledAt?: Date): Promise<EmailCampaignInterface> {
-        const content = await this.blockTransformerService.transformToPlain(campaign.content);
+        const content = await this.blockTransformerService.transformToPlain(campaign.content, { previewDamUrls: false });
 
         const brevoConfig = await this.brevoConfigRepository.findOneOrFail({ scope: campaign.scope });
 

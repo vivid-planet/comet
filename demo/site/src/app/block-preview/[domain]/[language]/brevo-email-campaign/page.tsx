@@ -1,3 +1,4 @@
+import { getEmailCampaignConfigFromEnvVariables } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 import { loadMessages } from "@src/util/loadMessages";
 
 import { BrevoEmailCampaignPreview } from "./BrevoEmailCampaignPreview";
@@ -5,5 +6,5 @@ import { BrevoEmailCampaignPreview } from "./BrevoEmailCampaignPreview";
 export default async function Page({ params: { language } }: { params: { language: string } }) {
     const messages = await loadMessages(language);
 
-    return <BrevoEmailCampaignPreview language={language} messages={messages} />;
+    return <BrevoEmailCampaignPreview language={language} messages={messages} config={getEmailCampaignConfigFromEnvVariables()} />;
 }

@@ -1,5 +1,6 @@
 import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import { generateMjmlMailContent } from "@src/app/brevo-email-campaign/generateMjmlMailContent";
+import { getEmailCampaignConfigFromEnvVariables } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 import { loadMessages } from "@src/util/loadMessages";
 import { type ReactElement } from "react";
 import { z } from "zod";
@@ -18,7 +19,8 @@ const RequestQueryValidationSchema = z.object({
 });
 
 export async function POST(request: Request) {
-    const validationResult = RequestQueryValidationSchema.safeParse(await request.json());
+    const requestBody = await request.json();
+    const validationResult = RequestQueryValidationSchema.safeParse(requestBody);
 
     if (!validationResult.success) {
         return new Response("Sent data not valid", { status: 400 });
@@ -27,7 +29,9 @@ export async function POST(request: Request) {
     const params = validationResult.data;
     const messages = await loadMessages(params.scope.language);
 
-    const { html, errors } = await renderReactToHtml(generateMjmlMailContent(params.content, { locale: params.scope.language, messages }));
+    const { html, errors } = await renderReactToHtml(
+        generateMjmlMailContent(params.content, { locale: params.scope.language, messages }, getEmailCampaignConfigFromEnvVariables()),
+    );
 
     if (errors?.length > 0) {
         return Response.json({ errors }, { status: 400 });

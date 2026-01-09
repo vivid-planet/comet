@@ -5,6 +5,7 @@ import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import { generateMjmlMailContent } from "@src/app/brevo-email-campaign/generateMjmlMailContent";
 import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { RenderedMail } from "@src/brevo/components/RenderedMail";
+import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 import { type ContentScope } from "@src/site-configs";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -17,9 +18,10 @@ const cachingFetch = createFetchInMemoryCache(fetch);
 interface BrevoEmailCampaignPreviewProps {
     language: string;
     messages: IntlConfig["messages"];
+    config: EmailCampaignConfig;
 }
 
-function BrevoEmailCampaignPreviewComponent({ language, messages }: BrevoEmailCampaignPreviewProps) {
+function BrevoEmailCampaignPreviewComponent({ language, messages, config }: BrevoEmailCampaignPreviewProps) {
     const iFrameBridge = useIFrameBridge();
     const [blockData, setBlockData] = useState<EmailCampaignContentBlockData>();
 
@@ -47,7 +49,7 @@ function BrevoEmailCampaignPreviewComponent({ language, messages }: BrevoEmailCa
         return null;
     }
 
-    const mjmlContent = renderToMjml(generateMjmlMailContent(blockData, { locale: language, messages }));
+    const mjmlContent = renderToMjml(generateMjmlMailContent(blockData, { locale: language, messages }, config));
 
     return <RenderedMail mjmlContent={mjmlContent} />;
 }
