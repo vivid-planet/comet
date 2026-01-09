@@ -1,5 +1,6 @@
 import { getEmailCampaignConfigFromEnvVariables } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
+import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
 import { loadMessages } from "@src/util/loadMessages";
 import { z } from "zod";
 
@@ -24,12 +25,13 @@ export async function POST(request: Request) {
     const { html, errors } = await convertMjmlToHtml(
         renderMailContentAsMjml(params.content, { locale: params.scope.language, messages }, getEmailCampaignConfigFromEnvVariables()),
     );
+    const outputHtml = replaceMailHtmlPlaceholders(html, "mail");
 
     if (errors?.length > 0) {
         return Response.json({ errors }, { status: 400 });
     }
 
-    return new Response(html, {
+    return new Response(outputHtml, {
         headers: { "Content-Type": "text/html; charset=utf-8" },
     });
 }
