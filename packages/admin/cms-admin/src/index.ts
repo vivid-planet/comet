@@ -1,6 +1,6 @@
-export { DiffHeader, DiffHeaderProps } from "./actionLog/components/DiffHeader";
-export { DiffViewer, DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
-export { ActionLogHeader, ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
+export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/DiffHeader";
+export { DiffViewer, type DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
+export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
