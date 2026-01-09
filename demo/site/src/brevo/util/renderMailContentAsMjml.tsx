@@ -1,3 +1,4 @@
+import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignContentBlock } from "@src/brevo/blocks/EmailCampaignContentBlock";
 import { Root } from "@src/brevo/components/Root";
@@ -9,18 +10,18 @@ export interface IntlProviderValues {
     messages: IntlConfig["messages"];
 }
 
-export const generateMjmlMailContent = (
+export function renderMailContentAsMjml(
     blockData: EmailCampaignContentBlockData,
     intlProviderValues: IntlProviderValues,
     config: EmailCampaignConfig,
-) => {
+) {
     const { locale, messages } = intlProviderValues;
 
-    return (
+    return renderToMjml(
         <IntlProvider messages={messages} locale={locale}>
             <Root>
                 <EmailCampaignContentBlock content={blockData} config={config} />
             </Root>
-        </IntlProvider>
+        </IntlProvider>,
     );
-};
+}

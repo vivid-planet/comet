@@ -529,9 +529,6 @@ importers:
       mjml:
         specifier: ^4.18.0
         version: 4.18.0
-      mjml-browser:
-        specifier: ^4.18.0
-        version: 4.18.0
       next:
         specifier: ^14.2.30
         version: 14.2.35(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.93.0)
@@ -593,6 +590,9 @@ importers:
       '@types/mjml':
         specifier: ^4.7.4
         version: 4.7.4
+      '@types/mjml-browser':
+        specifier: ^4.15.0
+        version: 4.15.0
       '@types/node':
         specifier: ^24.9.1
         version: 24.10.4
@@ -614,6 +614,9 @@ importers:
       graphql:
         specifier: ^16.0.0
         version: 16.12.0
+      mjml-browser:
+        specifier: ^4.18.0
+        version: 4.18.0
       npm-run-all2:
         specifier: ^8.0.4
         version: 8.0.4
@@ -1173,7 +1176,7 @@ importers:
         version: 6.1.2
       ts-jest:
         specifier: ^29.4.6
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -1769,7 +1772,7 @@ importers:
         version: 6.1.2
       ts-jest:
         specifier: ^29.4.6
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -1899,7 +1902,7 @@ importers:
         version: 3.0.2
       ts-jest:
         specifier: ^29.0.5
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)
@@ -2152,7 +2155,7 @@ importers:
         version: 7.8.2
       ts-jest:
         specifier: ^29.4.6
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)
@@ -2219,7 +2222,7 @@ importers:
         version: 10.1.8(eslint@9.39.1(jiti@2.5.1))
       eslint-plugin-formatjs:
         specifier: ^5.4.0
-        version: 5.4.0(eslint@9.39.1(jiti@2.5.1))(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3))(typescript@5.9.3)
+        version: 5.4.0(eslint@9.39.1(jiti@2.5.1))(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3))(typescript@5.9.3)
       eslint-plugin-import:
         specifier: ^2.31.0
         version: 2.32.0(@typescript-eslint/parser@8.46.4(eslint@9.39.1(jiti@2.5.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.1(jiti@2.5.1))
@@ -2310,7 +2313,7 @@ importers:
         version: 3.6.2
       ts-jest:
         specifier: ^29.4.6
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -2437,7 +2440,7 @@ importers:
         version: 1.93.0
       ts-jest:
         specifier: ^29.4.6
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -2525,7 +2528,7 @@ importers:
         version: 1.93.0
       ts-jest:
         specifier: ^29.4.6
-        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+        version: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -2537,7 +2540,7 @@ importers:
         version: 4.5.4(@types/node@24.10.4)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@24.10.4)(sass@1.93.0)(terser@5.43.1))
       webpack:
         specifier: ^5.102.1
-        version: 5.103.0
+        version: 5.103.0(@swc/core@1.15.3)
 
   storybook:
     dependencies:
@@ -8855,6 +8858,9 @@ packages:
 
   '@types/mime@2.0.3':
     resolution: {integrity: sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q==}
+
+  '@types/mjml-browser@4.15.0':
+    resolution: {integrity: sha512-WNmr7LB4XfSM4pe+ES3zCcF4NY3hfPQxLNPn8v3GgNYc3u2rJbiQ56Ahswn/WF9kpO+M5jKd2jlq8u2ZAV0g6A==}
 
   '@types/mjml-core@4.15.2':
     resolution: {integrity: sha512-Q7SxFXgoX979HP57DEVsRI50TV8x1V4lfCA4Up9AvfINDM5oD/X9ARgfoyX1qS987JCnDLv85JjkqAjt3hZSiQ==}
@@ -22360,7 +22366,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@formatjs/ts-transformer@3.14.0(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3))':
+  '@formatjs/ts-transformer@3.14.0(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3))':
     dependencies:
       '@formatjs/icu-messageformat-parser': 2.11.2
       '@types/json-stable-stringify': 1.2.0
@@ -22370,7 +22376,7 @@ snapshots:
       tslib: 2.8.1
       typescript: 5.9.3
     optionalDependencies:
-      ts-jest: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
+      ts-jest: 29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3)
 
   '@getbrevo/brevo@3.0.1':
     dependencies:
@@ -26710,6 +26716,10 @@ snapshots:
 
   '@types/mime@2.0.3': {}
 
+  '@types/mjml-browser@4.15.0':
+    dependencies:
+      '@types/mjml-core': 4.15.2
+
   '@types/mjml-core@4.15.2': {}
 
   '@types/mjml@4.7.4':
@@ -29881,10 +29891,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-formatjs@5.4.0(eslint@9.39.1(jiti@2.5.1))(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3))(typescript@5.9.3):
+  eslint-plugin-formatjs@5.4.0(eslint@9.39.1(jiti@2.5.1))(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
       '@formatjs/icu-messageformat-parser': 2.11.2
-      '@formatjs/ts-transformer': 3.14.0(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3))
+      '@formatjs/ts-transformer': 3.14.0(ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3))
       '@types/eslint': 9.6.1
       '@types/picomatch': 3.0.2
       '@typescript-eslint/utils': 8.46.4(eslint@9.39.1(jiti@2.5.1))(typescript@5.9.3)
@@ -36990,7 +37000,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3):
+  ts-jest@29.4.6(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.10.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.10.4)(typescript@5.9.3)))(typescript@5.9.3):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0

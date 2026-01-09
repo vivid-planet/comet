@@ -1,17 +1,9 @@
-import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
-import { generateMjmlMailContent } from "@src/app/brevo-email-campaign/generateMjmlMailContent";
 import { getEmailCampaignConfigFromEnvVariables } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
+import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
 import { loadMessages } from "@src/util/loadMessages";
-import { type ReactElement } from "react";
 import { z } from "zod";
 
 export const runtime = "nodejs";
-
-async function renderReactToHtml(email: ReactElement) {
-    // mjml2html is CJS-ish; importing dynamically is usually the least painful
-    const { default: mjml2html } = await import("mjml");
-    return mjml2html(renderToMjml(email), { validationLevel: "soft" });
-}
 
 const RequestQueryValidationSchema = z.object({
     content: z.object({ blocks: z.array(z.any()) }),
@@ -29,8 +21,8 @@ export async function POST(request: Request) {
     const params = validationResult.data;
     const messages = await loadMessages(params.scope.language);
 
-    const { html, errors } = await renderReactToHtml(
-        generateMjmlMailContent(params.content, { locale: params.scope.language, messages }, getEmailCampaignConfigFromEnvVariables()),
+    const { html, errors } = await convertMjmlToHtml(
+        renderMailContentAsMjml(params.content, { locale: params.scope.language, messages }, getEmailCampaignConfigFromEnvVariables()),
     );
 
     if (errors?.length > 0) {
@@ -40,4 +32,10 @@ export async function POST(request: Request) {
     return new Response(html, {
         headers: { "Content-Type": "text/html; charset=utf-8" },
     });
+}
+
+async function convertMjmlToHtml(mjml: string) {
+    // mjml2html only works when importing it dynamically, something to do with CommonJS
+    const { default: mjml2html } = await import("mjml");
+    return mjml2html(mjml, { validationLevel: "soft" });
 }
