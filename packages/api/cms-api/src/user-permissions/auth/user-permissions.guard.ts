@@ -10,6 +10,7 @@ import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
 import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
+import { UserPermissionsStorageService } from "../user-permissions-storage.service";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -18,6 +19,7 @@ export class UserPermissionsGuard implements CanActivate {
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
+        private readonly userPermissionsStorageService: UserPermissionsStorageService,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -40,6 +42,8 @@ export class UserPermissionsGuard implements CanActivate {
 
         const user = this.getUser(context);
         if (!user) return false;
+
+        this.userPermissionsStorageService.set("user", user);
 
         // System user authenticated via basic auth
         if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
