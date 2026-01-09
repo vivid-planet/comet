@@ -1,5 +1,86 @@
 # @comet/cms-api
 
+## 8.10.0
+
+### Minor Changes
+
+- 5f025a9: Add Importer Module
+
+    The module can be used to import data (e.g., from a CSV file) into applications.
+    Review the [docs](https://docs.comet-dxp.com/docs/features-modules/importer/) for more information on how to use it.
+
+## 8.9.0
+
+### Minor Changes
+
+- 5cf497f: Allow Easier Local Usage of the Kubernetes Module
+
+    As projects increasingly use the Kubernetes API, local testing and debugging have become necessary.
+    Previously, if you wanted to use the Kubernetes service locally (outside of a cluster), you had to overwrite the Kubernetes service inside the node_modules folder.
+    Now, you can instantiate the Kubernetes module with a fixed namespace and Helm release, and the module will attempt to authenticate you using local credentials.
+    The change in the configuration was made with backwards compatibility in mind.
+    This update also renames the guard to be more descriptive.
+    This update also adds the Kubernetes service to the public API.
+
+    Example:
+
+    ```app.module.ts
+    KubernetesModule.register({
+        helmRelease: "comet-test",
+        namespace: "comet-test",
+    }),
+    ```
+
+### Patch Changes
+
+- ef30d93: Fix FileUploadModule: The `setInterval` for cleaning expired files was blocking application bootstrap. Moved interval initialization to the NestJS lifecycle hook `onApplicationBootstrap` and added cleanup in `beforeApplicationShutdown` to properly clear the interval.
+
+## 8.8.0
+
+### Minor Changes
+
+- d328dac: Log guard rejections
+
+    The following error now lead to a log output:
+    - CometAuthGuard can't authenticate the user
+    - CdnGuard does not receive correct header
+    - UserPermissionsGuard does not receive an authenticated user
+    - UserPermissionsGuard denies access due to insufficient permissions
+
+- e62d6bd: Add support for temporary file uploads with configurable expiration times. The `expiresIn` duration can be set as a default value in the module configuration, and can be overridden by setting the value when using the `FileUploadsService` or sending the request to the upload endpoint.
+
+    Files are automatically validated for expiration when accessed, and expired files are cleared every minute in the background.
+
+    The `FileUploadField` also supports overriding the `expiresIn` property.
+
+### Patch Changes
+
+- b79687c: Fix a Bug where some warnings where not correctly detected
+
+## 8.7.1
+
+### Patch Changes
+
+- 9ed0711: Improve Warnings SQL-Performance by setting appropriate indexes
+- 182c930: Optimize `WarningEventSubscriber`. This improves performance for create and update requests where blocks occur.
+- 07c9b17: Fix in-memory filtering in `paginatedRedirects` query
+    - Fix `isEmpty` and `isNotEmpty` filters for string filters
+    - Fix boolean filter handling: properly handle the "any" case (when no specific value is set)
+    - Add support for `activatedAt` field in redirect filters
+
+## 8.7.0
+
+### Minor Changes
+
+- 13babd1: Use `sharp` to calculate the dominant image color
+
+    `sharp` replaces the previous implementation based on `get-image-colors`, which was removed because it's unmaintained and causes some security warnings.
+
+### Patch Changes
+
+- b2da6c9: Add `calculateInheritAspectRatio` to public API (for real)
+- b305d5b: Add EntityInfo to RedirectEntity to provide additional entity information, particularly useful when displaying warnings.
+
 ## 8.6.0
 
 ### Minor Changes

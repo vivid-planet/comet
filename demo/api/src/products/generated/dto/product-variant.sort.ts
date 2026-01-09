@@ -9,6 +9,7 @@ export enum ProductVariantSortField {
     product = "product",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
+    id = "id",
     product_title = "product_title",
     product_status = "product_status",
     product_slug = "product_slug",
@@ -17,14 +18,13 @@ export enum ProductVariantSortField {
     product_additionalTypes = "product_additionalTypes",
     product_price = "product_price",
     product_inStock = "product_inStock",
-    product_soldCount = "product_soldCount",
     product_availableSince = "product_availableSince",
     product_lastCheckedAt = "product_lastCheckedAt",
     product_category = "product_category",
     product_createdAt = "product_createdAt",
     product_updatedAt = "product_updatedAt",
     product_manufacturer = "product_manufacturer",
-    product_priceList = "product_priceList"
+    product_priceList = "product_priceList",
 }
 registerEnumType(ProductVariantSortField, {
     name: "ProductVariantSortField",

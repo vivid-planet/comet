@@ -557,7 +557,7 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -599,7 +599,7 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -689,7 +689,7 @@
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
                                 "mediaGallery": "MediaGallery",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
                             },
@@ -733,7 +733,7 @@
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
                                 "mediaGallery": "MediaGallery",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
                             },
@@ -1084,6 +1084,11 @@
                 "nullable": false
             },
             {
+                "name": "caption",
+                "kind": "String",
+                "nullable": false
+            },
+            {
                 "name": "linkList",
                 "kind": "Block",
                 "block": "LinkList",
@@ -1106,6 +1111,11 @@
                 "name": "image",
                 "kind": "Block",
                 "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "caption",
+                "kind": "String",
                 "nullable": false
             },
             {
@@ -2080,7 +2090,7 @@
                                 "billboardTeaser": "BillboardTeaser",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -2145,7 +2155,7 @@
                                 "billboardTeaser": "BillboardTeaser",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richtext": "RichText",
+                                "richtext": "StandaloneRichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -2438,7 +2448,19 @@
                 "enum": [
                     "cap",
                     "shirt",
-                    "tie"
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
                 ],
                 "nullable": false,
                 "array": true
@@ -2451,7 +2473,19 @@
                 "enum": [
                     "cap",
                     "shirt",
-                    "tie"
+                    "tie",
+                    "pants",
+                    "jacket",
+                    "shoes",
+                    "socks",
+                    "mug",
+                    "pen",
+                    "calendar",
+                    "notebook",
+                    "bag",
+                    "watch",
+                    "sunglasses",
+                    "wallet"
                 ],
                 "nullable": false,
                 "array": true
@@ -3079,6 +3113,47 @@
                     "2x3",
                     "3x4",
                     "9x16"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "StandaloneRichText",
+        "fields": [
+            {
+                "name": "richText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "richText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
                 ],
                 "nullable": false
             }

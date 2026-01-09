@@ -58,7 +58,7 @@ export const MobileMenu = ({ menu }: Props) => {
             >
                 <SvgUse href={isMenuOpen ? "/assets/icons/menu-open.svg#root" : "/assets/icons/menu.svg#root"} width={24} height={24} />
             </button>
-            <div className={clsx(styles.menuContainer, isMenuOpen && styles.menuContainerOpen)} aria-hidden={!isMenuOpen}>
+            <div className={clsx(styles.menuContainer, isMenuOpen && styles["menuContainer--open"])} aria-hidden={!isMenuOpen}>
                 <PageLayout grid>
                     <div className={styles.pageLayoutContent}>
                         <FocusLock>
@@ -105,7 +105,7 @@ export const MobileMenu = ({ menu }: Props) => {
                                                     <ol
                                                         className={clsx(
                                                             styles.subLevelNavigation,
-                                                            expandedSubLevelNavigation === node.id && styles.subLevelNavigationExpanded,
+                                                            expandedSubLevelNavigation === node.id && styles["subLevelNavigation--expanded"],
                                                         )}
                                                     >
                                                         <PageLayout grid>

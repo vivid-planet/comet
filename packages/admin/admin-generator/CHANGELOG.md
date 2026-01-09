@@ -1,5 +1,30 @@
 # @comet/admin-generator
 
+## 8.10.0
+
+### Minor Changes
+
+- 6570d03: Grid headerName: don't generate FormattedMessage for empty header (empty string)
+
+## 8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- 6c6ea5e: Detect installed MUI X Data Grid package (community/pro/premium) and generate code accordingly
+- 8575871: Add initialValue to form config for static initial values
+- e16e1f9: Grid: support non-null sort argument
+
+## 8.7.1
+
+## 8.7.0
+
+### Minor Changes
+
+- bfb954e: Form: add support for fields accessing nested objects (e.g., Embeddable in MikroORM)
+- 91f0b8d: Add injectFormVariables helper function to inject id, mode, client or formApi into validator
+
 ## 8.6.0
 
 ## 8.5.2

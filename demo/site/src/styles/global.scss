@@ -68,6 +68,9 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+
+    /* Balance text wrapping for better readability */
+    text-wrap: balance;
 }
 
 h1,
@@ -149,7 +152,7 @@ legend {
 }
 
 :focus {
-    outline: 3px solid var(--functional-highlight-main);
+    outline: 3px solid var(--functional-focus-main);
     outline-offset: 0;
     border: 2px solid var(--brand-primary-contrast);
 }

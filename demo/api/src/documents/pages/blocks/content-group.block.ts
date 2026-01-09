@@ -13,11 +13,11 @@ import {
 } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
-import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
+import { StandaloneRichTextBlock } from "@src/common/blocks/standalone-rich-text.block";
 import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
@@ -34,7 +34,7 @@ export const ContentBlock = createBlocksBlock(
             keyFacts: KeyFactsBlock,
             media: StandaloneMediaBlock,
             mediaGallery: MediaGalleryBlock,
-            richtext: RichTextBlock,
+            richtext: StandaloneRichTextBlock,
             space: SpaceBlock,
             teaser: TeaserBlock,
         },

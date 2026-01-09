@@ -16,6 +16,18 @@ const nextCoreWebVitals = compat
     // because it gets redefined
     .filter((config) => !config.plugins || !config.plugins.import);
 
+export const restrictedImportPaths = [
+    {
+        name: "react",
+        importNames: ["default"],
+    },
+    {
+        name: "next/image",
+        importNames: ["default"],
+        message: "Please use Image from @comet/site-nextjs instead",
+    },
+];
+
 /** @type {import('eslint')} */
 const config = [
     ...coreConfig,
@@ -28,17 +40,7 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        {
-                            name: "react",
-                            importNames: ["default"],
-                        },
-                        {
-                            name: "next/image",
-                            importNames: ["default"],
-                            message: "Please use Image from @comet/site-nextjs instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
                 },
             ],
         },
@@ -56,6 +58,11 @@ const config = [
         },
         plugins: {
             react: react,
+        },
+        settings: {
+            react: {
+                version: "detect",
+            },
         },
         rules: {
             "react/display-name": "off",

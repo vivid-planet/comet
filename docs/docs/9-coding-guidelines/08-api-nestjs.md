@@ -81,11 +81,7 @@ We do not use rollbacks; issues are resolved with a new deployment.
 
 ### Data Types
 
-- Always use `uuidv4` as the primary key whenever possible.
-    - Prevent listing or guessing of IDs (e.g., when they are part of a URL).
-    - Can be generated "offline" (without a connection to the database), making the ID available in the code before insertion.
-    - Are globally unique, which can sometimes be helpful.
-    - Use `columnType: "uuid"` for UUID columns.
+- Prefer `type: "uuid"` for IDs. See [Prefer UUIDs for IDs](/docs/coding-guidelines/postgresql#prefer-uuids-for-ids).
 - Always use `columnType: text` for strings. Explanation: See [Don't Do This - PostgreSQL wiki.](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_varchar.28n.29_by_default)
 - Prefer `jsonb` over `json`. Explanation: See [8.14. JSON Types](https://www.postgresql.org/docs/current/datatype-json.html)
 - For timestamps, always use `columnType: "timestamp with time zone"`.

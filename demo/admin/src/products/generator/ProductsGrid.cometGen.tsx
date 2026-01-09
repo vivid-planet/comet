@@ -30,12 +30,15 @@ export default defineConfig<GQLProduct>({
     initialFilter: {
         items: [{ field: "type", operator: "is", value: "shirt" }],
     },
+    crudContextMenu: {
+        deleteText: "Extinguish",
+    },
     columns: [
         {
             type: "virtual",
             name: "overview",
             queryFields: ["category.title"],
-            headerName: "Overview",
+            headerName: <FormattedMessage id="product.overview.headerName" defaultMessage="Over-view" />,
             minWidth: 200,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
@@ -119,7 +122,7 @@ export default defineConfig<GQLProduct>({
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "date")
         { type: "date", name: "availableSince", width: 140 },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "dateTime")
-        { type: "dateTime", name: "createdAt", width: 170 },
+        { type: "dateTime", name: "createdAt", width: 170, visible: false },
         {
             type: "text",
             name: "manufacturer.name",

@@ -1,7 +1,10 @@
 import { promises as fs } from "fs";
+import { createJiti } from "jiti";
 import { basename, dirname } from "path";
 
 import { transformConfigFile } from "./transformConfig";
+
+const jiti = createJiti(__dirname);
 
 export async function parseConfig(file: string) {
     //1. parse config file using TypeScript Complier Api and transform it (replace imports and functions that can't be executed)
@@ -14,11 +17,8 @@ export async function parseConfig(file: string) {
     //3. import (=execute) temp modified config file
     let executedConfig;
     try {
-        const configFile = await import(tempFileName.replace(/\.tsx?$/, ""));
-        if (!configFile.default) {
-            throw new Error(`No default export found in ${file}`);
-        }
-        executedConfig = configFile.default;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        executedConfig = (await jiti.import(tempFileName.replace(/\.tsx?$/, ""), { default: true })) as any;
     } catch (e) {
         console.error(e);
         throw new Error(`Error executing config file ${file}: ${e}`);

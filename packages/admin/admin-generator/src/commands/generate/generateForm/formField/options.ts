@@ -2,6 +2,7 @@ import { type Adornment, type FormConfig, type FormFieldConfig } from "../../gen
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../../utils/convertConfigImport";
 import { type Imports } from "../../utils/generateImportsCode";
+import { generateFormattedMessage } from "../../utils/intl";
 import { isGeneratorConfigImport } from "../../utils/runtimeTypeGuards";
 
 type AdornmentData = {
@@ -58,9 +59,13 @@ export function buildFormFieldOptions({
 }) {
     const rootGqlType = formConfig.gqlType;
     const name = String(config.name);
-    const label = config.label ?? camelCaseToHumanReadable(name);
     const formattedMessageRootId = rootGqlType[0].toLowerCase() + rootGqlType.substring(1);
-    const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;
+    const fieldLabel = generateFormattedMessage({
+        config: config.label,
+        id: `${formattedMessageRootId}.${name}`,
+        defaultMessage: camelCaseToHumanReadable(name),
+        type: "jsx",
+    });
 
     const imports: Imports = [];
     let startAdornment: AdornmentData = { adornmentString: "" };

@@ -52,7 +52,8 @@ export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (i
                     id="comet.dataGridPagination.pageInformation"
                     defaultMessage="{itemsFrom}-{itemsTo} of {itemsTotal} items"
                     values={{
-                        itemsFrom: paginationState.paginationModel.page * paginationState.paginationModel.pageSize + 1,
+                        itemsFrom:
+                            paginationState.rowCount === 0 ? 0 : paginationState.paginationModel.page * paginationState.paginationModel.pageSize + 1,
                         itemsTo: Math.min(
                             (paginationState.paginationModel.page + 1) * paginationState.paginationModel.pageSize,
                             paginationState.rowCount,

@@ -78,10 +78,17 @@ export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Mu
     : FinalFormFileUploadSingleFileProps) &
     Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>> & {
         uploadEndpoint?: string;
+        /**
+         * The duration in seconds after which the file will be deleted.
+         * Leaving it undefined will take the default value from the module configuration in the API
+         * If both the default configuration and expiresIn are undefined, the file will never be deleted.
+         */
+        expiresIn?: number;
     };
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
+    expiresIn,
     maxFiles,
     uploadEndpoint,
     ...restProps
@@ -124,6 +131,10 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 const tooManyFilesWereDropped = rejectedFiles.some((rejection) => rejection.errors.some((error) => error.code === "too-many-files"));
                 setTooManyFilesSelected(tooManyFilesWereDropped);
 
+                if (tooManyFilesWereDropped || !acceptedFiles.length) {
+                    return;
+                }
+
                 rejectedFiles.map((rejection) => {
                     const failedFile: ErrorFileSelectItem = {
                         name: rejection.file.name,
@@ -145,10 +156,6 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                     onChange(undefined);
                 }
 
-                if (tooManyFilesWereDropped || !acceptedFiles.length) {
-                    return;
-                }
-
                 setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
 
                 const successfullyUploadedFiles: Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment> = [];
@@ -156,6 +163,9 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
+                    if (expiresIn) {
+                        formData.append("expiresIn", expiresIn.toString());
+                    }
                     const response = await fetch(uploadEndpoint ?? `${apiUrl}/file-uploads/upload`, {
                         method: "POST",
                         body: formData,
@@ -215,7 +225,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}
-            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            error={tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles ? maxFiles : 1) : undefined}
             getDownloadUrl={(file) => (isDownloadableFile(file) && file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />

@@ -5,6 +5,7 @@ import {
     createBasicAuthService,
     createJwtAuthService,
     createSitePreviewAuthService,
+    createStaticUserAuthService,
 } from "@comet/cms-api";
 import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
@@ -12,6 +13,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { Config } from "@src/config/config";
 
 import { AccessControlService } from "./access-control.service";
+import { staticUsers } from "./static-users";
 import { UserService } from "./user.service";
 
 export const SYSTEM_USER_NAME = "system-user";
@@ -54,6 +56,8 @@ export class AuthModule {
                                 isAdmin: jwt.isAdmin,
                             }),
                         }),
+                        // Additionally, set a static user as fallback that is always authenticated. Used when bypassing OAuth2-Proxy through http://localhost:8001.
+                        createStaticUserAuthService({ staticUser: staticUsers[0] }),
                     ],
                 ),
             ],
