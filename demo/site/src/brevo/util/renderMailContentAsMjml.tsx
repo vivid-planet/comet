@@ -5,7 +5,7 @@ import { Root } from "@src/brevo/components/Root";
 import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 import { type IntlConfig, IntlProvider } from "react-intl";
 
-export interface IntlProviderValues {
+interface IntlProviderValues {
     locale: string;
     messages: IntlConfig["messages"];
 }
