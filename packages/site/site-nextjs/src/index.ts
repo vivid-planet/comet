@@ -2,7 +2,6 @@ import "@comet/site-react/css";
 
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
-export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
@@ -18,6 +17,7 @@ export {
     AdminMessageType,
     type BlockLoader,
     type BlockLoaderDependencies,
+    type BlockLoaderOptions,
     BlockPreviewProvider,
     BlocksBlock,
     calculateInheritAspectRatio,
@@ -59,6 +59,7 @@ export {
     parseAspectRatio,
     persistedQueryRoute,
     PhoneLinkBlock,
+    type PlayPauseButtonProps,
     Preview,
     type PreviewData,
     PreviewSkeleton,
@@ -78,6 +79,7 @@ export {
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
     usePreview,
+    type VideoPreviewImageProps,
     webpackPersistedQueriesLoader,
     withPreview,
     type WithPreviewProps,

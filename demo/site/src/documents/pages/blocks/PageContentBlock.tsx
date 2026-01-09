@@ -7,11 +7,11 @@ import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
-import { PageContentRichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { PageContentStandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { PageContentStandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { PageContentStandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { PageContentTextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/BillboardTeaserBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
@@ -30,7 +30,7 @@ const supportedBlocks: SupportedBlocks = {
     billboardTeaser: (props) => <BillboardTeaserBlock data={props} />,
     space: (props) => <SpaceBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
-    richtext: (props) => <PageContentRichTextBlock data={props} disableLastBottomSpacing />,
+    richtext: (props) => <PageContentStandaloneRichTextBlock data={props} />,
     heading: (props) => <PageContentStandaloneHeadingBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
     callToActionList: (props) => <PageContentStandaloneCallToActionListBlock data={props} />,

@@ -3,18 +3,27 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { BooleanFilter, DateFilter, DateTimeFilter, IdFilter, ManyToManyFilter, ManyToOneFilter, NumberFilter, OneToManyFilter, StringFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+import {
+    BooleanFilter,
+    DateFilter,
+    DateTimeFilter,
+    IdFilter,
+    ManyToManyFilter,
+    ManyToOneFilter,
+    NumberFilter,
+    OneToManyFilter,
+    StringFilter,
+    createEnumFilter,
+    createEnumsFilter,
+} from "@comet/cms-api";
 import { ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 @InputType()
-class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {
-}
+class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {}
 @InputType()
-class ProductTypeEnumFilter extends createEnumFilter(ProductType) {
-}
+class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}
 @InputType()
-class ProductTypeEnumsFilter extends createEnumsFilter(ProductType) {
-}
+class ProductTypeEnumsFilter extends createEnumsFilter(ProductType) {}
 @InputType()
 export class ProductFilter {
     @Field(() => IdFilter, { nullable: true })
@@ -62,11 +71,6 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => BooleanFilter)
     inStock?: BooleanFilter;
-    @Field(() => NumberFilter, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => NumberFilter)
-    soldCount?: NumberFilter;
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

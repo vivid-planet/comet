@@ -10,7 +10,8 @@ export enum NewsSortField {
     date = "date",
     category = "category",
     createdAt = "createdAt",
-    updatedAt = "updatedAt"
+    updatedAt = "updatedAt",
+    id = "id",
 }
 registerEnumType(NewsSortField, {
     name: "NewsSortField",

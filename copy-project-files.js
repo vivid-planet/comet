@@ -7,11 +7,11 @@ const files = [
         : [
               {
                   file: ".env",
-                  targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages"],
+                  targetDir: ["demo/admin", "demo/api", "demo/site"],
               },
               {
                   file: "demo/.env.local",
-                  targetDir: ["demo/admin", "demo/api", "demo/site", "demo/site-pages", "storybook"],
+                  targetDir: ["demo/admin", "demo/api", "demo/site", "storybook"],
               },
               {
                   file: "demo/.env.site-configs",
@@ -28,15 +28,15 @@ const files = [
     },
     {
         file: "demo/api/block-meta.json",
-        targetDir: ["demo/admin", "demo/site", "demo/site-pages"],
+        targetDir: ["demo/admin", "demo/site"],
     },
     {
         file: "demo/api/schema.gql",
-        targetDir: ["demo/admin", "demo/site", "demo/site-pages"],
+        targetDir: ["demo/admin", "demo/site"],
     },
     {
         file: "demo/api/src/comet-config.json",
-        targetDir: ["demo/admin/src", "demo/site/src", "demo/site-pages/src"],
+        targetDir: ["demo/admin/src", "demo/site/src"],
     },
     {
         file: "demo/site-configs/site-configs.d.ts",

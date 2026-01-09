@@ -1,7 +1,6 @@
 import { DamImageBlock } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product, ProductStatus } from "@src/products/entities/product.entity";
@@ -14,13 +13,7 @@ import { format } from "date-fns";
 export class ProductsFixtureService {
     private logger = new Logger(ProductsFixtureService.name);
 
-    constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(Manufacturer) private readonly manufacturersRepository: EntityRepository<Manufacturer>,
-        @InjectRepository(Product) private readonly productsRepository: EntityRepository<Product>,
-        @InjectRepository(ProductCategory) private readonly productCategoriesRepository: EntityRepository<ProductCategory>,
-        @InjectRepository(ProductCategoryType) private readonly productCategoryTypesRepository: EntityRepository<ProductCategoryType>,
-    ) {}
+    constructor(private readonly entityManager: EntityManager) {}
 
     async generate(): Promise<void> {
         this.logger.log("Generating manufacturers...");
@@ -28,7 +21,7 @@ export class ProductsFixtureService {
         const manufacturers: Manufacturer[] = [];
 
         for (let i = 0; i < 10; i++) {
-            const manufacturer = this.manufacturersRepository.create({
+            const manufacturer = this.entityManager.create(Manufacturer, {
                 id: faker.string.uuid(),
                 name: faker.company.name(),
                 address: {
@@ -66,7 +59,7 @@ export class ProductsFixtureService {
         const productCategoryTypes: ProductCategoryType[] = [];
         for (let i = 0; i < 5; i++) {
             const title = faker.commerce.productName();
-            const productCategoryType = this.productCategoryTypesRepository.create({
+            const productCategoryType = this.entityManager.create(ProductCategoryType, {
                 id: faker.string.uuid(),
                 title: title,
             });
@@ -78,7 +71,7 @@ export class ProductsFixtureService {
         const productCategories: ProductCategory[] = [];
         for (let i = 0; i < 10; i++) {
             const title = faker.commerce.productName();
-            const productCategory = this.productCategoriesRepository.create({
+            const productCategory = this.entityManager.create(ProductCategory, {
                 id: faker.string.uuid(),
                 title: title,
                 type: faker.helpers.arrayElement(productCategoryTypes),
@@ -93,7 +86,7 @@ export class ProductsFixtureService {
         for (let i = 0; i < 100; i++) {
             const title = faker.commerce.productName();
 
-            const product = this.productsRepository.create({
+            const product = this.entityManager.create(Product, {
                 id: faker.string.uuid(),
                 title: faker.commerce.productName(),
                 status: faker.helpers.arrayElement([ProductStatus.Published, ProductStatus.Unpublished]),

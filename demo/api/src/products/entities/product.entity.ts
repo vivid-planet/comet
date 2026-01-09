@@ -5,6 +5,7 @@ import {
     CrudGenerator,
     DamImageBlock,
     FileUpload,
+    ImportTargetInterface,
     RootBlock,
     RootBlockEntity,
     RootBlockType,
@@ -90,7 +91,7 @@ export class ProductPriceRange {
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
 @ActionLogs()
-export class Product extends BaseEntity {
+export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -111,7 +112,7 @@ export class Product extends BaseEntity {
     @Field(() => ProductStatus)
     status: ProductStatus = ProductStatus.Unpublished;
 
-    @Property()
+    @Property({ unique: true })
     @Field()
     slug: string;
 
@@ -139,7 +140,7 @@ export class Product extends BaseEntity {
     @Field()
     inStock: boolean = true;
 
-    @Property({ type: types.decimal, nullable: true })
+    @Property({ type: types.integer, nullable: true })
     @Field(() => Int, { nullable: true })
     @CrudField({
         input: false,

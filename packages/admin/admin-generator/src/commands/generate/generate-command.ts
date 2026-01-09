@@ -14,13 +14,16 @@ import {
     type GridSortDirection,
     type GridValidRowModel,
 } from "@mui/x-data-grid";
+import { exec as execCallback } from "child_process";
 import { Command } from "commander";
 import { type FieldValidator, type FormApi } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import { type ComponentType } from "react";
+import type { ComponentType, ReactElement } from "react";
+import type { FormattedMessage, MessageDescriptor } from "react-intl";
+import { promisify } from "util";
 
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
@@ -28,6 +31,10 @@ import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
+
+const exec = promisify(execCallback);
+
+export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
     name: IconName;
@@ -82,23 +89,25 @@ type AsyncSelectFilter =
       };
 
 export type FormFieldConfig<T> = (
-    | ({ type: "text"; name: UsableFormFields<T>; multiline?: boolean } & InputBaseFieldConfig)
-    | ({ type: "number"; name: UsableFormFields<T>; decimals?: number } & InputBaseFieldConfig)
+    | ({ type: "text"; name: UsableFormFields<T>; multiline?: boolean; initialValue?: string } & InputBaseFieldConfig)
+    | ({ type: "number"; name: UsableFormFields<T>; decimals?: number; initialValue?: number } & InputBaseFieldConfig)
     | ({
           type: "numberRange";
           name: UsableFormFields<T>;
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
+          initialValue?: { min: number; max: number };
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: UsableFormFields<T> }
-    | ({ type: "date"; name: UsableFormFields<T> } & InputBaseFieldConfig)
-    | ({ type: "dateTime"; name: UsableFormFields<T> } & InputBaseFieldConfig)
+    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean }
+    | ({ type: "date"; name: UsableFormFields<T>; initialValue?: string } & InputBaseFieldConfig)
+    | ({ type: "dateTime"; name: UsableFormFields<T>; initialValue?: Date } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
           name: UsableFormFields<T>;
           values?: StaticSelectValue[];
           inputType?: "select" | "radio";
+          initialValue?: string;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelect";
@@ -141,10 +150,10 @@ export type FormFieldConfig<T> = (
           "maxFileSize" | "readOnly" | "layout" | "accept"
       >)
 ) & {
-    label?: string;
+    label?: string | FormattedMessageElement;
     required?: boolean;
     validate?: FieldValidator<unknown>;
-    helperText?: string;
+    helperText?: string | FormattedMessageElement;
     readOnly?: boolean;
 };
 
@@ -155,14 +164,14 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 type OptionalNestedFieldsConfig<T> = {
     type: "optionalNestedFields";
     name: UsableFormFields<T>; // object name containing fields
-    checkboxLabel?: string;
+    checkboxLabel?: string | FormattedMessageElement;
     fields: FormFieldConfig<any>[];
 };
 export type FormLayoutConfig<T> =
     | {
           type: "fieldSet";
           name: string;
-          title?: string;
+          title?: string | FormattedMessageElement;
           supportText?: string; // can contain field-placeholder
           collapsible?: boolean; // default true
           initiallyExpanded?: boolean; // default false
@@ -204,15 +213,16 @@ export function injectFormVariables<T>(fn: (injectedVariables: InjectedFormVaria
     return fn({} as any);
 }
 
-type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
-    headerInfoTooltip?: string;
+type BaseColumnConfig = Pick<GridColDef, "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
+    headerName?: string | FormattedMessageElement;
+    headerInfoTooltip?: string | FormattedMessageElement;
     visible?: ColumnVisibleOption;
     fieldName?: string; // this can be used to overwrite field-prop of column-config
 };
 
 export type GridColumnStaticSelectLabelCellContent = {
-    primaryText?: string;
-    secondaryText?: string;
+    primaryText?: string | FormattedMessageElement;
+    secondaryText?: string | FormattedMessageElement;
     icon?: Icon;
 };
 
@@ -220,7 +230,7 @@ export type GridColumnStaticSelectValue =
     | StaticSelectValue
     | {
           value: string | number | boolean;
-          label: string | GridColumnStaticSelectLabelCellContent;
+          label: string | FormattedMessageElement | GridColumnStaticSelectLabelCellContent;
       }
     | number
     | boolean;
@@ -292,7 +302,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
-    newEntryText?: string;
+    newEntryText?: string | FormattedMessageElement;
     rowActionProp?: boolean;
     selectionProps?: "multiSelect" | "singleSelect";
     rowReordering?: {
@@ -304,6 +314,10 @@ export type GridConfig<T extends { __typename?: string }> = {
      * @default false
      */
     scopeAsProp?: boolean;
+    density?: "comfortable" | "compact" | "standard";
+    crudContextMenu?: {
+        deleteText?: string;
+    };
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
@@ -324,6 +338,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         loaders: [new GraphQLFileLoader()],
     });
     const gqlIntrospection = introspectionFromSchema(schema);
+    const writtenFiles: string[] = [];
 
     const files: string[] = await glob(filePattern);
     for (const file of files) {
@@ -334,7 +349,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = await parseConfig(file);
+        const config = await parseConfig(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
@@ -357,6 +372,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         }
 
         await writeGenerated(codeOuputFilename, outputCode);
+        writtenFiles.push(codeOuputFilename);
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
@@ -367,9 +383,12 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
                 ${gqlDocumentsOutputCode}
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
+            writtenFiles.push(gqlDocumentsOuputFilename);
         }
         console.log("");
     }
+    console.log("Formatting generated files...");
+    await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
 }
 
 export const generateCommand = new Command("generate")

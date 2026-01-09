@@ -92,8 +92,10 @@ export class AppModule {
                         },
                         context: ({ req }: { req: Request }) => ({ ...req }),
                         cors: {
-                            credentials: true,
-                            origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
+                            origin: config.corsAllowedOrigin,
+                            methods: ["GET", "POST"],
+                            credentials: false,
+                            maxAge: 600,
                         },
                         useGlobalPrefix: true,
                         buildSchemaOptions: {

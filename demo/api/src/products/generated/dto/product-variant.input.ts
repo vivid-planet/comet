@@ -2,9 +2,8 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsOptional, IsInt } from "class-validator";
 import { BlockInputInterface, DamImageBlock, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
-import { Min } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min, ValidateNested } from "class-validator";
 @InputType()
 export class ProductVariantInput {
     @IsNotEmpty()
@@ -19,9 +18,8 @@ export class ProductVariantInput {
     @IsOptional()
     @Min(1)
     @IsInt()
-    @Field(() => Int, { nullable: true, })
+    @Field(() => Int, { nullable: true })
     position?: number;
 }
 @InputType()
-export class ProductVariantUpdateInput extends PartialType(ProductVariantInput) {
-}
+export class ProductVariantUpdateInput extends PartialType(ProductVariantInput) {}
