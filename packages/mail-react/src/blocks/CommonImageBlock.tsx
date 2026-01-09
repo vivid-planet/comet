@@ -6,11 +6,12 @@ import { calculateInheritAspectRatio, generateImageUrl, getDamAllowedImageWidth 
 
 interface Props extends ComponentProps<typeof MjmlImage> {
     data: PixelImageBlockData;
+    validSizes: number[];
     desktopRenderWidth?: number;
     contentWidth?: number;
 }
 
-export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, ...restProps }: Props) => {
+export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, ...restProps }: Props) => {
     const { damFile, cropArea, urlTemplate } = data;
 
     if (!damFile?.image) {
@@ -22,7 +23,7 @@ export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth 
 
     const imageUrl: string = generateImageUrl(
         {
-            width: getDamAllowedImageWidth(desktopRenderWidth, contentWidth),
+            width: getDamAllowedImageWidth(validSizes, desktopRenderWidth, contentWidth),
             src: urlTemplate,
         },
         usedAspectRatio,
