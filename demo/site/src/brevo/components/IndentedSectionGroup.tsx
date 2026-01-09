@@ -3,7 +3,7 @@ import { MjmlGroup, MjmlSection, MjmlStyle } from "@faire/mjml-react";
 import { theme } from "@src/brevo/util/theme";
 import { type ComponentProps, type ReactNode } from "react";
 
-export interface IndentedSectionGroupProps extends ComponentProps<typeof MjmlSection> {
+interface IndentedSectionGroupProps extends ComponentProps<typeof MjmlSection> {
     children?: ReactNode;
     cssClass?: string;
 }
