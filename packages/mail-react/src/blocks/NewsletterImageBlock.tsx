@@ -8,13 +8,20 @@ interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockDa
     desktopRenderWidth?: number;
     contentWidth?: number;
     validSizes: number[];
+    baseUrl: string;
 }
 
-export const NewsletterImageBlock = ({ data, desktopRenderWidth, contentWidth, validSizes }: NewsletterImageBlockProps) => {
+export const NewsletterImageBlock = ({ data, desktopRenderWidth, contentWidth, validSizes, baseUrl }: NewsletterImageBlockProps) => {
     return (
         <MjmlSection>
             <MjmlColumn>
-                <CommonImageBlock data={data.image} desktopRenderWidth={desktopRenderWidth} contentWidth={contentWidth} validSizes={validSizes} />
+                <CommonImageBlock
+                    data={data.image}
+                    desktopRenderWidth={desktopRenderWidth}
+                    contentWidth={contentWidth}
+                    validSizes={validSizes}
+                    baseUrl={baseUrl}
+                />
             </MjmlColumn>
         </MjmlSection>
     );

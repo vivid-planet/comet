@@ -7,11 +7,21 @@ import { calculateInheritAspectRatio, generateImageUrl, getDamAllowedImageWidth 
 interface Props extends ComponentProps<typeof MjmlImage> {
     data: PixelImageBlockData;
     validSizes: number[];
+    baseUrl: string;
     desktopRenderWidth?: number;
     contentWidth?: number;
 }
 
-export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, ...restProps }: Props) => {
+function isAbsoluteUrl(url: string): boolean {
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, baseUrl, ...restProps }: Props) => {
     const { damFile, cropArea, urlTemplate } = data;
 
     if (!damFile?.image) {
@@ -33,8 +43,9 @@ export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth 
 
     return (
         <MjmlImage
-            src={imageUrl}
-            // fluidOnMobile={true}
+            src={isAbsoluteUrl(imageUrl) ? imageUrl : `${baseUrl}${imageUrl}`}
+            // @ts-expect-error mjml-react expects a boolean but mjml2html requires "true" as string
+            fluidOnMobile="true"
             cssClass="image-block"
             width={desktopRenderWidth}
             height={desktopImageHeight}
