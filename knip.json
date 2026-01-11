@@ -57,7 +57,6 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/brevo-admin": {
-            "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts"]
         },
@@ -70,7 +69,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/brevo-api": {
-            "entry": ["./src/index.ts", "./src/permissions/permissions.interface.ts"],
+            "entry": ["./src/permissions/permissions.interface.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/site/site-react": {
