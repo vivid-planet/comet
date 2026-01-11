@@ -55,7 +55,7 @@ export interface UserPermissionsOptions {
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;
     AccessControlService: Type<AccessControlServiceInterface>;
-    AppPermission?: Record<string, string>;
+    AppPermission?: Record<string, string> | Array<Record<string, string>>;
 }
 
 export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
@@ -74,7 +74,7 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     useClass?: Type<UserPermissionsOptionsFactory>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useFactory?: (...args: any[]) => Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
-    AppPermission?: Record<string, string>;
+    AppPermission?: Record<string, string> | Array<Record<string, string>>;
 }
 
 /**

@@ -107,18 +107,28 @@ export class UserPermissionsModule {
 
     private static combinedPermissionEnumRegistered = false;
 
-    private static registerCombinedPermission(AppPermission?: Record<string, string>): void {
+    private static registerCombinedPermission(PassedAppPermission?: Record<string, string> | Array<Record<string, string>>): void {
         if (this.combinedPermissionEnumRegistered) {
             throw new Error(
                 "CombinedPermission enum has already been registered. Make sure to register UserPermissionsModule only once in your application.",
             );
         }
 
-        if (AppPermission) {
-            Object.entries(AppPermission).forEach(([key, value]) => {
-                CombinedPermission[key] = value;
-            });
+        let AppPermissions: Record<string, string>[] | undefined;
+        if (PassedAppPermission && Array.isArray(PassedAppPermission)) {
+            AppPermissions = PassedAppPermission;
+        } else if (PassedAppPermission) {
+            AppPermissions = [PassedAppPermission];
         }
+
+        if (AppPermissions) {
+            for (const AppPermission of AppPermissions) {
+                Object.entries(AppPermission).forEach(([key, value]) => {
+                    CombinedPermission[key] = value;
+                });
+            }
+        }
+
         registerEnumType(CombinedPermission, { name: "Permission" });
         this.combinedPermissionEnumRegistered = true;
     }

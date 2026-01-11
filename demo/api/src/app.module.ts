@@ -1,4 +1,4 @@
-import { BrevoModule } from "@comet/brevo-api";
+import { BrevoModule, BrevoPermission } from "@comet/brevo-api";
 import {
     AccessLogModule,
     AzureAiTranslatorModule,
@@ -130,7 +130,7 @@ export class AppModule {
                     }),
                     inject: [UserService, AccessControlService],
                     imports: [authModule],
-                    AppPermission,
+                    AppPermission: [AppPermission, BrevoPermission],
                 }),
                 BlocksModule,
                 DependenciesModule,
