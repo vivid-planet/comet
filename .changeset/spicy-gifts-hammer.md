@@ -1,5 +1,5 @@
 ---
-"@comet/brevo-api": major
+"@comet/brevo-api": minor
 ---
 
 Make this package compatible with [COMET v8](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v7-to-v8)

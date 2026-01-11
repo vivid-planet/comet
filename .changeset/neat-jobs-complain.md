@@ -1,6 +1,6 @@
 ---
-"@comet/brevo-admin": major
-"@comet/brevo-api": major
+"@comet/brevo-admin": minor
+"@comet/brevo-api": minor
 ---
 
 Prefix all entities and API requests with `brevo` to prevent naming issues in projects.
