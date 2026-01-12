@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../../blocks.generated";
 import { type ColumnInsertData } from "../utils/column";
-import { getInitialTableData } from "../utils/getInitialTableData";
+import { getInitialTableData } from "../utils/tableData";
 
 export const columnInsertDataWithFiveValues: ColumnInsertData = {
     size: "standard",
