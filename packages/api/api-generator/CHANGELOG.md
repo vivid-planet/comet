@@ -1,5 +1,21 @@
 # @comet/api-generator
 
+## 8.11.0
+
+### Minor Changes
+
+- 4bb9e21: Format generated files using prettier
+- 09e677f: Add support for soft delete by setting deletedAt in delete mutation
+
+    Note: The filter to exclude deleted entries by default has to be added manually to the entity, api-generator can't do that.
+
+### Patch Changes
+
+- 8f8eea7: Fix duplicate class-validator imports in generated input file
+- aec3ec2: Skip props with Unsupported Reference Type instead of generating broken input
+- Updated dependencies [f34b750]
+    - @comet/cms-api@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

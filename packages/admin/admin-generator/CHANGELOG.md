@@ -1,5 +1,20 @@
 # @comet/admin-generator
 
+## 8.11.0
+
+### Minor Changes
+
+- 438e182: Replace ts-node with jiti
+
+    This in preparation for the upcoming switch to ESM.
+
+- 4bb9e21: Format generated files using prettier
+- 0998531: Grid: add support for density setting to specify grid density programmatically
+- 52006d2: Allow usage of `<FormattedMessage>` for user visible stings in config to allow customizing message ids
+- f293762: Grid: Add support for column visible=false (not just breakpoints)
+- 0371889: Grid: Add crudContextMenu.deleteText that allows customizing the menu item text for delete action
+- 222ff35: Form: don't use `string` as form value for number fields as `NumberField` uses `number`
+
 ## 8.10.0
 
 ### Minor Changes
