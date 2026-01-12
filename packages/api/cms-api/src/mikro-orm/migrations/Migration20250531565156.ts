@@ -1,8 +1,10 @@
 import { Migration } from "@mikro-orm/migrations";
 
+export const PAGE_TREE_NODE_ENTITY_INFO_VIEW = "PageTreeNodeEntityInfo";
+
 export class Migration20250531565156 extends Migration {
     async up(): Promise<void> {
-        this.addSql(`CREATE OR REPLACE VIEW "PageTreeNodeEntityInfo" AS
+        this.addSql(`CREATE OR REPLACE VIEW "${PAGE_TREE_NODE_ENTITY_INFO_VIEW}" AS
 WITH RECURSIVE "PageTreeNodePath" AS (
     -- root nodes
     SELECT
