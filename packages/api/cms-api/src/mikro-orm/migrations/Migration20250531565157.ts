@@ -1,8 +1,10 @@
 import { Migration } from "@mikro-orm/migrations";
 
+export const DAM_FILE_ENTITY_INFO_VIEW = "DamFileEntityInfo";
+
 export class Migration20250531565157 extends Migration {
     async up(): Promise<void> {
-        this.addSql(`CREATE OR REPLACE VIEW "DamFileEntityInfo" AS
+        this.addSql(`CREATE OR REPLACE VIEW "${DAM_FILE_ENTITY_INFO_VIEW}" AS
 WITH RECURSIVE folder_tree AS (
   -- Root folders
   SELECT

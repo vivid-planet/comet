@@ -2,6 +2,7 @@ import { AnyEntity, Connection, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
+import { PAGE_TREE_NODE_ENTITY_INFO_VIEW } from "../mikro-orm/migrations/Migration20250531565156";
 import { ENTITY_INFO_VIEW } from "./entity-info.constants";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
@@ -59,9 +60,9 @@ export class EntityInfoService {
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
+        indexSelects.push(`SELECT ptnei."name", ptnei."secondaryInformation", ptnei."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
             FROM "PageTreeNodeDocument"
-            JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
+            JOIN "${PAGE_TREE_NODE_ENTITY_INFO_VIEW}" AS ptnei ON ptnei."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
         `);
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
