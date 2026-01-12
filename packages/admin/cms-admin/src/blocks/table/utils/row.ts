@@ -62,17 +62,10 @@ export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInser
 };
 
 export const deleteRowById = (state: TableBlockData, rowIdToDelete: string): TableBlockData => {
-    let updatedState = {
+    return {
         ...state,
         rows: state.rows.filter(({ id }) => id !== rowIdToDelete),
     };
-
-    if (updatedState.rows.length === 0) {
-        const newRowInsertData = { highlighted: false, cellValues: [] };
-        updatedState = insertRowDataAtIndex(updatedState, newRowInsertData, 0);
-    }
-
-    return updatedState;
 };
 
 export const getInsertDataFromRowById = (state: TableBlockData, rowId: string): RowInsertData | null => {
