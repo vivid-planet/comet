@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AsyncSelect autocomplete generates field with default autocomplete because of search arg 1`] = `
+exports[`AsyncSelect autocomplete > generates field with default autocomplete because of search arg 1`] = `
 "<AsyncAutocompleteField
                 required
                 variant="horizontal"
@@ -31,7 +31,7 @@ exports[`AsyncSelect autocomplete generates field with default autocomplete beca
             />"
 `;
 
-exports[`AsyncSelect autocomplete generates field without autocomplete explicitly set 1`] = `
+exports[`AsyncSelect autocomplete > generates field without autocomplete explicitly set 1`] = `
 "<AsyncSelectField
                 required
                 variant="horizontal"

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Form Scope generates prop for scope 1`] = `
+exports[`Form Scope > generates prop for scope 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -176,7 +176,7 @@ scope: GQLProductScope;
     "
 `;
 
-exports[`Form Scope uses scope from context by default 1`] = `
+exports[`Form Scope > uses scope from context by default 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";

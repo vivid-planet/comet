@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Grid Scope generates prop for scope 1`] = `
+exports[`Grid Scope > generates prop for scope 1`] = `
 "import {
         GQLProductsGridQuery,
         GQLProductsGridQueryVariables,
@@ -176,7 +176,7 @@ renderCell: (params) => {
     "
 `;
 
-exports[`Grid Scope uses scope from context by default 1`] = `
+exports[`Grid Scope > uses scope from context by default 1`] = `
 "import {
         GQLProductsGridQuery,
         GQLProductsGridQueryVariables,

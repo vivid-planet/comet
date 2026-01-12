@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import { afterAll, describe, expect, it } from "vitest";
 
 import { parseConfig } from "../parseConfig";
 

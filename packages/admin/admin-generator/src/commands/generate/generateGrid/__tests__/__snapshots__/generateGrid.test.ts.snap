@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generateGrid should generate a grid with book configuration 1`] = `
+exports[`generateGrid > should generate a grid with book configuration 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
@@ -189,7 +189,7 @@ renderCell: (params) => {
     "
 `;
 
-exports[`generateGrid should generate custom text for delete action in crudContextMenu 1`] = `
+exports[`generateGrid > should generate custom text for delete action in crudContextMenu 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
@@ -378,7 +378,7 @@ renderCell: (params) => {
     "
 `;
 
-exports[`generateGrid should generate required root gql args in export-query variables 1`] = `
+exports[`generateGrid > should generate required root gql args in export-query variables 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
@@ -602,7 +602,7 @@ renderCell: (params) => {
     "
 `;
 
-exports[`generateGrid should generate valueGetter for date in nested field 1`] = `
+exports[`generateGrid > should generate valueGetter for date in nested field 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
