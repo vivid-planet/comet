@@ -97,7 +97,7 @@ export const insertColumnDataAtIndex = (
 };
 
 export const removeColumnFromState = (state: TableBlockData, columnId: string): TableBlockData => {
-    return {
+    let updatedState = {
         ...state,
         columns: state.columns.filter((column) => column.id !== columnId),
         rows: state.rows.map((row) => ({
@@ -105,6 +105,13 @@ export const removeColumnFromState = (state: TableBlockData, columnId: string): 
             cellValues: row.cellValues.filter((cellValue) => cellValue.columnId !== columnId),
         })),
     };
+
+    if (updatedState.columns.length === 0) {
+        const newColumnInsertData = getNewColumnInsertData(updatedState.rows.length);
+        updatedState = insertColumnDataAtIndex(updatedState, newColumnInsertData, 0);
+    }
+
+    return updatedState;
 };
 
 export const toggleColumnHighlight = (state: TableBlockData, columnId: string): TableBlockData => {

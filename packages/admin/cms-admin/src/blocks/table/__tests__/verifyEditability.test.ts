@@ -47,8 +47,7 @@ describe("TableBlock: Verify the table is always editable, regardless of the num
         });
     });
 
-    // TODO: Make the test pass
-    it.skip("should create an empty column when deleting the last column", async () => {
+    it("should create an empty column when deleting the last column", async () => {
         const initialBlockData = mockBlockDataObjects.twoColumnsAndTwoRows;
         const rendered = renderTableBlock(initialBlockData);
 
