@@ -1,7 +1,7 @@
+import { MjmlText } from "@faire/mjml-react";
 import { type PropsWithChildren } from "react";
 
-import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
-import { type SupportedBlocks } from "./types";
+import { type SupportedBlocks } from "./types.js";
 
 interface Props extends PropsWithChildren {
     data: {
@@ -25,16 +25,16 @@ export const OneOfBlock = ({ data: { block, ...additionalProps }, supportedBlock
     if (!blockFunction) {
         if (process.env.NODE_ENV === "development") {
             return (
-                <pre>
+                <MjmlText>
                     {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,react/jsx-no-literals */}
                     {/* eslint-disable-next-line react/jsx-no-literals */}
                     Unknown type ({block.type}): {JSON.stringify(block.props)}
-                </pre>
+                </MjmlText>
             );
         }
 
         return null;
     }
 
-    return <ErrorHandlerBoundary>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorHandlerBoundary>;
+    return <>{blockFunction({ ...block.props, ...additionalProps, children, className })}</>;
 };
