@@ -18,6 +18,7 @@ import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
 import { type ColumnSize } from "./utils/column";
+import { ensureMinimumTableData } from "./utils/tableData";
 import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
@@ -45,6 +46,12 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
     const apiRef = useGridApiRef();
     const { recentlyPastedIds: recentlyPastedRowIds, addToRecentlyPastedIds: addToRecentlyPastedRowIds } = useRecentlyPastedIds();
     const { recentlyPastedIds: recentlyPastedColumnIds, addToRecentlyPastedIds: addToRecentlyPastedColumnIds } = useRecentlyPastedIds();
+
+    useEffect(() => {
+        if (state.columns.length === 0 || state.rows.length === 0) {
+            updateState(ensureMinimumTableData);
+        }
+    }, [state.columns.length, state.rows.length, updateState]);
 
     const setRowData: Dispatch<SetStateAction<TableBlockData["rows"]>> = (newRows) => {
         updateState((state) => {

@@ -17,8 +17,7 @@ describe("TableBlock: Verify the table is always editable, regardless of the num
         expect(columnOptionsButtons.length).toBeGreaterThan(0);
     });
 
-    // TODO: Make the test pass
-    it.skip("should have the ability to add new rows and columns when rendered with the empty data", async () => {
+    it("should have the ability to add new rows and columns when rendered with the empty data", async () => {
         const rendered = renderTableBlock(mockBlockDataObjects.empty);
 
         const rowOptionsButtons = rendered.queryAllByLabelText(/row options/i);
