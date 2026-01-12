@@ -1,3 +1,5 @@
+import { type BrevoPermission } from "./permissions/brevo-permission.enum";
+
 export { createBlacklistedContactsEntity } from "./blacklisted-contacts/entity/blacklisted-contacts.entity.factory";
 export { NewsletterImageBlock } from "./blocks/newsletter-image.block";
 export { BrevoTransactionalMailsService } from "./brevo-api/brevo-api-transactional-mails.service";
@@ -10,3 +12,9 @@ export { createEmailCampaignEntity } from "./email-campaign/entities/email-campa
 export { migrationsList } from "./mikro-orm/migrations/migrations";
 export { BrevoPermission } from "./permissions/brevo-permission.enum";
 export { createTargetGroupEntity } from "./target-group/entity/target-group-entity.factory";
+
+declare module "@comet/cms-api" {
+    export interface PermissionOverrides {
+        brevo: BrevoPermission;
+    }
+}
