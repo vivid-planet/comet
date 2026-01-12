@@ -10,6 +10,7 @@ import {
     createBlock,
     createBlocksBlock,
     ExtractBlockInput,
+    TableBlock,
 } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
@@ -37,6 +38,7 @@ export const ContentBlock = createBlocksBlock(
             richtext: StandaloneRichTextBlock,
             space: SpaceBlock,
             teaser: TeaserBlock,
+            table: TableBlock,
         },
     },
     { name: "ContentGroupContent" },
