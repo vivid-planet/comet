@@ -46,7 +46,7 @@ services:
             COLLECTOR_OTLP_HTTP_HOST_PORT: 0.0.0.0:4318
 
     valkey:
-        image: valkey/valkey:8
+        image: valkey/valkey:9
         pull_policy: weekly
         command: valkey-server --maxmemory 256M --maxmemory-policy allkeys-lru --loglevel warning --requirepass ${VALKEY_PASSWORD}
         ports:
