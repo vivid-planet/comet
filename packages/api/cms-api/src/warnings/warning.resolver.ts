@@ -5,9 +5,9 @@ import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql
 import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { EntityInfoObject } from "../common/entityInfo/entity-info.object";
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { EntityInfoObject } from "../entity-info/entity-info.object";
+import { EntityInfoService } from "../entity-info/entity-info.service";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
@@ -105,14 +105,6 @@ export class WarningResolver {
 
     @ResolveField(() => EntityInfoObject, { nullable: true })
     async entityInfo(@Parent() warning: Warning): Promise<EntityInfoObject | undefined> {
-        const repository = this.entityManager.getRepository(warning.sourceInfo.rootEntityName);
-        const instance = await repository.findOne({ [warning.sourceInfo.rootPrimaryKey]: warning.sourceInfo.targetId });
-
-        if (instance) {
-            const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-            return entityInfo;
-        }
-
-        return undefined;
+        return this.entityInfoService.getEntityInfo(warning.sourceInfo.rootEntityName, warning.sourceInfo.targetId);
     }
 }

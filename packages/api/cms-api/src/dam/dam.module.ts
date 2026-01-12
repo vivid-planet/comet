@@ -25,7 +25,6 @@ import { FileWarningService } from "./files/file-warning.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
-import { FilesEntityInfoService } from "./files/files-entity-info.service";
 import { createFoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
@@ -111,7 +110,6 @@ export class DamModule {
                 fileValidationServiceProvider,
                 FilesResolver,
                 FileDependentsResolver,
-                FilesEntityInfoService,
                 FilesService,
                 FileLicensesResolver,
                 FoldersResolver,
