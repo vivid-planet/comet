@@ -1,6 +1,6 @@
 import { DragIndicator } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { type GridColDef, type GridColumnHeaderParams } from "@mui/x-data-grid";
+import { type GridColDef, type GridColumnHeaderParams, type GridValidRowModel } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GRID_REORDER_COL_DEF,
@@ -160,22 +160,19 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         },
     ];
 
-    // TODO: Can this be simplified?
-    const gridRows = state.rows.map((row) => {
-        const newRow: Record<string, string> = {
-            id: row.id,
-        };
-        row.cellValues.forEach((cellValue) => {
-            newRow[cellValue.columnId] = cellValue.value;
+    const rowsInDataGridFormat = state.rows.map(({ id, cellValues }) => {
+        const dataGridRow: GridValidRowModel = { id };
+        cellValues.forEach(({ columnId, value }) => {
+            dataGridRow[columnId] = value;
         });
-        return newRow;
+        return dataGridRow;
     });
 
     return (
         <DataGridPro
             columns={dataGridColumns}
             apiRef={apiRef}
-            rows={gridRows}
+            rows={rowsInDataGridFormat}
             rowHeight={55}
             rowReordering
             disableColumnResize
