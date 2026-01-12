@@ -8,7 +8,7 @@ import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Navigation } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 import { type Swiper as SwiperClass } from "swiper/types";
@@ -77,7 +77,11 @@ export const MediaGalleryBlock = withPreview(
                     ))}
                 </BasicSwiper>
                 <Typography variant="paragraph300" className={styles.customPagination} role="status" aria-live="polite" aria-atomic="true">
-                    {activeItem + 1} of {data.items.blocks.length}
+                    <FormattedMessage
+                        id="mediaGalleryBlock.pagination"
+                        defaultMessage="{current} of {total}"
+                        values={{ current: activeItem + 1, total: data.items.blocks.length }}
+                    />
                 </Typography>
                 <button
                     ref={nextButtonRef}
