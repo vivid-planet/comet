@@ -76,7 +76,7 @@ export const MediaGalleryBlock = withPreview(
                         </SwiperSlide>
                     ))}
                 </BasicSwiper>
-                <Typography variant="paragraph300" className={styles.customPagination}>
+                <Typography variant="paragraph300" className={styles.customPagination} role="status" aria-live="polite" aria-atomic="true">
                     {activeItem + 1} of {data.items.blocks.length}
                 </Typography>
                 <button
