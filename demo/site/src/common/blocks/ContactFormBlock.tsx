@@ -2,7 +2,7 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type ContactFormBlockData } from "@src/blocks.generated";
 import { useParams } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
@@ -39,7 +39,17 @@ export const ContactFormBlock = withPreview(
             handleSubmit,
             setError,
             formState: { errors, isSubmitting },
-        } = useForm<ContactFormValues>();
+        } = useForm<ContactFormValues>({
+            defaultValues: {
+                name: "",
+                company: "",
+                email: "",
+                phoneNumber: "",
+                subject: "",
+                message: "",
+                privacyConsent: false,
+            },
+        });
 
         const onSubmit = async (formValues: ContactFormValues) => {
             try {
@@ -68,34 +78,23 @@ export const ContactFormBlock = withPreview(
 
         return (
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Controller
+                <TextField
                     name="name"
                     control={control}
                     rules={{
                         required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Please enter your name" }),
                     }}
-                    render={({ field, fieldState }) => (
-                        <TextField
-                            label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
-                            placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
-                            required
-                            {...field}
-                            error={fieldState.error?.message}
-                        />
-                    )}
+                    label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
+                    placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
+                    required
                 />
-                <Controller
+                <TextField
                     name="company"
                     control={control}
-                    render={({ field }) => (
-                        <TextField
-                            label={intl.formatMessage({ id: "contactForm.company.label", defaultMessage: "Company" })}
-                            placeholder={intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" })}
-                            {...field}
-                        />
-                    )}
+                    label={intl.formatMessage({ id: "contactForm.company.label", defaultMessage: "Company" })}
+                    placeholder={intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" })}
                 />
-                <Controller
+                <TextField
                     name="email"
                     control={control}
                     rules={{
@@ -108,17 +107,11 @@ export const ContactFormBlock = withPreview(
                             message: intl.formatMessage({ id: "contactForm.email.invalid", defaultMessage: "Invalid email address" }),
                         },
                     }}
-                    render={({ field, fieldState }) => (
-                        <TextField
-                            label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
-                            placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
-                            required
-                            {...field}
-                            error={fieldState.error?.message}
-                        />
-                    )}
+                    label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
+                    placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
+                    required
                 />
-                <Controller
+                <TextField
                     name="phoneNumber"
                     control={control}
                     rules={{
@@ -130,20 +123,14 @@ export const ContactFormBlock = withPreview(
                             }),
                         },
                     }}
-                    render={({ field, fieldState }) => (
-                        <TextField
-                            label={intl.formatMessage({ id: "contactForm.phoneNumber.label", defaultMessage: "Phone Number" })}
-                            placeholder={intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" })}
-                            helperText={intl.formatMessage({
-                                id: "contactForm.phoneNumber.helperText",
-                                defaultMessage: "Please enter without special characters and spaces",
-                            })}
-                            {...field}
-                            error={fieldState.error?.message}
-                        />
-                    )}
+                    label={intl.formatMessage({ id: "contactForm.phoneNumber.label", defaultMessage: "Phone Number" })}
+                    placeholder={intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" })}
+                    helperText={intl.formatMessage({
+                        id: "contactForm.phoneNumber.helperText",
+                        defaultMessage: "Please enter without special characters and spaces",
+                    })}
                 />
-                <Controller
+                <SelectField
                     name="subject"
                     control={control}
                     rules={{
@@ -152,18 +139,12 @@ export const ContactFormBlock = withPreview(
                             defaultMessage: "Please select a subject",
                         }),
                     }}
-                    render={({ field, fieldState }) => (
-                        <SelectField
-                            label={intl.formatMessage({ id: "contactForm.subject.label", defaultMessage: "Subject" })}
-                            required
-                            placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
-                            options={subjectOptions}
-                            {...field}
-                            error={fieldState.error?.message}
-                        />
-                    )}
+                    label={intl.formatMessage({ id: "contactForm.subject.label", defaultMessage: "Subject" })}
+                    required
+                    placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
+                    options={subjectOptions}
                 />
-                <Controller
+                <TextareaField
                     name="message"
                     control={control}
                     rules={{
@@ -172,17 +153,11 @@ export const ContactFormBlock = withPreview(
                             defaultMessage: "Please enter your message",
                         }),
                     }}
-                    render={({ field, fieldState }) => (
-                        <TextareaField
-                            label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
-                            placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
-                            required
-                            {...field}
-                            error={fieldState.error?.message}
-                        />
-                    )}
+                    label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
+                    placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
+                    required
                 />
-                <Controller
+                <CheckboxField
                     name="privacyConsent"
                     control={control}
                     rules={{
@@ -191,19 +166,12 @@ export const ContactFormBlock = withPreview(
                             defaultMessage: "You must agree to the privacy policy to continue",
                         }),
                     }}
-                    render={({ field: { value, ...field }, fieldState }) => (
-                        <CheckboxField
-                            label={intl.formatMessage({
-                                id: "contactForm.privacyConsent.label",
-                                defaultMessage:
-                                    "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
-                            })}
-                            required
-                            {...field}
-                            checked={value}
-                            error={fieldState.error?.message}
-                        />
-                    )}
+                    label={intl.formatMessage({
+                        id: "contactForm.privacyConsent.label",
+                        defaultMessage:
+                            "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
+                    })}
+                    required
                 />
                 <Button type="submit" variant="contained" disabled={isSubmitting}>
                     <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />

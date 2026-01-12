@@ -1,21 +1,37 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode } from "react";
+import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
 
-interface CheckboxFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+interface CheckboxFieldProps<TFieldValues extends FieldValues> extends Omit<InputHTMLAttributes<HTMLInputElement>, "name"> {
+    name: Path<TFieldValues>;
+    control: Control<TFieldValues>;
+    rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
     helperText?: ReactNode;
     required?: boolean;
-    error?: ReactNode;
 }
 
-export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
-    ({ label, helperText, required = false, error, ...inputProps }, ref) => {
-        return (
-            <div>
-                <input ref={ref} type="checkbox" required={required} {...inputProps} />
-                <label>{label}</label>
-                {helperText && <div>{helperText}</div>}
-                {error && <div style={{ color: "red" }}>{error}</div>}
-            </div>
-        );
-    },
-);
+export const CheckboxField = <TFieldValues extends FieldValues>({
+    name,
+    control,
+    rules,
+    label,
+    helperText,
+    required = false,
+    ...inputProps
+}: CheckboxFieldProps<TFieldValues>) => {
+    return (
+        <Controller
+            name={name}
+            control={control}
+            rules={rules}
+            render={({ field: { value, ...field }, fieldState }) => (
+                <div>
+                    <input type="checkbox" required={required} {...inputProps} {...field} checked={value} />
+                    <label>{label}</label>
+                    {helperText && <div>{helperText}</div>}
+                    {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
+                </div>
+            )}
+        />
+    );
+};
