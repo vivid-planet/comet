@@ -1,5 +1,25 @@
 # @comet/admin-color-picker
 
+## 8.11.0
+
+### Minor Changes
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
