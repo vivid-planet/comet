@@ -1,5 +1,7 @@
-import { type SupportedBlocks } from "@comet/site-nextjs";
+import { MjmlText } from "@faire/mjml-react";
 import { Fragment } from "react";
+
+import { type SupportedBlocks } from "./types.js";
 
 interface Props {
     supportedBlocks: SupportedBlocks;
@@ -9,10 +11,6 @@ interface Props {
 }
 
 export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
-    if (blocks.length === 0) {
-        return "Preview";
-    }
-
     return (
         <>
             {blocks.map((block) => {
@@ -21,10 +19,11 @@ export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
                 if (!blockFunction) {
                     if (process.env.NODE_ENV === "development") {
                         return (
-                            <pre key={block.key}>
-                                {}
+                            <MjmlText key={block.key}>
+                                {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,react/jsx-no-literals */}
+                                {/* eslint-disable-next-line react/jsx-no-literals */}
                                 Unknown type ({block.type}): {JSON.stringify(block.props)}
-                            </pre>
+                            </MjmlText>
                         );
                     }
 
