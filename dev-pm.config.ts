@@ -139,31 +139,31 @@ export default defineConfig({
         {
             name: "brevo-api",
             script: "pnpm --filter @comet/brevo-api run dev",
-            group: ["brevo"],
+            group: ["brevo", "brevo-api"],
             waitOn: waitOnPackages("@comet/cms-api"),
         },
         {
             name: "brevo-api-codegen-schema",
             script: "pnpm --filter @comet/brevo-api run generate-schema:watch",
-            group: ["brevo"],
+            group: ["brevo", "brevo-api"],
             waitOn: waitOnPackages("@comet/cms-api"),
         },
         {
             name: "brevo-api-codegen-block-meta",
             script: "pnpm --filter @comet/brevo-api run generate-block-meta:watch",
-            group: ["brevo"],
+            group: ["brevo", "brevo-api"],
             waitOn: waitOnPackages("@comet/cms-api"),
         },
         {
             name: "brevo-admin",
             script: "pnpm --filter @comet/brevo-admin run start",
-            group: ["brevo"],
+            group: ["brevo", "brevo-admin"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
         },
         {
             name: "brevo-admin-codegen-graphql-types",
             script: "pnpm --filter @comet/brevo-admin run gql:watch",
-            group: ["brevo"],
+            group: ["brevo", "brevo-admin"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
         },
 
