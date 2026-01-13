@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix styling of button typography
+Fix uppercase styling of tabs
