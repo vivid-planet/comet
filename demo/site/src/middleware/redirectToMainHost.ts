@@ -1,8 +1,75 @@
+import { gql } from "@comet/site-nextjs";
+import { type RedirectsLinkBlockData } from "@src/blocks.generated";
 import type { PublicSiteConfig } from "@src/site-configs";
+import { getRedirectTargetUrl } from "@src/util/getRedirectTargetUrl";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
 
+import { memoryCache } from "./cache";
 import { type CustomMiddleware } from "./chain";
+
+type Redirect = { source: string; target: RedirectsLinkBlockData; sourceType: string };
+
+const domainRedirectsQuery = gql`
+    query DomainRedirects($scope: RedirectScopeInput!, $offset: Int, $limit: Int) {
+        paginatedRedirects(scope: $scope, offset: $offset, limit: $limit) {
+            nodes {
+                id
+                source
+                target
+                sourceType
+            }
+            totalCount
+        }
+    }
+`;
+
+async function fetchDomainRedirects(domain: string): Promise<Redirect[]> {
+    const key = `domainRedirects-${domain}`;
+    return memoryCache.wrap(key, async () => {
+        const graphQLFetch = createGraphQLFetch();
+        const limit = 50;
+        let totalCount = 0;
+        let currentCount = 0;
+        let allNodes: Redirect[] = [];
+
+        do {
+            const data = await graphQLFetch<
+                {
+                    paginatedRedirects: {
+                        nodes: Redirect[];
+                        totalCount: number;
+                    };
+                },
+                { scope: { domain: string }; offset: number; limit: number }
+            >(domainRedirectsQuery, {
+                scope: { domain },
+                offset: currentCount,
+                limit,
+            });
+            const nodes = data?.paginatedRedirects?.nodes || [];
+            totalCount = data?.paginatedRedirects?.totalCount || 0;
+            currentCount += nodes.length;
+            allNodes = allNodes.concat(nodes);
+        } while (currentCount < totalCount);
+        return allNodes;
+    });
+}
+
+function normalizeHost(value: string): string {
+    return value.replace(/^https?:\/\//, "");
+}
+
+function findDomainRedirectTarget(redirects: Redirect[], host: string): RedirectsLinkBlockData | undefined {
+    const matching = redirects.find((redirect) => redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host));
+    return matching ? matching.target : undefined;
+}
+
+async function getDomainRedirectTarget(domain: string, host: string): Promise<RedirectsLinkBlockData | undefined> {
+    const redirects = await fetchDomainRedirects(domain);
+    return findDomainRedirectTarget(redirects, host);
+}
 
 const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
 
@@ -17,9 +84,6 @@ const matchesHostWithPattern = (siteConfig: PublicSiteConfig, host: string) => {
     return new RegExp(siteConfig.domains.pattern).test(host);
 };
 
-/**
- * When http host isn't siteConfig.domains.main (instead .pattern or .additional match), redirect to main host.
- */
 export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
         const headers = request.headers;
@@ -27,14 +91,24 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
         const siteConfig = await getSiteConfigForHost(host);
 
         if (!siteConfig) {
-            // Redirect to Main Host
             const redirectSiteConfig =
                 getSiteConfigs().find((siteConfig) => matchesHostWithAdditionalDomain(siteConfig, host)) ||
                 getSiteConfigs().find((siteConfig) => matchesHostWithPattern(siteConfig, host));
+
             if (redirectSiteConfig) {
-                return NextResponse.redirect(`https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
-                    status: 301,
-                });
+                const { scope } = redirectSiteConfig;
+
+                const domainRedirectTarget = await getDomainRedirectTarget(scope.domain, host);
+
+                if (domainRedirectTarget) {
+                    let destination: string | undefined;
+                    if (typeof domainRedirectTarget === "object" && domainRedirectTarget.block !== undefined) {
+                        destination = getRedirectTargetUrl(domainRedirectTarget.block, host);
+                    }
+                    if (destination) {
+                        return NextResponse.redirect(destination, { status: 301 });
+                    }
+                }
             }
 
             return NextResponse.json({ error: `Cannot resolve domain: ${host}` }, { status: 404 });
