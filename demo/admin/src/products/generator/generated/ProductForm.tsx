@@ -48,7 +48,7 @@ import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
-import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
+import { DateTimePickerField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormDetailsFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";

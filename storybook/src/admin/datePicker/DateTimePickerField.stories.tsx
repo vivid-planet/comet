@@ -1,10 +1,10 @@
-import { Alert, FinalForm, Future_DateTimePickerField } from "@comet/admin";
+import { Alert, DateTimePickerField, FinalForm } from "@comet/admin";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 
-type Story = StoryFn<typeof Future_DateTimePickerField>;
-const config: Meta<typeof Future_DateTimePickerField> = {
-    component: Future_DateTimePickerField,
-    title: "@comet/admin/datePicker/Future_DateTimePickerField",
+type Story = StoryFn<typeof DateTimePickerField>;
+const config: Meta<typeof DateTimePickerField> = {
+    component: DateTimePickerField,
+    title: "@comet/admin/datePicker/DateTimePickerField",
 };
 export default config;
 
@@ -24,7 +24,7 @@ const TemplateStory: Story = (props) => {
                 {({ values }) => {
                     return (
                         <>
-                            <Future_DateTimePickerField label="Date Time Picker" {...props} name="value" />
+                            <DateTimePickerField label="Date Time Picker" {...props} name="value" />
 
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
