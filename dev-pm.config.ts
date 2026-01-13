@@ -166,6 +166,12 @@ export default defineConfig({
             group: ["brevo", "brevo-admin"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
         },
+        {
+            name: "brevo-admin-codegen-block-types",
+            script: "pnpm --filter @comet/brevo-admin run generate-block-types:watch",
+            group: ["brevo", "brevo-admin"],
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-date-time", "@comet/cms-admin"),
+        },
 
         //group demo admin
         {
