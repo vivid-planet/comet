@@ -38,9 +38,9 @@
         "commander": "^9.5.0",
         "glob": "^11.1.0",
         "graphql": "^16.11.0",
-        "jiti": "^2.6.1",
         "object-path": "^0.11.8",
-        "pluralize": "^8.0.0"
+        "pluralize": "^8.0.0",
+        "tsx": "^4.21.0"
     },
     "devDependencies": {
         "@apollo/client": "^3.14.0",

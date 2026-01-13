@@ -1,10 +1,11 @@
 import { promises as fs } from "fs";
-import { createJiti } from "jiti";
 import { basename, dirname } from "path";
 
 import { transformConfigFile } from "./transformConfig";
 
-const jiti = createJiti(__dirname);
+// TODO: Convert to import when converting the Admin Generator to ESM
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const tsx = require("tsx/cjs/api");
 
 export async function parseConfig(file: string) {
     //1. parse config file using TypeScript Complier Api and transform it (replace imports and functions that can't be executed)
@@ -17,8 +18,7 @@ export async function parseConfig(file: string) {
     //3. import (=execute) temp modified config file
     let executedConfig;
     try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        executedConfig = (await jiti.import(tempFileName.replace(/\.tsx?$/, ""), { default: true })) as any;
+        executedConfig = tsx.require(tempFileName.replace(/\.tsx?$/, ""), __filename).default;
     } catch (e) {
         console.error(e);
         throw new Error(`Error executing config file ${file}: ${e}`);
