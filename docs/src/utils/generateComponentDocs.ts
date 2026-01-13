@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { kebabCase } from "change-case";
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";

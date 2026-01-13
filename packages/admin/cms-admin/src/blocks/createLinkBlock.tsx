@@ -1,5 +1,5 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { type LinkBlockData } from "../blocks.generated";

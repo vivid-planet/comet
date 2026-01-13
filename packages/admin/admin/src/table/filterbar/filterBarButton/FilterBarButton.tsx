@@ -1,8 +1,7 @@
 import { ChevronDown } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Button, buttonClasses, type ButtonProps, type ComponentsOverrides, svgIconClasses } from "@mui/material";
-import { css, type Theme } from "@mui/material/styles";
-import { useThemeProps } from "@mui/system";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ComponentType } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
