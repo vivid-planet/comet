@@ -2,13 +2,13 @@ import "@fontsource-variable/roboto-flex/full.css";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { BrevoConfigProvider } from "@comet/brevo-admin";
 import {
     CometConfigProvider,
     type ContentScope,
     ContentScopeProvider,
     createDamFileDependency,
     CurrentUserProvider,
-    MasterMenuRoutes,
     SitePreview,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
@@ -27,7 +27,7 @@ import { Route, Switch } from "react-router";
 
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
-import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { AppMasterMenu, AppMasterMenuRoutes, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
@@ -131,48 +131,59 @@ export function App() {
                 },
             }}
         >
-            <ApolloProvider client={apolloClient}>
-                <IntlProvider locale="en" messages={getMessages("en")}>
-                    <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-                        <MuiThemeProvider theme={theme}>
-                            <DndProvider options={HTML5toTouch}>
-                                <SnackbarProvider>
-                                    <ErrorDialogHandler />
-                                    <CurrentUserProvider>
-                                        <RouterBrowserRouter>
-                                            <GlobalStyle />
-                                            <ContentScopeProvider>
-                                                {({ match }) => (
-                                                    <Switch>
-                                                        <Route
-                                                            path={`${match.path}/preview`}
-                                                            render={(props) => (
-                                                                <SitePreview
-                                                                    resolvePath={(path: string, scope) => {
-                                                                        return `/${scope.language}${path}`;
-                                                                    }}
-                                                                    {...props}
-                                                                />
-                                                            )}
-                                                        />
-                                                        <Route
-                                                            render={() => (
-                                                                <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                    <MasterMenuRoutes menu={masterMenuData} />
-                                                                </MasterLayout>
-                                                            )}
-                                                        />
-                                                    </Switch>
-                                                )}
-                                            </ContentScopeProvider>
-                                        </RouterBrowserRouter>
-                                    </CurrentUserProvider>
-                                </SnackbarProvider>
-                            </DndProvider>
-                        </MuiThemeProvider>
-                    </LocalizationProvider>
-                </IntlProvider>
-            </ApolloProvider>
+            <BrevoConfigProvider
+                value={{
+                    scopeParts: ["domain", "language"],
+                    apiUrl: config.apiUrl,
+                    resolvePreviewUrlForScope: (scope: ContentScope) => {
+                        return `${config.brevo.campaignUrl}/block-preview/${scope.domain}/${scope.language}`;
+                    },
+                    allowAddingContactsWithoutDoi: config.brevo.allowAddingContactsWithoutDoi,
+                }}
+            >
+                <ApolloProvider client={apolloClient}>
+                    <IntlProvider locale="en" messages={getMessages("en")}>
+                        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+                            <MuiThemeProvider theme={theme}>
+                                <DndProvider options={HTML5toTouch}>
+                                    <SnackbarProvider>
+                                        <ErrorDialogHandler />
+                                        <CurrentUserProvider>
+                                            <RouterBrowserRouter>
+                                                <GlobalStyle />
+                                                <ContentScopeProvider>
+                                                    {({ match }) => (
+                                                        <Switch>
+                                                            <Route
+                                                                path={`${match.path}/preview`}
+                                                                render={(props) => (
+                                                                    <SitePreview
+                                                                        resolvePath={(path: string, scope) => {
+                                                                            return `/${scope.language}${path}`;
+                                                                        }}
+                                                                        {...props}
+                                                                    />
+                                                                )}
+                                                            />
+                                                            <Route
+                                                                render={() => (
+                                                                    <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                        <AppMasterMenuRoutes />
+                                                                    </MasterLayout>
+                                                                )}
+                                                            />
+                                                        </Switch>
+                                                    )}
+                                                </ContentScopeProvider>
+                                            </RouterBrowserRouter>
+                                        </CurrentUserProvider>
+                                    </SnackbarProvider>
+                                </DndProvider>
+                            </MuiThemeProvider>
+                        </LocalizationProvider>
+                    </IntlProvider>
+                </ApolloProvider>
+            </BrevoConfigProvider>
         </CometConfigProvider>
     );
 }
