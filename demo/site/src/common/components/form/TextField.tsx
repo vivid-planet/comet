@@ -1,26 +1,47 @@
-import { type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode } from "react";
+import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-interface InputProps {
+interface InputProps<TFieldValues extends FieldValues> extends Omit<InputHTMLAttributes<HTMLInputElement>, "name"> {
+    name: Path<TFieldValues>;
+    control: Control<TFieldValues>;
+    rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
     required?: boolean;
     placeholder?: string;
     helperText?: ReactNode;
 }
 
-export function TextField({ label, required = false, placeholder, helperText }: InputProps) {
+export const TextField = <TFieldValues extends FieldValues>({
+    name,
+    control,
+    rules,
+    label,
+    required = false,
+    placeholder,
+    helperText,
+    ...inputProps
+}: InputProps<TFieldValues>) => {
     return (
-        <div>
-            <label>
-                {label}
-                {!required && (
-                    <span>
-                        <FormattedMessage id="inputField.optional" defaultMessage="(optional)" />
-                    </span>
-                )}
-            </label>
-            <input required={required} placeholder={placeholder} />
-            {helperText && <div>{helperText}</div>}
-        </div>
+        <Controller
+            name={name}
+            control={control}
+            rules={rules}
+            render={({ field, fieldState }) => (
+                <div>
+                    <label>
+                        {label}
+                        {!required && (
+                            <span>
+                                <FormattedMessage id="inputField.optional" defaultMessage="(optional)" />
+                            </span>
+                        )}
+                    </label>
+                    <input required={required} placeholder={placeholder} {...inputProps} {...field} />
+                    {helperText && <div>{helperText}</div>}
+                    {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
+                </div>
+            )}
+        />
     );
-}
+};
