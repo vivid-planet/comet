@@ -1,4 +1,4 @@
-import { AnchorBlock, BlockCategory, createBlocksBlock, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { AnchorBlock, BlockCategory, createBlocksBlock, createCompositeBlock, createCompositeBlockSelectField, TableBlock } from "@comet/cms-admin";
 import { type ContentGroupBlockData } from "@src/blocks.generated";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
@@ -33,6 +33,7 @@ const ContentGroupContentBlock = createBlocksBlock({
         keyFacts: KeyFactsBlock,
         media: StandaloneMediaBlock,
         mediaGallery: MediaGalleryBlock,
+        table: TableBlock,
     },
 });
 

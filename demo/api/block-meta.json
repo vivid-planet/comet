@@ -691,7 +691,8 @@
                                 "mediaGallery": "MediaGallery",
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "table": "Table"
                             },
                             "nullable": false
                         }
@@ -735,7 +736,8 @@
                                 "mediaGallery": "MediaGallery",
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "table": "Table"
                             },
                             "nullable": false
                         }
