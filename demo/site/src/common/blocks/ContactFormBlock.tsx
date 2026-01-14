@@ -1,7 +1,6 @@
 "use client";
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type ContactFormBlockData } from "@src/blocks.generated";
-import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -30,9 +29,6 @@ interface ContactFormValues {
 export const ContactFormBlock = withPreview(
     ({ data }: PropsWithData<ContactFormBlockData>) => {
         const intl = useIntl();
-        const params = useParams();
-        const domain = params.domain as string;
-        const language = params.language as string;
 
         const {
             control,
@@ -53,7 +49,7 @@ export const ContactFormBlock = withPreview(
 
         const onSubmit = async (formValues: ContactFormValues) => {
             try {
-                const response = await fetch(`/api/${domain}/${language}/contact-form`, {
+                const response = await fetch("api/contact-form", {
                     method: "POST",
                     headers: {
                         "content-type": "application/json",

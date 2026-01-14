@@ -13,7 +13,6 @@ const queryValidationSchema = z.object({
 
 export async function POST(request: NextRequest) {
     const body = await request.json();
-
     const validationResult = queryValidationSchema.safeParse(body);
 
     if (!validationResult.success) {
