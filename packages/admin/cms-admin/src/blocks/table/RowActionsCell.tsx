@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
-import { getInsertDataFromRowById, insertRowDataAtIndex, type RowInsertData, rowInsertSchema } from "./utils/row";
+import { deleteRowById, getInsertDataFromRowById, insertRowDataAtIndex, type RowInsertData, rowInsertSchema } from "./utils/row";
 
 type Props = {
     row: Record<string, unknown> & { id: string };
@@ -34,9 +34,9 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         });
     };
 
-    const deleteRow = () => {
+    const handleDeleteRow = () => {
         updateState((state) => {
-            return { ...state, rows: state.rows.filter(({ id }) => id !== row.id) };
+            return deleteRowById(state, row.id);
         });
     };
 
@@ -171,12 +171,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                     <FormattedMessage id="comet.tableBlock.duplicateRow" defaultMessage="Duplicate" />
                 </RowActionsItem>
                 <Divider />
-                <RowActionsItem
-                    icon={<Delete />}
-                    onClick={() => {
-                        deleteRow();
-                    }}
-                >
+                <RowActionsItem icon={<Delete />} onClick={handleDeleteRow}>
                     <FormattedMessage id="comet.tableBlock.deleteRow" defaultMessage="Delete" />
                 </RowActionsItem>
             </RowActionsMenu>

@@ -2,7 +2,7 @@ import { userEvent } from "@testing-library/user-event";
 import { cleanup, waitFor } from "test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { mockTableData } from "../__mocks__/TableBlockData.mocks";
+import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
 import { type ColumnInsertData } from "../utils/column";
 import { clickButtonOfColumnAtIndex, getCellValuesPerColumn, renderTableBlock } from "./utils";
 
@@ -15,7 +15,7 @@ describe("TableBlock: Paste a column with different values", () => {
     });
 
     it("should paste a column with less values than rows in the table", async () => {
-        const rendered = renderTableBlock(mockTableData);
+        const rendered = renderTableBlock(mockBlockDataObjects.default);
         const initialColumnHeaders = rendered.getAllByRole("columnheader");
         const originalCellValuesPerColumn = getCellValuesPerColumn(rendered);
 
@@ -65,7 +65,7 @@ describe("TableBlock: Paste a column with different values", () => {
     });
 
     it("should paste a column with more values than rows in the table", async () => {
-        const rendered = renderTableBlock(mockTableData);
+        const rendered = renderTableBlock(mockBlockDataObjects.default);
         const initialColumnHeaders = rendered.getAllByRole("columnheader");
         const originalCellValuesPerColumn = getCellValuesPerColumn(rendered);
         const pasteTargetColumnIndex = 0;

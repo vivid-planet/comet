@@ -1,21 +1,22 @@
 import { cleanup, within } from "test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { mockTableData } from "../__mocks__/TableBlockData.mocks";
+import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
 
 afterEach(cleanup);
 
 describe("TableBlock: Insert a new row", () => {
     it("should insert a new, empty row at the top of the table", async () => {
-        const rendered = renderTableBlock(mockTableData);
+        const initialBlockData = mockBlockDataObjects.default;
+        const rendered = renderTableBlock(initialBlockData);
 
         clickButtonOfRowAtIndex(rendered, 0, /add row above/i);
 
         const rowgroup = rendered.getByRole("rowgroup");
         const rows = within(rowgroup).getAllByRole("row");
 
-        const numberOfRowsAfterInserting = mockTableData.rows.length + 1;
+        const numberOfRowsAfterInserting = initialBlockData.rows.length + 1;
         expect(rows).toHaveLength(numberOfRowsAfterInserting);
 
         rows.forEach((row, rowIndex) => {
@@ -28,22 +29,23 @@ describe("TableBlock: Insert a new row", () => {
                     expect(cell.textContent).toBe("");
                 } else {
                     const rowIndexBeforeInsertingNewRow = rowIndex - 1;
-                    const cellValueBeforeInsertingNewRow = mockTableData.rows[rowIndexBeforeInsertingNewRow].cellValues[cellIndex].value;
+                    const cellValueBeforeInsertingNewRow = initialBlockData.rows[rowIndexBeforeInsertingNewRow].cellValues[cellIndex].value;
                     expect(cell.textContent).toBe(cellValueBeforeInsertingNewRow);
                 }
             });
         });
     });
     it("should insert a new, empty row at the bottom of the table", async () => {
-        const rendered = renderTableBlock(mockTableData);
-        const targetRowIndex = mockTableData.rows.length - 1;
+        const initialBlockData = mockBlockDataObjects.default;
+        const rendered = renderTableBlock(initialBlockData);
+        const targetRowIndex = initialBlockData.rows.length - 1;
 
         clickButtonOfRowAtIndex(rendered, targetRowIndex, /add row below/i);
 
         const rowgroup = rendered.getByRole("rowgroup");
         const rows = within(rowgroup).getAllByRole("row");
 
-        const numberOfRowsAfterInserting = mockTableData.rows.length + 1;
+        const numberOfRowsAfterInserting = initialBlockData.rows.length + 1;
         expect(rows).toHaveLength(numberOfRowsAfterInserting);
 
         rows.forEach((row, rowIndex) => {
@@ -55,14 +57,15 @@ describe("TableBlock: Insert a new row", () => {
                 if (isNewlyInsertedRow) {
                     expect(cell.textContent).toBe("");
                 } else {
-                    const originalCellValue = mockTableData.rows[rowIndex].cellValues[cellIndex].value;
+                    const originalCellValue = initialBlockData.rows[rowIndex].cellValues[cellIndex].value;
                     expect(cell.textContent).toBe(originalCellValue);
                 }
             });
         });
     });
     it("should insert a new, empty row in the middle of the table", async () => {
-        const rendered = renderTableBlock(mockTableData);
+        const initialBlockData = mockBlockDataObjects.default;
+        const rendered = renderTableBlock(initialBlockData);
         const targetRowIndex = 2;
 
         clickButtonOfRowAtIndex(rendered, targetRowIndex, /add row below/i);
@@ -70,7 +73,7 @@ describe("TableBlock: Insert a new row", () => {
         const rowgroup = rendered.getByRole("rowgroup");
         const rows = within(rowgroup).getAllByRole("row");
 
-        const numberOfRowsAfterInserting = mockTableData.rows.length + 1;
+        const numberOfRowsAfterInserting = initialBlockData.rows.length + 1;
         expect(rows).toHaveLength(numberOfRowsAfterInserting);
 
         rows.forEach((row, rowIndex) => {
@@ -87,12 +90,12 @@ describe("TableBlock: Insert a new row", () => {
                 }
 
                 if (isBeforeNewlyInsertedRow) {
-                    const originalCellValue = mockTableData.rows[rowIndex].cellValues[cellIndex].value;
+                    const originalCellValue = initialBlockData.rows[rowIndex].cellValues[cellIndex].value;
                     expect(cell.textContent).toBe(originalCellValue);
                 }
 
                 if (isAfterNewlyInsertedRow) {
-                    const originalValueOfCellBelow = mockTableData.rows[rowIndex - 1].cellValues[cellIndex].value;
+                    const originalValueOfCellBelow = initialBlockData.rows[rowIndex - 1].cellValues[cellIndex].value;
                     expect(cell.textContent).toBe(originalValueOfCellBelow);
                 }
             });

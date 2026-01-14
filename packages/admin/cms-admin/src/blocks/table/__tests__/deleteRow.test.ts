@@ -1,14 +1,14 @@
 import { within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
-import { mockTableData } from "../__mocks__/TableBlockData.mocks";
+import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
 
 describe("TableBlock: Delete row", () => {
     it("should delete a certain row", async () => {
         const targetRowIndex = 2;
 
-        const rendered = renderTableBlock(mockTableData);
+        const rendered = renderTableBlock(mockBlockDataObjects.default);
         const rowgroup = rendered.getByRole("rowgroup");
         const rowsBeforeDeleting = within(rowgroup).getAllByRole("row");
 
