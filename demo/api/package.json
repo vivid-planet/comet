@@ -103,7 +103,6 @@
         "eslint-plugin-storybook": "^10.1.11",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
         "storybook": "^10.1.11",
         "ts-node": "^10.9.2",
