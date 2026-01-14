@@ -125,9 +125,9 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
 
     return (
         <>
-            <ColumnHeaderButton component="div" disableRipple>
+            <DraggableColumnReorderingButton component="div" disableRipple>
                 <DragIndicator />
-            </ColumnHeaderButton>
+            </DraggableColumnReorderingButton>
             <RowActionsMenu>
                 <RowActionsMenu
                     componentsProps={{
@@ -203,9 +203,8 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
     );
 };
 
-// TODO: Explain this comment better??
-// Workaround: When a button is rendered inside the ColumnHeader (e.g. RowActionsItem), only buttons can be used for column reordering
-const ColumnHeaderButton = styled(ButtonBase)(({ theme }) => ({
+// The first element of type "button" inside the ColumnHeader will automatically be used for column reordering
+const DraggableColumnReorderingButton = styled(ButtonBase)(({ theme }) => ({
     position: "absolute",
     inset: 0,
     cursor: "move",

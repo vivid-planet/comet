@@ -71,7 +71,6 @@ const EditInput = styled(InputBase, { shouldForwardProp: (prop) => prop !== "col
     width: "100%",
     height: "100%",
 
-    // TODO: Can this be a separate SC?
     textarea: {
         resize: "both",
         minHeight: `calc(55px - ${theme.spacing(2)})`,

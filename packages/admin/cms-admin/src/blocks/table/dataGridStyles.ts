@@ -1,6 +1,5 @@
 import { type SxProps, type Theme } from "@mui/material";
 
-// TODO: Can we remove the `!important`s?
 export const dataGridStyles: SxProps<Theme> = (theme) => ({
     "--DataGrid-rowBorderColor": theme.palette.grey[100],
     borderLeft: 0,
