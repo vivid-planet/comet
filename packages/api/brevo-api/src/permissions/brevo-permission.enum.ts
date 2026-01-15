@@ -1,3 +1,4 @@
+import { registerAdditionalPermissions } from "@comet/cms-api";
 import { registerEnumType } from "@nestjs/graphql";
 
 export enum BrevoPermission {
@@ -8,3 +9,5 @@ export enum BrevoPermission {
 registerEnumType(BrevoPermission, {
     name: "BrevoPermission",
 });
+
+registerAdditionalPermissions(BrevoPermission);
