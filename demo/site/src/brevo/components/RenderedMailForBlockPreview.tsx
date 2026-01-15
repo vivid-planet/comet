@@ -5,7 +5,7 @@ interface Props {
     mjmlContent: string;
 }
 
-export const RenderedMail: FC<Props> = ({ mjmlContent }) => {
+export const RenderedMailForBlockPreview: FC<Props> = ({ mjmlContent }) => {
     const [mailHtml, setMailHtml] = useState<string>("");
 
     useEffect(() => {

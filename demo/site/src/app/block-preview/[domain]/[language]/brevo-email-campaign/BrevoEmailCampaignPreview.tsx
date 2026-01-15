@@ -2,7 +2,7 @@
 
 import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
 import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
-import { RenderedMail } from "@src/brevo/components/RenderedMail";
+import { RenderedMailForBlockPreview } from "@src/brevo/components/RenderedMailForBlockPreview";
 import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
 import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
 import { type ContentScope } from "@src/site-configs";
@@ -50,7 +50,7 @@ function BrevoEmailCampaignPreviewComponent({ language, messages, config }: Brev
 
     const mjmlContent = renderMailContentAsMjml(blockData, { locale: language, messages }, config);
 
-    return <RenderedMail mjmlContent={mjmlContent} />;
+    return <RenderedMailForBlockPreview mjmlContent={mjmlContent} />;
 }
 
 export const BrevoEmailCampaignPreview = withBlockPreview(BrevoEmailCampaignPreviewComponent);
