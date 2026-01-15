@@ -349,7 +349,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = await parseConfig(`${process.cwd()}/${file}`);
+        const config = await parseConfig(file);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
