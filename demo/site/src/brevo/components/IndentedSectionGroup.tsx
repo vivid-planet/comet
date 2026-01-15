@@ -1,6 +1,7 @@
 import { css } from "@comet/mail-react";
 import { MjmlGroup, MjmlSection, MjmlStyle } from "@faire/mjml-react";
 import { theme } from "@src/brevo/util/theme";
+import clsx from "clsx";
 import { type ComponentProps, type ReactNode } from "react";
 
 interface IndentedSectionGroupProps extends ComponentProps<typeof MjmlSection> {
@@ -22,7 +23,7 @@ export const indentedSectionGroupStyles = (
 export const IndentedSectionGroup = ({ children, cssClass, ...restProps }: IndentedSectionGroupProps) => {
     return (
         <MjmlSection
-            cssClass={`indented-section ${cssClass || ""}`.trim()}
+            cssClass={clsx("indented-section", cssClass)}
             paddingLeft={theme.mailSize.contentSpacing}
             paddingRight={theme.mailSize.contentSpacing}
             backgroundColor={theme.colors.background.content}
