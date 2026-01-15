@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 8.11.1
+
+### Patch Changes
+
+- a498b80: Fix uppercase styling of tabs
+    - @comet/admin-icons@8.11.1
+
 ## 8.11.0
 
 ### Minor Changes

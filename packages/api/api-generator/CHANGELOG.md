@@ -1,5 +1,12 @@
 # @comet/api-generator
 
+## 8.11.1
+
+### Patch Changes
+
+- 0839bd6: Fix accidentally formatting all files
+    - @comet/cms-api@8.11.1
+
 ## 8.11.0
 
 ### Minor Changes
