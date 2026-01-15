@@ -23,7 +23,7 @@ const nextConfig = {
     },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
-        serverComponentsExternalPackages: ["mjml", "react-intl", "@faire/mjml-react", "react-dom"],
+        serverComponentsExternalPackages: ["mjml", "react-intl", "@faire/mjml-react"],
     },
     env: {
         DAM_ALLOWED_IMAGE_SIZES: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes].join(","),
