@@ -1,5 +1,15 @@
 # @comet/admin-generator
 
+## 8.11.1
+
+### Patch Changes
+
+- 64bd5f4: Revert "Replace ts-node with jiti"
+
+    This broke import aliases (e.g, `@src/`) in config files.
+
+- 0839bd6: Fix accidentally formatting all files
+
 ## 8.11.0
 
 ### Minor Changes
