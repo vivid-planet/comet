@@ -114,6 +114,10 @@
         {
             "matchDepTypes": ["peerDependencies"],
             "rangeStrategy": ["widen"]
+        },
+        {
+            "matchUpdateTypes": ["lockFileMaintenance"],
+            "minimumReleaseAgeBehaviour": "timestamp-optional"
         }
     ],
     "lockFileMaintenance": { "enabled": true },
