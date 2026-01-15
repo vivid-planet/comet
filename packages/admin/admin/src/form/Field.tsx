@@ -47,6 +47,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     shouldShowError: passedShouldShowError,
     shouldShowWarning: passedShouldShowWarning,
     shouldScrollTo: passedShouldScrollTo,
+    "data-testid": dataTestId,
     ...otherProps
 }: FieldProps<FieldValue, FieldElement>) {
     const { disabled, variant, fullWidth } = otherProps;
@@ -89,6 +90,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
+                data-testid={dataTestId}
                 {...fieldContainerProps}
             >
                 {render()}

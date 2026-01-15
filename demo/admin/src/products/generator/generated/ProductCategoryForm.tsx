@@ -41,12 +41,19 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductCategoryQuery, GQLProductCategoryQueryVariables>(productCategoryQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.productCategory
-        ? {
-            ...filterByFragment<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
-        }
-        : {}, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLProductCategoryQuery, GQLProductCategoryQueryVariables>(
+        productCategoryQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.productCategory
+                ? {
+                      ...filterByFragment<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
+                  }
+                : {},
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "productCategory", id);
@@ -58,23 +65,20 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
         },
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValues, type: formValues.type ? formValues.type.id : null, };
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = { ...formValues, type: formValues.type ? formValues.type.id : null };
         if (mode === "edit") {
-            if (!id)
-                throw new Error();
+            if (!id) throw new Error();
             const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                 mutation: createProductCategoryMutation,
                 variables: {
-                    input: output
+                    input: output,
                 },
             });
             const id = mutationResponse?.createProductCategory.id;
@@ -88,36 +92,66 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="productCategory.title" defaultMessage="Title"/>}/>
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="productCategory.title" defaultMessage="Title" />}
+                        />
 
-        <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="productCategory.slug" defaultMessage="Slug"/>}/>
-        <AsyncAutocompleteField variant="horizontal" fullWidth name="type" label={<FormattedMessage id="productCategory.type" defaultMessage="Type"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
-                    query: gql`
-    query ProductCategoryTypesSelect($search: String) {
-        productCategoryTypes(search: $search) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        search,
-                    }
-                });
-                return data.productCategoryTypes.nodes;
-            }} getOptionLabel={(option) => option.title}/>
-                        </>
-                    </>)}
-            </FinalForm>);
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="slug"
+                            label={<FormattedMessage id="productCategory.slug" defaultMessage="Slug" />}
+                        />
+                        <AsyncAutocompleteField
+                            variant="horizontal"
+                            fullWidth
+                            name="type"
+                            label={<FormattedMessage id="productCategory.type" defaultMessage="Type" />}
+                            loadOptions={async (search?: string) => {
+                                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductCategoryTypesSelect($search: String) {
+                                            productCategoryTypes(search: $search) {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                    variables: {
+                                        search,
+                                    },
+                                });
+                                return data.productCategoryTypes.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
+                        />
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }

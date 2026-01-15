@@ -1,5 +1,103 @@
 # @comet/admin-rte
 
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 8d7a90c: Add `requiredValidator` to validate if the RTE field is empty
+
+    ```tsx
+    import { createFinalFormRte, requiredValidator } from "@comet/admin-rte";
+
+    const { RteField } = createFinalFormRte();
+
+    const ExampleForm = () => {
+        return <Field name="richText" label="Rich Text" component={RteField} required validate={requiredValidator} />;
+    };
+    ```
+
+- cc727d1: Deprecate `createFinalFormRte` and add the new `createRteField` helper as a replacement
+
+    `createRteField` can be used to get the field-component directly, which does not need to be combined with the `Field` component.
+    Additionally, when using `createRteField`, the `requiredValidator` is automatically applied when setting the `required` prop.
+
+    **Example usage:**
+
+    ```tsx
+    import { createRteField } from "@comet/admin-rte";
+
+    const { RteField } = createRteField();
+
+    export const ExampleFields = () => {
+        return (
+            <>
+                <RteField name="optionalRteContent" label="Rich Text (optional)" />
+                <RteField name="requiredRteContent" label="Rich Text (required)" required />
+            </>
+        );
+    };
+    ```
+
+    **Example replacement of `createFinalFormRte`:**
+
+    ```diff
+    -import { Field } from "@comet/admin";
+    -import { createFinalFormRte, requiredValidator } from "@comet/admin-rte";
+    +import { createRteField } from "@comet/admin-rte";
+     import { Form } from "react-final-form";
+
+    -const { RteField } = createFinalFormRte();
+    +const { RteField } = createRteField();
+
+     type FormValues = {
+         optionalRteContent: string;
+         requiredRteContent: string;
+     };
+
+     export const ExampleForm = () => {
+         return (
+             <Form<FormValues>
+                 onSubmit={(values) => {
+                     // Handle submit
+                 }}
+                 render={({ handleSubmit }) => (
+                     <form onSubmit={handleSubmit}>
+    -                    <Field name="optionalRteContent" label="Rich Text (optional)" component={RteField} />
+    +                    <RteField name="optionalRteContent" label="Rich Text (optional)" />
+
+    -                    <Field name="requiredRteContent" label="Rich Text (required)" component={RteField} required validate={requiredValidator} />
+    +                    <RteField name="requiredRteContent" label="Rich Text (required)" required />
+                     </form>
+                 )}
+             />
+         );
+     };
+    ```
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Minor Changes

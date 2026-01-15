@@ -14,7 +14,7 @@ export enum ManufacturerSortField {
     addressAsEmbeddable_alternativeAddress_zip = "addressAsEmbeddable_alternativeAddress_zip",
     addressAsEmbeddable_alternativeAddress_country = "addressAsEmbeddable_alternativeAddress_country",
     updatedAt = "updatedAt",
-    id = "id"
+    id = "id",
 }
 registerEnumType(ManufacturerSortField, {
     name: "ManufacturerSortField",
