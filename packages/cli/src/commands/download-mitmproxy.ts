@@ -3,7 +3,6 @@ import { execSync } from "child_process";
 import { Command } from "commander";
 import * as fs from "fs";
 import * as os from "os";
-import * as semver from "semver";
 
 function getPlatform(): string {
     const platform = os.platform();
@@ -31,52 +30,13 @@ function getArchitecture(): string {
     }
 }
 
-async function fetchJson<T>(url: string): Promise<T> {
-    const res = await fetch(url, {
-        headers: { "User-Agent": "Node.js" },
-    });
-    if (!res.ok) {
-        throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
-    }
-    return res.json() as Promise<T>;
-}
-
-interface GitHubRelease {
-    tag_name: string;
-    assets: { name: string; browser_download_url: string }[];
-    draft: boolean;
-    prerelease: boolean;
-}
-
 export const downloadMitmproxyCommand = new Command("download-mitmproxy")
     .description("Download the Mitmproxy binary")
     .requiredOption("-v, --version <version>", "Specify the version of the Mitmproxy to download (semver, e.g. >=7.0.0 <8.0.0).")
     .action(async (options) => {
         console.log("=== Installing mitmproxy ===");
 
-        // Get latest version from GitHub API
-        console.log("Fetching release list...");
-        const releases = await fetchJson<GitHubRelease[]>("https://api.github.com/repos/mitmproxy/mitmproxy/releases");
-        if (!releases) throw new Error("Could not determine latest version");
-
-        // Filter for stable releases matching the semver range
-        const validReleases = releases
-            .filter((r) => !r.draft && !r.prerelease)
-            .filter((r) => {
-                const version = semver.coerce(r.tag_name);
-                return version ? semver.satisfies(version, options.version) : false;
-            })
-            .sort((a, b) => {
-                const va = semver.coerce(a.tag_name);
-                const vb = semver.coerce(b.tag_name);
-                return semver.rcompare(va, vb);
-            });
-        if (validReleases.length === 0) {
-            throw new Error(`No releases found for version range ${options.version}`);
-        }
-        const latest = validReleases[0];
-
-        const version = latest.tag_name.replace(/^v/, "");
+        const version = options.version;
         const platform = getPlatform();
         const architecture = getArchitecture();
 

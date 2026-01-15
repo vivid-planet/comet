@@ -31,7 +31,6 @@
     "dependencies": {
         "commander": "^9.5.0",
         "prettier": "^3.6.2",
-        "semver": "^7.7.3",
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
