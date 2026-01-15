@@ -6,11 +6,9 @@ import { Field, InputType } from "@nestjs/graphql";
 import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter, createEnumFilter } from "@comet/cms-api";
 import { NewsCategory, NewsStatus } from "../../entities/news.entity";
 @InputType()
-class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {
-}
+class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {}
 @InputType()
-class NewsCategoryEnumFilter extends createEnumFilter(NewsCategory) {
-}
+class NewsCategoryEnumFilter extends createEnumFilter(NewsCategory) {}
 @InputType()
 export class NewsFilter {
     @Field(() => IdFilter, { nullable: true })
