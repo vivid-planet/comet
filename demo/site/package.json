@@ -29,7 +29,7 @@
     "dependencies": {
         "@comet/site-nextjs": "workspace:*",
         "@formatjs/cli": "^6.7.2",
-        "@next/bundle-analyzer": "^14.2.30",
+        "@next/bundle-analyzer": "^14.2.35",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/auto-instrumentations-node": "^0.66.0",
         "@opentelemetry/exporter-prometheus": "^0.207.0",
