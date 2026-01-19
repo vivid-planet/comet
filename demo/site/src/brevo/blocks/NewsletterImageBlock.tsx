@@ -1,8 +1,6 @@
+import { ImageBlock, type PropsWithData } from "@comet/mail-react";
 import { MjmlColumn, MjmlSection } from "@faire/mjml-react";
-
-import { type NewsletterImageBlockData } from "../blocks.generated.js";
-import { CommonImageBlock } from "./CommonImageBlock.js";
-import { type PropsWithData } from "./helpers/PropsWithData.js";
+import { type NewsletterImageBlockData } from "@src/blocks.generated";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {
     desktopRenderWidth?: number;
@@ -15,7 +13,7 @@ export const NewsletterImageBlock = ({ data, desktopRenderWidth, contentWidth, v
     return (
         <MjmlSection>
             <MjmlColumn>
-                <CommonImageBlock
+                <ImageBlock
                     data={data.image}
                     desktopRenderWidth={desktopRenderWidth}
                     contentWidth={contentWidth}

@@ -16,7 +16,7 @@ function isAbsoluteUrl(url: string): boolean {
     return !url.startsWith("/");
 }
 
-export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, baseUrl, ...restProps }: Props) => {
+export const ImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, baseUrl, ...restProps }: Props) => {
     const { damFile, cropArea, urlTemplate } = data;
 
     if (!damFile?.image) {
