@@ -21,14 +21,10 @@ export async function POST(request: Request, { params: { domain, language } }: {
     const params = validationResult.data;
     const messages = await loadMessages(language);
 
-    const { html, errors } = await convertMjmlToHtml(
+    const { html } = await convertMjmlToHtml(
         renderMailContentAsMjml(params.content, { locale: language, messages }, getEmailCampaignConfig({ domain, language })),
     );
     const outputHtml = replaceMailHtmlPlaceholders(html, "mail");
-
-    if (errors?.length > 0) {
-        return Response.json({ errors }, { status: 400 });
-    }
 
     return new Response(outputHtml, {
         headers: { "Content-Type": "text/html; charset=utf-8" },
