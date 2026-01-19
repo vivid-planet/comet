@@ -14,8 +14,10 @@ export const RenderedMailForBlockPreview: FC<Props> = ({ mjmlContent }) => {
             const { html: mjmlHtml, errors } = mjml2htmlBrowser(mjmlContent);
             const html = replaceMailHtmlPlaceholders(mjmlHtml, "preview");
 
-            if (errors.length) {
-                console.error(`${errors.length} MJML render errors:`, errors);
+            if (process.env.NODE_ENV === "development") {
+                if (errors.length) {
+                    console.error(`${errors.length} MJML render errors:`, errors);
+                }
             }
 
             setMailHtml(html);
