@@ -30,7 +30,7 @@ interface ContactFormValues {
 export const ContactFormBlock = withPreview(
     ({ data }: PropsWithData<ContactFormBlockData>) => {
         const intl = useIntl();
-        const params = useParams();
+        const params = useParams<{ visibility: string; domain: string; language: string }>();
         const language = params.language as string;
 
         const {
