@@ -8,6 +8,7 @@ import { PageContentStandaloneCallToActionListBlock } from "@src/common/blocks/S
 import { PageContentStandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { PageContentStandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
+import { TableBlock } from "@src/common/blocks/TableBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
@@ -28,6 +29,7 @@ const supportedBlocks: SupportedBlocks = {
     keyFacts: (props) => <KeyFactsBlock data={props} />,
     media: (props) => <StandaloneMediaBlock data={props} />,
     mediaGallery: (props) => <PageContentMediaGalleryBlock data={props} />,
+    table: (props) => <TableBlock data={props} />,
 };
 
 const ContentGroupContentBlock = withPreview(
