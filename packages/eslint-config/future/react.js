@@ -1,4 +1,5 @@
 import reactConfig from "../react.js";
+import formatJs from "eslint-plugin-formatjs";
 
 /** @type {import('eslint')} */
 const config = [
@@ -19,6 +20,14 @@ const config = [
                     fixMixedExportsWithInlineTypeSpecifier: true,
                 },
             ],
+        },
+    },
+    {
+        plugins: {
+            formatjs: formatJs,
+        },
+        rules: {
+            "formatjs/enforce-default-message": ["error", "literal"],
         },
     },
 ];

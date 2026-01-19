@@ -29,7 +29,7 @@ import { GQLCreateProductMutation } from "./CreateCapProductForm.gql.generated";
 import { GQLCreateProductMutationVariables } from "./CreateCapProductForm.gql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
-    image: DamImageBlock
+    image: DamImageBlock,
 };
 type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
@@ -43,14 +43,21 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
     const initialValues = {
-        inStock: false, image: rootBlocks.image.defaultValues(),
+        inStock: false,
+        image: rootBlocks.image.defaultValues(),
     };
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        const output = { ...formValues, description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), };
+        const output = {
+            ...formValues,
+            description: formValues.description ?? null,
+            category: formValues.category ? formValues.category.id : null,
+            availableSince: formValues.availableSince ?? null,
+            image: rootBlocks.image.state2Output(formValues.image),
+        };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
             variables: {
-                input: { ...output, type }
+                input: { ...output, type },
             },
         });
         const id = mutationResponse?.createProduct.id;
@@ -63,36 +70,94 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
             });
         }
     };
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode="add" initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                            
-        <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Titel"/>} validate={validateTitle}/>
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode="add"
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    <TextField
+                        required
+                        variant="horizontal"
+                        fullWidth
+                        name="title"
+                        label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                        validate={validateTitle}
+                    />
 
-        <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>}/>
+                    <TextField
+                        required
+                        variant="horizontal"
+                        fullWidth
+                        name="slug"
+                        label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
+                    />
 
-        <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
-        <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`
-    query ProductCategoriesSelect($search: String) {
-        productCategories(search: $search) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        search,
-                    }
-                });
-                return data.productCategories.nodes;
-            }} getOptionLabel={(option) => option.title}/>
-        <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
+                    <TextAreaField
+                        variant="horizontal"
+                        fullWidth
+                        name="description"
+                        label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                    />
+                    <AsyncAutocompleteField
+                        variant="horizontal"
+                        fullWidth
+                        name="category"
+                        label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                        loadOptions={async (search?: string) => {
+                            const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                query: gql`
+                                    query ProductCategoriesSelect($search: String) {
+                                        productCategories(search: $search) {
+                                            nodes {
+                                                id
+                                                title
+                                            }
+                                        }
+                                    }
+                                `,
+                                variables: {
+                                    search,
+                                },
+                            });
+                            return data.productCategories.nodes;
+                        }}
+                        getOptionLabel={(option) => option.title}
+                    />
+                    <CheckboxField
+                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                        name="inStock"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-            <DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-                        </>)}
-            </FinalForm>);
+                    <DatePickerField
+                        variant="horizontal"
+                        fullWidth
+                        name="availableSince"
+                        label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <CalendarTodayIcon />
+                            </InputAdornment>
+                        }
+                    />
+                    <Field
+                        name="image"
+                        isEqual={isEqual}
+                        label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                        variant="horizontal"
+                        fullWidth
+                    >
+                        {createFinalFormBlock(rootBlocks.image)}
+                    </Field>
+                </>
+            )}
+        </FinalForm>
+    );
 }
