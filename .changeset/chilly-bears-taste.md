@@ -2,6 +2,7 @@
 "@comet/mail-react": minor
 ---
 
-Add `NewsletterImageBlock`
+Add `ImageBlock`
 
-This block was moved here from the discontinued `@comet/brevo-mail-rendering` package.
+This block corresponds to the `CommonImageBlock` from the discontinued `@comet/brevo-mail-rendering` package.
+The `NewsletterImageBlock` wasn't migrated and should be implemented in the project if needed.
