@@ -7,6 +7,21 @@ sidebar_position: -9
 
 ## Admin
 
+### Admin packages are now ESM-only
+
+Make the following changes to your `admin/tsconfig.json`:
+
+```diff title="admin/tsconfig.json"
+{
+    "compilerOptions": {
+-       "module": "ESNext",
+-       "moduleResolution": "Node",
++       "module": "preserve",
++       "moduleResolution": "bundler"
+    }
+}
+```
+
 ### Tooltip-related Changes
 
 #### 🤖 Replace the `variant` prop with `color` in `Tooltip`
