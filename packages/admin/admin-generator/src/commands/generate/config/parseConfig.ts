@@ -1,10 +1,40 @@
-import { promises as fs } from "fs";
+import { promises as fs, readFileSync } from "fs";
 import { createJiti } from "jiti";
 import { basename, dirname } from "path";
 
 import { transformConfigFile } from "./transformConfig.js";
 
-const jiti = createJiti(import.meta.url);
+type TsConfig = {
+    compilerOptions?: {
+        paths?: Record<string, string[]>;
+    };
+};
+
+let alias: Record<string, string> | undefined;
+
+try {
+    const tsConfigJson = readFileSync("tsconfig.json", "utf-8");
+    const tsConfig = JSON.parse(tsConfigJson) as TsConfig;
+
+    if (tsConfig.compilerOptions?.paths) {
+        alias = {};
+        for (const [key, value] of Object.entries(tsConfig.compilerOptions.paths)) {
+            // Remove glob in alias as it doesn't work.
+            // See https://github.com/unjs/jiti/issues/395.
+            const cleanedKey = key.replace("/*", "");
+            const cleanedValue = value[0].replace("/*", "");
+            alias[cleanedKey] = `${process.cwd()}/${cleanedValue}`;
+        }
+    }
+} catch (error) {
+    console.warn("Failed to parse TSConfig paths, import aliases might not work. See original error below");
+    console.warn(error);
+}
+
+const jiti = createJiti(import.meta.url, {
+    alias,
+    fsCache: false,
+});
 
 export async function parseConfig(file: string) {
     //1. parse config file using TypeScript Complier Api and transform it (replace imports and functions that can't be executed)
