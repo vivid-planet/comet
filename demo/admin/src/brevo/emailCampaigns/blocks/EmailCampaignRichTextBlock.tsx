@@ -1,6 +1,13 @@
 import { CopyToClipboardButton } from "@comet/admin";
-import { type BlockAdminComponentProps, createRichTextBlock, ExternalLinkBlock, type RichTextBlockState } from "@comet/cms-admin";
-import { Box, FormLabel, List, ListItem, ListItemText, Paper } from "@mui/material";
+import {
+    BlockAdminComponentPaper,
+    type BlockAdminComponentProps,
+    BlockAdminComponentSection,
+    createRichTextBlock,
+    ExternalLinkBlock,
+    type RichTextBlockState,
+} from "@comet/cms-admin";
+import { Box, List, ListItem, ListItemText } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 const placeholders = [
@@ -21,24 +28,25 @@ export const EmailCampaignRichTextBlock = {
     ...BaseRichTextBlock,
     AdminComponent: (rteAdminComponentProps: BlockAdminComponentProps<RichTextBlockState>) => (
         <>
-            <Box mb={2}>
+            <BlockAdminComponentSection>
                 <BaseRichTextBlock.AdminComponent {...rteAdminComponentProps} />
-            </Box>
-            <FormLabel>
-                <FormattedMessage id="cometBrevoModule.richText.placeholder.info" defaultMessage="Placeholders available in the text" />
-            </FormLabel>
-            <Paper variant="outlined">
-                <List>
-                    {placeholders.map(({ placeholder, helper }) => {
-                        const placeholderText = <Box sx={{ fontFamily: "monospace", fontWeight: "bold" }}>{placeholder}</Box>;
-                        return (
-                            <ListItem key={placeholder} secondaryAction={<CopyToClipboardButton copyText={placeholder} />}>
-                                <ListItemText primary={placeholderText} secondary={helper} />
-                            </ListItem>
-                        );
-                    })}
-                </List>
-            </Paper>
+            </BlockAdminComponentSection>
+            <BlockAdminComponentSection
+                title={<FormattedMessage id="cometBrevoModule.richText.placeholder.info" defaultMessage="Placeholders available in the text" />}
+            >
+                <BlockAdminComponentPaper disablePadding>
+                    <List>
+                        {placeholders.map(({ placeholder, helper }) => {
+                            const placeholderText = <Box sx={{ fontFamily: "monospace", fontWeight: "bold" }}>{placeholder}</Box>;
+                            return (
+                                <ListItem key={placeholder} secondaryAction={<CopyToClipboardButton copyText={placeholder} />}>
+                                    <ListItemText primary={placeholderText} secondary={helper} />
+                                </ListItem>
+                            );
+                        })}
+                    </List>
+                </BlockAdminComponentPaper>
+            </BlockAdminComponentSection>
         </>
     ),
 };
