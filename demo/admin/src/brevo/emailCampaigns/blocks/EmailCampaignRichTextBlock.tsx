@@ -1,13 +1,14 @@
 import { CopyToClipboardButton } from "@comet/admin";
 import {
     BlockAdminComponentPaper,
-    type BlockAdminComponentProps,
     BlockAdminComponentSection,
+    type BlockInterface,
+    type BlockState,
     createRichTextBlock,
     ExternalLinkBlock,
-    type RichTextBlockState,
 } from "@comet/cms-admin";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
+import { type RichTextBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 const placeholders = [
@@ -24,9 +25,9 @@ const BaseRichTextBlock = createRichTextBlock({
     },
 });
 
-export const EmailCampaignRichTextBlock = {
+export const EmailCampaignRichTextBlock: BlockInterface<RichTextBlockData, BlockState<typeof BaseRichTextBlock>> = {
     ...BaseRichTextBlock,
-    AdminComponent: (rteAdminComponentProps: BlockAdminComponentProps<RichTextBlockState>) => (
+    AdminComponent: (rteAdminComponentProps) => (
         <>
             <BlockAdminComponentSection>
                 <BaseRichTextBlock.AdminComponent {...rteAdminComponentProps} />

@@ -17,7 +17,7 @@ export { BlockContextProvider } from "./blocks/context/BlockContextProvider";
 export { useBlockContext } from "./blocks/context/useBlockContext";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
-export type { RichTextBlockFactoryOptions, RichTextBlockState } from "./blocks/createRichTextBlock";
+export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
 export { createRichTextBlock, isRichTextEmpty, isRichTextEqual } from "./blocks/createRichTextBlock";
 export { createSeoBlock } from "./blocks/createSeoBlock";
 export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock";
@@ -82,7 +82,6 @@ export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type {
     BlockAdminComponent,
     BlockAdminComponentPart,
-    BlockAdminComponentProps,
     BlockDependency,
     BlockInputApi,
     BlockInterface,
