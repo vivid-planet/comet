@@ -3,8 +3,7 @@ import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignContentBlock } from "@src/brevo/blocks/EmailCampaignContentBlock";
 import { Root } from "@src/brevo/components/Root";
 import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
-import { IntlProvider } from "@src/util/IntlProvider";
-import { type IntlConfig } from "react-intl";
+import { type IntlConfig, IntlProvider } from "react-intl";
 
 interface IntlProviderValues {
     locale: string;
