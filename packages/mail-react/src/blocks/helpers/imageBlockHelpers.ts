@@ -1,4 +1,4 @@
-export const getDamAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
+export const getOptimalAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
     const sortedValidSizes = validSizes.sort((a, b) => a - b);
 
     let width: number | null = null;

@@ -2,7 +2,7 @@ import { MjmlImage } from "@faire/mjml-react";
 import type { ComponentProps } from "react";
 
 import { type PixelImageBlockData } from "../blocks.generated.js";
-import { calculateInheritAspectRatio, generateImageUrl, getDamAllowedImageWidth } from "./helpers/imageBlockHelpers.js";
+import { calculateInheritAspectRatio, generateImageUrl, getOptimalAllowedImageWidth } from "./helpers/imageBlockHelpers.js";
 
 interface Props extends ComponentProps<typeof MjmlImage> {
     data: PixelImageBlockData;
@@ -28,7 +28,7 @@ export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth 
 
     const imageUrl: string = generateImageUrl(
         {
-            width: getDamAllowedImageWidth(validSizes, desktopRenderWidth, contentWidth),
+            width: getOptimalAllowedImageWidth(validSizes, desktopRenderWidth, contentWidth),
             src: urlTemplate,
         },
         usedAspectRatio,
