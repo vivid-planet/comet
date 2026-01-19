@@ -48,15 +48,16 @@ export class EmailCampaignsService {
         const content = await this.blockTransformerService.transformToPlain(campaign.content, { previewDamUrls: false });
 
         const brevoConfig = await this.brevoConfigRepository.findOneOrFail({ scope: campaign.scope });
+        const campaignConfig = this.config.emailCampaigns.resolveFrontendConfig(campaign.scope);
 
         const { data: htmlContent, status } = await this.httpService.axiosRef.post(
-            this.config.emailCampaigns.frontend.url,
+            campaignConfig.frontend.url,
             { id: campaign.id, title: campaign.title, content, scope: campaign.scope },
             {
                 headers: { "Content-Type": "application/json" },
                 auth: {
-                    username: this.config.emailCampaigns.frontend.basicAuth.username,
-                    password: this.config.emailCampaigns.frontend.basicAuth.password,
+                    username: campaignConfig.frontend.basicAuth.username,
+                    password: campaignConfig.frontend.basicAuth.password,
                 },
             },
         );

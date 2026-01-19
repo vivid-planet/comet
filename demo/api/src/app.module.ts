@@ -266,12 +266,20 @@ export class AppModule {
                     emailCampaigns: {
                         EmailCampaignContentBlock,
                         Scope: EmailCampaignContentScope,
-                        frontend: {
-                            url: `${config.brevo.campaign.url}/render-brevo-email-campaign`,
-                            basicAuth: {
-                                username: config.brevo.campaign.basicAuth.username,
-                                password: config.brevo.campaign.basicAuth.password,
-                            },
+                        resolveFrontendConfig: (scope: EmailCampaignContentScope) => {
+                            const siteConfig = config.siteConfigs.find((sc) => sc.scope.domain === scope.domain);
+                            if (!siteConfig) {
+                                throw new Error(`No site config found for scope ${scope.domain}`);
+                            }
+                            return {
+                                frontend: {
+                                    url: `${siteConfig.url}/${scope.language}/render-brevo-email-campaign`,
+                                    basicAuth: {
+                                        username: config.brevo.campaign.basicAuth.username,
+                                        password: config.brevo.campaign.basicAuth.password,
+                                    },
+                                },
+                            };
                         },
                     },
                 }),

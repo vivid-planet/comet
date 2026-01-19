@@ -1,4 +1,4 @@
-import { getEmailCampaignConfigFromEnvVariables } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
+import { getEmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
 import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
 import { loadMessages } from "@src/util/loadMessages";
@@ -8,10 +8,9 @@ export const runtime = "nodejs";
 
 const RequestQueryValidationSchema = z.object({
     content: z.object({ blocks: z.array(z.any()) }),
-    scope: z.object({ domain: z.string(), language: z.string() }),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: Request, { params: { domain, language } }: { params: { domain: string; language: string } }) {
     const requestBody = await request.json();
     const validationResult = RequestQueryValidationSchema.safeParse(requestBody);
 
@@ -20,10 +19,10 @@ export async function POST(request: Request) {
     }
 
     const params = validationResult.data;
-    const messages = await loadMessages(params.scope.language);
+    const messages = await loadMessages(language);
 
     const { html, errors } = await convertMjmlToHtml(
-        renderMailContentAsMjml(params.content, { locale: params.scope.language, messages }, getEmailCampaignConfigFromEnvVariables()),
+        renderMailContentAsMjml(params.content, { locale: language, messages }, getEmailCampaignConfig({ domain, language })),
     );
     const outputHtml = replaceMailHtmlPlaceholders(html, "mail");
 

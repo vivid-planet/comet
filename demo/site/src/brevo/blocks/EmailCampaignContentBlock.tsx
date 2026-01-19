@@ -4,7 +4,7 @@ import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignDividerBlock } from "@src/brevo/blocks/EmailCampaignDividerBlock";
 import { EmailCampaignRichTextBlock } from "@src/brevo/blocks/EmailCampaignRichTextBlock";
 import { BlocksBlock } from "@src/brevo/temp/BlocksBlock";
-import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
+import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
 
 import { EmailCampaignSalutationBlock } from "./EmailCampaignSalutationBlock";
 

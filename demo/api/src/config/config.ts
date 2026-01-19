@@ -117,7 +117,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             apiKey: envVars.BREVO_API_KEY,
             redirectUrlForImport: envVars.BREVO_REDIRECT_URL_FOR_IMPORT,
             campaign: {
-                url: envVars.BREVO_CAMPAIGN_URL,
                 basicAuth: {
                     username: envVars.BREVO_CAMPAIGN_BASIC_AUTH_USERNAME,
                     password: envVars.BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD,

@@ -27,11 +27,13 @@ export interface BrevoModuleConfig {
     emailCampaigns: {
         Scope: Type<EmailCampaignScopeInterface>;
         EmailCampaignContentBlock: Block;
-        frontend: {
-            url: string;
-            basicAuth: {
-                username: string;
-                password: string;
+        resolveFrontendConfig: (scope: EmailCampaignScopeInterface) => {
+            frontend: {
+                url: string;
+                basicAuth: {
+                    username: string;
+                    password: string;
+                };
             };
         };
     };

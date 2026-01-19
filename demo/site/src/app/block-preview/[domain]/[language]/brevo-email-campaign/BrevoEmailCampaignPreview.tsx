@@ -3,7 +3,7 @@
 import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
 import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { RenderedMailForBlockPreview } from "@src/brevo/components/RenderedMailForBlockPreview";
-import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfigFromEnvVariables";
+import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
 import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
 import { type ContentScope } from "@src/site-configs";
 import { withBlockPreview } from "@src/util/blockPreview";
