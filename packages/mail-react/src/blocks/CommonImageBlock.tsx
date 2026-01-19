@@ -13,12 +13,7 @@ interface Props extends ComponentProps<typeof MjmlImage> {
 }
 
 function isAbsoluteUrl(url: string): boolean {
-    try {
-        new URL(url);
-        return true;
-    } catch {
-        return false;
-    }
+    return !url.startsWith("/");
 }
 
 export const CommonImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, baseUrl, ...restProps }: Props) => {
