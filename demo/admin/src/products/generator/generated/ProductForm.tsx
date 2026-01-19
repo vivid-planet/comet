@@ -216,10 +216,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 }}
                             />
 
-<<<<<<< HEAD
-            <DatePickerField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="createdAt" label={<FormattedMessage id="product.createdAt" defaultMessage="Created"/>}/>
-=======
-                            <Future_DatePickerField
+                            <DatePickerField
                                 readOnly
                                 disabled
                                 endAdornment={
@@ -232,7 +229,6 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 name="createdAt"
                                 label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
                             />
->>>>>>> main
 
                             <TextAreaField
                                 variant="horizontal"
@@ -480,21 +476,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 variant="horizontal"
                             />
 
-<<<<<<< HEAD
-            <DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
-        <FutureProductNotice />
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-        <FileUploadField name="priceList" label={<FormattedMessage id="product.priceList" defaultMessage="Price List"/>} variant="horizontal" maxFileSize={4194304}/>
-        <FileUploadField name="datasheets" label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets"/>} variant="horizontal" multiple maxFileSize={4194304}/>
-        <DateTimePickerField variant="horizontal" fullWidth name="lastCheckedAt" label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at"/>}/>
-        </FieldSet>
-                        </>
-                    </>)}
-            </FinalForm>);
-=======
-                            <Future_DatePickerField
+                            <DatePickerField
                                 variant="horizontal"
                                 fullWidth
                                 name="availableSince"
@@ -540,5 +522,4 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
             )}
         </FinalForm>
     );
->>>>>>> main
 }

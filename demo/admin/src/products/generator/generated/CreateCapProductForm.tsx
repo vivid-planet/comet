@@ -136,15 +136,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
                         variant="horizontal"
                     />
 
-<<<<<<< HEAD
-            <DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-                        </>)}
-            </FinalForm>);
-=======
-                    <Future_DatePickerField
+                    <DatePickerField
                         variant="horizontal"
                         fullWidth
                         name="availableSince"
@@ -168,5 +160,4 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
             )}
         </FinalForm>
     );
->>>>>>> main
 }

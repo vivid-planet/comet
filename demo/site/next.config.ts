@@ -58,15 +58,9 @@ const nextConfig: NextConfig = {
             ],
         },
     ],
-<<<<<<< HEAD:demo/site/next.config.ts
-    cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
-    cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
-    rewrites: async () => {
-=======
     cacheHandler: process.env.VALKEY_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.VALKEY_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
-    rewrites: () => {
->>>>>>> main:demo/site/next.config.mjs
+    rewrites: async () => {
         return {
             afterFiles: [
                 {

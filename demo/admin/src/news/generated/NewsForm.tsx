@@ -144,31 +144,7 @@ export function NewsForm({ onCreate, id }: FormProps) {
                             label={<FormattedMessage id="news.title" defaultMessage="Title" />}
                         />
 
-<<<<<<< HEAD
-            <DatePickerField required variant="horizontal" fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
-        <RadioGroupField required variant="horizontal" fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category"/>} options={[
-                {
-                    label: <FormattedMessage id="news.category.events" defaultMessage="Events"/>,
-                    value: "events",
-                }, {
-                    label: <FormattedMessage id="news.category.company" defaultMessage="Company"/>,
-                    value: "company",
-                }, {
-                    label: <FormattedMessage id="news.category.awards" defaultMessage="Awards"/>,
-                    value: "awards",
-                }
-            ]}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="news.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-        <Field name="content" isEqual={isEqual} label={<FormattedMessage id="news.content" defaultMessage="Content"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.content)}
-        </Field>
-                        </>
-                    </>)}
-            </FinalForm>);
-=======
-                        <Future_DatePickerField
+                        <DatePickerField
                             required
                             variant="horizontal"
                             fullWidth
@@ -219,5 +195,4 @@ export function NewsForm({ onCreate, id }: FormProps) {
             )}
         </FinalForm>
     );
->>>>>>> main
 }
