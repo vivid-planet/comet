@@ -32,11 +32,15 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id } });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLProductPriceFormDetailsFragment>(productFormFragment, data.product),
-        }
-        : {}, [data]);
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.product
+                ? {
+                      ...filterByFragment<GQLProductPriceFormDetailsFragment>(productFormFragment, data.product),
+                  }
+                : {},
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "product", id);
@@ -48,30 +52,44 @@ export function ProductPriceForm({ onCreate, id }: FormProps) {
         },
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValues, price: formValues.price ?? null, };
-        if (!id)
-            throw new Error();
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = { ...formValues, price: formValues.price ?? null };
+        if (!id) throw new Error();
         const { ...updateInput } = output;
         await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
             mutation: updateProductMutation,
             variables: { id, input: updateInput },
         });
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode="edit" initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-            <NumberField variant="horizontal" fullWidth name="price" label={<FormattedMessage id="product.price" defaultMessage="Price"/>} decimals={2} startAdornment={<InputAdornment position="start">€</InputAdornment>} helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123.45"/>}/>
-                        </>
-                    </>)}
-            </FinalForm>);
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode="edit"
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <NumberField
+                            variant="horizontal"
+                            fullWidth
+                            name="price"
+                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                            decimals={2}
+                            startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123.45" />}
+                        />
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }
