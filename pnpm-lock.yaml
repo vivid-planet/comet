@@ -277,11 +277,11 @@ importers:
   demo/api:
     dependencies:
       '@apollo/server':
-        specifier: ^5.1.0
-        version: 5.1.0(graphql@16.11.0)
+        specifier: ^5.2.0
+        version: 5.2.0(graphql@16.11.0)
       '@as-integrations/express5':
         specifier: ^1.1.2
-        version: 1.1.2(@apollo/server@5.1.0(graphql@16.11.0))(express@5.2.1)
+        version: 1.1.2(@apollo/server@5.2.0(graphql@16.11.0))(express@5.2.1)
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
@@ -311,7 +311,7 @@ importers:
         version: 6.5.3(@mikro-orm/core@6.5.3)
       '@nestjs/apollo':
         specifier: ^13.2.3
-        version: 13.2.3(@apollo/server@5.1.0(graphql@16.11.0))(@as-integrations/express5@1.1.2(@apollo/server@5.1.0(graphql@16.11.0))(express@5.2.1))(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/graphql@13.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1))(graphql@16.11.0)
+        version: 13.2.3(@apollo/server@5.2.0(graphql@16.11.0))(@as-integrations/express5@1.1.2(@apollo/server@5.2.0(graphql@16.11.0))(express@5.2.1))(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/graphql@13.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1))(graphql@16.11.0)
       '@nestjs/common':
         specifier: ^11.1.11
         version: 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -2616,8 +2616,8 @@ packages:
     peerDependencies:
       '@apollo/server': ^5.1.0
 
-  '@apollo/server@5.1.0':
-    resolution: {integrity: sha512-azqwwmKp23TMFQkjE66622sdY2Ao9d+LrebW++b3rFCNxU6XAl/vRwInOh9ejNgShDQzVS+bdCIFQnH9+r+N1A==}
+  '@apollo/server@5.2.0':
+    resolution: {integrity: sha512-OEAl5bwVitkvVkmZlgWksSnQ10FUr6q2qJMdkexs83lsvOGmd/y81X5LoETmKZux8UiQsy/A/xzP00b8hTHH/w==}
     engines: {node: '>=20'}
     peerDependencies:
       graphql: ^16.11.0
@@ -14203,10 +14203,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  open@10.1.0:
-    resolution: {integrity: sha512-mnkeQ1qP5Ue2wd+aivTD3NHd/lZ96Lu0jgf0pwktLPtx6cTZiH7tyeGRRHs0zX0rbrahXPnXlUnbeXyaBBuIaw==}
-    engines: {node: '>=18'}
-
   open@10.2.0:
     resolution: {integrity: sha512-YgBpdJHPyQ2UE5x+hlSXcnejzAvD0b22U2OuAP+8OnlJT+PjWPxtgmGqKKc+RgTM63U9gN0YzrYc71R2WT/hTA==}
     engines: {node: '>=18'}
@@ -17900,12 +17896,12 @@ snapshots:
       '@apollo/utils.logger': 3.0.0
       graphql: 16.11.0
 
-  '@apollo/server-plugin-landing-page-graphql-playground@4.0.1(@apollo/server@5.1.0(graphql@16.11.0))':
+  '@apollo/server-plugin-landing-page-graphql-playground@4.0.1(@apollo/server@5.2.0(graphql@16.11.0))':
     dependencies:
-      '@apollo/server': 5.1.0(graphql@16.11.0)
+      '@apollo/server': 5.2.0(graphql@16.11.0)
       '@apollographql/graphql-playground-html': 1.6.29
 
-  '@apollo/server@5.1.0(graphql@16.11.0)':
+  '@apollo/server@5.2.0(graphql@16.11.0)':
     dependencies:
       '@apollo/cache-control-types': 1.0.3(graphql@16.11.0)
       '@apollo/server-gateway-interface': 2.0.0(graphql@16.11.0)
@@ -18032,9 +18028,9 @@ snapshots:
       - encoding
       - supports-color
 
-  '@as-integrations/express5@1.1.2(@apollo/server@5.1.0(graphql@16.11.0))(express@5.2.1)':
+  '@as-integrations/express5@1.1.2(@apollo/server@5.2.0(graphql@16.11.0))(express@5.2.1)':
     dependencies:
-      '@apollo/server': 5.1.0(graphql@16.11.0)
+      '@apollo/server': 5.2.0(graphql@16.11.0)
       express: 5.2.1
 
   '@aws-crypto/crc32@5.2.0':
@@ -23431,10 +23427,10 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@nestjs/apollo@13.2.3(@apollo/server@5.1.0(graphql@16.11.0))(@as-integrations/express5@1.1.2(@apollo/server@5.1.0(graphql@16.11.0))(express@5.2.1))(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/graphql@13.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1))(graphql@16.11.0)':
+  '@nestjs/apollo@13.2.3(@apollo/server@5.2.0(graphql@16.11.0))(@as-integrations/express5@1.1.2(@apollo/server@5.2.0(graphql@16.11.0))(express@5.2.1))(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/graphql@13.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1))(graphql@16.11.0)':
     dependencies:
-      '@apollo/server': 5.1.0(graphql@16.11.0)
-      '@apollo/server-plugin-landing-page-graphql-playground': 4.0.1(@apollo/server@5.1.0(graphql@16.11.0))
+      '@apollo/server': 5.2.0(graphql@16.11.0)
+      '@apollo/server-plugin-landing-page-graphql-playground': 4.0.1(@apollo/server@5.2.0(graphql@16.11.0))
       '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/graphql': 13.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.11.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1)
@@ -23443,7 +23439,7 @@ snapshots:
       lodash.omit: 4.5.0
       tslib: 2.8.1
     optionalDependencies:
-      '@as-integrations/express5': 1.1.2(@apollo/server@5.1.0(graphql@16.11.0))(express@5.2.1)
+      '@as-integrations/express5': 1.1.2(@apollo/server@5.2.0(graphql@16.11.0))(express@5.2.1)
 
   '@nestjs/cli@11.0.14(@swc/core@1.15.3)(@types/node@24.10.4)(esbuild@0.25.12)':
     dependencies:
@@ -33153,15 +33149,8 @@ snapshots:
       file-type: 18.7.0
       get-stdin: 9.0.0
       meow: 12.1.1
-      open: 10.1.0
+      open: 10.2.0
       tempy: 3.1.0
-
-  open@10.1.0:
-    dependencies:
-      default-browser: 5.2.1
-      define-lazy-prop: 3.0.0
-      is-inside-container: 1.0.0
-      is-wsl: 3.1.0
 
   open@10.2.0:
     dependencies:
@@ -36784,7 +36773,7 @@ snapshots:
       http-proxy-middleware: 2.0.9(@types/express@4.17.21)
       ipaddr.js: 2.2.0
       launch-editor: 2.9.1
-      open: 10.1.0
+      open: 10.2.0
       p-retry: 6.2.1
       schema-utils: 4.3.3
       selfsigned: 2.4.1
