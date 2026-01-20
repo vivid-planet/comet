@@ -47,13 +47,22 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLManufacturerQuery, GQLManufacturerQueryVariables>(manufacturerQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.manufacturer
-        ? {
-            ...filterByFragment<GQLManufacturerFormFragment>(manufacturerFormFragment, data.manufacturer),
-            address: data.manufacturer.address ? { ...data.manufacturer.address, alternativeAddressEnabled: !!data.manufacturer.address.alternativeAddress, } : undefined,
-        }
-        : {}, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLManufacturerQuery, GQLManufacturerQueryVariables>(
+        manufacturerQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.manufacturer
+                ? {
+                      ...filterByFragment<GQLManufacturerFormFragment>(manufacturerFormFragment, data.manufacturer),
+                      address: data.manufacturer.address
+                          ? { ...data.manufacturer.address, alternativeAddressEnabled: !!data.manufacturer.address.alternativeAddress }
+                          : undefined,
+                  }
+                : {},
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "manufacturer", id);
@@ -64,24 +73,34 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async ({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValuesRest, address: { ...formValuesAddressRest, alternativeAddress: alternativeAddressEnabled && formValuesAddressRest.alternativeAddress ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ?? null, } : null, }, };
+    const handleSubmit = async (
+        { address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = {
+            ...formValuesRest,
+            address: {
+                ...formValuesAddressRest,
+                alternativeAddress:
+                    alternativeAddressEnabled && formValuesAddressRest.alternativeAddress
+                        ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ?? null }
+                        : null,
+            },
+        };
         if (mode === "edit") {
-            if (!id)
-                throw new Error();
+            if (!id) throw new Error();
             const { ...updateInput } = output;
             await client.mutate<GQLUpdateManufacturerMutation, GQLUpdateManufacturerMutationVariables>({
                 mutation: updateManufacturerMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
                 mutation: createManufacturerMutation,
                 variables: {
-                    input: output
+                    input: output,
                 },
             });
             const id = mutationResponse?.createManufacturer.id;
@@ -95,64 +114,218 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <TextField required variant="horizontal" fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name"/>}/>
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="name"
+                            label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />}
+                        />
 
-        <FieldSet collapsible title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address"/>}>
-            
-        <TextField required variant="horizontal" fullWidth name="address.street" label={<FormattedMessage id="manufacturer.address.street" defaultMessage="Address Street"/>}/>
+                        <FieldSet collapsible title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address" />}>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="address.street"
+                                label={<FormattedMessage id="manufacturer.address.street" defaultMessage="Address Street" />}
+                            />
 
-            <NumberField required variant="horizontal" fullWidth name="address.streetNumber" label={<FormattedMessage id="manufacturer.address.streetNumber" defaultMessage="Address Street Number"/>}/>
+                            <NumberField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="address.streetNumber"
+                                label={<FormattedMessage id="manufacturer.address.streetNumber" defaultMessage="Address Street Number" />}
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="address.zip" label={<FormattedMessage id="manufacturer.address.zip" defaultMessage="Address Zip"/>}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="address.zip"
+                                label={<FormattedMessage id="manufacturer.address.zip" defaultMessage="Address Zip" />}
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="address.country" label={<FormattedMessage id="manufacturer.address.country" defaultMessage="Address Country"/>}/>
-        <Field fullWidth name="address.alternativeAddressEnabled" type="checkbox" label={<FormattedMessage id="manufacturer.address.alternativeAddress.address.alternativeAddressEnabled" defaultMessage="Add alternative address"/>}>
-                    {(props) => (<FormControlLabel control={<FinalFormSwitch {...props}/>} label={props.input.checked ? <FormattedMessage {...messages.yes}/> : <FormattedMessage {...messages.no}/>}/>)}
-                </Field>
-                 <Field name="address.alternativeAddressEnabled" fullWidth subscription={{ value: true }}>
-                    {({ input: { value } }) => value ? (<>
-                                
-        <TextField required variant="horizontal" fullWidth name="address.alternativeAddress.street" label={<FormattedMessage id="manufacturer.street" defaultMessage="Street"/>}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="address.country"
+                                label={<FormattedMessage id="manufacturer.address.country" defaultMessage="Address Country" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="address.alternativeAddressEnabled"
+                                type="checkbox"
+                                label={
+                                    <FormattedMessage
+                                        id="manufacturer.address.alternativeAddress.address.alternativeAddressEnabled"
+                                        defaultMessage="Add alternative address"
+                                    />
+                                }
+                            >
+                                {(props) => (
+                                    <FormControlLabel
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                                    />
+                                )}
+                            </Field>
+                            <Field name="address.alternativeAddressEnabled" fullWidth subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <TextField
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="address.alternativeAddress.street"
+                                                label={<FormattedMessage id="manufacturer.street" defaultMessage="Street" />}
+                                            />
 
-            <NumberField variant="horizontal" fullWidth name="address.alternativeAddress.streetNumber" label={<FormattedMessage id="manufacturer.streetNumber" defaultMessage="Street Number"/>}/>
+                                            <NumberField
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="address.alternativeAddress.streetNumber"
+                                                label={<FormattedMessage id="manufacturer.streetNumber" defaultMessage="Street Number" />}
+                                            />
 
-        <TextField required variant="horizontal" fullWidth name="address.alternativeAddress.zip" label={<FormattedMessage id="manufacturer.zip" defaultMessage="Zip"/>}/>
+                                            <TextField
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="address.alternativeAddress.zip"
+                                                label={<FormattedMessage id="manufacturer.zip" defaultMessage="Zip" />}
+                                            />
 
-        <TextField required variant="horizontal" fullWidth name="address.alternativeAddress.country" label={<FormattedMessage id="manufacturer.country" defaultMessage="Country"/>}/>
-                            </>) : null}
-                </Field>
-        </FieldSet>
+                                            <TextField
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="address.alternativeAddress.country"
+                                                label={<FormattedMessage id="manufacturer.country" defaultMessage="Country" />}
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
+                        </FieldSet>
 
-        <FieldSet title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address as embeddable"/>}>
-            
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.street" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.street" defaultMessage="Address As Embeddable Street"/>}/>
+                        <FieldSet title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address as embeddable" />}>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.street"
+                                label={
+                                    <FormattedMessage id="manufacturer.addressAsEmbeddable.street" defaultMessage="Address As Embeddable Street" />
+                                }
+                            />
 
-            <NumberField required variant="horizontal" fullWidth name="addressAsEmbeddable.streetNumber" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.streetNumber" defaultMessage="Address As Embeddable Street Number"/>}/>
+                            <NumberField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.streetNumber"
+                                label={
+                                    <FormattedMessage
+                                        id="manufacturer.addressAsEmbeddable.streetNumber"
+                                        defaultMessage="Address As Embeddable Street Number"
+                                    />
+                                }
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.zip" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.zip" defaultMessage="Address As Embeddable Zip"/>}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.zip"
+                                label={<FormattedMessage id="manufacturer.addressAsEmbeddable.zip" defaultMessage="Address As Embeddable Zip" />}
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.country" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.country" defaultMessage="Address As Embeddable Country"/>}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.country"
+                                label={
+                                    <FormattedMessage id="manufacturer.addressAsEmbeddable.country" defaultMessage="Address As Embeddable Country" />
+                                }
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.street" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.street" defaultMessage="Address As Embeddable Alternative Address Street"/>}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.alternativeAddress.street"
+                                label={
+                                    <FormattedMessage
+                                        id="manufacturer.addressAsEmbeddable.alternativeAddress.street"
+                                        defaultMessage="Address As Embeddable Alternative Address Street"
+                                    />
+                                }
+                            />
 
-            <NumberField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.streetNumber" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber" defaultMessage="Address As Embeddable Alternative Address Street Number"/>}/>
+                            <NumberField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.alternativeAddress.streetNumber"
+                                label={
+                                    <FormattedMessage
+                                        id="manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber"
+                                        defaultMessage="Address As Embeddable Alternative Address Street Number"
+                                    />
+                                }
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.zip" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.zip" defaultMessage="Address As Embeddable Alternative Address Zip"/>}/>
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.alternativeAddress.zip"
+                                label={
+                                    <FormattedMessage
+                                        id="manufacturer.addressAsEmbeddable.alternativeAddress.zip"
+                                        defaultMessage="Address As Embeddable Alternative Address Zip"
+                                    />
+                                }
+                            />
 
-        <TextField required variant="horizontal" fullWidth name="addressAsEmbeddable.alternativeAddress.country" label={<FormattedMessage id="manufacturer.addressAsEmbeddable.alternativeAddress.country" defaultMessage="Address As Embeddable Alternative Address Country"/>}/>
-        </FieldSet>
-                        </>
-                    </>)}
-            </FinalForm>);
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="addressAsEmbeddable.alternativeAddress.country"
+                                label={
+                                    <FormattedMessage
+                                        id="manufacturer.addressAsEmbeddable.alternativeAddress.country"
+                                        defaultMessage="Address As Embeddable Alternative Address Country"
+                                    />
+                                }
+                            />
+                        </FieldSet>
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }

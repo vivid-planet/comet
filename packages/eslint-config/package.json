@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "8.10.0",
+    "version": "8.11.1",
     "description": "A set of ESLint configurations for Comet projects",
     "repository": {
         "directory": "packages/eslint-config",
@@ -36,15 +36,15 @@
         "lint": "run-p lint:prettier lint:eslint",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 *.json ",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'"
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'"
     },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
         "@comet/eslint-plugin": "workspace:*",
         "@eslint/eslintrc": "^3.3.3",
         "@eslint/js": "^9.30.1",
-        "@next/eslint-plugin-next": "^15.3.5",
-        "eslint-config-next": "^15.3.5",
+        "@next/eslint-plugin-next": "^15.5.9",
+        "eslint-config-next": "^15.5.9",
         "eslint-config-prettier": "^10.1.5",
         "eslint-plugin-formatjs": "^5.4.0",
         "eslint-plugin-import": "^2.31.0",
@@ -56,7 +56,7 @@
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
         "globals": "^15.15.0",
-        "npm-run-all2": "^8.0.0",
+        "npm-run-all2": "^8.0.4",
         "typescript-eslint": "^8.24.1"
     },
     "devDependencies": {

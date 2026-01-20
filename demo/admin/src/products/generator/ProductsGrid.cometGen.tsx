@@ -122,7 +122,7 @@ export default defineConfig<GQLProduct>({
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "date")
         { type: "date", name: "availableSince", width: 140 },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "dateTime")
-        { type: "dateTime", name: "createdAt", width: 170 },
+        { type: "dateTime", name: "createdAt", width: 170, visible: false },
         {
             type: "text",
             name: "manufacturer.name",
