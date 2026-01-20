@@ -79,6 +79,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export { TableBlock } from "./blocks/table/TableBlock";
 export type {
     BlockAdminComponent,
     BlockAdminComponentPart,

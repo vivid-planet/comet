@@ -1,0 +1,36 @@
+import { type PropsWithData } from "@comet/site-nextjs";
+import { type TableBlockData } from "@src/blocks.generated";
+import { PageLayout } from "@src/layout/PageLayout";
+import clsx from "clsx";
+
+import { Typography } from "../components/Typography";
+import styles from "./TableBlock.module.scss";
+
+export const TableBlock = ({ data }: PropsWithData<TableBlockData>) => {
+    return (
+        <PageLayout grid>
+            <div className={styles.pageLayoutContent}>
+                <table className={styles.table}>
+                    <tbody>
+                        {data.rows.map((row) => (
+                            <tr key={row.id} className={styles.row}>
+                                {data.columns.map((column) => {
+                                    const cellValue = row.cellValues.find((cellValue) => cellValue.columnId === column.id);
+                                    const highlightCell = row.highlighted || column.highlighted;
+
+                                    return (
+                                        <td key={column.id} className={clsx([styles.cell, highlightCell && styles["cell--highlighted"]])}>
+                                            <Typography variant="paragraph300" className={styles["cell__text"]}>
+                                                {cellValue?.value}
+                                            </Typography>
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </PageLayout>
+    );
+};

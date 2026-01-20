@@ -51,7 +51,7 @@
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts"],
-            "ignoreDependencies": ["jsdom"]
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "jsdom"]
         },
         "packages/admin/admin-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
