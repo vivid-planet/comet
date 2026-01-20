@@ -8,6 +8,14 @@ import { type BlacklistedContactsInterface } from "../blacklisted-contacts/entit
 import { type BrevoEmailImportLogInterface } from "../brevo-email-import-log/entity/brevo-email-import-log.entity.factory";
 import { type BrevoContactFilterAttributesInterface } from "../types";
 
+interface FrontendConfig {
+    url: string;
+    basicAuth: {
+        username: string;
+        password: string;
+    };
+}
+
 export interface BrevoModuleConfig {
     brevo: {
         resolveConfig: (scope: EmailCampaignScopeInterface) => {
@@ -27,15 +35,7 @@ export interface BrevoModuleConfig {
     emailCampaigns: {
         Scope: Type<EmailCampaignScopeInterface>;
         EmailCampaignContentBlock: Block;
-        resolveFrontendConfig: (scope: EmailCampaignScopeInterface) => {
-            frontend: {
-                url: string;
-                basicAuth: {
-                    username: string;
-                    password: string;
-                };
-            };
-        };
+        frontend: FrontendConfig | ((scope: EmailCampaignScopeInterface) => FrontendConfig);
     };
     contactsWithoutDoi?: {
         allowAddingContactsWithoutDoi?: boolean;

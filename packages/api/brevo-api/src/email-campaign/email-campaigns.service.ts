@@ -48,16 +48,21 @@ export class EmailCampaignsService {
         const content = await this.blockTransformerService.transformToPlain(campaign.content, { previewDamUrls: false });
 
         const brevoConfig = await this.brevoConfigRepository.findOneOrFail({ scope: campaign.scope });
-        const campaignConfig = this.config.emailCampaigns.resolveFrontendConfig(campaign.scope);
+        let campaignConfig;
+        if (typeof this.config.emailCampaigns.frontend === "function") {
+            campaignConfig = this.config.emailCampaigns.frontend(campaign.scope);
+        } else {
+            campaignConfig = this.config.emailCampaigns.frontend;
+        }
 
         const { data: htmlContent, status } = await this.httpService.axiosRef.post(
-            campaignConfig.frontend.url,
+            campaignConfig.url,
             { id: campaign.id, title: campaign.title, content, scope: campaign.scope },
             {
                 headers: { "Content-Type": "application/json" },
                 auth: {
-                    username: campaignConfig.frontend.basicAuth.username,
-                    password: campaignConfig.frontend.basicAuth.password,
+                    username: campaignConfig.basicAuth.username,
+                    password: campaignConfig.basicAuth.password,
                 },
             },
         );
