@@ -1,5 +1,3 @@
-import { createRichTextBlock } from "@comet/cms-api";
+import { createRichTextBlock, ExternalLinkBlock } from "@comet/cms-api";
 
-import { EmailCampaignLinkBlock } from "./email-campaign-link.block";
-
-export const EmailCampaignRichTextBlock = createRichTextBlock({ link: EmailCampaignLinkBlock });
+export const EmailCampaignRichTextBlock = createRichTextBlock({ link: ExternalLinkBlock });

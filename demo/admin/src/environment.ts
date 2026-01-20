@@ -6,6 +6,5 @@ export const environment = [
     "BUILD_NUMBER",
     "COMMIT_SHA",
     "MUI_LICENSE_KEY",
-    "BREVO_CAMPAIGN_URL",
     "BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI",
 ];

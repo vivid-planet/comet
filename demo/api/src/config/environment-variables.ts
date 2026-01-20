@@ -192,9 +192,6 @@ export class EnvironmentVariables {
     BREVO_ECG_RTR_LIST_API_KEY: string;
 
     @IsString()
-    BREVO_CAMPAIGN_URL: string;
-
-    @IsString()
     BREVO_CAMPAIGN_BASIC_AUTH_USERNAME: string;
 
     @IsString()

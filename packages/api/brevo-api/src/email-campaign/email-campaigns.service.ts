@@ -45,18 +45,24 @@ export class EmailCampaignsService {
     }
 
     async saveEmailCampaignInBrevo(campaign: EmailCampaignInterface, scheduledAt?: Date): Promise<EmailCampaignInterface> {
-        const content = await this.blockTransformerService.transformToPlain(campaign.content);
+        const content = await this.blockTransformerService.transformToPlain(campaign.content, { previewDamUrls: false });
 
         const brevoConfig = await this.brevoConfigRepository.findOneOrFail({ scope: campaign.scope });
+        let campaignConfig;
+        if (typeof this.config.emailCampaigns.frontend === "function") {
+            campaignConfig = this.config.emailCampaigns.frontend(campaign.scope);
+        } else {
+            campaignConfig = this.config.emailCampaigns.frontend;
+        }
 
         const { data: htmlContent, status } = await this.httpService.axiosRef.post(
-            this.config.emailCampaigns.frontend.url,
+            campaignConfig.url,
             { id: campaign.id, title: campaign.title, content, scope: campaign.scope },
             {
                 headers: { "Content-Type": "application/json" },
                 auth: {
-                    username: this.config.emailCampaigns.frontend.basicAuth.username,
-                    password: this.config.emailCampaigns.frontend.basicAuth.password,
+                    username: campaignConfig.basicAuth.username,
+                    password: campaignConfig.basicAuth.password,
                 },
             },
         );
