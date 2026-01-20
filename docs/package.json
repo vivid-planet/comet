@@ -16,7 +16,7 @@
         "lint": "run-p lint:prettier lint:eslint lint:spelling",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:spelling": "pnpm cspell docs/**",
         "serve": "docusaurus serve",
         "start": "run-s clear:generated-docs generate-component-docs:running-storybook && run-p watch:component-docs start:docusaurus",
@@ -39,7 +39,7 @@
         ]
     },
     "dependencies": {
-        "@algolia/client-search": "^5.32.0",
+        "@algolia/client-search": "^5.46.2",
         "@docusaurus/core": "^3.9.2",
         "@docusaurus/preset-classic": "^3.9.2",
         "@docusaurus/theme-mermaid": "^3.9.2",
@@ -61,7 +61,7 @@
         "chokidar-cli": "^3.0.0",
         "cspell": "^9.0.0",
         "eslint": "^9.30.1",
-        "npm-run-all2": "^8.0.0",
+        "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "ts-node": "^10.9.2",
         "typescript": "5.9.3"

@@ -126,6 +126,13 @@ export default defineConfig({
             group: ["site-react", "site-nextjs", "cms"],
         },
 
+        //group mail-react
+        {
+            name: "mail-react",
+            script: "pnpm --filter @comet/mail-react run dev",
+            group: ["mail-react"],
+        },
+
         //group demo admin
         {
             name: "demo-admin",
@@ -169,6 +176,11 @@ export default defineConfig({
             script: "pnpm run dev:demo-api-mitmproxy",
             group: ["demo-api", "demo"],
             waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "demo-api-storybook",
+            script: "pnpm --filter comet-demo-api run storybook",
+            group: ["demo-api", "demo"],
         },
 
         // group demo login

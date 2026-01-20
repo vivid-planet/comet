@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generateFormField - staticSelect should generate readonly staticSelect 1`] = `
+exports[`generateFormField - staticSelect > should generate readonly staticSelect 1`] = `
 "<SelectField
                             
                              fullWidth
@@ -25,7 +25,7 @@ exports[`generateFormField - staticSelect should generate readonly staticSelect 
                             />"
 `;
 
-exports[`generateFormField - staticSelect should generate simple staticSelect 1`] = `
+exports[`generateFormField - staticSelect > should generate simple staticSelect 1`] = `
 "<RadioGroupField
              required
               variant="horizontal"
