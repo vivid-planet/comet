@@ -1,7 +1,7 @@
 import { buildSchema, type GraphQLSchema, introspectionFromSchema, type IntrospectionQuery } from "graphql";
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { findIntrospectionObjectType } from "../generateAsyncSelect.js";
+import { findIntrospectionObjectType } from "../generateAsyncSelect";
 
 describe("generateAsyncSelect", () => {
     describe("findIntrospectionObjectType single", () => {

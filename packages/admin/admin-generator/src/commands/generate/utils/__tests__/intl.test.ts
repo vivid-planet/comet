@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { type FormattedMessageElement } from "../../generate-command.js";
-import { generateFormattedMessage } from "../intl.js";
+import { type FormattedMessageElement } from "../../generate-command";
+import { generateFormattedMessage } from "../intl";
 
 describe("generateFormattedMessage", () => {
     describe("jsx type", () => {

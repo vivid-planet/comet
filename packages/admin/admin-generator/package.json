@@ -11,21 +11,20 @@
     "type": "module",
     "exports": {
         ".": {
-            "import": "./lib/index.js",
-            "types": "./lib/index.d.ts"
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.mts"
         }
     },
     "bin": {
-        "comet-admin-generator": "bin/admin-generator.js"
+        "comet-admin-generator": "bin/admin-generator.mjs"
     },
     "files": [
-        "bin/**/*.js",
-        "lib/*"
+        "bin/**/*.mjs",
+        "dist/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && tsc -p tsconfig.build.json",
-        "clean": "rimraf lib",
-        "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
+        "build": "tsdown",
+        "dev": "tsdown --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
@@ -36,38 +35,38 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@graphql-tools/graphql-file-loader": "^7.5.17",
-        "@graphql-tools/load": "^7.8.14",
-        "change-case": "^4.1.2",
-        "commander": "^9.5.0",
-        "glob": "^11.1.0",
-        "graphql": "^16.11.0",
-        "jiti": "^2.6.1",
-        "object-path": "^0.11.8",
-        "pluralize": "^8.0.0"
-    },
-    "devDependencies": {
         "@apollo/client": "^3.14.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
+        "@graphql-tools/graphql-file-loader": "^7.5.17",
+        "@graphql-tools/load": "^7.8.14",
         "@mui/material": "^7.3.7",
         "@mui/x-data-grid": "^7.29.8",
+        "change-case": "^4.1.2",
+        "commander": "^9.5.0",
+        "final-form": "^4.20.10",
+        "glob": "^11.1.0",
+        "graphql": "^16.11.0",
+        "jiti": "^2.6.1",
+        "object-path": "^0.11.8",
+        "pluralize": "^8.0.0",
+        "react-intl": "^7.1.11",
+        "typescript": "5.9.3"
+    },
+    "devDependencies": {
+        "@comet/eslint-config": "workspace:*",
         "@types/node": "^24.9.1",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",
         "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "eslint": "^9.30.1",
-        "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "react-intl": "^7.1.11",
-        "rimraf": "^6.1.2",
-        "typescript": "5.9.3",
+        "tsdown": "0.20.0-beta.4",
         "vitest": "^4.0.16"
     },
     "engines": {

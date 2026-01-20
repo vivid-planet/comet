@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { generateGqlOperation } from "../generateGqlOperation.js";
+import { generateGqlOperation } from "../generateGqlOperation";
 
 function normalizeSpaces(str: string) {
     return str.replace(/\s+/g, " ").trim();

@@ -1,6 +1,6 @@
 import { type IntrospectionQuery } from "graphql";
 
-import { type FormFieldConfig } from "../generate-command.js";
+import { type FormFieldConfig } from "../generate-command";
 
 export const isFieldOptional = ({
     config,

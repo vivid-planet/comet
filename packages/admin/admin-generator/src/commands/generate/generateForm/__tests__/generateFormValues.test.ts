@@ -1,15 +1,15 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import { type FormConfig } from "../../generate-command.js";
-import { generateFields } from "../generateFields.js";
+import { type FormConfig } from "../../generate-command";
+import { generateFields } from "../generateFields";
 import {
     formValuesConfigToTree,
     generateDestructFormValueForInput,
     generateFormValuesToGqlInput,
     generateFormValuesType,
     generateInitialValues,
-} from "../generateFormValues.js";
+} from "../generateFormValues";
 
 describe("generateFormValues", () => {
     it("generates standard case without fields that need special handling", async () => {

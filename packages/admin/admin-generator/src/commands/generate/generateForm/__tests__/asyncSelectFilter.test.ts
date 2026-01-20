@@ -1,9 +1,9 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import { type FormConfig, type FormFieldConfig } from "../../generate-command.js";
-import { generateForm } from "../generateForm.js";
-import { generateFormField } from "../generateFormField.js";
+import { type FormConfig, type FormFieldConfig } from "../../generate-command";
+import { generateForm } from "../generateForm";
+import { generateFormField } from "../generateFormField";
 
 describe("AsyncSelectFilter", () => {
     it("generates field with filter", async () => {

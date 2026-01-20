@@ -25,12 +25,12 @@ import type { ComponentType, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
 import { promisify } from "util";
 
-import { parseConfig } from "./config/parseConfig.js";
-import { generateForm } from "./generateForm/generateForm.js";
-import { generateGrid } from "./generateGrid/generateGrid.js";
-import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields.js";
-import { type ColumnVisibleOption } from "./utils/columnVisibility.js";
-import { writeGenerated } from "./utils/writeGenerated.js";
+import { parseConfig } from "./config/parseConfig";
+import { generateForm } from "./generateForm/generateForm";
+import { generateGrid } from "./generateGrid/generateGrid";
+import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
+import { type ColumnVisibleOption } from "./utils/columnVisibility";
+import { writeGenerated } from "./utils/writeGenerated";
 
 const exec = promisify(execCallback);
 

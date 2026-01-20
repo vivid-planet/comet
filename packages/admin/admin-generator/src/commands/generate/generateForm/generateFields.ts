@@ -7,12 +7,12 @@ import {
     type GQLDocumentConfigMap,
     isFormFieldConfig,
     isFormLayoutConfig,
-} from "../generate-command.js";
-import { type Imports } from "../utils/generateImportsCode.js";
-import { generateComponentFormField } from "./generateComponentFormField.js";
-import { type Prop } from "./generateForm.js";
-import { generateFormField } from "./generateFormField.js";
-import { generateFormLayout } from "./generateFormLayout.js";
+} from "../generate-command";
+import { type Imports } from "../utils/generateImportsCode";
+import { generateComponentFormField } from "./generateComponentFormField";
+import { type Prop } from "./generateForm";
+import { generateFormField } from "./generateFormField";
+import { generateFormLayout } from "./generateFormLayout";
 
 export type GenerateFieldsReturn = GeneratorReturn & {
     imports: Imports;

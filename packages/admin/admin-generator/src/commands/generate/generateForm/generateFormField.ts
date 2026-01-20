@@ -1,17 +1,17 @@
 import { type IntrospectionEnumType, type IntrospectionNamedTypeRef, type IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from "../generate-command.js";
-import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable.js";
-import { convertConfigImport } from "../utils/convertConfigImport.js";
-import { type Imports } from "../utils/generateImportsCode.js";
-import { generateFormattedMessage } from "../utils/intl.js";
-import { isFieldOptional } from "../utils/isFieldOptional.js";
-import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards.js";
-import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect.js";
-import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType.js";
-import { buildFormFieldOptions } from "./formField/options.js";
-import { type GenerateFieldsReturn } from "./generateFields.js";
-import { type Prop } from "./generateForm.js";
+import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from "../generate-command";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { convertConfigImport } from "../utils/convertConfigImport";
+import { type Imports } from "../utils/generateImportsCode";
+import { generateFormattedMessage } from "../utils/intl";
+import { isFieldOptional } from "../utils/isFieldOptional";
+import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
+import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType";
+import { buildFormFieldOptions } from "./formField/options";
+import { type GenerateFieldsReturn } from "./generateFields";
+import { type Prop } from "./generateForm";
 
 export function generateFormField({
     gqlIntrospection,

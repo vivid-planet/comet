@@ -1,13 +1,13 @@
 import { type IntrospectionInputValue, type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../generate-command.js";
-import { findQueryTypeOrThrow } from "../../utils/findQueryType.js";
-import { generateGqlOperation } from "../../utils/generateGqlOperation.js";
-import { type Imports } from "../../utils/generateImportsCode.js";
-import { isFieldOptional } from "../../utils/isFieldOptional.js";
-import { buildFormFieldOptions } from "../formField/options.js";
-import { findFieldByName, type GenerateFieldsReturn } from "../generateFields.js";
-import { type Prop } from "../generateForm.js";
+import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../generate-command";
+import { findQueryTypeOrThrow } from "../../utils/findQueryType";
+import { generateGqlOperation } from "../../utils/generateGqlOperation";
+import { type Imports } from "../../utils/generateImportsCode";
+import { isFieldOptional } from "../../utils/isFieldOptional";
+import { buildFormFieldOptions } from "../formField/options";
+import { findFieldByName, type GenerateFieldsReturn } from "../generateFields";
+import { type Prop } from "../generateForm";
 
 function gqlScalarToTypescriptType(scalarName: string): string {
     if (scalarName === "String" || scalarName === "ID" || scalarName === "DateTime" || scalarName === "LocalDate" || scalarName === "Date") {

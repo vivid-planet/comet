@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { afterAll, describe, expect, it } from "vitest";
 
-import { parseConfig } from "../parseConfig.js";
+import { parseConfig } from "../parseConfig";
 
 describe("parseConfig", () => {
     it("parses a simple file", async () => {

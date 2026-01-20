@@ -1,8 +1,8 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import { type FormConfig, type FormFieldConfig } from "../../generate-command.js";
-import { generateFormField } from "../generateFormField.js";
+import { type FormConfig, type FormFieldConfig } from "../../generate-command";
+import { generateFormField } from "../generateFormField";
 
 describe("AsyncSelect rendered props", () => {
     it("generates readonly async select", async () => {

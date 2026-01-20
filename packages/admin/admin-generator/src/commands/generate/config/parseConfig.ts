@@ -2,7 +2,7 @@ import { promises as fs, readFileSync } from "fs";
 import { createJiti } from "jiti";
 import { basename, dirname } from "path";
 
-import { transformConfigFile } from "./transformConfig.js";
+import { transformConfigFile } from "./transformConfig";
 
 type TsConfig = {
     compilerOptions?: {

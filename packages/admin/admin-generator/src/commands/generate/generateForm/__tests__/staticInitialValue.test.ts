@@ -1,9 +1,9 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import type { FormConfig, FormFieldConfig } from "../../generate-command.js";
-import { generateFormField } from "../generateFormField.js";
-import { generateInitialValues } from "../generateFormValues.js";
+import type { FormConfig, FormFieldConfig } from "../../generate-command";
+import { generateFormField } from "../generateFormField";
+import { generateInitialValues } from "../generateFormValues";
 
 const schema = buildSchema(`
     type Query {

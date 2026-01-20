@@ -1,8 +1,8 @@
 import { type IntrospectionInputObjectType } from "graphql";
 
-import { type GridConfig } from "../generate-command.js";
-import { type Imports } from "../utils/generateImportsCode.js";
-import { type Prop } from "./generateGrid.js";
+import { type GridConfig } from "../generate-command";
+import { type Imports } from "../utils/generateImportsCode";
+import { type Prop } from "./generateGrid";
 
 export function getPropsForFilterProp<T extends { __typename?: string }>({
     config,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { generateGridToolbar } from "../generateGridToolbar.js";
+import { generateGridToolbar } from "../generateGridToolbar";
 
 describe("generateGridToolbar", () => {
     it("generates toolbar with all features enabled", () => {
