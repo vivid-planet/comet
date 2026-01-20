@@ -15,7 +15,7 @@ export const rowInsertSchema = z.object({
 
 export type RowInsertData = z.infer<typeof rowInsertSchema>;
 
-export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInsertData, index: number, newRowId: string = uuid()) => {
+export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInsertData, index: number, newRowId: string = uuid()): TableBlockData => {
     const updatedColumns = [...state.columns];
     const newColumnIds: string[] = [];
 
@@ -58,6 +58,13 @@ export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInser
         ...state,
         columns: updatedColumns,
         rows: [...rowsBeforeTargetIndex, newRow, ...rowsAfterTargetIndex],
+    };
+};
+
+export const deleteRowById = (state: TableBlockData, rowIdToDelete: string): TableBlockData => {
+    return {
+        ...state,
+        rows: state.rows.filter(({ id }) => id !== rowIdToDelete),
     };
 };
 

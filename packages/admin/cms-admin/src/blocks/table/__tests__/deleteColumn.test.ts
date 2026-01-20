@@ -1,12 +1,12 @@
 import { within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
-import { mockTableData } from "../__mocks__/TableBlockData.mocks";
+import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfColumnAtIndex, renderTableBlock } from "./utils";
 
 describe("TableBlock: Delete a column", () => {
     it("should delete a certain column", async () => {
-        const rendered = renderTableBlock(mockTableData);
+        const rendered = renderTableBlock(mockBlockDataObjects.default);
         const targetColumnIndex = 2;
 
         const rowgroup = rendered.getByRole("rowgroup");

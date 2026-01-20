@@ -63,3 +63,7 @@ export const getCellValuesPerColumn = (rendered: RenderResult) => {
 
     return cellValuesPerColumn;
 };
+
+export const getCellsExcludingTheDragHandleAndActionsCells = (rowElement: HTMLElement): HTMLElement[] => {
+    return within(rowElement).queryAllByRole("gridcell").slice(1, -1);
+};

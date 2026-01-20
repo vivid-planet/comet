@@ -2,7 +2,7 @@ import { userEvent } from "@testing-library/user-event";
 import { waitFor } from "test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { mockTableData } from "../__mocks__/TableBlockData.mocks";
+import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfColumnAtIndex, getCellValuesPerColumn, renderTableBlock, waitForClipboardToHaveValue } from "./utils";
 
 describe("TableBlock: Copy and paste a column", () => {
@@ -15,7 +15,7 @@ describe("TableBlock: Copy and paste a column", () => {
         const sourceColumnIndex = 1;
         const targetColumnIndex = 2;
 
-        const rendered = renderTableBlock(mockTableData);
+        const rendered = renderTableBlock(mockBlockDataObjects.default);
         const initialColumnHeaders = rendered.getAllByRole("columnheader");
 
         const waitForNewColumnToBeInserted = async () => {
