@@ -11,11 +11,14 @@ type SelectFieldProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"s
     };
 
 export const SelectField = <TFieldValues extends FieldValues>({
+    label,
+    helperText,
     name,
     control,
     rules,
-    label,
-    helperText,
+    defaultValue,
+    shouldUnregister,
+    disabled,
     options,
     placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
     ...selectProps
@@ -26,6 +29,9 @@ export const SelectField = <TFieldValues extends FieldValues>({
             name={name}
             control={control}
             rules={rules}
+            defaultValue={defaultValue}
+            shouldUnregister={shouldUnregister}
+            disabled={disabled}
             render={({ field, fieldState }) => (
                 <div>
                     <label>

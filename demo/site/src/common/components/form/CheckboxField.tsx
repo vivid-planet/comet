@@ -8,11 +8,14 @@ type CheckboxFieldProps<TFieldValues extends FieldValues> = Omit<ComponentProps<
     };
 
 export const CheckboxField = <TFieldValues extends FieldValues>({
+    label,
+    helperText,
     name,
     control,
     rules,
-    label,
-    helperText,
+    defaultValue,
+    shouldUnregister,
+    disabled,
     ...inputProps
 }: CheckboxFieldProps<TFieldValues>) => {
     const required = !!rules?.required;
@@ -21,6 +24,9 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
             name={name}
             control={control}
             rules={rules}
+            defaultValue={defaultValue}
+            shouldUnregister={shouldUnregister}
+            disabled={disabled}
             render={({ field: { value, ...field }, fieldState }) => (
                 <div>
                     <input type="checkbox" required={required} {...inputProps} {...field} checked={value} />

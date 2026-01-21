@@ -9,11 +9,14 @@ type InputProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"textare
     };
 
 export const TextareaField = <TFieldValues extends FieldValues>({
+    label,
+    helperText,
     name,
     control,
     rules,
-    label,
-    helperText,
+    defaultValue,
+    shouldUnregister,
+    disabled,
     ...textareaProps
 }: InputProps<TFieldValues>) => {
     const required = !!rules?.required;
@@ -22,6 +25,9 @@ export const TextareaField = <TFieldValues extends FieldValues>({
             name={name}
             control={control}
             rules={rules}
+            defaultValue={defaultValue}
+            shouldUnregister={shouldUnregister}
+            disabled={disabled}
             render={({ field, fieldState }) => (
                 <div>
                     <label>

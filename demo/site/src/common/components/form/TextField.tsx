@@ -8,13 +8,26 @@ type InputProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"input">
         helperText?: ReactNode;
     };
 
-export const TextField = <TFieldValues extends FieldValues>({ name, control, rules, label, helperText, ...inputProps }: InputProps<TFieldValues>) => {
+export const TextField = <TFieldValues extends FieldValues>({
+    label,
+    helperText,
+    name,
+    control,
+    rules,
+    defaultValue,
+    shouldUnregister,
+    disabled,
+    ...inputProps
+}: InputProps<TFieldValues>) => {
     const required = !!rules?.required;
     return (
         <Controller
             name={name}
             control={control}
             rules={rules}
+            defaultValue={defaultValue}
+            shouldUnregister={shouldUnregister}
+            disabled={disabled}
             render={({ field, fieldState }) => (
                 <div>
                     <label>
