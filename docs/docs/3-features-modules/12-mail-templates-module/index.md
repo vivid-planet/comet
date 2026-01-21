@@ -15,12 +15,33 @@ imports: [
 ]
 ```
 
+### Using React
+
+If you plan to use React components in the mail template, update your `tsconfig.json` and install the react packages:
+
+```json title="/api/tsconfig.json"
+{
+    "compilerOptions": {
+        "jsx": "react-jsx",
+    }
+}
+```
+
+```json title="/api/package.json"
+"dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+}
+```
+
 ## Create a mail template class
 
-Create class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts` (.mail is just a convention, not required)
+Create class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts`. 
+- `.mail` is just a convention, not required
+- Use `.tsx` if you want to use React components in the mail template
 
-```ts title="/api/src/my-module/my-custom.mail.ts"
-import { renderToMjml } from "mjml-react";
+```ts title="/api/src/my-module/my-custom.mail.tsx"
+import { renderToString } from "react-dom/server";
 
 @MailTemplate()
 export class MyCustomMail implements MailTemplateInterface<MailProps> {
@@ -36,8 +57,8 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
                 defaultMessage: "My Custom Mail Subject",
             }),
             text: "LOREM IPSUM",
-            html: renderToMjml(
-                <IntlProvider locale={"de"} defaultLocale={"de"} messages={intl.messages}>
+            html: renderToString(
+                <IntlProvider locale="de" defaultLocale="de" messages={intl.messages}>
                     <MailContent {...props} />
                 </IntlProvider>,
             ),
@@ -58,7 +79,7 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
 
 export type MailProps = { ... }; // define props required to generate/render the mail
 
-const MailContent: React.FC<MailProps> = ({ recipient }) => {
+const MailContent = ({ recipient }: MailProps) => {
     return (
         <div>
             {recipient.name} LOREM IPSUM
