@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.10.0",
+    "version": "8.11.1",
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
@@ -25,7 +25,7 @@
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "NODE_OPTIONS=--experimental-vm-modules pnpm exec jest",
         "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules jest --updateSnapshot",
@@ -45,7 +45,7 @@
         "@mikro-orm/cli": "^6.4.16",
         "@mikro-orm/core": "^6.4.16",
         "@mikro-orm/postgresql": "^6.4.16",
-        "@nestjs/graphql": "^13.2.0",
+        "@nestjs/graphql": "^13.2.3",
         "@types/jest": "^29.5.14",
         "@types/node": "^24.9.1",
         "@types/pluralize": "^0.0.33",

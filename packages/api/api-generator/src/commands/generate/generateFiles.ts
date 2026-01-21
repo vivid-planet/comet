@@ -74,7 +74,9 @@ export const generateFiles = async (
                 }
             }
         }
-        console.log("Formatting generated files...");
-        await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+        if (writtenFiles.length > 0) {
+            console.log("Formatting generated files...");
+            await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+        }
     }
 };

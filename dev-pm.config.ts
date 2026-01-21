@@ -220,6 +220,11 @@ export default defineConfig({
             group: ["demo-api", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
+        {
+            name: "demo-api-storybook",
+            script: "pnpm --filter comet-demo-api run storybook",
+            group: ["demo-api", "demo"],
+        },
 
         // group demo login
         {

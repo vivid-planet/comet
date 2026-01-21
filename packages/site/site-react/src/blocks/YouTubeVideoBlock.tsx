@@ -91,7 +91,7 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("enablejsapi", "1");
 
         // start playing the video when the preview image has been hidden
-        if ((hasPreviewImage && !showPreviewImage) || !hasPreviewImage) searchParams.append("autoplay", "1");
+        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
 
         if (autoplay) searchParams.append("mute", "1");
 

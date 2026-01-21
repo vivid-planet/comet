@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "8.10.0",
+    "version": "8.11.1",
     "description": "Comet CMS Admin package",
     "repository": {
         "directory": "packages/admin/cms-admin",
@@ -26,7 +26,7 @@
         "lint": "run-p gql:types generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "pnpm exec prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p gql:types generate-block-types && run-p start:babel start:types",
         "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
@@ -62,7 +62,7 @@
         "rimraf": "^6.1.2",
         "scroll-into-view-if-needed": "^3.1.0",
         "slugify": "^1.6.6",
-        "use-debounce": "^10.0.5",
+        "use-debounce": "^10.0.6",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
@@ -79,11 +79,11 @@
         "@graphql-codegen/near-operation-file-preset": "^3.1.0",
         "@graphql-codegen/typescript": "^4.1.6",
         "@graphql-codegen/typescript-operations": "^4.6.1",
-        "@mui/material": "^7.3.5",
-        "@mui/system": "^7.3.5",
-        "@mui/x-data-grid": "^7.29.8",
-        "@testing-library/dom": "^10.4.0",
-        "@testing-library/react": "^16.3.0",
+        "@mui/material": "^7.3.7",
+        "@mui/system": "^7.3.7",
+        "@mui/x-data-grid": "^7.29.12",
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/react": "^16.3.1",
         "@types/draft-js": "^0.11.20",
         "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-touched": "^1.0.3",
