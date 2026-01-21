@@ -32,7 +32,7 @@ function getArchitecture(): string {
 
 export const downloadMitmproxyCommand = new Command("download-mitmproxy")
     .description("Download the Mitmproxy binary")
-    .requiredOption("-v, --version <version>", "Specify the version of the Mitmproxy to download (semver, e.g. >=7.0.0 <8.0.0).")
+    .requiredOption("-v, --version <version>", "Specify the version of the Mitmproxy to download (e.g. v12.2.0).")
     .action(async (options) => {
         console.log("=== Installing mitmproxy ===");
 

@@ -32,7 +32,7 @@ function getArchitecture(): string {
 
 export const downloadOAuth2ProxyCommand = new Command("download-oauth2-proxy")
     .description("Download the OAuth2 Proxy binary")
-    .requiredOption("-v, --version <version>", "Specify the version of the OAuth2 Proxy to download (semver, e.g. >=7.0.0 <8.0.0).")
+    .requiredOption("-v, --version <version>", "Specify the version of the OAuth2 Proxy to download (e.g. v7.12.0).")
     .action(async (options) => {
         console.log("=== Installing oauth2-proxy ===");
 
