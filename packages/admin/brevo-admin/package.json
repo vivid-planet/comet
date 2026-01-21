@@ -32,8 +32,8 @@
     },
     "dependencies": {
         "@comet/admin": "workspace:*",
-        "@comet/admin-icons": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
+        "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
         "date-fns": "^4.1.0",
         "file-saver": "^2.0.5",
