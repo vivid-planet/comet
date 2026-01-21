@@ -387,8 +387,10 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         }
         console.log("");
     }
-    console.log("Formatting generated files...");
-    await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+    if (writtenFiles.length > 0) {
+        console.log("Formatting generated files...");
+        await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+    }
 }
 
 export const generateCommand = new Command("generate")

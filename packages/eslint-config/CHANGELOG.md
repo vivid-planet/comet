@@ -1,5 +1,31 @@
 # @comet/eslint-config
 
+## 8.11.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 4b448f6: Format.JS: enforce literal default messages
+
+    Prevent function calls or variables in `defaultMessage` which are not supported in our internationalization workflow.
+
+- e5427a0: Future: Ban `node-cache` because it's unmaintained
+
+    Introduce a new rule in `future/nestjs` and `future/nextjs` that bans importing `node-cache` and recommends `cache-manager` / `@cacheable/node-cache` / `@nestjs/cache-manager` instead.
+
+    This rule is now in the future configs and will be enforced generally in v9.
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
