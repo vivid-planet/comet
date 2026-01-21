@@ -2,32 +2,18 @@ import { type ComponentProps, type ReactNode } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-type InputProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"input">, "name"> &
-    Omit<ControllerProps<TFieldValues>, "render"> & {
-        label: ReactNode;
-        helperText?: ReactNode;
-    };
+type TextFieldProps<TFieldValues extends FieldValues> = {
+    label: ReactNode;
+    helperText?: ReactNode;
+    controllerProps: Omit<ControllerProps<TFieldValues>, "render">;
+    inputProps: Omit<ComponentProps<"input">, "name">;
+};
 
-export const TextField = <TFieldValues extends FieldValues>({
-    label,
-    helperText,
-    name,
-    control,
-    rules,
-    defaultValue,
-    shouldUnregister,
-    disabled,
-    ...inputProps
-}: InputProps<TFieldValues>) => {
-    const required = !!rules?.required;
+export const TextField = <TFieldValues extends FieldValues>({ label, helperText, controllerProps, inputProps }: TextFieldProps<TFieldValues>) => {
+    const required = !!controllerProps.rules?.required;
     return (
         <Controller
-            name={name}
-            control={control}
-            rules={rules}
-            defaultValue={defaultValue}
-            shouldUnregister={shouldUnregister}
-            disabled={disabled}
+            {...controllerProps}
             render={({ field, fieldState }) => (
                 <div>
                     <label>

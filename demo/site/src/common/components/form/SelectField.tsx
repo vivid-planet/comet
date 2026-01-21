@@ -2,36 +2,27 @@ import { type ComponentProps, type ReactNode } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-type SelectFieldProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"select">, "name"> &
-    Omit<ControllerProps<TFieldValues>, "render"> & {
-        label: ReactNode;
-        helperText?: ReactNode;
-        options: Array<{ value: string; label: ReactNode }>;
-        placeholder?: ReactNode;
-    };
+type SelectFieldProps<TFieldValues extends FieldValues> = {
+    label: ReactNode;
+    helperText?: ReactNode;
+    controllerProps: Omit<ControllerProps<TFieldValues>, "render">;
+    inputProps: Omit<ComponentProps<"select">, "name">;
+    options: Array<{ value: string; label: ReactNode }>;
+    placeholder?: ReactNode;
+};
 
 export const SelectField = <TFieldValues extends FieldValues>({
     label,
     helperText,
-    name,
-    control,
-    rules,
-    defaultValue,
-    shouldUnregister,
-    disabled,
+    controllerProps,
+    inputProps,
     options,
     placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
-    ...selectProps
 }: SelectFieldProps<TFieldValues>) => {
-    const required = !!rules?.required;
+    const required = !!controllerProps.rules?.required;
     return (
         <Controller
-            name={name}
-            control={control}
-            rules={rules}
-            defaultValue={defaultValue}
-            shouldUnregister={shouldUnregister}
-            disabled={disabled}
+            {...controllerProps}
             render={({ field, fieldState }) => (
                 <div>
                     <label>
@@ -42,7 +33,7 @@ export const SelectField = <TFieldValues extends FieldValues>({
                             </span>
                         )}
                     </label>
-                    <select required={required} {...selectProps} {...field}>
+                    <select required={required} {...inputProps} {...field}>
                         <option value="" disabled>
                             {placeholder}
                         </option>
