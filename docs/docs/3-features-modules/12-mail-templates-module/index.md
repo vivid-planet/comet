@@ -4,20 +4,22 @@ This module provides a way to create and manage mail-templates. It allows you to
 
 **Epic:** https://vivid-planet.atlassian.net/browse/COM-2057
 
-## Usage
+## Setup
 
-### Changes in files
+Add the `MailTemplatesModule` to the imports of your `AppModule`:
 
-#### /api/src/app.module.ts
+```ts title="/api/src/app.module.ts"
+imports: [
+    // existing imports
+    MailTemplatesModule,
+]
+```
 
-    imports: [
-        ...
-        MailTemplatesModule,
-    ]
+## Create a mail template class
 
-#### Create mail-class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts` (.mail is just a convention, not required)
+Create class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts` (.mail is just a convention, not required)
 
-```typescript
+```ts title="/api/src/my-module/my-custom.mail.ts"
 import { renderToMjml } from "mjml-react";
 
 @MailTemplate()
@@ -66,16 +68,20 @@ const MailContent: React.FC<MailProps> = ({ recipient }) => {
 }
 ```
 
-#### Register in related module, required for debug-tools to find the mail-template
+## Register the mail template class
 
-    providers: [
-        ...
-        MyCustomMail,
-    ]
+Register the mail template class in the module it belongs to, required for debug-tools to find the mail-template
 
-#### Use MailTemplate
+```ts title="/api/src/my-module/my-module.module.ts"
+providers: [
+    // existing providers
+    MyCustomMail,
+]
+```
 
-```typescript
+## Use MailTemplate
+
+```ts title="/api/src/my-module/my-service.ts"
 import { MyCustomMail } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 
 @Injectable()
@@ -93,7 +99,7 @@ export class MyService {
 }
 ```
 
-#### Send test-mail
+## Send a test-mail
 
 ```shell
 # npm run console mail-template:test [mailTemplateClassName] [preparedTestPropsIndex]
