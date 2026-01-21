@@ -24,22 +24,20 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc"
     },
+    "dependencies": {
+        "@faire/mjml-react": "^3.0.0",
+        "react": "^18.0.0"
+    },
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@faire/mjml-react": "^3.5.3",
         "@types/react": "^18.3.27",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
         "rimraf": "^6.1.2",
         "typescript": "5.9.3"
-    },
-    "peerDependencies": {
-        "@faire/mjml-react": "^3.0.0",
-        "react": "^18.0.0"
     },
     "engines": {
         "node": ">=22.0.0"
