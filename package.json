@@ -55,7 +55,7 @@
     "devDependencies": {
         "@changesets/cli": "^2.29.8",
         "@comet/cli": "workspace:*",
-        "@comet/dev-oidc-provider": "^1.2.0",
+        "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.0.0",
         "@formatjs/cli": "^6.7.2",
         "@types/node": "^24.9.1",

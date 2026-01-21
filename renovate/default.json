@@ -114,6 +114,11 @@
         {
             "matchDepTypes": ["peerDependencies"],
             "rangeStrategy": ["widen"]
+        },
+        {
+            "enabled": false,
+            "matchDepNames": ["node"],
+            "matchDepTypes": ["engines", "uses-with"]
         }
     ],
     "regexManagers": [
@@ -134,5 +139,8 @@
     ],
     "lockFileMaintenance": { "enabled": true },
     "labels": ["dependencies"],
-    "baseBranches": ["main"]
+    "baseBranches": ["main"],
+    "nvm": {
+        "enabled": false
+    }
 }
