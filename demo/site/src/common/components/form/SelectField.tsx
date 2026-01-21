@@ -1,8 +1,8 @@
-import { type ReactNode, type SelectHTMLAttributes } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-interface SelectFieldProps<TFieldValues extends FieldValues> extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "name"> {
+interface SelectFieldProps<TFieldValues extends FieldValues> extends Omit<ComponentProps<"select">, "name"> {
     name: Path<TFieldValues>;
     control: Control<TFieldValues>;
     rules?: RegisterOptions<TFieldValues>;

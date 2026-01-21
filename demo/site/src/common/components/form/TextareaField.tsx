@@ -1,8 +1,8 @@
-import { type ReactNode, type TextareaHTMLAttributes } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-interface InputProps<TFieldValues extends FieldValues> extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "name"> {
+interface InputProps<TFieldValues extends FieldValues> extends Omit<ComponentProps<"textarea">, "name"> {
     name: Path<TFieldValues>;
     control: Control<TFieldValues>;
     rules?: RegisterOptions<TFieldValues>;

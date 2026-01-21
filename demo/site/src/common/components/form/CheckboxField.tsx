@@ -1,7 +1,7 @@
-import { type InputHTMLAttributes, type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
 
-interface CheckboxFieldProps<TFieldValues extends FieldValues> extends Omit<InputHTMLAttributes<HTMLInputElement>, "name"> {
+interface CheckboxFieldProps<TFieldValues extends FieldValues> extends Omit<ComponentProps<"input">, "name"> {
     name: Path<TFieldValues>;
     control: Control<TFieldValues>;
     rules?: RegisterOptions<TFieldValues>;
