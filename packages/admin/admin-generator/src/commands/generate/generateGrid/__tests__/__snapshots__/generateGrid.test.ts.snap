@@ -150,6 +150,7 @@ renderCell: (params) => {
                                             
                                             refetchQueries={[booksQuery]}
                                             
+                                            
                                         />
                                     
                                 </>
@@ -338,6 +339,7 @@ renderCell: (params) => {
                                             }}
                                             
                                             refetchQueries={[booksQuery]}
+                                            
                                             messagesMapping={{ delete: <FormattedMessage id="book.crudContextMenu.delete" defaultMessage="Extinguish" /> }}
                                         />
                                     
@@ -549,6 +551,7 @@ renderCell: (params) => {
                                             }}
                                             
                                             refetchQueries={[booksQuery]}
+                                            
                                             
                                         />
                                     
@@ -778,6 +781,7 @@ renderCell: (params) => {
                                             }}
                                             
                                             refetchQueries={[booksQuery]}
+                                            
                                             
                                         />
                                     
