@@ -18,8 +18,8 @@ importers:
         specifier: workspace:*
         version: link:packages/cli
       '@comet/dev-oidc-provider':
-        specifier: ^1.2.0
-        version: 1.2.0
+        specifier: ^1.2.1
+        version: 1.2.1
       '@comet/dev-process-manager':
         specifier: ^3.0.0
         version: 3.0.0
@@ -3804,8 +3804,8 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@comet/dev-oidc-provider@1.2.0':
-    resolution: {integrity: sha512-IBGerXuhFHsz7WoixJkgHBFmMQ0jSMgLzuMCu4U3HHUiM1dx2ji47W6dSakD+zJeAPqJ6azFvVnWJhFArqsHNg==}
+  '@comet/dev-oidc-provider@1.2.1':
+    resolution: {integrity: sha512-+fL5srKQ3gIoSCIBZr1dMoZEEGeMh3WOI8pb63fuK5jiEwEjFagqxlS3GKNRk72FXTAQaypG0dftqU2a2sMXHQ==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -20048,7 +20048,7 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@comet/dev-oidc-provider@1.2.0':
+  '@comet/dev-oidc-provider@1.2.1':
     dependencies:
       '@koa/ejs': 5.1.0
       '@koa/router': 14.0.0
