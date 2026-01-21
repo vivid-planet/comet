@@ -36,7 +36,7 @@ export const downloadMitmproxyCommand = new Command("download-mitmproxy")
     .action(async (options) => {
         console.log("=== Installing mitmproxy ===");
 
-        const version = options.version;
+        const version = options.version.startsWith("v") ? options.version.slice(1) : options.version;
         const platform = getPlatform();
         const architecture = getArchitecture();
 
