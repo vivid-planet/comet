@@ -8,7 +8,6 @@ interface InputProps<TFieldValues extends FieldValues> extends Omit<InputHTMLAtt
     rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
     required?: boolean;
-    placeholder?: string;
     helperText?: ReactNode;
 }
 
@@ -18,7 +17,6 @@ export const TextField = <TFieldValues extends FieldValues>({
     rules,
     label,
     required = false,
-    placeholder,
     helperText,
     ...inputProps
 }: InputProps<TFieldValues>) => {
@@ -37,7 +35,7 @@ export const TextField = <TFieldValues extends FieldValues>({
                             </span>
                         )}
                     </label>
-                    <input required={required} placeholder={placeholder} {...inputProps} {...field} />
+                    <input required={required} {...inputProps} {...field} />
                     {helperText && <div>{helperText}</div>}
                     {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
                 </div>

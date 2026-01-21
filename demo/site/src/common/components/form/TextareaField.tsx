@@ -8,7 +8,6 @@ interface InputProps<TFieldValues extends FieldValues> extends Omit<TextareaHTML
     rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
     required?: boolean;
-    placeholder?: string;
     helperText?: ReactNode;
 }
 
@@ -18,7 +17,6 @@ export const TextareaField = <TFieldValues extends FieldValues>({
     rules,
     label,
     required = false,
-    placeholder,
     helperText,
     ...textareaProps
 }: InputProps<TFieldValues>) => {
@@ -37,7 +35,7 @@ export const TextareaField = <TFieldValues extends FieldValues>({
                             </span>
                         )}
                     </label>
-                    <textarea placeholder={placeholder} {...textareaProps} {...field} />
+                    <textarea {...textareaProps} {...field} />
                     {helperText && <div>{helperText}</div>}
                     {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
                 </div>
