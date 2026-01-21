@@ -1,16 +1,14 @@
 import { type ComponentProps, type ReactNode } from "react";
-import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
+import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-interface SelectFieldProps<TFieldValues extends FieldValues> extends Omit<ComponentProps<"select">, "name"> {
-    name: Path<TFieldValues>;
-    control: Control<TFieldValues>;
-    rules?: RegisterOptions<TFieldValues>;
-    label: ReactNode;
-    helperText?: ReactNode;
-    options: Array<{ value: string; label: ReactNode }>;
-    placeholder?: ReactNode;
-}
+type SelectFieldProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"select">, "name"> &
+    Omit<ControllerProps<TFieldValues>, "render"> & {
+        label: ReactNode;
+        helperText?: ReactNode;
+        options: Array<{ value: string; label: ReactNode }>;
+        placeholder?: ReactNode;
+    };
 
 export const SelectField = <TFieldValues extends FieldValues>({
     name,

@@ -1,14 +1,12 @@
 import { type ComponentProps, type ReactNode } from "react";
-import { type Control, Controller, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
+import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-interface InputProps<TFieldValues extends FieldValues> extends Omit<ComponentProps<"textarea">, "name"> {
-    name: Path<TFieldValues>;
-    control: Control<TFieldValues>;
-    rules?: RegisterOptions<TFieldValues>;
-    label: ReactNode;
-    helperText?: ReactNode;
-}
+type InputProps<TFieldValues extends FieldValues> = Omit<ComponentProps<"textarea">, "name"> &
+    Omit<ControllerProps<TFieldValues>, "render"> & {
+        label: ReactNode;
+        helperText?: ReactNode;
+    };
 
 export const TextareaField = <TFieldValues extends FieldValues>({
     name,
