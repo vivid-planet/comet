@@ -22,6 +22,7 @@ import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
+import { EditDialogBugPage } from "@src/products/devStories/EditDialogBugPage";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
 import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
 import { ProductCategoriesPage } from "@src/products/generator/ProductCategoriesPage";
@@ -211,6 +212,21 @@ export const masterMenuData: MasterMenuData = [
         type: "group",
         title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
         items: [
+            {
+                type: "collapsible",
+                primary: <FormattedMessage id="menu.devStories" defaultMessage="Dev Stories" />,
+                icon: <Snips />,
+                items: [
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.devStories.editDialogBug" defaultMessage="Edit-Dialog Bug" />,
+                        route: {
+                            path: "/dev-stories/edit-dialog-bug",
+                            component: EditDialogBugPage,
+                        },
+                    },
+                ],
+            },
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.generator" defaultMessage="Generator" />,
