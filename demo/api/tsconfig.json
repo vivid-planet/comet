@@ -6,8 +6,8 @@
         "experimentalDecorators": true,
         "incremental": true,
         "lib": ["esnext"],
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "outDir": "./dist",
         "paths": {
             "@src/*": ["src/*"]

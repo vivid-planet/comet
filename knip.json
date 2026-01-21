@@ -56,12 +56,19 @@
         "packages/admin/admin-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/admin/brevo-admin": {
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["**/*.generated.ts"]
+        },
         "packages/api/cms-api": {
             "entry": ["./src/**/migrations/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@sentry/node"]
         },
         "packages/api/api-generator": {
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/api/brevo-api": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/site/site-react": {
@@ -73,7 +80,8 @@
             "ignore": ["./src/**/*.generated.ts"]
         },
         "packages/mail-react": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
