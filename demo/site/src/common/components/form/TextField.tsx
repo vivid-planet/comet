@@ -7,19 +7,11 @@ interface InputProps<TFieldValues extends FieldValues> extends Omit<ComponentPro
     control: Control<TFieldValues>;
     rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
-    required?: boolean;
     helperText?: ReactNode;
 }
 
-export const TextField = <TFieldValues extends FieldValues>({
-    name,
-    control,
-    rules,
-    label,
-    required = false,
-    helperText,
-    ...inputProps
-}: InputProps<TFieldValues>) => {
+export const TextField = <TFieldValues extends FieldValues>({ name, control, rules, label, helperText, ...inputProps }: InputProps<TFieldValues>) => {
+    const required = !!rules?.required;
     return (
         <Controller
             name={name}

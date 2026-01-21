@@ -7,7 +7,6 @@ interface InputProps<TFieldValues extends FieldValues> extends Omit<ComponentPro
     control: Control<TFieldValues>;
     rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
-    required?: boolean;
     helperText?: ReactNode;
 }
 
@@ -16,10 +15,10 @@ export const TextareaField = <TFieldValues extends FieldValues>({
     control,
     rules,
     label,
-    required = false,
     helperText,
     ...textareaProps
 }: InputProps<TFieldValues>) => {
+    const required = !!rules?.required;
     return (
         <Controller
             name={name}

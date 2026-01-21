@@ -7,7 +7,6 @@ interface SelectFieldProps<TFieldValues extends FieldValues> extends Omit<Compon
     control: Control<TFieldValues>;
     rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
-    required?: boolean;
     helperText?: ReactNode;
     options: Array<{ value: string; label: ReactNode }>;
     placeholder?: ReactNode;
@@ -18,12 +17,12 @@ export const SelectField = <TFieldValues extends FieldValues>({
     control,
     rules,
     label,
-    required = false,
     helperText,
     options,
     placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
     ...selectProps
 }: SelectFieldProps<TFieldValues>) => {
+    const required = !!rules?.required;
     return (
         <Controller
             name={name}

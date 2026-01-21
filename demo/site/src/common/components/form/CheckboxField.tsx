@@ -7,7 +7,6 @@ interface CheckboxFieldProps<TFieldValues extends FieldValues> extends Omit<Comp
     rules?: RegisterOptions<TFieldValues>;
     label: ReactNode;
     helperText?: ReactNode;
-    required?: boolean;
 }
 
 export const CheckboxField = <TFieldValues extends FieldValues>({
@@ -16,9 +15,9 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
     rules,
     label,
     helperText,
-    required = false,
     ...inputProps
 }: CheckboxFieldProps<TFieldValues>) => {
+    const required = !!rules?.required;
     return (
         <Controller
             name={name}

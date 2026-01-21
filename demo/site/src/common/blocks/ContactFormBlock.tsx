@@ -85,7 +85,6 @@ export const ContactFormBlock = withPreview(
                     }}
                     label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
                     placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
-                    required
                 />
                 <TextField
                     name="company"
@@ -108,7 +107,6 @@ export const ContactFormBlock = withPreview(
                     }}
                     label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
                     placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
-                    required
                 />
                 <TextField
                     name="phoneNumber"
@@ -139,7 +137,6 @@ export const ContactFormBlock = withPreview(
                         }),
                     }}
                     label={intl.formatMessage({ id: "contactForm.subject.label", defaultMessage: "Subject" })}
-                    required
                     placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
                     options={subjectOptions}
                 />
@@ -154,7 +151,6 @@ export const ContactFormBlock = withPreview(
                     }}
                     label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
                     placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
-                    required
                 />
                 <CheckboxField
                     name="privacyConsent"
@@ -170,7 +166,6 @@ export const ContactFormBlock = withPreview(
                         defaultMessage:
                             "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
                     })}
-                    required
                 />
                 <Button type="submit" variant="contained" disabled={isSubmitting}>
                     <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
