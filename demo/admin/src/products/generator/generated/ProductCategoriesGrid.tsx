@@ -156,6 +156,7 @@ export function ProductCategoriesGrid() {
                                     });
                                 }}
                                 refetchQueries={[productCategoriesQuery]}
+                                deleteType="remove"
                             />
                         </>
                     );
