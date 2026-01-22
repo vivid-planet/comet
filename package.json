@@ -50,12 +50,12 @@
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
         "setup:ci": "pnpm run copy-project-files",
         "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec comet download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'",
-        "setup:download-mitmproxy": "pnpm exec comet download-mitmproxy -v ^12.2.0"
+        "setup:download-mitmproxy": "dotenv -- sh -c 'pnpm exec comet download-mitmproxy -v $MITMPROXY_VERSION'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.8",
         "@comet/cli": "workspace:*",
-        "@comet/dev-oidc-provider": "^1.2.0",
+        "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.0.0",
         "@formatjs/cli": "^6.7.2",
         "@types/node": "^24.9.1",
@@ -93,6 +93,12 @@
                 "peerDependencies": {
                     "@types/react": "*",
                     "@types/react-dom": "*"
+                }
+            },
+            "@faire/mjml-react": {
+                "peerDependencies": {
+                    "@types/react": "^19.0.0",
+                    "@types/react-dom": "^19.0.0"
                 }
             }
         },
