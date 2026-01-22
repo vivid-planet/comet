@@ -9,7 +9,7 @@ export type MailProps = {
 
 export const Mail = ({ recipient, countProductPublished }: MailProps) => {
     return (
-        <MailRoot locale={recipient.language}>
+        <MailRoot>
             <MjmlSection backgroundColor="#FFFFFF">
                 <MjmlColumn>
                     <MjmlSpacer height="20px" />
