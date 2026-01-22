@@ -30,8 +30,8 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.3",
-        "@babel/core": "^7.28.5",
+        "@babel/cli": "^7.28.6",
+        "@babel/core": "^7.28.6",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.3.7",
