@@ -1,8 +1,0 @@
-# Copy of .gitignore, remove once Prettier v3 is in use
-
-# Production
-build
-
-# Generated files
-.docusaurus
-.cache-loader
