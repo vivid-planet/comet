@@ -31,7 +31,10 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
+        "@comet/admin": "workspace:*",
+        "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
+        "@comet/cms-admin": "workspace:*",
         "date-fns": "^4.1.0",
         "file-saver": "^2.0.5",
         "react-dropzone": "^14.2.3"
@@ -40,10 +43,7 @@
         "@apollo/client": "^3.14.0",
         "@babel/cli": "^7.28.3",
         "@babel/core": "^7.28.5",
-        "@comet/admin": "workspace:*",
         "@comet/admin-babel-preset": "workspace:*",
-        "@comet/admin-date-time": "workspace:*",
-        "@comet/cms-admin": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
@@ -78,9 +78,6 @@
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
-        "@comet/admin": "^8.0.0",
-        "@comet/admin-date-time": "^8.0.0",
-        "@comet/cms-admin": "^8.0.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/material": "^7.0.0",
