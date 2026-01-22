@@ -22,6 +22,7 @@ export interface CurrentUserInterface {
     name: string;
     email: string;
     impersonated: boolean;
+    accountUrl?: string;
     authenticatedUser: {
         name: string;
         email: string;
@@ -44,6 +45,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                 name
                 email
                 impersonated
+                accountUrl
                 authenticatedUser {
                     name
                     email
@@ -86,6 +88,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                 : null,
             allowedContentScopes: data.currentUser.allowedContentScopes.map((acs) => ({ scope: acs.scope, label: acs.label })),
             impersonated: !!data.currentUser.impersonated,
+            accountUrl: data.currentUser.accountUrl || undefined,
         },
         isAllowed:
             isAllowed ??
