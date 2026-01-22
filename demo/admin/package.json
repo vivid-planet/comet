@@ -62,7 +62,7 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.28.5",
+        "@babel/core": "^7.28.6",
         "@comet/admin-generator": "workspace:*",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
