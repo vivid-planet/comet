@@ -1,28 +1,31 @@
-import { type ComponentProps, type ReactNode } from "react";
+import { type ReactNode, type SelectHTMLAttributes } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-type SelectFieldProps<TFieldValues extends FieldValues> = {
-    label: ReactNode;
-    helperText?: ReactNode;
-    controllerProps: Omit<ControllerProps<TFieldValues>, "render">;
-    inputProps: Omit<ComponentProps<"select">, "name">;
-    options: Array<{ value: string; label: ReactNode }>;
-    placeholder?: ReactNode;
-};
+type SelectFieldProps<TFieldValues extends FieldValues> = Omit<SelectHTMLAttributes<HTMLSelectElement>, "name"> &
+    Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
+        label: ReactNode;
+        helperText?: ReactNode;
+        options: Array<{ value: string; label: ReactNode }>;
+        placeholder?: ReactNode;
+    };
 
 export const SelectField = <TFieldValues extends FieldValues>({
     label,
     helperText,
-    controllerProps,
-    inputProps,
+    name,
+    control,
+    rules,
     options,
     placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
+    ...inputProps
 }: SelectFieldProps<TFieldValues>) => {
-    const required = !!controllerProps.rules?.required;
+    const required = !!rules?.required;
     return (
         <Controller
-            {...controllerProps}
+            name={name}
+            control={control}
+            rules={rules}
             render={({ field, fieldState }) => (
                 <div>
                     <label>

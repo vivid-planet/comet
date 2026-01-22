@@ -78,65 +78,49 @@ export const ContactFormBlock = withPreview(
         return (
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField
-                    controllerProps={{
-                        name: "name",
-                        control,
-                        rules: {
-                            required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Please enter your name" }),
-                        },
+                    name="name"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Please enter your name" }),
                     }}
-                    inputProps={{
-                        placeholder: intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" }),
-                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
                     label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
                 />
                 <TextField
-                    controllerProps={{
-                        name: "company",
-                        control,
-                    }}
-                    inputProps={{
-                        placeholder: intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" }),
-                    }}
+                    name="company"
+                    control={control}
+                    placeholder={intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" })}
                     label={intl.formatMessage({ id: "contactForm.company.label", defaultMessage: "Company" })}
                 />
                 <TextField
-                    controllerProps={{
-                        name: "email",
-                        control,
-                        rules: {
-                            required: intl.formatMessage({
-                                id: "contactForm.email.required",
-                                defaultMessage: "Please enter your email address",
-                            }),
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: intl.formatMessage({ id: "contactForm.email.invalid", defaultMessage: "Invalid email address" }),
-                            },
+                    name="email"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.email.required",
+                            defaultMessage: "Please enter your email address",
+                        }),
+                        pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: intl.formatMessage({ id: "contactForm.email.invalid", defaultMessage: "Invalid email address" }),
                         },
                     }}
-                    inputProps={{
-                        placeholder: intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" }),
-                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
                     label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
                 />
                 <TextField
-                    controllerProps={{
-                        name: "phoneNumber",
-                        control,
-                        rules: {
-                            pattern: {
-                                value: /^[0-9+]*$/,
-                                message: intl.formatMessage({
-                                    id: "contactForm.phoneNumber.invalid",
-                                    defaultMessage: "Please enter only numbers",
-                                }),
-                            },
+                    name="phoneNumber"
+                    control={control}
+                    rules={{
+                        pattern: {
+                            value: /^[0-9+]*$/,
+                            message: intl.formatMessage({
+                                id: "contactForm.phoneNumber.invalid",
+                                defaultMessage: "Please enter only numbers",
+                            }),
                         },
                     }}
-                    inputProps={{
-                        placeholder: intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" }),
-                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" })}
                     label={intl.formatMessage({ id: "contactForm.phoneNumber.label", defaultMessage: "Phone Number" })}
                     helperText={intl.formatMessage({
                         id: "contactForm.phoneNumber.helperText",
@@ -144,49 +128,39 @@ export const ContactFormBlock = withPreview(
                     })}
                 />
                 <SelectField
-                    controllerProps={{
-                        name: "subject",
-                        control,
-                        rules: {
-                            required: intl.formatMessage({
-                                id: "contactForm.subject.required",
-                                defaultMessage: "Please select a subject",
-                            }),
-                        },
+                    name="subject"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.subject.required",
+                            defaultMessage: "Please select a subject",
+                        }),
                     }}
-                    inputProps={{}}
                     label={intl.formatMessage({ id: "contactForm.subject.label", defaultMessage: "Subject" })}
                     placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
                     options={subjectOptions}
                 />
                 <TextareaField
-                    controllerProps={{
-                        name: "message",
-                        control,
-                        rules: {
-                            required: intl.formatMessage({
-                                id: "contactForm.message.required",
-                                defaultMessage: "Please enter your message",
-                            }),
-                        },
+                    name="message"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.message.required",
+                            defaultMessage: "Please enter your message",
+                        }),
                     }}
-                    inputProps={{
-                        placeholder: intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" }),
-                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
                     label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
                 />
                 <CheckboxField
-                    controllerProps={{
-                        name: "privacyConsent",
-                        control,
-                        rules: {
-                            required: intl.formatMessage({
-                                id: "contactForm.privacyConsent.required",
-                                defaultMessage: "You must agree to the privacy policy to continue",
-                            }),
-                        },
+                    name="privacyConsent"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.privacyConsent.required",
+                            defaultMessage: "You must agree to the privacy policy to continue",
+                        }),
                     }}
-                    inputProps={{}}
                     label={intl.formatMessage({
                         id: "contactForm.privacyConsent.label",
                         defaultMessage:

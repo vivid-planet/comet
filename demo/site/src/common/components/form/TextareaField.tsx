@@ -1,24 +1,27 @@
-import { type ComponentProps, type ReactNode } from "react";
+import { type ReactNode, type TextareaHTMLAttributes } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
-type TextareaFieldProps<TFieldValues extends FieldValues> = {
-    label: ReactNode;
-    helperText?: ReactNode;
-    controllerProps: Omit<ControllerProps<TFieldValues>, "render">;
-    inputProps: Omit<ComponentProps<"textarea">, "name">;
-};
+type TextareaFieldProps<TFieldValues extends FieldValues> = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "name"> &
+    Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
+        label: ReactNode;
+        helperText?: ReactNode;
+    };
 
 export const TextareaField = <TFieldValues extends FieldValues>({
     label,
     helperText,
-    controllerProps,
-    inputProps,
+    name,
+    control,
+    rules,
+    ...inputProps
 }: TextareaFieldProps<TFieldValues>) => {
-    const required = !!controllerProps.rules?.required;
+    const required = !!rules?.required;
     return (
         <Controller
-            {...controllerProps}
+            name={name}
+            control={control}
+            rules={rules}
             render={({ field, fieldState }) => (
                 <div>
                     <label>

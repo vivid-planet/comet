@@ -1,23 +1,26 @@
-import { type ComponentProps, type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 
-type CheckboxFieldProps<TFieldValues extends FieldValues> = {
-    label: ReactNode;
-    helperText?: ReactNode;
-    controllerProps: Omit<ControllerProps<TFieldValues>, "render">;
-    inputProps: Omit<ComponentProps<"input">, "name">;
-};
+type CheckboxFieldProps<TFieldValues extends FieldValues> = Omit<InputHTMLAttributes<HTMLInputElement>, "name"> &
+    Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
+        label: ReactNode;
+        helperText?: ReactNode;
+    };
 
 export const CheckboxField = <TFieldValues extends FieldValues>({
     label,
     helperText,
-    controllerProps,
-    inputProps,
+    name,
+    control,
+    rules,
+    ...inputProps
 }: CheckboxFieldProps<TFieldValues>) => {
-    const required = !!controllerProps.rules?.required;
+    const required = !!rules?.required;
     return (
         <Controller
-            {...controllerProps}
+            name={name}
+            control={control}
+            rules={rules}
             render={({ field: { value, ...field }, fieldState }) => (
                 <div>
                     <input type="checkbox" required={required} {...inputProps} {...field} checked={value} />
