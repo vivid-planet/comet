@@ -1,5 +1,41 @@
 # @comet/brevo-api
 
+## 8.12.0
+
+### Minor Changes
+
+- 297ceeb: Prefix all entities and API requests with `brevo` to prevent naming issues in projects.
+
+    Update the entity name in the `additionalPageTreeNodeFieldsFragment` GraphQL fragment from `TargetGroup` to `BrevoTargetGroup` in the `targetGroupFormConfig`.
+
+    ```
+    export const additionalPageTreeNodeFieldsFragment = {
+        fragment: gql`
+            fragment TargetGroupFilters on BrevoTargetGroup {
+                filters {
+                    SALUTATION
+                    BRANCH
+                }
+            }
+       `,
+        name: "TargetGroupFilters",
+    };
+    ```
+
+- 297ceeb: Make this package compatible with [COMET v8](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v7-to-v8)
+
+    Now requires
+    - `@comet/cms-api` >= `8.0.0`
+    - `@mikro-orm/*` >= `6.0.0`
+    - `@nestjs/*` >= `11.0.0`
+    - `reflect-metadata` >= `0.2.0`
+
+### Patch Changes
+
+- Updated dependencies [488da0b]
+- Updated dependencies [2930556]
+    - @comet/cms-api@8.12.0
+
 ## 3.1.4
 
 ### Patch Changes
