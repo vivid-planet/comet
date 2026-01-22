@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from "@storybook/react-vite";
 
-// eslint-disable-next-line @comet/no-other-module-relative-import
-import { MailRendererDecorator } from "../../../../.storybook/decorators/MailRenderer.decorator";
 import { Mail } from "../Mail";
 
 type Story = StoryObj<typeof Mail>;
@@ -9,7 +7,6 @@ type Story = StoryObj<typeof Mail>;
 const config: Meta = {
     title: "products/ProductPublishedMail",
     component: Mail,
-    decorators: [MailRendererDecorator],
     argTypes: {
         countProductPublished: {
             control: "select",

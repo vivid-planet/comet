@@ -1,7 +1,6 @@
+import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-
-import { type StorybookConfig } from "@storybook/react-vite";
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
