@@ -54,6 +54,7 @@
             "ignoreDependencies": ["jsdom"]
         },
         "packages/admin/admin-generator": {
+            "entry": ["./src/index.ts", "./src/adminGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/cms-api": {

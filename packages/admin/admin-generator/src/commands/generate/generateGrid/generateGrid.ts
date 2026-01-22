@@ -7,7 +7,7 @@ import {
     type IntrospectionObjectType,
     type IntrospectionQuery,
 } from "graphql";
-import { plural, singular } from "pluralize";
+import pluralize from "pluralize";
 import { type ReactNode } from "react";
 
 import {
@@ -35,6 +35,8 @@ import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
 import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./getPropsForFilterProp";
+
+const { plural, singular } = pluralize;
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
