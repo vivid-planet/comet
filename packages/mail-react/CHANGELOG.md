@@ -1,5 +1,22 @@
 # @comet/mail-react
 
+## 8.12.0
+
+### Minor Changes
+
+- 51a213a: Add mjml-compatible versions of the following block factories
+    - `BlocksBlock`
+    - `ListBlock`
+    - `OneOfBlock`
+    - `OptionalBlock`
+
+- b4e0609: Make this package ESM and add peer dependencies to `react` and `@faire/mjml-react`
+
+    Previously, this package was published as a CommonJS package and had no peer dependencies.
+    Now, it is published as an ESM package and has peer dependencies to `react@18` and `@faire/mjml-react@3`.
+
+    Though this is theoretically a breaking change, we are bumping only the minor version, as this package is completely new and has no known users yet.
+
 ## 8.11.1
 
 ## 8.11.0

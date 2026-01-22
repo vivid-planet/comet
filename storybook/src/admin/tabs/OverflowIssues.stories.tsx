@@ -1,6 +1,6 @@
 import { MainContent, RouterTab, RouterTabs, Toolbar, ToolbarAutomaticTitleItem } from "@comet/admin";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import { type Meta } from "@storybook/react/*";
+import { type Meta } from "@storybook/react-webpack5";
 import { type ComponentType, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
