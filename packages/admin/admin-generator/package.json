@@ -54,11 +54,6 @@
     "devDependencies": {
         "@apollo/client": "^3.14.0",
         "@comet/eslint-config": "workspace:*",
-<<<<<<< HEAD
-=======
-        "@mui/material": "^7.3.7",
-        "@mui/x-data-grid": "^7.29.12",
->>>>>>> main
         "@types/node": "^24.9.1",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",

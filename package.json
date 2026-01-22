@@ -94,6 +94,12 @@
                     "@types/react": "*",
                     "@types/react-dom": "*"
                 }
+            },
+            "@faire/mjml-react": {
+                "peerDependencies": {
+                    "@types/react": "^19.0.0",
+                    "@types/react-dom": "^19.0.0"
+                }
             }
         },
         "overrides": {
