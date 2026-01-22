@@ -96,7 +96,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     };
 
     return (
-        <MainNavigationContext.Provider value={{ open, toggleOpen, drawerVariant, setDrawerVariant }}>
+        <MainNavigationContext.Provider value={{ open, toggleOpen, setOpen, drawerVariant, setDrawerVariant }}>
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
                 <Root {...slotProps?.root} {...restProps}>
