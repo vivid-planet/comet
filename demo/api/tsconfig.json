@@ -6,8 +6,8 @@
         "experimentalDecorators": true,
         "incremental": true,
         "lib": ["esnext"],
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "outDir": "./dist",
         "paths": {
             "@src/*": ["src/*"]
@@ -20,5 +20,7 @@
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
         "target": "es2017"
-    }
+    },
+    "exclude": ["**/*.stories.tsx", "**/*.stories.ts", ".storybook"],
+    "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

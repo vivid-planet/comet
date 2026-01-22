@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
 ## 8.11.1
 
 ### Patch Changes

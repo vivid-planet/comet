@@ -1,5 +1,16 @@
 # @comet/cms-admin
 
+## 8.12.0
+
+### Patch Changes
+
+- 02c25c1: Fix preview url handling in `SvgImageBlock`
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-date-time@8.12.0
+    - @comet/admin-rte@8.12.0
+    - @comet/admin-icons@8.12.0
+
 ## 8.11.1
 
 ### Patch Changes

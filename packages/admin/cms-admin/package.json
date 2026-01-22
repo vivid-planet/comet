@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "8.11.1",
+    "version": "8.12.0",
     "description": "Comet CMS Admin package",
     "repository": {
         "directory": "packages/admin/cms-admin",
@@ -66,8 +66,8 @@
     },
     "devDependencies": {
         "@apollo/client": "^3.14.0",
-        "@babel/cli": "^7.28.3",
-        "@babel/core": "^7.28.5",
+        "@babel/cli": "^7.28.6",
+        "@babel/core": "^7.28.6",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
@@ -80,7 +80,7 @@
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@mui/material": "^7.3.7",
         "@mui/system": "^7.3.7",
-        "@mui/x-data-grid": "^7.29.8",
+        "@mui/x-data-grid": "^7.29.12",
         "@testing-library/dom": "^10.4.1",
         "@testing-library/react": "^16.3.1",
         "@types/draft-js": "^0.11.20",
