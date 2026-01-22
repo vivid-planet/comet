@@ -1,0 +1,504 @@
+type UserPermissionsUser {
+  id: String!
+  name: String!
+  email: String!
+}
+
+type CurrentUserPermission {
+  permission: Permission!
+  contentScopes: [JSONObject!]!
+}
+
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  sitePreview
+  blockPreview
+  brevoNewsletterConfig
+  brevoNewsletter
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+  name: String
+  secondaryInformation: String
+}
+
+type DamMediaAlternative {
+  id: ID!
+  language: String!
+  type: DamMediaAlternativeType!
+}
+
+enum DamMediaAlternativeType {
+  captions
+}
+
+type ImageCropArea {
+  focalPoint: FocalPoint!
+  width: Float
+  height: Float
+  x: Float
+  y: Float
+}
+
+enum FocalPoint {
+  SMART
+  CENTER
+  NORTHWEST
+  NORTHEAST
+  SOUTHWEST
+  SOUTHEAST
+}
+
+type WarningSourceInfo {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
+  status: WarningStatus!
+  scope: JSONObject
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum WarningSeverity {
+  high
+  medium
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type BrevoApiEmailTemplateSender {
+  id: String
+  subject: String
+  email: String!
+}
+
+type BrevoApiEmailTemplate {
+  id: ID!
+  name: String!
+  subject: String!
+  isActive: Boolean!
+  testSent: Boolean!
+  replyTo: String!
+  toField: String!
+  tag: String!
+  htmlContent: String!
+  createdAt: String!
+  modifiedAt: String!
+  sender: BrevoApiEmailTemplateSender!
+}
+
+type BrevoApiSender {
+  id: ID!
+  name: String!
+  email: String!
+  active: Boolean!
+  ips: [BrevoIp!]
+}
+
+type BrevoIp {
+  ip: String!
+  domain: String!
+  weight: Int!
+}
+
+type CsvImportInformation {
+  created: Int!
+  updated: Int!
+  failed: Int!
+  blacklisted: Int!
+  failedColumns: [JSONObject!]
+  blacklistedColumns: [JSONObject!]
+  errorMessage: String
+}
+
+type BrevoApiCampaignStatistics {
+  """Number of unique clicks for the campaign"""
+  uniqueClicks: Int!
+
+  """Number of total clicks for the campaign"""
+  clickers: Int!
+
+  """Number of complaints (Spam reports) for the campaign"""
+  complaints: Int!
+
+  """Number of delivered emails for the campaign"""
+  delivered: Int!
+
+  """Number of sent emails for the campaign"""
+  sent: Int!
+
+  """Number of softbounce for the campaign"""
+  softBounces: Int!
+
+  """Number of hardbounces for the campaign"""
+  hardBounces: Int!
+
+  """Number of unique openings for the campaign"""
+  uniqueViews: Int!
+
+  """Number of unique openings for the campaign"""
+  trackableViews: Int!
+
+  """
+  Rate of recipients without any privacy protection option enabled in their email client, applied to all delivered emails
+  """
+  estimatedViews: Int!
+
+  """Number of unsubscription for the campaign"""
+  unsubscriptions: Int!
+
+  """Number of openings for the campaign"""
+  viewed: Int!
+}
+
+type EmailCampaignContentScope {
+  thisScopeHasNoFields____: String
+}
+
+type BrevoContact {
+  id: Int!
+  createdAt: String!
+  modifiedAt: String!
+  email: String!
+  emailBlacklisted: Boolean!
+  smsBlacklisted: Boolean!
+  listIds: [Int!]!
+  listUnsubscribed: [Int!]!
+}
+
+type PaginatedBrevoContacts {
+  nodes: [BrevoContact!]!
+  totalCount: Int!
+}
+
+type BrevoTargetGroup implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  title: String!
+  isMainList: Boolean!
+  isTestList: Boolean!
+  brevoId: Int!
+  totalSubscribers: Int!
+  scope: EmailCampaignContentScope!
+  assignedContactsTargetGroupBrevoId: Int
+  brevoTotalSubscribers: Int!
+}
+
+interface DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+}
+
+type PaginatedTargetGroups {
+  nodes: [BrevoTargetGroup!]!
+  totalCount: Int!
+}
+
+type BrevoEmailCampaign implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  title: String!
+  subject: String!
+  brevoId: Int
+  scheduledAt: DateTime
+  targetGroups: [BrevoTargetGroup!]!
+  content: EmailCampaignContentBlockData!
+  scope: EmailCampaignContentScope!
+  sendingState: SendingState!
+  brevoTargetGroups: [BrevoTargetGroup!]!
+}
+
+"""EmailCampaignContent root block data"""
+scalar EmailCampaignContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+enum SendingState {
+  DRAFT
+  SENT
+  SCHEDULED
+}
+
+type PaginatedEmailCampaigns {
+  nodes: [BrevoEmailCampaign!]!
+  totalCount: Int!
+}
+
+type BrevoConfig implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  senderMail: String!
+  senderName: String!
+  doubleOptInTemplateId: Int!
+  folderId: Int!
+  allowedRedirectionUrl: String!
+  unsubscriptionPageId: String!
+  createdAt: DateTime!
+  scope: EmailCampaignContentScope!
+}
+
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+input EmailCampaignContentScopeInput {
+  thisScopeHasNoFields____: String
+}
+
+type Query {
+  brevoContact(id: Int!, scope: EmailCampaignContentScopeInput!): BrevoContact!
+  brevoContacts(targetGroupId: ID, email: String, scope: EmailCampaignContentScopeInput!, offset: Int! = 0, limit: Int! = 25): PaginatedBrevoContacts!
+  brevoTestContacts(targetGroupId: ID, email: String, scope: EmailCampaignContentScopeInput!, offset: Int! = 0, limit: Int! = 25): PaginatedBrevoContacts!
+  manuallyAssignedBrevoContacts(offset: Int! = 0, limit: Int! = 25, targetGroupId: ID!, email: String): PaginatedBrevoContacts!
+  brevoTargetGroup(id: ID!): BrevoTargetGroup!
+  brevoTargetGroups(scope: EmailCampaignContentScopeInput!, search: String, filter: TargetGroupFilter, sort: [TargetGroupSort!], offset: Int! = 0, limit: Int! = 25): PaginatedTargetGroups!
+  brevoEmailCampaign(id: ID!): BrevoEmailCampaign!
+  brevoEmailCampaigns(scope: EmailCampaignContentScopeInput!, search: String, filter: EmailCampaignFilter, sort: [EmailCampaignSort!], offset: Int! = 0, limit: Int! = 25): PaginatedEmailCampaigns!
+  brevoEmailCampaignStatistics(id: ID!): BrevoApiCampaignStatistics
+  brevoSenders(scope: EmailCampaignContentScopeInput!): [BrevoApiSender!]
+  brevoDoubleOptInTemplates(scope: EmailCampaignContentScopeInput!): [BrevoApiEmailTemplate!]
+  isBrevoConfigDefined(scope: EmailCampaignContentScopeInput!): Boolean!
+  brevoConfig(scope: EmailCampaignContentScopeInput!): BrevoConfig
+}
+
+input TargetGroupFilter {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  title: StringFilter
+  isTestList: BooleanFilter
+  and: [TargetGroupFilter!]
+  or: [TargetGroupFilter!]
+}
+
+input DateTimeFilter {
+  equal: DateTime
+  lowerThan: DateTime
+  greaterThan: DateTime
+  lowerThanEqual: DateTime
+  greaterThanEqual: DateTime
+  notEqual: DateTime
+  isEmpty: Boolean
+  isNotEmpty: Boolean
+}
+
+input StringFilter {
+  contains: String
+  notContains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input TargetGroupSort {
+  field: TargetGroupSortField!
+  direction: SortDirection! = ASC
+}
+
+enum TargetGroupSortField {
+  createdAt
+  updatedAt
+  title
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+input EmailCampaignFilter {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  title: StringFilter
+  subject: StringFilter
+  sendingState: SendingStateEnumFilter
+  scheduledAt: DateTimeFilter
+  and: [EmailCampaignFilter!]
+  or: [EmailCampaignFilter!]
+}
+
+input SendingStateEnumFilter {
+  isAnyOf: [SendingState!]
+  equal: SendingState
+  notEqual: SendingState
+}
+
+input EmailCampaignSort {
+  field: EmailCampaignSortField!
+  direction: SortDirection! = ASC
+}
+
+enum EmailCampaignSortField {
+  createdAt
+  updatedAt
+  title
+  subject
+  scheduledAt
+}
+
+type Mutation {
+  updateBrevoContact(id: Int!, scope: EmailCampaignContentScopeInput!, input: BrevoContactUpdateInput!): BrevoContact!
+  createBrevoContact(scope: EmailCampaignContentScopeInput!, input: BrevoContactInput!): SubscribeResponse!
+  createBrevoTestContact(scope: EmailCampaignContentScopeInput!, input: BrevoTestContactInput!): SubscribeResponse!
+  deleteBrevoContact(id: Int!, scope: EmailCampaignContentScopeInput!): Boolean!
+  deleteBrevoTestContact(id: Int!, scope: EmailCampaignContentScopeInput!): Boolean!
+  subscribeBrevoContact(input: SubscribeInput!, scope: EmailCampaignContentScopeInput!): SubscribeResponse!
+  createBrevoTargetGroup(scope: EmailCampaignContentScopeInput!, input: TargetGroupInput!): BrevoTargetGroup!
+  addBrevoContactsToTargetGroup(id: ID!, input: AddBrevoContactsInput!): Boolean!
+  removeBrevoContactFromTargetGroup(id: ID!, input: RemoveBrevoContactInput!): Boolean!
+  updateBrevoTargetGroup(id: ID!, input: TargetGroupUpdateInput!, lastUpdatedAt: DateTime): BrevoTargetGroup!
+  deleteBrevoTargetGroup(id: ID!): Boolean!
+  createBrevoEmailCampaign(scope: EmailCampaignContentScopeInput!, input: EmailCampaignInput!): BrevoEmailCampaign!
+  updateBrevoEmailCampaign(id: ID!, input: EmailCampaignUpdateInput!, lastUpdatedAt: DateTime): BrevoEmailCampaign!
+  deleteBrevoEmailCampaign(id: ID!): Boolean!
+  sendBrevoEmailCampaignNow(id: ID!): Boolean!
+  sendBrevoEmailCampaignToTestEmails(id: ID!, data: SendTestEmailCampaignArgs!): Boolean!
+  startBrevoContactImport(fileId: ID!, targetGroupIds: [ID!], scope: EmailCampaignContentScopeInput!, sendDoubleOptIn: Boolean!): CsvImportInformation!
+  createBrevoConfig(scope: EmailCampaignContentScopeInput!, input: BrevoConfigInput!): BrevoConfig!
+  updateBrevoConfig(id: ID!, input: BrevoConfigUpdateInput!, lastUpdatedAt: DateTime): BrevoConfig!
+}
+
+input BrevoContactUpdateInput {
+  blocked: Boolean!
+}
+
+enum SubscribeResponse {
+  SUCCESSFUL
+  ERROR_UNKNOWN
+  ERROR_CONTAINED_IN_ECG_RTR_LIST
+  ERROR_MAXIMAL_NUMBER_OF_TEST_CONTACTS_REACHED
+  ERROR_CONTACT_IS_BLACKLISTED
+  ERROR_CONTACT_ALREADY_EXISTS
+}
+
+input BrevoContactInput {
+  email: String!
+  blocked: Boolean!
+  redirectionUrl: String!
+  sendDoubleOptIn: Boolean! = true
+}
+
+input BrevoTestContactInput {
+  email: String!
+  blocked: Boolean!
+}
+
+input SubscribeInput {
+  email: String!
+  redirectionUrl: String!
+}
+
+input TargetGroupInput {
+  title: String!
+  filters: BrevoContactFilterAttributesInput
+}
+
+input BrevoContactFilterAttributesInput {
+  thisFilterHasNoFields____: [String!]
+}
+
+input AddBrevoContactsInput {
+  brevoContactIds: [Int!]!
+}
+
+input RemoveBrevoContactInput {
+  brevoContactId: Int!
+}
+
+input TargetGroupUpdateInput {
+  title: String
+  filters: BrevoContactFilterAttributesInput
+}
+
+input EmailCampaignInput {
+  title: String!
+  subject: String!
+  scheduledAt: DateTime
+  brevoTargetGroups: [ID!]!
+  content: EmailCampaignContentBlockInput!
+}
+
+"""EmailCampaignContent root block input"""
+scalar EmailCampaignContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input EmailCampaignUpdateInput {
+  title: String
+  subject: String
+  scheduledAt: DateTime
+  brevoTargetGroups: [ID!]
+  content: EmailCampaignContentBlockInput
+}
+
+input SendTestEmailCampaignArgs {
+  emails: [String!]!
+}
+
+input BrevoConfigInput {
+  senderMail: String!
+  senderName: String!
+  doubleOptInTemplateId: Int!
+  folderId: Int!
+  allowedRedirectionUrl: String!
+  unsubscriptionPageId: String!
+}
+
+input BrevoConfigUpdateInput {
+  senderMail: String
+  senderName: String
+  doubleOptInTemplateId: Int
+  folderId: Int
+  allowedRedirectionUrl: String
+  unsubscriptionPageId: String
+}

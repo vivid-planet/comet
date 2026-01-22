@@ -5,7 +5,8 @@ import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
-import { render, screen, waitFor } from "test-utils";
+import { cleanup, render, screen, waitFor } from "test-utils";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";
@@ -123,6 +124,8 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
             </RouterTabs>
         );
     }
+
+    afterEach(cleanup);
 
     it("should not open edit dialog when navigating to the products page", async () => {
         const history = createMemoryHistory({

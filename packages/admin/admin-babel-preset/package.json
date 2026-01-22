@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-babel-preset",
-    "version": "8.10.0",
+    "version": "8.11.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -15,7 +15,7 @@
         "@babel/core": "^7.28.5",
         "@babel/preset-env": "^7.28.5",
         "@babel/preset-react": "^7.28.5",
-        "@babel/preset-typescript": "^7.26.0",
+        "@babel/preset-typescript": "^7.28.5",
         "@emotion/babel-plugin": "^11.13.5"
     },
     "devDependencies": {
