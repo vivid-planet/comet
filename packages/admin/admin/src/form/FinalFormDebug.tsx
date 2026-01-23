@@ -1,8 +1,35 @@
+import { Box } from "@mui/material";
 import { useState } from "react";
 import { type AnyObject, FormSpy } from "react-final-form";
 
 import { Alert } from "../alert/Alert";
+import { Button } from "../common/buttons/Button";
 
+/**
+ * A debug component for React Final Form that displays the complete form state in a collapsible panel.
+ *
+ * This component renders an info alert with an expandable section that shows all available form state properties
+ * including values, errors, validation state, submission state, and field-level metadata. It's useful for
+ * development and debugging purposes to inspect the current state of a Final Form.
+ *
+ * @template FormValues - The type of the form values object. Defaults to `AnyObject`.
+ *
+ * @example
+ * ```tsx
+ * <Form onSubmit={handleSubmit}>
+ *   {() => (
+ *     <>
+ *       <Field name="email" component="input" />
+ *       <FinalFormDebug />
+ *     </>
+ *   )}
+ * </Form>
+ * ```
+ *
+ * @remarks
+ * The component subscribes to all form state properties and displays them as formatted JSON.
+ * Use this only during development as it can impact performance with large forms.
+ */
 export function FinalFormDebug<FormValues = AnyObject>() {
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -31,20 +58,11 @@ export function FinalFormDebug<FormValues = AnyObject>() {
         >
             {(formState) => (
                 <Alert severity="info" title="Debug Final Form State:">
-                    <button
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        style={{
-                            marginTop: "8px",
-                            marginBottom: isExpanded ? "8px" : "0",
-                            cursor: "pointer",
-                            padding: "4px 8px",
-                            border: "1px solid #ccc",
-                            borderRadius: "4px",
-                            background: "#fff",
-                        }}
-                    >
-                        {isExpanded ? "Collapse" : "Expand"}
-                    </button>
+                    <Box paddingTop={2}>
+                        <Button onClick={() => setIsExpanded(!isExpanded)} variant="outlined" size="small">
+                            {isExpanded ? "Collapse" : "Expand"}
+                        </Button>
+                    </Box>
                     {isExpanded && (
                         <>
                             <pre>{`dirty: ${JSON.stringify(formState.dirty, null, 2)}`}</pre>
@@ -74,6 +92,8 @@ export function FinalFormDebug<FormValues = AnyObject>() {
                             <pre>{`submitting: ${JSON.stringify(formState.submitting, null, 2)}`}</pre>
 
                             <pre>{`touched: ${JSON.stringify(formState.touched, null, 2)}`}</pre>
+
+                            <pre>{`values: ${JSON.stringify(formState.values, null, 2)}`}</pre>
 
                             <pre>{`valid: ${JSON.stringify(formState.valid, null, 2)}`}</pre>
 
