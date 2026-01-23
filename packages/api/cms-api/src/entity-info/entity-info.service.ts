@@ -26,7 +26,7 @@ export class EntityInfoService {
      * Resolves a field (e.g., "title") or field path for relations (e.g., "manufacturer.name") to SQL expression.
      * Supports direct fields and one level of ManyToOne/OneToOne relations.
      */
-    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, mainAlias: string): FieldSqlResult {
+    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, mainAlias: string, options?: { allowNull?: boolean }): FieldSqlResult {
         const joins: string[] = [];
 
         // Check if it's a relation path (contains a dot)
@@ -66,9 +66,12 @@ export class EntityInfoService {
             const joinSql = `LEFT JOIN "${targetTableName}" "${relationAlias}" ON "${mainAlias}"."${joinColumn}" = "${relationAlias}"."${targetPrimaryKey}"`;
             joins.push(joinSql);
 
-            // Return the SQL expression for the field (will be NULL if relation is null)
+            // Use COALESCE to ensure non-null values for required fields
+            const fieldSql = `"${relationAlias}"."${targetFieldColumn}"`;
+            const sql = options?.allowNull ? fieldSql : `COALESCE(${fieldSql}, '')`;
+
             return {
-                sql: `"${relationAlias}"."${targetFieldColumn}"`,
+                sql,
                 joins,
             };
         } else {
@@ -79,8 +82,11 @@ export class EntityInfoService {
             }
 
             const columnName = fieldProp.fieldNames[0];
+            const fieldSql = `"${mainAlias}"."${columnName}"`;
+            const sql = options?.allowNull ? fieldSql : `COALESCE(${fieldSql}, '')`;
+
             return {
-                sql: `"${mainAlias}"."${columnName}"`,
+                sql,
                 joins: [],
             };
         }
@@ -100,15 +106,15 @@ export class EntityInfoService {
                     const mainAlias = "t";
                     const allJoins: string[] = [];
 
-                    // Resolve the name field
+                    // Resolve the name field (must not be NULL)
                     const nameResult = this.resolveFieldToSql(entityInfo.name, metadata, mainAlias);
                     const nameSql = nameResult.sql;
                     allJoins.push(...nameResult.joins);
 
-                    // Resolve the secondaryInformation field (if provided)
+                    // Resolve the secondaryInformation field (if provided, can be NULL)
                     let secondaryInformationSql = "null";
                     if (entityInfo.secondaryInformation) {
-                        const secondaryResult = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, mainAlias);
+                        const secondaryResult = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, mainAlias, { allowNull: true });
                         secondaryInformationSql = secondaryResult.sql;
                         allJoins.push(...secondaryResult.joins);
                     }
