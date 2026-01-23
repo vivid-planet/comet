@@ -23,7 +23,7 @@ export class EntityInfoService {
     }
 
     /**
-     * Resolves a field path (e.g., "manufacturer.name") to SQL expression.
+     * Resolves a field (e.g., "title") or field path for relations (e.g., "manufacturer.name") to SQL expression.
      * Supports direct fields and one level of ManyToOne/OneToOne relations.
      */
     private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, mainAlias: string): FieldSqlResult {
@@ -71,19 +71,19 @@ export class EntityInfoService {
                 sql: `"${relationAlias}"."${targetFieldColumn}"`,
                 joins,
             };
-        }
+        } else {
+            // Direct field - find the actual column name
+            const fieldProp = metadata.props.find((p) => p.name === fieldPath);
+            if (!fieldProp) {
+                throw new Error(`Field "${fieldPath}" not found in entity "${metadata.className}"`);
+            }
 
-        // Direct field - find the actual column name
-        const fieldProp = metadata.props.find((p) => p.name === fieldPath);
-        if (!fieldProp) {
-            throw new Error(`Field "${fieldPath}" not found in entity "${metadata.className}"`);
+            const columnName = fieldProp.fieldNames[0];
+            return {
+                sql: `"${mainAlias}"."${columnName}"`,
+                joins: [],
+            };
         }
-
-        const columnName = fieldProp.fieldNames[0];
-        return {
-            sql: `"${mainAlias}"."${columnName}"`,
-            joins: [],
-        };
     }
 
     async createEntityInfoView(): Promise<void> {
@@ -135,7 +135,7 @@ export class EntityInfoService {
                                 ${visibleSql} AS "visible",
                                 ${mainAlias}."${primary}"::text "id",
                                 '${entityName}' "entityName"
-                            FROM "${metadata.tableName}" ${mainAlias}${joinsSql}`;
+                            FROM "${metadata.tableName}" ${mainAlias} ${joinsSql}`;
                     indexSelects.push(select);
                 }
             }
