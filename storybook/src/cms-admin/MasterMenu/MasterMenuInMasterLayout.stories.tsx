@@ -10,18 +10,12 @@ export default {
     decorators: [CurrentUserProviderDecorator, apolloStoryDecorator("/graphql"), storyRouterDecorator()],
 };
 
+// --------------- One item ------------------------
+
 export const MasterMenuInMasterLayoutOneItem = () => {
     return (
         <MasterLayout menuComponent={AppMasterMenuOneItem}>
             <AppMasterMenuRoutesOneItem />
-        </MasterLayout>
-    );
-};
-
-export const MasterMenuInMasterLayoutTwoItems = () => {
-    return (
-        <MasterLayout menuComponent={AppMasterMenuTwoItems}>
-            <AppMasterMenuRoutesTwoItems />
         </MasterLayout>
     );
 };
@@ -49,6 +43,16 @@ const masterMenuDataOneItem: MasterMenuData = [
 function OnlyPage() {
     return "Only page";
 }
+
+// --------------- Two items ------------------------
+
+export const MasterMenuInMasterLayoutTwoItems = () => {
+    return (
+        <MasterLayout menuComponent={AppMasterMenuTwoItems}>
+            <AppMasterMenuRoutesTwoItems />
+        </MasterLayout>
+    );
+};
 
 const AppMasterMenuTwoItems = () => {
     return <MasterMenu menu={masterMenuDataTwoItems} />;
