@@ -7,8 +7,9 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allPermissions;
         } else {
-            const deniedPermissions: Permission[] = ["userPermissions"];
-            return availablePermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission }));
+            return [{ permission: "dam" }];
+            // const deniedPermissions: Permission[] = ["userPermissions"];
+            // return availablePermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission }));
         }
     }
     getContentScopesForUser(user: User): ContentScopesForUser {

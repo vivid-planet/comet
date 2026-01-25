@@ -98,6 +98,7 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 path: "/dashboard",
                 component: DashboardPage,
             },
+            requiredPermission: "pageTree",
         },
         {
             type: "collapsible",
