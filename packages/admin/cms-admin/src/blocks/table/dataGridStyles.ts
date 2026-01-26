@@ -27,7 +27,7 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
             boxShadow: "none",
         },
 
-        "&:nth-last-child(4)": {
+        "&:nth-last-of-type(4)": {
             // The last non-pinned cell should not have a border, as the pinned column already has one
             borderRight: "none",
         },
@@ -52,7 +52,7 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
             boxShadow: "none",
         },
 
-        "&:nth-last-child(3)": {
+        "&:nth-last-of-type(3)": {
             // The last non-pinned cell should not have a border, as the pinned column already has one
             borderRight: "none",
         },
