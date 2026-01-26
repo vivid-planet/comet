@@ -725,6 +725,25 @@ describe("generateFormValues", () => {
                      } : { } , [data]);`.replace(/\s+/g, " "),
             );
         });
+
+        it("generates code with initialValuesAsProp", () => {
+            expect(
+                generateInitialValues({
+                    formValuesConfig: [
+                        {
+                            fieldName: "foo",
+                        },
+                    ],
+                    filterByFragmentType: "GQLProductFormFragment",
+                    mode: "all",
+                    gqlIntrospection: introspection,
+                    gqlType: "Product",
+                    initialValuesAsProp: true,
+                }).replace(/\s+/g, " "),
+            ).toEqual(
+                `const initialValues = useMemo<Partial<FormValues>>(() => data?.product ? { ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product), } : { ...passedInitialValues, } , [data]);`,
+            );
+        });
     });
 
     describe("generateFormValuesToGqlInput code unit tests", () => {
