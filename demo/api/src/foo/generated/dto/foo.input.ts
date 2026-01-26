@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsString, IsNotEmpty, IsArray } from "class-validator";
 import { PartialType } from "@comet/cms-api";
-import { FooNestedBarInput } from "./bar-nested-baz.input";
+import { FooNestedBarInput } from "./foo-nested-bar.input";
 @InputType()
 export class FooInput {
     @IsNotEmpty()

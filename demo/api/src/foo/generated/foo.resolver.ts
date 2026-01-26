@@ -7,6 +7,7 @@ import { FooInput, FooUpdateInput } from "./dto/foo.input";
 import { PaginatedFoos } from "./dto/paginated-foos";
 import { FoosArgs } from "./dto/foos.args";
 import { Bar } from "../entities/bar.entity";
+import { Baz } from "../entities/baz.entity";
 import { Foo } from "../entities/foo.entity";
 import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Foo)
@@ -53,17 +54,19 @@ export class FooResolver {
             await foo.bars.loadItems();
             foo.bars.set(await Promise.all(barsInput.map(async (barInput) => {
                 const { bazs: bazsInput, ...assignInput } = barInput;
-                return this.entityManager.assign(new Bar(), {
+                const bar = this.entityManager.assign(new Bar(), {
                     ...assignInput,
                 });
                 if (bazsInput) {
                     await bar.bazs.loadItems();
                     bar.bazs.set(bazsInput.map((bazInput) => {
-                        return this.entityManager.assign(new Baz(), {
+                        const baz = this.entityManager.assign(new Baz(), {
                             ...bazInput,
                         });
+                        return baz;
                     }));
                 }
+                return bar;
             })));
         }
         await this.entityManager.flush();
@@ -85,17 +88,19 @@ export class FooResolver {
             await foo.bars.loadItems();
             foo.bars.set(await Promise.all(barsInput.map(async (barInput) => {
                 const { bazs: bazsInput, ...assignInput } = barInput;
-                return this.entityManager.assign(new Bar(), {
+                const bar = this.entityManager.assign(new Bar(), {
                     ...assignInput,
                 });
                 if (bazsInput) {
                     await bar.bazs.loadItems();
                     bar.bazs.set(bazsInput.map((bazInput) => {
-                        return this.entityManager.assign(new Baz(), {
+                        const baz = this.entityManager.assign(new Baz(), {
                             ...bazInput,
                         });
+                        return baz;
                     }));
                 }
+                return bar;
             })));
         }
         await this.entityManager.flush();

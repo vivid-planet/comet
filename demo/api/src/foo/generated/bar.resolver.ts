@@ -6,8 +6,8 @@ import { GraphQLResolveInfo } from "graphql";
 import { BarInput, BarUpdateInput } from "./dto/bar.input";
 import { PaginatedBars } from "./dto/paginated-bars";
 import { BarsArgs } from "./dto/bars.args";
-import { Foo } from "../entities/foo.entity";
 import { Baz } from "../entities/baz.entity";
+import { Foo } from "../entities/foo.entity";
 import { Bar } from "../entities/bar.entity";
 import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Bar)
@@ -57,9 +57,10 @@ export class BarResolver {
         if (bazsInput) {
             await bar.bazs.loadItems();
             bar.bazs.set(bazsInput.map((bazInput) => {
-                return this.entityManager.assign(new Baz(), {
+                const baz = this.entityManager.assign(new Baz(), {
                     ...bazInput,
                 });
+                return baz;
             }));
         }
         await this.entityManager.flush();
@@ -80,9 +81,10 @@ export class BarResolver {
         if (bazsInput) {
             await bar.bazs.loadItems();
             bar.bazs.set(bazsInput.map((bazInput) => {
-                return this.entityManager.assign(new Baz(), {
+                const baz = this.entityManager.assign(new Baz(), {
                     ...bazInput,
                 });
+                return baz;
             }));
         }
         if (fooInput !== undefined) {
