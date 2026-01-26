@@ -79,7 +79,7 @@ export interface BlockMethods<
      */
     output2State: (output: OutputApi, context: BlockContext) => Promise<State>;
     /**
-     * Converts a block's Admin component state into block data for the live preview, e.g., when rendering a Site block in the Admin's preview.
+     * Converts a block's Admin component state into block data for the block preview, e.g., when rendering a block in the Admin's preview.
      */
     createPreviewState: (v: State, previewCtx: BlockPreviewContext & BlockContext) => PreviewState;
     isValid: (state: State) => Promise<boolean> | boolean;
