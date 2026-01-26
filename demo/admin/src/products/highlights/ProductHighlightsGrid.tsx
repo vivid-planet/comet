@@ -12,10 +12,12 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -64,6 +66,15 @@ export function ProductHighlightsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductHighlightsGrid") };
+    const stackSwitchApi = useStackSwitchApi();
+
+    const handleRowPrimaryAction = useCallback(
+        (row: GQLProductHighlightsFormFragment) => {
+            stackSwitchApi.activatePage("edit", row.id);
+        },
+        [stackSwitchApi],
+    );
+
     const columns: GridColDef<GQLProductHighlightsFormFragment>[] = [
         {
             field: "description",
@@ -83,7 +94,7 @@ export function ProductHighlightsGrid() {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <IconButton color="primary" onClick={() => handleRowPrimaryAction(params.row)}>
                             <EditIcon />
                         </IconButton>
                         <CrudContextMenu
@@ -120,6 +131,7 @@ export function ProductHighlightsGrid() {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
+            onRowClick={(params) => handleRowPrimaryAction(params.row)}
             slots={{
                 toolbar: ProductHighlightsGridToolbar as GridSlotsComponent["toolbar"],
             }}

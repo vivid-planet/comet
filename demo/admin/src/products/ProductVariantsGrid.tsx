@@ -11,10 +11,12 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -45,7 +47,15 @@ function ProductVariantsGridToolbar() {
 export function ProductVariantsGrid({ productId }: { productId: string }) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
     const sortModel = dataGridProps.sortModel;
+    const stackSwitchApi = useStackSwitchApi();
     //const client = useApolloClient();
+
+    const handleRowPrimaryAction = useCallback(
+        (row: GQLProductVariantsListFragment) => {
+            stackSwitchApi.activatePage("edit", row.id);
+        },
+        [stackSwitchApi],
+    );
 
     const columns: GridColDef<GQLProductVariantsListFragment>[] = [
         { field: "name", headerName: "Name", flex: 1 },
@@ -85,7 +95,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <IconButton color="primary" onClick={() => handleRowPrimaryAction(params.row)}>
                             <Edit />
                         </IconButton>
                         {/*
@@ -121,6 +131,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
+            onRowClick={(params) => handleRowPrimaryAction(params.row)}
             slots={{
                 toolbar: ProductVariantsGridToolbar,
             }}
