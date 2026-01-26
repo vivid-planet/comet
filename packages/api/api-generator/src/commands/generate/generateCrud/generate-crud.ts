@@ -794,6 +794,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasFilterArg,
         hasPositionProp,
         positionGroupProps,
+        hasDeletedAtProp,
         dedicatedResolverArgProps,
     } = buildOptions(metadata, generatorOptions);
 
@@ -1137,7 +1138,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @AffectedEntity(${metadata.className})
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
-            this.entityManager.remove(${instanceNameSingular});${
+            ${hasDeletedAtProp ? `${instanceNameSingular}.assign({ deletedAt: new Date() });` : `this.entityManager.remove(${instanceNameSingular});`}
+            ${
                 hasPositionProp
                     ? `await this.${instanceNamePlural}Service.decrementPositions(${
                           positionGroupProps.length

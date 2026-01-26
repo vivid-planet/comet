@@ -1,5 +1,24 @@
 # @comet/site-nextjs
 
+## 8.12.0
+
+### Patch Changes
+
+- @comet/site-react@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [02d2ba8]
+    - @comet/site-react@8.11.1
+
+## 8.11.0
+
+### Patch Changes
+
+- @comet/site-react@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

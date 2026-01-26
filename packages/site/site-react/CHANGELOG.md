@@ -1,5 +1,15 @@
 # @comet/site-react
 
+## 8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- 02d2ba8: Fix autoplay behavior of `YouTubeVideoBlock`
+
+## 8.11.0
+
 ## 8.10.0
 
 ### Patch Changes
