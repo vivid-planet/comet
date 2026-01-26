@@ -46,7 +46,6 @@ import { Link } from "./documents/links/entities/link.entity";
 import { Page } from "./documents/pages/entities/page.entity";
 import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
-import { FooModule } from "./foo/foo.module";
 import { FooterModule } from "./footer/footer.module";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
@@ -207,7 +206,6 @@ export class AppModule {
                 MailerModule.register(config.mailer),
                 MailTemplatesModule,
                 ProductsModule,
-                FooModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {

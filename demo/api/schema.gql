@@ -73,87 +73,6 @@ type AutoBuildStatus {
   nextCheck: DateTime!
 }
 
-type Bar {
-  bazs: [Baz!]!
-  foo: Foo!
-  id: ID!
-  name: String!
-}
-
-input BarFilter {
-  and: [BarFilter!]
-  bazs: OneToManyFilter
-  foo: ManyToOneFilter
-  id: IdFilter
-  name: StringFilter
-  or: [BarFilter!]
-}
-
-input BarInput {
-  bazs: [BarNestedBazInput!]! = []
-  foo: ID!
-  name: String!
-}
-
-input BarNestedBazInput {
-  description: String!
-}
-
-input BarSort {
-  direction: SortDirection! = ASC
-  field: BarSortField!
-}
-
-enum BarSortField {
-  foo
-  foo_title
-  id
-  name
-}
-
-input BarUpdateInput {
-  bazs: [BarNestedBazInput!]
-  foo: ID
-  name: String
-}
-
-type Baz {
-  bar: Bar!
-  description: String!
-  id: ID!
-}
-
-input BazFilter {
-  and: [BazFilter!]
-  bar: ManyToOneFilter
-  description: StringFilter
-  id: IdFilter
-  or: [BazFilter!]
-}
-
-input BazInput {
-  bar: ID!
-  description: String!
-}
-
-input BazSort {
-  direction: SortDirection! = ASC
-  field: BazSortField!
-}
-
-enum BazSortField {
-  bar
-  bar_foo
-  bar_name
-  description
-  id
-}
-
-input BazUpdateInput {
-  bar: ID
-  description: String
-}
-
 input BooleanFilter {
   equal: Boolean
 }
@@ -464,45 +383,6 @@ input FolderFilterInput {
   searchText: String
 }
 
-type Foo {
-  bars: [Bar!]!
-  id: ID!
-  title: String!
-}
-
-input FooFilter {
-  and: [FooFilter!]
-  bars: OneToManyFilter
-  id: IdFilter
-  or: [FooFilter!]
-  title: StringFilter
-}
-
-input FooInput {
-  bars: [FooNestedBarInput!]! = []
-  title: String!
-}
-
-input FooNestedBarInput {
-  bazs: [BarNestedBazInput!]! = []
-  name: String!
-}
-
-input FooSort {
-  direction: SortDirection! = ASC
-  field: FooSortField!
-}
-
-enum FooSortField {
-  id
-  title
-}
-
-input FooUpdateInput {
-  bars: [FooNestedBarInput!]
-  title: String
-}
-
 type Footer {
   content: FooterContentBlockData!
   createdAt: DateTime!
@@ -749,12 +629,9 @@ type Mutation {
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
-  createBar(input: BarInput!): Bar!
-  createBaz(input: BazInput!): Baz!
   createBuilds(input: CreateBuildsInput!): Boolean!
   createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput!): DamFolder!
   createDamMediaAlternative(alternative: ID!, for: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
-  createFoo(input: FooInput!): Foo!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
   createNewsComment(input: NewsCommentInput!, newsId: ID!): NewsComment!
@@ -767,12 +644,9 @@ type Mutation {
   createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
   createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
   currentUserSignOut: String!
-  deleteBar(id: ID!): Boolean!
-  deleteBaz(id: ID!): Boolean!
   deleteDamFile(id: ID!): Boolean!
   deleteDamFolder(id: ID!): Boolean!
   deleteDamMediaAlternative(id: ID!): Boolean!
-  deleteFoo(id: ID!): Boolean!
   deleteManufacturer(id: ID!): Boolean!
   deleteNews(id: ID!): Boolean!
   deleteNewsComment(id: ID!): Boolean!
@@ -797,12 +671,9 @@ type Mutation {
   savePage(attachedPageTreeNodeId: ID, input: PageInput!, lastUpdatedAt: DateTime, pageId: ID!): Page!
   savePredefinedPage(attachedPageTreeNodeId: ID!, id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
-  updateBar(id: ID!, input: BarUpdateInput!): Bar!
-  updateBaz(id: ID!, input: BazUpdateInput!): Baz!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
-  updateFoo(id: ID!, input: FooUpdateInput!): Foo!
   updateMainMenuItem(input: MainMenuItemInput!, lastUpdatedAt: DateTime, pageTreeNodeId: ID!): MainMenuItem!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   updateNews(id: ID!, input: NewsUpdateInput!): News!
@@ -1062,16 +933,6 @@ enum PageTreeNodeVisibility {
   Unpublished
 }
 
-type PaginatedBars {
-  nodes: [Bar!]!
-  totalCount: Int!
-}
-
-type PaginatedBazs {
-  nodes: [Baz!]!
-  totalCount: Int!
-}
-
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -1094,11 +955,6 @@ type PaginatedDamMediaAlternatives {
 
 type PaginatedDependencies {
   nodes: [Dependency!]!
-  totalCount: Int!
-}
-
-type PaginatedFoos {
-  nodes: [Foo!]!
   totalCount: Int!
 }
 
@@ -1725,10 +1581,6 @@ input ProductVariantUpdateInput {
 
 type Query {
   autoBuildStatus: AutoBuildStatus!
-  bar(id: ID!): Bar!
-  bars(filter: BarFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [BarSort!]! = [{direction: ASC, field: id}]): PaginatedBars!
-  baz(id: ID!): Baz!
-  bazs(filter: BazFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [BazSort!]! = [{direction: ASC, field: id}]): PaginatedBazs!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
@@ -1746,8 +1598,6 @@ type Query {
   damMediaAlternative(id: ID!): DamMediaAlternative!
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
-  foo(id: ID!): Foo!
-  foos(filter: FooFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [FooSort!]! = [{direction: ASC, field: id}]): PaginatedFoos!
   footer(scope: FooterScopeInput!): Footer
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
