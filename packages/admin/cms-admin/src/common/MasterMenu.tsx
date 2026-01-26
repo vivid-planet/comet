@@ -138,7 +138,7 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
 export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
-    const { open, toggleOpen } = useMainNavigation();
+    const { open, toggleOpen, setHasMultipleMenuItems } = useMainNavigation();
     const windowSize = useWindowSize();
     const match = useRouteMatch();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
@@ -151,6 +151,14 @@ export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuPro
         // useEffect dependencies must only include `location`, because the function should only be called once after changing the location.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
+
+    useEffect(() => {
+        setHasMultipleMenuItems(menuItems.length > 1);
+    }, [menuItems.length, setHasMultipleMenuItems]);
+
+    if (menuItems.length <= 1) {
+        return null;
+    }
 
     const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuItemCollapsibleElement["items"]) =>
         items.flatMap((item, index) => {
