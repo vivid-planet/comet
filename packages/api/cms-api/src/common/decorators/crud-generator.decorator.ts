@@ -5,9 +5,9 @@ import { type Permission } from "../../user-permissions/user-permissions.types";
 
 export interface CrudGeneratorHooksService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    validateCreateInput?: (input: any, options: { currentUser: CurrentUser; scopy: any; args: any }) => Promise<void>;
+    validateCreateInput?: (input: any, options: { currentUser: CurrentUser; scope: any; args: any }) => Promise<void>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    validateUpdateInput?: (input: any, options: { currentUser: CurrentUser; scopy: any; entity: any }) => Promise<void>;
+    validateUpdateInput?: (input: any, options: { currentUser: CurrentUser; scope: any; entity: any }) => Promise<void>;
 }
 
 export interface CrudGeneratorOptions {
