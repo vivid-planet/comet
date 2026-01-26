@@ -1,12 +1,12 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-import { screen, waitFor, within } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
-import { render } from "test-utils";
+import { render, screen, waitFor, within } from "test-utils";
+import { describe, expect, it } from "vitest";
 
 import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";

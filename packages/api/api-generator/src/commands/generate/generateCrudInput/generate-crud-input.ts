@@ -80,6 +80,18 @@ export async function generateCrudInput(
         { name: "PartialType", importPath: "@comet/cms-api" },
         { name: "BlockInputInterface", importPath: "@comet/cms-api" },
         { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "IsString", importPath: "class-validator" },
+        { name: "IsNotEmpty", importPath: "class-validator" },
+        { name: "ValidateNested", importPath: "class-validator" },
+        { name: "IsNumber", importPath: "class-validator" },
+        { name: "IsBoolean", importPath: "class-validator" },
+        { name: "IsDate", importPath: "class-validator" },
+        { name: "IsDateString", importPath: "class-validator" },
+        { name: "IsOptional", importPath: "class-validator" },
+        { name: "IsEnum", importPath: "class-validator" },
+        { name: "IsUUID", importPath: "class-validator" },
+        { name: "IsArray", importPath: "class-validator" },
+        { name: "IsInt", importPath: "class-validator" },
     ];
     for (const prop of props) {
         let type = prop.type;
@@ -224,6 +236,7 @@ export async function generateCrudInput(
                 decorators.push("@IsInt()");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
+                continue;
             }
         } else if (prop.kind == "1:m") {
             if (prop.orphanRemoval) {
@@ -455,7 +468,6 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsDateString, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 

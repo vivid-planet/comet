@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "noEmit": true
+    },
+    "exclude": ["../dist"],
+    "extends": "../tsconfig.json",
+    "include": ["../src/**/*.stories.ts", "../src/**/*.stories.tsx"]
+}

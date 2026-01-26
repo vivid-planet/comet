@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generateFormField - datePicker should generate simple date field with LocalType scalar 1`] = `
+exports[`generateFormField - datePicker > should generate simple date field with LocalType scalar 1`] = `
 "
             <Future_DatePickerField
                 
@@ -16,7 +16,7 @@ exports[`generateFormField - datePicker should generate simple date field with L
             />"
 `;
 
-exports[`generateFormField - datePicker should generate simple date field with LocalType scalar 2`] = `
+exports[`generateFormField - datePicker > should generate simple date field with LocalType scalar 2`] = `
 [
   {
     "fieldName": "availableSince",

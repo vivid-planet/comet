@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import { fireEvent, render, waitFor } from "@testing-library/react";
 import { IntlProvider } from "react-intl";
+import { cleanup, fireEvent, render, waitFor } from "test-utils";
+import { afterEach, expect, test } from "vitest";
 
 import { FinalForm } from "./FinalForm";
 import { Field } from "./form/Field";
@@ -13,6 +14,8 @@ import { Stack } from "./stack/Stack";
 import { StackLink } from "./stack/StackLink";
 import { StackSwitch } from "./stack/Switch";
 import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
+
+afterEach(cleanup);
 
 test("Form DirtyPrompt for inner Tabs", async () => {
     function Story() {

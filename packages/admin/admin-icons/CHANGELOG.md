@@ -1,5 +1,15 @@
 # @comet/admin-icons
 
+## 8.12.0
+
+## 8.11.1
+
+## 8.11.0
+
+### Patch Changes
+
+- 7e34c0b: Fix `Mail` and `Letter` icons
+
 ## 8.10.0
 
 ## 8.9.0

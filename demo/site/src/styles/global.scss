@@ -68,6 +68,9 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+
+    /* Balance text wrapping for better readability */
+    text-wrap: balance;
 }
 
 h1,

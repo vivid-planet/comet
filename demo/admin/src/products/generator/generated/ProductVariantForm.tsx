@@ -32,7 +32,7 @@ import { GQLUpdateProductVariantMutation } from "./ProductVariantForm.gql.genera
 import { GQLUpdateProductVariantMutationVariables } from "./ProductVariantForm.gql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
-    image: DamImageBlock
+    image: DamImageBlock,
 };
 type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
@@ -47,15 +47,22 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductVariantQuery, GQLProductVariantQueryVariables>(productVariantQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.productVariant
-        ? {
-            ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
-            image: rootBlocks.image.input2State(data.productVariant.image),
-        }
-        : {
-            image: rootBlocks.image.defaultValues(),
-        }, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLProductVariantQuery, GQLProductVariantQueryVariables>(
+        productVariantQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.productVariant
+                ? {
+                      ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
+                      image: rootBlocks.image.input2State(data.productVariant.image),
+                  }
+                : {
+                      image: rootBlocks.image.defaultValues(),
+                  },
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "productVariant", id);
@@ -67,23 +74,21 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
         },
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
         if (mode === "edit") {
-            if (!id)
-                throw new Error();
+            if (!id) throw new Error();
             const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
                 mutation: updateProductVariantMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
                 mutation: createProductVariantMutation,
                 variables: {
-                    input: output, product
+                    input: output,
+                    product,
                 },
             });
             const id = mutationResponse?.createProductVariant.id;
@@ -94,22 +99,42 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <TextField required variant="horizontal" fullWidth name="name" label={<FormattedMessage id="productVariant.name" defaultMessage="Name"/>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="productVariant.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-                        </>
-                    </>)}
-            </FinalForm>);
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="name"
+                            label={<FormattedMessage id="productVariant.name" defaultMessage="Name" />}
+                        />
+                        <Field
+                            name="image"
+                            isEqual={isEqual}
+                            label={<FormattedMessage id="productVariant.image" defaultMessage="Image" />}
+                            variant="horizontal"
+                            fullWidth
+                        >
+                            {createFinalFormBlock(rootBlocks.image)}
+                        </Field>
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }
