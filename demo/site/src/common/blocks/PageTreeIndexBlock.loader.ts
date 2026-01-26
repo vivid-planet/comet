@@ -15,8 +15,8 @@ export const loader = async ({ graphQLFetch, scope }: BlockLoaderOptions<PageTre
     do {
         const { paginatedPageTreeNodes } = await graphQLFetch<GQLPageTreeIndexDataQuery, GQLPageTreeIndexDataQueryVariables>(
             gql`
-                query PageTreeIndexData($scope: PageTreeNodeScopeInput!, $offset: Int, $limit: Int) {
-                    paginatedPageTreeNodes(scope: $scope, offset: $offset, limit: $limit) {
+                query PageTreeIndexData($scope: PageTreeNodeScopeInput!, $offset: Int, $limit: Int, $visibility: PageTreeNodeVisibility) {
+                    paginatedPageTreeNodes(scope: $scope, offset: $offset, limit: $limit, visibility: $visibility) {
                         nodes {
                             id
                             name
@@ -26,6 +26,7 @@ export const loader = async ({ graphQLFetch, scope }: BlockLoaderOptions<PageTre
                                 domain
                                 language
                             }
+                            visibility
                         }
                         totalCount
                     }
@@ -35,6 +36,7 @@ export const loader = async ({ graphQLFetch, scope }: BlockLoaderOptions<PageTre
                 scope,
                 offset: currentCount,
                 limit: pageSize,
+                visibility: "Published",
             },
         );
 
