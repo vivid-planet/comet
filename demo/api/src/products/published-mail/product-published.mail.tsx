@@ -12,7 +12,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
     async generateMail(props: MailProps) {
         const intl = await this.translationService.getIntl(props.recipient.language);
         const mailHtml = renderMailHtml(
-            <IntlProvider locale={intl.locale} defaultLocale={intl.defaultLocale} messages={intl.messages}>
+            <IntlProvider {...intl}>
                 <Mail {...props} />
             </IntlProvider>,
         );
