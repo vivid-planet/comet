@@ -12,13 +12,7 @@ import {
 import { IncomingMessage, ServerResponse } from "http";
 import { NextUrlWithParsedQuery } from "next/dist/server/request-meta";
 
-export type MetricType =
-    | "Counter"
-    | "UpDownCounter"
-    | "Histogram"
-    | "ObservableGauge"
-    | "ObservableCounter"
-    | "ObservableUpDownCounter";
+export type MetricType = "Counter" | "UpDownCounter" | "Histogram" | "ObservableGauge" | "ObservableCounter" | "ObservableUpDownCounter";
 export type GenericMetric = Counter | UpDownCounter | Histogram | ObservableGauge | ObservableCounter | ObservableUpDownCounter;
 export const OTEL_METER_NAME = "nestjs-otel";
 

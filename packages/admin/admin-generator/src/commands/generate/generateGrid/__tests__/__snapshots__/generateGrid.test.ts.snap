@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generateGrid should generate a grid with book configuration 1`] = `
+exports[`generateGrid > should generate a grid with book configuration 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
@@ -102,7 +102,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
                 <GridFilterButton />
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -149,6 +149,8 @@ renderCell: (params) => {
                                             }}
                                             
                                             refetchQueries={[booksQuery]}
+                                            
+                                            
                                         />
                                     
                                 </>
@@ -181,13 +183,204 @@ renderCell: (params) => {
                             }}
                             
                 
+                
             />
         );
     }
     "
 `;
 
-exports[`generateGrid should generate required root gql args in export-query variables 1`] = `
+exports[`generateGrid > should generate custom text for delete action in crudContextMenu 1`] = `
+"import {
+        GQLBooksGridQuery,
+        GQLBooksGridQueryVariables,
+        GQLBooksFormFragment,
+        GQLCreateBookMutation,
+        GQLCreateBookMutationVariables,
+        GQLUpdateBookPositionMutation,
+        GQLUpdateBookPositionMutationVariables,
+        GQLDeleteBookMutation,
+        GQLDeleteBookMutationVariables
+    } from "./BooksGrid.generated";
+    import { FormattedMessage } from "react-intl";
+import { FormattedNumber } from "react-intl";
+import { useIntl } from "react-intl";
+import { ReactNode } from "react";
+import { gql } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { Button } from "@comet/admin";
+import { CrudContextMenu } from "@comet/admin";
+import { CrudMoreActionsMenu } from "@comet/admin";
+import { DataGridToolbar } from "@comet/admin";
+import { ExportApi } from "@comet/admin";
+import { filterByFragment } from "@comet/admin";
+import { GridFilterButton } from "@comet/admin";
+import { GridCellContent } from "@comet/admin";
+import { GridColDef } from "@comet/admin";
+import { dataGridDateTimeColumn } from "@comet/admin";
+import { dataGridDateColumn } from "@comet/admin";
+import { dataGridIdColumn } from "@comet/admin";
+import { dataGridManyToManyColumn } from "@comet/admin";
+import { dataGridOneToManyColumn } from "@comet/admin";
+import { renderStaticSelectCell } from "@comet/admin";
+import { messages } from "@comet/admin";
+import { muiGridFilterToGql } from "@comet/admin";
+import { muiGridSortToGql } from "@comet/admin";
+import { StackLink } from "@comet/admin";
+import { FillSpace } from "@comet/admin";
+import { Tooltip } from "@comet/admin";
+import { useBufferedRowCount } from "@comet/admin";
+import { useDataGridExcelExport } from "@comet/admin";
+import { useDataGridRemote } from "@comet/admin";
+import { usePersistentColumnState } from "@comet/admin";
+import { BlockPreviewContent } from "@comet/cms-admin";
+import { Alert } from "@mui/material";
+import { Box } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { Menu } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { ListItemIcon } from "@mui/material";
+import { ListItemText } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridProps } from "@mui/x-data-grid";
+import { GridLogicOperator } from "@mui/x-data-grid";
+import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridSlotsComponent } from "@mui/x-data-grid";
+import { GridToolbarProps } from "@mui/x-data-grid";
+import { GridColumnHeaderTitle } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridRowOrderChangeParams } from "@mui/x-data-grid";
+import { useMemo } from "react";
+import { Add as AddIcon } from "@comet/admin-icons";
+import { Edit as EditIcon } from "@comet/admin-icons";
+import { Info as InfoIcon } from "@comet/admin-icons";
+import { Excel as ExcelIcon } from "@comet/admin-icons";
+
+    const booksFragment = gql\`
+        fragment BooksForm on Book {
+            id
+            title
+        }
+    \`;
+
+    const booksQuery = gql\`
+    query BooksGrid($offset: Int!, $limit: Int!, $sort: [BookSort!], $filter: BookFilter) {
+        books(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+            nodes { ...BooksForm } totalCount
+        }
+    }
+    \${booksFragment}
+    \`;
+
+    
+
+    const deleteBookMutation = gql\`
+                mutation DeleteBook($id: ID!) {
+                    deleteBook(id: $id)
+                }
+            \`;
+
+
+    
+    function BooksGridToolbar() {
+        return (
+            <DataGridToolbar>
+                <GridFilterButton />
+                <FillSpace />
+        <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
+    </Button>
+            </DataGridToolbar>
+        );
+    }
+
+    
+
+    export function BooksGrid() {
+        const client = useApolloClient();
+        const intl = useIntl();
+        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("BooksGrid") };
+        
+        
+
+        
+
+        const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
+            {field: "title",
+headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
+flex: 1,
+minWidth: 150,},
+                {field: "actions",
+headerName: "",
+sortable: false,
+filterable: false,
+type: "actions",
+align: "right",
+pinned: "right",
+width: 84,
+renderCell: (params) => {
+                            return (
+                                <>
+                                
+                                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                            <EditIcon />
+                                        </IconButton>
+                                        <CrudContextMenu
+                                            
+                                            onDelete={async () => {
+                                                await client.mutate<GQLDeleteBookMutation, GQLDeleteBookMutationVariables>({
+                                                    mutation: deleteBookMutation,
+                                                    variables: { id: params.row.id },
+                                                });
+                                            }}
+                                            
+                                            refetchQueries={[booksQuery]}
+                                            
+                                            messagesMapping={{ delete: <FormattedMessage id="book.crudContextMenu.delete" defaultMessage="Extinguish" /> }}
+                                        />
+                                    
+                                </>
+                            );
+                                },}
+        ],[intl, client]);
+
+        const { filter: gqlFilter,  } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+
+        const { data, loading, error } = useQuery<GQLBooksGridQuery, GQLBooksGridQueryVariables>(booksQuery, {
+            variables: {
+                filter: gqlFilter, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+            },
+        });
+        const rowCount = useBufferedRowCount(data?.books.totalCount);
+        if (error) throw error;
+        const rows = data?.books.nodes ?? [];
+
+        
+
+        return (
+            <DataGrid
+                {...dataGridProps}
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                slots={{
+                                toolbar: BooksGridToolbar as GridSlotsComponent["toolbar"],
+                            }}
+                            
+                
+                
+            />
+        );
+    }
+    "
+`;
+
+exports[`generateGrid > should generate required root gql args in export-query variables 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
@@ -308,7 +501,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         ]}
     />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -358,6 +551,8 @@ renderCell: (params) => {
                                             }}
                                             
                                             refetchQueries={[booksQuery]}
+                                            
+                                            
                                         />
                                     
                                 </>
@@ -403,13 +598,14 @@ renderCell: (params) => {
         toolbar: {                exportApi,    } as BooksGridToolbarToolbarProps  
     }}
                 
+                
             />
         );
     }
     "
 `;
 
-exports[`generateGrid should generate valueGetter for date in nested field 1`] = `
+exports[`generateGrid > should generate valueGetter for date in nested field 1`] = `
 "import {
         GQLBooksGridQuery,
         GQLBooksGridQueryVariables,
@@ -530,7 +726,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         ]}
     />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="book.booksForm.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="book.booksForm.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
@@ -585,6 +781,8 @@ renderCell: (params) => {
                                             }}
                                             
                                             refetchQueries={[booksQuery]}
+                                            
+                                            
                                         />
                                     
                                 </>
@@ -629,6 +827,7 @@ renderCell: (params) => {
                             slotProps={{
         toolbar: {                exportApi,    } as BooksGridToolbarToolbarProps  
     }}
+                
                 
             />
         );

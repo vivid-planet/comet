@@ -3,6 +3,6 @@
  * @type {import('lint-staged').Configuration}
  */
 export default {
-    "*.{js,json,css,scss,md}": () => "pnpm lint:eslint",
-    "*.{js,json,md,yml,yaml}": () => "pnpm lint:prettier",
+    "*.{ts,js,json,css,scss,md}": () => "pnpm lint:eslint",
+    "*.{ts,js,json,md,yml,yaml}": () => "pnpm lint:prettier",
 };

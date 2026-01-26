@@ -30,7 +30,7 @@ interface PageTreePageAdditionalFieldsForUi {
     level: number;
     matches: PageSearchMatch[];
 }
-export type PageTreePage = GQLPageTreePageFragment & PageTreePageAdditionalFieldsForUi;
+export type PageTreePage<AdditionalFields = object> = GQLPageTreePageFragment & AdditionalFields & PageTreePageAdditionalFieldsForUi;
 
 interface UsePageTreeProps {
     pages: GQLPageTreePageFragment[];

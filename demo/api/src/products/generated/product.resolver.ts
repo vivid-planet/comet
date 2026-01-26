@@ -8,40 +8,55 @@ import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, BlocksTransformerService, CurrentUser, DamImageBlock, FileUpload, GetCurrentUser, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import {
+    AffectedEntity,
+    BlocksTransformerService,
+    DamImageBlock,
+    FileUpload,
+    RequiredPermission,
+    RootBlockDataScalar,
+    extractGraphqlFields,
+    gqlArgsToMikroOrmQuery,
+    gqlSortToMikroOrmOrderBy,
+} from "@comet/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { Product } from "../entities/product.entity";
-import { ProductService } from "../product.service";
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
-    constructor(protected readonly entityManager: EntityManager, private readonly blocksTransformer: BlocksTransformerService, protected readonly productService: ProductService) { }
+    constructor(
+        protected readonly entityManager: EntityManager,
+        private readonly blocksTransformer: BlocksTransformerService,
+    ) {}
     @Query(() => Product)
     @AffectedEntity(Product)
     async product(
-    @Args("id", { type: () => ID })
-    id: string): Promise<Product> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<Product> {
         const product = await this.entityManager.findOneOrFail(Product, id);
         return product;
     }
     @Query(() => Product, { nullable: true })
     async productBySlug(
-    @Args("slug")
-    slug: string): Promise<Product | null> {
+        @Args("slug")
+        slug: string,
+    ): Promise<Product | null> {
         const product = await this.entityManager.findOne(Product, { slug });
         return product ?? null;
     }
     @Query(() => PaginatedProducts)
     async products(
-    @Args()
-    { search, filter, sort, offset, limit }: ProductsArgs, 
-    @Info()
-    info: GraphQLResolveInfo): Promise<PaginatedProducts> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Product));
+        @Args()
+        { search, filter, sort, offset, limit }: ProductsArgs,
+        @Info()
+        info: GraphQLResolveInfo,
+    ): Promise<PaginatedProducts> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(Product));
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
         if (fields.includes("category")) {
@@ -81,46 +96,61 @@ export class ProductResolver {
     }
     @Mutation(() => Product)
     async createProduct(
-    @Args("input", { type: () => ProductInput })
-    input: ProductInput, 
-    @GetCurrentUser()
-    user: CurrentUser): Promise<Product> {
-        await this.productService.validateCreateInput(input, { currentUser: user });
-        const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, image: imageInput, ...assignInput } = input;
+        @Args("input", { type: () => ProductInput })
+        input: ProductInput,
+    ): Promise<Product> {
+        const {
+            colors: colorsInput,
+            tagsWithStatus: tagsWithStatusInput,
+            tags: tagsInput,
+            datasheets: datasheetsInput,
+            category: categoryInput,
+            manufacturer: manufacturerInput,
+            priceList: priceListInput,
+            statistics: statisticsInput,
+            image: imageInput,
+            ...assignInput
+        } = input;
         const product = this.entityManager.create(Product, {
             ...assignInput,
-            category: categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined, manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined, priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
+            category: categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined,
+            manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined,
+            priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
             await product.colors.loadItems();
-            product.colors.set(colorsInput.map((colorInput) => {
-                return this.entityManager.assign(new ProductColor(), {
-                    ...colorInput,
-                });
-            }));
+            product.colors.set(
+                colorsInput.map((colorInput) => {
+                    return this.entityManager.assign(new ProductColor(), {
+                        ...colorInput,
+                    });
+                }),
+            );
         }
         if (tagsWithStatusInput) {
             await product.tagsWithStatus.loadItems();
-            product.tagsWithStatus.set(await Promise.all(tagsWithStatusInput.map(async (tagsWithStatusInput) => {
-                const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
-                return this.entityManager.assign(new ProductToTag(), {
-                    ...assignInput,
-                    tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
-                });
-            })));
+            product.tagsWithStatus.set(
+                await Promise.all(
+                    tagsWithStatusInput.map(async (tagsWithStatusInput) => {
+                        const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
+                        return this.entityManager.assign(new ProductToTag(), {
+                            ...assignInput,
+                            tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
+                        });
+                    }),
+                ),
+            );
         }
         if (tagsInput) {
             const tags = await this.entityManager.find(ProductTag, { id: tagsInput });
-            if (tags.length != tagsInput.length)
-                throw new Error("Couldn't find all tags that were passed as input");
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
         if (datasheetsInput) {
             const datasheets = await this.entityManager.find(FileUpload, { id: datasheetsInput });
-            if (datasheets.length != datasheetsInput.length)
-                throw new Error("Couldn't find all datasheets that were passed as input");
+            if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
         }
@@ -136,44 +166,60 @@ export class ProductResolver {
     @Mutation(() => Product)
     @AffectedEntity(Product)
     async updateProduct(
-    @Args("id", { type: () => ID })
-    id: string, 
-    @Args("input", { type: () => ProductUpdateInput })
-    input: ProductUpdateInput): Promise<Product> {
+        @Args("id", { type: () => ID })
+        id: string,
+        @Args("input", { type: () => ProductUpdateInput })
+        input: ProductUpdateInput,
+    ): Promise<Product> {
         const product = await this.entityManager.findOneOrFail(Product, id);
-        const { colors: colorsInput, tagsWithStatus: tagsWithStatusInput, tags: tagsInput, datasheets: datasheetsInput, category: categoryInput, manufacturer: manufacturerInput, priceList: priceListInput, statistics: statisticsInput, image: imageInput, ...assignInput } = input;
+        const {
+            colors: colorsInput,
+            tagsWithStatus: tagsWithStatusInput,
+            tags: tagsInput,
+            datasheets: datasheetsInput,
+            category: categoryInput,
+            manufacturer: manufacturerInput,
+            priceList: priceListInput,
+            statistics: statisticsInput,
+            image: imageInput,
+            ...assignInput
+        } = input;
         product.assign({
             ...assignInput,
         });
         if (colorsInput) {
             await product.colors.loadItems();
-            product.colors.set(colorsInput.map((colorInput) => {
-                return this.entityManager.assign(new ProductColor(), {
-                    ...colorInput,
-                });
-            }));
+            product.colors.set(
+                colorsInput.map((colorInput) => {
+                    return this.entityManager.assign(new ProductColor(), {
+                        ...colorInput,
+                    });
+                }),
+            );
         }
         if (tagsWithStatusInput) {
             await product.tagsWithStatus.loadItems();
-            product.tagsWithStatus.set(await Promise.all(tagsWithStatusInput.map(async (tagsWithStatusInput) => {
-                const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
-                return this.entityManager.assign(new ProductToTag(), {
-                    ...assignInput,
-                    tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
-                });
-            })));
+            product.tagsWithStatus.set(
+                await Promise.all(
+                    tagsWithStatusInput.map(async (tagsWithStatusInput) => {
+                        const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
+                        return this.entityManager.assign(new ProductToTag(), {
+                            ...assignInput,
+                            tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
+                        });
+                    }),
+                ),
+            );
         }
         if (tagsInput) {
             const tags = await this.entityManager.find(ProductTag, { id: tagsInput });
-            if (tags.length != tagsInput.length)
-                throw new Error("Couldn't find all tags that were passed as input");
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
         if (datasheetsInput) {
             const datasheets = await this.entityManager.find(FileUpload, { id: datasheetsInput });
-            if (datasheets.length != datasheetsInput.length)
-                throw new Error("Couldn't find all datasheets that were passed as input");
+            if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
         }
@@ -184,22 +230,15 @@ export class ProductResolver {
             });
         }
         if (categoryInput !== undefined) {
-            product.category =
-                categoryInput ?
-                    Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput))
-                    : undefined;
+            product.category = categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined;
         }
         if (manufacturerInput !== undefined) {
-            product.manufacturer =
-                manufacturerInput ?
-                    Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput))
-                    : undefined;
+            product.manufacturer = manufacturerInput
+                ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput))
+                : undefined;
         }
         if (priceListInput !== undefined) {
-            product.priceList =
-                priceListInput ?
-                    Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput))
-                    : undefined;
+            product.priceList = priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined;
         }
         if (imageInput) {
             product.image = imageInput.transformToBlockData();
@@ -210,8 +249,9 @@ export class ProductResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(Product)
     async deleteProduct(
-    @Args("id", { type: () => ID })
-    id: string): Promise<boolean> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<boolean> {
         const product = await this.entityManager.findOneOrFail(Product, id);
         this.entityManager.remove(product);
         await this.entityManager.flush();
@@ -219,62 +259,72 @@ export class ProductResolver {
     }
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(
-    @Parent()
-    product: Product): Promise<ProductCategory | undefined> {
+        @Parent()
+        product: Product,
+    ): Promise<ProductCategory | undefined> {
         return product.category?.loadOrFail();
     }
     @ResolveField(() => Manufacturer, { nullable: true })
     async manufacturer(
-    @Parent()
-    product: Product): Promise<Manufacturer | undefined> {
+        @Parent()
+        product: Product,
+    ): Promise<Manufacturer | undefined> {
         return product.manufacturer?.loadOrFail();
     }
     @ResolveField(() => FileUpload, { nullable: true })
     async priceList(
-    @Parent()
-    product: Product): Promise<FileUpload | undefined> {
+        @Parent()
+        product: Product,
+    ): Promise<FileUpload | undefined> {
         return product.priceList?.loadOrFail();
     }
     @ResolveField(() => [ProductColor])
     async colors(
-    @Parent()
-    product: Product): Promise<ProductColor[]> {
+        @Parent()
+        product: Product,
+    ): Promise<ProductColor[]> {
         return product.colors.loadItems();
     }
     @ResolveField(() => [ProductVariant])
     async variants(
-    @Parent()
-    product: Product): Promise<ProductVariant[]> {
+        @Parent()
+        product: Product,
+    ): Promise<ProductVariant[]> {
         return product.variants.loadItems();
     }
     @ResolveField(() => [ProductToTag])
     async tagsWithStatus(
-    @Parent()
-    product: Product): Promise<ProductToTag[]> {
+        @Parent()
+        product: Product,
+    ): Promise<ProductToTag[]> {
         return product.tagsWithStatus.loadItems();
     }
     @ResolveField(() => [ProductTag])
     async tags(
-    @Parent()
-    product: Product): Promise<ProductTag[]> {
+        @Parent()
+        product: Product,
+    ): Promise<ProductTag[]> {
         return product.tags.loadItems();
     }
     @ResolveField(() => [FileUpload])
     async datasheets(
-    @Parent()
-    product: Product): Promise<FileUpload[]> {
+        @Parent()
+        product: Product,
+    ): Promise<FileUpload[]> {
         return product.datasheets.loadItems();
     }
     @ResolveField(() => ProductStatistics, { nullable: true })
     async statistics(
-    @Parent()
-    product: Product): Promise<ProductStatistics | undefined> {
+        @Parent()
+        product: Product,
+    ): Promise<ProductStatistics | undefined> {
         return product.statistics?.loadOrFail();
     }
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))
     async image(
-    @Parent()
-    product: Product): Promise<object> {
+        @Parent()
+        product: Product,
+    ): Promise<object> {
         return this.blocksTransformer.transformToPlain(product.image);
     }
 }
