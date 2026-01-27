@@ -76,7 +76,7 @@ If it's still missing, you can add it to `api/package.json`:
 }
 ```
 
-Now you can run the generator with `npm run api-generator`. The generated files are located in `generated/` subfolders.
+Now you can run the generator with `npm run api-generator`. The generated files are located in `generated/` folders.
 
 :::info
 Although this is generated code, it should still be checked into the repository. This enables a quick start of the API.
