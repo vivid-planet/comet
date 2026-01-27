@@ -14,7 +14,7 @@ import { buildOptions } from "./build-options";
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { crudFilterProps } = buildOptions(metadata, generatorOptions);
+    const { crudFilterProps, targetDirectory } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
     imports.push({ name: "IsOptional", importPath: "class-validator" });
@@ -31,7 +31,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         if (prop.type == "EnumArrayType") {
             imports.push({ name: "createEnumsFilter", importPath: "@comet/cms-api" });
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            const importPath = findEnumImportPath(enumName, `${targetDirectory}/dto`, metadata);
             if (!generatedEnumNames.has(enumName)) {
                 generatedEnumNames.add(enumName);
                 enumFiltersOut += `@InputType()
@@ -42,7 +42,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         } else if (prop.enum) {
             imports.push({ name: "createEnumFilter", importPath: "@comet/cms-api" });
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            const importPath = findEnumImportPath(enumName, `${targetDirectory}/dto`, metadata);
             if (!generatedEnumsNames.has(enumName)) {
                 generatedEnumsNames.add(enumName);
                 enumFiltersOut += `@InputType()
@@ -210,11 +210,12 @@ export function generateSortDto({ generatorOptions, metadata }: { generatorOptio
 }
 function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNamePlural } = buildNameVariants(metadata);
+    const { targetDirectory } = buildOptions(metadata, generatorOptions);
 
     const paginatedOut = `import { ObjectType } from "@nestjs/graphql";
     import { PaginatedResponseFactory } from "@comet/cms-api";
 
-    import { ${metadata.className} } from "${path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "")}";
+    import { ${metadata.className} } from "${path.relative(`${targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "")}";
 
     @ObjectType()
     export class Paginated${classNamePlural} extends PaginatedResponseFactory.create(${metadata.className}) {}
@@ -225,11 +226,20 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps, hasPositionProp, crudSortProps } =
-        buildOptions(metadata, generatorOptions);
+    const {
+        scopeProp,
+        argsClassName,
+        hasSearchArg,
+        hasSortArg,
+        hasFilterArg,
+        dedicatedResolverArgProps,
+        hasPositionProp,
+        crudSortProps,
+        targetDirectory,
+    } = buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
-        imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
+        imports.push(generateEntityImport(scopeProp.targetMeta, `${targetDirectory}/dto`));
     }
 
     let defaultSortField: null | string = metadata.props.find((prop) => prop.primary)?.name || "id";
@@ -318,7 +328,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
 function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasPositionProp, positionGroupProps } = buildOptions(metadata, generatorOptions);
+    const { hasPositionProp, positionGroupProps, targetDirectory } = buildOptions(metadata, generatorOptions);
 
     const positionGroupType = positionGroupProps.length
         ? `{ ${positionGroupProps
@@ -337,11 +347,11 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     const serviceOut = `import { EntityManager, FilterQuery, raw } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
 
-    ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
+    ${generateImportsCode([generateEntityImport(metadata, targetDirectory)])}
     ${generateImportsCode(
         positionGroupProps.reduce<Imports>((acc, prop) => {
             if (prop.targetMeta) {
-                acc.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+                acc.push(generateEntityImport(prop.targetMeta, targetDirectory));
             }
             return acc;
         }, []),
@@ -633,7 +643,7 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { skipScopeCheck } = buildOptions(metadata, generatorOptions);
+    const { skipScopeCheck, targetDirectory } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
 
@@ -646,7 +656,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     if (!hasOutputRelations) return null;
     imports.push(...fieldImports);
 
-    imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
+    imports.push(generateEntityImport(metadata, targetDirectory));
 
     return `
     import { RequiredPermission, RootBlockDataScalar, BlocksTransformerService } from "@comet/cms-api";
@@ -664,6 +674,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 
 function generateRelationsFieldResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { instanceNameSingular } = buildNameVariants(metadata);
+    const { targetDirectory } = buildOptions(metadata, generatorOptions);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.kind === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.kind === "1:m");
@@ -701,12 +712,12 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 
     for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
-        imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+        imports.push(generateEntityImport(prop.targetMeta, targetDirectory));
     }
 
     for (const prop of resolveFieldBlockProps) {
         const blockName = findBlockName(prop.name, metadata);
-        const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}`, metadata);
+        const importPath = findBlockImportPath(blockName, `${targetDirectory}`, metadata);
         imports.push({ name: blockName, importPath });
     }
 
@@ -792,6 +803,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         positionGroupProps,
         hasDeletedAtProp,
         dedicatedResolverArgProps,
+        targetDirectory,
     } = buildOptions(metadata, generatorOptions);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.kind === "m:1");
@@ -832,9 +844,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     });
     imports.push(...relationsFieldResolverImports);
 
-    imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
+    imports.push(generateEntityImport(metadata, targetDirectory));
     if (scopeProp && scopeProp.targetMeta) {
-        imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
+        imports.push(generateEntityImport(scopeProp.targetMeta, targetDirectory));
     }
 
     function generateIdArg(name: string, metadata: EntityMetadata<any>): string {

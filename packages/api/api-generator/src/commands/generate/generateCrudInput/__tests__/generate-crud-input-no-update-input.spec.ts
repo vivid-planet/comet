@@ -21,15 +21,11 @@ describe("GenerateCrudInput", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntity"),
-            {
-                nested: false,
-                excludeFields: [],
-                generateUpdateInput: false,
-            },
-        );
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"), {
+            nested: false,
+            excludeFields: [],
+            generateUpdateInput: false,
+        });
 
         const formattedOut = await formatSource(out[0].content);
 
