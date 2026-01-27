@@ -657,7 +657,7 @@ importers:
   docs:
     dependencies:
       '@algolia/client-search':
-        specifier: ^5.46.3
+        specifier: ^5.47.0
         version: 5.47.0
       '@docusaurus/core':
         specifier: ^3.9.2
