@@ -1512,6 +1512,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      draft-js:
+        specifier: ^0.11.7
+        version: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
@@ -1672,9 +1675,6 @@ importers:
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
-      draft-js:
-        specifier: ^0.11.7
-        version: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       eslint:
         specifier: ^9.30.1
         version: 9.34.0(jiti@2.6.1)
