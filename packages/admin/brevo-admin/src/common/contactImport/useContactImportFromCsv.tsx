@@ -138,7 +138,7 @@ export const useContactImportFromCsv = ({ scope, targetGroupId, refetchQueries }
 };
 
 interface UseContactComponentProps extends UseContactImportProps {
-    fileInputRef: RefObject<HTMLInputElement>;
+    fileInputRef: RefObject<HTMLInputElement | null>;
 }
 
 const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDoubleOptIn, refetchQueries }: UseContactComponentProps) => {
