@@ -6,8 +6,8 @@ export interface GeneratedFile {
     type: "resolver" | "input" | "filter" | "sort" | "service" | "args";
 }
 
-export async function writeGeneratedFiles(files: GeneratedFile[], options: { targetDirectory: string }): Promise<void> {
+export async function writeGeneratedFiles(files: GeneratedFile[], targetDirectory: string): Promise<void> {
     for (const file of files) {
-        await writeGeneratedFile(`${options.targetDirectory}/${file.name}`, file.content);
+        await writeGeneratedFile(`${targetDirectory}/${file.name}`, file.content);
     }
 }
