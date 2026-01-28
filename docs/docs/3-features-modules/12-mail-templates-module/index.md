@@ -4,21 +4,44 @@ This module provides a way to create and manage mail-templates. It allows you to
 
 **Epic:** https://vivid-planet.atlassian.net/browse/COM-2057
 
-## Usage
+## Setup
 
-### Changes in files
+Add the `MailTemplatesModule` to the imports of your `AppModule`:
 
-#### /api/src/app.module.ts
+```ts title="/api/src/app.module.ts"
+imports: [
+    // existing imports
+    MailTemplatesModule,
+]
+```
 
-    imports: [
-        ...
-        MailTemplatesModule,
-    ]
+### Using React
 
-#### Create mail-class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts` (.mail is just a convention, not required)
+If you plan to use React components in the mail template, update your `tsconfig.json` and install the react packages:
 
-```typescript
-import { renderToMjml } from "mjml-react";
+```json title="/api/tsconfig.json"
+{
+    "compilerOptions": {
+        "jsx": "react-jsx",
+    }
+}
+```
+
+```json title="/api/package.json"
+"dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+}
+```
+
+## Create a mail template class
+
+Create class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts`. 
+- `.mail` is just a convention, not required
+- Use `.tsx` if you want to use React components in the mail template
+
+```ts title="/api/src/my-module/my-custom.mail.tsx"
+import { renderToString } from "react-dom/server";
 
 @MailTemplate()
 export class MyCustomMail implements MailTemplateInterface<MailProps> {
@@ -34,8 +57,8 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
                 defaultMessage: "My Custom Mail Subject",
             }),
             text: "LOREM IPSUM",
-            html: renderToMjml(
-                <IntlProvider locale={"de"} defaultLocale={"de"} messages={intl.messages}>
+            html: renderToString(
+                <IntlProvider locale="de" defaultLocale="de" messages={intl.messages}>
                     <MailContent {...props} />
                 </IntlProvider>,
             ),
@@ -56,7 +79,7 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
 
 export type MailProps = { ... }; // define props required to generate/render the mail
 
-const MailContent: React.FC<MailProps> = ({ recipient }) => {
+const MailContent = ({ recipient }: MailProps) => {
     return (
         <div>
             {recipient.name} LOREM IPSUM
@@ -66,16 +89,20 @@ const MailContent: React.FC<MailProps> = ({ recipient }) => {
 }
 ```
 
-#### Register in related module, required for debug-tools to find the mail-template
+## Register the mail template class
 
-    providers: [
-        ...
-        MyCustomMail,
-    ]
+Register the mail template class in the module it belongs to, required for debug-tools to find the mail-template
 
-#### Use MailTemplate
+```ts title="/api/src/my-module/my-module.module.ts"
+providers: [
+    // existing providers
+    MyCustomMail,
+]
+```
 
-```typescript
+## Use MailTemplate
+
+```ts title="/api/src/my-module/my-service.ts"
 import { MyCustomMail } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 
 @Injectable()
@@ -93,7 +120,7 @@ export class MyService {
 }
 ```
 
-#### Send test-mail
+## Send a test-mail
 
 ```shell
 # npm run console mail-template:test [mailTemplateClassName] [preparedTestPropsIndex]
