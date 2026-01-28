@@ -109,6 +109,7 @@ export function generateForm(
             imports.push(...forwardedArg.imports);
             if (forwardedArg.gqlArg.name === "scope" && !forwardedArg.gqlArg.isInputArgSubfield && !config.scopeAsProp) {
                 useScopeFromContext = true;
+                gqlArgs.push(forwardedArg.gqlArg);
             } else {
                 formProps.push(forwardedArg.prop);
                 gqlArgs.push(forwardedArg.gqlArg);
@@ -220,7 +221,6 @@ export function generateForm(
                             name: gqlArg.name,
                             type: `${gqlArg.type}!`,
                         })),
-                    ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
                     {
                         name: "input",
                         type: `${gqlType}Input!`,
@@ -396,7 +396,6 @@ export function generateForm(
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: {
-                        ${useScopeFromContext ? `scope,` : ""}
                         input: ${
                             gqlArgs.filter((prop) => prop.isInputArgSubfield).length
                                 ? `{ ...output, ${gqlArgs
