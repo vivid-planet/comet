@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+
 ## 8.12.0
 
 ### Minor Changes
