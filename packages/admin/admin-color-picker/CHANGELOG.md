@@ -1,5 +1,125 @@
 # @comet/admin-color-picker
 
+## 8.12.0
+
+### Patch Changes
+
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
+## 8.10.0
+
+### Patch Changes
+
+- Updated dependencies [1918d88]
+    - @comet/admin@8.10.0
+    - @comet/admin-icons@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @comet/admin@8.9.0
+- @comet/admin-icons@8.9.0
+
+## 8.8.0
+
+### Patch Changes
+
+- @comet/admin@8.8.0
+- @comet/admin-icons@8.8.0
+
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin@8.7.1
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- Updated dependencies [a8e8132]
+    - @comet/admin@8.7.0
+    - @comet/admin-icons@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- Updated dependencies [6c5578a]
+    - @comet/admin@8.6.0
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin@8.5.2
+- @comet/admin-icons@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/admin@8.5.1
+- @comet/admin-icons@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-icons@8.4.1
+
 ## 8.4.0
 
 ### Patch Changes

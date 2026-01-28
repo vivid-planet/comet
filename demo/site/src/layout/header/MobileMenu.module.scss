@@ -23,14 +23,14 @@
     height: 0;
     width: 100vw;
     z-index: 40;
-    background-color: var(--palette-gray-200);
+    background-color: var(--brand-grey-050);
     overflow: auto;
     visibility: hidden;
     transition:
         height 0.15s ease-out,
         visibility 0s linear 0.15s;
 
-    &Open {
+    &--open {
         visibility: visible;
         height: calc(var(--full-viewport-height) - var(--header-height));
         transition: height 0.25s ease-in;
@@ -50,7 +50,7 @@
     left: 0;
     height: calc(var(--full-viewport-height) - var(--header-height));
     width: 100vw;
-    background-color: var(--palette-gray-200);
+    background-color: var(--brand-grey-050);
     padding: 0;
     overflow: auto;
     visibility: hidden;
@@ -59,7 +59,7 @@
         transform 0.2s ease-out,
         visibility 0s linear 0.2s;
 
-    &Expanded {
+    &--expanded {
         visibility: visible;
         transform: translateX(0);
         transition: transform 0.2s ease-in;
@@ -71,11 +71,11 @@
     text-decoration: none;
     display: inline-block;
     padding: var(--spacing-s500) 0;
-    color: var(--palette-text-primary);
+    color: var(--brand-grey-800);
 
     @media (min-width: $breakpoint-sm) {
         &:hover {
-            color: var(--palette-primary-main);
+            color: var(--brand-primary-main);
         }
     }
 }
@@ -89,7 +89,7 @@
 
     @media (min-width: $breakpoint-sm) {
         &:hover {
-            color: var(--palette-primary-main);
+            color: var(--brand-primary-main);
         }
     }
 }
@@ -102,18 +102,18 @@
 .backButton {
     @extend %buttonBase;
     align-items: center;
-    border-bottom: 1px solid var(--palette-gray-300);
+    border-bottom: 1px solid var(--brand-grey-200);
 }
 
 .overviewButton {
     @extend %buttonBase;
     align-items: center;
     text-decoration: none;
-    color: var(--palette-text-primary);
+    color: var(--brand-grey-800);
 
     @media (min-width: $breakpoint-sm) {
         &:hover {
-            color: var(--palette-primary-main);
+            color: var(--brand-primary-main);
         }
     }
 }

@@ -5,12 +5,12 @@
     "description": "Comet Admin Demo Server Application",
     "type": "commonjs",
     "dependencies": {
-        "compression": "^1.8.0",
-        "express": "^4.21.2",
+        "compression": "^1.8.1",
+        "express": "^4.22.1",
         "helmet": "^7.2.0",
         "http-proxy-middleware": "^3.0.5"
     },
     "engines": {
-        "node": "22"
+        "node": "24"
     }
 }

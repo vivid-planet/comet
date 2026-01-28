@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-react",
-    "version": "8.4.0",
+    "version": "8.12.0",
     "description": "Comet Site React package",
     "repository": {
         "type": "git",
@@ -8,13 +8,17 @@
         "directory": "packages/site/site-react"
     },
     "license": "BSD-2-Clause",
+    "sideEffects": [
+        "**/*.css"
+    ],
     "type": "module",
     "exports": {
         ".": {
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
         },
-        "./css": "./lib/style.css"
+        "./css": "./lib/style.css",
+        "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "module": "./lib/index.js",
     "types": "lib/index.d.ts",
@@ -22,14 +26,15 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && npm run generate-block-types && vite build",
+        "build": "pnpm run clean && pnpm run generate-block-types && vite build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
-        "dev": "$npm_execpath run clean && $npm_execpath generate-block-types && vite build --watch",
+        "dev": "pnpm run clean && pnpm generate-block-types && vite build --watch",
         "generate-block-types": "comet generate-block-types",
-        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
+        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
+        "lint": "pnpm generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
@@ -44,27 +49,28 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@types/draft-js": "^0.11.18",
+        "@types/draft-js": "^0.11.20",
         "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/react": "^18.3.23",
-        "@vitejs/plugin-react": "^4.6.0",
+        "@types/react": "^18.3.27",
+        "@vitejs/plugin-react": "^4.7.0",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
         "jest-junit": "^16.0.0",
-        "npm-run-all2": "^8.0.0",
+        "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react": "^18.3.1",
-        "rimraf": "^6.0.1",
+        "rimraf": "^6.1.2",
         "rollup": "^4.44.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass": "^1.89.2",
-        "ts-jest": "^29.4.0",
-        "typescript": "5.8.3",
-        "vite": "^5.4.19",
-        "vite-plugin-dts": "^4.5.4"
+        "ts-jest": "^29.4.6",
+        "typescript": "5.9.3",
+        "vite": "^5.4.21",
+        "vite-plugin-dts": "^4.5.4",
+        "webpack": "^5.102.1"
     },
     "peerDependencies": {
         "react": "^18.0.0"

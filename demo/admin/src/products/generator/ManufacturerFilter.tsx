@@ -38,15 +38,20 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
 
     const handleApplyValue = useCallback(
         (value: string | undefined) => {
-            // value can't be "{ id: value.id, name: value.name }" because value is sent to api
-            applyValue({ id: item.id, operator: "equals", value, field: "manufacturer" });
+            applyValue({
+                ...item,
+                id: item.id,
+                operator: "equals",
+                value,
+            });
         },
-        [applyValue, item.id],
+        [applyValue, item],
     );
 
     // source https://mui.com/material-ui/react-autocomplete/
     return (
         <Autocomplete
+            size="small"
             options={data?.manufacturers.nodes ?? []}
             autoHighlight
             value={item.value ? item.value : null}

@@ -1,5 +1,185 @@
 # @comet/cms-api
 
+## 8.12.0
+
+### Minor Changes
+
+- 488da0b: Add `registerAdditionalPermissions` helper
+
+    The helper can be used register additional permissions into the permission enum used for the GraphQL schema.
+    Only use this if you're building a library that requires additional permissions.
+    For application-level permissions, use the `AppPermission` option in the module registration methods.
+
+- 2930556: Send 401 instead 403 when CometAuthGuard cannot authenticate user
+
+    Restores the behavior of Comet v7.
+
+    Before (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "Forbidden resource",
+          "extensions": {
+            "code": "FORBIDDEN",
+            "originalError": {
+              "message": "Forbidden resource",
+              "error": "Forbidden",
+              "statusCode": 403
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+    After (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "No AuthService could authenticate the user",
+          "extensions": {
+            "code": "UNAUTHENTICATED",
+            "originalError": {
+              "message": "No AuthService could authenticate the user",
+              "error": "Unauthorized",
+              "statusCode": 401
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+## 8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- f34b750: Add Status to CronJob
+
+## 8.10.0
+
+### Minor Changes
+
+- 5f025a9: Add Importer Module
+
+    The module can be used to import data (e.g., from a CSV file) into applications.
+    Review the [docs](https://docs.comet-dxp.com/docs/features-modules/importer/) for more information on how to use it.
+
+## 8.9.0
+
+### Minor Changes
+
+- 5cf497f: Allow Easier Local Usage of the Kubernetes Module
+
+    As projects increasingly use the Kubernetes API, local testing and debugging have become necessary.
+    Previously, if you wanted to use the Kubernetes service locally (outside of a cluster), you had to overwrite the Kubernetes service inside the node_modules folder.
+    Now, you can instantiate the Kubernetes module with a fixed namespace and Helm release, and the module will attempt to authenticate you using local credentials.
+    The change in the configuration was made with backwards compatibility in mind.
+    This update also renames the guard to be more descriptive.
+    This update also adds the Kubernetes service to the public API.
+
+    Example:
+
+    ```app.module.ts
+    KubernetesModule.register({
+        helmRelease: "comet-test",
+        namespace: "comet-test",
+    }),
+    ```
+
+### Patch Changes
+
+- ef30d93: Fix FileUploadModule: The `setInterval` for cleaning expired files was blocking application bootstrap. Moved interval initialization to the NestJS lifecycle hook `onApplicationBootstrap` and added cleanup in `beforeApplicationShutdown` to properly clear the interval.
+
+## 8.8.0
+
+### Minor Changes
+
+- d328dac: Log guard rejections
+
+    The following error now lead to a log output:
+    - CometAuthGuard can't authenticate the user
+    - CdnGuard does not receive correct header
+    - UserPermissionsGuard does not receive an authenticated user
+    - UserPermissionsGuard denies access due to insufficient permissions
+
+- e62d6bd: Add support for temporary file uploads with configurable expiration times. The `expiresIn` duration can be set as a default value in the module configuration, and can be overridden by setting the value when using the `FileUploadsService` or sending the request to the upload endpoint.
+
+    Files are automatically validated for expiration when accessed, and expired files are cleared every minute in the background.
+
+    The `FileUploadField` also supports overriding the `expiresIn` property.
+
+### Patch Changes
+
+- b79687c: Fix a Bug where some warnings where not correctly detected
+
+## 8.7.1
+
+### Patch Changes
+
+- 9ed0711: Improve Warnings SQL-Performance by setting appropriate indexes
+- 182c930: Optimize `WarningEventSubscriber`. This improves performance for create and update requests where blocks occur.
+- 07c9b17: Fix in-memory filtering in `paginatedRedirects` query
+    - Fix `isEmpty` and `isNotEmpty` filters for string filters
+    - Fix boolean filter handling: properly handle the "any" case (when no specific value is set)
+    - Add support for `activatedAt` field in redirect filters
+
+## 8.7.0
+
+### Minor Changes
+
+- 13babd1: Use `sharp` to calculate the dominant image color
+
+    `sharp` replaces the previous implementation based on `get-image-colors`, which was removed because it's unmaintained and causes some security warnings.
+
+### Patch Changes
+
+- b2da6c9: Add `calculateInheritAspectRatio` to public API (for real)
+- b305d5b: Add EntityInfo to RedirectEntity to provide additional entity information, particularly useful when displaying warnings.
+
+## 8.6.0
+
+### Minor Changes
+
+- 206b352: Add `calculateInheritAspectRatio` to the public API
+- fda9262: Add support for scope-specific site preview secrets
+
+    The `sitePreviewSecret` in `PageTreeModule` now accepts a function `(scope: ContentScope) => string` to use different secrets based on the current content scope.
+
+- 30b671e: File Uploads: add preview endpoint for files
+- fbae3ae: Add new permissions `sitePreview` and `blockPreview` to `SitePreviewResolver`
+
+    These permissions can be assigned to users who can't access the page tree, but some other parts of the CMS where site or block previews are needed.
+
+    Users with the `pageTree` permission can still automatically access both previews.
+
+### Patch Changes
+
+- 6326641: Add validation of parentId to PageTreeNode to avoid setting a page as its own parent
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- 942200f: Improve check-warnings job by adding a missing await which led to bad performance
+- b7156bb: Fix crash in WarningModule with nullable blocks
+
+## 8.4.2
+
+## 8.4.1
+
 ## 8.4.0
 
 ### Minor Changes

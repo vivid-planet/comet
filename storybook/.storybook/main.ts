@@ -23,6 +23,14 @@ const config: StorybookConfig = {
         MUI_LICENSE_KEY: process.env.MUI_LICENSE_KEY || "",
     }),
     staticDirs: ["../public"],
+    refs: (config, { configType }) => {
+        return {
+            "@comet/admin": {
+                title: "@comet/admin",
+                url: configType === "DEVELOPMENT" ? "http://localhost:26646/" : "https://main--68e7b70f15b8f51dac492af6.chromatic.com", // TODO: support pull request previews,
+            },
+        };
+    },
 };
 
 export default config;

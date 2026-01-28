@@ -33,8 +33,11 @@ export class PageTreeService {
 
     async createNode(input: PageTreeNodeBaseCreateInput, category: PageTreeNodeCategory, scope?: ScopeInterface): Promise<PageTreeNodeInterface> {
         // TODO: check for unique id
-        // TODO: check ParentId
         const readApi = this.createReadApi({ visibility: "all" });
+
+        if (input.id && input.parentId && input.id === input.parentId) {
+            throw new CometValidationException("A page cannot be its own parent");
+        }
 
         const path = await this.pathForParentAndSlug(input.parentId || null, input.slug);
 
@@ -185,6 +188,18 @@ export class PageTreeService {
         const readApi = this.createReadApi({ visibility: "all" });
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
+
+        if (input.parentId) {
+            let currentParentId: string | null = input.parentId;
+            while (currentParentId !== null) {
+                if (currentParentId === id) {
+                    throw new CometValidationException("A page cannot be its own parent or be moved under one of its descendants");
+                }
+                const parentNode = await readApi.getNode(currentParentId);
+                if (!parentNode) break;
+                currentParentId = parentNode.parentId;
+            }
+        }
 
         const requestedPath = await this.pathForParentAndSlug(input.parentId, existingNode.slug);
 

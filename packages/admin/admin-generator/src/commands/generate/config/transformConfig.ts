@@ -18,6 +18,22 @@ const supportedInlineCodePaths = [
     //support in up to 5 levels of nested fields (eg. fieldSet)
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
 ];
+const supportedFormattedMessagePaths = [
+    "[type=grid].newEntryText",
+    "[type=grid].columns.headerName",
+    "[type=grid].columns.headerInfoTooltip",
+
+    //staticSelect
+    "[type=grid].columns.values.label",
+    "[type=grid].columns.values.label.primaryText",
+    "[type=grid].columns.values.label.secondaryText",
+
+    //support in up to 5 levels of nested fields (eg. fieldSet)
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.label`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.helperText`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.checkboxLabel`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.title`), // fieldSet title
+];
 
 // transform the config file to replace all imports and inline code with a { code, imports } object
 // this is needed to be able to execute the config file in a node environment
@@ -34,6 +50,22 @@ export function transformConfigFile(fileName: string, sourceText: string) {
     function configTransformer(): ts.TransformerFactory<ts.Node> {
         return (context) => {
             const visit = (node: ts.Node, path: string): ts.Node => {
+                if (ts.isCallExpression(node)) {
+                    if (node.expression.getText() === "injectFormVariables") {
+                        if (!path.startsWith("[type=form].fields")) {
+                            throw new Error(`injectFormVariables can only be used in form field definitions: ${path}`);
+                        }
+                        if (node.arguments.length !== 1) {
+                            throw new Error(`injectFormVariables expects exactly one argument`);
+                        }
+                        const injectFormVariablesArg = node.arguments[0];
+                        if (!ts.isArrowFunction(injectFormVariablesArg)) {
+                            throw new Error(`injectFormVariables expects an arrow function as its argument`);
+                        }
+                        node = injectFormVariablesArg.body;
+                    }
+                }
+
                 if (ts.isArrowFunction(node)) {
                     if (supportedInlineCodePaths.includes(path)) {
                         let code = node.getText();
@@ -50,6 +82,9 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                                             return ts.factory.createObjectLiteralExpression([
                                                 ts.factory.createPropertyAssignment("name", ts.factory.createStringLiteral(imprt.name)),
                                                 ts.factory.createPropertyAssignment("import", ts.factory.createStringLiteral(imprt.import)),
+                                                ...(imprt.defaultImport
+                                                    ? [ts.factory.createPropertyAssignment("defaultImport", ts.factory.createTrue())]
+                                                    : []),
                                             ]);
                                         }),
                                     ),
@@ -73,6 +108,25 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                                 true,
                             );
                         }
+                    }
+                } else if (ts.isJsxSelfClosingElement(node)) {
+                    if (node.tagName.getText() == "FormattedMessage") {
+                        if (!supportedFormattedMessagePaths.includes(path)) {
+                            throw new Error(`FormattedMessage is not supported in this context: ${path}`);
+                        }
+                        return ts.factory.createObjectLiteralExpression(
+                            node.attributes.properties.map((attr) => {
+                                if (!ts.isJsxAttribute(attr)) {
+                                    throw new Error(`Only JsxAttributes are supported in FormattedMessage in this context: ${path}`);
+                                }
+                                let name = attr.name?.getText();
+                                if (name === "id") name = "formattedMessageId"; // rename to identify as formattedMessage
+                                if (!attr.initializer || !ts.isStringLiteral(attr.initializer)) {
+                                    throw new Error(`Only string literals are supported in FormattedMessage in this context: ${path}.${name}`);
+                                }
+                                return ts.factory.createPropertyAssignment(name, ts.factory.createStringLiteral(attr.initializer.text));
+                            }),
+                        );
                     }
                 }
 
@@ -179,22 +233,28 @@ function getTypePropertyFromObjectLiteral(node: ts.ObjectLiteralExpression) {
 }
 
 // visits ast and collects all imports statements in the source file
-function collectImports(rootNode: ts.Node) {
-    const importedIdentifiers = new Map<string, { name: string; import: string }>();
+export function collectImports(rootNode: ts.Node) {
+    const importedIdentifiers = new Map<string, { name: string; import: string; defaultImport?: boolean }>();
 
     function visit(node: ts.Node) {
-        if (
-            ts.isImportDeclaration(node) &&
-            node.importClause &&
-            node.importClause.namedBindings &&
-            ts.isNamedImports(node.importClause.namedBindings)
-        ) {
+        if (ts.isImportDeclaration(node) && node.importClause) {
             const moduleSpecifier = (node.moduleSpecifier as ts.StringLiteral).text;
-            for (const element of node.importClause.namedBindings.elements) {
-                const localName = element.name.text;
-                const originalName = element.propertyName ? element.propertyName.text : localName;
+            if (node.importClause.namedBindings && ts.isNamedImports(node.importClause.namedBindings)) {
+                //named import
+                for (const element of node.importClause.namedBindings.elements) {
+                    const localName = element.name.text;
+                    const originalName = element.propertyName ? element.propertyName.text : localName;
+                    importedIdentifiers.set(localName, {
+                        name: originalName,
+                        import: moduleSpecifier,
+                    });
+                }
+            } else if (node.importClause.name && ts.isIdentifier(node.importClause.name)) {
+                //default import
+                const localName = node.importClause.name.text;
                 importedIdentifiers.set(localName, {
-                    name: originalName,
+                    defaultImport: true,
+                    name: localName,
                     import: moduleSpecifier,
                 });
             }
@@ -206,8 +266,8 @@ function collectImports(rootNode: ts.Node) {
 }
 
 // visits ast and collects all identifiers that are an import
-function findUsedImports(rootNode: ts.Node, importedIdentifiers: Map<string, { name: string; import: string }>) {
-    const imports: { name: string; import: string }[] = [];
+function findUsedImports(rootNode: ts.Node, importedIdentifiers: Map<string, { name: string; import: string; defaultImport?: boolean }>) {
+    const imports: { name: string; import: string; defaultImport?: boolean }[] = [];
     const usedNames = new Set<string>();
 
     // Collect all identifiers used in the rootNode

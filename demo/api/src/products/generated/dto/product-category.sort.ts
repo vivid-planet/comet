@@ -10,7 +10,8 @@ export enum ProductCategorySortField {
     type = "type",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
-    type_title = "type_title"
+    id = "id",
+    type_title = "type_title",
 }
 registerEnumType(ProductCategorySortField, {
     name: "ProductCategorySortField",

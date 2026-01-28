@@ -3,17 +3,33 @@ import { type ComponentProps, type ElementType, type PropsWithChildren } from "r
 
 import styles from "./Typography.module.scss";
 
-type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "p300" | "p200";
+type TypographyVariant =
+    | "headline600"
+    | "headline550"
+    | "headline500"
+    | "headline450"
+    | "headline400"
+    | "headline350"
+    | "eyebrow600"
+    | "eyebrow550"
+    | "eyebrow500"
+    | "eyebrow450"
+    | "paragraph300"
+    | "paragraph200";
 
 const variantToElementMap: Record<TypographyVariant, ElementType> = {
-    h600: "h1",
-    h550: "h2",
-    h500: "h3",
-    h450: "h4",
-    h400: "h5",
-    h350: "h6",
-    p300: "p",
-    p200: "p",
+    headline600: "h1",
+    headline550: "h2",
+    headline500: "h3",
+    headline450: "h4",
+    headline400: "h5",
+    headline350: "h6",
+    eyebrow600: "p",
+    eyebrow550: "p",
+    eyebrow500: "p",
+    eyebrow450: "p",
+    paragraph300: "p",
+    paragraph200: "p",
 };
 
 export type TypographyProps<T extends ElementType> = {
@@ -23,10 +39,13 @@ export type TypographyProps<T extends ElementType> = {
 } & Omit<ComponentProps<T>, "variant">;
 
 export const Typography = <T extends ElementType = "p">(props: PropsWithChildren<TypographyProps<T>>) => {
-    const { as, variant = "p300", bottomSpacing = false, className, children, ...restProps } = props;
+    const { as, variant = "paragraph300", bottomSpacing = false, className, children, ...restProps } = props;
     const Component = as || variantToElementMap[variant] || "p";
     return (
-        <Component className={clsx(styles.root, styles[variant], !bottomSpacing && styles.noBottomSpacing, className)} {...restProps}>
+        <Component
+            className={clsx(styles.root, styles[`root--${variant}`], !bottomSpacing && styles[`root--noBottomSpacing`], className)}
+            {...restProps}
+        >
             {children}
         </Component>
     );

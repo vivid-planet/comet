@@ -17,24 +17,43 @@ indexFile = indexFile.replace(/\$([A-Z_]+)/g, (match, p1) => {
 });
 
 app.use(compression());
+
+app.disable("x-powered-by"); // Disable the X-Powered-By header as it is not needed and can be used to infer the server technology
+
 app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
-                "script-src": ["'self'", "'unsafe-inline'"],
-                "img-src": ["'self'", "https:", "data:"],
-                "default-src": ["'self'", "https:"],
-                "media-src": ["'self'", "https:"],
-                "style-src": ["'self'", "https:", "'unsafe-inline'"],
-                "font-src": ["'self'", "https:", "data:"],
+                "default-src": ["'none'"], // Don't allow any content to be loaded if not explicitly allowed
+                "script-src": [process.env.NODE_ENV === "development" ? "'self' 'unsafe-eval'" : "'self'"], // Unsafe eval is needed for the preview in local development
+                "script-src-elem": ["'self'", "'unsafe-inline'"],
+                "style-src-elem": ["'self'", "'unsafe-inline'", process.env.PREVIEW_URL],
+                "style-src-attr": ["'unsafe-inline'"],
+                "font-src": ["'self'", "data:"],
+                "connect-src": ["'self'"],
+                "img-src": ["'self'", "data:", "blob:"],
+                "media-src": ["'self'", "data:"],
+                "frame-src": [process.env.PREVIEW_URL],
+                upgradeInsecureRequests: process.env.NODE_ENV === "development" ? undefined : [], // Upgrade all requests to HTTPS on production
             },
+            useDefaults: false, // Avoid default values for not explicitly set directives
         },
-        xXssProtection: false,
+        xFrameOptions: false, // Disable deprecated X-Frame-Options header
+        crossOriginResourcePolicy: "same-origin", // Do not allow cross-origin requests to access the response
+        crossOriginEmbedderPolicy: false, // Disable Cross-Origin-Embedder-Policy as it is not needed (value=no-corp)
+        crossOriginOpenerPolicy: true, // Enable Cross-Origin-Opener-Policy (value=same-origin)
         strictTransportSecurity: {
-            maxAge: 63072000,
+            // Enable Strict-Transport-Security
+            maxAge: 63072000, // 2 years (recommended when subdomains are included)
             includeSubDomains: true,
-            preload: true,
+            preload: true, // Enable preload list (recommended if subdomains are included)
         },
+        referrerPolicy: {
+            policy: "no-referrer", // No referrer information needs to be sent
+        },
+        xContentTypeOptions: true, // Enable X-Content-Type-Options (value=nosniff)
+        xDnsPrefetchControl: false, // Disable this non-standard header as recommended by MDN
+        xPermittedCrossDomainPolicies: true, // Enable X-Permitted-Cross-Domain-Policies (value=none)
     }),
 );
 

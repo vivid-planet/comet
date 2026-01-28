@@ -21,11 +21,11 @@
 }
 
 .inlineLink {
-    color: var(--palette-primary-main);
+    color: var(--cta-inline-link-default);
     transition: color 0.3s ease-in-out;
 
     &:hover {
-        color: var(--palette-primary-dark);
+        color: var(--cta-inline-link-hover);
         text-decoration-thickness: 2px;
     }
 }

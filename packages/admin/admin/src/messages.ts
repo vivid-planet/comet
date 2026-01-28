@@ -12,6 +12,7 @@ export const messages = defineMessages({
     saveAndGoBack: { id: "comet.generic.saveAndGoBack", defaultMessage: "Save and go back" },
     cancel: { id: "comet.generic.cancel", defaultMessage: "Cancel" },
     delete: { id: "comet.generic.delete", defaultMessage: "Delete" },
+    remove: { id: "comet.generic.remove", defaultMessage: "Remove" },
     ok: { id: "comet.generic.ok", defaultMessage: "OK" },
     unsavedChanges: { id: "comet.generic.unsavedChanges", defaultMessage: "Unsaved Changes" },
     discard: { id: "comet.generic.discard", defaultMessage: "Discard" },

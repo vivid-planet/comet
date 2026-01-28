@@ -4,9 +4,11 @@ import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { type Imports } from "../utils/generateImportsCode";
+import { generateFormattedMessage } from "../utils/intl";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
+import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType";
 import { buildFormFieldOptions } from "./formField/options";
 import { type GenerateFieldsReturn } from "./generateFields";
 import { type Prop } from "./generateForm";
@@ -42,10 +44,10 @@ export function generateFormField({
         startAdornment,
         endAdornment,
         imports: optionsImports,
-    } = buildFormFieldOptions({ config, formConfig, gqlType, gqlIntrospection });
+    } = buildFormFieldOptions({ config, formConfig });
     imports.push(...optionsImports);
 
-    let { introspectionFieldType } = buildFormFieldOptions({ config, formConfig, gqlType, gqlIntrospection });
+    let introspectionFieldType = findIntrospectionFieldType({ name, gqlIntrospection, gqlType });
 
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
 
@@ -61,7 +63,9 @@ export function generateFormField({
     const readOnlyProps = `readOnly disabled`;
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
-    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [{}]; // FormFields should only contain one entry
+    const formValueConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
+        fieldName: nameWithPrefix,
+    };
 
     const gqlDocuments: GQLDocumentConfigMap = {};
     const hooksCode = "";
@@ -79,7 +83,6 @@ export function generateFormField({
     }
 
     let code = "";
-    let formValueToGqlInputCode = "";
     let formFragmentFields = [name];
     if (config.type == "text") {
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
@@ -95,15 +98,20 @@ export function generateFormField({
             ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` +
-                      `"${formattedMessageRootId}.${name}.helperText" ` +
-                      `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={${generateFormattedMessage({
+                          config: config.helperText,
+                          id: `${formattedMessageRootId}.${name}.helperText`,
+                          type: "jsx",
+                      })}}`
                     : ""
             }
             ${validateCode}
         />`;
         if (!required && !config.readOnly) {
-            formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
+            formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
+        }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "number") {
         code = `
@@ -126,24 +134,12 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `parseFloat(formValues.${nameWithPrefix})`;
-        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `formValues.${nameWithPrefix} ? ${assignment} : null`;
+        if (!required && !config.readOnly) {
+            formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
         }
-        formValueToGqlInputCode = `${name}: ${assignment},`;
-
-        let initializationAssignment = `String(data.${dataRootName}.${nameWithPrefix})`;
-        if (!required) {
-            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
-        formValuesConfig = [
-            {
-                omitFromFragmentType: name,
-                typeCode: `${name}${!required ? `?` : ``}: string;`,
-                initializationCode: `${name}: ${initializationAssignment}`,
-            },
-        ];
     } else if (config.type === "numberRange") {
         code = `
             <Field
@@ -170,6 +166,9 @@ export function generateFormField({
             />`;
 
         formFragmentFields = [`${name}.min`, `${name}.max`];
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
+        }
     } else if (config.type == "boolean") {
         code = `<CheckboxField
                         label={${fieldLabel}}
@@ -186,11 +185,7 @@ export function generateFormField({
                         }
                         ${validateCode}
                     />`;
-        formValuesConfig = [
-            {
-                defaultInitializationCode: `${name}: false`,
-            },
-        ];
+        formValueConfig.defaultInitializationCode = config.initialValue ? "true" : "false";
     } else if (config.type == "date") {
         imports.push({
             name: "Future_DatePickerField",
@@ -216,7 +211,10 @@ export function generateFormField({
                 ${validateCode}
             />`;
         if (!required && !config.readOnly) {
-            formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
+            formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
+        }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "dateTime") {
         imports.push({
@@ -241,30 +239,27 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        formValuesConfig = [
-            {
-                initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
-                omitFromFragmentType: name,
-                typeCode: `${name}${!required ? "?" : ""}: Date${!required ? " | null" : ""};`,
-            },
-        ];
+        formValueConfig.initializationCode = `data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`;
+        formValueConfig.omitFromFragmentType = true;
+        formValueConfig.typeCode = {
+            nullable: !required,
+            type: `Date${!required ? " | null" : ""}`,
+        };
         if (!config.readOnly) {
-            formValueToGqlInputCode = required
-                ? `${name}: formValues.${name}.toISOString(),`
-                : `${name}: formValues.${name} ? formValues.${name}.toISOString() : null,`;
+            formValueConfig.formValueToGqlInputCode = required ? `$fieldName.toISOString()` : `$fieldName ? $fieldName.toISOString() : null`;
+        }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = `new Date("${config.initialValue.toISOString()}")`;
         }
     } else if (config.type == "block") {
         code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
-        formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),`;
-        formValuesConfig = [
-            {
-                typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                initializationCode: `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
-            },
-        ];
+        formValueConfig.formValueToGqlInputCode = `rootBlocks.${name}.state2Output($fieldName)`;
+        formValueConfig.omitFromFragmentType = true;
+        formValueConfig.typeCode = { nullable: false, type: `BlockState<typeof rootBlocks.${name}>` };
+        formValueConfig.initializationCode = `rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`;
+        formValueConfig.defaultInitializationCode = `rootBlocks.${name}.defaultValues()`;
     } else if (config.type === "fileUpload") {
         const multiple = config.multiple || (typeof config.maxFiles === "number" && config.maxFiles > 1);
         code = `<FileUploadField name="${name}" label={${fieldLabel}}
@@ -277,11 +272,11 @@ export function generateFormField({
             ${config.accept ? `accept="${config.accept}"` : ""}
         />`;
         if (multiple) {
-            formValueToGqlInputCode = `${name}: formValues.${name}?.map(({ id }) => id),`;
+            formValueConfig.formValueToGqlInputCode = `$fieldName?.map(({ id }) => id)`;
         } else {
-            formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+            formValueConfig.formValueToGqlInputCode = `$fieldName ? $fieldName.id : null`;
         }
-        formFragmentFields = [`${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`];
+        formFragmentFields = [`${name}...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"}`];
     } else if (config.type == "staticSelect") {
         const multiple = introspectionFieldType?.kind === "LIST";
         if (introspectionFieldType?.kind === "LIST") {
@@ -379,18 +374,20 @@ export function generateFormField({
                                 })}]}
                             />`;
         }
+        if (config.initialValue !== undefined) {
+            formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
+        }
     } else {
         throw new Error(`Unsupported type`);
     }
     return {
         code,
         hooksCode,
-        formValueToGqlInputCode,
         formFragmentFields,
         gqlDocuments,
         imports,
         formProps,
-        formValuesConfig,
+        formValuesConfig: [formValueConfig],
         finalFormConfig,
     };
 }

@@ -16,12 +16,15 @@ export function createConfig() {
     }
     return {
         ...cometConfig,
-        apiUrl: environmentVariables.API_URL,
+        apiUrl: `${window.location.origin}/api`,
         adminUrl: environmentVariables.ADMIN_URL,
         siteConfigs: JSON.parse(atob(environmentVariables.PUBLIC_SITE_CONFIGS)) as PublicSiteConfig[],
         buildDate: environmentVariables.BUILD_DATE,
         buildNumber: environmentVariables.BUILD_NUMBER,
         commitSha: environmentVariables.COMMIT_SHA,
         muiLicenseKey: environmentVariables.MUI_LICENSE_KEY,
+        brevo: {
+            allowAddingContactsWithoutDoi: environmentVariables.BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI === "true",
+        },
     };
 }

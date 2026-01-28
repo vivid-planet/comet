@@ -3,15 +3,16 @@ import { type ContentGroupBlockData, type ContentGroupContentBlockData } from "@
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
-import { PageContentRichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { PageContentStandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { PageContentStandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { PageContentStandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { PageLayout } from "@src/layout/PageLayout";
+import clsx from "clsx";
 
 import styles from "./ContentGroupBlock.module.scss";
 
@@ -20,7 +21,7 @@ const supportedBlocks: SupportedBlocks = {
     anchor: (props) => <AnchorBlock data={props} />,
     space: (props) => <SpaceBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
-    richtext: (props) => <PageContentRichTextBlock data={props} disableLastBottomSpacing />,
+    richtext: (props) => <PageContentStandaloneRichTextBlock data={props} />,
     heading: (props) => <PageContentStandaloneHeadingBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
     callToActionList: (props) => <PageContentStandaloneCallToActionListBlock data={props} />,
@@ -37,10 +38,12 @@ const ContentGroupContentBlock = withPreview(
 );
 
 export const ContentGroupBlock = withPreview(
-    ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => (
-        <PageLayout className={backgroundColor !== "default" ? styles[backgroundColor] : undefined}>
-            <ContentGroupContentBlock data={content} />
-        </PageLayout>
-    ),
+    ({ data: { content, backgroundColor } }: PropsWithData<ContentGroupBlockData>) => {
+        return (
+            <PageLayout className={clsx(styles.root, backgroundColor !== "default" ? styles[`root--${backgroundColor}`] : undefined)}>
+                <ContentGroupContentBlock data={content} />
+            </PageLayout>
+        );
+    },
     { label: "ContentGroup" },
 );

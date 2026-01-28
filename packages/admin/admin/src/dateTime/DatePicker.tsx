@@ -8,7 +8,7 @@ import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { getDateValue, getIsoDateString } from "./utils";
+import { getDateValue, getIsoDateString, isValidDate } from "./utils";
 
 export type Future_DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
@@ -57,7 +57,15 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
             onClose={() => setOpen(false)}
             disableOpenPicker
             value={dateValue}
-            onChange={(date) => onChange?.(date ? getIsoDateString(date) : undefined)}
+            onChange={(date) => {
+                let newStringValue: string | undefined = undefined;
+
+                if (date && isValidDate(date)) {
+                    newStringValue = getIsoDateString(date);
+                }
+
+                return onChange?.(newStringValue);
+            }}
             {...slotProps?.root}
             {...restProps}
             slotProps={{

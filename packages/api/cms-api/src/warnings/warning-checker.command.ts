@@ -95,43 +95,47 @@ export class WarningCheckerCommand extends CommandRunner {
                             }
                         }
 
-                        const flatBlocks = new FlatBlocks(blockData, {
-                            name: block.name,
-                            visible: true,
-                            rootPath: "root",
-                        });
-                        for (const node of flatBlocks.depthFirst()) {
-                            const warningsOrWarningsService = await node.block.warnings();
-                            let warnings: BlockWarning[] = [];
-
-                            if (isInjectableService(warningsOrWarningsService)) {
-                                const warningsService = warningsOrWarningsService;
-                                const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
-
-                                warnings = await service.warnings(node.block);
-                            } else {
-                                warnings = warningsOrWarningsService;
-                            }
-
-                            this.warningService.saveWarnings({
-                                warnings,
-                                scope,
-                                sourceInfo: {
-                                    rootEntityName: tableName,
-                                    rootColumnName: column,
-                                    rootPrimaryKey: data.primaryKey,
-                                    targetId: rootBlock.id,
-                                    jsonPath: node.pathToString(),
-                                },
+                        if (blockData) {
+                            const flatBlocks = new FlatBlocks(blockData, {
+                                name: block.name,
+                                visible: true,
+                                rootPath: "root",
                             });
+                            for (const node of flatBlocks.depthFirst()) {
+                                const warningsOrWarningsService = await node.block.warnings();
+                                let warnings: BlockWarning[] = [];
+
+                                if (isInjectableService(warningsOrWarningsService)) {
+                                    const warningsService = warningsOrWarningsService;
+                                    const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
+
+                                    warnings = await service.warnings(node.block);
+                                } else {
+                                    warnings = warningsOrWarningsService;
+                                }
+
+                                await this.warningService.saveWarnings({
+                                    warnings,
+                                    scope,
+                                    sourceInfo: {
+                                        rootEntityName: tableName,
+                                        rootColumnName: column,
+                                        rootPrimaryKey: data.primaryKey,
+                                        targetId: rootBlock.id,
+                                        jsonPath: node.pathToString(),
+                                    },
+                                });
+                            }
                         }
                     }
                 }
 
+                await this.entityManager.flush();
+                this.entityManager.clear();
+
                 offset += queryBuilderLimit;
             } while (rootBlocks.length > 0);
         }
-        await this.entityManager.flush();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entities = this.orm.config.get("entities") as EntityClass<any>[];
@@ -149,17 +153,15 @@ export class WarningCheckerCommand extends CommandRunner {
                     if (service.bulkCreateWarnings) {
                         const warningGenerator = service.bulkCreateWarnings();
                         for await (const { warnings, targetId, scope } of warningGenerator) {
-                            for (const warning of warnings) {
-                                await this.warningService.saveWarnings({
-                                    warnings: await service.createWarnings(warning),
-                                    sourceInfo: {
-                                        rootEntityName: entity.name,
-                                        rootPrimaryKey: entityMetadata.primaryKeys[0],
-                                        targetId,
-                                    },
-                                    scope,
-                                });
-                            }
+                            await this.warningService.saveWarnings({
+                                warnings,
+                                sourceInfo: {
+                                    rootEntityName: entity.name,
+                                    rootPrimaryKey: entityMetadata.primaryKeys[0],
+                                    targetId,
+                                },
+                                scope,
+                            });
                         }
                     } else {
                         await this.processEntityWarningsIndividually({

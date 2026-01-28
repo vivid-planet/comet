@@ -32,9 +32,9 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
         adminUrl: envVars.ADMIN_URL,
-        corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
+        corsAllowedOrigin: new RegExp(envVars.CORS_ALLOWED_ORIGIN),
+        defaultLocale: "en", // fallback locale
         auth: {
-            useAuthProxy: envVars.USE_AUTHPROXY,
             systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
             idpClientId: envVars.IDP_CLIENT_ID,
             idpJwksUri: envVars.IDP_JWKS_URI,
@@ -113,6 +113,23 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         },
         sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
         siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
+        brevo: {
+            apiKey: envVars.BREVO_API_KEY,
+            redirectUrlForImport: envVars.BREVO_REDIRECT_URL_FOR_IMPORT,
+            campaign: {
+                basicAuth: {
+                    username: envVars.BREVO_CAMPAIGN_BASIC_AUTH_USERNAME,
+                    password: envVars.BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD,
+                },
+            },
+            ecgRtrList: {
+                apiKey: envVars.BREVO_ECG_RTR_LIST_API_KEY,
+            },
+            contactsWithoutDoi: {
+                allowAddingContactsWithoutDoi: envVars.BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI,
+                emailHashKey: envVars.BREVO_EMAIL_HASH_KEY,
+            },
+        },
     };
 }
 

@@ -192,6 +192,7 @@ export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";
 export { ImageCropArea } from "./dam/images/entities/image-crop-area.entity";
 export { ImagesService } from "./dam/images/images.service";
+export { calculateInheritAspectRatio } from "./dam/images/images.util";
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
@@ -215,8 +216,17 @@ export { IMGPROXY_CONFIG } from "./imgproxy/imgproxy.constants";
 export { Extension, Gravity, ResizingType } from "./imgproxy/imgproxy.enum";
 export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
+export { ImporterDataStream } from "./importer/data-streams/data-stream";
+export { ImporterLocalFileDataStream } from "./importer/data-streams/local-file-data-stream";
+export { CsvColumn, CsvColumnType } from "./importer/decorators/csv-column.decorator";
+export { ImportTargetInterface } from "./importer/import-target.interface";
+export { ImporterInputClass } from "./importer/importer-input.type";
+export { ImporterEndPipe } from "./importer/pipes/end.pipe";
+export { ImporterPipe } from "./importer/pipes/importer-pipe.type";
+export { ImporterCsvParseAndTransformPipes } from "./importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
+export { KubernetesService } from "./kubernetes/kubernetes.service";
 export { MailTemplate, MailTemplateInterface, PreparedTestProps } from "./mail-templates/mail-template.decorator";
 export { MailTemplateService } from "./mail-templates/mail-template.service";
 export { MailTemplatesModule } from "./mail-templates/mail-templates.module";
@@ -270,6 +280,7 @@ export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
+export { registerAdditionalPermissions } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,

@@ -1,6 +1,8 @@
 import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@src/config/config.module";
+import { TranslationModule } from "@src/translation/translation.module";
 
 import { CustomProductResolver } from "./custom-product.resolver";
 import { Manufacturer } from "./entities/manufacturer.entity";
@@ -25,6 +27,8 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
+import { ProductImporterCommand } from "./product-importer.command";
+import { ProductImporterService } from "./product-importer.service";
 import { ProductPublishedMail } from "./product-published.mail";
 
 @Module({
@@ -42,6 +46,8 @@ import { ProductPublishedMail } from "./product-published.mail";
             ManufacturerCountry,
             ProductHighlight,
         ]),
+        ConfigModule,
+        TranslationModule,
     ],
     providers: [
         ProductResolver,
@@ -53,6 +59,8 @@ import { ProductPublishedMail } from "./product-published.mail";
         ManufacturerResolver,
         ManufacturerCountryResolver,
         ProductToTagResolver,
+        ProductImporterCommand,
+        ProductImporterService,
         ProductColorResolver,
         CustomProductResolver,
         ProductHighlightResolver,

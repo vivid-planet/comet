@@ -52,6 +52,13 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                     </LoggedInInfo>
                     <SingleLineTypography variant="h4">{user.authenticatedUser ? user.authenticatedUser.name : user.name}</SingleLineTypography>
                     <SingleLineTypography variant="body2">{user.authenticatedUser ? user.authenticatedUser.email : user.email}</SingleLineTypography>
+                    {user.accountUrl && (
+                        <MyAccountLink href={user.accountUrl} target="_blank" rel="noopener noreferrer">
+                            <SingleLineTypography variant="body2">
+                                <FormattedMessage id="comet.myAccount" defaultMessage="My Account" />
+                            </SingleLineTypography>
+                        </MyAccountLink>
+                    )}
                 </Box>
                 <Divider />
                 {user.impersonated && (
@@ -144,6 +151,10 @@ const MenuFooter = styled(Box)`
     padding-top: 10px;
     justify-content: space-between;
     align-items: center;
+`;
+
+const MyAccountLink = styled(Link)`
+    padding-top: 10px;
 `;
 
 const AboutLink = styled(Link)(

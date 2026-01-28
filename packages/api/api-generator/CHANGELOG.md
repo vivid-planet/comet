@@ -1,5 +1,139 @@
 # @comet/api-generator
 
+## 8.12.0
+
+### Patch Changes
+
+- Updated dependencies [488da0b]
+- Updated dependencies [2930556]
+    - @comet/cms-api@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- 0839bd6: Fix accidentally formatting all files
+    - @comet/cms-api@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 4bb9e21: Format generated files using prettier
+- 09e677f: Add support for soft delete by setting deletedAt in delete mutation
+
+    Note: The filter to exclude deleted entries by default has to be added manually to the entity, api-generator can't do that.
+
+### Patch Changes
+
+- 8f8eea7: Fix duplicate class-validator imports in generated input file
+- aec3ec2: Skip props with Unsupported Reference Type instead of generating broken input
+- Updated dependencies [f34b750]
+    - @comet/cms-api@8.11.0
+
+## 8.10.0
+
+### Patch Changes
+
+- Updated dependencies [5f025a9]
+    - @comet/cms-api@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- 1231050: Fix id default value for sort if sort is disabled
+- 0839ae8: Fix generated sort DTO to avoid duplicate `id` field
+- Updated dependencies [ef30d93]
+- Updated dependencies [5cf497f]
+    - @comet/cms-api@8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- e16e1f9: list query: add default value for sort if there is a position column
+- 6898b95: Add default sort order: position (if exists), createdAt (if exists), id
+
+### Patch Changes
+
+- Updated dependencies [d328dac]
+- Updated dependencies [e62d6bd]
+- Updated dependencies [b79687c]
+    - @comet/cms-api@8.8.0
+
+## 8.7.1
+
+### Patch Changes
+
+- Updated dependencies [9ed0711]
+- Updated dependencies [182c930]
+- Updated dependencies [07c9b17]
+    - @comet/cms-api@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- 8d61ce6: Support type=integer, not just columnType=integer
+- ec40bb1: Support input for relations with text as primary key
+- Updated dependencies [b2da6c9]
+- Updated dependencies [13babd1]
+- Updated dependencies [b305d5b]
+    - @comet/cms-api@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- e81b1ef: Cleanup dependencies
+    - Make `@mikro-orm/core` and `@mikro-orm/postgresql` peer dependencies
+    - Make `typescript` a dependency
+    - Exclude `test-helper.ts` from build and leave `prettier` as dev dependency
+
+    This shouldn't have any noticeable effect.
+
+- Updated dependencies [206b352]
+- Updated dependencies [fda9262]
+- Updated dependencies [30b671e]
+- Updated dependencies [fbae3ae]
+- Updated dependencies [6326641]
+    - @comet/cms-api@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- dd351bf: Fix import path for relations targeting entity from `@comet/cms-api`
+    - @comet/cms-api@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- f292b68: Fix position update when trying to move entry to position higher than total item count
+    - @comet/cms-api@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [942200f]
+- Updated dependencies [b7156bb]
+    - @comet/cms-api@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/cms-api@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/cms-api@8.4.1
+
 ## 8.4.0
 
 ### Patch Changes

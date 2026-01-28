@@ -1,9 +1,19 @@
-import { type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { Alert, type GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
-import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
-import { IconButton, tablePaginationClasses } from "@mui/material";
-import { type LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
-import { DataGrid } from "@mui/x-data-grid";
+import { type QueryResult, type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
+import {
+    Alert,
+    DataGridToolbar,
+    FillSpace,
+    type GridColDef,
+    messages,
+    Tooltip,
+    useBufferedRowCount,
+    useDataGridRemote,
+    usePersistentColumnState,
+} from "@comet/admin";
+import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
+import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
@@ -35,12 +45,39 @@ type QueryVariables = {
     forceRefresh?: boolean;
 };
 
+interface DependencyListGridToolbarProps extends GridToolbarProps {
+    refetch: QueryResult<Query, QueryVariables>["refetch"];
+}
+function DependencyListGridToolbar({ refetch }: DependencyListGridToolbarProps) {
+    const [isRefetching, setIsRefetching] = useState<boolean>(false);
+
+    return (
+        <DataGridToolbar>
+            <FillSpace />
+            <Tooltip title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
+                <IconButton
+                    onClick={async () => {
+                        setIsRefetching(true);
+                        try {
+                            await refetch({ forceRefresh: true });
+                        } finally {
+                            setIsRefetching(false);
+                        }
+                    }}
+                    disabled={isRefetching}
+                >
+                    {isRefetching ? <ThreeDotSaving /> : <Reload />}
+                </IconButton>
+            </Tooltip>
+        </DataGridToolbar>
+    );
+}
+
+const pageSize = 10;
 interface DependencyListProps {
     query: TypedDocumentNode<Query, QueryVariables>;
     variables: Record<string, unknown>;
 }
-
-const pageSize = 10;
 
 export const DependencyList = ({ query, variables }: DependencyListProps) => {
     const intl = useIntl();
@@ -49,15 +86,13 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     const apolloClient = useApolloClient();
     const history = useHistory();
 
-    const dataGridProps = useDataGridRemote({ queryParamsPrefix: "dependencies", pageSize: pageSize });
-
-    const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
-        variables: {
-            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
-            limit: dataGridProps.paginationModel.pageSize,
-            ...variables,
-        },
-    });
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "dependencies",
+            pageSize,
+        }),
+        ...usePersistentColumnState("DependencyList"),
+    };
 
     const columns: GridColDef<DependencyItem>[] = [
         {
@@ -132,78 +167,48 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
         },
     ];
 
-    let items: DependencyItem[] = [];
-    let totalCount = 0;
+    const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
+        variables: {
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            ...variables,
+        },
+    });
 
-    if (error) {
-        throw error;
+    if (error) throw error;
+
+    if (!loading && ((data?.item.dependencies && data?.item.dependents) || (!data?.item.dependents && !data?.item.dependencies))) {
+        throw new Error("Either dependencies or dependents must be defined, but not both.");
     }
 
-    if (data?.item.dependencies) {
-        items = data.item.dependencies.nodes.map((node) => ({
-            ...node,
-            graphqlObjectType: node.targetGraphqlObjectType,
-            id: node.targetId,
-        }));
-        totalCount = data.item.dependencies.totalCount;
-    } else if (data?.item.dependents) {
-        items = data.item.dependents.nodes.map((node) => ({
-            ...node,
-            graphqlObjectType: node.rootGraphqlObjectType,
-            id: node.rootId,
-        }));
-        totalCount = data.item.dependents.totalCount;
-    } else if (!loading) {
-        throw new Error("Neither dependencies nor dependents is defined");
-    }
+    const type: "dependencies" | "dependents" = data?.item.dependencies ? "dependencies" : "dependents";
+
+    const rowCount = useBufferedRowCount(data?.item[type]?.totalCount);
+    const rows =
+        data?.item[type]?.nodes.map((node) => {
+            return {
+                ...node,
+                graphqlObjectType: type === "dependencies" ? (node as Dependency).targetGraphqlObjectType : (node as Dependent).rootGraphqlObjectType,
+                id: type === "dependencies" ? (node as Dependency).targetId : (node as Dependent).rootId,
+            };
+        }) ?? [];
 
     return (
         <>
-            <sc.Toolbar>
-                <Tooltip title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
-                    <IconButton
-                        onClick={() => {
-                            refetch({
-                                forceRefresh: true,
-                            });
-                        }}
-                    >
-                        <Reload />
-                    </IconButton>
-                </Tooltip>
-            </sc.Toolbar>
             <DataGrid
                 {...dataGridProps}
-                slotProps={{
-                    loadingOverlay: {
-                        variant: "linear-progress",
-                    },
-                    pagination: {
-                        labelDisplayedRows: DisplayedRows,
-                        sx: {
-                            flexGrow: 1,
-                            [`& .${tablePaginationClasses.spacer}`]: {
-                                width: 0,
-                                flex: 0,
-                            },
-                            [`& .${tablePaginationClasses.displayedRows}`]: {
-                                flexGrow: 1,
-                            },
-                            [`& .${tablePaginationClasses.toolbar} .${tablePaginationClasses.actions}`]: {
-                                marginLeft: "5px",
-                            },
-                        },
-                    },
-                }}
-                rowHeight={60}
-                disableColumnMenu
-                loading={loading && data != null}
-                autoHeight={true}
+                rows={rows}
+                rowCount={rowCount}
                 columns={columns}
-                rows={items}
-                rowCount={totalCount}
+                loading={loading}
                 getRowId={(row) => {
                     return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
+                }}
+                slots={{
+                    toolbar: DependencyListGridToolbar as GridSlotsComponent["toolbar"],
+                }}
+                slotProps={{
+                    toolbar: { refetch } as DependencyListGridToolbarProps,
                 }}
             />
             <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
@@ -213,28 +218,5 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                 />
             </Alert>
         </>
-    );
-};
-
-const DisplayedRows = ({ from, to, count, page }: LabelDisplayedRowsArgs) => {
-    const numPages = Math.ceil(count / pageSize) > 0 ? Math.ceil(count / pageSize) : 1;
-
-    return (
-        <sc.DisplayedRowsWrapper>
-            <div>
-                <FormattedMessage
-                    id="comet.dependencies.dataGrid.currentItems"
-                    defaultMessage="{from} - {to} of {count} Items"
-                    values={{ from, to, count }}
-                />
-            </div>
-            <sc.PageLabel>
-                <FormattedMessage
-                    id="comet.dependencies.dataGrid.currentPage"
-                    defaultMessage="Page {page} of {numPages}"
-                    values={{ page: page + 1, numPages }}
-                />
-            </sc.PageLabel>
-        </sc.DisplayedRowsWrapper>
     );
 };

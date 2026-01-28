@@ -1,6 +1,12 @@
 # compiled output
 /dist
 /node_modules
+
+# translation
+/lang/
+/lang-compiled/
+/lang-extracted/
+
 .env
 src/site-configs.d.ts
 

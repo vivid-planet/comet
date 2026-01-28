@@ -43,6 +43,7 @@ export function buildSortProps(metadata: EntityMetadata<any>) {
                 (prop) =>
                     hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
                     !prop.name.startsWith("scope_") &&
+                    !prop.primary &&
                     (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
                     (prop.type === "string" ||
                         prop.type === "text" ||
@@ -63,10 +64,13 @@ export function buildSortProps(metadata: EntityMetadata<any>) {
     }
     const crudSortProps = directSortProps(metadata);
 
-    // add nested from relations, one level deep
     metadata.props.forEach((prop) => {
         if (hasCrudFieldFeature(metadata.class, prop.name, "sort")) {
-            if ((prop.kind == "1:1" || prop.kind == "m:1") && prop.targetMeta) {
+            if (prop.primary) {
+                // primary only on root level
+                crudSortProps.push(prop.name);
+            } else if ((prop.kind == "1:1" || prop.kind == "m:1") && prop.targetMeta) {
+                // add nested from relations, one level deep
                 crudSortProps.push(...directSortProps(prop.targetMeta).map((nestedProp) => `${prop.name}.${nestedProp}`));
                 return true;
             }
@@ -111,6 +115,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
 
+    const hasDeletedAtProp = metadata.props.some((prop) => prop.name == "deletedAt");
+
     const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
 
     const positionGroupPropNames: string[] = hasPositionProp
@@ -140,6 +146,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         hasSlugProp,
         hasPositionProp,
         positionGroupProps,
+        hasDeletedAtProp,
         scopeProp,
         skipScopeCheck,
         argsClassName,

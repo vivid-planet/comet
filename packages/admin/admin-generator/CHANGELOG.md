@@ -1,5 +1,95 @@
 # @comet/admin-generator
 
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
+## 8.11.1
+
+### Patch Changes
+
+- 64bd5f4: Revert "Replace ts-node with jiti"
+
+    This broke import aliases (e.g, `@src/`) in config files.
+
+- 0839bd6: Fix accidentally formatting all files
+
+## 8.11.0
+
+### Minor Changes
+
+- 438e182: Replace ts-node with jiti
+
+    This in preparation for the upcoming switch to ESM.
+
+- 4bb9e21: Format generated files using prettier
+- 0998531: Grid: add support for density setting to specify grid density programmatically
+- 52006d2: Allow usage of `<FormattedMessage>` for user visible stings in config to allow customizing message ids
+- f293762: Grid: Add support for column visible=false (not just breakpoints)
+- 0371889: Grid: Add crudContextMenu.deleteText that allows customizing the menu item text for delete action
+- 222ff35: Form: don't use `string` as form value for number fields as `NumberField` uses `number`
+
+## 8.10.0
+
+### Minor Changes
+
+- 6570d03: Grid headerName: don't generate FormattedMessage for empty header (empty string)
+
+## 8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- 6c6ea5e: Detect installed MUI X Data Grid package (community/pro/premium) and generate code accordingly
+- 8575871: Add initialValue to form config for static initial values
+- e16e1f9: Grid: support non-null sort argument
+
+## 8.7.1
+
+## 8.7.0
+
+### Minor Changes
+
+- bfb954e: Form: add support for fields accessing nested objects (e.g., Embeddable in MikroORM)
+- 91f0b8d: Add injectFormVariables helper function to inject id, mode, client or formApi into validator
+
+## 8.6.0
+
+## 8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- 2be11c4: Fix incorrect `GridRenderCellParams` generic usage in `rowAction`
+- ad9b20e: Grid: Fix type for forwarded prop, GQL prefix was missing for objects
+- 1383c89: Restore persisted column state of generated DataGrid.
+
+    **What changed**
+    - Wrapped the DataGrid's column definitions in `useMemo` to ensure the `columns` prop keeps a stable reference between renders.
+
+    **Why**
+    - According to the MUI DataGrid documentation, the `columns` prop must keep the same reference across renders for persisted column state (width, order, visibility) to work correctly.
+    - Previously, column definitions were re-created on every render, which caused loss of the persisted state.
+
+    **Result**
+    - Column width and order are now properly restored across all admin-generated DataGrids.
+
+## 8.5.0
+
+### Minor Changes
+
+- 7806dd1: Add scopeAsProp to grid and form to generate a scope prop that needs to be passed into the generated grid/form
+- c96e920: Add FormConfig.navigateOnCreate (defaults to true) to allow disabling the navigation to edit page after successful create mutation
+- 7806dd1: form: add scope to create mutation (if any), defaulting to using the current scope from context (as grid does it) [breaking]
+
+## 8.4.2
+
+## 8.4.1
+
 ## 8.4.0
 
 ### Minor Changes

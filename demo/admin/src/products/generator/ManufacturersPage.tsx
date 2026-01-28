@@ -1,7 +1,32 @@
-import { Stack, StackMainContent, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import {
+    FillSpace,
+    SaveBoundary,
+    SaveBoundarySaveButton,
+    Stack,
+    StackMainContent,
+    StackPage,
+    StackSwitch,
+    StackToolbar,
+    ToolbarActions,
+    ToolbarAutomaticTitleItem,
+    ToolbarBackButton,
+} from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { ManufacturersGrid } from "@src/products/generator/generated/ManufacturersGrid";
 import { useIntl } from "react-intl";
+
+import { ManufacturerForm } from "./generated/ManufacturerForm";
+import { ManufacturersGrid } from "./generated/ManufacturersGrid";
+
+const FormToolbar = () => (
+    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+        <ToolbarBackButton />
+        <ToolbarAutomaticTitleItem />
+        <FillSpace />
+        <ToolbarActions>
+            <SaveBoundarySaveButton />
+        </ToolbarActions>
+    </StackToolbar>
+);
 
 export function ManufacturersPage() {
     const intl = useIntl();
@@ -15,13 +40,21 @@ export function ManufacturersPage() {
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "manufacturers.addManufacturer", defaultMessage: "Add Manufacturer" })}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,react/jsx-no-literals */}
-                    <StackMainContent>TODO: Add manufacturer form</StackMainContent>
+                    <SaveBoundary>
+                        <FormToolbar />
+                        <StackMainContent>
+                            <ManufacturerForm />
+                        </StackMainContent>
+                    </SaveBoundary>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "manufacturers.editManufacturer", defaultMessage: "Edit Manufacturer" })}>
                     {(selectedId) => (
-                        // eslint-disable-next-line @calm/react-intl/missing-formatted-message,react/jsx-no-literals
-                        <StackMainContent>TODO: Edit manufacturer form</StackMainContent>
+                        <SaveBoundary>
+                            <FormToolbar />
+                            <StackMainContent>
+                                <ManufacturerForm id={selectedId} />
+                            </StackMainContent>
+                        </SaveBoundary>
                     )}
                 </StackPage>
             </StackSwitch>

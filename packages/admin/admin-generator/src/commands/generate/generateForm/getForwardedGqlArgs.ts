@@ -4,7 +4,7 @@ import { type FormFieldConfig } from "../generate-command";
 import { type Imports } from "../utils/generateImportsCode";
 import { type Prop } from "./generateForm";
 
-type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
+export type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
 
 export function getForwardedGqlArgs({
     fields,
@@ -15,40 +15,44 @@ export function getForwardedGqlArgs({
     fields: FormFieldConfig<any>[];
     gqlOperation: IntrospectionField;
     gqlIntrospection: IntrospectionQuery;
-}): {
-    imports: Imports;
-    props: Prop[];
-    gqlArgs: GqlArg[];
-} {
-    const imports: Imports = [];
-    const props: Prop[] = [];
-    const gqlArgs: GqlArg[] = [];
-
-    const skipGqlInputArgFields = fields.map((field) => String(field.name));
+}) {
+    const ret: {
+        imports: Imports;
+        prop: Prop;
+        gqlArg: GqlArg;
+    }[] = [];
 
     getArgsIncludingInputArgSubfields(gqlOperation, gqlIntrospection).forEach((arg) => {
-        if (arg.isInputArgSubfield && skipGqlInputArgFields.includes(arg.name)) return;
+        if (arg.isInputArgSubfield) {
+            if (
+                fields.some((field) => {
+                    return field.name === arg.name || field.name.startsWith(`${arg.name}.`);
+                })
+            ) {
+                // there is a field (or subfield) in this form, no need to forward this arg
+                return;
+            }
+        }
+
+        let prop: Prop;
+        const imports: Imports = [];
 
         if (arg.type === "ID" || arg.type === "String" || arg.type === "DateTime") {
-            props.push({ name: arg.name, optional: false, type: "string" });
+            prop = { name: arg.name, optional: false, type: "string" };
         } else if (arg.type === "Boolean") {
-            props.push({ name: arg.name, optional: false, type: "boolean" });
+            prop = { name: arg.name, optional: false, type: "boolean" };
         } else if (arg.type === "Int" || arg.type === "Float") {
-            props.push({ name: arg.name, optional: false, type: "number" });
+            prop = { name: arg.name, optional: false, type: "number" };
         } else if (arg.type === "JSONObject") {
-            props.push({ name: arg.name, optional: false, type: "unknown" });
+            prop = { name: arg.name, optional: false, type: "unknown" };
         } else {
-            props.push({ name: arg.name, optional: false, type: `GQL${arg.type}` }); // generated types contain GQL prefix
+            prop = { name: arg.name, optional: false, type: `GQL${arg.type}` }; // generated types contain GQL prefix
             imports.push({ name: `GQL${arg.type}`, importPath: "@src/graphql.generated" });
         }
-        gqlArgs.push({ name: arg.name, type: arg.type, isInputArgSubfield: arg.isInputArgSubfield });
+        ret.push({ gqlArg: arg, prop, imports });
     });
 
-    return {
-        imports,
-        props,
-        gqlArgs,
-    };
+    return ret;
 }
 
 function getArgsIncludingInputArgSubfields(gqlOperation: IntrospectionField, gqlIntrospection: IntrospectionQuery) {

@@ -1,4 +1,4 @@
-import { Tooltip } from "@comet/admin";
+import { Button, Tooltip } from "@comet/admin";
 import { Add, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import { type Decorator } from "@storybook/react-webpack5";
@@ -166,6 +166,58 @@ export const TooltipsWithCustomContent = {
                     <Chip label="Image with description" sx={{ width: 150 }} />
                 </Tooltip>
             </Stack>
+        );
+    },
+};
+
+/**
+ * This is to test how the focus-behavior works with different tooltip children.
+ */
+export const FocusTest = {
+    render: () => {
+        return (
+            <>
+                <Typography variant="h4">Without tooltip (standalone elements)</Typography>
+                <Typography variant="overline">Only the button should be focusable</Typography>
+                <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+                    <Typography>Typography</Typography>
+                    <Chip label="Chip" />
+                    <Button>Button</Button>
+                    <span>Span</span>
+                </Stack>
+                <Typography variant="h4">With tooltip</Typography>
+                <Typography variant="overline">All elements should be focusable</Typography>
+                <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+                    <Tooltip title="Hello Tooltip">
+                        <Typography>Typography</Typography>
+                    </Tooltip>
+                    <Tooltip title="Hello Tooltip">
+                        <Chip label="Chip" />
+                    </Tooltip>
+                    <Tooltip title="Hello Tooltip">
+                        <Button>Button</Button>
+                    </Tooltip>
+                    <Tooltip title="Hello Tooltip">
+                        <span>Span</span>
+                    </Tooltip>
+                </Stack>
+                <Typography variant="h4">With tooltip and disabled tabindex</Typography>
+                <Typography variant="overline">Nothing should be focusable</Typography>
+                <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                        <Typography>Typography</Typography>
+                    </Tooltip>
+                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                        <Chip label="Chip" />
+                    </Tooltip>
+                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                        <Button>Button</Button>
+                    </Tooltip>
+                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                        <span>Span</span>
+                    </Tooltip>
+                </Stack>
+            </>
         );
     },
 };

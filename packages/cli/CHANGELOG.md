@@ -1,5 +1,41 @@
 # @comet/cli
 
+## 8.12.0
+
+### Minor Changes
+
+- 979a1d3: Use renovate for updating local oauth2-proxy and mitmproxy
+
+## 8.11.1
+
+## 8.11.0
+
+## 8.10.0
+
+## 8.9.0
+
+## 8.8.0
+
+## 8.7.1
+
+## 8.7.0
+
+## 8.6.0
+
+### Minor Changes
+
+- 4c452a1: Add download-mitmproxy command
+
+## 8.5.2
+
+## 8.5.1
+
+## 8.5.0
+
+## 8.4.2
+
+## 8.4.1
+
 ## 8.4.0
 
 ### Minor Changes

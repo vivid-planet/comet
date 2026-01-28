@@ -35,30 +35,38 @@ import { GQLUpdateProductMutation } from "./IdFieldInForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./IdFieldInForm.gql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
-    image: DamImageBlock
+    image: DamImageBlock,
 };
-type FormValues = Omit<GQLIdFieldInFormFragment, keyof typeof rootBlocks> & {
+type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 interface FormProps {
+    onCreate?: (id: string) => void;
     id?: string;
     type: GQLProductType;
     slug: string;
 }
-export function IdFieldInForm({ id, type, slug }: FormProps) {
+export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.product
-        ? {
-            ...filterByFragment<GQLIdFieldInFormFragment>(productFormFragment, data.product),
-            image: rootBlocks.image.input2State(data.product.image)
-        }
-        : {
-            image: rootBlocks.image.defaultValues()
-        }, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
+        productQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.product
+                ? {
+                      ...filterByFragment<GQLIdFieldInFormFragment>(productFormFragment, data.product),
+                      image: rootBlocks.image.input2State(data.product.image),
+                  }
+                : {
+                      image: rootBlocks.image.defaultValues(),
+                  },
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "product", id);
@@ -70,52 +78,82 @@ export function IdFieldInForm({ id, type, slug }: FormProps) {
         },
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
-        };
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: { ...output, slug, type } },
+                variables: {
+                    input: { ...output, slug, type },
+                },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
+            const id = mutationResponse?.createProduct.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                    if (!event.navigatingBack) {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+                    }
+                });
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <TextField readOnly disabled endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>} variant="horizontal" fullWidth name="id" label={<FormattedMessage id="product.id" defaultMessage="ID"/>}/>
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <TextField
+                            readOnly
+                            disabled
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <Lock />
+                                </InputAdornment>
+                            }
+                            variant="horizontal"
+                            fullWidth
+                            name="id"
+                            label={<FormattedMessage id="product.id" defaultMessage="ID" />}
+                        />
 
-        <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title"/>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-                        </>
-                    </>)}
-            </FinalForm>);
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
+                        />
+                        <Field
+                            name="image"
+                            isEqual={isEqual}
+                            label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                            variant="horizontal"
+                            fullWidth
+                        >
+                            {createFinalFormBlock(rootBlocks.image)}
+                        </Field>
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }

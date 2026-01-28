@@ -1,5 +1,150 @@
 # @comet/admin
 
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
+### Patch Changes
+
+- @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- a498b80: Fix uppercase styling of tabs
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 2580c61: Set cursor of DataGrid rows to "pointer" if `onRowClick` is set
+- f0b1eb1: Allow passing `data-testid` to FieldContainer/Field-based fields
+
+    This enables easier element selection in end-to-end tests (e.g., with Playwright).
+
+    **Example usage:**
+
+    ```ts
+    <SelectField
+        data-testid="test-select"
+        ...
+    />
+    ```
+
+- f293762: Grid: Add support for column visible=false (not just breakpoints)
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- 5337c20: Style the `button` typography variant
+- ed03e8d: **Toolbar:** add `topBarActions` prop to render custom actions in the top bar, and introduce `<HelpDialogButton />` for a built-in help dialog trigger
+
+    **What’s new**
+    - `Toolbar` now supports a new prop: `topBarActions` (class key & slot name: `"topBarActions"`). Use it to place action controls on the right side of the top bar.
+    - New component: `HelpDialogButton`. It renders an icon button that toggles a modal dialog with a title and rich help content.
+
+    **Usage**
+
+    ```tsx
+    import { Toolbar, HelpDialogButton } from "@comet/admin";
+    import { FormattedMessage } from "react-intl";
+
+    <Toolbar
+        topBarActions={
+            <HelpDialogButton
+                dialogTitle={<FormattedMessage id="toolbar.help.title" defaultMessage="Help" />}
+                dialogDescription={<Typography>Put any explanatory text, images, or markup here.</Typography>}
+            />
+        }
+    >
+        {/* your toolbar items */}
+    </Toolbar>;
+    ```
+
+### Patch Changes
+
+- 198da7b: Fix pagination labels for empty DataGrids
+- 9c091ec: Fix DatePicker from possibly crashing when starting to type a date
+- Updated dependencies [7e34c0b]
+    - @comet/admin-icons@8.11.0
+
+## 8.10.0
+
+### Patch Changes
+
+- 1918d88: muiGridSortToGql: Prevent overwriting the default value defined in the GraphQL schema
+    - @comet/admin-icons@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @comet/admin-icons@8.9.0
+
+## 8.8.0
+
+### Patch Changes
+
+- @comet/admin-icons@8.8.0
+
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- a8e8132: Prevent `StackPageTitle` rerender loop when passing a React element as `title`
+    - @comet/admin-icons@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- 6c5578a: Remove the delay before closing the EditDialog after successful save
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin-icons@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.5.1
+
+## 8.5.0
+
+### Minor Changes
+
+- c8359f6: Add Filter Count Chip to DataGrid Filter Button
+
+### Patch Changes
+
+- a2af2c6: `Tooltip` children are now focusable by default for improved accessibility
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- a57d092: Prevent crash in `FinalFormSelect` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- 9374018: Prevent crash in `FinalFormAutocomplete` when using `multiple` without initial values
+    - @comet/admin-icons@8.4.1
+
 ## 8.4.0
 
 ### Minor Changes

@@ -7,7 +7,7 @@
     flex: 1;
     flex-direction: row;
     gap: var(--spacing-s300);
-    color: var(--palette-text-primary);
+    color: var(--text-primary);
 
     @media (min-width: $breakpoint-md) {
         flex: unset;
@@ -46,11 +46,11 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-s200);
-    color: var(--palette-primary-main);
+    color: var(--cta-text-default);
     transition: color 0.3s ease-in-out;
 
     &:hover {
-        color: var(--palette-primary-dark);
+        color: var(--cta-text-hover);
     }
 }
 

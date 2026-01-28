@@ -3,9 +3,9 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
-import { OffsetBasedPaginationArgs } from "@comet/cms-api";
+import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
 import { ProductCategoryTypeFilter } from "./product-category-type.filter";
-import { ProductCategoryTypeSort } from "./product-category-type.sort";
+import { ProductCategoryTypeSort, ProductCategoryTypeSortField } from "./product-category-type.sort";
 @ArgsType()
 export class ProductCategoryTypesArgs extends OffsetBasedPaginationArgs {
     @Field({ nullable: true })
@@ -17,9 +17,8 @@ export class ProductCategoryTypesArgs extends OffsetBasedPaginationArgs {
     @Type(() => ProductCategoryTypeFilter)
     @IsOptional()
     filter?: ProductCategoryTypeFilter;
-    @Field(() => [ProductCategoryTypeSort], { nullable: true })
+    @Field(() => [ProductCategoryTypeSort], { defaultValue: [{ field: ProductCategoryTypeSortField.id, direction: SortDirection.ASC }] })
     @ValidateNested({ each: true })
     @Type(() => ProductCategoryTypeSort)
-    @IsOptional()
-    sort?: ProductCategoryTypeSort[];
+    sort: ProductCategoryTypeSort[];
 }
