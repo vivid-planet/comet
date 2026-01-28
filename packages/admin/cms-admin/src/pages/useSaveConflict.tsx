@@ -21,7 +21,7 @@ export interface SaveConflictHookReturn {
 export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookReturn {
     const { checkConflict, hasChanges, loadLatestVersion, onDiscardButtonPressed } = options;
     const snackbarApi = useSnackbarApi();
-    const pollingIntervalId = useRef<number | undefined>();
+    const pollingIntervalId = useRef<number | undefined>(undefined);
 
     const [showDialog, setShowDialog] = useState(false);
     const [hasConflict, setHasConflict] = useState(false);

@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { type FieldRenderProps } from "react-final-form";
 
 import PageTreeSelect from "./PageTreeSelect";

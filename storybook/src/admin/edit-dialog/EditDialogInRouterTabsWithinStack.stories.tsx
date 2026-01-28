@@ -67,7 +67,7 @@ const stocks = [
 ];
 
 type DialogProps = {
-    dialogApiRef: RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi | null>;
 };
 
 const AddProductDialog = ({ dialogApiRef }: DialogProps) => {

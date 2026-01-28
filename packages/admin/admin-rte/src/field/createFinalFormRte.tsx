@@ -28,7 +28,7 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
         value: remove,
         ...rest
     }) => {
-        const ref = useRef<any>();
+        const ref = useRef<any>(undefined);
 
         const onDebouncedContentChange: OnDebouncedContentChangeFn<T> = (debouncedEditorState: EditorState, convertStateToRawContent) => {
             onChange(convertStateToRawContent(debouncedEditorState));

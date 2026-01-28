@@ -24,7 +24,7 @@ import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
-    useRef<FormApi<FormValues, InitialFormValues>>();
+    useRef<FormApi<FormValues, InitialFormValues>>(undefined);
 
 // copy of FormProps from final-form, because Omit doen't work on it
 interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>

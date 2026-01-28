@@ -1,6 +1,6 @@
 import { Home, Link as LinkIcon } from "@comet/admin-icons";
 import { type SvgIconProps } from "@mui/material";
-import { type ReactNode } from "react";
+import { type JSX, type ReactNode } from "react";
 
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { type PageTreePage } from "./usePageTree";

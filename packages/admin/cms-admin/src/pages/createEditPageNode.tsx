@@ -6,7 +6,7 @@ import { type Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { type DocumentNode } from "graphql";
 import debounce from "p-debounce";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { type JSX, type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";

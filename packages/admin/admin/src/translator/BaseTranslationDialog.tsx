@@ -7,7 +7,7 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { type JSX, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";

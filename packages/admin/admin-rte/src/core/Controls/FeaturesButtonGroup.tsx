@@ -17,7 +17,7 @@ interface IProps
     }> {
     features: IFeatureConfig[];
     disabled?: boolean;
-    editorRef: RefObject<Editor>;
+    editorRef: RefObject<Editor | null>;
     maxVisible?: number;
 }
 

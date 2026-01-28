@@ -17,7 +17,7 @@ export const SynchronizedRtEs = {
         const [activeEditor, setActiveEditor] = useState<"left" | "right">("left");
 
         // focus the editor to see the cursor immediately
-        const leftEditorRef = useRef<IRteRef>();
+        const leftEditorRef = useRef<IRteRef>(undefined);
         useAutoFocus(leftEditorRef);
 
         return (
