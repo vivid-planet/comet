@@ -273,7 +273,7 @@ describe("UserPermissionsGuard", () => {
                     args: { scope: { a: "a", b: undefined } },
                 }),
             ),
-        ).toBe(true); // It is explicitly allowed to have a partial scope (e.g. for operations using ScopeParts). To prevent allowing empty objects, the shape of the content scope object must be checked in another place (e.g. in the Input-Object of a graphql-resolver)
+        ).toBe(false); // It is explicitly allowed to have a partial scope (e.g. for operations using ScopeParts). To prevent allowing empty objects, the shape of the content scope object must be checked in another place (e.g. in the Input-Object of a graphql-resolver)
         expect(
             await guard.canActivate(
                 mockContext({
@@ -648,7 +648,7 @@ describe("UserPermissionsGuard", () => {
                 requiredPermission: [permissions.p1],
                 options: undefined,
             },
-            affectedScope: { argsToScope: (args) => ({ a: args.a, b: args.b }) },
+            affectedScope: { argsToScope: (args) => ({ a: args.a }) },
         });
         expect(
             await guard.canActivate(
