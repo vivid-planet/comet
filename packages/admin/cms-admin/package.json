@@ -8,11 +8,15 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        }
+    },
     "files": [
-        "lib/*"
+        "lib"
     ],
     "scripts": {
         "build": "pnpm run clean && run-p gql:types generate-block-types && run-p build:babel build:types",

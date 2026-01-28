@@ -212,9 +212,6 @@ export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
+import packageJson from "../package.json";
 
-// import can not be used here as this file is outside of rootDir
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const version: string = require("../package.json").version;
-
-export { version };
+export const version = packageJson.version;

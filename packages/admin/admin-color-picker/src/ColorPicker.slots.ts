@@ -1,6 +1,7 @@
 import { createComponentSlot, InputWithPopper, type ThemedComponentBaseProps } from "@comet/admin";
 import { Box, ButtonBase, IconButton, InputAdornment as MuiInputAdornment, Typography } from "@mui/material";
 import { css, type Theme } from "@mui/material/styles";
+import type { ComponentProps, ComponentType } from "react";
 import { HexColorPicker as HexColorPickerBase, RgbaStringColorPicker as RgbaStringColorPickerBase } from "react-colorful";
 
 export type ColorPickerClassKey =
@@ -280,12 +281,14 @@ export const PreviewIndicator = createComponentSlot("div")<ColorPickerClassKey, 
     `,
 );
 
-export const HexColorPicker = createComponentSlot(HexColorPickerBase)<ColorPickerClassKey>({
+export const HexColorPicker: ComponentType<ComponentProps<typeof HexColorPickerBase>> = createComponentSlot(HexColorPickerBase)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "hexColorPicker",
 })();
 
-export const RgbaStringColorPicker = createComponentSlot(RgbaStringColorPickerBase)<ColorPickerClassKey>({
+export const RgbaStringColorPicker: ComponentType<ComponentProps<typeof RgbaStringColorPickerBase>> = createComponentSlot(
+    RgbaStringColorPickerBase,
+)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "rgbaStringColorPicker",
 })();
