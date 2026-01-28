@@ -1,5 +1,69 @@
 # @comet/cms-api
 
+## 8.12.0
+
+### Minor Changes
+
+- 488da0b: Add `registerAdditionalPermissions` helper
+
+    The helper can be used register additional permissions into the permission enum used for the GraphQL schema.
+    Only use this if you're building a library that requires additional permissions.
+    For application-level permissions, use the `AppPermission` option in the module registration methods.
+
+- 2930556: Send 401 instead 403 when CometAuthGuard cannot authenticate user
+
+    Restores the behavior of Comet v7.
+
+    Before (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "Forbidden resource",
+          "extensions": {
+            "code": "FORBIDDEN",
+            "originalError": {
+              "message": "Forbidden resource",
+              "error": "Forbidden",
+              "statusCode": 403
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+    After (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "No AuthService could authenticate the user",
+          "extensions": {
+            "code": "UNAUTHENTICATED",
+            "originalError": {
+              "message": "No AuthService could authenticate the user",
+              "error": "Unauthorized",
+              "statusCode": 401
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+## 8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- f34b750: Add Status to CronJob
+
 ## 8.10.0
 
 ### Minor Changes

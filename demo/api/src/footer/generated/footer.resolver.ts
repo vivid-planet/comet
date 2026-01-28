@@ -10,11 +10,15 @@ import { FooterInput } from "./dto/footer.input";
 @Resolver(() => Footer)
 @RequiredPermission(["pageTree"])
 export class FooterResolver {
-    constructor(protected readonly entityManager: EntityManager, protected readonly footersService: FootersService) { }
+    constructor(
+        protected readonly entityManager: EntityManager,
+        protected readonly footersService: FootersService,
+    ) {}
     @Query(() => Footer, { nullable: true })
     async footer(
-    @Args("scope", { type: () => FooterScope })
-    scope: FooterScope): Promise<Footer | null> {
+        @Args("scope", { type: () => FooterScope })
+        scope: FooterScope,
+    ): Promise<Footer | null> {
         const footers = await this.entityManager.find(Footer, { scope });
         if (footers.length > 1) {
             throw new Error("There must be only one footer");
@@ -23,10 +27,11 @@ export class FooterResolver {
     }
     @Mutation(() => Footer)
     async saveFooter(
-    @Args("scope", { type: () => FooterScope })
-    scope: FooterScope, 
-    @Args("input", { type: () => FooterInput })
-    input: FooterInput): Promise<Footer> {
+        @Args("scope", { type: () => FooterScope })
+        scope: FooterScope,
+        @Args("input", { type: () => FooterInput })
+        input: FooterInput,
+    ): Promise<Footer> {
         let footer = await this.entityManager.findOne(Footer, { scope });
         if (!footer) {
             footer = this.entityManager.create(Footer, {

@@ -552,7 +552,8 @@ export function generateGrid<T extends { __typename?: string }>(
                 maxWidth: column.maxWidth,
                 flex: column.flex,
                 headerInfoTooltip: column.headerInfoTooltip,
-                visible: column.visible && `theme.breakpoints.${column.visible}`,
+                visible:
+                    column.visible !== undefined ? (typeof column.visible == "string" ? `theme.breakpoints.${column.visible}` : "false") : undefined,
                 pinned: column.pinned,
                 disableExport: column.disableExport,
             };
@@ -610,7 +611,7 @@ export function generateGrid<T extends { __typename?: string }>(
             maxWidth: column.maxWidth,
             flex: column.flex,
             headerInfoTooltip: column.headerInfoTooltip,
-            visible: column.visible && `theme.breakpoints.${column.visible}`,
+            visible: column.visible !== undefined ? (typeof column.visible == "string" ? `theme.breakpoints.${column.visible}` : "false") : undefined,
             pinned: column.pinned,
             disableExport: column.disableExport,
             sortBy: "sortBy" in column ? column.sortBy : undefined,
@@ -890,7 +891,12 @@ export function generateGrid<T extends { __typename?: string }>(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: forwardRowAction ? "actionsColumnWidth" : actionsColumnWidth,
-                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
+                              visible:
+                                  actionsColumnVisible !== undefined
+                                      ? typeof actionsColumnVisible == "string"
+                                          ? `theme.breakpoints.${actionsColumnVisible}`
+                                          : "false"
+                                      : undefined,
                               ...restActionsColumnConfig,
                               headerInfoTooltip: restActionsColumnConfig.headerInfoTooltip
                                   ? generateFormattedMessage({
@@ -929,6 +935,7 @@ export function generateGrid<T extends { __typename?: string }>(
                                                     : ""
                                             }
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
+                                            ${config.crudContextMenu?.deleteType ? `deleteType="${config.crudContextMenu.deleteType}"` : ""}
                                             ${config.crudContextMenu?.deleteText ? `messagesMapping={{ delete: <FormattedMessage id="${instanceGqlType}.crudContextMenu.delete" defaultMessage="${config.crudContextMenu.deleteText}" /> }}` : ""}
                                         />
                                     `

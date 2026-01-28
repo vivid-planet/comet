@@ -1,4 +1,4 @@
-import eslintConfigNextJs from "@comet/eslint-config/nextjs.js";
+import eslintConfigNextJs from "@comet/eslint-config/future/nextjs.js";
 
 /** @type {import('eslint')} */
 const config = [

@@ -1,4 +1,4 @@
-import eslintConfigReact from "@comet/eslint-config/nestjs.js";
+import eslintConfigReact from "@comet/eslint-config/future/nestjs.js";
 
 /** @type {import('eslint')} */
 const config = [

@@ -1,5 +1,5 @@
 module.exports = {
     "src/**/*.{ts,tsx,js,jsx,json,css,scss,md}": () => "pnpm lint:eslint",
     "src/**/*.{ts,tsx}": () => "pnpm lint:tsc",
-    "*.{js,json,md,yml,yaml,css,scss}": () => "pnpm lint:prettier",
+    "*.{ts,js,json,md,yml,yaml,css,scss}": () => "pnpm lint:prettier",
 };

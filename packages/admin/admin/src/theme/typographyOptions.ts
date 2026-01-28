@@ -132,7 +132,6 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyVar
         fontSize: 16,
         lineHeight: "20px",
         fontWeight: 250,
-        textTransform: "none",
 
         [breakpoints.up("md")]: {
             lineHeight: "16px",

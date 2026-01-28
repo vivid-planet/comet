@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { RowActionsItem, RowActionsMenu, useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
+import { RowActionsItem, RowActionsMenu, useEditDialog, useErrorDialog, useStackSwitchApi } from "@comet/admin";
 import { Archive, Delete, Download, Edit, Move, Restore } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import { saveAs } from "file-saver";
@@ -29,7 +29,7 @@ interface FolderInnerMenuProps {
 }
 
 const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
-    const editDialogApi = useEditDialogApi();
+    const [, , editDialogApi] = useEditDialog();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
     const { apiUrl } = useCometConfig();

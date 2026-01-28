@@ -4,6 +4,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import {
     IsEmail,
     IsISO8601,
+    IsOptional,
     IsString,
     Length,
     registerDecorator,
@@ -78,6 +79,17 @@ export class TestEntityWithRelativeImportDecorator extends BaseEntity {
     @IsValidRedirectSource()
     @Property({ columnType: "text" })
     source: string;
+}
+
+@Entity()
+export class TestEntityWithDuplicateDefaultDecorator extends BaseEntity {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @IsString()
+    @IsOptional()
+    @Property({ columnType: "text", nullable: true })
+    name?: string;
 }
 
 @Entity()
@@ -330,6 +342,52 @@ describe("GenerateDefinedValidatorDecorators", () => {
             expect(isTrueAsStringImport?.getModuleSpecifierValue()).toBe("../generate-crud-input-validators.spec");
 
             await orm.close();
+        });
+    });
+
+    describe("duplicate class-validator imports", () => {
+        it("should not have duplicate imports from class-validator", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithDuplicateDefaultDecorator],
+                }),
+            );
+
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithDuplicateDefaultDecorator"),
+            );
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-duplicate-default-decorator.input.ts");
+            if (!file) throw new Error("File not found");
+            const source = parseSource(file.content);
+            const classes = source.getClasses();
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const prop = structure.properties![0];
+            expect(prop.name).toBe("name");
+
+            const importDeclarations = source.getImportDeclarations();
+            // check if import from class-validator exists only once
+            const classValidatorImports = importDeclarations.filter(
+                (getImportDeclaration) => getImportDeclaration.getModuleSpecifierValue() === "class-validator",
+            );
+
+            expect(classValidatorImports.length).toBe(1);
+
+            // check if IsOptional and IsString are imported only once from class-validator
+            const isOptionalImport = classValidatorImports[0].getNamedImports().filter((namedImport) => namedImport.getName() === "IsOptional");
+            expect(isOptionalImport.length).toBe(1);
+
+            const isStringImport = classValidatorImports[0].getNamedImports().filter((namedImport) => namedImport.getName() === "IsString");
+            expect(isStringImport.length).toBe(1);
+
+            orm.close();
         });
     });
 });

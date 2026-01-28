@@ -2,7 +2,8 @@
     "compilerOptions": {
         "isolatedModules": false,
         "lib": ["es2019"],
-        "module": "commonjs",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "noEmit": false,
         "outDir": "dist",
         "target": "es2019"
