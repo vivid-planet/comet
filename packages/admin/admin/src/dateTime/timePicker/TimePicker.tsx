@@ -4,11 +4,11 @@ import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerPr
 import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
-import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
-import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
-import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
+import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type Future_TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
@@ -19,9 +19,25 @@ export type Future_TimePickerProps = ThemedComponentBaseProps<{
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
     fullWidth?: boolean;
+    /**
+     * If `true`, the picker will be marked as required and the clear button will be hidden.
+     */
     required?: boolean;
+    /**
+     * The selected time value in 24-hour format (HH:mm).
+     */
     value?: string;
+    /**
+     * Callback fired when the time changes.
+     *
+     * @param time - The new time value in 24-hour format (HH:mm), or `undefined` if cleared.
+     */
     onChange?: (time: string | undefined) => void;
+    /**
+     * Custom icons for the picker.
+     *
+     * - `openPicker`: Icon to display in the adornment that opens the time picker (default: Time icon)
+     */
     iconMapping?: {
         openPicker?: ReactNode;
     };
@@ -46,6 +62,14 @@ const getDateFromTimeString = (value: string | undefined): Date | null => {
     return parsedDate;
 };
 
+/**
+ * The TimePicker component allows users to select a time from a time picker interface. It provides a text field
+ * with a time icon that opens a time picker dialog. The component handles time strings in 24-hour format (HH:mm)
+ * and includes features like clearing, read-only state, and customizable icons.
+ *
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-timepicker--docs)
+ * - [MUI X TimePicker Documentation](https://mui.com/x/react-date-pickers/time-picker/)
+ */
 export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
     const {
         iconMapping = {},
