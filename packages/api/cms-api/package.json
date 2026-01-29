@@ -98,7 +98,7 @@
         "@types/mime": "^2.0.3",
         "@types/mime-db": "^1.43.6",
         "@types/multer": "^2.0.0",
-        "@types/node": "^24.9.1",
+        "@types/node": "^24.10.9",
         "@types/nodemailer": "^6.4.21",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
