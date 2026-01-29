@@ -148,7 +148,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                             openSitePreviewWindow(item.node.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="pages.pages.page.edit.sitePreview" defaultMessage="Site preview" />
                     </Button>
                     <SaveButton disabled={!hasChanges} loading={saving} hasErrors={saveError != null} onClick={handleSaveClick} />
                 </ToolbarActions>
