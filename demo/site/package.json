@@ -29,7 +29,6 @@
     "dependencies": {
         "@comet/mail-react": "workspace:*",
         "@comet/site-nextjs": "workspace:*",
-        "@faire/mjml-react": "^3.5.3",
         "@formatjs/cli": "^6.7.2",
         "@next/bundle-analyzer": "^14.2.35",
         "@opentelemetry/api": "^1.9.0",
