@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`optionalNestedFields > generates form for optionalNestedFields 1`] = `
+exports[`initialValueAsProp > should generate simple form with initialValues prop 1`] = `
 "
     import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
@@ -36,9 +36,6 @@ import { MenuItem } from "@mui/material";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { FinalFormSwitch } from "@comet/admin";
-import { messages } from "@comet/admin";
-import { FormControlLabel } from "@mui/material";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -56,15 +53,15 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 
     
 
-    type FormValues = GQLProductFormFragment & { addressEnabled: boolean;  };
+    type FormValues = GQLProductFormFragment;
 
     interface FormProps {
-            onCreate?: (id: string) => void;
+            initialValues?: Partial<FormValues>;
+onCreate?: (id: string) => void;
 id?: string;
-title: string;
         }
 
-    export function ProductForm({onCreate, id, title}: FormProps) {
+    export function ProductForm({initialValues: passedInitialValues, onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -81,11 +78,11 @@ title: string;
         const initialValues = useMemo<Partial<FormValues>>(() => data?.product
             ? {
                 ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
-                addressEnabled: !!data.product.address, 
+                
             }
             : {
                 
-                
+                ...passedInitialValues,
             }
         , [data]);
 
@@ -103,9 +100,9 @@ title: string;
         });
         
 
-        const handleSubmit = async ({ addressEnabled, ...formValuesRest }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = formValuesRest;
+            const output = formValues;
 
             if (mode === "edit") {
                 
@@ -121,7 +118,8 @@ title: string;
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        input: { ...output, title } },
+                        
+                        input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
@@ -155,54 +153,19 @@ title: string;
                     <>
                         {saveConflict.dialogs}
                         <>
-                            <Field
-                    fullWidth
-                    name="addressEnabled"
-                    type="checkbox"
-                    label={<FormattedMessage id="product.address.addressEnabled" defaultMessage="Enable Address" />}
-                >
-                    {(props) => (
-                        <FormControlLabel
-                            control={<FinalFormSwitch {...props} />}
-                            label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
-                        />
-                    )}
-                </Field>
-                 <Field name="addressEnabled" fullWidth subscription={{ value: true }}>
-                    {({ input: { value } }) =>
-                        value ? (
-                            <>
-                                
+                            
         <TextField
             required
             
             variant="horizontal"
             fullWidth
-            name="address.city"
-            label={<FormattedMessage id="product.city" defaultMessage="City" />}
+            name="title"
+            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
             
             
             
             
         />
-
-            <NumberField
-                required
-                
-                variant="horizontal"
-                fullWidth
-                name="address.zip"
-                label={<FormattedMessage id="product.zip" defaultMessage="Zip" />}
-                
-                
-                
-                
-                
-            />
-                            </>
-                            ) : null
-                    }
-                </Field>
                         </>
                     </>
                 )}

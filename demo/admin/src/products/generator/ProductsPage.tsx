@@ -164,6 +164,9 @@ export function ProductsPage() {
                         <MainContent>
                             <ProductForm
                                 manufacturerCountry="DE"
+                                initialValues={{
+                                    lastCheckedAt: new Date(),
+                                }}
                                 onCreate={(id) => {
                                     productsStackSwitchApi.activatePage("edit", id);
                                 }}

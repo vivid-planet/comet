@@ -12,7 +12,7 @@ import { generateDestructFormValueForInput, generateFormValuesToGqlInput, genera
 import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
 import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 
-export type Prop = { type: string; optional: boolean; name: string };
+export type Prop = { type: string; optional: boolean; name: string; localAliasName?: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
 
@@ -30,7 +30,7 @@ function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; form
         formPropsTypeCode: `interface FormProps {
             ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name + (prop.localAliasName ? `: ${prop.localAliasName}` : "")).join(", ")}}: FormProps`,
     };
 }
 
@@ -179,6 +179,15 @@ export function generateForm(
         optional: true,
         type: `(id: string) => void`,
     });
+
+    if (config.initialValuesAsProp) {
+        formProps.push({
+            name: "initialValues",
+            localAliasName: "passedInitialValues",
+            optional: true,
+            type: `Partial<FormValues>`,
+        });
+    }
 
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
@@ -348,7 +357,7 @@ export function generateForm(
                 : ""
         }
 
-        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
+        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType, initialValuesAsProp: !!config.initialValuesAsProp })}
 
 
         ${

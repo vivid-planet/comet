@@ -83,6 +83,7 @@ scope: GQLProductScope;
             }
             : {
                 
+                
             }
         , [data]);
 
@@ -257,6 +258,7 @@ id?: string;
                 
             }
             : {
+                
                 
             }
         , [data]);
