@@ -29,7 +29,7 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
 import { ProductImporterCommand } from "./product-importer.command";
 import { ProductImporterService } from "./product-importer.service";
-import { ProductPublishedMail } from "./product-published.mail";
+import { ProductPublishedMail } from "./published-mail/product-published.mail";
 
 @Module({
     imports: [
