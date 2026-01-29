@@ -97,7 +97,7 @@
         "@types/inquirer": "^8.2.12",
         "@types/mjml": "^4.7.4",
         "@types/mjml-browser": "^4.15.0",
-        "@types/node": "^24.9.1",
+        "@types/node": "^24.10.9",
         "@types/react": "^18.3.1",
         "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",

@@ -58,7 +58,7 @@
         "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.0.0",
         "@formatjs/cli": "^6.7.2",
-        "@types/node": "^24.9.1",
+        "@types/node": "^24.10.9",
         "cspell": "^9.0.0",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
