@@ -2,4 +2,4 @@
 "@comet/api-generator": patch
 ---
 
-Fix resolver and dto for nested OneToMany relations
+Fix resolver and DTO for nested OneToMany relations
