@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 8.13.0
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- dbf8774: Don't open the mobile `MainNavigation` when resizing the window to a smaller width
+    - @comet/admin-icons@8.13.0
+
 ## 8.12.0
 
 ### Minor Changes
