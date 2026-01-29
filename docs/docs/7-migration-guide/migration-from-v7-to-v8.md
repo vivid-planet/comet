@@ -1416,7 +1416,7 @@ You now need to pass the entity metadata instead of the repository to `gqlArgsTo
 +       const where = gqlArgsToMikroOrmQuery({ filter, search }, this.entityManager.getMetadata(YourEntity));
 ```
 
-### **Typed Permissions System**
+### Typed Permissions System
 
 Search for all `@CrudGenerator` or `@RequiredPermission` decorators and move all permissions into the AppPermission enum. Add also module augmentation for `PermissionOverrides` to include the new `AppPermission` enum.
 
@@ -1531,6 +1531,10 @@ You can remove previously generated files and generate them on demand:
     ```sh
     git rm -r --cached api/src/*/generated
     ```
+
+### Brevo module
+
+If your project uses the COMET brevo module for newsletter integration, check out the [brevo module migration guide](/docs/features-modules/brevo-module/migration-guide/migration-from-brevo-v3-to-v8#api) for necessary steps.
 
 ### Fix linting errors
 
@@ -2813,6 +2817,10 @@ export const RedirectsPage = createRedirectsPage({
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
 
+### Brevo module
+
+If your project uses the COMET brevo module for newsletter integration, check out the [brevo module migration guide](/docs/features-modules/brevo-module/migration-guide/migration-from-brevo-v3-to-v8#admin) for necessary steps.
+
 ### Fix linting errors
 
 #### EsLint
@@ -2945,6 +2953,10 @@ scalars: rootBlocks.reduce(
 +   { LocalDate: "string" }
 )
 ```
+
+### Brevo module
+
+If your project uses the COMET brevo module for newsletter integration, check out the [brevo module migration guide](/docs/features-modules/brevo-module/migration-guide/migration-from-brevo-v3-to-v8#site) for necessary steps.
 
 ### Fix linting errors
 
