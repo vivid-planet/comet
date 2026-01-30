@@ -1,4 +1,4 @@
-import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
+import { renderToMjml } from "@comet/mail-react";
 import { type Decorator } from "@storybook/react-vite";
 import mjml2html from "mjml-browser";
 import React from "react";

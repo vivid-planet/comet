@@ -1,4 +1,4 @@
-import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
+import { renderToMjml } from "@comet/mail-react";
 import mjml2html from "mjml";
 import { type ReactElement } from "react";
 
