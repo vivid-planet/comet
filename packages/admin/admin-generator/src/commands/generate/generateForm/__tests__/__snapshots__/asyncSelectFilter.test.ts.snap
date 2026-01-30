@@ -123,7 +123,6 @@ id?: string;
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductHighlightMutation, GQLCreateProductHighlightMutationVariables>({
                     mutation: createProductHighlightMutation,
                     variables: {
-                        
                         input: output },
                 });
                 const id = mutationResponse?.createProductHighlight.id;
@@ -390,7 +389,6 @@ id?: string;
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
@@ -585,7 +583,6 @@ id?: string;
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
@@ -781,7 +778,6 @@ id?: string;
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
