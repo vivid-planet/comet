@@ -60,7 +60,7 @@ export const generateFiles = async (
                         const files = await generateCrud(generatorOptions, entity);
                         const { targetDirectory } = buildOptions(entity, generatorOptions);
                         await writeGeneratedFiles(files, targetDirectory);
-                        writtenFiles.push(...files.map((f) => realpathSync(`${targetDirectory}/${f.name}`)));
+                        writtenFiles.push(...files.map((f) => realpathSync(`${f.targetDirectory ?? targetDirectory}/${f.name}`)));
                     }
                 }
                 {
@@ -72,7 +72,7 @@ export const generateFiles = async (
                         const files = await generateCrudSingle(generatorOptions, entity);
                         const { targetDirectory } = buildOptions(entity, generatorOptions);
                         await writeGeneratedFiles(files, targetDirectory);
-                        writtenFiles.push(...files.map((f) => realpathSync(`${targetDirectory}/${f.name}`)));
+                        writtenFiles.push(...files.map((f) => realpathSync(`${f.targetDirectory ?? targetDirectory}/${f.name}`)));
                     }
                 }
             }

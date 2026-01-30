@@ -13,6 +13,7 @@ export enum ManufacturerSortField {
     addressAsEmbeddable_alternativeAddress_streetNumber = "addressAsEmbeddable_alternativeAddress_streetNumber",
     addressAsEmbeddable_alternativeAddress_zip = "addressAsEmbeddable_alternativeAddress_zip",
     addressAsEmbeddable_alternativeAddress_country = "addressAsEmbeddable_alternativeAddress_country",
+    productType = "productType",
     updatedAt = "updatedAt",
     id = "id",
 }

@@ -11,10 +11,19 @@ import { generateImportsCode, type Imports } from "../utils/generate-imports-cod
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
+import { generateEnumFilterDto } from "./generate-enum-filter-dto";
 
-function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
-    const { classNameSingular } = buildNameVariants(metadata);
+function generateFilterDto({
+    generatorOptions,
+    metadata,
+}: {
+    generatorOptions: CrudGeneratorOptions;
+    metadata: EntityMetadata<any>;
+}): GeneratedFile[] {
+    const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
     const { crudFilterProps, targetDirectory } = buildOptions(metadata, generatorOptions);
+
+    const generatedFiles: GeneratedFile[] = [];
 
     const imports: Imports = [];
     imports.push({ name: "IsOptional", importPath: "class-validator" });
@@ -23,33 +32,22 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     imports.push({ name: "Field", importPath: "@nestjs/graphql" });
     imports.push({ name: "InputType", importPath: "@nestjs/graphql" });
 
-    let enumFiltersOut = "";
+    const enumFiltersOut = "";
 
-    const generatedEnumNames = new Set<string>();
-    const generatedEnumsNames = new Set<string>();
     crudFilterProps.map((prop) => {
-        if (prop.type == "EnumArrayType") {
-            imports.push({ name: "createEnumsFilter", importPath: "@comet/cms-api" });
+        if (prop.type == "EnumArrayType" || prop.enum) {
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, `${targetDirectory}/dto`, metadata);
-            if (!generatedEnumNames.has(enumName)) {
-                generatedEnumNames.add(enumName);
-                enumFiltersOut += `@InputType()
-                    class ${enumName}EnumsFilter extends createEnumsFilter(${enumName}) {}
-                `;
-                imports.push({ name: enumName, importPath });
-            }
-        } else if (prop.enum) {
-            imports.push({ name: "createEnumFilter", importPath: "@comet/cms-api" });
-            const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, `${targetDirectory}/dto`, metadata);
-            if (!generatedEnumsNames.has(enumName)) {
-                generatedEnumsNames.add(enumName);
-                enumFiltersOut += `@InputType()
-                    class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
-                `;
-                imports.push({ name: enumName, importPath });
-            }
+            const enumImportPath = findEnumImportPath(enumName, targetDirectory, metadata);
+            const enumFilter = generateEnumFilterDto(
+                prop.type == "EnumArrayType" ? "enums" : "enum",
+                enumName,
+                `${targetDirectory}/${enumImportPath}`,
+            );
+            generatedFiles.push(enumFilter);
+            imports.push({
+                name: `${enumName}${prop.type == "EnumArrayType" ? "EnumsFilter" : "EnumFilter"}`,
+                importPath: `./${path.relative(`${targetDirectory}/dto`, `${enumFilter.targetDirectory}/${enumFilter.name.replace(/\.ts$/, "")}`)}`,
+            });
         }
     });
 
@@ -171,7 +169,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     }
     `;
 
-    return generateImportsCode(imports) + filterOut;
+    generatedFiles.push({
+        name: `dto/${fileNameSingular}.filter.ts`,
+        content: generateImportsCode(imports) + filterOut,
+        type: "filter",
+    });
+
+    return generatedFiles;
 }
 
 export function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
@@ -1196,11 +1200,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {
-            generatedFiles.push({
-                name: `dto/${fileNameSingular}.filter.ts`,
-                content: generateFilterDto({ generatorOptions, metadata }),
-                type: "filter",
-            });
+            generatedFiles.push(...generateFilterDto({ generatorOptions, metadata }));
         }
         if (hasSortArg) {
             generatedFiles.push({
