@@ -1,12 +1,17 @@
 import { ArrowLeft } from "@comet/admin-icons";
 import { type ComponentsOverrides, IconButton as MuiIconButton, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
+import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem as CommonToolbarItem } from "../item/ToolbarItem";
+
+const BackButtonLink = forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
+    <RouterLink ref={ref} to={to ?? href} {...rest} />
+));
 
 export type ToolbarBackButtonClassKey = "root" | "iconButton" | "toolbarItem";
 
@@ -69,16 +74,13 @@ export const ToolbarBackButton = (inProps: ToolbarBackButtonProps) => {
         return null;
     }
 
+    const backUrl = stackApi.breadCrumbs[stackApi.breadCrumbs.length - 2].url;
+
     return (
         <Root {...slotProps?.root} {...restProps}>
             <ToolbarItem {...slotProps?.toolbarItem}>
-                <IconButton
-                    onClick={() => {
-                        stackApi?.goBack();
-                    }}
-                    size="large"
-                    {...slotProps?.iconButton}
-                >
+                {/* @ts-expect-error: The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+                <IconButton component={BackButtonLink} to={backUrl} size="large" {...slotProps?.iconButton}>
                     {backIcon}
                 </IconButton>
             </ToolbarItem>
