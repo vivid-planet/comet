@@ -1,5 +1,11 @@
 # @comet/site-react
 
+## 8.13.0
+
+### Patch Changes
+
+- 9f5c4e6: Fix height of DamVideoBlock when fill prop is set
+
 ## 8.12.0
 
 ## 8.11.1
