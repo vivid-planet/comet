@@ -98,7 +98,7 @@
         "@types/mjml": "^4.7.4",
         "@types/mjml-browser": "^4.15.0",
         "@types/node": "^24.10.9",
-        "@types/react": "^18.3.1",
+        "@types/react": "^18.3.27",
         "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
