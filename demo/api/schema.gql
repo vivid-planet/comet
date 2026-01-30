@@ -805,6 +805,7 @@ type Manufacturer {
   coordinates: Coordinates
   id: ID!
   name: String!
+  productType: ProductType
   updatedAt: DateTime!
 }
 
@@ -835,6 +836,7 @@ input ManufacturerFilter {
   id: IdFilter
   name: StringFilter
   or: [ManufacturerFilter!]
+  productType: ProductTypeEnumFilter
   updatedAt: DateTimeFilter
 }
 
@@ -843,6 +845,7 @@ input ManufacturerInput {
   addressAsEmbeddable: AddressAsEmbeddableInput!
   coordinates: CoordinatesInput
   name: String!
+  productType: ProductType!
 }
 
 input ManufacturerSort {
@@ -861,6 +864,7 @@ enum ManufacturerSortField {
   addressAsEmbeddable_zip
   id
   name
+  productType
   updatedAt
 }
 
@@ -869,6 +873,7 @@ input ManufacturerUpdateInput {
   addressAsEmbeddable: AddressAsEmbeddableInput
   coordinates: CoordinatesInput
   name: String
+  productType: ProductType
 }
 
 input ManyToManyFilter {
@@ -1681,6 +1686,7 @@ enum ProductSortField {
   manufacturer_addressAsEmbeddable_streetNumber
   manufacturer_addressAsEmbeddable_zip
   manufacturer_name
+  manufacturer_productType
   manufacturer_updatedAt
   price
   priceList

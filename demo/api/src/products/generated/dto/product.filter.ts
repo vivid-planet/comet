@@ -3,6 +3,9 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
+import { ProductStatusEnumFilter } from "./product.entity-ProductStatus.enum-filter";
+import { ProductTypeEnumFilter } from "./product-type-ProductType.enum-filter";
+import { ProductTypeEnumsFilter } from "./product-type-ProductType.enums-filter";
 import {
     BooleanFilter,
     DateFilter,
@@ -13,17 +16,7 @@ import {
     NumberFilter,
     OneToManyFilter,
     StringFilter,
-    createEnumFilter,
-    createEnumsFilter,
 } from "@comet/cms-api";
-import { ProductStatus } from "../../entities/product.entity";
-import { ProductType } from "../../entities/product-type.enum";
-@InputType()
-class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {}
-@InputType()
-class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}
-@InputType()
-class ProductTypeEnumsFilter extends createEnumsFilter(ProductType) {}
 @InputType()
 export class ProductFilter {
     @Field(() => IdFilter, { nullable: true })

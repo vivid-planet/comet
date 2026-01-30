@@ -17,6 +17,7 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { GQLProductType } from "@src/graphql.generated";
 import { FinalFormSwitch } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
@@ -41,8 +42,9 @@ type FormValues = Omit<GQLManufacturerFormFragment, "address"> & {
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
+    productType: GQLProductType;
 }
-export function ManufacturerForm({ onCreate, id }: FormProps) {
+export function ManufacturerForm({ onCreate, id, productType }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -100,7 +102,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
             const { data: mutationResponse } = await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
                 mutation: createManufacturerMutation,
                 variables: {
-                    input: output,
+                    input: { ...output, productType },
                 },
             });
             const id = mutationResponse?.createManufacturer.id;
