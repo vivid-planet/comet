@@ -3,9 +3,10 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsNullable, PartialType } from "@comet/cms-api";
-import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { Address, AddressAsEmbeddable } from "../../entities/manufacturer.entity";
 import { Coordinates } from "../../coordinates.type";
+import { ProductType } from "../../entities/product-type.enum";
 @InputType()
 export class ManufacturerInput {
     @IsNotEmpty()
@@ -27,6 +28,10 @@ export class ManufacturerInput {
     @Type(() => Coordinates)
     @Field(() => Coordinates, { nullable: true })
     coordinates?: Coordinates;
+    @IsNotEmpty()
+    @IsEnum(ProductType)
+    @Field(() => ProductType)
+    productType: ProductType;
 }
 @InputType()
 export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {}
