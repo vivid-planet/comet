@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- 5cfa88d: Fix renaming of DAM folders
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-date-time@8.13.0
+    - @comet/admin-rte@8.13.0
+    - @comet/admin-icons@8.13.0
+
 ## 8.12.0
 
 ### Patch Changes
