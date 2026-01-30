@@ -55,7 +55,8 @@ export class EnvironmentVariables {
     ADMIN_URL: string;
 
     @IsString()
-    SERVER_HOST: string;
+    @IsUndefinable()
+    SERVER_HOST?: string;
 
     @Type(() => Number)
     @IsInt()
