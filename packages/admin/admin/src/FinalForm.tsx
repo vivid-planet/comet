@@ -11,7 +11,7 @@ import {
     type ValidationErrors,
 } from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { type MutableRefObject, type PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
+import { type PropsWithChildren, type RefObject, useCallback, useContext, useEffect, useRef } from "react";
 import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
@@ -52,7 +52,7 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues, InitialFormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
-    apiRef?: MutableRefObject<FormApi<FormValues, InitialFormValues> | undefined>;
+    apiRef?: RefObject<FormApi<FormValues, InitialFormValues> | undefined>;
     subRoutePath?: string;
 }
 
