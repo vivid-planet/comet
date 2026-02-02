@@ -7,7 +7,7 @@ import { Product } from "./product.entity";
 
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+@CrudGenerator({ requiredPermission: ["products"] })
 export class ProductHighlight extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

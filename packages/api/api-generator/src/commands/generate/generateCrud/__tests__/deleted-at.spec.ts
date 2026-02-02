@@ -30,7 +30,7 @@ describe("deletedAt soft delete", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         formattedOut = await formatGeneratedFiles(out);
     });
     afterEach(async () => {
@@ -38,7 +38,7 @@ describe("deletedAt soft delete", () => {
     });
 
     it("should detect deletedAt property", () => {
-        const options = buildOptions(orm.em.getMetadata().get("TestEntity"), { targetDirectory: __dirname, requiredPermission: testPermission });
+        const options = buildOptions(orm.em.getMetadata().get("TestEntity"), { requiredPermission: testPermission });
         expect(options.hasDeletedAtProp).toBe(true);
     });
 
