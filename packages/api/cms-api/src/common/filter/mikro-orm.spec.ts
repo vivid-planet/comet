@@ -2,7 +2,9 @@ import { raw } from "@mikro-orm/postgresql";
 
 import { BooleanFilter } from "./boolean.filter";
 import { DateTimeFilter } from "./date-time.filter";
-import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
+import { type IdFilter } from "./id.filter";
+import { createManyToOneFilter, ManyToOneFilter } from "./many-to-one.filter";
+import { applyFilterToMikroOrmQuery, filtersToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
@@ -134,61 +136,158 @@ describe("searchToMikroOrmQuery", () => {
     });
 });
 
-describe("filterToMikroOrmQuery", () => {
+describe("applyFilterToMikroOrmQuery", () => {
     it("string equal", async () => {
         const f = new StringFilter();
         f.equal = "foo";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $eq: "foo",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $eq: "foo",
+            },
         });
     });
     it("string not equal", async () => {
         const f = new StringFilter();
         f.notEqual = "foo";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ne: "foo",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ne: "foo",
+            },
         });
     });
     it("string contains", async () => {
         const f = new StringFilter();
         f.contains = "foo";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ilike: "%foo%",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ilike: "%foo%",
+            },
         });
     });
     it("string contains escape %", async () => {
         const f = new StringFilter();
         f.contains = "fo%o";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ilike: "%fo\\%o%",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ilike: "%fo\\%o%",
+            },
         });
     });
     it("string contains escape _", async () => {
         const f = new StringFilter();
         f.contains = "fo_o";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ilike: "%fo\\_o%",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ilike: "%fo\\_o%",
+            },
+        });
+    });
+    it("string notContains", async () => {
+        const f = new StringFilter();
+        f.notContains = "foo";
+
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            $not: {
+                test: {
+                    $ilike: "%foo%",
+                },
+            },
+        });
+    });
+    it("string notContains with existing $not for multiple fields", async () => {
+        const f = new StringFilter();
+        f.notContains = "foo";
+
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test1");
+
+        applyFilterToMikroOrmQuery(acc, f, "test2");
+        expect(acc).toStrictEqual({
+            $not: {
+                $and: [
+                    {
+                        test1: {
+                            $ilike: "%foo%",
+                        },
+                    },
+                    {
+                        test2: {
+                            $ilike: "%foo%",
+                        },
+                    },
+                ],
+            },
+        });
+    });
+    it("string notContains with existing $not.$and for multiple fields", async () => {
+        const f = new StringFilter();
+        f.notContains = "foo";
+
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test1");
+        applyFilterToMikroOrmQuery(acc, f, "test2");
+        applyFilterToMikroOrmQuery(acc, f, "test3");
+        expect(acc).toStrictEqual({
+            $not: {
+                $and: [
+                    {
+                        test1: {
+                            $ilike: "%foo%",
+                        },
+                    },
+                    {
+                        test2: {
+                            $ilike: "%foo%",
+                        },
+                    },
+                    {
+                        test3: {
+                            $ilike: "%foo%",
+                        },
+                    },
+                ],
+            },
         });
     });
     it("string starts with", async () => {
         const f = new StringFilter();
         f.startsWith = "foo";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ilike: "foo%",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ilike: "foo%",
+            },
         });
     });
     it("string ends with", async () => {
         const f = new StringFilter();
         f.endsWith = "foo";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ilike: "%foo",
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ilike: "%foo",
+            },
         });
     });
     it("string starts with and contains", async () => {
@@ -196,40 +295,130 @@ describe("filterToMikroOrmQuery", () => {
         f.endsWith = "foo";
         f.contains = "bar";
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
             $and: [{ test: { $ilike: "%bar%" } }, { test: { $ilike: "%foo" } }],
+        });
+    });
+    it("string starts with and contains for multiple fields", async () => {
+        const f = new StringFilter();
+        f.endsWith = "foo";
+        f.contains = "bar";
+
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test1");
+        applyFilterToMikroOrmQuery(acc, f, "test2");
+        expect(acc).toStrictEqual({
+            $and: [{ test1: { $ilike: "%bar%" } }, { test1: { $ilike: "%foo" } }, { test2: { $ilike: "%bar%" } }, { test2: { $ilike: "%foo" } }],
         });
     });
     it("number equals", async () => {
         const f = new NumberFilter();
         f.equal = 123;
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $eq: 123,
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $eq: 123,
+            },
         });
     });
     it("number not equals", async () => {
         const f = new NumberFilter();
         f.notEqual = 123;
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $ne: 123,
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $ne: 123,
+            },
         });
     });
     it("number gt", async () => {
         const f = new NumberFilter();
         f.greaterThan = 123;
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $gt: 123,
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $gt: 123,
+            },
         });
     });
     it("boolean equals", async () => {
         const f = new BooleanFilter();
         f.equal = true;
 
-        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
-            $eq: true,
+        const acc = {};
+        applyFilterToMikroOrmQuery(acc, f, "test");
+        expect(acc).toStrictEqual({
+            test: {
+                $eq: true,
+            },
+        });
+    });
+    describe("ManyToOneFilter", () => {
+        it("simple contains", async () => {
+            const f = new ManyToOneFilter();
+            f.equal = "id1";
+
+            const acc = {};
+            applyFilterToMikroOrmQuery(acc, f, "test");
+            expect(acc).toStrictEqual({
+                test: {
+                    $eq: "id1",
+                },
+            });
+        });
+        it("nested filter", async () => {
+            class CategoryFilter {
+                id?: IdFilter;
+                and?: CategoryFilter[];
+                or?: CategoryFilter[];
+                title?: StringFilter;
+            }
+            const f = new (createManyToOneFilter(CategoryFilter))();
+            f.filter = new CategoryFilter();
+            f.filter.title = new StringFilter();
+            f.filter.title.equal = "bar";
+
+            const acc = {};
+            applyFilterToMikroOrmQuery(acc, f, "category");
+            expect(acc).toStrictEqual({
+                category: {
+                    title: {
+                        $eq: "bar",
+                    },
+                },
+            });
+        });
+        it("nested filter with $not", async () => {
+            class CategoryFilter {
+                id?: IdFilter;
+                and?: CategoryFilter[];
+                or?: CategoryFilter[];
+                title?: StringFilter;
+            }
+            const f = new (createManyToOneFilter(CategoryFilter))();
+            f.filter = new CategoryFilter();
+            f.filter.title = new StringFilter();
+            f.filter.title.notContains = "bar";
+
+            const acc = {};
+            applyFilterToMikroOrmQuery(acc, f, "category");
+            expect(acc).toStrictEqual({
+                $not: {
+                    category: {
+                        title: {
+                            $ilike: "%bar%",
+                        },
+                    },
+                },
+            });
         });
     });
 });
@@ -336,7 +525,7 @@ describe("filtersToMikroOrmQuery", () => {
                         filterValue instanceof DateTimeFilter ||
                         filterValue instanceof BooleanFilter
                     ) {
-                        acc[filterKey] = filterToMikroOrmQuery(filterValue, filterKey);
+                        applyFilterToMikroOrmQuery(acc, filterValue, filterKey);
                     } else {
                         throw new Error("unsupported filter");
                     }

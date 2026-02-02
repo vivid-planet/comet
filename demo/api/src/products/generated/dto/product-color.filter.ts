@@ -6,7 +6,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { DateTimeFilter, IdFilter, ManyToOneFilter, StringFilter } from "@comet/cms-api";
 import { ProductFilter } from "./product.filter";
 @InputType()
-class ProductHighlightFilterManyToOneProduct extends ManyToOneFilter {
+class ProductColorFilterManyToOneProduct extends ManyToOneFilter {
     @Field(() => ProductFilter, { nullable: true })
     @IsOptional()
     @ValidateNested()
@@ -14,7 +14,7 @@ class ProductHighlightFilterManyToOneProduct extends ManyToOneFilter {
     filter?: ProductFilter;
 }
 @InputType()
-export class ProductHighlightFilter {
+export class ProductColorFilter {
     @Field(() => IdFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -24,12 +24,17 @@ export class ProductHighlightFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => StringFilter)
-    description?: StringFilter;
-    @Field(() => ProductHighlightFilterManyToOneProduct, { nullable: true })
+    name?: StringFilter;
+    @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => ProductHighlightFilterManyToOneProduct)
-    product?: ProductHighlightFilterManyToOneProduct;
+    @Type(() => StringFilter)
+    hexCode?: StringFilter;
+    @Field(() => ProductColorFilterManyToOneProduct, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ProductColorFilterManyToOneProduct)
+    product?: ProductColorFilterManyToOneProduct;
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -40,14 +45,14 @@ export class ProductHighlightFilter {
     @IsOptional()
     @Type(() => DateTimeFilter)
     updatedAt?: DateTimeFilter;
-    @Field(() => [ProductHighlightFilter], { nullable: true })
-    @Type(() => ProductHighlightFilter)
+    @Field(() => [ProductColorFilter], { nullable: true })
+    @Type(() => ProductColorFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    and?: ProductHighlightFilter[];
-    @Field(() => [ProductHighlightFilter], { nullable: true })
-    @Type(() => ProductHighlightFilter)
+    and?: ProductColorFilter[];
+    @Field(() => [ProductColorFilter], { nullable: true })
+    @Type(() => ProductColorFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    or?: ProductHighlightFilter[];
+    or?: ProductColorFilter[];
 }

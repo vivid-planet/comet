@@ -3,6 +3,7 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
+import { ProductTypeEnumFilter } from "./product-type-ProductType.enum-filter";
 import { DateTimeFilter, IdFilter, NumberFilter, StringFilter } from "@comet/cms-api";
 @InputType()
 export class ManufacturerFilter {
@@ -56,6 +57,11 @@ export class ManufacturerFilter {
     @IsOptional()
     @Type(() => StringFilter)
     addressAsEmbeddable_alternativeAddress_country?: StringFilter;
+    @Field(() => ProductTypeEnumFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ProductTypeEnumFilter)
+    productType?: ProductTypeEnumFilter;
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

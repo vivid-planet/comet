@@ -14,7 +14,7 @@ import { v4 } from "uuid";
 
 @Entity()
 @ObjectType()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "customer" })
+@CrudGenerator({ requiredPermission: "customer" })
 export class Customer extends BaseEntity<Customer, "id"> {
     @CrudField({ search: true, filter: true, sort: true, input: false })
     @Field(() => ID)

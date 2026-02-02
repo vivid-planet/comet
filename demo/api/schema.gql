@@ -804,6 +804,7 @@ type Manufacturer {
   coordinates: Coordinates
   id: ID!
   name: String!
+  productType: ProductType
   updatedAt: DateTime!
 }
 
@@ -834,6 +835,7 @@ input ManufacturerFilter {
   id: IdFilter
   name: StringFilter
   or: [ManufacturerFilter!]
+  productType: ProductTypeEnumFilter
   updatedAt: DateTimeFilter
 }
 
@@ -842,6 +844,7 @@ input ManufacturerInput {
   addressAsEmbeddable: AddressAsEmbeddableInput!
   coordinates: CoordinatesInput
   name: String!
+  productType: ProductType!
 }
 
 input ManufacturerSort {
@@ -860,6 +863,7 @@ enum ManufacturerSortField {
   addressAsEmbeddable_zip
   id
   name
+  productType
   updatedAt
 }
 
@@ -868,6 +872,7 @@ input ManufacturerUpdateInput {
   addressAsEmbeddable: AddressAsEmbeddableInput
   coordinates: CoordinatesInput
   name: String
+  productType: ProductType
 }
 
 input ManyToManyFilter {
@@ -1025,6 +1030,23 @@ type NewsComment {
   updatedAt: DateTime!
 }
 
+input NewsCommentFilter {
+  and: [NewsCommentFilter!]
+  comment: StringFilter
+  createdAt: DateTimeFilter
+  id: IdFilter
+  news: NewsCommentFilterManyToOneNews
+  or: [NewsCommentFilter!]
+  updatedAt: DateTimeFilter
+}
+
+input NewsCommentFilterManyToOneNews {
+  equal: ID
+  filter: NewsFilter
+  isAnyOf: [ID!]
+  notEqual: ID
+}
+
 input NewsCommentInput {
   comment: String!
 }
@@ -1048,7 +1070,7 @@ input NewsContentScopeInput {
 input NewsFilter {
   and: [NewsFilter!]
   category: NewsCategoryEnumFilter
-  comments: OneToManyFilter
+  comments: NewsFilterOneToManyNewsComment
   createdAt: DateTimeFilter
   date: DateTimeFilter
   id: IdFilter
@@ -1057,6 +1079,13 @@ input NewsFilter {
   status: NewsStatusEnumFilter
   title: StringFilter
   updatedAt: DateTimeFilter
+}
+
+input NewsFilterOneToManyNewsComment {
+  contains: ID
+  filter: NewsCommentFilter
+  isAnyOf: [ID!]
+  search: String
 }
 
 input NewsInput {
@@ -1116,12 +1145,6 @@ input NumberFilter {
   lowerThan: Float
   lowerThanEqual: Float
   notEqual: Float
-}
-
-input OneToManyFilter {
-  contains: ID
-  isAnyOf: [ID!]
-  search: String
 }
 
 type Page implements DocumentInterface {
@@ -1414,11 +1437,25 @@ input ProductCategoryFilter {
   createdAt: DateTimeFilter
   id: IdFilter
   or: [ProductCategoryFilter!]
-  products: OneToManyFilter
+  products: ProductCategoryFilterOneToManyProduct
   slug: StringFilter
   title: StringFilter
-  type: ManyToOneFilter
+  type: ProductCategoryFilterManyToOneProductCategoryType
   updatedAt: DateTimeFilter
+}
+
+input ProductCategoryFilterManyToOneProductCategoryType {
+  equal: ID
+  filter: ProductCategoryTypeFilter
+  isAnyOf: [ID!]
+  notEqual: ID
+}
+
+input ProductCategoryFilterOneToManyProduct {
+  contains: ID
+  filter: ProductFilter
+  isAnyOf: [ID!]
+  search: String
 }
 
 input ProductCategoryInput {
@@ -1453,10 +1490,17 @@ type ProductCategoryType {
 
 input ProductCategoryTypeFilter {
   and: [ProductCategoryTypeFilter!]
-  categories: OneToManyFilter
+  categories: ProductCategoryTypeFilterOneToManyProductCategory
   id: IdFilter
   or: [ProductCategoryTypeFilter!]
   title: StringFilter
+}
+
+input ProductCategoryTypeFilterOneToManyProductCategory {
+  contains: ID
+  filter: ProductCategoryFilter
+  isAnyOf: [ID!]
+  search: String
 }
 
 input ProductCategoryTypeInput {
@@ -1496,6 +1540,24 @@ type ProductColor implements DocumentInterface {
   updatedAt: DateTime!
 }
 
+input ProductColorFilter {
+  and: [ProductColorFilter!]
+  createdAt: DateTimeFilter
+  hexCode: StringFilter
+  id: IdFilter
+  name: StringFilter
+  or: [ProductColorFilter!]
+  product: ProductColorFilterManyToOneProduct
+  updatedAt: DateTimeFilter
+}
+
+input ProductColorFilterManyToOneProduct {
+  equal: ID
+  filter: ProductFilter
+  isAnyOf: [ID!]
+  notEqual: ID
+}
+
 type ProductDimensions {
   depth: Float!
   height: Float!
@@ -1522,26 +1584,68 @@ input ProductFilter {
   additionalTypes: ProductTypeEnumsFilter
   and: [ProductFilter!]
   availableSince: DateFilter
-  category: ManyToOneFilter
-  colors: OneToManyFilter
+  category: ProductFilterManyToOneProductCategory
+  colors: ProductFilterOneToManyProductColor
   createdAt: DateTimeFilter
   datasheets: ManyToManyFilter
   description: StringFilter
   id: IdFilter
   inStock: BooleanFilter
   lastCheckedAt: DateTimeFilter
-  manufacturer: ManyToOneFilter
+  manufacturer: ProductFilterManyToOneManufacturer
   or: [ProductFilter!]
   price: NumberFilter
   priceList: ManyToOneFilter
   slug: StringFilter
   status: ProductStatusEnumFilter
-  tags: ManyToManyFilter
-  tagsWithStatus: OneToManyFilter
+  tags: ProductFilterManyToManyProductTag
+  tagsWithStatus: ProductFilterOneToManyProductToTag
   title: StringFilter
   type: ProductTypeEnumFilter
   updatedAt: DateTimeFilter
-  variants: OneToManyFilter
+  variants: ProductFilterOneToManyProductVariant
+}
+
+input ProductFilterManyToManyProductTag {
+  contains: ID
+  filter: ProductTagFilter
+  isAnyOf: [ID!]
+  search: String
+}
+
+input ProductFilterManyToOneManufacturer {
+  equal: ID
+  filter: ManufacturerFilter
+  isAnyOf: [ID!]
+  notEqual: ID
+}
+
+input ProductFilterManyToOneProductCategory {
+  equal: ID
+  filter: ProductCategoryFilter
+  isAnyOf: [ID!]
+  notEqual: ID
+}
+
+input ProductFilterOneToManyProductColor {
+  contains: ID
+  filter: ProductColorFilter
+  isAnyOf: [ID!]
+  search: String
+}
+
+input ProductFilterOneToManyProductToTag {
+  contains: ID
+  filter: ProductToTagFilter
+  isAnyOf: [ID!]
+  search: String
+}
+
+input ProductFilterOneToManyProductVariant {
+  contains: ID
+  filter: ProductVariantFilter
+  isAnyOf: [ID!]
+  search: String
 }
 
 type ProductHighlight {
@@ -1558,8 +1662,15 @@ input ProductHighlightFilter {
   description: StringFilter
   id: IdFilter
   or: [ProductHighlightFilter!]
-  product: ManyToOneFilter
+  product: ProductHighlightFilterManyToOneProduct
   updatedAt: DateTimeFilter
+}
+
+input ProductHighlightFilterManyToOneProduct {
+  equal: ID
+  filter: ProductFilter
+  isAnyOf: [ID!]
+  notEqual: ID
 }
 
 input ProductHighlightInput {
@@ -1680,6 +1791,7 @@ enum ProductSortField {
   manufacturer_addressAsEmbeddable_streetNumber
   manufacturer_addressAsEmbeddable_zip
   manufacturer_name
+  manufacturer_productType
   manufacturer_updatedAt
   price
   priceList
@@ -1732,10 +1844,24 @@ input ProductTagFilter {
   createdAt: DateTimeFilter
   id: IdFilter
   or: [ProductTagFilter!]
-  products: ManyToManyFilter
-  productsWithStatus: OneToManyFilter
+  products: ProductTagFilterManyToManyProduct
+  productsWithStatus: ProductTagFilterOneToManyProductToTag
   title: StringFilter
   updatedAt: DateTimeFilter
+}
+
+input ProductTagFilterManyToManyProduct {
+  contains: ID
+  filter: ProductFilter
+  isAnyOf: [ID!]
+  search: String
+}
+
+input ProductTagFilterOneToManyProductToTag {
+  contains: ID
+  filter: ProductToTagFilter
+  isAnyOf: [ID!]
+  search: String
 }
 
 input ProductTagInput {
@@ -1772,6 +1898,29 @@ type ProductToTag {
   id: String!
   product: Product!
   tag: ProductTag!
+}
+
+input ProductToTagFilter {
+  and: [ProductToTagFilter!]
+  exampleStatus: BooleanFilter
+  id: IdFilter
+  or: [ProductToTagFilter!]
+  product: ProductToTagFilterManyToOneProduct
+  tag: ProductToTagFilterManyToOneProductTag
+}
+
+input ProductToTagFilterManyToOneProduct {
+  equal: ID
+  filter: ProductFilter
+  isAnyOf: [ID!]
+  notEqual: ID
+}
+
+input ProductToTagFilterManyToOneProductTag {
+  equal: ID
+  filter: ProductTagFilter
+  isAnyOf: [ID!]
+  notEqual: ID
 }
 
 enum ProductType {
