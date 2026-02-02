@@ -3,13 +3,16 @@ import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeP
 import { type DateTimeRangePickerProps as MuiDateTimeRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../common/ClearInputAdornment";
-import { OpenPickerAdornment } from "../common/OpenPickerAdornment";
-import { ReadOnlyAdornment } from "../common/ReadOnlyAdornment";
-import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { isValidDate } from "./utils";
+import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
+import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { isValidDate } from "../utils";
 
+/**
+ * Represents a date-time range with start and end dates as Date objects.
+ */
 export type DateTimeRange = {
     start: Date | null;
     end: Date | null;
@@ -24,14 +27,38 @@ export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
     fullWidth?: boolean;
+    /**
+     * If `true`, the picker will be marked as required and the clear button will be hidden.
+     */
     required?: boolean;
+    /**
+     * The selected date-time range value with start and end as Date objects.
+     */
     value?: DateTimeRange;
+    /**
+     * Callback fired when the date-time range changes.
+     *
+     * @param date - The new date-time range value, or `undefined` if cleared.
+     */
     onChange?: (date: DateTimeRange | undefined) => void;
+    /**
+     * Custom icons for the picker.
+     *
+     * - `openPicker`: Icon to display in the adornment that opens the picker (default: Calendar icon)
+     */
     iconMapping?: {
         openPicker?: ReactNode;
     };
 } & Omit<MuiDateTimeRangePickerProps<Date, true>, "value" | "onChange">;
 
+/**
+ * The DateTimeRangePicker component allows users to select a date-time range from a combined picker interface.
+ * It provides two text fields with a calendar icon that opens a date-time range picker dialog. The component handles
+ * Date objects and includes features like clearing, read-only state, and customizable icons.
+ *
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-datetimerangepicker--docs)
+ * - [MUI X DateTimeRangePicker Documentation](https://mui.com/x/react-date-pickers/date-time-range-picker/)
+ */
 export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
     const {
         iconMapping = {},
