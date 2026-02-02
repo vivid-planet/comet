@@ -1,4 +1,4 @@
-import { MjmlColumn, MjmlSection, MjmlSpacer, MjmlText } from "@faire/mjml-react";
+import { MjmlColumn, MjmlSection, MjmlSpacer, MjmlText } from "@comet/mail-react";
 import { MailRoot } from "@src/mail/components/MailRoot";
 import { FormattedMessage } from "react-intl";
 

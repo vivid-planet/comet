@@ -1,4 +1,4 @@
-import { Mjml, MjmlAttributes, MjmlBody, MjmlHead, MjmlSection, MjmlText } from "@faire/mjml-react";
+import { Mjml, MjmlAttributes, MjmlBody, MjmlHead, MjmlSection, MjmlText } from "@comet/mail-react";
 import { type PropsWithChildren } from "react";
 
 export const MailRoot = ({ children }: PropsWithChildren) => {

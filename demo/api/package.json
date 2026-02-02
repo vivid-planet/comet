@@ -39,7 +39,7 @@
         "@as-integrations/express5": "^1.1.2",
         "@comet/cms-api": "workspace:*",
         "@comet/brevo-api": "workspace:*",
-        "@faire/mjml-react": "^3.5.3",
+        "@comet/mail-react": "workspace:*",
         "@faker-js/faker": "^10.1.0",
         "@kubernetes/client-node": "^1.3.0",
         "@mikro-orm/cli": "^6.4.16",
