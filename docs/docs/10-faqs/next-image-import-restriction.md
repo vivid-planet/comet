@@ -1,5 +1,5 @@
 ---
-title: Why shouldn't I use next/image directly?
+title: Why shouldn't I use next/image?
 ---
 
 The [Next.js Image component](https://nextjs.org/docs/app/api-reference/components/image) optimizes and caches images in-memory by default.
@@ -9,7 +9,7 @@ This doesn't play well with our deployment setup for the following reasons:
 - The cache is lost when restarting a pod, which means we'll have to build the cache again after a deployment or autoscaling.
 - Optimizing (i.e., resizing) images in the site requires lots of resources, both CPU and memory, thereby increasing the load on our site pods.
 
-Instead of using `next/image` directly, choose one of the following options based on the image's origin:
+Instead of using `next/image`, choose one of the following options based on the image's origin:
 
 1. For DAM images, use the `Image` component from `@comet/site-nextjs` instead, which uses the imgproxy to optimize images.
 2. For local images (i.e., files in the `public/` folder), use a plain `<img>` tag instead.
