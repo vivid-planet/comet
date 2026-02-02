@@ -119,6 +119,10 @@
             "enabled": false,
             "matchDepNames": ["node"],
             "matchDepTypes": ["engines", "uses-with"]
+        },
+        {
+            "groupName": "Stylelint",
+            "matchPackageNames": ["stylelint", "/^stylelint-*/"]
         }
     ],
     "regexManagers": [
