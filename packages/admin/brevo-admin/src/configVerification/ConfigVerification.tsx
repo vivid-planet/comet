@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Alert, Loading, MainContent } from "@comet/admin";
 import { type ContentScope } from "@comet/cms-admin";
-import { type PropsWithChildren } from "react";
+import { type JSX, type PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { brevoConfigCheckQuery } from "./ConfigVerification.gql";

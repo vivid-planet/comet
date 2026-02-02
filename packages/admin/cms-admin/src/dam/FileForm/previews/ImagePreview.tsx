@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 import { ImageCrop } from "../../../common/image/ImageCrop";
 import { type DamFileDetails } from "../EditFile";
 

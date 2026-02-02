@@ -1,6 +1,6 @@
 import { type DataGridProps, type GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
 import { type DataGridProProps, type GridPinnedColumnFields } from "@mui/x-data-grid-pro";
-import { type MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouteMatch } from "react-router";
 
 import { useStoredState } from "../hooks/useStoredState";
@@ -69,7 +69,7 @@ type GridProps = {
 
     initialState: DataGridProps["initialState"];
 
-    apiRef: MutableRefObject<any>;
+    apiRef: RefObject<any>;
 };
 
 export function usePersistentColumnState(stateKey: string): GridProps {

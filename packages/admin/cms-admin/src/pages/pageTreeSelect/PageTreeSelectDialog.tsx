@@ -12,7 +12,7 @@ import {
     Select,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { type JSX, memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 

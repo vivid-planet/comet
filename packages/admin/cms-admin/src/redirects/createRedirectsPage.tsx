@@ -1,6 +1,6 @@
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { Document, LinkExternal } from "@comet/admin-icons";
-import { type ComponentType } from "react";
+import { type ComponentType, type JSX } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";

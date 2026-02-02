@@ -76,30 +76,10 @@
         "pnpm": "10.17.0"
     },
     "pnpm": {
-        "packageExtensions": {
-            "next": {
-                "peerDependencies": {
-                    "@types/react": "^19.0.0",
-                    "@types/react-dom": "^19.0.0"
-                }
-            },
-            "react-intl": {
-                "peerDependencies": {
-                    "@types/react": "*",
-                    "@types/react-dom": "*"
-                }
-            },
-            "styled-components": {
-                "peerDependencies": {
-                    "@types/react": "*",
-                    "@types/react-dom": "*"
-                }
-            },
-            "@faire/mjml-react": {
-                "peerDependencies": {
-                    "@types/react": "^19.0.0",
-                    "@types/react-dom": "^19.0.0"
-                }
+        "peerDependencyRules": {
+            "allowedVersions": {
+                "react-final-form>react": "19",
+                "react-final-form-arrays>react": "19"
             }
         },
         "overrides": {

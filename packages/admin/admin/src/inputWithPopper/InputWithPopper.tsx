@@ -32,7 +32,7 @@ export interface InputWithPopperProps extends Omit<InputBaseProps, "components" 
     components?: InputWithPopperComponents;
     onOpenPopper?: () => void;
     onClosePopper?: () => void;
-    inputRef?: RefObject<HTMLElement>;
+    inputRef?: RefObject<HTMLElement | null>;
     slotProps?: BaseProps["slotProps"] & {
         transition?: TransitionProps;
     };
