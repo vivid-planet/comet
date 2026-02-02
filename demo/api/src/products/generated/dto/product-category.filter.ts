@@ -4,6 +4,24 @@ import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
 import { DateTimeFilter, IdFilter, ManyToOneFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { ProductFilter } from "./product.filter";
+import { ProductCategoryTypeFilter } from "./product-category-type.filter";
+@InputType()
+class ProductCategoryFilterOneToManyProduct extends OneToManyFilter {
+    @Field(() => ProductFilter, { nullable: true })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => ProductFilter)
+    filter?: ProductFilter;
+}
+@InputType()
+class ProductCategoryFilterManyToOneProductCategoryType extends ManyToOneFilter {
+    @Field(() => ProductCategoryTypeFilter, { nullable: true })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => ProductCategoryTypeFilter)
+    filter?: ProductCategoryTypeFilter;
+}
 @InputType()
 export class ProductCategoryFilter {
     @Field(() => IdFilter, { nullable: true })
@@ -21,16 +39,16 @@ export class ProductCategoryFilter {
     @IsOptional()
     @Type(() => StringFilter)
     slug?: StringFilter;
-    @Field(() => OneToManyFilter, { nullable: true })
+    @Field(() => ProductCategoryFilterOneToManyProduct, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => OneToManyFilter)
-    products?: OneToManyFilter;
-    @Field(() => ManyToOneFilter, { nullable: true })
+    @Type(() => ProductCategoryFilterOneToManyProduct)
+    products?: ProductCategoryFilterOneToManyProduct;
+    @Field(() => ProductCategoryFilterManyToOneProductCategoryType, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => ManyToOneFilter)
-    type?: ManyToOneFilter;
+    @Type(() => ProductCategoryFilterManyToOneProductCategoryType)
+    type?: ProductCategoryFilterManyToOneProductCategoryType;
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

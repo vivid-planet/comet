@@ -4,32 +4,32 @@ import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
 import { DateTimeFilter, IdFilter, ManyToOneFilter, StringFilter } from "@comet/cms-api";
-import { ProductFilter } from "./product.filter";
+import { NewsFilter } from "./news.filter";
 @InputType()
-class ProductHighlightFilterManyToOneProduct extends ManyToOneFilter {
-    @Field(() => ProductFilter, { nullable: true })
+class NewsCommentFilterManyToOneNews extends ManyToOneFilter {
+    @Field(() => NewsFilter, { nullable: true })
     @IsOptional()
     @ValidateNested()
-    @Type(() => ProductFilter)
-    filter?: ProductFilter;
+    @Type(() => NewsFilter)
+    filter?: NewsFilter;
 }
 @InputType()
-export class ProductHighlightFilter {
+export class NewsCommentFilter {
     @Field(() => IdFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
     @Type(() => IdFilter)
     id?: IdFilter;
+    @Field(() => NewsCommentFilterManyToOneNews, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => NewsCommentFilterManyToOneNews)
+    news?: NewsCommentFilterManyToOneNews;
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
     @Type(() => StringFilter)
-    description?: StringFilter;
-    @Field(() => ProductHighlightFilterManyToOneProduct, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => ProductHighlightFilterManyToOneProduct)
-    product?: ProductHighlightFilterManyToOneProduct;
+    comment?: StringFilter;
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -40,14 +40,14 @@ export class ProductHighlightFilter {
     @IsOptional()
     @Type(() => DateTimeFilter)
     updatedAt?: DateTimeFilter;
-    @Field(() => [ProductHighlightFilter], { nullable: true })
-    @Type(() => ProductHighlightFilter)
+    @Field(() => [NewsCommentFilter], { nullable: true })
+    @Type(() => NewsCommentFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    and?: ProductHighlightFilter[];
-    @Field(() => [ProductHighlightFilter], { nullable: true })
-    @Type(() => ProductHighlightFilter)
+    and?: NewsCommentFilter[];
+    @Field(() => [NewsCommentFilter], { nullable: true })
+    @Type(() => NewsCommentFilter)
     @ValidateNested({ each: true })
     @IsOptional()
-    or?: ProductHighlightFilter[];
+    or?: NewsCommentFilter[];
 }

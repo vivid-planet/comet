@@ -13,6 +13,7 @@ import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
 import { generateEnumFilterDto } from "./generate-enum-filter-dto";
 
+const generatedFilterDtos = new Set<string>(); //to avoid recursion for back references
 function generateFilterDto({
     generatorOptions,
     metadata,
@@ -23,6 +24,8 @@ function generateFilterDto({
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
     const { crudFilterProps, targetDirectory } = buildOptions(metadata, generatorOptions);
 
+    generatedFilterDtos.add(metadata.className);
+
     const generatedFiles: GeneratedFile[] = [];
 
     const imports: Imports = [];
@@ -32,7 +35,43 @@ function generateFilterDto({
     imports.push({ name: "Field", importPath: "@nestjs/graphql" });
     imports.push({ name: "InputType", importPath: "@nestjs/graphql" });
 
-    const enumFiltersOut = "";
+    const manyToOneFilters: Record<string, { filterName: string }> = {};
+
+    let relationFiltersOut = "";
+    crudFilterProps.map((prop) => {
+        if ((prop.kind === "m:1" || prop.kind == "1:m" || prop.kind == "m:n") && prop.targetMeta) {
+            const { classNameSingular: targetClassNameSingular, fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
+            const { targetDirectory: targetTargetDirectory } = buildOptions(prop.targetMeta, generatorOptions);
+
+            const filterKind = prop.kind === "m:1" ? `ManyToOne` : prop.kind === "1:m" ? `OneToMany` : `ManyToMany`;
+
+            imports.push({ name: `${filterKind}Filter`, importPath: "@comet/cms-api" });
+
+            let filterName = `${filterKind}Filter`;
+
+            if (prop.targetMeta.className != "FileUpload") {
+                if (!generatedFilterDtos.has(prop.targetMeta.className)) {
+                    generatedFiles.push(...generateFilterDto({ generatorOptions, metadata: prop.targetMeta }));
+                }
+                imports.push({
+                    name: `${targetClassNameSingular}Filter`,
+                    importPath: `./${path.relative(`${targetDirectory}/dto`, `${targetTargetDirectory}/dto/${targetFileNameSingular}.filter`)}`,
+                });
+                filterName = `${classNameSingular}Filter${filterKind}${targetClassNameSingular}`;
+                relationFiltersOut += `
+                    @InputType()
+                    class ${filterName} extends ${filterKind}Filter {
+                        @Field(() => ${targetClassNameSingular}Filter, { nullable: true })
+                        @IsOptional()
+                        @ValidateNested()
+                        @Type(() => ${targetClassNameSingular}Filter)
+                        filter?: ${targetClassNameSingular}Filter;
+                    }
+                `;
+            }
+            manyToOneFilters[prop.name] = { filterName };
+        }
+    });
 
     crudFilterProps.map((prop) => {
         if (prop.type == "EnumArrayType" || prop.enum) {
@@ -52,7 +91,7 @@ function generateFilterDto({
     });
 
     const filterOut = `
-    ${enumFiltersOut}
+    ${relationFiltersOut}
 
     @InputType()
     export class ${classNameSingular}Filter {
@@ -116,29 +155,13 @@ function generateFilterDto({
                     @Type(() => DateTimeFilter)
                     ${prop.name}?: DateTimeFilter;
                     `;
-                } else if (prop.kind === "m:1") {
-                    imports.push({ name: "ManyToOneFilter", importPath: "@comet/cms-api" });
-                    return `@Field(() => ManyToOneFilter, { nullable: true })
+                } else if ((prop.kind === "m:1" || prop.kind == "1:m" || prop.kind == "m:n") && prop.targetMeta) {
+                    const { filterName } = manyToOneFilters[prop.name];
+                    return `@Field(() => ${filterName}, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
-                    @Type(() => ManyToOneFilter)
-                    ${prop.name}?: ManyToOneFilter;
-                    `;
-                } else if (prop.kind === "1:m") {
-                    imports.push({ name: "OneToManyFilter", importPath: "@comet/cms-api" });
-                    return `@Field(() => OneToManyFilter, { nullable: true })
-                    @ValidateNested()
-                    @IsOptional()
-                    @Type(() => OneToManyFilter)
-                    ${prop.name}?: OneToManyFilter;
-                    `;
-                } else if (prop.kind === "m:n") {
-                    imports.push({ name: "ManyToManyFilter", importPath: "@comet/cms-api" });
-                    return `@Field(() => ManyToManyFilter, { nullable: true })
-                    @ValidateNested()
-                    @IsOptional()
-                    @Type(() => ManyToManyFilter)
-                    ${prop.name}?: ManyToManyFilter;
+                    @Type(() => ${filterName})
+                    ${prop.name}?: ${filterName};
                     `;
                 } else if (prop.type == "uuid") {
                     imports.push({ name: "IdFilter", importPath: "@comet/cms-api" });
