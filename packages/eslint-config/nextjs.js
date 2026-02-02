@@ -24,7 +24,7 @@ export const restrictedImportPaths = [
     {
         name: "next/image",
         importNames: ["default"],
-        message: "Please use Image from @comet/site-nextjs instead",
+        message: "Please use Image from @comet/site-nextjs instead. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
     },
 ];
 
