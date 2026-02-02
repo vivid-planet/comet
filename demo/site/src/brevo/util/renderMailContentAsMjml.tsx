@@ -1,4 +1,4 @@
-import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
+import { renderToMjml } from "@comet/mail-react";
 import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignContentBlock } from "@src/brevo/blocks/EmailCampaignContentBlock";
 import { Root } from "@src/brevo/components/Root";

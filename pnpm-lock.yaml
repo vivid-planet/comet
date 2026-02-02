@@ -291,9 +291,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
-      '@faire/mjml-react':
-        specifier: ^3.5.3
-        version: 3.5.3(mjml@4.18.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@comet/mail-react':
+        specifier: workspace:*
+        version: link:../../packages/mail-react
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.1.0
@@ -511,9 +511,6 @@ importers:
       '@comet/site-nextjs':
         specifier: workspace:*
         version: link:../../packages/site/site-nextjs
-      '@faire/mjml-react':
-        specifier: ^3.5.3
-        version: 3.5.3(mjml@4.18.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@formatjs/cli':
         specifier: ^6.7.2
         version: 6.7.4(@vue/compiler-core@3.5.15)
@@ -2346,6 +2343,10 @@ importers:
         version: 8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
   packages/mail-react:
+    dependencies:
+      '@faire/mjml-react':
+        specifier: ^3.5.3
+        version: 3.5.3(mjml@4.18.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@comet/cli':
         specifier: workspace:*
@@ -2353,9 +2354,6 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@faire/mjml-react':
-        specifier: ^3.5.3
-        version: 3.5.3(mjml@4.18.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ^18.3.27
         version: 18.3.27
