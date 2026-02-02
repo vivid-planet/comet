@@ -3,6 +3,7 @@ title: Migrate local development to a setup with authentication
 ---
 
 This guide helps to add local authentication in a project, like the [current implementation the Comet DXP Starter](https://github.com/vivid-planet/comet-starter/pull/1201) uses.
+That brings the development setup closer to the production setup as it requires real authentication, thus reducing the risk of environment-specific bugs.
 
 ## Add Auth-Server
 
