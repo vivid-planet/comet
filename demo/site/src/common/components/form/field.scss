@@ -1,0 +1,45 @@
+@mixin label-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-s100);
+}
+
+@mixin label {
+    font-weight: 700;
+    color: var(--contact-form-text-label);
+}
+
+@mixin optional-text {
+    color: var(--text-secondary);
+}
+
+@mixin field-base {
+    padding: 0 var(--spacing-s300);
+    border-radius: 4px;
+    border: 1px solid var(--contact-form-border-border);
+    width: 100%;
+    height: 50px;
+    color: var(--contact-form-text-input-text);
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+@mixin placeholder {
+    &::placeholder {
+        color: var(--contact-form-text-placeholder);
+    }
+}
+
+@mixin helper-text {
+    color: var(--contact-form-helper-text);
+    margin-top: var(--spacing-s100);
+}
+
+@mixin error-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-s100);
+    margin-top: var(--spacing-s100);
+    color: var(--contact-form-text-error);
+}
