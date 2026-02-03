@@ -13,6 +13,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { exec as execCallback } from "child_process";
 import { promisify } from "util";
 
+import { buildOptions } from "./generateCrud/build-options";
 import { generateCrud } from "./generateCrud/generate-crud";
 import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
@@ -57,8 +58,9 @@ export const generateFiles = async (
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrud for Entity ${entity.path}`);
                         const files = await generateCrud(generatorOptions, entity);
-                        await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
-                        writtenFiles.push(...files.map((f) => realpathSync(`${generatorOptions.targetDirectory}/${f.name}`)));
+                        const { targetDirectory } = buildOptions(entity, generatorOptions);
+                        await writeGeneratedFiles(files, targetDirectory);
+                        writtenFiles.push(...files.map((f) => realpathSync(`${f.targetDirectory ?? targetDirectory}/${f.name}`)));
                     }
                 }
                 {
@@ -68,8 +70,9 @@ export const generateFiles = async (
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrudSingle for Entity ${entity.path}`);
                         const files = await generateCrudSingle(generatorOptions, entity);
-                        await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
-                        writtenFiles.push(...files.map((f) => realpathSync(`${generatorOptions.targetDirectory}/${f.name}`)));
+                        const { targetDirectory } = buildOptions(entity, generatorOptions);
+                        await writeGeneratedFiles(files, targetDirectory);
+                        writtenFiles.push(...files.map((f) => realpathSync(`${f.targetDirectory ?? targetDirectory}/${f.name}`)));
                     }
                 }
             }

@@ -212,6 +212,13 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
+## Api
+
+### Api Generator `targetDirectory` config removed
+
+The `targetDirectory` config of `@CrudGenerator` decorator is not needed anymore and must be removed. Generated files are now always written to `${__dirname}/../generated/`, which was a commonly used default.
+
+
 ## Site
 
 ### 🤖 Upgrade peer dependencies
