@@ -280,7 +280,7 @@ importers:
   demo/api:
     dependencies:
       '@apollo/server':
-        specifier: ^5.2.0
+        specifier: ^5.3.0
         version: 5.3.0(graphql@16.11.0)
       '@as-integrations/express5':
         specifier: ^1.1.2
@@ -13457,7 +13457,6 @@ packages:
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
