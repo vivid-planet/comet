@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.13.0
+
+### Minor Changes
+
+- 94abd9b: Add initialValuesAsProp config to generate a initialValues prop for the form that allows injecting dynamic initialValues
+
 ## 8.12.0
 
 ### Minor Changes

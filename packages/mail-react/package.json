@@ -1,6 +1,6 @@
 {
     "name": "@comet/mail-react",
-    "version": "8.12.0",
+    "version": "8.13.0",
     "description": "Utilities for building HTML emails with React",
     "type": "module",
     "exports": {
@@ -24,10 +24,12 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc"
     },
+    "dependencies": {
+        "@faire/mjml-react": "^3.5.3"
+    },
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@faire/mjml-react": "^3.5.3",
         "@types/react": "^18.3.27",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
@@ -38,7 +40,6 @@
         "typescript": "5.9.3"
     },
     "peerDependencies": {
-        "@faire/mjml-react": "^3.0.0",
         "react": "^18.0.0"
     },
     "engines": {
