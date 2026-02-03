@@ -96,8 +96,8 @@ export function NewsForm({ onCreate, id }: FormProps) {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
                 variables: {
-                    scope,
                     input: output,
+                    scope,
                 },
             });
             const id = mutationResponse?.createNews.id;

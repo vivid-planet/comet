@@ -118,7 +118,6 @@ id?: string;
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
                 const id = mutationResponse?.createProduct.id;
