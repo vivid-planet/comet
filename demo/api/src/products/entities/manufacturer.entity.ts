@@ -105,7 +105,7 @@ export class Manufacturer extends BaseEntity {
     @Field(() => Coordinates, { nullable: true })
     coordinates?: IType<Coordinates, string>;
 
-    @Enum({ items: () => ProductType })
+    @Enum({ items: () => ProductType, nullable: true })
     @Field(() => ProductType, { nullable: true })
     productType?: ProductType;
 

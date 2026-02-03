@@ -28,10 +28,10 @@ export class ManufacturerInput {
     @Type(() => Coordinates)
     @Field(() => Coordinates, { nullable: true })
     coordinates?: Coordinates;
-    @IsNotEmpty()
+    @IsNullable()
     @IsEnum(ProductType)
-    @Field(() => ProductType)
-    productType: ProductType;
+    @Field(() => ProductType, { nullable: true, defaultValue: null })
+    productType?: ProductType;
 }
 @InputType()
 export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {}
