@@ -1,4 +1,5 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
+import { clsx } from "clsx";
 import { type InputHTMLAttributes, type ReactNode } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
@@ -37,7 +38,13 @@ export const TextField = <TFieldValues extends FieldValues>({
                             </span>
                         )}
                     </div>
-                    <Typography as="input" variant="paragraph200" {...inputProps} {...field} className={styles.inputField} />
+                    <Typography
+                        as="input"
+                        variant="paragraph200"
+                        {...inputProps}
+                        {...field}
+                        className={clsx(styles.inputField, fieldState.error && styles["inputField--error"])}
+                    />
                     {helperText && (
                         <Typography variant="paragraph200" className={styles.helperText}>
                             {helperText}
