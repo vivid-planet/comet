@@ -32,10 +32,11 @@ export function generateEnumFilterDto(type: "enum" | "enums", enumName: string, 
         export class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
     `;
     }
+    const enumNameKebabCase = enumName[0].toLocaleLowerCase() + enumName.slice(1).replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
     return {
         targetDirectory,
-        name: `dto/${path.basename(enumPath.replace(/\.enum$/, ""))}-${enumName}.${type}-filter.ts`,
+        name: `dto/${enumNameKebabCase}.${type}-filter.ts`,
         content: generateImportsCode(imports) + enumFilterOut,
         type: `${type}-filter`,
     };
