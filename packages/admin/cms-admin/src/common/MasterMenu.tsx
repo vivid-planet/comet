@@ -8,9 +8,10 @@ import {
     type MainNavigationItemGroupProps,
     MainNavigationItemRouterLink,
     type MainNavigationItemRouterLinkProps,
+    useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import { type RouteProps, useRouteMatch } from "react-router-dom";
 
 import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -137,9 +138,18 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
 export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
+    const { setHasMultipleMenuItems } = useMainNavigation();
     const windowSize = useWindowSize();
     const match = useRouteMatch();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
+
+    useEffect(() => {
+        setHasMultipleMenuItems(menuItems.length > 1);
+    }, [menuItems.length, setHasMultipleMenuItems]);
+
+    if (menuItems.length <= 1) {
+        return null;
+    }
 
     const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuItemCollapsibleElement["items"]) =>
         items.flatMap((item, index) => {

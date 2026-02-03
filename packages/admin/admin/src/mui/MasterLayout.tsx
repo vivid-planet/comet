@@ -74,6 +74,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     const [open, setOpen] = useStoredState("main-navigation-open", openMenuByDefault);
     const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
     const [menuWidth, setMenuWidth] = useState(0);
+    const [hasMultipleMenuItems, setHasMultipleMenuItems] = useState(true);
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -97,7 +98,9 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     };
 
     return (
-        <MainNavigationContext.Provider value={{ open, toggleOpen, setOpen, drawerVariant, setDrawerVariant }}>
+        <MainNavigationContext.Provider
+            value={{ open, toggleOpen, setOpen, drawerVariant, setDrawerVariant, hasMultipleMenuItems, setHasMultipleMenuItems }}
+        >
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
                 <Root {...slotProps?.root} {...restProps}>
