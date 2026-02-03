@@ -31,6 +31,7 @@ import { ProductService } from "./product.service";
 import { ProductImporterCommand } from "./product-importer.command";
 import { ProductImporterService } from "./product-importer.service";
 import { ProductPublishedMail } from "./product-published.mail";
+import { ProductVariantService } from "./product-variant.service";
 
 @Module({
     imports: [
@@ -68,6 +69,7 @@ import { ProductPublishedMail } from "./product-published.mail";
         ProductPublishedMail,
         ProductCategoryTypeResolver,
         ProductService,
+        ProductVariantService,
     ],
     exports: [],
 })
