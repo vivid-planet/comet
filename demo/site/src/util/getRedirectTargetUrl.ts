@@ -1,4 +1,4 @@
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 
 import { createSitePath } from "./createSitePath";
@@ -22,6 +22,14 @@ export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], hos
         }
         case "external":
             return (block.props as ExternalLinkBlockData).targetUrl;
+        case "news": {
+            const newsLink = block.props as NewsLinkBlockData;
+            if (newsLink.news) {
+                const destination = `/${newsLink.news.scope.language}/news/${newsLink.news.slug}`;
+                return destination.startsWith("/") ? `http://${host}${destination}` : destination;
+            }
+            break;
+        }
     }
     return undefined;
 }

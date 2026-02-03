@@ -1,7 +1,7 @@
 export const dynamic = "error";
 
 import { gql } from "@comet/site-nextjs";
-import { type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
+import { type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { type VisibilityParam } from "@src/middleware/domainRewrite";
 import { getRedirectTargetUrl } from "@src/util/getRedirectTargetUrl";
@@ -66,17 +66,7 @@ export default async function Page({ params }: PageProps<"/[visibility]/[domain]
     if (!data.pageTreeNodeByPath?.documentType) {
         if (data.redirectBySource?.target) {
             const target = data.redirectBySource?.target as RedirectsLinkBlockData;
-            let destination: string | undefined;
-            if (target.block !== undefined) {
-                if (target.block.type === "news") {
-                    const newsLink = target.block.props as NewsLinkBlockData;
-                    if (newsLink.news) {
-                        destination = `/${newsLink.news.scope.language}/news/${newsLink.news.slug}`;
-                    }
-                } else {
-                    destination = getRedirectTargetUrl(target.block, domain);
-                }
-            }
+            const destination = target.block ? getRedirectTargetUrl(target.block, domain) : undefined;
             if (destination) {
                 redirect(destination);
             }
