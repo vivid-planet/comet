@@ -845,7 +845,7 @@ input ManufacturerInput {
   addressAsEmbeddable: AddressAsEmbeddableInput!
   coordinates: CoordinatesInput
   name: String!
-  productType: ProductType!
+  productType: ProductType = null
 }
 
 input ManufacturerSort {
