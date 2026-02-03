@@ -103,7 +103,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 if (domainRedirectTarget) {
                     let destination: string | undefined;
                     if (domainRedirectTarget.block !== undefined) {
-                        destination = getRedirectTargetUrl(domainRedirectTarget.block, host);
+                        destination = getRedirectTargetUrl(domainRedirectTarget.block, `https://${redirectSiteConfig.domains.main}`);
                     }
                     if (destination) {
                         return NextResponse.redirect(destination, { status: 301 });
