@@ -30,6 +30,7 @@ import { ProductVariantsService } from "./generated/product-variants.service";
 import { ProductService } from "./product.service";
 import { ProductImporterCommand } from "./product-importer.command";
 import { ProductImporterService } from "./product-importer.service";
+import { ProductVariantService } from "./product-variant.service";
 import { ProductPublishedMail } from "./published-mail/product-published.mail";
 
 @Module({
@@ -68,6 +69,7 @@ import { ProductPublishedMail } from "./published-mail/product-published.mail";
         ProductPublishedMail,
         ProductCategoryTypeResolver,
         ProductService,
+        ProductVariantService,
     ],
     exports: [],
 })

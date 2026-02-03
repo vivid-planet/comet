@@ -337,6 +337,16 @@ input CreateDamFolderInput {
   parentId: ID
 }
 
+type CreateProductPayload {
+  errors: [MutationError!]
+  product: Product
+}
+
+type CreateProductVariantPayload {
+  errors: [MutationError!]
+  productVariant: ProductVariant
+}
+
 type CsvImportInformation {
   blacklisted: Int!
   blacklistedColumns: [JSONObject!]
@@ -916,12 +926,12 @@ type Mutation {
   createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
   createNewsComment(input: NewsCommentInput!, newsId: ID!): NewsComment!
   createPageTreeNode(category: String!, input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!): PageTreeNode!
-  createProduct(input: ProductInput!): Product!
+  createProduct(input: ProductInput!): CreateProductPayload!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   createProductCategoryType(input: ProductCategoryTypeInput!): ProductCategoryType!
   createProductHighlight(input: ProductHighlightInput!): ProductHighlight!
   createProductTag(input: ProductTagInput!): ProductTag!
-  createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
+  createProductVariant(input: ProductVariantInput!, product: ID!): CreateProductVariantPayload!
   createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
   currentUserSignOut: String!
   deleteBrevoContact(id: Int!, scope: EmailCampaignContentScopeInput!): Boolean!
@@ -980,7 +990,7 @@ type Mutation {
   updateProductCategoryType(id: ID!, input: ProductCategoryTypeUpdateInput!): ProductCategoryType!
   updateProductHighlight(id: ID!, input: ProductHighlightUpdateInput!): ProductHighlight!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
-  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): UpdateProductVariantPayload!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   userPermissionsCreatePermission(input: UserPermissionInput!, userId: String!): UserPermission!
@@ -988,6 +998,12 @@ type Mutation {
   userPermissionsUpdateContentScopes(input: UserContentScopesInput!, userId: String!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
+}
+
+type MutationError {
+  code: String!
+  field: String
+  message: String
 }
 
 type News {
@@ -2173,6 +2189,11 @@ input UpdateDamFolderInput {
 
 input UpdateImageFileInput {
   cropArea: ImageCropAreaInput
+}
+
+type UpdateProductVariantPayload {
+  errors: [MutationError!]
+  productVariant: ProductVariant
 }
 
 input UserContentScopesInput {
