@@ -3,9 +3,9 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { ProductStatusEnumFilter } from "./product.entity-ProductStatus.enum-filter";
-import { ProductTypeEnumFilter } from "./product-type-ProductType.enum-filter";
-import { ProductTypeEnumsFilter } from "./product-type-ProductType.enums-filter";
+import { ProductStatusEnumFilter } from "./product-status.enum-filter";
+import { ProductTypeEnumFilter } from "./product-type.enum-filter";
+import { ProductTypeEnumsFilter } from "./product-type.enums-filter";
 import {
     BooleanFilter,
     DateFilter,
