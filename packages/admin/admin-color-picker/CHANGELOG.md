@@ -1,5 +1,15 @@
 # @comet/admin-color-picker
 
+## 8.14.0
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-icons@8.14.0
+
 ## 8.13.0
 
 ### Patch Changes

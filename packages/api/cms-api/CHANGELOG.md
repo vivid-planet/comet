@@ -1,5 +1,13 @@
 # @comet/cms-api
 
+## 8.14.0
+
+### Minor Changes
+
+- 736e4ae: Add `@AffectedScope` decorator
+
+    See https://docs.comet-dxp.com/docs/core-concepts/content-scope/evaluate-content-scopes#operations-that-require-a-content-scope-independently-of-a-specific-entity
+
 ## 8.13.0
 
 ### Minor Changes

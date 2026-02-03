@@ -1,5 +1,11 @@
 # @comet/admin-generator
 
+## 8.14.0
+
+### Patch Changes
+
+- 540f8c8: Form: Use scope type from gql schema when using scope from context
+
 ## 8.13.0
 
 ### Minor Changes
