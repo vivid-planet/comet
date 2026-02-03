@@ -138,19 +138,10 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
 export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
-    const { open, toggleOpen, setHasMultipleMenuItems } = useMainNavigation();
+    const { setHasMultipleMenuItems } = useMainNavigation();
     const windowSize = useWindowSize();
     const match = useRouteMatch();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
-
-    // Open menu when changing to permanent variant and close when changing to temporary variant.
-    useEffect(() => {
-        if ((useTemporaryMenu && open) || (!useTemporaryMenu && !open)) {
-            toggleOpen();
-        }
-        // useEffect dependencies must only include `location`, because the function should only be called once after changing the location.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location]);
 
     useEffect(() => {
         setHasMultipleMenuItems(menuItems.length > 1);

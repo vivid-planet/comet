@@ -6,6 +6,9 @@ import { GraphQLResolveInfo } from "graphql";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
+import { ProductColor } from "../entities/product-color.entity";
+import { ProductToTag } from "../entities/product-to-tag.entity";
+import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
 import {
@@ -19,11 +22,8 @@ import {
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
-import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
-import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";
-import { ProductStatistics } from "../entities/product-statistics.entity";
 import { Product } from "../entities/product.entity";
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
@@ -122,9 +122,10 @@ export class ProductResolver {
             await product.colors.loadItems();
             product.colors.set(
                 colorsInput.map((colorInput) => {
-                    return this.entityManager.assign(new ProductColor(), {
+                    const color = this.entityManager.assign(new ProductColor(), {
                         ...colorInput,
                     });
+                    return color;
                 }),
             );
         }
@@ -134,10 +135,11 @@ export class ProductResolver {
                 await Promise.all(
                     tagsWithStatusInput.map(async (tagsWithStatusInput) => {
                         const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
-                        return this.entityManager.assign(new ProductToTag(), {
+                        const tagsWithStatus = this.entityManager.assign(new ProductToTag(), {
                             ...assignInput,
                             tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
                         });
+                        return tagsWithStatus;
                     }),
                 ),
             );
@@ -191,9 +193,10 @@ export class ProductResolver {
             await product.colors.loadItems();
             product.colors.set(
                 colorsInput.map((colorInput) => {
-                    return this.entityManager.assign(new ProductColor(), {
+                    const color = this.entityManager.assign(new ProductColor(), {
                         ...colorInput,
                     });
+                    return color;
                 }),
             );
         }
@@ -203,10 +206,11 @@ export class ProductResolver {
                 await Promise.all(
                     tagsWithStatusInput.map(async (tagsWithStatusInput) => {
                         const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
-                        return this.entityManager.assign(new ProductToTag(), {
+                        const tagsWithStatus = this.entityManager.assign(new ProductToTag(), {
                             ...assignInput,
                             tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
                         });
+                        return tagsWithStatus;
                     }),
                 ),
             );

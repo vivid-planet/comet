@@ -15,7 +15,7 @@
         {
             "groupName": "eslint",
             "matchPackageNames": ["/^eslint/"],
-            "excludePackagePatterns": ["eslint-config-next"]
+            "excludePackagePatterns": ["eslint-config-next", "eslint-plugin-storybook"]
         },
         {
             "groupName": "prettier",
@@ -27,7 +27,7 @@
         },
         {
             "groupName": "Storybook",
-            "matchPackageNames": ["/^@storybook/", "/^storybook/"]
+            "matchPackageNames": ["/^@storybook/", "/^storybook/", "eslint-plugin-storybook"]
         },
         {
             "groupName": "Mui-X",
@@ -119,6 +119,10 @@
             "enabled": false,
             "matchDepNames": ["node"],
             "matchDepTypes": ["engines", "uses-with"]
+        },
+        {
+            "groupName": "Stylelint",
+            "matchPackageNames": ["stylelint", "/^stylelint-*/"]
         }
     ],
     "regexManagers": [

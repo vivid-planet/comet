@@ -6,6 +6,7 @@ import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { useStoredState } from "../hooks/useStoredState";
 import { MainNavigationContext } from "./mainNavigation/Context";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 
@@ -70,7 +71,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMasterLayout" });
 
-    const [open, setOpen] = useState(openMenuByDefault);
+    const [open, setOpen] = useStoredState("main-navigation-open", openMenuByDefault);
     const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
     const [menuWidth, setMenuWidth] = useState(0);
     const [hasMultipleMenuItems, setHasMultipleMenuItems] = useState(true);
@@ -97,7 +98,9 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     };
 
     return (
-        <MainNavigationContext.Provider value={{ open, toggleOpen, drawerVariant, setDrawerVariant, hasMultipleMenuItems, setHasMultipleMenuItems }}>
+        <MainNavigationContext.Provider
+            value={{ open, toggleOpen, setOpen, drawerVariant, setDrawerVariant, hasMultipleMenuItems, setHasMultipleMenuItems }}
+        >
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
                 <Root {...slotProps?.root} {...restProps}>

@@ -348,6 +348,7 @@ type CsvImportInformation {
 }
 
 type CurrentUser {
+  accountUrl: String
   allowedContentScopes: [ContentScopeWithLabel!]!
   authenticatedUser: UserPermissionsUser
   email: String!

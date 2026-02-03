@@ -1,6 +1,5 @@
-import { type PropsWithData } from "@comet/mail-react";
+import { MjmlColumn, type PropsWithData } from "@comet/mail-react";
 import { ExternalLinkBlock } from "@comet/site-nextjs";
-import { MjmlColumn } from "@faire/mjml-react";
 import { type ExternalLinkBlockData, type RichTextBlockData } from "@src/blocks.generated";
 import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
 import { Typography, type TypographyProps } from "@src/brevo/components/Typography";
