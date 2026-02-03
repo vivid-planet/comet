@@ -35,10 +35,6 @@ const AppHeaderRoot = createComponentSlot(MuiAppBar)<AppHeaderClassKey, OwnerSta
         height: var(--header-height);
         flex-direction: row;
         align-items: center;
-
-        ${theme.breakpoints.up("md")} {
-            padding-left: 14px;
-        }
     `,
 );
 

@@ -48,7 +48,7 @@ const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
         border: 1px solid ${theme.palette.grey.A200};
 
         ${theme.breakpoints.up("md")} {
-            margin: 0 14px 0 0;
+            margin: 0 0 0 14px;
         }
     `,
 );
