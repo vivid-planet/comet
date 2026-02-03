@@ -1,0 +1,33 @@
+@use "@src/styles/variables" as *;
+@use "./field" as *;
+
+.labelWrapper {
+    @include label-wrapper;
+}
+
+.textareaField {
+    @include field-base;
+    @include placeholder;
+    min-height: 120px;
+    resize: vertical;
+
+    &--error {
+        @include field-base-error;
+    }
+}
+
+.label {
+    @include label;
+}
+
+.optionalText {
+    @include optional-text;
+}
+
+.helperText {
+    @include helper-text;
+}
+
+.errorWrapper {
+    @include error-wrapper;
+}

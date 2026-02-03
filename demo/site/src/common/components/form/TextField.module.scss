@@ -1,0 +1,31 @@
+@use "@src/styles/variables" as *;
+@use "./field" as *;
+
+.labelWrapper {
+    @include label-wrapper;
+}
+
+.inputField {
+    @include field-base;
+    @include placeholder;
+
+    &--error {
+        @include field-base-error;
+    }
+}
+
+.label {
+    @include label;
+}
+
+.optionalText {
+    @include optional-text;
+}
+
+.helperText {
+    @include helper-text;
+}
+
+.errorWrapper {
+    @include error-wrapper;
+}
