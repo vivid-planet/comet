@@ -3,4 +3,4 @@
 "@comet/admin": minor
 ---
 
-Automatically hide the `MasterMenu` if only one menu item is available
+Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
