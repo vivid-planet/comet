@@ -102,7 +102,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
 
                 if (domainRedirectTarget) {
                     let destination: string | undefined;
-                    if (typeof domainRedirectTarget === "object" && domainRedirectTarget.block !== undefined) {
+                    if (domainRedirectTarget.block !== undefined) {
                         destination = getRedirectTargetUrl(domainRedirectTarget.block, host);
                     }
                     if (destination) {
