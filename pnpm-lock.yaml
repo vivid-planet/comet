@@ -464,7 +464,7 @@ importers:
         specifier: ^24.10.9
         version: 24.10.9
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/response-time':
         specifier: ^2.3.9
@@ -1439,7 +1439,7 @@ importers:
         specifier: ^2.0.7
         version: 2.0.7
       '@types/react':
-        specifier: ^18.3.23
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
         specifier: ^18.3.7
