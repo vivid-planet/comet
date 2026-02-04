@@ -1,5 +1,5 @@
 import { Error as ErrorIcon } from "@comet/admin-icons";
-import { type ComponentsOverrides, FormHelperText, Typography } from "@mui/material";
+import { type ComponentsOverrides, type FormHelperText, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { type Accept, type DropzoneOptions } from "react-dropzone";
@@ -11,7 +11,6 @@ import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBase
 import { FileDropzone } from "./FileDropzone";
 import { type ErrorFileSelectItem, type FileSelectItem, type ValidFileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
-import { getFilesInfoText } from "./getFilesInfoText";
 
 export type FileSelectClassKey =
     | "root"
@@ -93,7 +92,6 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
     const numberOfValidFiles = files?.filter((file) => !("error" in file)).length ?? 0;
     const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
-    const filesInfoText = getFilesInfoText(maxFiles, maxFileSize);
     const showFileList = files.length > 0 || readOnly;
 
     const ownerState: OwnerState = {
@@ -187,7 +185,6 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                     </ErrorMessage>
                 </Error>
             )}
-            {Boolean(filesInfoText && !readOnly) && <FilesInfoText {...slotProps?.filesInfoText}>{filesInfoText}</FilesInfoText>}
         </Root>
     );
 };
@@ -261,13 +258,6 @@ const ErrorMessage = createComponentSlot(Typography)<FileSelectClassKey>({
     componentName: "FileSelect",
     slotName: "errorMessage",
 })();
-
-const FilesInfoText = createComponentSlot(FormHelperText)<FileSelectClassKey>({
-    componentName: "FileSelect",
-    slotName: "filesInfoText",
-})(css`
-    margin: 0;
-`);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
