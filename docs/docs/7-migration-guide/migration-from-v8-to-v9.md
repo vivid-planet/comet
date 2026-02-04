@@ -212,6 +212,10 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
+### Remove `filesInfoText` slot from `FileSelect`
+
+The `filesInfoText` has been removed. Therefor remove it from the `FileSelect` component
+
 ## Site
 
 ### 🤖 Upgrade peer dependencies
