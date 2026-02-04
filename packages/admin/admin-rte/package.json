@@ -59,7 +59,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
-        "typescript": "5.9.3",
+        "typescript": "^5.9.3",
         "vitest": "^4.0.16"
     },
     "peerDependencies": {
