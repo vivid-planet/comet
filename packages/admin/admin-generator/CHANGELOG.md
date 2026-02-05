@@ -1,5 +1,7 @@
 # @comet/admin-generator
 
+## 8.14.1
+
 ## 8.14.0
 
 ### Patch Changes

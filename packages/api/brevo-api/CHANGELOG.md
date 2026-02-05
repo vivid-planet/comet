@@ -1,5 +1,11 @@
 # @comet/brevo-api
 
+## 8.14.1
+
+### Patch Changes
+
+- @comet/cms-api@8.14.1
+
 ## 8.14.0
 
 ### Patch Changes
