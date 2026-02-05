@@ -1,5 +1,5 @@
 ---
-"@comet/api-generator": minor
+"@comet/api-generator": major
 ---
 
 Stop generating GraphQL selection-set based `populate` handling in generated CRUD list resolvers.
