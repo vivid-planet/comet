@@ -395,3 +395,25 @@ export function createGraphQLFetch() {
     );
 }
 ```
+
+## API
+
+### Enable MikroORM dataloader for generated CRUD resolvers
+
+Generated list resolvers from `@comet/api-generator` no longer inspect GraphQL selection sets to build `populate` options.
+Relation loading is now expected to be handled by MikroORM's dataloader.
+
+Enable dataloader in your MikroORM config:
+
+```diff title="api/src/db/ormconfig.ts"
++import { DataloaderType } from "@mikro-orm/core";
++
+ export const ormConfig = createOrmConfig(
+     defineConfig({
+         // ...
++        dataloader: DataloaderType.ALL,
+     }),
+ );
+```
+
+Without enabling dataloader, relation fields resolved by generated resolvers can lead to significantly more SQL queries.
