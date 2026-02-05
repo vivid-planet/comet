@@ -43,6 +43,7 @@ const config = [
             "@comet": cometPlugin,
         },
         rules: {
+            "@comet/no-comet-lib-import": "error",
             "@comet/no-other-module-relative-import": ["warn"],
         },
     },
