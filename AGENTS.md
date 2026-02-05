@@ -43,4 +43,4 @@
 
 ## Generated demo files
 
-- `demo/api` and `demo/admin` contain generated folders. Do not edit generated files directly; rerun `api-generator` or `admin-generator` to update them.
+- `demo/api` and `demo/admin` contain `generated/` folders. Do not edit files inside `generated/` directly; rerun `api-generator` or `admin-generator` to update them.
