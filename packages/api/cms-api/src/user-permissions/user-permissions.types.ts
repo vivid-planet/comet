@@ -40,6 +40,7 @@ export interface UserPermissionsUserServiceInterface {
     getUserForLogin?: (id: string) => Promise<User> | User;
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    getAccountUrl?: (user: User) => Promise<string> | string;
 }
 
 export type ContentScopeWithLabel = {
