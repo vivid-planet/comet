@@ -1,5 +1,5 @@
 import { Error as ErrorIcon } from "@comet/admin-icons";
-import { type ComponentsOverrides, type FormHelperText, Typography } from "@mui/material";
+import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { type Accept, type DropzoneOptions } from "react-dropzone";
@@ -21,8 +21,7 @@ export type FileSelectClassKey =
     | "fileList"
     | "fileListItem"
     | "error"
-    | "errorMessage"
-    | "filesInfoText";
+    | "errorMessage";
 
 type Layout = "list" | "grid";
 
@@ -34,7 +33,6 @@ type ThemeProps = ThemedComponentBaseProps<{
     fileListItem: typeof FileSelectListItem;
     error: "div";
     errorMessage: typeof Typography;
-    filesInfoText: typeof FormHelperText;
 }>;
 
 type OwnerState = {
