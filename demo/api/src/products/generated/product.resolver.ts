@@ -14,8 +14,10 @@ import { Manufacturer } from "../entities/manufacturer.entity";
 import {
     AffectedEntity,
     BlocksTransformerService,
+    CurrentUser,
     DamImageBlock,
     FileUpload,
+    GetCurrentUser,
     RequiredPermission,
     RootBlockDataScalar,
     extractGraphqlFields,
@@ -25,12 +27,14 @@ import {
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { Product } from "../entities/product.entity";
+import { ProductService } from "../product.service";
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
         protected readonly entityManager: EntityManager,
         private readonly blocksTransformer: BlocksTransformerService,
+        protected readonly productService: ProductService,
     ) {}
     @Query(() => Product)
     @AffectedEntity(Product)
@@ -98,7 +102,10 @@ export class ProductResolver {
     async createProduct(
         @Args("input", { type: () => ProductInput })
         input: ProductInput,
+        @GetCurrentUser()
+        user: CurrentUser,
     ): Promise<Product> {
+        await this.productService.validateCreateInput(input, { currentUser: user });
         const {
             colors: colorsInput,
             tagsWithStatus: tagsWithStatusInput,
