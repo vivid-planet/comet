@@ -1,0 +1,207 @@
+import { Calendar } from "@comet/admin-icons";
+import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { type DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
+import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
+
+import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
+import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { getDateValue, getIsoDateString } from "../utils";
+
+/**
+ * Represents a date range with start and end dates in ISO 8601 format (YYYY-MM-DD).
+ */
+export type DateRange = {
+    start: string | null;
+    end: string | null;
+};
+
+export type DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
+
+export type DateRangePickerProps = ThemedComponentBaseProps<{
+    root: ComponentType<MuiDateRangePickerProps<Date, true>>;
+    clearInputAdornment: typeof CometClearInputAdornment;
+    readOnlyAdornment: typeof ReadOnlyAdornment;
+    openPickerAdornment: typeof OpenPickerAdornment;
+}> & {
+    fullWidth?: boolean;
+    /**
+     * If `true`, the picker will be marked as required and the clear button will be hidden.
+     */
+    required?: boolean;
+    /**
+     * The selected date range value with start and end dates in ISO 8601 format.
+     */
+    value?: DateRange;
+    /**
+     * Callback fired when the date range changes.
+     *
+     * @param date - The new date range value, or `undefined` if cleared.
+     */
+    onChange?: (date: DateRange | undefined) => void;
+    /**
+     * Custom icons for the picker.
+     *
+     * - `openPicker`: Icon to display in the adornment that opens the calendar picker (default: Calendar icon)
+     */
+    iconMapping?: {
+        openPicker?: ReactNode;
+    };
+} & Omit<MuiDateRangePickerProps<Date, true>, "value" | "onChange">;
+
+const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | null] => {
+    return [getDateValue(value?.start), getDateValue(value?.end)];
+};
+
+<<<<<<< HEAD:packages/admin/admin/src/dateTime/DateRangePicker.tsx
+export const DateRangePicker = (inProps: DateRangePickerProps) => {
+=======
+/**
+ * The DateRangePicker component allows users to select a date range from a calendar interface. It provides two
+ * text fields with a calendar icon that opens a date range picker dialog. The component handles ISO 8601 date strings
+ * and includes features like clearing, read-only state, and customizable icons.
+ *
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-daterangepicker--docs)
+ * - [MUI X DateRangePicker Documentation](https://mui.com/x/react-date-pickers/date-range-picker/)
+ */
+export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => {
+>>>>>>> main:packages/admin/admin/src/dateTime/dateRangePicker/DateRangePicker.tsx
+    const {
+        iconMapping = {},
+        fullWidth,
+        required,
+        slotProps,
+        disabled,
+        value: stringDateRangeValue,
+        onChange,
+        readOnly,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFutureDateRangePicker",
+    });
+    const [open, setOpen] = useState(false);
+
+    const dateRangeValue = getDateRangeValue(stringDateRangeValue);
+    const hasDateRangeValue = dateRangeValue.some((date) => date !== null);
+
+    const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
+
+    return (
+        <Suspense>
+            <LazyRoot
+                enableAccessibleFieldDOMStructure
+                disabled={disabled}
+                readOnly={readOnly}
+                open={open}
+                onOpen={() => setOpen(true)}
+                onClose={() => setOpen(false)}
+                disableOpenPicker
+                value={dateRangeValue}
+                onChange={([startDate, endDate]) => {
+                    if (!startDate && !endDate) {
+                        onChange?.(undefined);
+                        return;
+                    }
+
+                    onChange?.({
+                        start: startDate ? getIsoDateString(startDate) : null,
+                        end: endDate ? getIsoDateString(endDate) : null,
+                    });
+                }}
+                {...slotProps?.root}
+                {...restProps}
+                slotProps={{
+                    ...slotProps?.root?.slotProps,
+                    textField: (ownerState) => {
+                        const textFieldProps = {
+                            ...slotProps?.root?.slotProps?.textField,
+                            ownerState,
+                        };
+
+                        return {
+                            fullWidth,
+                            required,
+                            ...textFieldProps,
+                            InputProps: {
+                                ...textFieldProps?.InputProps,
+                                startAdornment: (
+                                    <>
+                                        <OpenPickerAdornment
+                                            inputIsDisabled={disabled}
+                                            inputIsReadOnly={readOnly}
+                                            onClick={() => setOpen(true)}
+                                            {...slotProps?.openPickerAdornment}
+                                        >
+                                            {openPickerIcon}
+                                        </OpenPickerAdornment>
+                                        {textFieldProps?.InputProps?.startAdornment}
+                                    </>
+                                ),
+                                endAdornment: (
+                                    <>
+                                        {textFieldProps?.InputProps?.endAdornment}
+                                        <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
+                                        <ClearInputAdornment
+                                            position="end"
+                                            hasClearableContent={hasDateRangeValue && !required && !disabled && !readOnly}
+                                            onClick={() => onChange?.(undefined)}
+                                            {...slotProps?.clearInputAdornment}
+                                        />
+                                    </>
+                                ),
+                            },
+                        };
+                    },
+                }}
+            />
+        </Suspense>
+    );
+};
+
+const LazyRoot = lazy(async () => {
+    const module = await import("@mui/x-date-pickers-pro");
+
+    const Root = createComponentSlot(module.DateRangePicker<Date, true>)<DateRangePickerClassKey>({
+        componentName: "DateRangePicker",
+        slotName: "root",
+    })(css`
+        .${inputLabelClasses.root} {
+            display: none;
+
+            & + .${module.pickersInputBaseClasses.root} {
+                margin-top: 0;
+            }
+        }
+    `);
+
+    return {
+        default: (props: MuiDateRangePickerProps<Date, true>) => (
+            <Root {...props} slots={{ field: module.SingleInputDateRangeField, ...props.slots }} />
+        ),
+    };
+});
+
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateRangePickerClassKey>({
+    componentName: "DateRangePicker",
+    slotName: "clearInputAdornment",
+})();
+
+declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminDateRangePicker: DateRangePickerProps;
+    }
+
+    interface ComponentNameToClassKey {
+        CometAdminDateRangePicker: DateRangePickerClassKey;
+    }
+
+    interface Components {
+        CometAdminDateRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDateRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateRangePicker"];
+        };
+    }
+}

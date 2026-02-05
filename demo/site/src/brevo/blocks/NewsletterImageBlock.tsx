@@ -1,6 +1,5 @@
-import { type PropsWithData } from "@comet/mail-react";
+import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData } from "@comet/mail-react";
 import { calculateInheritAspectRatio, generateImageUrl } from "@comet/site-nextjs";
-import { MjmlColumn, MjmlImage, MjmlSection } from "@faire/mjml-react";
 import { type NewsletterImageBlockData } from "@src/blocks.generated";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {
