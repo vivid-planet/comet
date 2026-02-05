@@ -794,15 +794,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         dedicatedResolverArgProps,
     } = buildOptions(metadata, generatorOptions);
 
-    const relationManyToOneProps = metadata.props.filter((prop) => prop.kind === "m:1");
-    const relationOneToManyProps = metadata.props.filter((prop) => prop.kind === "1:m");
-    const relationManyToManyProps = metadata.props.filter((prop) => prop.kind === "m:n");
-    const relationOneToOneProps = metadata.props.filter((prop) => prop.kind === "1:1");
-    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
-
     const imports: Imports = [];
 
     const { code: createInputHandlingCode } = generateInputHandling(
@@ -824,7 +815,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const {
         imports: relationsFieldResolverImports,
         code: relationsFieldResolverCode,
-        hasOutputRelations,
         needsBlocksTransformer,
     } = generateRelationsFieldResolver({
         generatorOptions,
@@ -845,7 +835,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
-    imports.push({ name: "extractGraphqlFields", importPath: "@comet/cms-api" });
     imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
     imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
     imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
@@ -856,8 +845,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "gqlSortToMikroOrmOrderBy", importPath: "@comet/cms-api" });
 
     const resolverOut = `import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
-    import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { GraphQLResolveInfo } from "graphql";
+    import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
 
     ${hasPositionProp ? `import { ${classNamePlural}Service } from "./${fileNamePlural}.service";` : ``}
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
@@ -932,7 +920,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 .filter(([key, use]) => use)
                 .map(([key]) => key)
                 .join(", ")}}: ${argsClassName}
-            ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
@@ -946,25 +933,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 })
                 .join("\n")}
 
-            ${
-                hasOutputRelations
-                    ? `const fields = extractGraphqlFields(info, { root: "nodes" });
-            const populate: string[] = [];`
-                    : ""
-            }
-            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps, ...outputRelationOneToOneProps]
-                .map(
-                    (r) =>
-                        `if (fields.includes("${r.name}")) {
-                            populate.push("${r.name}");
-                        }`,
-                )
-                .join("\n")}
-
-            ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
-            const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-                hasOutputRelations ? `, populate` : ""
-            }};
+            const options: FindOptions<${metadata.className}> = { offset, limit };
 
             ${
                 hasSortArg
