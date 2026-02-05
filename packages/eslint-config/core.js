@@ -44,6 +44,7 @@ const config = [
         },
         rules: {
             "@comet/no-other-module-relative-import": ["warn"],
+            "@comet/no-comet-lib-import": "error",
         },
     },
     {
