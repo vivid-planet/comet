@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 8.14.1
+
+### Patch Changes
+
+- 0c2435a: Hide `filesInfoText` from FileSelect
+    - @comet/admin-icons@8.14.1
+
 ## 8.14.0
 
 ### Minor Changes
