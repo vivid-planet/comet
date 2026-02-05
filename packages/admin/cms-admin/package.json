@@ -113,7 +113,7 @@
         "react-intl": "^7.1.11",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "typescript": "5.9.3",
+        "typescript": "^5.9.3",
         "vitest": "^4.0.16"
     },
     "peerDependencies": {

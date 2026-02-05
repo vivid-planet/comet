@@ -86,9 +86,6 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
-
-Please pin typescript to `5.8.3` due to some ESLint plugins not working with
-higher versions.
 :::
 
 **Create a branch `typescript-5`.**
@@ -97,22 +94,22 @@ higher versions.
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
@@ -136,7 +133,7 @@ higher versions.
 
     SUPPORTED TYPESCRIPT VERSIONS: >=3.3.1 <5.2.0
 
-    YOUR TYPESCRIPT VERSION: 5.8.3
+    YOUR TYPESCRIPT VERSION: 5.9.3
 
     Please only submit bug reports when using the officially supported version.
 
