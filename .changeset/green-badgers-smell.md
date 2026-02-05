@@ -4,6 +4,4 @@
 
 Stop generating GraphQL selection-set based `populate` handling in generated CRUD list resolvers.
 
-Generated resolvers no longer use `extractGraphqlFields`, `@Info()`, or `GraphQLResolveInfo` for relation preloading.
-
 MikroORM dataloader must now be enabled in API projects (for example with `dataloader: DataloaderType.ALL` in your MikroORM config) to efficiently resolve relation fields.
