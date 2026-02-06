@@ -20,7 +20,6 @@ import { GridFilterButton } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
 import { dataGridIdColumn } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
@@ -33,6 +32,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -317,9 +317,9 @@ export function ManufacturersGrid() {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
+            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
         },
     });
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
