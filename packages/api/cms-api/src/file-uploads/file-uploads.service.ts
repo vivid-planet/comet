@@ -151,6 +151,10 @@ export class FileUploadsService {
         this.entityManager.remove(fileUpload);
     }
 
+    acceptsMimeType(mimeType: string): boolean {
+        return this.config.acceptedMimeTypes.includes(mimeType);
+    }
+
     @CreateRequestContext()
     async deleteExpiredFiles(): Promise<void> {
         let hasMore = false;
