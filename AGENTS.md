@@ -39,7 +39,7 @@
 ## Commit messages
 
 - Do not use Conventional Commits.
-- If a change is scoped to one package, prefix the commit message with the affected package name.
+- If a change is scoped to one package, prefix the commit message with the affected package name. Don't include `@comet/` in the package name.
 
 ## Generated demo files
 
