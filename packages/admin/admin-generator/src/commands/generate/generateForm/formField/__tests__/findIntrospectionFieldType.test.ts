@@ -67,4 +67,67 @@ describe("findIntrospectionFieldType", () => {
         expect(introspectionFieldType).toBeDefined();
         expect(introspectionFieldType?.kind).toBe("SCALAR");
     });
+    it("nested field through 1:1 relation is found", () => {
+        const schema = buildSchema(`
+                type Query {
+                    product(id: ID!): Product!
+                }
+
+                type Product {
+                    id: ID!
+                    details: ProductDetails!
+                }
+                type ProductDetails {
+                    availabilityStatus: ProductAvailabilityStatus!
+                }
+                enum ProductAvailabilityStatus {
+                    inStock
+                    outOfStock
+                }
+            `);
+        const introspection = introspectionFromSchema(schema);
+        const introspectionFieldType = findIntrospectionFieldType({
+            name: "details.availabilityStatus",
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
+        expect(introspectionFieldType).toBeDefined();
+        expect(introspectionFieldType?.kind).toBe("ENUM");
+        if (introspectionFieldType?.kind === "ENUM") {
+            expect(introspectionFieldType.name).toBe("ProductAvailabilityStatus");
+        }
+    });
+    it("nested field through 2-level relation is found", () => {
+        const schema = buildSchema(`
+                type Query {
+                    product(id: ID!): Product!
+                }
+
+                type Product {
+                    id: ID!
+                    details: ProductDetails!
+                }
+                type ProductDetails {
+                    audit: ProductAudit!
+                }
+                type ProductAudit {
+                    status: ProductAuditStatus!
+                }
+                enum ProductAuditStatus {
+                    pending
+                    approved
+                }
+            `);
+        const introspection = introspectionFromSchema(schema);
+        const introspectionFieldType = findIntrospectionFieldType({
+            name: "details.audit.status",
+            gqlIntrospection: introspection,
+            gqlType: "Product",
+        });
+        expect(introspectionFieldType).toBeDefined();
+        expect(introspectionFieldType?.kind).toBe("ENUM");
+        if (introspectionFieldType?.kind === "ENUM") {
+            expect(introspectionFieldType.name).toBe("ProductAuditStatus");
+        }
+    });
 });

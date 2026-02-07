@@ -89,4 +89,72 @@ describe("generateFormField - staticSelect", () => {
         });
         expect(formOutput.code).toMatchSnapshot();
     });
+
+    it("should generate staticSelect for nested fields on 1:1 relations", async () => {
+        const relationSchema = buildSchema(`
+            type Query {
+                products: [Product!]!
+            }
+
+            type Product {
+                id: ID!
+                details: ProductDetails!
+            }
+
+            type ProductDetails {
+                visibilityStatus: ProductVisibilityStatus!
+            }
+
+            type Mutation {
+                updateProduct(id: ID!, input: ProductInput!): Product!
+            }
+
+            input ProductInput {
+                details: ProductDetailsInput!
+            }
+
+            input ProductDetailsInput {
+                visibilityStatus: ProductVisibilityStatus!
+            }
+
+            enum ProductVisibilityStatus {
+                visible
+                hidden
+            }
+        `);
+
+        type GQLProduct = {
+            __typename?: "Product";
+            id: string;
+            details: {
+                __typename?: "ProductDetails";
+                visibilityStatus: "visible" | "hidden";
+            };
+        };
+
+        const fieldConfig = {
+            type: "staticSelect",
+            name: "details.visibilityStatus",
+            inputType: "select",
+        } as FormFieldConfig<GQLProduct>;
+
+        const formConfig: FormConfig<GQLProduct> = {
+            type: "form",
+            gqlType: "Product",
+            fields: [fieldConfig],
+        };
+
+        const introspection = introspectionFromSchema(relationSchema);
+
+        const formOutput = generateFormField({
+            gqlIntrospection: introspection,
+            baseOutputFilename: "ProductForm",
+            formFragmentName: "ProductFormFragment",
+            config: fieldConfig,
+            formConfig,
+            gqlType: "Product",
+        });
+
+        expect(formOutput.code).toMatchSnapshot();
+    });
 });

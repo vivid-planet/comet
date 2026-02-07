@@ -45,3 +45,25 @@ exports[`generateFormField - staticSelect > should generate simple staticSelect 
                             }
             ]}/>"
 `;
+
+exports[`generateFormField - staticSelect > should generate staticSelect for nested fields on 1:1 relations 1`] = `
+"<SelectField
+                            required
+                             fullWidth
+                                variant={"horizontal"}
+                                name="details.visibilityStatus"
+                                label={<FormattedMessage id="product.details.visibilityStatus" defaultMessage="Details Visibility Status" />}
+                                
+                                
+                                
+                                
+                                
+                                options={[{
+                                        value: "visible",
+                                        label: <FormattedMessage id="product.details.visibilityStatus.visible" defaultMessage="Visible" />
+                                    },{
+                                        value: "hidden",
+                                        label: <FormattedMessage id="product.details.visibilityStatus.hidden" defaultMessage="Hidden" />
+                                    }]}
+                            />"
+`;

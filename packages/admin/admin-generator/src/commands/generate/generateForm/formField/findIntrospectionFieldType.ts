@@ -1,4 +1,4 @@
-import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+import { type IntrospectionObjectType, type IntrospectionQuery, type IntrospectionTypeRef } from "graphql";
 
 export function findIntrospectionFieldType({
     name,
@@ -9,7 +9,7 @@ export function findIntrospectionFieldType({
     gqlType: string;
     gqlIntrospection: IntrospectionQuery;
 }) {
-    let introspectionFieldType;
+    let introspectionFieldType: IntrospectionTypeRef | undefined;
     for (const namePart of name.split(".")) {
         const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
             | IntrospectionObjectType
@@ -22,9 +22,13 @@ export function findIntrospectionFieldType({
                 ? introspectionField.type.ofType
                 : introspectionField.type
             : undefined;
-        if (introspectionFieldType?.kind === "OBJECT") {
+        let nestedType: IntrospectionTypeRef | undefined = introspectionFieldType;
+        if (nestedType?.kind === "NON_NULL") {
+            nestedType = nestedType.ofType;
+        }
+        if (nestedType?.kind === "OBJECT") {
             // for next loop iteration (nested fields)
-            gqlType = introspectionFieldType.name;
+            gqlType = nestedType.name;
         }
     }
     return introspectionFieldType;
