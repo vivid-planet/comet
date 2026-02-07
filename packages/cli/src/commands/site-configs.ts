@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { execSync } from "child_process";
 import { Command } from "commander";
 import fs from "fs";
 import { resolve } from "path";
@@ -50,7 +51,8 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 console.error(`inject-site-configs: ERROR: type must be ${Object.keys(replacerFunctions).join("|")} (got ${type})`);
                 return substr;
             }
-            const ret = JSON.stringify(replacerFunctions[type](siteConfigs, env));
+            let ret = JSON.stringify(replacerFunctions[type](siteConfigs, env));
+            ret = resolveOpReferences(ret);
             if (options.base64) {
                 return Buffer.from(ret).toString("base64");
             }
@@ -78,6 +80,34 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
 
         fs.writeFileSync(resolve(process.cwd(), options.outFile), str);
     });
+
+const resolveOpReferences = (input: string): string => {
+    const opRefs = input.match(/\{\{ op:\/\/[^ }]+ \}\}/g);
+    if (!opRefs) return input;
+
+    try {
+        execSync("op --version", { stdio: "ignore" });
+    } catch {
+        console.warn(
+            "inject-site-configs: WARNING: Config contains 1Password references (op://) but the 1Password CLI (op) is not installed. " +
+                "These references will not be resolved. Install from https://developer.1password.com/docs/cli/",
+        );
+        return input;
+    }
+
+    let result = input;
+    for (const ref of opRefs) {
+        const opUri = ref.replace("{{ ", "").replace(" }}", "");
+        try {
+            const secret = execSync(`op read "${opUri}"`, { encoding: "utf-8" }).trim();
+            console.log(`inject-site-configs: - Resolved ${ref}`);
+            result = result.replace(ref, secret);
+        } catch (e) {
+            console.error(`inject-site-configs: ERROR: Failed to resolve 1Password reference ${ref}: ${e}`);
+        }
+    }
+    return result;
+};
 
 // https://stackoverflow.com/a/75205316
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
