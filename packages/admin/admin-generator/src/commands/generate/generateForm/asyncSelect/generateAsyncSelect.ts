@@ -106,8 +106,8 @@ export function findIntrospectionObjectType({
     } else {
         //for a standard select we follow the nested path (if any) to find the final object type
         const nameParts = name.split(".");
-        const lastPart = nameParts.pop()!;
-        const resolvedObject = nameParts.reduce((acc, fieldName) => {
+        const lastPart = nameParts[nameParts.length - 1];
+        const resolvedObject = nameParts.slice(0, -1).reduce((acc, fieldName) => {
             const introspectionField = findIntrospectionField(acc, fieldName);
             if (introspectionField.multiple) throw new Error(`asyncSelect does not support list fields in nested path`);
             return introspectionField.objectType;
