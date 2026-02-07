@@ -29,3 +29,14 @@
   ```bash
   pnpm --recursive --filter '<package-name>' run build
   ```
+
+## Knip
+
+Knip is a tool for analyzing and optimizing dependencies in a monorepo. To run knip, execute the following command in the root directory:
+
+```bash
+pnpm run lint:knip                                              # all packages
+pnpm run lint:knip --workspace packages/<path/to/your/package>  # specific package
+```
+
+Knip is configured in the `knip.json` file at the root of the repository.

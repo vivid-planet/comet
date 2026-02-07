@@ -8,7 +8,8 @@
             "ignoreBinaries": ["oauth2-proxy"]
         },
         "packages/cli": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/commands/__fixtures__/**"]
         },
         "packages/eslint-config": {
             "ignore": ["*"],
