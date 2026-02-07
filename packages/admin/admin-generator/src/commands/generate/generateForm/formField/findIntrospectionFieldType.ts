@@ -22,10 +22,7 @@ export function findIntrospectionFieldType({
                 ? introspectionField.type.ofType
                 : introspectionField.type
             : undefined;
-        let nestedType: IntrospectionTypeRef | undefined = introspectionFieldType;
-        if (nestedType?.kind === "NON_NULL") {
-            nestedType = nestedType.ofType;
-        }
+        const nestedType: IntrospectionTypeRef | undefined = introspectionFieldType;
         if (nestedType?.kind === "OBJECT") {
             // for next loop iteration (nested fields)
             gqlType = nestedType.name;
