@@ -73,7 +73,7 @@
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",
-        "graphql": "^16.0.0",
+        "graphql": "^16.12.0",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "sass": "^1.90.0",
