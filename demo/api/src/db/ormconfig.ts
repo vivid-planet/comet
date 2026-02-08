@@ -5,6 +5,7 @@ import path from "path";
 
 export const ormConfig = createOrmConfig(
     defineConfig({
+        connect: process.env.MIKRO_ORM_NO_CONNECT !== "true",
         host: process.env.POSTGRESQL_HOST,
         port: Number(process.env.POSTGRESQL_PORT),
         user: process.env.POSTGRESQL_USER,

@@ -30,6 +30,7 @@
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
         "repl": "pnpm run start --entryFile repl",
         "start": "pnpm clean && pnpm intl:compile && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
+        "start:no-db": "pnpm clean && pnpm intl:compile && MIKRO_ORM_NO_CONNECT=true dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
         "start:dev": "pnpm check-node-version && run-p dev:*",
         "start:prod": "node dist/main",
         "storybook": "storybook dev -p 4004 --no-open"
