@@ -5,11 +5,6 @@ import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
 
-interface FieldSqlResult {
-    sql: string;
-    joins: string[];
-}
-
 @Injectable()
 export class EntityInfoService {
     private connection: Connection;
@@ -23,73 +18,49 @@ export class EntityInfoService {
     }
 
     /**
-     * Resolves a field (e.g., "title") or field path for relations (e.g., "manufacturer.name") to SQL expression.
-     * Supports direct fields and one level of ManyToOne/OneToOne relations.
+     * Resolves a field path (e.g., "title" or "manufacturer.name") to a SQL expression.
+     * Supports direct fields and n-level deep ManyToOne/OneToOne relations using subqueries.
      */
-    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string, options?: { allowNull?: boolean }): FieldSqlResult {
-        const joins: string[] = [];
+    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
+        const parts = fieldPath.split(".");
 
-        // Check if it's a relation path (contains a dot)
-        if (fieldPath.includes(".")) {
-            const [relationName, fieldName] = fieldPath.split(".");
-
-            // Find the relation property in metadata
-            const relationProp = metadata.props.find((p) => p.name === relationName);
-
-            if (!relationProp) {
-                throw new Error(`Relation "${relationName}" not found in entity "${metadata.className}"`);
-            }
-
-            if (relationProp.kind !== "m:1" && relationProp.kind !== "1:1") {
-                throw new Error(`Only ManyToOne and OneToOne relations are supported for EntityInfo. "${relationName}" is "${relationProp.kind}"`);
-            }
-
-            if (!relationProp.targetMeta) {
-                throw new Error(`Relation "${relationName}" has no target metadata`);
-            }
-
-            // Get the join column (foreign key) and target table info
-            const joinColumn = relationProp.joinColumns[0];
-            const targetTableName = relationProp.targetMeta.tableName;
-            const targetPrimaryKey = relationProp.targetMeta.primaryKeys[0];
-
-            // Find the target field property
-            const targetFieldProp = relationProp.targetMeta.props.find((p) => p.name === fieldName);
-            if (!targetFieldProp) {
-                throw new Error(`Field "${fieldName}" not found in related entity "${relationProp.targetMeta.className}"`);
-            }
-
-            const relationAlias = `${tableName}_${relationName}`;
-            const targetFieldColumn = targetFieldProp.fieldNames[0];
-
-            // Create the LEFT JOIN clause
-            const joinSql = `LEFT JOIN "${targetTableName}" "${relationAlias}" ON "${tableName}"."${joinColumn}" = "${relationAlias}"."${targetPrimaryKey}"`;
-            joins.push(joinSql);
-
-            // Use COALESCE to ensure non-null values for required fields
-            const fieldSql = `"${relationAlias}"."${targetFieldColumn}"`;
-            const sql = options?.allowNull ? fieldSql : `COALESCE(${fieldSql}, '')`;
-
-            return {
-                sql,
-                joins,
-            };
-        } else {
-            // Direct field - find the actual column name
-            const fieldProp = metadata.props.find((p) => p.name === fieldPath);
+        // Direct field - find the actual column name
+        if (parts.length === 1) {
+            const fieldProp = metadata.props.find((p) => p.name === parts[0]);
             if (!fieldProp) {
-                throw new Error(`Field "${fieldPath}" not found in entity "${metadata.className}"`);
+                throw new Error(`Field "${parts[0]}" not found in entity "${metadata.className}"`);
             }
 
-            const columnName = fieldProp.fieldNames[0];
-            const fieldSql = `"${tableName}"."${columnName}"`;
-            const sql = options?.allowNull ? fieldSql : `COALESCE(${fieldSql}, '')`;
-
-            return {
-                sql,
-                joins: [],
-            };
+            return `"${tableName}"."${fieldProp.fieldNames[0]}"`;
         }
+
+        // Relation path - resolve first relation and recurse for the rest
+        const [relationName, ...remainingParts] = parts;
+
+        // Find the relation property in metadata
+        const relationProp = metadata.props.find((p) => p.name === relationName);
+
+        if (!relationProp) {
+            throw new Error(`Relation "${relationName}" not found in entity "${metadata.className}"`);
+        }
+
+        if (relationProp.kind !== "m:1" && relationProp.kind !== "1:1") {
+            throw new Error(`Only ManyToOne and OneToOne relations are supported for EntityInfo. "${relationName}" is "${relationProp.kind}"`);
+        }
+
+        if (!relationProp.targetMeta) {
+            throw new Error(`Relation "${relationName}" has no target metadata`);
+        }
+
+        // Get the join column (foreign key) and target table info
+        const joinColumn = relationProp.joinColumns[0];
+        const targetTableName = relationProp.targetMeta.tableName;
+        const targetPrimaryKey = relationProp.targetMeta.primaryKeys[0];
+
+        // Recursively resolve the remaining path in the target entity
+        const innerSql = this.resolveFieldToSql(remainingParts.join("."), relationProp.targetMeta, targetTableName);
+
+        return `(SELECT ${innerSql} FROM "${targetTableName}" WHERE "${targetTableName}"."${targetPrimaryKey}" = "${tableName}"."${joinColumn}")`;
     }
 
     async createEntityInfoView(): Promise<void> {
@@ -103,21 +74,14 @@ export class EntityInfoService {
                 } else {
                     const { entityName, metadata } = targetEntity;
                     const primary = metadata.primaryKeys[0];
-                    const allJoins: string[] = [];
 
                     // Resolve the name field (must not be NULL)
-                    const nameResult = this.resolveFieldToSql(entityInfo.name, metadata, metadata.tableName);
-                    const nameSql = nameResult.sql;
-                    allJoins.push(...nameResult.joins);
+                    const nameSql = `COALESCE(${this.resolveFieldToSql(entityInfo.name, metadata, metadata.tableName)}, '')`;
 
                     // Resolve the secondaryInformation field (if provided, can be NULL)
                     let secondaryInformationSql = "null";
                     if (entityInfo.secondaryInformation) {
-                        const secondaryResult = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, metadata.tableName, {
-                            allowNull: true,
-                        });
-                        secondaryInformationSql = secondaryResult.sql;
-                        allJoins.push(...secondaryResult.joins);
+                        secondaryInformationSql = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, metadata.tableName);
                     }
 
                     let visibleSql = "true";
@@ -132,17 +96,13 @@ export class EntityInfoService {
                         visibleSql = sqlWhereMatch[1];
                     }
 
-                    // Build unique joins (avoid duplicates if same relation is used for name and secondaryInformation)
-                    const uniqueJoins = [...new Set(allJoins)];
-                    const joinsSql = uniqueJoins.length > 0 ? `\n${uniqueJoins.join("\n")}` : "";
-
                     const select = `SELECT
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
                                 '${entityName}' "entityName"
-                            FROM "${metadata.tableName}" ${joinsSql}`;
+                            FROM "${metadata.tableName}"`;
                     indexSelects.push(select);
                 }
             }
