@@ -101,11 +101,24 @@ export function createPageTreeResolver({
 
         @Query(() => PaginatedPageTreeNodes)
         async paginatedPageTreeNodes(
-            @Args() { scope, category, sort, offset, limit, documentType }: PaginatedPageTreeNodesArgs,
+            @Args() { scope, category, sort, offset, limit, documentType, visibility }: PaginatedPageTreeNodesArgs,
         ): Promise<PaginatedPageTreeNodes> {
             await this.pageTreeReadApi.preloadNodes(scope);
-            const nodes = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category, offset, limit, sort, documentType });
-            const count = await this.pageTreeReadApi.getNodesCount({ scope: nonEmptyScopeOrNothing(scope), category, documentType });
+            const nodes = await this.pageTreeReadApi.getNodes({
+                scope: nonEmptyScopeOrNothing(scope),
+                category,
+                offset,
+                limit,
+                sort,
+                documentType,
+                visibility,
+            });
+            const count = await this.pageTreeReadApi.getNodesCount({
+                scope: nonEmptyScopeOrNothing(scope),
+                category,
+                documentType,
+                visibility,
+            });
 
             return new PaginatedPageTreeNodes(nodes, count);
         }

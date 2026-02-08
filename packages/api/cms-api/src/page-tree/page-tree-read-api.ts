@@ -16,6 +16,7 @@ interface PageTreeNodeFilterOptions {
     category?: string;
     documentType?: string;
     slug?: string;
+    visibility?: Visibility;
 }
 export interface PageTreeReadApiOptions {
     category?: PageTreeNodeCategory;
@@ -24,6 +25,7 @@ export interface PageTreeReadApiOptions {
     sort?: PageTreeNodeSort[];
     offset?: number;
     limit?: number;
+    visibility?: Visibility;
 }
 
 export interface PageTreeReadApi {
