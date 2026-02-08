@@ -26,7 +26,7 @@ export class EntityInfoService {
      * Resolves a field (e.g., "title") or field path for relations (e.g., "manufacturer.name") to SQL expression.
      * Supports direct fields and one level of ManyToOne/OneToOne relations.
      */
-    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, mainAlias: string, options?: { allowNull?: boolean }): FieldSqlResult {
+    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string, options?: { allowNull?: boolean }): FieldSqlResult {
         const joins: string[] = [];
 
         // Check if it's a relation path (contains a dot)
@@ -59,11 +59,11 @@ export class EntityInfoService {
                 throw new Error(`Field "${fieldName}" not found in related entity "${relationProp.targetMeta.className}"`);
             }
 
-            const relationAlias = `${mainAlias}_${relationName}`;
+            const relationAlias = `${tableName}_${relationName}`;
             const targetFieldColumn = targetFieldProp.fieldNames[0];
 
             // Create the LEFT JOIN clause
-            const joinSql = `LEFT JOIN "${targetTableName}" "${relationAlias}" ON "${mainAlias}"."${joinColumn}" = "${relationAlias}"."${targetPrimaryKey}"`;
+            const joinSql = `LEFT JOIN "${targetTableName}" "${relationAlias}" ON "${tableName}"."${joinColumn}" = "${relationAlias}"."${targetPrimaryKey}"`;
             joins.push(joinSql);
 
             // Use COALESCE to ensure non-null values for required fields
@@ -82,7 +82,7 @@ export class EntityInfoService {
             }
 
             const columnName = fieldProp.fieldNames[0];
-            const fieldSql = `"${mainAlias}"."${columnName}"`;
+            const fieldSql = `"${tableName}"."${columnName}"`;
             const sql = options?.allowNull ? fieldSql : `COALESCE(${fieldSql}, '')`;
 
             return {
@@ -103,25 +103,26 @@ export class EntityInfoService {
                 } else {
                     const { entityName, metadata } = targetEntity;
                     const primary = metadata.primaryKeys[0];
-                    const mainAlias = "t";
                     const allJoins: string[] = [];
 
                     // Resolve the name field (must not be NULL)
-                    const nameResult = this.resolveFieldToSql(entityInfo.name, metadata, mainAlias);
+                    const nameResult = this.resolveFieldToSql(entityInfo.name, metadata, metadata.tableName);
                     const nameSql = nameResult.sql;
                     allJoins.push(...nameResult.joins);
 
                     // Resolve the secondaryInformation field (if provided, can be NULL)
                     let secondaryInformationSql = "null";
                     if (entityInfo.secondaryInformation) {
-                        const secondaryResult = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, mainAlias, { allowNull: true });
+                        const secondaryResult = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, metadata.tableName, {
+                            allowNull: true,
+                        });
                         secondaryInformationSql = secondaryResult.sql;
                         allJoins.push(...secondaryResult.joins);
                     }
 
                     let visibleSql = "true";
                     if (entityInfo.visible) {
-                        const qb = this.entityManager.createQueryBuilder(targetEntity.entity.name, mainAlias);
+                        const qb = this.entityManager.createQueryBuilder(targetEntity.entity.name, metadata.tableName);
                         const query = qb.select("*").where(entityInfo.visible);
                         const sql = query.getFormattedQuery();
                         const sqlWhereMatch = sql.match(/^select .*? from .*? where (.*)/);
@@ -139,9 +140,9 @@ export class EntityInfoService {
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
-                                ${mainAlias}."${primary}"::text "id",
+                                "${metadata.tableName}"."${primary}"::text "id",
                                 '${entityName}' "entityName"
-                            FROM "${metadata.tableName}" ${mainAlias} ${joinsSql}`;
+                            FROM "${metadata.tableName}" ${joinsSql}`;
                     indexSelects.push(select);
                 }
             }
