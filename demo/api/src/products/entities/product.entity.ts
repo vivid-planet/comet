@@ -86,7 +86,7 @@ export class ProductPriceRange {
     max: number;
 }
 
-@EntityInfo<Product>({ name: "title", /*secondaryInformation: "manufacturer.name",*/ visible: { status: { $eq: ProductStatus.Published } } })
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name", visible: { status: { $eq: ProductStatus.Published } } })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })

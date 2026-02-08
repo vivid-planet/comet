@@ -4,8 +4,8 @@ export const ENTITY_INFO_METADATA_KEY = "data:entity-info";
 
 export type EntityInfo<Entity> =
     | {
-          name: AutoPath<Entity, PopulatePath.ALL>;
-          secondaryInformation?: AutoPath<Entity, PopulatePath.ALL>;
+          name: AutoPath<Entity, PopulatePath.ALL> | string;
+          secondaryInformation?: AutoPath<Entity, PopulatePath.ALL> | string;
           visible?: ObjectQuery<Entity>;
       }
     | string;
