@@ -83,7 +83,7 @@
         "eslint": "^9.30.1",
         "eslint-plugin-storybook": "^9.1.10",
         "final-form": "^4.20.10",
-        "graphql": "^16.0.0",
+        "graphql": "^16.12.0",
         "history": "^4.10.1",
         "jsdom": "^28.0.0",
         "msw": "^2.10.4",
