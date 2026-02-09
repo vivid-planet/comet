@@ -9,7 +9,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { memoryCache } from "./cache";
 import { type CustomMiddleware } from "./chain";
 
-type Redirect = { source: string; target: RedirectsLinkBlockData; sourceType: string };
+type Redirect = { source: string; target: RedirectsLinkBlockData; sourceType: string; scope: { domain: string } };
 
 const domainRedirectsQuery = gql`
     query DomainRedirects($scope: RedirectScopeInput!, $offset: Int, $limit: Int) {
@@ -19,21 +19,23 @@ const domainRedirectsQuery = gql`
                 source
                 target
                 sourceType
+                scope {
+                    domain
+                }
             }
             totalCount
         }
     }
 `;
 
-async function fetchDomainRedirects(domain: string): Promise<Redirect[]> {
-    const key = `domainRedirects-${domain}`;
-    return memoryCache.wrap(key, async () => {
-        const graphQLFetch = createGraphQLFetch();
-        const limit = 50;
+async function fetchPaginatedDomainRedirects(domains: string[]): Promise<Redirect[]> {
+    const graphQLFetch = createGraphQLFetch();
+    const limit = 50;
+
+    async function fetchForDomain(domain: string): Promise<Redirect[]> {
+        let allNodes: Redirect[] = [];
         let totalCount = 0;
         let currentCount = 0;
-        let allNodes: Redirect[] = [];
-
         do {
             const data = await graphQLFetch<
                 {
@@ -54,21 +56,45 @@ async function fetchDomainRedirects(domain: string): Promise<Redirect[]> {
             allNodes = allNodes.concat(nodes);
         } while (currentCount < totalCount);
         return allNodes;
-    });
+    }
+
+    const results = await Promise.all(domains.map(fetchForDomain));
+    return results.flat();
+}
+
+async function fetchDomainRedirects(domain: string): Promise<Redirect[]> {
+    const key = `domainRedirects-${domain}`;
+    return memoryCache.wrap(key, () => fetchPaginatedDomainRedirects([domain]));
+}
+
+async function fetchDomainRedirectsForAllScopes(): Promise<Redirect[]> {
+    const key = `domainRedirects-all-scopes`;
+    const allDomains = getSiteConfigs().map((config) => config.scope.domain);
+    return memoryCache.wrap(key, () => fetchPaginatedDomainRedirects(allDomains));
 }
 
 function normalizeHost(value: string): string {
     return value.replace(/^https?:\/\//, "");
 }
 
+function findDomainRedirect(redirects: Redirect[], host: string): Redirect | undefined {
+    return redirects.find((redirect) => redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host));
+}
+
 function findDomainRedirectTarget(redirects: Redirect[], host: string): RedirectsLinkBlockData | undefined {
-    const matching = redirects.find((redirect) => redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host));
+    const matching = findDomainRedirect(redirects, host);
     return matching ? matching.target : undefined;
 }
 
 async function getDomainRedirectTarget(domain: string, host: string): Promise<RedirectsLinkBlockData | undefined> {
     const redirects = await fetchDomainRedirects(domain);
     return findDomainRedirectTarget(redirects, host);
+}
+
+async function getDomainRedirectTargetForAllScopes(host: string): Promise<{ target: RedirectsLinkBlockData; scopeDomain: string } | undefined> {
+    const redirects = await fetchDomainRedirectsForAllScopes();
+    const matching = findDomainRedirect(redirects, host);
+    return matching ? { target: matching.target, scopeDomain: matching.scope.domain } : undefined;
 }
 
 const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
@@ -103,7 +129,22 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 if (domainRedirectTarget) {
                     let destination: string | undefined;
                     if (domainRedirectTarget.block !== undefined) {
-                        destination = getRedirectTargetUrl(domainRedirectTarget.block, `https://${redirectSiteConfig.domains.main}`);
+                        destination = getRedirectTargetUrl(domainRedirectTarget.block, redirectSiteConfig.domains.main);
+                    }
+                    if (destination) {
+                        return NextResponse.redirect(destination, { status: 301 });
+                    }
+                }
+            } else {
+                const domainRedirectTarget = await getDomainRedirectTargetForAllScopes(host);
+
+                if (domainRedirectTarget) {
+                    const scopedSiteConfig = getSiteConfigs().find((config) => config.scope.domain === domainRedirectTarget.scopeDomain);
+                    const redirectHost = scopedSiteConfig?.domains.main ?? host;
+
+                    let destination: string | undefined;
+                    if (domainRedirectTarget.target.block !== undefined) {
+                        destination = getRedirectTargetUrl(domainRedirectTarget.target.block, redirectHost);
                     }
                     if (destination) {
                         return NextResponse.redirect(destination, { status: 301 });
