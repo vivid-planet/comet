@@ -1,13 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
-
-@ObjectType()
-export class MutationError {
-    @Field({ nullable: true })
-    message?: string;
-
-    @Field({ nullable: true })
+export interface MutationError {
     field?: string;
-
-    @Field()
     code: string;
 }

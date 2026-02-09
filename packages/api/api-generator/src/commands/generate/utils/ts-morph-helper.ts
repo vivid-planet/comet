@@ -50,8 +50,12 @@ export function findImportPath(importName: string, targetDirectory: string, meta
 
                 if (importPath.startsWith("./") || importPath.startsWith("../")) {
                     const absolutePath = path.resolve(path.dirname(metadata.path), importPath);
+                    let relativePath = path.relative(targetDirectory, absolutePath);
+                    if (!relativePath.startsWith(".")) {
+                        relativePath = `./${relativePath}`;
+                    }
                     return {
-                        importPath: path.relative(targetDirectory, absolutePath),
+                        importPath: relativePath,
                         exportedDeclaration,
                     };
                 } else {

@@ -338,12 +338,12 @@ input CreateDamFolderInput {
 }
 
 type CreateProductPayload {
-  errors: [MutationError!]
+  errors: [ProductMutationError!]
   product: Product
 }
 
 type CreateProductVariantPayload {
-  errors: [MutationError!]
+  errors: [ProductVariantMutationError!]
   productVariant: ProductVariant
 }
 
@@ -1000,12 +1000,6 @@ type Mutation {
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
 }
 
-type MutationError {
-  code: String!
-  field: String
-  message: String
-}
-
 type News {
   category: NewsCategory!
   comments: [NewsComment!]!
@@ -1643,6 +1637,18 @@ input ProductInput {
   type: ProductType!
 }
 
+type ProductMutationError {
+  code: ProductMutationErrorCode!
+  field: String
+}
+
+enum ProductMutationErrorCode {
+  """
+  Title must be at least 3 characters long when creating a product, except for foo
+  """
+  titleTooShort
+}
+
 input ProductNestedProductColorInput {
   hexCode: String!
   name: String!
@@ -1868,6 +1874,16 @@ input ProductVariantInput {
   image: DamImageBlockInput!
   name: String!
   position: Int
+}
+
+type ProductVariantMutationError {
+  code: ProductVariantMutationErrorCode!
+  field: String
+}
+
+enum ProductVariantMutationErrorCode {
+  """Title must be at least 3 characters long, except for foo"""
+  titleTooShort
 }
 
 input ProductVariantSort {
@@ -2192,7 +2208,7 @@ input UpdateImageFileInput {
 }
 
 type UpdateProductVariantPayload {
-  errors: [MutationError!]
+  errors: [ProductVariantMutationError!]
   productVariant: ProductVariant
 }
 

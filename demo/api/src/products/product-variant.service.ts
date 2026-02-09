@@ -1,18 +1,39 @@
 import { type CrudGeneratorHooksService, type CurrentUser, type MutationError } from "@comet/cms-api";
+import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 
 import { type ProductVariant } from "./entities/product-variant.entity";
 import { type ProductVariantInput, type ProductVariantUpdateInput } from "./generated/dto/product-variant.input";
+
+export enum ProductVariantMutationErrorCode {
+    titleTooShort = "titleTooShort",
+}
+registerEnumType(ProductVariantMutationErrorCode, {
+    name: "ProductVariantMutationErrorCode",
+    valuesMap: {
+        titleTooShort: {
+            description: "Title must be at least 3 characters long, except for foo",
+        },
+    },
+});
+
+@ObjectType()
+export class ProductVariantMutationError implements MutationError {
+    @Field({ nullable: true })
+    field?: string;
+
+    @Field(() => ProductVariantMutationErrorCode)
+    code: ProductVariantMutationErrorCode;
+}
 
 export class ProductVariantService implements CrudGeneratorHooksService {
     async validateCreateInput(
         input: ProductVariantInput,
         options: { currentUser: CurrentUser; args: { product: string } },
-    ): Promise<MutationError[]> {
+    ): Promise<ProductVariantMutationError[]> {
         if (input.name.length < 3 && options.currentUser.email !== "foo@example.com") {
             return [
                 {
-                    message: "Title must be at least 3 characters long when creating a product variant, except for foo",
-                    code: "TITLE_TOO_SHORT",
+                    code: ProductVariantMutationErrorCode.titleTooShort,
                     field: "title",
                 },
             ];
@@ -23,12 +44,11 @@ export class ProductVariantService implements CrudGeneratorHooksService {
     async validateUpdateInput(
         input: ProductVariantUpdateInput,
         options: { currentUser: CurrentUser; entity: ProductVariant },
-    ): Promise<MutationError[]> {
+    ): Promise<ProductVariantMutationError[]> {
         if (input.name !== undefined && input.name.length < 3 && options.currentUser.email !== "foo@example.com") {
             return [
                 {
-                    message: "Title must be at least 3 characters long when updating a product variant, except for foo",
-                    code: "TITLE_TOO_SHORT",
+                    code: ProductVariantMutationErrorCode.titleTooShort,
                     field: "title",
                 },
             ];
