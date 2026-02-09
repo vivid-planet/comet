@@ -58,6 +58,7 @@ import { PredefinedPage } from "./documents/predefined-pages/entities/predefined
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
 import { MenusModule } from "./menus/menus.module";
+import { NavigationCallToActionButtonListsModule } from "./navigation-call-to-action-button-lists/navigation-call-to-action-button-lists.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { News } from "./news/entities/news.entity";
 import { NewsModule } from "./news/news.module";
@@ -212,6 +213,7 @@ export class AppModule {
                 NewsModule,
                 MenusModule,
                 FooterModule,
+                NavigationCallToActionButtonListsModule,
                 PredefinedPagesModule,
                 CronJobsModule,
                 MailerModule.register(config.mailer),

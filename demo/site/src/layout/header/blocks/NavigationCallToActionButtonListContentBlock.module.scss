@@ -1,0 +1,13 @@
+@use "@src/styles/variables" as *;
+
+.root {
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--spacing-s300);
+
+    @media (min-width: $breakpoint-md) {
+        align-items: center;
+        gap: var(--spacing-s200);
+        flex-flow: nowrap;
+    }
+}

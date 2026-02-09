@@ -1,5 +1,6 @@
 "use client";
 import { SvgUse } from "@src/common/helpers/SvgUse";
+import { NavigationCallToActionButtonListContentBlock } from "@src/layout/header/blocks/NavigationCallToActionButtonListContentBlock";
 import { PageLink } from "@src/layout/header/PageLink";
 import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
 import clsx from "clsx";
@@ -9,12 +10,14 @@ import { useIntl } from "react-intl";
 
 import { type GQLDesktopMenuFragment } from "./DesktopMenu.fragment.generated";
 import styles from "./DesktopMenu.module.scss";
+import { type GQLNavigationCallToActionButtonListFragment } from "./NavigationCallToActionButtonList.fragment.generated";
 
 interface Props {
     menu: GQLDesktopMenuFragment;
+    navigationCallToActionButtonList?: GQLNavigationCallToActionButtonListFragment | null;
 }
 
-export const DesktopMenu = ({ menu }: Props) => {
+export const DesktopMenu = ({ menu, navigationCallToActionButtonList }: Props) => {
     const intl = useIntl();
     const [expandedSubLevelNavigation, setExpandedSubLevelNavigation] = useState<string | null>(null);
     const [autoFocus, setAutoFocus] = useState<boolean>(false);
@@ -115,6 +118,9 @@ export const DesktopMenu = ({ menu }: Props) => {
                     );
                 })}
             </ol>
+            <div className={styles.menuButtonsWrapper}>
+                {navigationCallToActionButtonList && <NavigationCallToActionButtonListContentBlock data={navigationCallToActionButtonList.content} />}
+            </div>
         </div>
     );
 };

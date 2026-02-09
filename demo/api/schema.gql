@@ -953,6 +953,7 @@ type Mutation {
   restoreDamFiles(ids: [ID!]!): [DamFile!]!
   saveFooter(input: FooterInput!, scope: FooterScopeInput!): Footer!
   saveLink(attachedPageTreeNodeId: ID, id: ID!, input: LinkInput!, lastUpdatedAt: DateTime): Link!
+  saveNavigationCallToActionButtonList(input: NavigationCallToActionButtonListInput!, scope: NavigationCallToActionButtonListScopeInput!): NavigationCallToActionButtonList!
   savePage(attachedPageTreeNodeId: ID, input: PageInput!, lastUpdatedAt: DateTime, pageId: ID!): Page!
   savePredefinedPage(attachedPageTreeNodeId: ID!, id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime): PredefinedPage!
   sendBrevoEmailCampaignNow(id: ID!): Boolean!
@@ -1123,6 +1124,34 @@ input OneToManyFilter {
   contains: ID
   isAnyOf: [ID!]
   search: String
+}
+
+type NavigationCallToActionButtonList implements DocumentInterface {
+  content: NavigationCallToActionButtonListContentBlockData!
+  createdAt: DateTime!
+  id: ID!
+  scope: NavigationCallToActionButtonListScope!
+  updatedAt: DateTime!
+}
+
+"""NavigationCallToActionButtonListContent root block data"""
+scalar NavigationCallToActionButtonListContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""NavigationCallToActionButtonListContent root block input"""
+scalar NavigationCallToActionButtonListContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input NavigationCallToActionButtonListInput {
+  content: NavigationCallToActionButtonListContentBlockInput!
+}
+
+type NavigationCallToActionButtonListScope {
+  domain: String!
+  language: String!
+}
+
+input NavigationCallToActionButtonListScopeInput {
+  domain: String!
+  language: String!
 }
 
 type Page implements DocumentInterface {
@@ -1929,6 +1958,7 @@ type Query {
   link(id: ID!): Link
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
+  navigationCallToActionButtonList(scope: NavigationCallToActionButtonListScopeInput!): NavigationCallToActionButtonList
   manuallyAssignedBrevoContacts(email: String, limit: Int! = 25, offset: Int! = 0, targetGroupId: ID!): PaginatedBrevoContacts!
   manufacturer(id: ID!): Manufacturer!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
