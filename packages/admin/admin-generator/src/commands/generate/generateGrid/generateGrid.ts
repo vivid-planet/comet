@@ -194,9 +194,9 @@ function queryHasPaging(gridQueryType: IntrospectionField, gqlIntrospection: Int
     // If it's a named OBJECT type, check for nodes and totalCount fields
     if (returnType.kind === "OBJECT") {
         const typeName = returnType.name;
-        const objectType = gqlIntrospection.__schema.types.find(
-            (type: IntrospectionType) => type.kind === "OBJECT" && type.name === typeName,
-        ) as IntrospectionObjectType | undefined;
+        const objectType = gqlIntrospection.__schema.types.find((type: IntrospectionType) => type.kind === "OBJECT" && type.name === typeName) as
+            | IntrospectionObjectType
+            | undefined;
         if (objectType) {
             const hasNodes = objectType.fields.some((f) => f.name === "nodes");
             const hasTotalCount = objectType.fields.some((f) => f.name === "totalCount");
@@ -746,16 +746,18 @@ export function generateGrid<T extends { __typename?: string }>(
             ...gqlArgs
                 .filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name)
                 .map((gqlArg) => ({ name: gqlArg.name, type: `${gqlArg.type}!` })),
-            ...(hasPaging ? [
-                {
-                    name: "offset",
-                    type: "Int!",
-                },
-                {
-                    name: "limit",
-                    type: "Int!",
-                },
-            ] : []),
+            ...(hasPaging
+                ? [
+                      {
+                          name: "offset",
+                          type: "Int!",
+                      },
+                      {
+                          name: "limit",
+                          type: "Int!",
+                      },
+                  ]
+                : []),
             ...(hasSort ? [{ name: "sort", type: `[${gqlType}Sort!]` }] : []),
             ...(hasSearch ? [{ name: "search", type: "String" }] : []),
             ...(filterArg && (hasFilter || hasFilterProp) ? [{ name: "filter", type: `${gqlType}Filter` }] : []),
@@ -1007,10 +1009,12 @@ export function generateGrid<T extends { __typename?: string }>(
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...(!allowRowReordering
                         ? [
-                              ...(hasPaging ? [
-                                  `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
-                                  `limit: dataGridProps.paginationModel.pageSize`,
-                              ] : []),
+                              ...(hasPaging
+                                  ? [
+                                        `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
+                                        `limit: dataGridProps.paginationModel.pageSize`,
+                                    ]
+                                  : []),
                               `sort: muiGridSortToGql(dataGridProps.sortModel, columns)`,
                           ]
                         : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
@@ -1022,7 +1026,9 @@ export function generateGrid<T extends { __typename?: string }>(
         if (error) throw error;
         const rows = ${
             !allowRowReordering
-                ? hasPaging ? `data?.${gridQuery}.nodes` : `data?.${gridQuery}`
+                ? hasPaging
+                    ? `data?.${gridQuery}.nodes`
+                    : `data?.${gridQuery}`
                 : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
@@ -1116,18 +1122,10 @@ const generateGridExportApi = (
         return "";
     }
 
-    const queryNodeType = hasPaging
-        ? `GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0]`
-        : `GQL${gqlTypePlural}GridQuery["${gridQuery}"][0]`;
-    const variablesType = hasPaging
-        ? `Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">`
-        : `GQL${gqlTypePlural}GridQueryVariables`;
-    const resolveQueryNodes = hasPaging
-        ? `(data) => data.${gridQuery}.nodes`
-        : `(data) => data.${gridQuery}`;
-    const totalCount = hasPaging
-        ? `data?.${gridQuery}.totalCount ?? 0`
-        : `data?.${gridQuery}.length ?? 0`;
+    const queryNodeType = hasPaging ? `GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0]` : `GQL${gqlTypePlural}GridQuery["${gridQuery}"][0]`;
+    const variablesType = hasPaging ? `Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">` : `GQL${gqlTypePlural}GridQueryVariables`;
+    const resolveQueryNodes = hasPaging ? `(data) => data.${gridQuery}.nodes` : `(data) => data.${gridQuery}`;
+    const totalCount = hasPaging ? `data?.${gridQuery}.totalCount ?? 0` : `data?.${gridQuery}.length ?? 0`;
 
     return `const exportApi = useDataGridExcelExport<${queryNodeType}, GQL${gqlTypePlural}GridQuery, ${variablesType}>({
         columns,
