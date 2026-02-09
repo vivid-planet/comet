@@ -15,19 +15,15 @@ import { useQuery } from "@apollo/client";
 import { Button } from "@comet/admin";
 import { CrudContextMenu } from "@comet/admin";
 import { DataGridToolbar } from "@comet/admin";
-import { GridFilterButton } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
-import { muiGridFilterToGql } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
-import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -38,12 +34,9 @@ const productHighlightsFragment = gql`
     }
 `;
 const productHighlightsQuery = gql`
-    query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
-        productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-            nodes {
-                ...ProductHighlightsForm
-            }
-            totalCount
+    query ProductHighlightsGrid {
+        productHighlights {
+            ...ProductHighlightsForm
         }
     }
     ${productHighlightsFragment}
@@ -56,8 +49,6 @@ const deleteProductHighlightMutation = gql`
 function ProductHighlightsGridToolbar() {
     return (
         <DataGridToolbar>
-            <GridToolbarQuickFilter />
-            <GridFilterButton />
             <FillSpace />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="productHighlight.productHighlightsForm.newEntry" defaultMessage="New Product Highlight" />
@@ -74,6 +65,8 @@ export function ProductHighlightsGrid() {
             {
                 field: "description",
                 headerName: intl.formatMessage({ id: "productHighlight.description", defaultMessage: "Description" }),
+                filterable: false,
+                sortable: false,
                 flex: 1,
                 minWidth: 150,
             },
@@ -108,24 +101,17 @@ export function ProductHighlightsGrid() {
         ],
         [intl, client],
     );
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
     const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery, {
         variables: {
-            filter: gqlFilter,
-            search: gqlSearch,
-            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
-            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel, columns),
         },
     });
-    const rowCount = useBufferedRowCount(data?.productHighlights.totalCount);
     if (error) throw error;
-    const rows = data?.productHighlights.nodes ?? [];
+    const rows = data?.productHighlights ?? [];
     return (
         <DataGridPro
             {...dataGridProps}
             rows={rows}
-            rowCount={rowCount}
             columns={columns}
             loading={loading}
             slots={{
