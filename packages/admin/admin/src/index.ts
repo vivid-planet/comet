@@ -95,6 +95,7 @@ export {
 } from "./dataGrid/pagination/paginationActions/DataGridPaginationActions";
 export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
+export { useDataGridLocationState } from "./dataGrid/useDataGridLocationState";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { Future_DatePicker, type Future_DatePickerClassKey, type Future_DatePickerProps } from "./dateTime/datePicker/DatePicker";

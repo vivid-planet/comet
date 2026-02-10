@@ -6,11 +6,9 @@ import {
     FillSpace,
     type GridColDef,
     GridFilterButton,
-    muiGridFilterToGql,
-    muiGridSortToGql,
     StackLink,
     useBufferedRowCount,
-    useDataGridRemote,
+    useDataGridLocationState,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
@@ -33,8 +31,8 @@ const productHighlightsFragment = gql`
     }
 `;
 const productHighlightsQuery = gql`
-    query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
-        productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+    query ProductHighlightsGrid {
+        productHighlights {
             nodes {
                 ...ProductHighlightsForm
             }
@@ -63,7 +61,7 @@ function ProductHighlightsGridToolbar() {
 export function ProductHighlightsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductHighlightsGrid") };
+    const dataGridProps = { ...useDataGridLocationState(), ...usePersistentColumnState("ProductHighlightsGrid") };
     const columns: GridColDef<GQLProductHighlightsFormFragment>[] = [
         {
             field: "description",
@@ -100,17 +98,8 @@ export function ProductHighlightsGrid() {
             },
         },
     ];
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
-    const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery, {
-        variables: {
-            filter: gqlFilter,
-            search: gqlSearch,
-            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
-            limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
-        },
-    });
-    const rowCount = useBufferedRowCount(data?.productHighlights.totalCount);
+    const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery);
+    const rowCount = useBufferedRowCount(data?.productHighlights.nodes.length);
     if (error) throw error;
     const rows = data?.productHighlights.nodes ?? [];
     return (
