@@ -1012,17 +1012,15 @@ export function generateGrid<T extends { __typename?: string }>(
                             ? ["sort: muiGridSortToGql(dataGridProps.sortModel, columns)"]
                             : [`sort: { field: "position", direction: "ASC" }`]
                         : []),
-                    ...(!allowRowReordering
-                        ? [
-                              ...(hasPaging
-                                  ? [
-                                        `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
-                                        `limit: dataGridProps.paginationModel.pageSize`,
-                                    ]
-                                  : []),
-                          ]
-                        : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
-                          [`offset: 0`, `limit: 100`]),
+                    ...(hasPaging
+                        ? !allowRowReordering
+                            ? [
+                                  `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
+                                  `limit: dataGridProps.paginationModel.pageSize`,
+                              ]
+                            : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
+                              [`offset: 0`, `limit: 100`]
+                        : []),
                 ].join(", ")}
             },
         });
