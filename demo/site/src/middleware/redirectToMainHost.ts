@@ -134,6 +134,11 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                     if (destination) {
                         return NextResponse.redirect(destination, { status: 301 });
                     }
+                } else {
+                    // Redirect to Main Host
+                    return NextResponse.redirect(`https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
+                        status: 301,
+                    });
                 }
             } else {
                 const domainRedirectTarget = await getDomainRedirectTargetForAllScopes(host);
