@@ -254,7 +254,6 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "renderStaticSelectCell", importPath: "@comet/admin" },
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
-        { name: "muiGridSortToGql", importPath: "@comet/admin" },
         { name: "StackLink", importPath: "@comet/admin" },
         { name: "FillSpace", importPath: "@comet/admin" },
         { name: "Tooltip", importPath: "@comet/admin" },
@@ -399,6 +398,7 @@ export function generateGrid<T extends { __typename?: string }>(
     const hasSort = !!sortArg;
     let sortFields: string[] = [];
     if (sortArg) {
+        imports.push({ name: "muiGridSortToGql", importPath: "@comet/admin" });
         let sortArgType = sortArg.type;
         if (sortArgType.kind === "NON_NULL") {
             sortArgType = sortArgType.ofType;
@@ -1005,16 +1005,20 @@ export function generateGrid<T extends { __typename?: string }>(
                                 : []
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
+                    ...(hasSort
+                        ? !allowRowReordering
+                            ? ["sort: muiGridSortToGql(dataGridProps.sortModel, columns)"]
+                            : [`sort: { field: "position", direction: "ASC" }`]
+                        : []),
                     ...(!allowRowReordering
                         ? [
                               ...(hasPaging ? [
                                   `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
                                   `limit: dataGridProps.paginationModel.pageSize`,
                               ] : []),
-                              `sort: muiGridSortToGql(dataGridProps.sortModel, columns)`,
                           ]
                         : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
-                          [`offset: 0`, `limit: 100`, `sort: { field: "position", direction: "ASC" }`]),
+                          [`offset: 0`, `limit: 100`]),
                 ].join(", ")}
             },
         });

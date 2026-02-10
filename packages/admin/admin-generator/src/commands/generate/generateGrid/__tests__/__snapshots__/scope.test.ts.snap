@@ -36,7 +36,6 @@ import { dataGridOneToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
@@ -148,7 +147,7 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+                scope
             },
         });
         
@@ -212,7 +211,6 @@ import { dataGridOneToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
@@ -323,7 +321,7 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+                scope
             },
         });
         

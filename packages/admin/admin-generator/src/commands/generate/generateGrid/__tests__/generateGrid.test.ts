@@ -335,4 +335,60 @@ describe("generateGrid", () => {
 
         expect(result.code).toMatchSnapshot();
     });
+
+    it("should omit sort variable when the schema has no sort arg", () => {
+        const schemaWithoutSort = buildSchema(`
+            type Query {
+                books(
+                    offset: Int!
+                    limit: Int!
+                ): PaginatedBooks!
+            }
+
+            type PaginatedBooks {
+                nodes: [Book!]!
+                totalCount: Int!
+            }
+
+            type Book {
+                id: ID!
+                title: String!
+            }
+
+            type Mutation {
+                createBook(author: ID!, input: BookInput!): Book!
+                updateBook(id: ID!, input: BookInput!): Book!
+                deleteBook(id: ID!): Boolean!
+            }
+
+            input BookInput {
+                title: String!
+            }
+        `);
+
+        const introspectionWithoutSort = introspectionFromSchema(schemaWithoutSort);
+
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspectionWithoutSort,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
 });
