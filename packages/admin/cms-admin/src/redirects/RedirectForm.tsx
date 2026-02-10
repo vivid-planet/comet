@@ -222,7 +222,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                                 <Alert severity="warning">
                                     <FormattedMessage
                                         id="comet.pages.redirects.redirect.source.type.domain.warning"
-                                        defaultMessage="This only works if the DNS entry for this domain points to the correct web server."
+                                        defaultMessage="This only works if the domain is configured correctly."
                                     />
                                 </Alert>
                             </Box>
