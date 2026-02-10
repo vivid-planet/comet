@@ -29,7 +29,12 @@ describe("generateGrid", () => {
                     sort: [BookSort!]
                     filter: BookFilter
                 ): PaginatedBooks!
-            } 
+                allBooks(
+                    sort: [BookSort!]
+                    filter: BookFilter
+                ): [Book!]!
+                simpleBooks: [Book!]!
+            }
 
             type PaginatedBooks {
                 nodes: [Book!]!
@@ -226,6 +231,80 @@ describe("generateGrid", () => {
         );
 
         expect(result.code).toContain('density="compact"');
+    });
+
+    it("should generate a grid without paging when query returns a list", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "allBooks",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+        // Should NOT contain offset/limit in the query
+        expect(result.code).not.toMatch(/\$offset: Int!/);
+        expect(result.code).not.toMatch(/\$limit: Int!/);
+        // Should NOT contain nodes wrapper or totalCount
+        expect(result.code).not.toContain("nodes {");
+        expect(result.code).not.toContain("totalCount");
+        // Should NOT contain rowCount
+        expect(result.code).not.toContain("rowCount");
+    });
+
+    it("should generate a grid without paging, sort, or filter when query has no arguments", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "simpleBooks",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+        // Should NOT contain offset/limit
+        expect(result.code).not.toMatch(/\$offset: Int!/);
+        expect(result.code).not.toMatch(/\$limit: Int!/);
+        // Should NOT contain nodes wrapper or totalCount
+        expect(result.code).not.toContain("nodes {");
+        expect(result.code).not.toContain("totalCount");
+        // Should NOT contain rowCount
+        expect(result.code).not.toContain("rowCount");
+        // Should NOT contain sort or filter variables
+        expect(result.code).not.toMatch(/\$sort:/);
+        expect(result.code).not.toMatch(/\$filter:/);
+        // The query should have no arguments at all
+        expect(result.code).toMatch(/query BooksGrid \{/);
+        expect(result.code).toMatch(/simpleBooks \{/);
     });
 
     it("should generate custom text for delete action in crudContextMenu", () => {
