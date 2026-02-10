@@ -14,7 +14,7 @@ export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], hos
                     scope: internalLink.targetPage.scope as Pick<GQLPageTreeNodeScope, "language">,
                 });
                 if (destination && destination.startsWith("/")) {
-                    destination = `http://${host}${destination}`;
+                    destination = `https://${host}${destination}`;
                 }
                 return destination;
             }
@@ -26,7 +26,7 @@ export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], hos
             const newsLink = block.props as NewsLinkBlockData;
             if (newsLink.news) {
                 const destination = `/${newsLink.news.scope.language}/news/${newsLink.news.slug}`;
-                return destination.startsWith("/") ? `http://${host}${destination}` : destination;
+                return destination.startsWith("/") ? `https://${host}${destination}` : destination;
             }
             break;
         }
