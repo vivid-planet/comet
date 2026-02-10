@@ -14,6 +14,7 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
@@ -24,7 +25,7 @@ import {
     type GQLManufacturersListQuery,
     type GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 function ManufacturersGridToolbar() {
@@ -47,6 +48,14 @@ export function ManufacturersGrid() {
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
     const intl = useIntl();
+    const stackSwitchApi = useStackSwitchApi();
+
+    const handleRowPrimaryAction = useCallback(
+        (row: GridValues) => {
+            stackSwitchApi.activatePage("edit", row.id);
+        },
+        [stackSwitchApi],
+    );
 
     const columns: GridColDef<GridValues>[] = useMemo(() => {
         return [
@@ -119,7 +128,7 @@ export function ManufacturersGrid() {
                 renderCell: (params) => {
                     return (
                         <>
-                            <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <IconButton color="primary" onClick={() => handleRowPrimaryAction(params.row)}>
                                 <Edit />
                             </IconButton>
                             <CrudContextMenu
@@ -136,7 +145,7 @@ export function ManufacturersGrid() {
                 },
             },
         ];
-    }, [client, intl]);
+    }, [client, intl, handleRowPrimaryAction]);
 
     const { data, loading, error } = useQuery<GQLManufacturersListQuery, GQLManufacturersListQueryVariables>(manufacturersQuery, {
         variables: {
@@ -158,6 +167,7 @@ export function ManufacturersGrid() {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
+            onRowClick={(params) => handleRowPrimaryAction(params.row)}
             slots={{
                 toolbar: ManufacturersGridToolbar,
             }}
