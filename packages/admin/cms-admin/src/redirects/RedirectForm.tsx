@@ -16,13 +16,13 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { Box, MenuItem } from "@mui/material";
+import { isFQDN } from "class-validator";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { createFinalFormBlock } from "../blocks/form/createFinalFormBlock";
 import { type BlockInterface, type BlockState } from "../blocks/types";
-import { isValidUrl } from "../blocks/validators/isValidUrl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { type GQLRedirectSourceTypeValues } from "../graphql.generated";
 import { type GQLRedirectSourceAvailableQuery, type GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
@@ -157,10 +157,10 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     };
 
     const validateDomain = (value: string) => {
-        if (!isValidUrl(value)) {
+        if (!isFQDN(value)) {
             return intl.formatMessage({
                 id: "comet.pages.redirects.validate.domain.error",
-                defaultMessage: "Needs to start with http:// or https://",
+                defaultMessage: "Needs to be a valid domain (e.g. example.com)",
             });
         }
     };
@@ -237,7 +237,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             validate={validateSource as any}
                             fullWidth
-                            placeholder={values.sourceType === "domain" ? "https://example.com" : "/example-path"}
+                            placeholder={values.sourceType === "domain" ? "example.com" : "/example-path"}
                             disableContentTranslation
                         />
                         <Field
