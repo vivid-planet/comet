@@ -259,7 +259,6 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "Tooltip", importPath: "@comet/admin" },
         { name: "useBufferedRowCount", importPath: "@comet/admin" },
         { name: "useDataGridExcelExport", importPath: "@comet/admin" },
-        { name: "useDataGridRemote", importPath: "@comet/admin" },
         { name: "usePersistentColumnState", importPath: "@comet/admin" },
         { name: "BlockPreviewContent", importPath: "@comet/cms-admin" },
         { name: "Alert", importPath: "@mui/material" },
@@ -313,6 +312,12 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
     const hasPaging = queryHasPaging(gridQueryType, gqlIntrospection);
+
+    if (hasPaging) {
+        imports.push({ name: "useDataGridRemote", importPath: "@comet/admin" });
+    } else {
+        imports.push({ name: "useDataGridLocationState", importPath: "@comet/admin" });
+    }
 
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
@@ -812,7 +817,7 @@ export function generateGrid<T extends { __typename?: string }>(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}) {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        const dataGridProps = { ...${hasPaging ? "useDataGridRemote" : "useDataGridLocationState"}(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
             config.selectionProps === "multiSelect"
                 ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
                 : config.selectionProps === "singleSelect"
@@ -848,6 +853,16 @@ export function generateGrid<T extends { __typename?: string }>(
                         }
                     }
 
+                    let isColumnFilterable = hasPaging
+                        ? true // local (client side) sorting is always possible (no api support needed)
+                        : filterFields.includes(column.name) || !!column.filterOperators;
+                    if (allowRowReordering) isColumnFilterable = false; //disable filter if rowReordering is enabled
+
+                    let isColumnSortable = hasPaging
+                        ? true // local (client side) sorting is always possible (no api support needed)
+                        : sortFields.includes(column.name) || !!column.sortBy;
+                    if (allowRowReordering) isColumnSortable = false; //disable sort if rowReordering is enabled
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: column.fieldName ? `"${column.fieldName}"` : `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: column.headerInfoTooltip
@@ -882,8 +897,8 @@ export function generateGrid<T extends { __typename?: string }>(
                                       type: "intlCall",
                                   }),
                         type: column.gridType ? `"${column.gridType}"` : undefined,
-                        filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
-                        sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
+                        filterable: isColumnFilterable ? undefined : `false`,
+                        sortable: isColumnSortable ? undefined : `false`,
                         valueGetter: column.valueGetter,
                         valueFormatter: column.valueFormatter,
                         valueOptions: column.valueOptions,
