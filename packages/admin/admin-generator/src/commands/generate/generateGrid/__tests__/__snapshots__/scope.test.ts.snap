@@ -79,9 +79,9 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($scope: ProductScope!, $offset: Int!, $limit: Int!) {
-        products(scope: $scope, offset: $offset, limit: $limit) {
-            nodes { ...ProductsForm } totalCount
+    query ProductsGrid($scope: ProductScope!) {
+        products(scope: $scope) {
+            ...ProductsForm
         }
     }
     \${productsFragment}
@@ -148,12 +148,12 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+                scope, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
             },
         });
-        const rowCount = useBufferedRowCount(data?.products.totalCount);
+        
         if (error) throw error;
-        const rows = data?.products.nodes ?? [];
+        const rows = data?.products ?? [];
 
         
 
@@ -161,7 +161,7 @@ renderCell: (params) => {
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
-                rowCount={rowCount}
+                
                 columns={columns}
                 loading={loading}
                 slots={{
@@ -256,9 +256,9 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($offset: Int!, $limit: Int!, $scope: ProductContentScopeInput!) {
-        products(offset: $offset, limit: $limit, scope: $scope) {
-            nodes { ...ProductsForm } totalCount
+    query ProductsGrid($scope: ProductContentScopeInput!) {
+        products(scope: $scope) {
+            ...ProductsForm
         }
     }
     \${productsFragment}
@@ -323,12 +323,12 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+                scope, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
             },
         });
-        const rowCount = useBufferedRowCount(data?.products.totalCount);
+        
         if (error) throw error;
-        const rows = data?.products.nodes ?? [];
+        const rows = data?.products ?? [];
 
         
 
@@ -336,7 +336,7 @@ renderCell: (params) => {
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
-                rowCount={rowCount}
+                
                 columns={columns}
                 loading={loading}
                 slots={{

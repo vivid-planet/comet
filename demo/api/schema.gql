@@ -1291,11 +1291,6 @@ type PaginatedProductCategoryTypes {
   totalCount: Int!
 }
 
-type PaginatedProductHighlights {
-  nodes: [ProductHighlight!]!
-  totalCount: Int!
-}
-
 type PaginatedProductTags {
   nodes: [ProductTag!]!
   totalCount: Int!
@@ -1553,47 +1548,9 @@ type ProductHighlight {
   updatedAt: DateTime!
 }
 
-input ProductHighlightFilter {
-  and: [ProductHighlightFilter!]
-  createdAt: DateTimeFilter
-  description: StringFilter
-  id: IdFilter
-  or: [ProductHighlightFilter!]
-  product: ManyToOneFilter
-  updatedAt: DateTimeFilter
-}
-
 input ProductHighlightInput {
   description: String!
   product: ID!
-}
-
-input ProductHighlightSort {
-  direction: SortDirection! = ASC
-  field: ProductHighlightSortField!
-}
-
-enum ProductHighlightSortField {
-  createdAt
-  description
-  id
-  product
-  product_additionalTypes
-  product_availableSince
-  product_category
-  product_createdAt
-  product_description
-  product_inStock
-  product_lastCheckedAt
-  product_manufacturer
-  product_price
-  product_priceList
-  product_slug
-  product_status
-  product_title
-  product_type
-  product_updatedAt
-  updatedAt
 }
 
 input ProductHighlightUpdateInput {
@@ -1953,7 +1910,7 @@ type Query {
   productCategoryType(id: ID!): ProductCategoryType!
   productCategoryTypes(filter: ProductCategoryTypeFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategoryTypeSort!]! = [{direction: ASC, field: id}]): PaginatedProductCategoryTypes!
   productHighlight(id: ID!): ProductHighlight!
-  productHighlights(filter: ProductHighlightFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductHighlightSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProductHighlights!
+  productHighlights: [ProductHighlight!]!
   productTag(id: ID!): ProductTag!
   productTags(filter: ProductTagFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductTagSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!

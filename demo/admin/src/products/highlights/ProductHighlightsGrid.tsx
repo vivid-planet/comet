@@ -5,17 +5,13 @@ import {
     DataGridToolbar,
     FillSpace,
     type GridColDef,
-    GridFilterButton,
-    muiGridFilterToGql,
-    muiGridSortToGql,
     StackLink,
-    useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, type GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -33,12 +29,9 @@ const productHighlightsFragment = gql`
     }
 `;
 const productHighlightsQuery = gql`
-    query ProductHighlightsGrid($offset: Int!, $limit: Int!, $sort: [ProductHighlightSort!], $search: String, $filter: ProductHighlightFilter) {
-        productHighlights(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
-            nodes {
-                ...ProductHighlightsForm
-            }
-            totalCount
+    query ProductHighlightsGrid {
+        productHighlights {
+            ...ProductHighlightsForm
         }
     }
     ${productHighlightsFragment}
@@ -51,8 +44,6 @@ const deleteProductHighlightMutation = gql`
 function ProductHighlightsGridToolbar() {
     return (
         <DataGridToolbar>
-            <GridToolbarQuickFilter />
-            <GridFilterButton />
             <FillSpace />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="productHighlight.productHighlightsForm.newEntry" defaultMessage="New Product Highlight" />
@@ -100,24 +91,13 @@ export function ProductHighlightsGrid() {
             },
         },
     ];
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
-    const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery, {
-        variables: {
-            filter: gqlFilter,
-            search: gqlSearch,
-            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
-            limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
-        },
-    });
-    const rowCount = useBufferedRowCount(data?.productHighlights.totalCount);
+    const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery);
     if (error) throw error;
-    const rows = data?.productHighlights.nodes ?? [];
+    const rows = data?.productHighlights ?? [];
     return (
         <DataGridPro
             {...dataGridProps}
             rows={rows}
-            rowCount={rowCount}
             columns={columns}
             loading={loading}
             slots={{
