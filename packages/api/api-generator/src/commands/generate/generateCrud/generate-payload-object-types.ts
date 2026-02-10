@@ -51,7 +51,7 @@ function generate({
             @Field(() => ${entityName}, { nullable: true })
             ${instanceNameSingular}?: ${entityName};
 
-            @Field(() => [${returnType}], { nullable: true })
+            @Field(() => [${returnType}], { nullable: false })
             errors: ${returnType}[];
         }
     `;

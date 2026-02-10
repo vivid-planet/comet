@@ -28,14 +28,14 @@ import { Field, ObjectType } from "@nestjs/graphql";
 class CreateProductVariantPayload {
     @Field(() => ProductVariant, { nullable: true })
     productVariant?: ProductVariant;
-    @Field(() => [ProductVariantMutationError], { nullable: true })
+    @Field(() => [ProductVariantMutationError], { nullable: false })
     errors: ProductVariantMutationError[];
 }
 @ObjectType()
 class UpdateProductVariantPayload {
     @Field(() => ProductVariant, { nullable: true })
     productVariant?: ProductVariant;
-    @Field(() => [ProductVariantMutationError], { nullable: true })
+    @Field(() => [ProductVariantMutationError], { nullable: false })
     errors: ProductVariantMutationError[];
 }
 @Resolver(() => ProductVariant)

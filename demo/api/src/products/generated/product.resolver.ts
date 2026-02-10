@@ -34,7 +34,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 class CreateProductPayload {
     @Field(() => Product, { nullable: true })
     product?: Product;
-    @Field(() => [ProductMutationError], { nullable: true })
+    @Field(() => [ProductMutationError], { nullable: false })
     errors: ProductMutationError[];
 }
 @Resolver(() => Product)

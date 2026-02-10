@@ -338,12 +338,12 @@ input CreateDamFolderInput {
 }
 
 type CreateProductPayload {
-  errors: [ProductMutationError!]
+  errors: [ProductMutationError!]!
   product: Product
 }
 
 type CreateProductVariantPayload {
-  errors: [ProductVariantMutationError!]
+  errors: [ProductVariantMutationError!]!
   productVariant: ProductVariant
 }
 
@@ -2208,7 +2208,7 @@ input UpdateImageFileInput {
 }
 
 type UpdateProductVariantPayload {
-  errors: [ProductVariantMutationError!]
+  errors: [ProductVariantMutationError!]!
   productVariant: ProductVariant
 }
 
