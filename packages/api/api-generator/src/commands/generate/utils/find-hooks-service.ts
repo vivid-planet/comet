@@ -157,7 +157,6 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
                 validateUpdateInput,
                 imports,
                 className: hooksServiceClassName,
-                importPath,
             };
         }
     }
