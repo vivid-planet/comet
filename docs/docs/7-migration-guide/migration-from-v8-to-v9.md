@@ -219,11 +219,15 @@ If you're using Knip, you may need to add `proxy.ts` as entry point:
 
 ### Domain Redirects
 
-Domain redirects can now be set in the admin. To enable domain-based redirects, you need to:
+Domain redirects can now be set in the admin. It is necessary to:
 
-1. **Add the relevant domains** to the `additional` array in your site config, so that the middleware can recognize and handle them.
+1. **Update your middleware (required for all projects):** to handle the new `domain` source type for redirects. Check for domain-based redirects and perform the appropriate redirect by updating your previous `redirectToMainHost` middleware.
 
-2. **Adapt your middleware** to handle the new `domain` source type for redirects. Check for domain-based redirects and perform the appropriate redirect by updating your previous `redirectToMainHost` middleware.
+2. **Add relevant domains (if feature is used):** Include all necessary domains in the `additional` array of your site config. This allows the middleware to recognize and process them correctly.
+
+#### Example: Middleware Usage
+
+Update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects. See example in the demo here: https://github.com/vivid-planet/comet/blob/51f4ab31d98772794e3ac733f34e048a35960843/demo/site/src/middleware/redirectToMainHost.ts
 
 #### Example: Site Config
 
@@ -239,10 +243,6 @@ export default ((env) => {
     };
 }) satisfies GetSiteConfig;
 ```
-
-#### Example: Middleware Usage
-
-Update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects. See example in the demo here: https://github.com/vivid-planet/comet/blob/51f4ab31d98772794e3ac733f34e048a35960843/demo/site/src/middleware/redirectToMainHost.ts
 
 #### Admin UI
 
