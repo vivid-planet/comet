@@ -40,5 +40,3 @@ This repository includes a demo application which is showcasing the libraries.
 - `demo/api` and `demo/admin` contain `generated/` folders. Do not edit files inside `generated/` directly; rerun `api-generator` or `admin-generator` to update them.
 - After any changes to `api-generator` or `admin-generator` execute the generator in demo to update the generated files. Before running, build the package.
 
-## Api
-- when making changes to `demo/api` verify the api can still start by executing `pnpm run console --help` in `demo/api`, which also updates `schema.gql` in case the schema changed.
