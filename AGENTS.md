@@ -6,7 +6,7 @@
 - services can be started by dev-pm
 
 ## Cloud / Web Usage (Fresh Clone)
-When running in the cloud/web environment and repo is cloned from scratch, before doing any work, you MUST:
+When running in the cloud/web environment and repo is cloned from scratch, if required you can:
 
 1. Install dependencies
    - `NODE_USE_ENV_PROXY=1 ./install.sh`
