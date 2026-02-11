@@ -358,6 +358,7 @@ export function generateGrid<T extends { __typename?: string }>(
             imports.push(...forwardedArg.imports);
             if (forwardedArg.gqlArg.name === "scope" && !config.scopeAsProp) {
                 useScopeFromContext = true;
+                gqlArgs.push(forwardedArg.gqlArg);
             } else {
                 props.push(forwardedArg.prop);
                 gqlArgs.push(forwardedArg.gqlArg);
@@ -761,7 +762,6 @@ export function generateGrid<T extends { __typename?: string }>(
             ...(hasSort ? [{ name: "sort", type: `[${gqlType}Sort!]` }] : []),
             ...(hasSearch ? [{ name: "search", type: "String" }] : []),
             ...(filterArg && (hasFilter || hasFilterProp) ? [{ name: "filter", type: `${gqlType}Filter` }] : []),
-            ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
         ],
     })}\`;
 
@@ -996,7 +996,6 @@ export function generateGrid<T extends { __typename?: string }>(
             variables: {
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
-                    ...(useScopeFromContext ? ["scope"] : []),
                     ...(filterArg
                         ? hasFilter && hasFilterProp
                             ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]

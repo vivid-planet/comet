@@ -254,7 +254,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($scope: ProductContentScopeInput!) {
+    query ProductsGrid($scope: ProductScope!) {
         products(scope: $scope) {
             ...ProductsForm
         }
