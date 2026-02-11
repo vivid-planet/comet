@@ -410,22 +410,6 @@ Yes, you can do that before updating everything else to v8.
 
 4. Commit your changes with `--no-verify`
 5. Run `npm run lint` and manually fix all open issues
-
-    :::warning
-    If your project has knip, you might see an error like this regarding `eslint-config-next`:
-     <details>
-     > ERROR: Error loading /project/path/site/eslint.config.mjs
-     > Reason: Cannot read config file: /project/path/site/node_modules/eslint-config-next/index.js
-     > Error: Failed to patch ESLint because the calling module was not recognized.
-     > If you are using a newer ESLint version that may be unsupported, please create a GitHub issue:
-     > https://github.com/microsoft/rushstack/issues
-     > Referenced from: /project/path/site/node_modules/eslint-config-next/core-web-vitals.js
-     > ERROR: "lint:knip" exited with 2.
-
-    **Then you must install eslint-config-next in the site and add it to knip's ignore list as done in this commit: https://github.com/vivid-planet/comet-starter/pull/884/commits/32d6adfe73bbfc5e18eaaffc5dfc37b57f653aac**
-     </details>
-     :::
-
 6. Commit your changes **without** `--no-verify`. There should be no remaining errors.
 
 **Now open a PR from `update-eslint-to-v9` to `main`**
