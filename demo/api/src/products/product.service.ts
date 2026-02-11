@@ -3,7 +3,7 @@ import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 
 import { type ProductInput } from "./generated/dto/product.input";
 
-export enum ProductMutationErrorCode {
+enum ProductMutationErrorCode {
     titleTooShort = "titleTooShort",
 }
 registerEnumType(ProductMutationErrorCode, {

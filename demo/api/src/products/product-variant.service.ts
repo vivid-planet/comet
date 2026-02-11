@@ -4,7 +4,7 @@ import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { type ProductVariant } from "./entities/product-variant.entity";
 import { type ProductVariantInput, type ProductVariantUpdateInput } from "./generated/dto/product-variant.input";
 
-export enum ProductVariantMutationErrorCode {
+enum ProductVariantMutationErrorCode {
     nameTooShort = "titleTooShort",
 }
 registerEnumType(ProductVariantMutationErrorCode, {
