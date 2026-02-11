@@ -48,8 +48,8 @@ const newsFragment = gql`
     }
 `;
 const newsQuery = gql`
-    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
-        newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
+    query NewsGrid($scope: NewsContentScopeInput!, $offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter) {
+        newsList(scope: $scope, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...NewsGrid
             }

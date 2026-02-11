@@ -254,8 +254,8 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($offset: Int!, $limit: Int!, $scope: ProductContentScopeInput!) {
-        products(offset: $offset, limit: $limit, scope: $scope) {
+    query ProductsGrid($scope: ProductScope!, $offset: Int!, $limit: Int!) {
+        products(scope: $scope, offset: $offset, limit: $limit) {
             nodes { ...ProductsForm } totalCount
         }
     }
