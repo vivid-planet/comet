@@ -43,7 +43,7 @@ describe("generatePayloadObjectTypes", () => {
         expect(result.code).toContain("class CreateProductPayload");
         expect(result.code).toContain("@Field(() => Product, { nullable: true })");
         expect(result.code).toContain("product?: Product");
-        expect(result.code).toContain("@Field(() => [ProductMutationError], { nullable: true })");
+        expect(result.code).toContain("@Field(() => [ProductMutationError], { nullable: false })");
         expect(result.code).toContain("errors: ProductMutationError[]");
         expect(result.createPayloadType).toBe("CreateProductPayload");
         expect(result.updatePayloadType).toBeNull();
