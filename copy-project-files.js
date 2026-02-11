@@ -2,18 +2,22 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const files = [
-    {
-        file: ".env",
-        targetDir: ["demo/admin", "demo/api", "demo/site"],
-    },
-    {
-        file: "demo/.env.local",
-        targetDir: ["demo/admin", "demo/api", "demo/site", "storybook"],
-    },
-    {
-        file: "demo/.env.site-configs",
-        targetDir: ["demo/admin", "demo/api", "demo/site"],
-    },
+    ...(process.env.CI === "true"
+        ? []
+        : [
+              {
+                  file: ".env",
+                  targetDir: ["demo/admin", "demo/api", "demo/site"],
+              },
+              {
+                  file: "demo/.env.local",
+                  targetDir: ["demo/admin", "demo/api", "demo/site", "storybook"],
+              },
+              {
+                  file: "demo/.env.site-configs",
+                  targetDir: ["demo/admin", "demo/api", "demo/site"],
+              },
+          ]),
     {
         file: "packages/api/cms-api/block-meta.json",
         targetDir: ["packages/admin/cms-admin", "packages/site/site-nextjs", "packages/site/site-react"],
@@ -52,9 +56,7 @@ for (const { file, targetDir } of files) {
     for (const dir of targetDir) {
         const targetFile = `${dir}/${path.basename(file)}`;
         if (process.env.CI === "true") {
-            if (fs.existsSync(file)) {
-                fs.copyFileSync(file, targetFile);
-            }
+            fs.copyFileSync(file, targetFile);
         } else {
             try {
                 fs.unlinkSync(targetFile);
