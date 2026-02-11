@@ -22,7 +22,7 @@
         "intl:compile:comet-demo": "formatjs compile-folder --format simple --ast lang/comet-demo-lang/api lang-compiled/comet-demo-api",
         "intl:extract": "formatjs extract \"src/**/*.ts*\" --ignore ./**.d.ts --out-file lang-extracted/en.json --format simple --throws",
         "lint": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc",
-        "lint:ci": "ls -lah && pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:console lint:generated-files-not-modified",
+        "lint:ci": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:console lint:generated-files-not-modified",
         "lint:console": "MIKRO_ORM_NO_CONNECT=true pnpm run console --help",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:generated-files-not-modified": "git diff --exit-code HEAD -- schema.gql $(find src -type f -path '*/generated/*')",
