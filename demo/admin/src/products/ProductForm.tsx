@@ -26,16 +26,16 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
-import { type GQLProductType } from "@src/graphql.generated";
+import { type GQLProductMutationErrorCode, type GQLProductType } from "@src/graphql.generated";
 import {
     type GQLManufacturerCountriesQuery,
     type GQLManufacturerCountriesQueryVariables,
     type GQLManufacturersQuery,
     type GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
-import { type FormApi } from "final-form";
+import { FORM_ERROR, type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "./helpers/FutureProductNotice";
@@ -81,6 +81,15 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
 // TODO should we use a deep partial here?
 type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
+};
+
+const submissionErrorMessages: { [K in GQLProductMutationErrorCode]: ReactNode } = {
+    titleTooShort: (
+        <FormattedMessage
+            id="product.form.error.titleTooShort"
+            defaultMessage="Title must be at least 3 characters long when creating a product, except for foo"
+        />
+    ),
 };
 
 export function ProductForm({ id, width, onCreate }: FormProps) {
@@ -158,11 +167,27 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
-            const id = mutationResponse?.createProduct.id;
+
+            const id = mutationResponse?.createProduct.product?.id;
             if (id) {
                 setTimeout(() => {
                     onCreate?.(id);
                 });
+            }
+
+            if (mutationResponse?.createProduct.errors.length) {
+                return mutationResponse.createProduct.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
             }
         }
     };

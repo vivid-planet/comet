@@ -1882,8 +1882,8 @@ type ProductVariantMutationError {
 }
 
 enum ProductVariantMutationErrorCode {
-  """Title must be at least 3 characters long, except for foo"""
-  titleTooShort
+  """Name must be at least 3 characters long, except for foo"""
+  nameTooShort
 }
 
 input ProductVariantSort {

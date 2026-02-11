@@ -20,6 +20,8 @@ import { useFormSaveConflict } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { ReactNode } from "react";
+import { FORM_ERROR } from "final-form";
 import { GQLProductType } from "@src/graphql.generated";
 import { DamImageBlock } from "@comet/cms-admin";
 import { productFormFragment } from "./IdFieldInForm.gql";
@@ -33,6 +35,7 @@ import { GQLCreateProductMutationVariables } from "./IdFieldInForm.gql.generated
 import { updateProductMutation } from "./IdFieldInForm.gql";
 import { GQLUpdateProductMutation } from "./IdFieldInForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./IdFieldInForm.gql.generated";
+import { GQLProductMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
@@ -46,6 +49,16 @@ interface FormProps {
     type: GQLProductType;
     slug: string;
 }
+const submissionErrorMessages: {
+    [K in GQLProductMutationErrorCode]: ReactNode;
+} = {
+    titleTooShort: (
+        <FormattedMessage
+            id="product.form.error.titleTooShort"
+            defaultMessage="Title must be at least 3 characters long when creating a product, except for foo"
+        />
+    ),
+};
 export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
@@ -82,7 +95,7 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
         const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
-            await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: updateInput },
             });
@@ -93,7 +106,21 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
                     input: { ...output, slug, type },
                 },
             });
-            const id = mutationResponse?.createProduct.id;
+            if (mutationResponse?.createProduct.errors.length) {
+                return mutationResponse?.createProduct.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
+            const id = mutationResponse?.createProduct.product?.id;
             if (id) {
                 setTimeout(() => {
                     onCreate?.(id);

@@ -5,13 +5,13 @@ import { type ProductVariant } from "./entities/product-variant.entity";
 import { type ProductVariantInput, type ProductVariantUpdateInput } from "./generated/dto/product-variant.input";
 
 export enum ProductVariantMutationErrorCode {
-    titleTooShort = "titleTooShort",
+    nameTooShort = "titleTooShort",
 }
 registerEnumType(ProductVariantMutationErrorCode, {
     name: "ProductVariantMutationErrorCode",
     valuesMap: {
-        titleTooShort: {
-            description: "Title must be at least 3 characters long, except for foo",
+        nameTooShort: {
+            description: "Name must be at least 3 characters long, except for foo",
         },
     },
 });
@@ -33,8 +33,8 @@ export class ProductVariantService implements CrudGeneratorHooksService {
         if (input.name.length < 3 && options.currentUser.email !== "foo@example.com") {
             return [
                 {
-                    code: ProductVariantMutationErrorCode.titleTooShort,
-                    field: "title",
+                    code: ProductVariantMutationErrorCode.nameTooShort,
+                    field: "name",
                 },
             ];
         }
@@ -48,8 +48,8 @@ export class ProductVariantService implements CrudGeneratorHooksService {
         if (input.name !== undefined && input.name.length < 3 && options.currentUser.email !== "foo@example.com") {
             return [
                 {
-                    code: ProductVariantMutationErrorCode.titleTooShort,
-                    field: "title",
+                    code: ProductVariantMutationErrorCode.nameTooShort,
+                    field: "name",
                 },
             ];
         }

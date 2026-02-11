@@ -18,6 +18,8 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { ReactNode } from "react";
+import { FORM_ERROR } from "final-form";
 import { DamImageBlock } from "@comet/cms-admin";
 import { productVariantFormFragment } from "./ProductVariantForm.gql";
 import { GQLProductVariantFormFragment } from "./ProductVariantForm.gql.generated";
@@ -30,6 +32,7 @@ import { GQLCreateProductVariantMutationVariables } from "./ProductVariantForm.g
 import { updateProductVariantMutation } from "./ProductVariantForm.gql";
 import { GQLUpdateProductVariantMutation } from "./ProductVariantForm.gql.generated";
 import { GQLUpdateProductVariantMutationVariables } from "./ProductVariantForm.gql.generated";
+import { GQLProductVariantMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
@@ -42,6 +45,13 @@ interface FormProps {
     id?: string;
     product: string;
 }
+const submissionErrorMessages: {
+    [K in GQLProductVariantMutationErrorCode]: ReactNode;
+} = {
+    nameTooShort: (
+        <FormattedMessage id="productvariant.form.error.nameTooShort" defaultMessage="Name must be at least 3 characters long, except for foo" />
+    ),
+};
 export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
@@ -79,10 +89,24 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
         if (mode === "edit") {
             if (!id) throw new Error();
             const { ...updateInput } = output;
-            await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
                 mutation: updateProductVariantMutation,
                 variables: { id, input: updateInput },
             });
+            if (mutationResponse?.updateProductVariant.errors.length) {
+                return mutationResponse?.updateProductVariant.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
                 mutation: createProductVariantMutation,
@@ -91,7 +115,21 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
                     product,
                 },
             });
-            const id = mutationResponse?.createProductVariant.id;
+            if (mutationResponse?.createProductVariant.errors.length) {
+                return mutationResponse?.createProductVariant.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
+            const id = mutationResponse?.createProductVariant.productVariant?.id;
             if (id) {
                 setTimeout(() => {
                     onCreate?.(id);
