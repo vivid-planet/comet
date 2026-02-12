@@ -14,49 +14,53 @@ type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {
     component: AsyncAutocompleteField,
     title: "components/form/AsyncAutocompleteField",
+    decorators: [ApolloDecorator("/graphql")],
 };
 export default config;
 
-const allOptions = [
-    { label: "Marketing & Communications", value: "marketing" },
-    { label: "Human Resources", value: "hr" },
-    { label: "Software Development", value: "dev" },
-    { label: "Product Management", value: "product" },
-    { label: "Customer Support", value: "support" },
-    { label: "Sales & Business Development", value: "sales" },
-    { label: "Quality Assurance", value: "qa" },
-    { label: "Research & Development", value: "rd" },
-    { label: "Finance & Accounting", value: "finance" },
-    { label: "Legal & Compliance", value: "legal" },
-    { label: "Operations Management", value: "operations" },
-    { label: "Data Analytics", value: "analytics" },
-    { label: "User Experience Design", value: "ux" },
-    { label: "Information Technology", value: "it" },
-    { label: "Project Management", value: "pm" },
-    { label: "Content Creation", value: "content" },
-    { label: "Supply Chain Management", value: "supply" },
-    { label: "Training & Development", value: "training" },
-    { label: "Strategic Planning", value: "strategy" },
-    { label: "Business Intelligence", value: "bi" },
-];
+// Helper function to load manufacturers from GraphQL
+const useLoadManufacturers = () => {
+    const client = useApolloClient();
+    
+    return async (search?: string) => {
+        const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
+            query: gql`
+                query Manufacturers($search: String) {
+                    manufacturers(search: $search) {
+                        id
+                        name
+                    }
+                }
+            `,
+            variables: {
+                search,
+            },
+        });
+
+        return data.manufacturers.map((manufacturer) => ({
+            value: manufacturer.id,
+            label: manufacturer.name,
+        }));
+    };
+};
 
 /**
- * Simple example of using AsyncAutocompleteField with a list of options, where the options are loaded as objects.
+ * Simple example of using AsyncAutocompleteField with data loaded from an API.
  * The options are loaded asynchronously, simulating a network request.
  */
 export const WithObjectOptions: Story = {
     render: () => {
+        const loadManufacturers = useLoadManufacturers();
+
         interface FormValues {
-            department: {
+            manufacturer: {
                 label: string;
                 value: string;
             };
         }
         return (
             <FinalForm<FormValues>
-                initialValues={{
-                    department: allOptions[0],
-                }}
+                initialValues={{}}
                 mode="edit"
                 onSubmit={() => {
                     // not handled
@@ -67,22 +71,9 @@ export const WithObjectOptions: Story = {
                     return (
                         <>
                             <AsyncAutocompleteField
-                                loadOptions={async (search?: string) => {
-                                    // Simulate network delay
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-
-                                    if (!search) {
-                                        return allOptions;
-                                    }
-
-                                    const searchLower = search.toLowerCase();
-                                    return allOptions.filter(
-                                        (option) =>
-                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
-                                    );
-                                }}
-                                name="department"
-                                label="Department"
+                                loadOptions={loadManufacturers}
+                                name="manufacturer"
+                                label="Manufacturer"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
@@ -107,8 +98,10 @@ export const WithObjectOptions: Story = {
  */
 export const Required: Story = {
     render: () => {
+        const loadManufacturers = useLoadManufacturers();
+
         interface FormValues {
-            department: {
+            manufacturer: {
                 label: string;
                 value: string;
             };
@@ -132,22 +125,9 @@ export const Required: Story = {
                             <AsyncAutocompleteField
                                 required
                                 clearable
-                                loadOptions={async (search?: string) => {
-                                    // Simulate network delay
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-
-                                    if (!search) {
-                                        return allOptions;
-                                    }
-
-                                    const searchLower = search.toLowerCase();
-                                    return allOptions.filter(
-                                        (option) =>
-                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
-                                    );
-                                }}
-                                name="department"
-                                label="Department"
+                                loadOptions={loadManufacturers}
+                                name="manufacturer"
+                                label="Manufacturer"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
@@ -170,8 +150,10 @@ export const Required: Story = {
  */
 export const MultipleSelect: Story = {
     render: () => {
+        const loadManufacturers = useLoadManufacturers();
+
         interface FormValues {
-            departments: {
+            manufacturers: {
                 label: string;
                 value: string;
             }[];
@@ -179,7 +161,7 @@ export const MultipleSelect: Story = {
         return (
             <FinalForm<FormValues>
                 initialValues={{
-                    departments: [allOptions[0]],
+                    manufacturers: [],
                 }}
                 mode="edit"
                 onSubmit={() => {
@@ -192,22 +174,9 @@ export const MultipleSelect: Story = {
                         <>
                             <AsyncAutocompleteField
                                 multiple
-                                loadOptions={async (search?: string) => {
-                                    // Simulate network delay
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-
-                                    if (!search) {
-                                        return allOptions;
-                                    }
-
-                                    const searchLower = search.toLowerCase();
-                                    return allOptions.filter(
-                                        (option) =>
-                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
-                                    );
-                                }}
-                                name="departments"
-                                label="Department"
+                                loadOptions={loadManufacturers}
+                                name="manufacturers"
+                                label="Manufacturers"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
@@ -229,9 +198,11 @@ export const MultipleSelect: Story = {
  */
 export const MultipleWithRequired: Story = {
     render: () => {
+        const loadManufacturers = useLoadManufacturers();
+
         interface FormValues {
             anotherField: string;
-            departments: {
+            manufacturers: {
                 label: string;
                 value: string;
             }[];
@@ -239,7 +210,7 @@ export const MultipleWithRequired: Story = {
         return (
             <FinalForm<FormValues>
                 initialValues={{
-                    departments: [],
+                    manufacturers: [],
                 }}
                 mode="edit"
                 onSubmit={(values) => {
@@ -255,22 +226,9 @@ export const MultipleWithRequired: Story = {
                             <AsyncAutocompleteField
                                 multiple
                                 clearable
-                                loadOptions={async (search?: string) => {
-                                    // Simulate network delay
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-
-                                    if (!search) {
-                                        return allOptions;
-                                    }
-
-                                    const searchLower = search.toLowerCase();
-                                    return allOptions.filter(
-                                        (option) =>
-                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
-                                    );
-                                }}
-                                name="departments"
-                                label="Department"
+                                loadOptions={loadManufacturers}
+                                name="manufacturers"
+                                label="Manufacturers"
                                 fullWidth
                                 required
                                 variant="horizontal"
@@ -296,8 +254,10 @@ export const MultipleWithRequired: Story = {
  */
 export const MultipleAutocompleteNoInitialValues: Story = {
     render: () => {
+        const loadManufacturers = useLoadManufacturers();
+
         interface FormValues {
-            departments: {
+            manufacturers: {
                 label: string;
                 value: string;
             }[];
@@ -315,22 +275,9 @@ export const MultipleAutocompleteNoInitialValues: Story = {
                         <>
                             <AsyncAutocompleteField
                                 multiple
-                                loadOptions={async (search?: string) => {
-                                    // Simulate network delay
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-
-                                    if (!search) {
-                                        return allOptions;
-                                    }
-
-                                    const searchLower = search.toLowerCase();
-                                    return allOptions.filter(
-                                        (option) =>
-                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
-                                    );
-                                }}
-                                name="departments"
-                                label="Department"
+                                loadOptions={loadManufacturers}
+                                name="manufacturers"
+                                label="Manufacturers"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
@@ -352,17 +299,17 @@ export const MultipleAutocompleteNoInitialValues: Story = {
  */
 export const LongLoading: Story = {
     render: () => {
+        const client = useApolloClient();
+
         interface FormValues {
-            department: {
+            manufacturer: {
                 label: string;
                 value: string;
             };
         }
         return (
             <FinalForm<FormValues>
-                initialValues={{
-                    department: allOptions[0],
-                }}
+                initialValues={{}}
                 mode="edit"
                 onSubmit={() => {
                     // not handled
@@ -373,22 +320,31 @@ export const LongLoading: Story = {
                     return (
                         <>
                             <AsyncAutocompleteField
-                                loadOptions={async (search?: string) => {
-                                    // Simulate network delay
+                                loadOptions={async (search) => {
+                                    // Simulate very long network delay
                                     await new Promise((resolve) => setTimeout(resolve, 5000));
 
-                                    if (!search) {
-                                        return allOptions;
-                                    }
+                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
+                                        query: gql`
+                                            query Manufacturers($search: String) {
+                                                manufacturers(search: $search) {
+                                                    id
+                                                    name
+                                                }
+                                            }
+                                        `,
+                                        variables: {
+                                            search,
+                                        },
+                                    });
 
-                                    const searchLower = search.toLowerCase();
-                                    return allOptions.filter(
-                                        (option) =>
-                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
-                                    );
+                                    return data.manufacturers.map((manufacturer) => ({
+                                        value: manufacturer.id,
+                                        label: manufacturer.name,
+                                    }));
                                 }}
-                                name="department"
-                                label="Department"
+                                name="manufacturer"
+                                label="Manufacturer"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
@@ -411,16 +367,14 @@ export const LongLoading: Story = {
 export const ErrorLoadingOptions: Story = {
     render: () => {
         interface FormValues {
-            department: {
+            manufacturer: {
                 label: string;
                 value: string;
             };
         }
         return (
             <FinalForm<FormValues>
-                initialValues={{
-                    department: allOptions[0],
-                }}
+                initialValues={{}}
                 mode="edit"
                 onSubmit={() => {
                     // not handled
@@ -436,8 +390,8 @@ export const ErrorLoadingOptions: Story = {
                                     await new Promise((resolve) => setTimeout(resolve, 500));
                                     throw Error("Error loading options");
                                 }}
-                                name="department"
-                                label="Department"
+                                name="manufacturer"
+                                label="Manufacturer"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
@@ -458,10 +412,8 @@ export const ErrorLoadingOptions: Story = {
  * AsyncAutocompleteField loading data from API.
  */
 export const AsyncAutocompleteLoadingDataFromApi: Story = {
-    decorators: [ApolloDecorator("/graphql")],
-
     render: () => {
-        const client = useApolloClient();
+        const loadManufacturers = useLoadManufacturers();
 
         interface FormValues {
             manufacturer: {
@@ -482,28 +434,7 @@ export const AsyncAutocompleteLoadingDataFromApi: Story = {
                     return (
                         <>
                             <AsyncAutocompleteField
-                                loadOptions={async (search) => {
-                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
-                                        query: gql`
-                                            query Manufacturers($search: String) {
-                                                manufacturers(search: $search) {
-                                                    id
-                                                    name
-                                                }
-                                            }
-                                        `,
-                                        variables: {
-                                            search,
-                                        },
-                                    });
-
-                                    return data.manufacturers.map((manufacturer) => {
-                                        return {
-                                            value: manufacturer.id,
-                                            label: manufacturer.name,
-                                        };
-                                    });
-                                }}
+                                loadOptions={loadManufacturers}
                                 name="manufacturer"
                                 label="Manufacturer"
                                 fullWidth
@@ -528,16 +459,14 @@ export const AsyncAutocompleteLoadingDataFromApi: Story = {
 export const ErrorLoadingOptionsWithCustomErrorText: Story = {
     render: () => {
         interface FormValues {
-            department: {
+            manufacturer: {
                 label: string;
                 value: string;
             };
         }
         return (
             <FinalForm<FormValues>
-                initialValues={{
-                    department: allOptions[0],
-                }}
+                initialValues={{}}
                 mode="edit"
                 onSubmit={() => {
                     // not handled
@@ -553,8 +482,8 @@ export const ErrorLoadingOptionsWithCustomErrorText: Story = {
                                     await new Promise((resolve) => setTimeout(resolve, 500));
                                     throw Error("Error loading options");
                                 }}
-                                name="department"
-                                label="Department"
+                                name="manufacturer"
+                                label="Manufacturer"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
