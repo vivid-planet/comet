@@ -1,3 +1,4 @@
+import { gql, useApolloClient } from "@apollo/client";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { SaveButton } from "../../../common/buttons/SaveButton";
@@ -5,6 +6,9 @@ import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
 import { AsyncAutocompleteField } from "../AsyncAutocompleteField";
 import { TextField } from "../TextField";
+import { ApolloDecorator } from "../../../../.storybook/decorators/Apollo.decorator";
+import type { Manufacturer } from "../../../../.storybook/mocks/handlers";
+import { WarningSolid } from "@comet/admin-icons";
 
 type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {
@@ -439,6 +443,129 @@ export const ErrorLoadingOptions: Story = {
                                 getOptionLabel={(option) => {
                                     return option.label;
                                 }}
+                            />
+
+                            <FinalFormDebug />
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * AsyncAutocompleteField loading data from API.
+ */
+export const AsyncAutocompleteLoadingDataFromApi: Story = {
+    decorators: [ApolloDecorator("/graphql")],
+
+    render: () => {
+        const client = useApolloClient();
+
+        interface FormValues {
+            manufacturer: {
+                id: string;
+                name: string;
+            };
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncAutocompleteField
+                                loadOptions={async (search) => {
+                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
+                                        query: gql`
+                                            query Manufacturers($search: String) {
+                                                manufacturers(search: $search) {
+                                                    id
+                                                    name
+                                                }
+                                            }
+                                        `,
+                                        variables: {
+                                            search,
+                                        },
+                                    });
+
+                                    return data.manufacturers.map((manufacturer) => {
+                                        return {
+                                            value: manufacturer.id,
+                                            label: manufacturer.name,
+                                        };
+                                    });
+                                }}
+                                name="manufacturer"
+                                label="Manufacturer"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    return option.label;
+                                }}
+                            />
+
+                            <FinalFormDebug />
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * AsyncAutocompleteField with error state and custom error text.
+ */
+export const ErrorLoadingOptionsWithCustomErrorText: Story = {
+    render: () => {
+        interface FormValues {
+            department: {
+                label: string;
+                value: string;
+            };
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{
+                    department: allOptions[0],
+                }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncAutocompleteField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                }}
+                                name="department"
+                                label="Department"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    return option.label;
+                                }}
+                                errorText={
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "black" }}>
+                                        <WarningSolid color="error" />
+                                        Error loading options
+                                    </div>
+                                }
                             />
 
                             <FinalFormDebug />
