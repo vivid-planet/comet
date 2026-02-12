@@ -7,10 +7,12 @@ import { singular } from "pluralize";
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { buildNameVariants } from "../utils/build-name-variants";
 import { integerTypes, numberTypes } from "../utils/constants";
+import { findHooksService } from "../utils/find-hooks-service";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
+import { generateServiceHookCall } from "./generate-service-hook-call";
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
@@ -843,6 +845,18 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
 
+    const hooksService = findHooksService({ generatorOptions, metadata });
+    if (hooksService) {
+        imports.push(...hooksService.imports);
+        if (
+            hooksService.validateCreateInput?.options?.includes("currentUser") ||
+            hooksService.validateUpdateInput?.options?.includes("currentUser")
+        ) {
+            imports.push({ name: "GetCurrentUser", importPath: "@comet/cms-api" });
+            imports.push({ name: "CurrentUser", importPath: "@comet/cms-api" });
+        }
+    }
+
     function generateIdArg(name: string, metadata: EntityMetadata<any>): string {
         if (integerTypes.includes(metadata.properties[name].type)) {
             return `@Args("${name}", { type: () => ID }, { transform: (value) => parseInt(value) }) ${name}: number`;
@@ -879,6 +893,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 hasPositionProp ? `protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
             }
             ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
+            ${hooksService ? `protected readonly ${instanceNameSingular}Service: ${hooksService.className},` : ""}
         ) {}
 
         ${
@@ -1003,7 +1018,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     return `${generateIdArg(dedicatedResolverArgProp.name, metadata)}, `;
                 })
                 .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
+                ${hooksService?.validateCreateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
         ): Promise<${metadata.className}> {
+            ${generateServiceHookCall("validateCreateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
+
             ${
                 // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
@@ -1062,8 +1080,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async update${classNameSingular}(
             ${generateIdArg("id", metadata)},
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
+            ${hooksService?.validateUpdateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
+            ${generateServiceHookCall("validateUpdateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
 
             ${
                 hasPositionProp
