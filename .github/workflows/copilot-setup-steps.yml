@@ -1,0 +1,83 @@
+name: "Copilot Setup Steps"
+
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - .github/workflows/copilot-setup-steps.yml
+    pull_request:
+        paths:
+            - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+    # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+    copilot-setup-steps:
+        runs-on: ubuntu-latest
+
+        # Set the permissions to the lowest permissions possible needed for your steps.
+        # Copilot will be given its own token for its operations.
+        permissions:
+            # If you want to clone the repository as part of your setup steps, for example to install dependencies, you'll need the `contents: read` permission. If you don't clone the repository in your setup steps, Copilot will do this for you automatically after the steps complete.
+            contents: read
+
+        # You can define any steps you want, and they will run before the agent starts.
+        # If you do not check out your code, Copilot will do this for you.
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: "Library: Clone translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/admin/lang/comet-lang"
+
+            - name: "Demo Admin: Clone translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/admin/lang/comet-demo-lang"
+
+            - name: "Demo Site: Clone translations"
+              uses: actions/checkout@v5
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/site/lang/comet-demo-lang"
+
+            - name: "Demo Api: Clone translations"
+              uses: actions/checkout@v4
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/api/lang/comet-demo-lang"
+
+            - uses: pnpm/action-setup@v4
+
+            - name: Use Node.js 24.x
+              uses: actions/setup-node@v5
+              with:
+                  node-version: 24
+                  registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+
+            - run: pnpm install --frozen-lockfile
+
+            - name: Build the packages CLI and eslint-plugin to be used for dev startup
+              run: pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
+
+            - run: CI= pnpm run copy-project-files
+
+            - name: create site-config-envs
+              run: pnpm run create-site-configs-env
+
+            - run: pnpm run setup:download-oauth2-proxy
+
+            - run: pnpm run setup:download-mitmproxy
+
+            - name: Build
+              run: pnpm run build:packages
