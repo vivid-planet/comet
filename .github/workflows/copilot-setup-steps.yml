@@ -70,7 +70,7 @@ jobs:
             - name: Build the packages CLI and eslint-plugin to be used for dev startup
               run: pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 
-            - run: CI= pnpm run copy-project-files
+            - run: CI=false pnpm run copy-project-files
 
             - name: create site-config-envs
               run: pnpm run create-site-configs-env
