@@ -17,6 +17,7 @@ export const ormConfig = createOrmConfig(
         },
         namingStrategy: EntityCaseNamingStrategy,
         debug: false,
+        connect: process.env.MIKRO_ORM_NO_CONNECT !== "true",
         migrations: {
             tableName: "Migrations",
             //  `path` is only used to tell MikroORM where to place newly generated migrations. Available migrations are defined using `migrationsList`.

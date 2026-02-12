@@ -51,7 +51,7 @@
         "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
         "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
-        "setup:ci": "pnpm run copy-project-files",
+        "setup:ci": "pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build && pnpm run create-site-configs-env && pnpm run copy-project-files",
         "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec comet download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'",
         "setup:download-mitmproxy": "dotenv -- sh -c 'pnpm exec comet download-mitmproxy -v $MITMPROXY_VERSION'"
     },
