@@ -36,7 +36,7 @@
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
-            "ignore": [".storybook/middleware.js"]
+            "ignore": [".storybook/middleware.js", ".storybook/public/mockServiceWorker.js"]
         },
         "packages/admin/admin-color-picker": {
             "project": ["./src/**/*.{ts,tsx}"]
