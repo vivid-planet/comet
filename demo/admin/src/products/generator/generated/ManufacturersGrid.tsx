@@ -152,7 +152,7 @@ export function ManufacturersGrid() {
                             title={
                                 <FormattedMessage
                                     id="manufacturer.address.alternativeAddress.street.tooltip"
-                                    defaultMessage="Alt-Address Street"
+                                    defaultMessage="Street of alternative address"
                                 />
                             }
                         >
@@ -182,7 +182,7 @@ export function ManufacturersGrid() {
                             title={
                                 <FormattedMessage
                                     id="manufacturer.address.alternativeAddress.streetNumber.tooltip"
-                                    defaultMessage="Alt-Address Street Number"
+                                    defaultMessage="Street number of alternative address"
                                 />
                             }
                         >
@@ -190,7 +190,10 @@ export function ManufacturersGrid() {
                         </Tooltip>
                     </>
                 ),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Address Street Number" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.address.alternativeAddress.streetNumber",
+                    defaultMessage: "Alt-Address Street Number",
+                }),
                 type: "number",
                 filterable: false,
                 sortable: false,
@@ -213,7 +216,7 @@ export function ManufacturersGrid() {
                             title={
                                 <FormattedMessage
                                     id="manufacturer.address.alternativeAddress.zip.tooltip"
-                                    defaultMessage="Alt-Address Zip"
+                                    defaultMessage="Zip of alternative address"
                                 />
                             }
                         >
@@ -237,7 +240,10 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable_streetNumber",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Address As Embeddable Street Number" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.addressAsEmbeddable.streetNumber",
+                    defaultMessage: "Address As Embeddable Street Number",
+                }),
                 type: "number",
                 valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
                 renderCell: ({ value }) => {
@@ -255,7 +261,10 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable_alternativeAddress_street",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Address As Embeddable Alternative Address Street" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.addressAsEmbeddable.alternativeAddress.street",
+                    defaultMessage: "Address As Embeddable Alternative Address Street",
+                }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.street,
                 flex: 1,
                 minWidth: 150,
@@ -276,7 +285,10 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable_alternativeAddress_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip", defaultMessage: "Address As Embeddable Alternative Address Zip" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip",
+                    defaultMessage: "Address As Embeddable Alternative Address Zip",
+                }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
                 flex: 1,
                 minWidth: 150,
