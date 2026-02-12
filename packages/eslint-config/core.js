@@ -11,6 +11,13 @@ import importPlugin from "eslint-plugin-import";
 import js from "@eslint/js";
 import packageJson from "eslint-plugin-package-json";
 
+export const restrictedImportPatterns = [
+    {
+        group: ["@comet/*/lib", "@comet/*/lib/**"],
+        message: "Avoid importing from @comet packages via /lib. Use the package root instead.",
+    },
+];
+
 /** @type {import('eslint')} */
 const config = [
     js.configs.recommended,
@@ -44,7 +51,6 @@ const config = [
         },
         rules: {
             "@comet/no-other-module-relative-import": ["warn"],
-            "@comet/no-comet-lib-import": "error",
         },
     },
     {
@@ -93,6 +99,12 @@ const config = [
             "prefer-template": "error",
             "no-console": ["error", { allow: ["warn", "error"] }],
             "no-return-await": "error",
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: restrictedImportPatterns,
+                },
+            ],
             "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
             "@typescript-eslint/no-inferrable-types": ["error", { ignoreProperties: true }],
             "@typescript-eslint/prefer-enum-initializers": "error",
