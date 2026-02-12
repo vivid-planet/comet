@@ -1139,6 +1139,7 @@ const generateGridExportApi = (
         query: ${instanceGqlTypePlural}Query,
         resolveQueryNodes: ${resolveQueryNodes},
         totalCount: ${totalCount},
+        ${!hasPaging ? `hasPaging: false,` : ""}
         exportOptions: {
             fileName: "${gqlTypePlural}",
         },
