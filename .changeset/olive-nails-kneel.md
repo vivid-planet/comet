@@ -3,9 +3,9 @@
 "@comet/eslint-plugin": major
 ---
 
-Add and enable `no-comet-lib-import` ESLint rule
+Prevent lib imports from `@comet/` packages
 
-This rule prevents importing private files from `@comet/*/lib`. For example, the following import would be forbidden:
+Use `no-restricted-imports` to prevent importing private files from `@comet/*/lib`. For example, the following import would be forbidden:
 
 ```ts
 import { something } from "@comet/admin/lib/some/private/file";
