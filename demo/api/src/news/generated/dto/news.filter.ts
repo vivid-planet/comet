@@ -3,12 +3,18 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter, createEnumFilter } from "@comet/cms-api";
-import { NewsCategory, NewsStatus } from "../../entities/news.entity";
+import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { NewsCommentFilter } from "./news-comment.filter";
+import { NewsStatusEnumFilter } from "./news.entity-NewsStatus.enum-filter";
+import { NewsCategoryEnumFilter } from "./news.entity-NewsCategory.enum-filter";
 @InputType()
-class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {}
-@InputType()
-class NewsCategoryEnumFilter extends createEnumFilter(NewsCategory) {}
+class NewsFilterOneToManyNewsComment extends OneToManyFilter {
+    @Field(() => NewsCommentFilter, { nullable: true })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => NewsCommentFilter)
+    filter?: NewsCommentFilter;
+}
 @InputType()
 export class NewsFilter {
     @Field(() => IdFilter, { nullable: true })
@@ -41,11 +47,11 @@ export class NewsFilter {
     @IsOptional()
     @Type(() => NewsCategoryEnumFilter)
     category?: NewsCategoryEnumFilter;
-    @Field(() => OneToManyFilter, { nullable: true })
+    @Field(() => NewsFilterOneToManyNewsComment, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => OneToManyFilter)
-    comments?: OneToManyFilter;
+    @Type(() => NewsFilterOneToManyNewsComment)
+    comments?: NewsFilterOneToManyNewsComment;
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

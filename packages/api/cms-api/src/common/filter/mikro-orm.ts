@@ -1,4 +1,4 @@
-import { type EntityMetadata, type FilterQuery, type ObjectQuery, type OrderDefinition, raw } from "@mikro-orm/postgresql";
+import { type EntityMetadata, type FilterValue, type ObjectQuery, type OrderDefinition, raw } from "@mikro-orm/postgresql";
 
 import { type CrudSearchField, getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { type SortDirection } from "../sorting/sort-direction.enum";
@@ -17,7 +17,9 @@ import { StringFilter } from "./string.filter";
 function quoteLike(string: string): string {
     return string.replace(/([%_\\])/g, "\\$1");
 }
-export function filterToMikroOrmQuery(
+export function applyFilterToMikroOrmQuery(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    acc: ObjectQuery<any>,
     filterProperty:
         | StringFilter
         | NumberFilter
@@ -32,17 +34,28 @@ export function filterToMikroOrmQuery(
         | IdFilter,
     propertyName: string,
     metadata?: EntityMetadata,
+): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): FilterQuery<any> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ret: any = {};
+    const propertyQuery: FilterValue<any> = {};
     if (filterProperty instanceof StringFilter) {
         const ilike: string[] = [];
         if (filterProperty.contains !== undefined) {
             ilike.push(`%${quoteLike(filterProperty.contains)}%`);
         }
         if (filterProperty.notContains !== undefined) {
-            ret.$not = { $ilike: `%${quoteLike(filterProperty.notContains)}%` };
+            const condition = { [propertyName]: { $ilike: `%${quoteLike(filterProperty.notContains)}%` } };
+            if (acc.$not) {
+                // there is already a $not condition, combine them
+                if (acc.$not.$and) {
+                    //add to existing $and array
+                    acc.$not.$and.push(condition);
+                } else {
+                    //create $and array with existing and new condition
+                    acc.$not = { $and: [acc.$not, condition] };
+                }
+            } else {
+                acc.$not = condition;
+            }
         }
         if (filterProperty.startsWith !== undefined) {
             ilike.push(`${quoteLike(filterProperty.startsWith)}%`);
@@ -51,99 +64,119 @@ export function filterToMikroOrmQuery(
             ilike.push(`%${quoteLike(filterProperty.endsWith)}`);
         }
         if (ilike.length === 1) {
-            ret.$ilike = ilike[0];
+            propertyQuery.$ilike = ilike[0];
         } else if (ilike.length > 1) {
-            ret.$and = ilike.map((i) => {
-                return {
-                    [propertyName]: { $ilike: i },
-                };
-            });
+            acc.$and = [
+                ...(acc.$and || []),
+                ...ilike.map((i) => {
+                    return {
+                        [propertyName]: { $ilike: i },
+                    };
+                }),
+            ];
         }
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
         if (filterProperty.notEqual !== undefined) {
-            ret.$ne = filterProperty.notEqual;
+            propertyQuery.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
         }
         if (filterProperty.isEmpty) {
-            ret.$or = [{ [propertyName]: { $eq: null } }, { [propertyName]: { $eq: "" } }];
+            acc.$and = [...(acc.$and || []), { $or: [{ [propertyName]: { $eq: null } }, { [propertyName]: { $eq: "" } }] }];
         }
         if (filterProperty.isNotEmpty) {
-            ret.$and = [{ [propertyName]: { $ne: null } }, { [propertyName]: { $ne: "" } }];
+            acc.$and = [...(acc.$and || []), { [propertyName]: { $ne: null } }, { [propertyName]: { $ne: "" } }];
         }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
         if (filterProperty.lowerThan !== undefined) {
-            ret.$lt = filterProperty.lowerThan;
+            propertyQuery.$lt = filterProperty.lowerThan;
         }
         if (filterProperty.greaterThan !== undefined) {
-            ret.$gt = filterProperty.greaterThan;
+            propertyQuery.$gt = filterProperty.greaterThan;
         }
         if (filterProperty.lowerThanEqual !== undefined) {
-            ret.$lte = filterProperty.lowerThanEqual;
+            propertyQuery.$lte = filterProperty.lowerThanEqual;
         }
         if (filterProperty.greaterThanEqual !== undefined) {
-            ret.$gte = filterProperty.greaterThanEqual;
+            propertyQuery.$gte = filterProperty.greaterThanEqual;
         }
         if (filterProperty.notEqual !== undefined) {
-            ret.$ne = filterProperty.notEqual;
+            propertyQuery.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
         }
         if (filterProperty.isEmpty) {
-            ret.$eq = null;
+            propertyQuery.$eq = null;
         }
         if (filterProperty.isNotEmpty) {
-            ret.$ne = null;
+            propertyQuery.$ne = null;
         }
     } else if (filterProperty instanceof DateTimeFilter || filterProperty instanceof DateFilter) {
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
         if (filterProperty.lowerThan !== undefined) {
-            ret.$lt = filterProperty.lowerThan;
+            propertyQuery.$lt = filterProperty.lowerThan;
         }
         if (filterProperty.greaterThan !== undefined) {
-            ret.$gt = filterProperty.greaterThan;
+            propertyQuery.$gt = filterProperty.greaterThan;
         }
         if (filterProperty.lowerThanEqual !== undefined) {
-            ret.$lte = filterProperty.lowerThanEqual;
+            propertyQuery.$lte = filterProperty.lowerThanEqual;
         }
         if (filterProperty.greaterThanEqual !== undefined) {
-            ret.$gte = filterProperty.greaterThanEqual;
+            propertyQuery.$gte = filterProperty.greaterThanEqual;
         }
         if (filterProperty.notEqual !== undefined) {
-            ret.$ne = filterProperty.notEqual;
+            propertyQuery.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isEmpty) {
-            ret.$eq = null;
+            propertyQuery.$eq = null;
         }
         if (filterProperty.isNotEmpty) {
-            ret.$ne = null;
+            propertyQuery.$ne = null;
         }
     } else if (filterProperty instanceof BooleanFilter) {
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
     } else if (filterProperty instanceof ManyToOneFilter) {
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
         if (filterProperty.notEqual !== undefined) {
-            ret.$ne = filterProperty.notEqual;
+            propertyQuery.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
+        }
+        if ("filter" in filterProperty && filterProperty.filter !== undefined) {
+            const propertyMetadata = metadata?.props.find((prop) => prop.name === propertyName)?.targetMeta;
+            for (const [key, value] of Object.entries(filtersToMikroOrmQuery(filterProperty.filter, { metadata: propertyMetadata }))) {
+                if (key === "$not") {
+                    const condition = { [propertyName]: value };
+                    // mikro-orm does not support nested $not, it has to be on the root level
+                    if (acc.$not) {
+                        //don't overwrite existing $not
+                        acc.$and = [...(acc.$and || []), { $not: condition }];
+                    } else {
+                        acc.$not = condition;
+                    }
+                } else {
+                    propertyQuery[key] = value;
+                }
+            }
         }
     } else if (filterProperty instanceof OneToManyFilter) {
         if (filterProperty.contains !== undefined) {
-            ret.id = {
+            propertyQuery.id = {
                 $eq: filterProperty.contains,
             };
         } else if (filterProperty.search !== undefined) {
@@ -160,14 +193,35 @@ export function filterToMikroOrmQuery(
             if (!prop.targetMeta) {
                 throw new Error("targetMeta is not defined");
             }
-            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and?.map((item) => ({ [propertyName]: item }));
+            acc.$and = [
+                ...(acc.$and || []),
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                ...searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and!.map((item) => ({ [propertyName]: item })),
+            ];
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
+        }
+        if ("filter" in filterProperty && filterProperty.filter !== undefined) {
+            const propertyMetadata = metadata?.props.find((prop) => prop.name === propertyName)?.targetMeta;
+            for (const [key, value] of Object.entries(filtersToMikroOrmQuery(filterProperty.filter, { metadata: propertyMetadata }))) {
+                if (key === "$not") {
+                    const condition = { [propertyName]: value };
+                    // mikro-orm does not support nested $not, it has to be on the root level
+                    if (acc.$not) {
+                        //don't overwrite existing $not
+                        acc.$and = [...(acc.$and || []), { $not: condition }];
+                    } else {
+                        acc.$not = condition;
+                    }
+                } else {
+                    propertyQuery[key] = value;
+                }
+            }
         }
     } else if (filterProperty instanceof ManyToManyFilter) {
         if (filterProperty.contains !== undefined) {
-            ret.id = {
+            propertyQuery.id = {
                 $eq: filterProperty.contains,
             };
         } else if (filterProperty.search !== undefined) {
@@ -184,39 +238,62 @@ export function filterToMikroOrmQuery(
             if (!prop.targetMeta) {
                 throw new Error("targetMeta is not defined");
             }
-            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and?.map((item) => ({ [propertyName]: item }));
+            acc.$and = [
+                ...(acc.$and || []),
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                ...searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and!.map((item) => ({ [propertyName]: item })),
+            ];
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
+        }
+        if ("filter" in filterProperty && filterProperty.filter !== undefined) {
+            const propertyMetadata = metadata?.props.find((prop) => prop.name === propertyName)?.targetMeta;
+            for (const [key, value] of Object.entries(filtersToMikroOrmQuery(filterProperty.filter, { metadata: propertyMetadata }))) {
+                if (key === "$not") {
+                    const condition = { [propertyName]: value };
+                    // mikro-orm does not support nested $not, it has to be on the root level
+                    if (acc.$not) {
+                        //don't overwrite existing $not
+                        acc.$and = [...(acc.$and || []), { $not: condition }];
+                    } else {
+                        acc.$not = condition;
+                    }
+                } else {
+                    propertyQuery[key] = value;
+                }
+            }
         }
     } else if (filterProperty instanceof IdFilter) {
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
         if (filterProperty.notEqual !== undefined) {
-            ret.$ne = filterProperty.notEqual;
+            propertyQuery.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
         }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {
-            ret.$eq = filterProperty.equal;
+            propertyQuery.$eq = filterProperty.equal;
         }
         if (filterProperty.notEqual !== undefined) {
-            ret.$ne = filterProperty.notEqual;
+            propertyQuery.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {
-            ret.$in = filterProperty.isAnyOf;
+            propertyQuery.$in = filterProperty.isAnyOf;
         }
     } else if (isEnumsFilter(filterProperty)) {
         if (filterProperty.contains !== undefined) {
-            ret.$contains = filterProperty.contains;
+            propertyQuery.$contains = filterProperty.contains;
         }
     } else {
         throw new Error(`Unsupported filter`);
     }
-    return ret;
+    if (Object.keys(propertyQuery).length > 0) {
+        acc[propertyName] = propertyQuery;
+    }
 }
 
 export function filtersToMikroOrmQuery(
@@ -253,36 +330,7 @@ export function filtersToMikroOrmQuery(
                     if (applyFilter) {
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
-                        const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
-
-                        // $and can't be applied like { field: { $and: [{ ... }] } }.
-                        // It has to be applied like { $and: [{ field: { ... } }] }.
-                        if (query.$and) {
-                            acc.$and ??= [];
-                            acc.$and.push(...query.$and);
-                            delete query.$and;
-                        }
-
-                        // $or can't be applied like { field: { $or: [{ ... }] } }.
-                        // It has to be applied like { $or: [{ field: { ... } }] }.
-                        if (query.$or) {
-                            acc.$or ??= [];
-                            acc.$or.push(...query.$or);
-                            delete query.$or;
-                        }
-
-                        // $not can't be applied like { field: { $not: { ... } } }.
-                        // It has to be applied like { $not: { field: { ... } } }.
-                        if (query.$not) {
-                            acc.$not ??= {};
-                            acc.$not[filterPropertyName] = query.$not;
-                            delete query.$not;
-                        }
-
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        if (Object.keys(query as any).length > 0) {
-                            acc[filterPropertyName] = query;
-                        }
+                        applyFilterToMikroOrmQuery(acc, filterProperty, filterPropertyName, metadata);
                     }
                 }
             }
@@ -367,7 +415,7 @@ export function gqlArgsToMikroOrmQuery({ search, filter }: { search?: string; fi
         andFilters.push(filtersToMikroOrmQuery(filter, { metadata }));
     }
 
-    return andFilters.length > 0 ? { $and: andFilters } : {};
+    return andFilters.length === 1 ? andFilters[0] : andFilters.length > 0 ? { $and: andFilters } : {};
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
