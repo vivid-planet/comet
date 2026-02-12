@@ -29,10 +29,7 @@ describe("GenerateCrud with ScopedEntity", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithScopedEntity"),
-        );
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithScopedEntity"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {
@@ -77,10 +74,7 @@ describe("GenerateCrud with Scope", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithScope"),
-        );
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithScope"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {

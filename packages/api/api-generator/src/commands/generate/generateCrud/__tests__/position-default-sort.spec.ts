@@ -29,10 +29,7 @@ describe("position default sort", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntity"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
             formattedOut = await formatGeneratedFiles(out);
         });
         afterEach(async () => {

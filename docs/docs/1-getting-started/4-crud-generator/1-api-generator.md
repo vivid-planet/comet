@@ -12,13 +12,11 @@ The API Generator uses the entity and the fields defined within it to generate r
 DTOs for the feature. For this, the entity must be annotated with the `CrudGenerator` decorator:
 
 ```ts
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ })
 export class Product extends BaseEntity {
     ...
 }
 ```
-
-The option `targetDirectory` specifies the path where the generated files should be written.
 
 :::info
 For features that should exist only once per scope (e.g., a footer), there is the special `CrudSingleGenerator`
@@ -29,7 +27,6 @@ decorator. The usage of both decorators is the same.
 
 | Parameter            | Type                 | Default     | Description                                                  |
 | -------------------- | -------------------- | ----------- | ------------------------------------------------------------ |
-| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.       |
 | `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.        |
 | `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                  |
 | `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                  |
@@ -79,8 +76,7 @@ If it's still missing, you can add it to `api/package.json`:
 }
 ```
 
-Now you can run the generator with `npm run api-generator`. The generated files are located in the specified
-`targetDirectory`.
+Now you can run the generator with `npm run api-generator`. The generated files are located in `generated/` folders.
 
 :::info
 Although this is generated code, it should still be checked into the repository. This enables a quick start of the API.
@@ -281,7 +277,7 @@ If the generated code doesn't fit your needs at all, you can "scaffold" the code
   @ObjectType()
   @Entity()
   @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-- @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+- @CrudGenerator({ })
   export class Product extends BaseEntity<Product, "id"> {
       // ...
   }
@@ -336,7 +332,6 @@ Instead, deactivate `create` in the `@CrudGenerator` decorator:
 
 ```ts
 @CrudGenerator({
-    targetDirectory: `${__dirname}/../generated/`,
     create: false,
 })
 export class Product extends BaseEntity<Product, "id"> {
