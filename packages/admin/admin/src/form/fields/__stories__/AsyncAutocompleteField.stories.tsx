@@ -163,10 +163,6 @@ export const Required: Story = {
 
 /**
  * AsyncAutocompleteField with multiple selection enabled.
- *
- * Use this when:
- * - Users can select multiple options from the list
- * - You need to store an array of selected values
  */
 export const MultipleSelect: Story = {
     render: () => {
@@ -226,10 +222,6 @@ export const MultipleSelect: Story = {
 
 /**
  * Multiple select with required validation.
- *
- * Use this when:
- * - Multiple selections are allowed but at least one is required
- * - You need to validate that the array is not empty
  */
 export const MultipleWithRequired: Story = {
     render: () => {
@@ -297,10 +289,6 @@ export const MultipleWithRequired: Story = {
 
 /**
  * Multiple autocomplete without initial values.
- *
- * Use this when:
- * - The form starts with no selections
- * - Users build their selection from scratch
  */
 export const MultipleAutocompleteNoInitialValues: Story = {
     render: () => {
@@ -357,10 +345,6 @@ export const MultipleAutocompleteNoInitialValues: Story = {
 
 /**
  * AsyncAutocompleteField with long loading time to demonstrate loading state.
- *
- * Use this when:
- * - Testing loading behavior
- * - You want to show how the component handles slow network requests
  */
 export const LongLoading: Story = {
     render: () => {
@@ -419,10 +403,6 @@ export const LongLoading: Story = {
 
 /**
  * AsyncAutocompleteField with error state when loading fails.
- *
- * Use this when:
- * - Demonstrating error handling
- * - Testing how the component displays loading errors
  */
 export const ErrorLoadingOptions: Story = {
     render: () => {
