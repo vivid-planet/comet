@@ -1,17 +1,15 @@
-import { gql, useApolloClient } from "@apollo/client";
-import { Alert, AsyncAutocompleteField, FinalForm, SaveButton, TextField } from "@comet/admin";
-import { WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import type { Manufacturer } from "../../../.storybook/mocks/handlers";
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { SaveButton } from "../../../common/buttons/SaveButton";
+import { FinalForm } from "../../../FinalForm";
+import { FinalFormDebug } from "../../../form/FinalFormDebug";
+import { AsyncAutocompleteField } from "../AsyncAutocompleteField";
+import { TextField } from "../TextField";
 
 type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {
     component: AsyncAutocompleteField,
-    title: "@comet/admin/form/AsyncAutocompleteField",
-    decorators: [storyRouterDecorator()],
+    title: "components/form/AsyncAutocompleteField",
 };
 export default config;
 
@@ -88,9 +86,7 @@ export const WithObjectOptions: Story = {
                                 }}
                             />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
@@ -99,6 +95,13 @@ export const WithObjectOptions: Story = {
     },
 };
 
+/**
+ * AsyncAutocompleteField with required validation.
+ *
+ * Use this when:
+ * - The field must have a value before form submission
+ * - You need to enforce selection from the options
+ */
 export const Required: Story = {
     render: () => {
         interface FormValues {
@@ -150,9 +153,7 @@ export const Required: Story = {
                             />
                             <SaveButton type="submit" disabled={!dirty} />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
@@ -161,6 +162,13 @@ export const Required: Story = {
     },
 };
 
+/**
+ * AsyncAutocompleteField with multiple selection enabled.
+ *
+ * Use this when:
+ * - Users can select multiple options from the list
+ * - You need to store an array of selected values
+ */
 export const MultipleSelect: Story = {
     render: () => {
         interface FormValues {
@@ -208,9 +216,7 @@ export const MultipleSelect: Story = {
                                 }}
                             />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
@@ -219,6 +225,13 @@ export const MultipleSelect: Story = {
     },
 };
 
+/**
+ * Multiple select with required validation.
+ *
+ * Use this when:
+ * - Multiple selections are allowed but at least one is required
+ * - You need to validate that the array is not empty
+ */
 export const MultipleWithRequired: Story = {
     render: () => {
         interface FormValues {
@@ -274,9 +287,7 @@ export const MultipleWithRequired: Story = {
                             <SaveButton type="submit" disabled={!dirty}>
                                 Submit
                             </SaveButton>
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
@@ -285,6 +296,13 @@ export const MultipleWithRequired: Story = {
     },
 };
 
+/**
+ * Multiple autocomplete without initial values.
+ *
+ * Use this when:
+ * - The form starts with no selections
+ * - Users build their selection from scratch
+ */
 export const MultipleAutocompleteNoInitialValues: Story = {
     render: () => {
         interface FormValues {
@@ -329,9 +347,7 @@ export const MultipleAutocompleteNoInitialValues: Story = {
                                 }}
                             />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
@@ -340,6 +356,13 @@ export const MultipleAutocompleteNoInitialValues: Story = {
     },
 };
 
+/**
+ * AsyncAutocompleteField with long loading time to demonstrate loading state.
+ *
+ * Use this when:
+ * - Testing loading behavior
+ * - You want to show how the component handles slow network requests
+ */
 export const LongLoading: Story = {
     render: () => {
         interface FormValues {
@@ -386,9 +409,7 @@ export const LongLoading: Story = {
                                 }}
                             />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
@@ -397,73 +418,13 @@ export const LongLoading: Story = {
     },
 };
 
-export const AsyncAutocompleteLoadingDataFromApi: Story = {
-    decorators: [apolloStoryDecorator("/graphql")],
-
-    render: () => {
-        const client = useApolloClient();
-
-        interface FormValues {
-            manufacturer: {
-                id: string;
-                name: string;
-            };
-        }
-        return (
-            <FinalForm<FormValues>
-                initialValues={{}}
-                mode="edit"
-                onSubmit={() => {
-                    // not handled
-                }}
-                subscription={{ values: true }}
-            >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncAutocompleteField
-                                loadOptions={async (search) => {
-                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
-                                        query: gql`
-                                            query Manufacturers($search: String) {
-                                                manufacturers(search: $search) {
-                                                    id
-                                                    name
-                                                }
-                                            }
-                                        `,
-                                        variables: {
-                                            search,
-                                        },
-                                    });
-
-                                    return data.manufacturers.map((manufacturer) => {
-                                        return {
-                                            value: manufacturer.id,
-                                            label: manufacturer.name,
-                                        };
-                                    });
-                                }}
-                                name="manufacturer"
-                                label="Manufacturer"
-                                fullWidth
-                                variant="horizontal"
-                                getOptionLabel={(option) => {
-                                    return option.label;
-                                }}
-                            />
-
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
-            </FinalForm>
-        );
-    },
-};
-
+/**
+ * AsyncAutocompleteField with error state when loading fails.
+ *
+ * Use this when:
+ * - Demonstrating error handling
+ * - Testing how the component displays loading errors
+ */
 export const ErrorLoadingOptions: Story = {
     render: () => {
         interface FormValues {
@@ -501,63 +462,7 @@ export const ErrorLoadingOptions: Story = {
                                 }}
                             />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
-            </FinalForm>
-        );
-    },
-};
-
-export const ErrorLoadingOptionsWithCustomErrorText: Story = {
-    render: () => {
-        interface FormValues {
-            department: {
-                label: string;
-                value: string;
-            };
-        }
-        return (
-            <FinalForm<FormValues>
-                initialValues={{
-                    department: allOptions[0],
-                }}
-                mode="edit"
-                onSubmit={() => {
-                    // not handled
-                }}
-                subscription={{ values: true }}
-            >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncAutocompleteField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 500));
-                                    throw Error("Error loading options");
-                                }}
-                                name="department"
-                                label="Department"
-                                fullWidth
-                                variant="horizontal"
-                                getOptionLabel={(option) => {
-                                    return option.label;
-                                }}
-                                errorText={
-                                    <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "black" }}>
-                                        <WarningSolid color="error" />
-                                        Error loading options
-                                    </div>
-                                }
-                            />
-
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FinalFormDebug />
                         </>
                     );
                 }}
