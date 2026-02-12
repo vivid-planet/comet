@@ -381,6 +381,39 @@ If you're using Knip, you may need to add `proxy.ts` as entry point:
 
 :::
 
+### Domain Redirects
+
+Domain redirects can now be set in the admin. It is necessary to:
+
+1. **Update your middleware (required for all projects):** to handle the new `domain` source type for redirects. Check for domain-based redirects and perform the appropriate redirect by updating your previous `redirectToMainHost` middleware.
+
+2. **Add relevant domains (if feature is used):** Include all necessary domains in the `additional` array of your site config. This allows the middleware to recognize and process them correctly.
+
+#### Example: Middleware Usage
+
+Update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects. See example in the demo here: https://github.com/vivid-planet/comet/blob/51f4ab31d98772794e3ac733f34e048a35960843/demo/site/src/middleware/redirectToMainHost.ts
+
+#### Example: Site Config
+
+```ts title="site-configs/main.ts"
+export default ((env) => {
+    return {
+        //...
+        domains: {
+            main: envToDomainMap[env],
+            additional: ["test.localhost:3000"], // Add your additional domains here
+        },
+        //...
+    };
+}) satisfies GetSiteConfig;
+```
+
+#### Admin UI
+
+In the admin, you can now select `domain` as the source type when creating a redirect. Enter the full domain (e.g., `https://mydomain.com`) as the source, and specify the target as usual.
+
+**Note:** Domain redirects only work if the DNS entry for the domain points to your web server.
+
 ### Add `cache: "force-cache"` to GraphQL fetch
 
 Next.js no longer caches `fetch` requests by default.
