@@ -138,6 +138,10 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @Field()
     inStock: boolean = true;
 
+    @Property({ type: types.boolean })
+    @Field()
+    flammable: boolean = false;
+
     @Property({ type: types.integer, nullable: true })
     @Field(() => Int, { nullable: true })
     @CrudField({

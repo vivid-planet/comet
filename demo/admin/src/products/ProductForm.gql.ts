@@ -9,6 +9,7 @@ export const productFormFragment = gql`
         type
         additionalTypes
         inStock
+        flammable
         image
         priceList {
             ...FinalFormFileUpload

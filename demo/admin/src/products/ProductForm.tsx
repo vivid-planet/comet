@@ -99,6 +99,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
             return {
                 image: rootBlocks.image.defaultValues(),
                 inStock: false,
+                flammable: false,
                 additionalTypes: [],
                 tags: [],
                 dimensions: width !== undefined ? { width } : undefined,
@@ -338,6 +339,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                         getOptionLabel={(option) => option.title}
                     />
                     <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
+                    <CheckboxField name="flammable" label={<FormattedMessage id="product.flammable" defaultMessage="Flammable" />} fullWidth />
                     <Field name="image" isEqual={isEqual}>
                         {createFinalFormBlock(rootBlocks.image)}
                     </Field>
