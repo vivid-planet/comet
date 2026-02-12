@@ -55,18 +55,90 @@ export interface AccessControlServiceInterface {
         permission: Permission,
         contentScope?: ContentScope,
     ): boolean;
-    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
+    getPermissionsForUser?: (user: User, availablePermissions: Permission[]) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 ```
 
 Furthermore, the Access Control Service may provide two methods that allow to programmatically assign permissions and scopes to certain users. These assignments are handled throughout the system in the same way as manually assigned permissions and/or scopes. Moreover, they are also reflected in the admin panel.
 
+**getPermissionsForUser(user, availablePermissions)**
+
+This method assigns permissions to users programmatically (permission by rule). It receives:
+- `user`: The user object from your authentication system
+- `availablePermissions`: All permissions registered in the system (both core and app permissions)
+
+It should return either:
+- An array of permission objects
+- `UserPermissions.allPermissions` constant for admin users with full access
+
+Example implementation:
+```typescript
+@Injectable()
+export class AccessControlService extends AbstractAccessControlService {
+    getPermissionsForUser(user: User, availablePermissions: Permission[]): PermissionsForUser {
+        // Admin users get all permissions
+        if (user.isAdmin) {
+            return UserPermissions.allPermissions;
+        }
+        
+        // Deny specific permissions for regular users
+        const deniedPermissions: Permission[] = ["userPermissions"];
+        return availablePermissions
+            .filter((permission) => !deniedPermissions.includes(permission))
+            .map((permission) => ({ permission }));
+    }
+}
+```
+
+You can also return permissions with per-permission content scopes and additional metadata:
+```typescript
+getPermissionsForUser(user: User, availablePermissions: Permission[]): PermissionsForUser {
+    return [
+        {
+            permission: "products",
+            contentScopes: [{ domain: "main", language: "en" }],
+            validFrom: new Date("2024-01-01"),
+            validTo: new Date("2024-12-31"),
+            reason: "Temporary access for Q1-Q4 2024"
+        },
+        {
+            permission: "news"
+            // No contentScopes - will use getContentScopesForUser() defaults
+        }
+    ];
+}
+```
+
+**getContentScopesForUser(user)**
+
+This method defines the default content scopes a user can access. It should return either:
+- An array of content scope objects
+- `UserPermissions.allContentScopes` constant for admin users with full access
+
+Example implementation:
+```typescript
+getContentScopesForUser(user: User): ContentScopesForUser {
+    // Admin users get all scopes
+    if (user.isAdmin) {
+        return UserPermissions.allContentScopes;
+    }
+    
+    // Regular users can only access specific scopes
+    return [
+        { domain: "main", language: "en" },
+        { domain: "main", language: "de" }
+    ];
+}
+```
+
 It's also possible to add additional properties and meta information to permissions (`validFrom`, `validTo`, `reason`, `requestedBy`, `approvedBy`). Additionally, for admin users, COMET DXP also provides the constants `UserPermissions.allPermissions` and `UserPermissions.allContentScopes`.
 
 :::note
 `getContentScopesForUser` returns the general scopes for the user but can be overridden for each permission in `getPermissionsForUser`. Please refer to the types that the IDE offers.
 :::
+
+For a detailed explanation of how these methods work together with decorators, see the [Implementation Guide](/docs/core-concepts/user-permissions/implementation-guide).
 
 ## Admin
 

@@ -2,6 +2,10 @@
 title: Access Control in the API
 ---
 
+:::tip
+For a comprehensive guide on how the permission system works internally, including detailed examples and best practices, see the [Implementation Guide](/docs/core-concepts/user-permissions/implementation-guide).
+:::
+
 :::note
 
 The term **operation** stands for the locations in which COMET DXP invokes permission checks:
@@ -80,3 +84,218 @@ async handlerThatUsesACustomGuard(): {
     ...
 }
 ```
+
+## Common Patterns
+
+### Pattern 1: Simple CRUD with Scope Checking
+
+For basic CRUD operations with scoped entities:
+
+```typescript
+@Resolver(() => Article)
+@RequiredPermission("news")
+export class ArticleResolver {
+    // Read - checks permission and scope
+    @Query(() => Article)
+    @AffectedEntity(Article)
+    async article(@Args("id", { type: () => ID }) id: string): Promise<Article> {
+        return await this.em.findOneOrFail(Article, id);
+    }
+    
+    // Create - checks permission and scope from argument
+    @Mutation(() => Article)
+    async createArticle(
+        @Args("scope") scope: ContentScope,
+        @Args("input") input: ArticleInput
+    ): Promise<Article> {
+        const article = new Article();
+        article.scope = scope; // Use the validated scope
+        article.title = input.title;
+        await this.em.persistAndFlush(article);
+        return article;
+    }
+    
+    // Update - checks permission and scope from existing entity
+    @Mutation(() => Article)
+    @AffectedEntity(Article)
+    async updateArticle(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("input") input: ArticleInput
+    ): Promise<Article> {
+        const article = await this.em.findOneOrFail(Article, id);
+        article.title = input.title;
+        await this.em.flush();
+        return article;
+    }
+    
+    // Delete - checks permission and scope
+    @Mutation(() => Boolean)
+    @AffectedEntity(Article)
+    async deleteArticle(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+        const article = await this.em.findOneOrFail(Article, id);
+        await this.em.removeAndFlush(article);
+        return true;
+    }
+}
+```
+
+### Pattern 2: Related Entities with @ScopedEntity
+
+When an entity doesn't have a direct scope property:
+
+```typescript
+// Entity without direct scope
+@Entity()
+@ScopedEntity(async (comment: Comment) => {
+    const article = await comment.article.load();
+    return article.scope;
+})
+export class Comment {
+    @PrimaryKey()
+    id: string;
+    
+    @Property()
+    text: string;
+    
+    @ManyToOne(() => Article)
+    article: Article;
+}
+
+// Resolver
+@Resolver(() => Comment)
+@RequiredPermission("news")
+export class CommentResolver {
+    @Mutation(() => Comment)
+    @AffectedEntity(Comment)
+    async updateComment(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("input") input: CommentInput
+    ): Promise<Comment> {
+        // System loads Comment, then loads related Article to get scope
+        const comment = await this.em.findOneOrFail(Comment, id);
+        comment.text = input.text;
+        await this.em.flush();
+        return comment;
+    }
+}
+```
+
+### Pattern 3: Multiple Affected Entities
+
+When an operation affects multiple entities:
+
+```typescript
+@Mutation(() => ProductVariant)
+@RequiredPermission("products")
+@AffectedEntity(ProductVariant)
+@AffectedEntity(Product, { idArg: "productId" })
+async createVariant(
+    @Args("productId", { type: () => ID }) productId: string,
+    @Args("input") input: VariantInput
+): Promise<ProductVariant> {
+    // System checks scopes of both Product and new ProductVariant
+    const product = await this.em.findOneOrFail(Product, productId);
+    const variant = new ProductVariant();
+    variant.product = product;
+    variant.scope = product.scope; // Inherit scope from product
+    await this.em.persistAndFlush(variant);
+    return variant;
+}
+```
+
+### Pattern 4: Using @AffectedScope
+
+When scope can be derived from arguments without loading entities:
+
+```typescript
+@Mutation(() => Article)
+@RequiredPermission("news")
+@AffectedScope((args: CreateArticleArgs) => ({
+    domain: args.domain,
+    language: args.language
+}))
+async createArticle(
+    @Args("domain") domain: string,
+    @Args("language") language: string,
+    @Args("input") input: ArticleInput
+): Promise<Article> {
+    const article = new Article();
+    article.scope = { domain, language };
+    article.title = input.title;
+    await this.em.persistAndFlush(article);
+    return article;
+}
+```
+
+### Pattern 5: Operations Without Scope (Use Carefully)
+
+For truly global operations or entities without scopes:
+
+```typescript
+@Resolver(() => GlobalSettings)
+@RequiredPermission("settings")
+export class SettingsResolver {
+    // Global settings have no scope concept
+    @Query(() => GlobalSettings)
+    @RequiredPermission("settings", { skipScopeCheck: true })
+    async globalSettings(): Promise<GlobalSettings> {
+        return await this.em.findOneOrFail(GlobalSettings, "singleton");
+    }
+    
+    @Mutation(() => GlobalSettings)
+    @RequiredPermission("settings", { skipScopeCheck: true })
+    async updateGlobalSettings(
+        @Args("input") input: SettingsInput
+    ): Promise<GlobalSettings> {
+        const settings = await this.em.findOneOrFail(GlobalSettings, "singleton");
+        settings.apply(input);
+        await this.em.flush();
+        return settings;
+    }
+}
+```
+
+## How Decorators Work Together
+
+When you use multiple decorators, they work in harmony:
+
+```typescript
+@Resolver(() => Product)
+@RequiredPermission("products")  // 1. Class-level permission (applied to all methods)
+export class ProductResolver {
+    @Mutation(() => Product)
+    @RequiredPermission(["products", "inventory"])  // 2. Method-level (overrides class-level)
+    @AffectedEntity(Product)  // 3. Tells system to load Product and check its scope
+    @AffectedEntity(Category, { idArg: "categoryId" })  // 4. Also check Category scope
+    async updateProduct(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("categoryId", { type: () => ID }) categoryId: string,
+        @Args("input") input: ProductInput
+    ): Promise<Product> {
+        // Permission check: User needs "products" OR "inventory"
+        // Scope check: Both Product(id) scope AND Category(categoryId) scope must match
+        
+        const product = await this.em.findOneOrFail(Product, id);
+        const category = await this.em.findOneOrFail(Category, categoryId);
+        product.category = category;
+        await this.em.flush();
+        return product;
+    }
+}
+```
+
+The execution flow:
+1. User makes a request
+2. `UserPermissionsGuard` intercepts
+3. Checks if user has `"products"` OR `"inventory"` permission
+4. Loads `Product` with `id` and extracts its scope
+5. Loads `Category` with `categoryId` and extracts its scope
+6. Checks if user's content scopes match BOTH the Product scope AND the Category scope
+7. If all checks pass, resolver executes
+
+## See Also
+
+For more detailed information:
+- [Implementation Guide](/docs/core-concepts/user-permissions/implementation-guide) - Deep dive into how everything works
+- [Setup Guide](/docs/core-concepts/user-permissions/setup) - Initial configuration
+- [Permissions in Admin](/docs/core-concepts/user-permissions/admin) - Frontend integration

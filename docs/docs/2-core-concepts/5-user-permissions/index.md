@@ -25,6 +25,18 @@ Users in COMET DXP possess permissions and scopes. Every operation is assigned t
 
 There are no roles as they can easily be represented as a combination of permissions. Furthermore, the ability to check scopes is more powerful than just being assigned a single role.
 
+## Permission Sources
+
+Permissions can be assigned to users in two ways:
+
+**Permission By Rule (Programmatic)**: Permissions assigned through code in the `AccessControlService.getPermissionsForUser()` method. These are automatically applied based on user attributes and are perfect for role-based access control.
+
+**Manual Permissions**: Permissions assigned through the admin panel's User Permissions interface. These can be granted or revoked per user, can include time-based restrictions, and include audit information.
+
+When checking permissions, the system considers both sources - a user's final permissions are the union of both programmatic and manual permissions.
+
+For more details, see the [Implementation Guide](/docs/core-concepts/user-permissions/implementation-guide).
+
 ## Important types
 
 - `User` is provided by COMET DXP as an interface so that it's possible to enhance the type by TypeScript module augmentation. By default, a ` User` object contains the fields `id`, `name` and `email`.
