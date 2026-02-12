@@ -1,14 +1,14 @@
 import { gql, useApolloClient } from "@apollo/client";
+import { WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
+import { ApolloDecorator } from "../../../../.storybook/decorators/Apollo.decorator";
+import type { Manufacturer } from "../../../../.storybook/mocks/handlers";
 import { SaveButton } from "../../../common/buttons/SaveButton";
 import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
 import { AsyncAutocompleteField } from "../AsyncAutocompleteField";
 import { TextField } from "../TextField";
-import { ApolloDecorator } from "../../../../.storybook/decorators/Apollo.decorator";
-import type { Manufacturer } from "../../../../.storybook/mocks/handlers";
-import { WarningSolid } from "@comet/admin-icons";
 
 type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {
@@ -21,7 +21,7 @@ export default config;
 // Helper function to load manufacturers from GraphQL
 const useLoadManufacturers = () => {
     const client = useApolloClient();
-    
+
     return async (search?: string) => {
         const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
             query: gql`
