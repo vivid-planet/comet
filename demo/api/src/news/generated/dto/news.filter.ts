@@ -3,12 +3,9 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter, createEnumFilter } from "@comet/cms-api";
-import { NewsCategory, NewsStatus } from "../../entities/news.entity";
-@InputType()
-class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {}
-@InputType()
-class NewsCategoryEnumFilter extends createEnumFilter(NewsCategory) {}
+import { NewsStatusEnumFilter } from "./news-status.enum-filter";
+import { NewsCategoryEnumFilter } from "./news-category.enum-filter";
+import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
 @InputType()
 export class NewsFilter {
     @Field(() => IdFilter, { nullable: true })

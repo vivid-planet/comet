@@ -10,7 +10,6 @@ import { Product } from "./product.entity";
 @Entity()
 @RootBlockEntity()
 @CrudGenerator({
-    targetDirectory: `${__dirname}/../generated/`,
     requiredPermission: "products",
     position: { groupByFields: ["product"] },
 })

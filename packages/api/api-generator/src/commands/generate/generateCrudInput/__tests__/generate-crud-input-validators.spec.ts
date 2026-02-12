@@ -114,10 +114,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityWithEmail"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithEmail"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-email.input.ts");
             if (!file) throw new Error("File not found");
@@ -155,7 +152,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: testPermission },
+                    { requiredPermission: testPermission },
                     orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -195,7 +192,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: testPermission },
+                    { requiredPermission: testPermission },
                     orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -235,7 +232,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: testPermission },
+                    { requiredPermission: testPermission },
                     orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -276,7 +273,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: testPermission },
+                    { requiredPermission: testPermission },
                     orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -316,10 +313,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-validator-defined-in-file.input.ts");
             if (!file) throw new Error("File not found");
@@ -339,7 +333,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsTrueAsString"),
             );
             expect(isTrueAsStringImport).toBeDefined();
-            expect(isTrueAsStringImport?.getModuleSpecifierValue()).toBe("../generate-crud-input-validators.spec");
+            expect(isTrueAsStringImport?.getModuleSpecifierValue()).toBe("../../generate-crud-input-validators.spec");
 
             await orm.close();
         });
@@ -357,7 +351,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
+                { requiredPermission: testPermission },
                 orm.em.getMetadata().get("TestEntityWithDuplicateDefaultDecorator"),
             );
             const formattedOut = await formatGeneratedFiles(out);
