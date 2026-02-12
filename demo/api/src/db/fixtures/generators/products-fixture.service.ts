@@ -97,6 +97,7 @@ export class ProductsFixtureService {
                 additionalTypes: [],
                 price: faker.number.float({ min: 0, max: 1000, fractionDigits: 2 }),
                 inStock: faker.datatype.boolean(),
+                flammable: faker.datatype.boolean(),
                 soldCount: faker.number.int({ min: 0, max: 100 }),
                 availableSince: format(faker.date.past(), "yyyy-MM-dd"),
                 image: DamImageBlock.blockInputFactory({

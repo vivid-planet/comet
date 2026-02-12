@@ -71,6 +71,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => BooleanFilter)
     inStock?: BooleanFilter;
+    @Field(() => BooleanFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => BooleanFilter)
+    flammable?: BooleanFilter;
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

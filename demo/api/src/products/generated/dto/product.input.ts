@@ -49,6 +49,10 @@ export class ProductInput {
     @IsBoolean()
     @Field({ defaultValue: true })
     inStock: boolean;
+    @IsNotEmpty()
+    @IsBoolean()
+    @Field({ defaultValue: false })
+    flammable: boolean;
     @IsNullable()
     @IsDateString()
     @Field(() => GraphQLLocalDate, { nullable: true, defaultValue: null })

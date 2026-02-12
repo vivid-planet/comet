@@ -57,6 +57,10 @@ export class ProductImporterInput {
     @IsBoolean()
     inStock: boolean = true;
 
+    @CsvColumn("flammable", { type: CsvColumnType.Boolean, valueMapping: { true: true, false: false, "": false } })
+    @IsBoolean()
+    flammable: boolean = false;
+
     @CsvColumn("soldCount", { type: CsvColumnType.Integer })
     @IsOptional()
     @IsInt()
