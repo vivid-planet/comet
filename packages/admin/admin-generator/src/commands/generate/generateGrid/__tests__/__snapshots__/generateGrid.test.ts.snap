@@ -951,7 +951,7 @@ renderCell: (params) => {
         if (error) throw error;
         const rows = data?.booksByAuthor.nodes ?? [];
 
-        const exportApi = useDataGridExcelExport<GQLBooksGridQuery["booksByAuthor"]["nodes"][0], GQLBooksGridQuery, Omit<GQLBooksGridQueryVariables, "offset" | "limit">>({
+        const exportApi = useDataGridExcelExport<GQLBooksGridQuery["booksByAuthor"]["nodes"][0], GQLBooksGridQuery, GQLBooksGridQueryVariables>({
         columns,
         variables: {
             authorId, ...muiGridFilterToGql(columns, dataGridProps.filterModel)
@@ -1181,7 +1181,7 @@ renderCell: (params) => {
         if (error) throw error;
         const rows = data?.books.nodes ?? [];
 
-        const exportApi = useDataGridExcelExport<GQLBooksGridQuery["books"]["nodes"][0], GQLBooksGridQuery, Omit<GQLBooksGridQueryVariables, "offset" | "limit">>({
+        const exportApi = useDataGridExcelExport<GQLBooksGridQuery["books"]["nodes"][0], GQLBooksGridQuery, GQLBooksGridQueryVariables>({
         columns,
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel)

@@ -1124,11 +1124,10 @@ const generateGridExportApi = (
     }
 
     const queryNodeType = hasPaging ? `GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0]` : `GQL${gqlTypePlural}GridQuery["${gridQuery}"][0]`;
-    const variablesType = hasPaging ? `Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">` : `GQL${gqlTypePlural}GridQueryVariables`;
     const resolveQueryNodes = hasPaging ? `(data) => data.${gridQuery}.nodes` : `(data) => data.${gridQuery}`;
     const totalCount = hasPaging ? `data?.${gridQuery}.totalCount ?? 0` : `data?.${gridQuery}.length ?? 0`;
 
-    return `const exportApi = useDataGridExcelExport<${queryNodeType}, GQL${gqlTypePlural}GridQuery, ${variablesType}>({
+    return `const exportApi = useDataGridExcelExport<${queryNodeType}, GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>({
         columns,
         variables: {
             ${[

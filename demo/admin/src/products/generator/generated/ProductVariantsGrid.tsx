@@ -170,7 +170,7 @@ export function ProductVariantsGrid({ product }: Props) {
     const exportApi = useDataGridExcelExport<
         GQLProductVariantsGridQuery["productVariants"]["nodes"][0],
         GQLProductVariantsGridQuery,
-        Omit<GQLProductVariantsGridQueryVariables, "offset" | "limit">
+        GQLProductVariantsGridQueryVariables
     >({
         columns,
         variables: {
