@@ -365,7 +365,11 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const rowCount = useBufferedRowCount(data?.products.totalCount);
     if (error) throw error;
     const rows = data?.products.nodes ?? [];
-    const exportApi = useDataGridExcelExport<GQLProductsGridQuery["products"]["nodes"][0], GQLProductsGridQuery, GQLProductsGridQueryVariables>({
+    const exportApi = useDataGridExcelExport<
+        GQLProductsGridQuery["products"]["nodes"][0],
+        GQLProductsGridQuery,
+        Omit<GQLProductsGridQueryVariables, "offset" | "limit">
+    >({
         columns,
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
