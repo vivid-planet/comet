@@ -1,20 +1,20 @@
 {
-    "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES2015",
-        "lib": ["ES2020"],
-        "removeComments": true,
+        "baseUrl": "./",
+        "declarationMap": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "sourceMap": true,
         "incremental": true,
-        "strict": true,
-        "strictPropertyInitialization": false,
-        "strictNullChecks": true,
-        "declarationMap": true,
+        "lib": ["ES2020"],
         "outDir": "./lib",
-        "baseUrl": "./"
+        "removeComments": true,
+        "sourceMap": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
+        "target": "ES2015"
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "lib"]
+    "exclude": ["node_modules", "lib"],
+    "extends": "../tsconfig.base.json",
+    "include": ["src/**/*"]
 }

@@ -11,7 +11,7 @@
         "build-storybook": "storybook build",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json .storybook/ --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' .storybook/ --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "storybook": "storybook dev -p 26638 --no-version-updates"
