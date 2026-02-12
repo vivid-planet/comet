@@ -14,7 +14,7 @@ import packageJson from "eslint-plugin-package-json";
 export const restrictedImportPatterns = [
     {
         group: ["@comet/*/lib", "@comet/*/lib/**"],
-        message: "Avoid importing from @comet packages via /lib. Use the package root instead.",
+        message: "Don't import private files from @comet packages via /lib. Use the package root instead.",
     },
 ];
 
