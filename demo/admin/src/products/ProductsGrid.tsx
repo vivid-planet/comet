@@ -261,7 +261,7 @@ export function ProductsGrid() {
             },
             {
                 field: "inStock",
-                headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+                headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
                 type: "boolean",
                 flex: 1,
                 minWidth: 80,

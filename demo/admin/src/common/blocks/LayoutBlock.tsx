@@ -35,7 +35,7 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
     },
     {
         name: "layout2",
-        label: <FormattedMessage id="layoutBlock.layout.layout1" defaultMessage="Layout 2" />,
+        label: <FormattedMessage id="layoutBlock.layout.layout2" defaultMessage="Layout 2" />,
         columns: 3,
         preview: (
             <ColumnsLayoutPreview>
@@ -50,7 +50,7 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
     },
     {
         name: "layout3",
-        label: <FormattedMessage id="layoutBlock.layout.layout1" defaultMessage="Layout 3" />,
+        label: <FormattedMessage id="layoutBlock.layout.layout3" defaultMessage="Layout 3" />,
         columns: 3,
         preview: (
             <ColumnsLayoutPreview>
@@ -65,7 +65,7 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
     },
     {
         name: "layout4",
-        label: <FormattedMessage id="layoutBlock.layout.layout1" defaultMessage="Layout 4" />,
+        label: <FormattedMessage id="layoutBlock.layout.layout4" defaultMessage="Layout 4" />,
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
@@ -78,7 +78,7 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
     },
     {
         name: "layout5",
-        label: <FormattedMessage id="layoutBlock.layout.layout1" defaultMessage="Layout 5" />,
+        label: <FormattedMessage id="layoutBlock.layout.layout5" defaultMessage="Layout 5" />,
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
@@ -91,7 +91,7 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
     },
     {
         name: "layout6",
-        label: <FormattedMessage id="layoutBlock.layout.layout1" defaultMessage="Layout 6" />,
+        label: <FormattedMessage id="layoutBlock.layout.layout6" defaultMessage="Layout 6" />,
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
@@ -104,7 +104,7 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
     },
     {
         name: "layout7",
-        label: <FormattedMessage id="layoutBlock.layout.layout1" defaultMessage="Layout 7" />,
+        label: <FormattedMessage id="layoutBlock.layout.layout7" defaultMessage="Layout 7" />,
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>

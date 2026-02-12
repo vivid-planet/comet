@@ -105,7 +105,7 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable.alternativeAddress.zip",
-                headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip", defaultMessage: "alt. ZIP2" }),
+                headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip2", defaultMessage: "alt. ZIP2" }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
             },
             {
