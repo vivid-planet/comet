@@ -100,7 +100,6 @@ export const WithObjectOptions: Story = {
  *
  * Use this when:
  * - The field must have a value before form submission
- * - You need to enforce selection from the options
  */
 export const Required: Story = {
     render: () => {
