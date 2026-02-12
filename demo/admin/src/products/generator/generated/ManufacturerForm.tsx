@@ -139,7 +139,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
                             label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />}
                         />
 
-                        <FieldSet collapsible title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address" />}>
+                        <FieldSet collapsible title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address as embeddable" />}>
                             <TextField
                                 required
                                 variant="horizontal"
@@ -198,7 +198,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="address.alternativeAddress.street"
-                                                label={<FormattedMessage id="manufacturer.street" defaultMessage="Street" />}
+                                                label={<FormattedMessage id="manufacturer.street" defaultMessage="Address Street" />}
                                             />
 
                                             <NumberField
@@ -213,7 +213,7 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="address.alternativeAddress.zip"
-                                                label={<FormattedMessage id="manufacturer.zip" defaultMessage="Zip" />}
+                                                label={<FormattedMessage id="manufacturer.zip" defaultMessage="Address Zip" />}
                                             />
 
                                             <TextField
