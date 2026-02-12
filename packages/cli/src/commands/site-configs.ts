@@ -81,7 +81,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
         fs.writeFileSync(resolve(process.cwd(), options.outFile), str);
     });
 
-const resolveOpReferences = (input: string): string => {
+export const resolveOpReferences = (input: string): string => {
     const opRefs = input.match(/\{\{ op:\/\/[^ }]+ \}\}/g);
     if (!opRefs) return input;
 
