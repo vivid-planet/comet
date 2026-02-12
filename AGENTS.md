@@ -40,3 +40,11 @@ This repository includes a demo application which is showcasing the libraries.
 - `demo/api` and `demo/admin` contain `generated/` folders. Do not edit files inside `generated/` directly; rerun `api-generator` or `admin-generator` to update them.
 - After any changes to `api-generator` or `admin-generator` execute the generator in demo to update the generated files. Before running, build the package.
 
+### admin-generator
+
+The source for generated files are *.cometGen.tsx config files. Modify those and re-run `admin-generator` for changes.
+
+### api-generator
+
+The source for generated files are entities, mainly the mikro-orm decorators but also custom `@Crud*` generators.
+
