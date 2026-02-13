@@ -9,7 +9,9 @@ export function generateImportsCode(imports: Imports): string {
     const filteredImports = imports.filter((imp) => {
         if (importsNameToPath.has(imp.name)) {
             if (importsNameToPath.get(imp.name) !== imp.importPath) {
-                throw new Error(`Duplicate import name ${imp.name}`);
+                throw new Error(
+                    `Duplicate import name ${imp.name} with different importPaths: ${imp.importPath} vs ${importsNameToPath.get(imp.name)}`,
+                );
             } else {
                 // duplicate import, skip
                 return false;

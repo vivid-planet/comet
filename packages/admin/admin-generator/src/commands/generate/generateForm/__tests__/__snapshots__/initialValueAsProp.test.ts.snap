@@ -61,6 +61,8 @@ onCreate?: (id: string) => void;
 id?: string;
         }
 
+    
+
     export function ProductForm({initialValues: passedInitialValues, onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -113,6 +115,7 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -120,6 +123,8 @@ id?: string;
                     variables: {
                         input: output },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {

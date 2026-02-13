@@ -337,6 +337,16 @@ input CreateDamFolderInput {
   parentId: ID
 }
 
+type CreateProductPayload {
+  errors: [ProductMutationError!]!
+  product: Product
+}
+
+type CreateProductVariantPayload {
+  errors: [ProductVariantMutationError!]!
+  productVariant: ProductVariant
+}
+
 type CsvImportInformation {
   blacklisted: Int!
   blacklistedColumns: [JSONObject!]
@@ -916,12 +926,12 @@ type Mutation {
   createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
   createNewsComment(input: NewsCommentInput!, newsId: ID!): NewsComment!
   createPageTreeNode(category: String!, input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!): PageTreeNode!
-  createProduct(input: ProductInput!): Product!
+  createProduct(input: ProductInput!): CreateProductPayload!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   createProductCategoryType(input: ProductCategoryTypeInput!): ProductCategoryType!
   createProductHighlight(input: ProductHighlightInput!): ProductHighlight!
   createProductTag(input: ProductTagInput!): ProductTag!
-  createProductVariant(input: ProductVariantInput!, product: ID!): ProductVariant!
+  createProductVariant(input: ProductVariantInput!, product: ID!): CreateProductVariantPayload!
   createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
   currentUserSignOut: String!
   deleteBrevoContact(id: Int!, scope: EmailCampaignContentScopeInput!): Boolean!
@@ -980,7 +990,7 @@ type Mutation {
   updateProductCategoryType(id: ID!, input: ProductCategoryTypeUpdateInput!): ProductCategoryType!
   updateProductHighlight(id: ID!, input: ProductHighlightUpdateInput!): ProductHighlight!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
-  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): UpdateProductVariantPayload!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   userPermissionsCreatePermission(input: UserPermissionInput!, userId: String!): UserPermission!
@@ -1627,6 +1637,18 @@ input ProductInput {
   type: ProductType!
 }
 
+type ProductMutationError {
+  code: ProductMutationErrorCode!
+  field: String
+}
+
+enum ProductMutationErrorCode {
+  """
+  Title must be at least 3 characters long when creating a product, except for foo
+  """
+  titleTooShort
+}
+
 input ProductNestedProductColorInput {
   hexCode: String!
   name: String!
@@ -1852,6 +1874,16 @@ input ProductVariantInput {
   image: DamImageBlockInput!
   name: String!
   position: Int
+}
+
+type ProductVariantMutationError {
+  code: ProductVariantMutationErrorCode!
+  field: String
+}
+
+enum ProductVariantMutationErrorCode {
+  """Name must be at least 3 characters long, except for foo"""
+  nameTooShort
 }
 
 input ProductVariantSort {
@@ -2173,6 +2205,11 @@ input UpdateDamFolderInput {
 
 input UpdateImageFileInput {
   cropArea: ImageCropAreaInput
+}
+
+type UpdateProductVariantPayload {
+  errors: [ProductVariantMutationError!]!
+  productVariant: ProductVariant
 }
 
 input UserContentScopesInput {

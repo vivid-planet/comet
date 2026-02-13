@@ -21,9 +21,15 @@ export const productQuery = gql`
 export const createProductMutation = gql`
     mutation CreateProduct($input: ProductInput!) {
         createProduct(input: $input) {
-            id
-            updatedAt
-            ...IdFieldInForm
+            product {
+                id
+                updatedAt
+                ...IdFieldInForm
+            }
+            errors {
+                code
+                field
+            }
         }
     }
     ${productFormFragment}

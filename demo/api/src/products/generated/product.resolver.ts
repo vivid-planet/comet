@@ -28,6 +28,15 @@ import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { Product } from "../entities/product.entity";
 import { ProductService } from "../product.service";
+import { ProductMutationError } from "./../product.service";
+import { Field, ObjectType } from "@nestjs/graphql";
+@ObjectType()
+class CreateProductPayload {
+    @Field(() => Product, { nullable: true })
+    product?: Product;
+    @Field(() => [ProductMutationError], { nullable: false })
+    errors: ProductMutationError[];
+}
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
@@ -98,14 +107,17 @@ export class ProductResolver {
         const [entities, totalCount] = await this.entityManager.findAndCount(Product, where, options);
         return new PaginatedProducts(entities, totalCount);
     }
-    @Mutation(() => Product)
+    @Mutation(() => CreateProductPayload)
     async createProduct(
         @Args("input", { type: () => ProductInput })
         input: ProductInput,
         @GetCurrentUser()
         user: CurrentUser,
-    ): Promise<Product> {
-        await this.productService.validateCreateInput(input, { currentUser: user });
+    ): Promise<CreateProductPayload> {
+        const errors = await this.productService.validateCreateInput(input, { currentUser: user });
+        if (errors.length > 0) {
+            return { errors };
+        }
         const {
             colors: colorsInput,
             tagsWithStatus: tagsWithStatusInput,
@@ -170,7 +182,7 @@ export class ProductResolver {
             });
         }
         await this.entityManager.flush();
-        return product;
+        return { product, errors: [] };
     }
     @Mutation(() => Product)
     @AffectedEntity(Product)

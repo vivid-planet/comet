@@ -150,6 +150,7 @@ export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { MutationError } from "./common/graphql/mutation-error";
 export { CdnGuard } from "./common/guards/cdn.guard";
 export { getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "./common/helper/crud-generator.helper";
 export { PartialType } from "./common/helper/partial-type.helper";

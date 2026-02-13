@@ -49,5 +49,10 @@ export function generateServiceHookCall(
         options.push(`entity: ${instanceNameSingular}`);
     }
     const optionsCode = options.join(", ");
-    return `await this.${instanceNameSingular}Service.${type}(input${optionsCode ? `, { ${optionsCode} }` : ""})`;
+    return `
+    const errors = await this.${instanceNameSingular}Service.${type}(input${optionsCode ? `, { ${optionsCode} }` : ""});
+    if (errors.length > 0) {
+        return { errors };
+    }
+    `;
 }

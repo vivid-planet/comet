@@ -1,19 +1,59 @@
-import { type CrudGeneratorHooksService, type CurrentUser } from "@comet/cms-api";
+import { type CrudGeneratorHooksService, type CurrentUser, type MutationError } from "@comet/cms-api";
+import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 
 import { type ProductVariant } from "./entities/product-variant.entity";
 import { type ProductVariantInput, type ProductVariantUpdateInput } from "./generated/dto/product-variant.input";
 
+enum ProductVariantMutationErrorCode {
+    nameTooShort = "titleTooShort",
+}
+registerEnumType(ProductVariantMutationErrorCode, {
+    name: "ProductVariantMutationErrorCode",
+    valuesMap: {
+        nameTooShort: {
+            description: "Name must be at least 3 characters long, except for foo",
+        },
+    },
+});
+
+@ObjectType()
+export class ProductVariantMutationError implements MutationError {
+    @Field({ nullable: true })
+    field?: string;
+
+    @Field(() => ProductVariantMutationErrorCode)
+    code: ProductVariantMutationErrorCode;
+}
+
 export class ProductVariantService implements CrudGeneratorHooksService {
-    async validateCreateInput(input: ProductVariantInput, options: { currentUser: CurrentUser; args: { product: string } }): Promise<void> {
+    async validateCreateInput(
+        input: ProductVariantInput,
+        options: { currentUser: CurrentUser; args: { product: string } },
+    ): Promise<ProductVariantMutationError[]> {
         if (input.name.length < 3 && options.currentUser.email !== "foo@example.com") {
-            throw new Error("Title must be at least 3 characters long when creating a product variant, except for foo");
+            return [
+                {
+                    code: ProductVariantMutationErrorCode.nameTooShort,
+                    field: "name",
+                },
+            ];
         }
         // we could access options.args.product here if needed
+        return [];
     }
-    async validateUpdateInput(input: ProductVariantUpdateInput, options: { currentUser: CurrentUser; entity: ProductVariant }): Promise<void> {
+    async validateUpdateInput(
+        input: ProductVariantUpdateInput,
+        options: { currentUser: CurrentUser; entity: ProductVariant },
+    ): Promise<ProductVariantMutationError[]> {
         if (input.name !== undefined && input.name.length < 3 && options.currentUser.email !== "foo@example.com") {
-            throw new Error("Title must be at least 3 characters long when updating a product variant, except for foo");
+            return [
+                {
+                    code: ProductVariantMutationErrorCode.nameTooShort,
+                    field: "name",
+                },
+            ];
         }
         // we could access options.entity here if needed
+        return [];
     }
 }
