@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { FinalForm, type ISelectionApi } from "@comet/admin";
+import { FinalForm } from "@comet/admin";
 
 import { useDamScope } from "../config/useDamScope";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
@@ -9,10 +9,9 @@ import { FolderFormFields, type FolderFormValues } from "./FolderFormFields";
 
 interface AddFolderProps {
     parentId?: string;
-    selectionApi: ISelectionApi;
 }
 
-const AddFolder = ({ parentId, selectionApi }: AddFolderProps) => {
+const AddFolder = ({ parentId }: AddFolderProps) => {
     const scope = useDamScope();
     const [createDamFolder] = useMutation<GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables>(createDamFolderMutation, {
         refetchQueries: ["DamItemsList"],
@@ -34,9 +33,6 @@ const AddFolder = ({ parentId, selectionApi }: AddFolderProps) => {
                         scope,
                     },
                 });
-            }}
-            onAfterSubmit={() => {
-                selectionApi.handleDeselect();
             }}
         >
             <FolderFormFields />

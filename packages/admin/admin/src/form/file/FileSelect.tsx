@@ -257,6 +257,17 @@ const ErrorMessage = createComponentSlot(Typography)<FileSelectClassKey>({
     slotName: "errorMessage",
 })();
 
+<<<<<<< HEAD
+=======
+const FilesInfoText = createComponentSlot(FormHelperText)<FileSelectClassKey>({
+    componentName: "FileSelect",
+    slotName: "filesInfoText",
+})(css`
+    margin: 0;
+    display: none;
+`);
+
+>>>>>>> main
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFileSelect: FileSelectClassKey;

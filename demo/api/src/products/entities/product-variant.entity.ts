@@ -4,6 +4,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
+import { ProductVariantService } from "../product-variant.service";
 import { Product } from "./product.entity";
 
 @ObjectType()
@@ -12,6 +13,7 @@ import { Product } from "./product.entity";
 @CrudGenerator({
     requiredPermission: "products",
     position: { groupByFields: ["product"] },
+    hooksService: ProductVariantService,
 })
 export class ProductVariant extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";

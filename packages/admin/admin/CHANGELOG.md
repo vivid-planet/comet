@@ -1,5 +1,25 @@
 # @comet/admin
 
+## 8.14.0
+
+### Minor Changes
+
+- f31b52e: Add FinalFormDebug component to display React Final Form state for debugging purposes
+- d0a7c96: Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
+
+### Patch Changes
+
+- 5075f7a: Render `ToolbarBackButton` as a link for improved accessibility
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- dbf8774: Don't open the mobile `MainNavigation` when resizing the window to a smaller width
+    - @comet/admin-icons@8.13.0
+
 ## 8.12.0
 
 ### Minor Changes

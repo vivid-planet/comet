@@ -39,7 +39,7 @@
         ]
     },
     "dependencies": {
-        "@algolia/client-search": "^5.46.3",
+        "@algolia/client-search": "^5.47.0",
         "@docusaurus/core": "^3.9.2",
         "@docusaurus/preset-classic": "^3.9.2",
         "@docusaurus/theme-mermaid": "^3.9.2",
@@ -64,7 +64,7 @@
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "ts-node": "^10.9.2",
-        "typescript": "5.9.3"
+        "typescript": "^5.9.3"
     },
     "engines": {
         "node": ">=18.0"

@@ -122,6 +122,7 @@ export {
     CrudField,
     CrudFieldOptions,
     CrudGenerator,
+    CrudGeneratorHooksService,
     CrudGeneratorOptions,
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
@@ -270,6 +271,7 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
+export { AffectedScope } from "./user-permissions/decorators/affected-scope.decorator";
 export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
 export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";

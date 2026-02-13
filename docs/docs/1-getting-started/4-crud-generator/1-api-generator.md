@@ -12,7 +12,11 @@ The API Generator uses the entity and the fields defined within it to generate r
 DTOs for the feature. For this, the entity must be annotated with the `CrudGenerator` decorator:
 
 ```ts
+<<<<<<< HEAD
 @CrudGenerator({ })
+=======
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
+>>>>>>> main
 export class Product extends BaseEntity {
     ...
 }
@@ -27,7 +31,12 @@ decorator. The usage of both decorators is the same.
 
 | Parameter            | Type                 | Default     | Description                                                  |
 | -------------------- | -------------------- | ----------- | ------------------------------------------------------------ |
+<<<<<<< HEAD
 | `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.        |
+=======
+| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.       |
+| `requiredPermission` | `string[] \| string` | Required    | Permission(s) required to access the CRUD operations.        |
+>>>>>>> main
 | `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                  |
 | `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                  |
 | `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                  |
@@ -277,7 +286,11 @@ If the generated code doesn't fit your needs at all, you can "scaffold" the code
   @ObjectType()
   @Entity()
   @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
+<<<<<<< HEAD
 - @CrudGenerator({ })
+=======
+- @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
+>>>>>>> main
   export class Product extends BaseEntity<Product, "id"> {
       // ...
   }
@@ -332,6 +345,10 @@ Instead, deactivate `create` in the `@CrudGenerator` decorator:
 
 ```ts
 @CrudGenerator({
+<<<<<<< HEAD
+=======
+    // ...
+>>>>>>> main
     create: false,
 })
 export class Product extends BaseEntity<Product, "id"> {

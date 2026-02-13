@@ -20,7 +20,6 @@ import { GridColDef } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
@@ -35,6 +34,7 @@ import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useContentScope } from "@comet/cms-admin";
+import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const newsFragment = gql`
@@ -48,8 +48,8 @@ const newsFragment = gql`
     }
 `;
 const newsQuery = gql`
-    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
-        newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
+    query NewsGrid($scope: NewsContentScopeInput!, $offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter) {
+        newsList(scope: $scope, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...NewsGrid
             }
@@ -172,9 +172,9 @@ export function NewsGrid() {
             scope,
             filter: gqlFilter,
             search: gqlSearch,
+            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
         },
     });
     const rowCount = useBufferedRowCount(data?.newsList.totalCount);

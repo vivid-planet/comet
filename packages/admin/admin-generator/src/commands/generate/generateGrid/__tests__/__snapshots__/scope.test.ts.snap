@@ -36,7 +36,6 @@ import { dataGridOneToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
@@ -148,7 +147,7 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize
             },
         });
         const rowCount = useBufferedRowCount(data?.products.totalCount);
@@ -212,7 +211,6 @@ import { dataGridOneToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
@@ -256,8 +254,8 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($offset: Int!, $limit: Int!, $scope: ProductContentScopeInput!) {
-        products(offset: $offset, limit: $limit, scope: $scope) {
+    query ProductsGrid($scope: ProductScope!, $offset: Int!, $limit: Int!) {
+        products(scope: $scope, offset: $offset, limit: $limit) {
             nodes { ...ProductsForm } totalCount
         }
     }
@@ -323,7 +321,7 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
+                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize
             },
         });
         const rowCount = useBufferedRowCount(data?.products.totalCount);

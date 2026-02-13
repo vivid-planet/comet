@@ -4,7 +4,9 @@ import {
     EntityInfo,
     PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
+    RootBlock,
     RootBlockDataScalar,
+    RootBlockEntity,
     RootBlockType,
     ScopedEntity,
 } from "@comet/cms-api";
@@ -18,6 +20,7 @@ import { v4 } from "uuid";
 @ObjectType({
     implements: () => [DocumentInterface],
 })
+@RootBlockEntity()
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
 export class Link extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
@@ -26,6 +29,7 @@ export class Link extends BaseEntity implements DocumentInterface {
     @Field(() => ID)
     id: string = v4();
 
+    @RootBlock(LinkBlock)
     @Property({ type: new RootBlockType(LinkBlock) })
     @Field(() => RootBlockDataScalar(LinkBlock))
     content: BlockDataInterface;

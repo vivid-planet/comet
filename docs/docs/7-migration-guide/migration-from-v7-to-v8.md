@@ -86,9 +86,6 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 :::info
 You can skip this step if your project already uses typescript v5 **everywhere**
-
-Please pin typescript to `5.8.3` due to some ESLint plugins not working with
-higher versions.
 :::
 
 **Create a branch `typescript-5`.**
@@ -97,22 +94,22 @@ higher versions.
 
     ```diff title="package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
     ```diff title="api/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
     ```diff title="admin/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
     ```diff title="site/package.json"
     -        "typescript": "^4.2.3",
-    +        "typescript": "5.8.3",
+    +        "typescript": "^5.9.3",
     ```
 
 2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
@@ -136,7 +133,7 @@ higher versions.
 
     SUPPORTED TYPESCRIPT VERSIONS: >=3.3.1 <5.2.0
 
-    YOUR TYPESCRIPT VERSION: 5.8.3
+    YOUR TYPESCRIPT VERSION: 5.9.3
 
     Please only submit bug reports when using the officially supported version.
 
@@ -413,22 +410,6 @@ Yes, you can do that before updating everything else to v8.
 
 4. Commit your changes with `--no-verify`
 5. Run `npm run lint` and manually fix all open issues
-
-    :::warning
-    If your project has knip, you might see an error like this regarding `eslint-config-next`:
-     <details>
-     > ERROR: Error loading /project/path/site/eslint.config.mjs
-     > Reason: Cannot read config file: /project/path/site/node_modules/eslint-config-next/index.js
-     > Error: Failed to patch ESLint because the calling module was not recognized.
-     > If you are using a newer ESLint version that may be unsupported, please create a GitHub issue:
-     > https://github.com/microsoft/rushstack/issues
-     > Referenced from: /project/path/site/node_modules/eslint-config-next/core-web-vitals.js
-     > ERROR: "lint:knip" exited with 2.
-
-    **Then you must install eslint-config-next in the site and add it to knip's ignore list as done in this commit: https://github.com/vivid-planet/comet-starter/pull/884/commits/32d6adfe73bbfc5e18eaaffc5dfc37b57f653aac**
-     </details>
-     :::
-
 6. Commit your changes **without** `--no-verify`. There should be no remaining errors.
 
 **Now open a PR from `update-eslint-to-v9` to `main`**
@@ -1416,7 +1397,7 @@ You now need to pass the entity metadata instead of the repository to `gqlArgsTo
 +       const where = gqlArgsToMikroOrmQuery({ filter, search }, this.entityManager.getMetadata(YourEntity));
 ```
 
-### **Typed Permissions System**
+### Typed Permissions System
 
 Search for all `@CrudGenerator` or `@RequiredPermission` decorators and move all permissions into the AppPermission enum. Add also module augmentation for `PermissionOverrides` to include the new `AppPermission` enum.
 
@@ -1531,6 +1512,10 @@ You can remove previously generated files and generate them on demand:
     ```sh
     git rm -r --cached api/src/*/generated
     ```
+
+### Brevo module
+
+If your project uses the COMET brevo module for newsletter integration, check out the [brevo module migration guide](/docs/features-modules/brevo-module/migration-guide/migration-from-brevo-v3-to-v8#api) for necessary steps.
 
 ### Fix linting errors
 
@@ -2813,6 +2798,10 @@ export const RedirectsPage = createRedirectsPage({
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
 
+### Brevo module
+
+If your project uses the COMET brevo module for newsletter integration, check out the [brevo module migration guide](/docs/features-modules/brevo-module/migration-guide/migration-from-brevo-v3-to-v8#admin) for necessary steps.
+
 ### Fix linting errors
 
 #### EsLint
@@ -2945,6 +2934,10 @@ scalars: rootBlocks.reduce(
 +   { LocalDate: "string" }
 )
 ```
+
+### Brevo module
+
+If your project uses the COMET brevo module for newsletter integration, check out the [brevo module migration guide](/docs/features-modules/brevo-module/migration-guide/migration-from-brevo-v3-to-v8#site) for necessary steps.
 
 ### Fix linting errors
 

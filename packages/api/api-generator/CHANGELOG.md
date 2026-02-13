@@ -1,5 +1,21 @@
 # @comet/api-generator
 
+## 8.14.0
+
+### Patch Changes
+
+- Updated dependencies [736e4ae]
+    - @comet/cms-api@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- 5e8a5c5: Fix resolver and DTO for nested OneToMany relations
+- Updated dependencies [6b0b088]
+- Updated dependencies [05638ed]
+    - @comet/cms-api@8.13.0
+
 ## 8.12.0
 
 ### Patch Changes
