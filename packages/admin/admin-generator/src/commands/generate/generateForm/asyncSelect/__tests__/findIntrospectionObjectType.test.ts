@@ -57,6 +57,44 @@ describe("generateAsyncSelect", () => {
             expect(objectType.name).toBe("ProductCategory");
         });
     });
+    describe("findIntrospectionObjectType nested field", () => {
+        let schema: GraphQLSchema;
+        let introspection: IntrospectionQuery;
+
+        beforeAll(() => {
+            schema = buildSchema(`
+            type Query {
+                categories: [ProductCategory!]
+            }
+
+            type Product {
+                id: ID!
+                title: String!
+                category: ProductCategory
+            }
+            type ProductCategory {
+                id: ID!
+                title: String!
+            }
+            type ProductHighlight {
+                id: ID!
+                product: Product!
+            }
+        `);
+
+            introspection = introspectionFromSchema(schema);
+        });
+        it("should find object for a standard select with nested field", () => {
+            const { objectType, multiple } = findIntrospectionObjectType({
+                config: { type: "asyncSelect", name: "product.category", rootQuery: "categories" },
+                gqlType: "ProductHighlight",
+                gqlIntrospection: introspection,
+            });
+            expect(multiple).toBe(false);
+            expect(objectType).toBeDefined();
+            expect(objectType.name).toBe("ProductCategory");
+        });
+    });
     describe("findIntrospectionObjectType list", () => {
         let schema: GraphQLSchema;
         let introspection: IntrospectionQuery;

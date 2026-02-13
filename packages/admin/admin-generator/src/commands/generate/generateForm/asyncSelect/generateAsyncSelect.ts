@@ -104,8 +104,15 @@ export function findIntrospectionObjectType({
             }, introspectionObject),
         };
     } else {
-        //for a standard select we just find the field directly (no nested path to follow, name can be only one level deep)
-        return findIntrospectionField(introspectionObject, name);
+        //for a standard select we follow the nested path (if any) to find the final object type
+        const nameParts = name.split(".");
+        const lastPart = nameParts[nameParts.length - 1];
+        const resolvedObject = nameParts.slice(0, -1).reduce((acc, fieldName) => {
+            const introspectionField = findIntrospectionField(acc, fieldName);
+            if (introspectionField.multiple) throw new Error(`asyncSelect does not support list fields in nested path`);
+            return introspectionField.objectType;
+        }, introspectionObject);
+        return findIntrospectionField(resolvedObject, lastPart);
     }
 }
 
