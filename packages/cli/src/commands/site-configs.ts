@@ -88,11 +88,10 @@ export const resolveOpReferences = (input: string): string => {
     try {
         execSync("op --version", { stdio: "ignore" });
     } catch {
-        console.warn(
-            "inject-site-configs: WARNING: Config contains 1Password references (op://) but the 1Password CLI (op) is not installed. " +
-                "These references will not be resolved. Install from https://developer.1password.com/docs/cli/",
+        throw new Error(
+            "inject-site-configs: Config contains 1Password references (op://) but the 1Password CLI (op) is not installed. " +
+                "Install from https://developer.1password.com/docs/cli/",
         );
-        return input;
     }
 
     let result = input;
@@ -103,7 +102,7 @@ export const resolveOpReferences = (input: string): string => {
             console.log(`inject-site-configs: - Resolved ${ref}`);
             result = result.replace(ref, secret);
         } catch (e) {
-            console.error(`inject-site-configs: ERROR: Failed to resolve 1Password reference ${ref}: ${e}`);
+            throw new Error(`inject-site-configs: Failed to resolve 1Password reference ${ref}: ${e}`);
         }
     }
     return result;

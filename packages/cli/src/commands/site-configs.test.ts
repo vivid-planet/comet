@@ -27,16 +27,28 @@ describe("resolveOpReferences", () => {
         expect(result).toBe('{"key":"resolved-secret"}');
     });
 
-    it("should warn and keep references when op CLI is not installed", () => {
-        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    it("should throw error when op CLI is not installed", () => {
         mockedExecSync.mockImplementation(() => {
             throw new Error("command not found: op");
         });
 
-        const result = resolveOpReferences('{"key":"{{ op://vault/item/password }}"}');
+        expect(() => resolveOpReferences('{"key":"{{ op://vault/item/password }}"}')).toThrow(
+            "inject-site-configs: Config contains 1Password references (op://) but the 1Password CLI (op) is not installed",
+        );
+    });
 
-        expect(result).toBe('{"key":"{{ op://vault/item/password }}"}');
-        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("1Password CLI (op) is not installed"));
+    it("should throw error when op reference resolution fails", () => {
+        mockedExecSync.mockImplementation((cmd: string) => {
+            if (cmd === "op --version") return Buffer.from("2.0.0");
+            if (cmd === 'op read "op://vault/item/password"') {
+                throw new Error("Item not found");
+            }
+            return "";
+        });
+
+        expect(() => resolveOpReferences('{"key":"{{ op://vault/item/password }}"}')).toThrow(
+            "inject-site-configs: Failed to resolve 1Password reference {{ op://vault/item/password }}",
+        );
     });
 
     it("should resolve multiple op:// references", () => {
