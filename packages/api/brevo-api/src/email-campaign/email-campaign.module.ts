@@ -13,7 +13,6 @@ import { EmailCampaignInputFactory } from "./dto/email-campaign-input.factory";
 import { createEmailCampaignsResolver } from "./email-campaign.resolver";
 import { EmailCampaignsService } from "./email-campaigns.service";
 import { EmailCampaignInterface } from "./entities/email-campaign-entity.factory";
-import { IsFutureDateConstraint } from "./validator/is-future-date.validator";
 
 interface EmailCampaignModuleConfig {
     Scope: Type<EmailCampaignScopeInterface>;
@@ -51,7 +50,7 @@ export class EmailCampaignModule {
                 }),
                 MikroOrmModule.forFeature([BrevoEmailCampaign, BrevoTargetGroup, BrevoConfig]),
             ],
-            providers: [EmailCampaignsResolver, EmailCampaignsService, EcgRtrListService, IsFutureDateConstraint],
+            providers: [EmailCampaignsResolver, EmailCampaignsService, EcgRtrListService],
         };
     }
 }
