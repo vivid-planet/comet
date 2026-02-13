@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 8.15.0
+
+### Patch Changes
+
+- 180d1e3: Fix required validation for `AsyncAutocompleteField` with multiple select
+- 0c2435a: Hide `filesInfoText` from FileSelect
+    - @comet/admin-icons@8.15.0
+
 ## 8.14.0
 
 ### Minor Changes

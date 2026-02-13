@@ -1,5 +1,31 @@
 # @comet/api-generator
 
+## 8.15.0
+
+### Minor Changes
+
+- 0b266f4: Add support for hooksService that allows injecting a custom service into update/create mutation for custom validation logic
+
+    Usage example:
+
+    ```
+    export class ProductService implements CrudGeneratorHooksService {
+        async validateCreateInput(input: ProductInput, options: { currentUser: CurrentUser, scope: Scope, args: { department: string } }): Promise<void> {
+            //add custom validation logic here
+        }
+        async validateUpdateInput(input: ProductInput, options: { currentUser: CurrentUser, entity: Product }): Promise<void> {
+            //add custom validation logic here
+        }
+    }
+
+    @CrudGenerator({ .... hooksService: ProductService })
+    class Products ...
+    ```
+
+### Patch Changes
+
+- @comet/cms-api@8.15.0
+
 ## 8.14.0
 
 ### Patch Changes

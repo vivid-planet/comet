@@ -1,5 +1,12 @@
 # @comet/admin-generator
 
+## 8.15.0
+
+### Patch Changes
+
+- 33ac500: Use the GraphQL schema scope type in generated grids when scope comes from context.
+- 47ed8cf: Only emit grid sort variables and helpers when the schema supports sorting.
+
 ## 8.14.0
 
 ### Patch Changes
