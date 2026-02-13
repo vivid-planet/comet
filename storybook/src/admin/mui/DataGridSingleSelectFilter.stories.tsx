@@ -1,4 +1,4 @@
-import { DataGridToolbar, FillSpace, GridCellContent, type GridColDef, ToolbarTitleItem } from "@comet/admin";
+import { DataGridToolbar, FillSpace, GridCellContent, type GridColDef, GridFilterButton, ToolbarTitleItem } from "@comet/admin";
 import { Check, Close, Education } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -54,6 +54,7 @@ export const BasicSingleSelect = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>Basic SingleSelect Filter</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
@@ -113,6 +114,7 @@ export const WithCustomLabels = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>SingleSelect with Custom Labels</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
@@ -163,6 +165,7 @@ export const WithLongLabels = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>SingleSelect with Long Labels</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
@@ -216,6 +219,7 @@ export const WithManyOptions = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>SingleSelect with Many Options</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
@@ -269,6 +273,7 @@ export const WithCustomCellContent = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>SingleSelect with Custom Cell Content</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
@@ -331,6 +336,7 @@ export const MultipleSingleSelectColumns = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>Multiple SingleSelect Columns</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
@@ -405,6 +411,7 @@ export const DifferentDensityModes = {
                             <DataGridToolbar>
                                 <ToolbarTitleItem>SingleSelect Filter - {density} Density</ToolbarTitleItem>
                                 <FillSpace />
+                                <GridFilterButton />
                             </DataGridToolbar>
                         ),
                     }}
