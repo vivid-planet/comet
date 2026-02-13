@@ -155,7 +155,6 @@ export function createEmailCampaignsResolver({
 
                     // If campaign is still scheduled or in draft, allow updates by resetting state
                     wrap(campaign).assign({ sendingState: actualState });
-                    await this.entityManager.flush();
                 }
 
                 hasScheduleRemoved = input.scheduledAt === null && campaign.scheduledAt !== null;
