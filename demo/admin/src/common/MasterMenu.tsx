@@ -403,7 +403,7 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                         },
                         {
                             type: "route",
-                            primary: <FormattedMessage id="menu.productHighlights" defaultMessage="Product Highlights Handmade" />,
+                            primary: <FormattedMessage id="menu.productHighlightsHandmade" defaultMessage="Product Highlights Handmade" />,
                             route: {
                                 path: "/product-highlights-handmade",
                                 component: ProductHighlightsHandmadePage,

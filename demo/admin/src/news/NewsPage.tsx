@@ -42,7 +42,7 @@ export function NewsPage() {
                         <NewsGrid />
                     </MainContent>
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "news.news", defaultMessage: "Edit News" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "news.editNews", defaultMessage: "Edit News" })}>
                     {(selectedNewsId) => (
                         <SaveBoundary>
                             <FormToolbar />
@@ -52,7 +52,7 @@ export function NewsPage() {
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "news.news", defaultMessage: "Add News" })}>
+                <StackPage name="add" title={intl.formatMessage({ id: "news.addNews", defaultMessage: "Add News" })}>
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>

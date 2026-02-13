@@ -124,12 +124,12 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
                     )}
                 </Field>
                 <TextField
-                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="First name" />}
+                    label={<FormattedMessage id="brevoContact.fields.firstName" defaultMessage="First name" />}
                     name="attributes.FIRSTNAME"
                     fullWidth
                 />
                 <TextField
-                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="Last name" />}
+                    label={<FormattedMessage id="brevoContact.fields.lastName" defaultMessage="Last name" />}
                     name="attributes.LASTNAME"
                     fullWidth
                 />

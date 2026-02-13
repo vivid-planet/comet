@@ -9,7 +9,7 @@ export default defineConfig<GQLManufacturer>({
         {
             type: "fieldSet",
             name: "addressAsEmbeddable",
-            title: "Address",
+            title: "Address as embeddable",
             collapsible: true,
             fields: [
                 { type: "text", name: "address.street" },

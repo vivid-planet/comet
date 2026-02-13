@@ -282,7 +282,7 @@ export function ManufacturerForm({ id }: FormProps) {
                     </FieldSet>
                     <FieldSet
                         collapsible={false}
-                        title={<FormattedMessage id="manufacturer.address.alternativeAddress.country" defaultMessage="Address as embeddable" />}
+                        title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address as embeddable" />}
                     >
                         <TextField
                             required

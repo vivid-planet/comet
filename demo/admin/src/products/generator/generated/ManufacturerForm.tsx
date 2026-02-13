@@ -139,7 +139,10 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
                             label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />}
                         />
 
-                        <FieldSet collapsible title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address" />}>
+                        <FieldSet
+                            collapsible
+                            title={<FormattedMessage id="manufacturer.addressAsEmbeddable.title" defaultMessage="Address as embeddable" />}
+                        >
                             <TextField
                                 required
                                 variant="horizontal"
