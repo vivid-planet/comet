@@ -19,12 +19,12 @@ export const ormConfig = createOrmConfig(
         namingStrategy: EntityCaseNamingStrategy,
         debug: false,
         discovery: {
-            getMappedType(type: string) {
+            getMappedType(type: string, platform) {
                 // Map all string types to TEXT instead of VARCHAR
                 if (type === "string") {
                     return Type.getType(TextType);
                 }
-                return undefined;
+                return platform.getDefaultMappedType(type);
             },
         },
         migrations: {
