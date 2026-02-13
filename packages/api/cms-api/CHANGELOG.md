@@ -1,5 +1,22 @@
 # @comet/cms-api
 
+## 8.14.0
+
+### Minor Changes
+
+- 736e4ae: Add `@AffectedScope` decorator
+
+    See https://docs.comet-dxp.com/docs/core-concepts/content-scope/evaluate-content-scopes#operations-that-require-a-content-scope-independently-of-a-specific-entity
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+- 05638ed: `MailerService.sendMail()` now automatically creates a plaintext version from the HTML content
+
+    When the params passed to `sendMail()` do not include a `text` property but do include a `html` property, a plaintext version will be automatically generated based on the HTML content.
+
 ## 8.12.0
 
 ### Minor Changes

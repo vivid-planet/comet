@@ -35,7 +35,7 @@
         },
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw", "jsdom"],
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw"],
             "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
@@ -45,13 +45,11 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-rte": {
-            "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jsdom"]
+            "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts"],
-            "ignoreDependencies": ["jsdom"]
+            "ignore": ["**/*.generated.ts"]
         },
         "packages/admin/admin-generator": {
             "entry": ["./src/index.ts", "./src/adminGenerator.ts"],

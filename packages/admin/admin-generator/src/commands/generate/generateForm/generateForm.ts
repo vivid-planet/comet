@@ -12,7 +12,7 @@ import { generateDestructFormValueForInput, generateFormValuesToGqlInput, genera
 import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
 import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 
-export type Prop = { type: string; optional: boolean; name: string };
+export type Prop = { type: string; optional: boolean; name: string; localAliasName?: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
 
@@ -30,7 +30,7 @@ function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; form
         formPropsTypeCode: `interface FormProps {
             ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name + (prop.localAliasName ? `: ${prop.localAliasName}` : "")).join(", ")}}: FormProps`,
     };
 }
 
@@ -109,6 +109,7 @@ export function generateForm(
             imports.push(...forwardedArg.imports);
             if (forwardedArg.gqlArg.name === "scope" && !forwardedArg.gqlArg.isInputArgSubfield && !config.scopeAsProp) {
                 useScopeFromContext = true;
+                gqlArgs.push(forwardedArg.gqlArg);
             } else {
                 formProps.push(forwardedArg.prop);
                 gqlArgs.push(forwardedArg.gqlArg);
@@ -179,6 +180,15 @@ export function generateForm(
         type: `(id: string) => void`,
     });
 
+    if (config.initialValuesAsProp) {
+        formProps.push({
+            name: "initialValues",
+            localAliasName: "passedInitialValues",
+            optional: true,
+            type: `Partial<FormValues>`,
+        });
+    }
+
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = {
@@ -220,7 +230,6 @@ export function generateForm(
                             name: gqlArg.name,
                             type: `${gqlArg.type}!`,
                         })),
-                    ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
                     {
                         name: "input",
                         type: `${gqlType}Input!`,
@@ -348,7 +357,7 @@ export function generateForm(
                 : ""
         }
 
-        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
+        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType, initialValuesAsProp: !!config.initialValuesAsProp })}
 
 
         ${
@@ -396,7 +405,6 @@ export function generateForm(
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: {
-                        ${useScopeFromContext ? `scope,` : ""}
                         input: ${
                             gqlArgs.filter((prop) => prop.isInputArgSubfield).length
                                 ? `{ ...output, ${gqlArgs
