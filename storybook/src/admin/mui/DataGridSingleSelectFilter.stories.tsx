@@ -1,4 +1,4 @@
-import { DataGridToolbar, FillSpace, GridCellContent, type GridColDef, GridFilterButton, ToolbarTitleItem } from "@comet/admin";
+import { DataGridToolbar, GridCellContent, type GridColDef, GridFilterButton } from "@comet/admin";
 import { Check, Close, Education } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -45,27 +45,30 @@ export const BasicSingleSelect = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>Basic SingleSelect Filter</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                    initialState={{
-                        filter: {
-                            filterModel: {
-                                items: [],
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    Basic SingleSelect Filter
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                        initialState={{
+                            filter: {
+                                filterModel: {
+                                    items: [],
+                                },
                             },
-                        },
-                    }}
-                />
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
@@ -105,20 +108,23 @@ export const WithCustomLabels = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>SingleSelect with Custom Labels</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                />
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    SingleSelect with Custom Labels
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
@@ -156,20 +162,23 @@ export const WithLongLabels = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>SingleSelect with Long Labels</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                />
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    SingleSelect with Long Labels
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
@@ -210,20 +219,23 @@ export const WithManyOptions = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>SingleSelect with Many Options</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                />
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    SingleSelect with Many Options
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
@@ -264,20 +276,23 @@ export const WithCustomCellContent = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>SingleSelect with Custom Cell Content</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                />
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    SingleSelect with Custom Cell Content
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
@@ -327,20 +342,23 @@ export const MultipleSingleSelectColumns = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>Multiple SingleSelect Columns</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                />
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    Multiple SingleSelect Columns
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
@@ -401,21 +419,24 @@ export const DifferentDensityModes = {
         ];
 
         return (
-            <Box height={500}>
-                <DataGrid
-                    density={density}
-                    rows={rows}
-                    columns={columns}
-                    slots={{
-                        toolbar: () => (
-                            <DataGridToolbar>
-                                <ToolbarTitleItem>SingleSelect Filter - {density} Density</ToolbarTitleItem>
-                                <FillSpace />
-                                <GridFilterButton />
-                            </DataGridToolbar>
-                        ),
-                    }}
-                />
+            <Box>
+                <Box component="h4" sx={{ mb: 2 }}>
+                    SingleSelect Filter - {density} Density
+                </Box>
+                <Box height={500}>
+                    <DataGrid
+                        density={density}
+                        rows={rows}
+                        columns={columns}
+                        slots={{
+                            toolbar: () => (
+                                <DataGridToolbar>
+                                    <GridFilterButton />
+                                </DataGridToolbar>
+                            ),
+                        }}
+                    />
+                </Box>
             </Box>
         );
     },
