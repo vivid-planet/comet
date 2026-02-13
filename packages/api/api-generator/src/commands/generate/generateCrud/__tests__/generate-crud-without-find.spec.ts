@@ -38,7 +38,9 @@ describe("GenerateCrud without find condition", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             expect(

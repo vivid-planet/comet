@@ -104,7 +104,9 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             : onClick;
 
     useEffect(() => {
-        if (isUncontrolled) return;
+        if (isUncontrolled) {
+            return;
+        }
 
         let timeoutId: number | undefined;
         let timeoutDuration: number | undefined;

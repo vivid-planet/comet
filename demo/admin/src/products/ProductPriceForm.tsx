@@ -50,7 +50,9 @@ export function ProductPriceForm({ id }: FormProps) {
     });
 
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
         const output = {
             ...formValues,
             price: formValues.price ? parseFloat(formValues.price) : null,

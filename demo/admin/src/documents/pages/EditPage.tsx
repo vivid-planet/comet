@@ -143,7 +143,9 @@ export const EditPage = ({ id }: Props) => {
             <ContentGenerationConfigProvider
                 seo={{
                     getRelevantContent: () => {
-                        if (!pageState || !pageState.document) return [];
+                        if (!pageState || !pageState.document) {
+                            return [];
+                        }
 
                         return PageContentBlock.extractTextContents?.(pageState.document.content, { includeInvisibleContent: false }) ?? [];
                     },
@@ -152,7 +154,9 @@ export const EditPage = ({ id }: Props) => {
                 {hasChanges && (
                     <RouterPrompt
                         message={(location) => {
-                            if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                            if (location.pathname.startsWith(match.url)) {
+                                return true;
+                            } //we navigated within our self
                             return intl.formatMessage({
                                 id: "editPage.discardChanges",
                                 defaultMessage: "Discard unsaved changes?",

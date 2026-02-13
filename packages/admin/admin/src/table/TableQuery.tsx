@@ -14,7 +14,9 @@ import { type ITableQueryApi, TableQueryContext } from "./TableQueryContext";
  */
 export const parseIdFromIri = (iri: string) => {
     const m = iri.match(/\/(\d+)/);
-    if (!m) return null;
+    if (!m) {
+        return null;
+    }
     return m[1];
 };
 

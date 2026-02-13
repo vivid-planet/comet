@@ -7,13 +7,19 @@ import { type CustomMiddleware } from "./chain";
 const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
 
 const matchesHostWithAdditionalDomain = (siteConfig: PublicSiteConfig, host: string) => {
-    if (normalizeDomain(siteConfig.domains.main) === normalizeDomain(host)) return true; // non-www redirect
-    if (siteConfig.domains.additional?.map(normalizeDomain).includes(normalizeDomain(host))) return true;
+    if (normalizeDomain(siteConfig.domains.main) === normalizeDomain(host)) {
+        return true;
+    } // non-www redirect
+    if (siteConfig.domains.additional?.map(normalizeDomain).includes(normalizeDomain(host))) {
+        return true;
+    }
     return false;
 };
 
 const matchesHostWithPattern = (siteConfig: PublicSiteConfig, host: string) => {
-    if (!siteConfig.domains.pattern) return false;
+    if (!siteConfig.domains.pattern) {
+        return false;
+    }
     return new RegExp(siteConfig.domains.pattern).test(host);
 };
 

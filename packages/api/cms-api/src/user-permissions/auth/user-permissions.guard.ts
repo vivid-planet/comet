@@ -38,7 +38,9 @@ export class UserPermissionsGuard implements CanActivate {
             request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
         }
 
-        if (this.getDecorator(context, DISABLE_COMET_GUARDS_METADATA_KEY)) return true;
+        if (this.getDecorator(context, DISABLE_COMET_GUARDS_METADATA_KEY)) {
+            return true;
+        }
 
         const user = this.getUser(context);
         if (!user) {
@@ -47,13 +49,23 @@ export class UserPermissionsGuard implements CanActivate {
         }
 
         // System user authenticated via basic auth
-        if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
+        if (typeof user === "string" && this.options.systemUsers?.includes(user)) {
+            return true;
+        }
 
-        if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;
-        if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
+        if (!requiredPermission && this.isResolvingGraphQLField(context)) {
+            return true;
+        }
+        if (!requiredPermission) {
+            throw new Error(`RequiredPermission decorator is missing in ${location}`);
+        }
         const requiredPermissions = requiredPermission.requiredPermission;
-        if (requiredPermissions.includes(DisablePermissionCheck)) return true;
-        if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
+        if (requiredPermissions.includes(DisablePermissionCheck)) {
+            return true;
+        }
+        if (requiredPermissions.length === 0) {
+            throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
+        }
         if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
             if (
@@ -64,10 +76,11 @@ export class UserPermissionsGuard implements CanActivate {
                 return true;
             }
         } else {
-            if (requiredContentScopes.length === 0)
+            if (requiredContentScopes.length === 0) {
                 throw new Error(
                     `Could not get content scope. Either pass a scope-argument or add an @AffectedEntity()-decorator or enable skipScopeCheck in the @RequiredPermission()-decorator of ${location}`,
                 );
+            }
 
             // requiredContentScopes is an two level array of scopes
             // The first level has to be checked with AND, the second level with OR

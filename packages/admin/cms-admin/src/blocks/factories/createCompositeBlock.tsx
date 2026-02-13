@@ -190,7 +190,9 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     hiddenForState,
                 } = blockConfigNormalized[blockKey];
 
-                if (hiddenForState?.(state)) return null;
+                if (hiddenForState?.(state)) {
+                    return null;
+                }
 
                 const sectionVariant = group.paper ? "dense" : "normal";
                 const showDivider = divider && (isInPaper || group.paper);

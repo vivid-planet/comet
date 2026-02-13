@@ -189,7 +189,9 @@ export function createPageTreeResolver({
                 if (fieldNode.selectionSet) {
                     const ret = fieldNode.selectionSet.selections.reduce(
                         (acc, selection) => {
-                            if (!acc) return acc;
+                            if (!acc) {
+                                return acc;
+                            }
                             if (selection.kind == "Field" && selection.name.value === "__typename") {
                                 //__typename is already in acc
                                 return acc;

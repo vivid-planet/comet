@@ -223,7 +223,9 @@ export function createTargetGroupsResolver({
 
         @ResolveField(() => Int)
         async brevoTotalSubscribers(@Parent() targetGroup: TargetGroupInterface): Promise<number> {
-            if (targetGroup.totalSubscribers !== undefined) return targetGroup.totalSubscribers;
+            if (targetGroup.totalSubscribers !== undefined) {
+                return targetGroup.totalSubscribers;
+            }
 
             const { uniqueSubscribers } = await this.brevoApiContactsService.findBrevoContactListById(targetGroup.brevoId, targetGroup.scope);
 

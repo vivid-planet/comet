@@ -17,7 +17,9 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps) 
     const [pendingTranslation, setPendingTranslation] = useState<EditorState | undefined>(undefined);
 
     async function handleClick(event: MouseEvent) {
-        if (!translationContext) return;
+        if (!translationContext) {
+            return;
+        }
 
         event.preventDefault();
 

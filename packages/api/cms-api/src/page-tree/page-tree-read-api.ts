@@ -45,7 +45,9 @@ export interface PageTreeReadApi {
 
 // hash from scope object used as key for preloadedNodes Map
 function scopeHash(scope: ScopeInterface | undefined): string {
-    if (!scope) return "";
+    if (!scope) {
+        return "";
+    }
     return JSON.stringify(scope);
 }
 
@@ -207,7 +209,9 @@ export function createReadApi(
     let preloadRunning = false;
     const waitForPreloadingResolvers: Array<() => void> = [];
     const waitForPreloadDone = async (): Promise<void> => {
-        if (!preloadRunning) return;
+        if (!preloadRunning) {
+            return;
+        }
         return new Promise((resolve, reject) => {
             waitForPreloadingResolvers.push(resolve);
         });
@@ -285,7 +289,9 @@ export function createReadApi(
         },
 
         async getParentNode(node) {
-            if (!node.parentId) return null;
+            if (!node.parentId) {
+                return null;
+            }
 
             return this.getNodeOrFail(node.parentId);
         },
@@ -332,7 +338,9 @@ export function createReadApi(
                 });
                 node = nodes[0];
 
-                if (!node) return null;
+                if (!node) {
+                    return null;
+                }
                 parentId = node.id;
             }
             return node;
@@ -361,13 +369,17 @@ export function createReadApi(
 
         async getFirstNodeByAttachedPageId(pageId: string): Promise<PageTreeNodeInterface | null> {
             const attachedDocument = await attachedDocumentsRepository.findOne({ documentId: pageId });
-            if (!attachedDocument) return null;
+            if (!attachedDocument) {
+                return null;
+            }
             return this.getNode(attachedDocument.pageTreeNodeId);
         },
 
         async preloadNodes(scope?: ScopeInterface) {
             const hash = scopeHash(scope);
-            if (preloadedNodes.has(hash)) return; //don't double-preload
+            if (preloadedNodes.has(hash)) {
+                return;
+            } //don't double-preload
             return tracer.startActiveSpan("preload PageTreeNode", async (span) => {
                 span.setAttribute("scope", JSON.stringify(scope));
                 preloadRunning = true;

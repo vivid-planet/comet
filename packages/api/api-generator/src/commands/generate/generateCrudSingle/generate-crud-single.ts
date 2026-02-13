@@ -20,7 +20,9 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         const generatedFiles: GeneratedFile[] = [];
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
-        if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+        if (scopeProp && !scopeProp.targetMeta) {
+            throw new Error("Scope prop has no targetMeta");
+        }
         const blockProps = metadata.props.filter((prop) => {
             return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });

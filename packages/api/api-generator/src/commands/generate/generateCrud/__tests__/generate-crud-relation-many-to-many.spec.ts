@@ -70,7 +70,9 @@ describe("GenerateCrud Relation n:m with additional column", () => {
         );
         const formattedOut = await formatGeneratedFiles(out);
         const foundFile = formattedOut.find((file) => file.name === "product.resolver.ts");
-        if (!foundFile) throw new Error("File not found");
+        if (!foundFile) {
+            throw new Error("File not found");
+        }
 
         file = foundFile;
     });

@@ -17,11 +17,17 @@ export function findRootBlocks({ gqlType, targetDirectory }: { gqlType: string; 
     const ret: Record<string, { import: string; name: string }> = {};
 
     const schemaEntity = schema.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as IntrospectionObjectType | undefined;
-    if (!schemaEntity) throw new Error("didn't find entity in schema types");
+    if (!schemaEntity) {
+        throw new Error("didn't find entity in schema types");
+    }
     schemaEntity.fields.forEach((field) => {
-        if (ret[field.name]) return; // already defined
+        if (ret[field.name]) {
+            return;
+        } // already defined
         let type = field.type;
-        if (type.kind == "NON_NULL") type = type.ofType;
+        if (type.kind == "NON_NULL") {
+            type = type.ofType;
+        }
         if (type.kind == "SCALAR" && type.name.endsWith("BlockData")) {
             let match = false;
             const blockName = `${type.name.replace(/BlockData$/, "")}Block`;

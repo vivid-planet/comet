@@ -7,14 +7,18 @@ export const useObservedWidth = (ref: RefObject<HTMLElement | null>): number => 
     const elementObserver = useMemo(() => {
         return new ResizeObserver(() => {
             debounce(() => {
-                if (!ref.current) return;
+                if (!ref.current) {
+                    return;
+                }
                 setContainerWidth(ref.current.clientWidth);
             }, 500)();
         });
     }, [ref]);
 
     useEffect(() => {
-        if (!ref.current) return;
+        if (!ref.current) {
+            return;
+        }
         const element = ref.current;
 
         elementObserver.observe(element);

@@ -8,7 +8,9 @@ import { type GeneratedFile } from "./write-generated-files";
 
 let options: Options | null;
 export async function formatSource(sourceCode: string): Promise<string> {
-    if (!options) options = await resolveConfig(process.cwd());
+    if (!options) {
+        options = await resolveConfig(process.cwd());
+    }
 
     return format(sourceCode, {
         ...options,

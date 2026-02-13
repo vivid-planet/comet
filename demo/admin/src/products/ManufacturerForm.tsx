@@ -76,7 +76,9 @@ export function ManufacturerForm({ id }: FormProps) {
         const filteredData = data
             ? filterByFragment<GQLManufacturerFormDetailsHandmadeFragment>(manufacturerFormFragment, data.manufacturer)
             : undefined;
-        if (!filteredData) return {};
+        if (!filteredData) {
+            return {};
+        }
         return {
             ...filteredData,
             useAlternativeAddress: !!filteredData.address?.alternativeAddress,
@@ -119,7 +121,9 @@ export function ManufacturerForm({ id }: FormProps) {
     });
 
     const handleSubmit = async ({ useAlternativeAddress, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
         const output = {
             ...formValues,
             address: formValues.address
@@ -149,7 +153,9 @@ export function ManufacturerForm({ id }: FormProps) {
             },
         };
         if (mode === "edit") {
-            if (!id) throw new Error();
+            if (!id) {
+                throw new Error();
+            }
             await client.mutate<GQLUpdateManufacturerMutation, GQLUpdateManufacturerMutationVariables>({
                 mutation: updateManufacturerMutation,
                 variables: { id, input: output },
@@ -170,7 +176,9 @@ export function ManufacturerForm({ id }: FormProps) {
         }
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

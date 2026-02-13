@@ -15,7 +15,9 @@ export function getPropsForFilterProp<T extends { __typename?: string }>({
     imports: Imports;
     props: Prop[];
 } {
-    if (!config.filterProp) return { hasFilterProp: false, imports: [], props: [] };
+    if (!config.filterProp) {
+        return { hasFilterProp: false, imports: [], props: [] };
+    }
 
     const filterTypeName = `GQL${filterType.name}`;
 

@@ -46,7 +46,9 @@ describe("GenerateCrudRelationsNested", () => {
 
             {
                 const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
 
                 const classes = source.getClasses();
@@ -62,7 +64,9 @@ describe("GenerateCrudRelationsNested", () => {
 
             {
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-product.input.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
 
                 const classes = source.getClasses();
@@ -79,7 +83,9 @@ describe("GenerateCrudRelationsNested", () => {
 
             {
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-product-nested-test-entity-variant.input.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
 
                 const classes = source.getClasses();

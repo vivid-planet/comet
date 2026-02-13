@@ -356,7 +356,9 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         await fs.rm(codeOuputFilename, { force: true });
 
         const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
-        if (!exportName) throw new Error("Can not determine exportName");
+        if (!exportName) {
+            throw new Error("Can not determine exportName");
+        }
 
         let generated: GeneratorReturn;
         if (config.type == "form") {

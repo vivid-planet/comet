@@ -87,7 +87,9 @@ export class ContentScopeService {
                         contentScopes.push([row.scope as ContentScope]);
                     } else {
                         const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [affectedEntity.entity]);
-                        if (!scoped) throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
+                        if (!scoped) {
+                            throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
+                        }
                         let scopes;
                         if (isInjectableService(scoped)) {
                             const service = this.moduleRef.get(scoped, { strict: false });
@@ -95,24 +97,33 @@ export class ContentScopeService {
                         } else {
                             scopes = await scoped(row);
                         }
-                        if (!scopes) throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
+                        if (!scopes) {
+                            throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
+                        }
                         contentScopes.push(Array.isArray(scopes) ? scopes : [scopes]);
                     }
                 }
             }
         } else if (affectedEntity.options.pageTreeNodeIdArg) {
-            if (!args[affectedEntity.options.pageTreeNodeIdArg] && !affectedEntity.options.nullable)
+            if (!args[affectedEntity.options.pageTreeNodeIdArg] && !affectedEntity.options.nullable) {
                 throw new Error(`${affectedEntity.options.pageTreeNodeIdArg} arg not found`);
+            }
 
             if (args[affectedEntity.options.pageTreeNodeIdArg]) {
-                if (this.pageTreeService === undefined) throw new Error("pageTreeNodeIdArg was given but no PageTreeModule is registered");
+                if (this.pageTreeService === undefined) {
+                    throw new Error("pageTreeNodeIdArg was given but no PageTreeModule is registered");
+                }
                 const pageTreeApi = await this.pageTreeService.createReadApi({ visibility: "all" });
                 const id = args[affectedEntity.options.pageTreeNodeIdArg];
                 const ids = Array.isArray(id) ? id : [id];
                 for (const id of ids) {
                     const node = await pageTreeApi.getNode(id);
-                    if (!node) throw new Error("Can't find pageTreeNode");
-                    if (!node.scope) throw new Error("PageTreeNode doesn't have a scope");
+                    if (!node) {
+                        throw new Error("Can't find pageTreeNode");
+                    }
+                    if (!node.scope) {
+                        throw new Error("PageTreeNode doesn't have a scope");
+                    }
                     contentScopes.push([node.scope as ContentScope]);
                 }
             }

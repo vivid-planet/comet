@@ -100,7 +100,9 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
                         )}
                         {menuActions &&
                             menuActions.map((item, index) => {
-                                if (!item) return null;
+                                if (!item) {
+                                    return null;
+                                }
 
                                 if (isValidElement(item)) {
                                     return item;

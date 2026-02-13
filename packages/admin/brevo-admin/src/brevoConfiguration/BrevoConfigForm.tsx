@@ -214,7 +214,9 @@ export function BrevoConfigForm({ scope }: FormProps): ReactElement {
         }
     };
 
-    if (error || senderError || doubleOptInTemplatesError) throw error ?? senderError ?? doubleOptInTemplatesError;
+    if (error || senderError || doubleOptInTemplatesError) {
+        throw error ?? senderError ?? doubleOptInTemplatesError;
+    }
 
     if (loading || senderLoading || doubleOptInTemplatesLoading) {
         return <Loading behavior="fillPageHeight" />;

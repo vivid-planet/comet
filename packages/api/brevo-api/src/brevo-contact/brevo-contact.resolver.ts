@@ -281,7 +281,9 @@ export function createBrevoContactResolver({
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
         ): Promise<boolean> {
             const contact = await this.brevoContactsApiService.findContact(id, scope);
-            if (!contact) return false;
+            if (!contact) {
+                return false;
+            }
 
             const where: FilterQuery<TargetGroupInterface> = { scope, isMainList: false, isTestList: true };
             const testTargetGroup = await this.targetGroupRepository.findOne(where);
@@ -313,7 +315,9 @@ export function createBrevoContactResolver({
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
         ): Promise<boolean> {
             const contact = await this.brevoContactsApiService.findContact(id, scope);
-            if (!contact) return false;
+            if (!contact) {
+                return false;
+            }
 
             const where: FilterQuery<TargetGroupInterface> = { scope, isMainList: false, isTestList: true };
             const testTargetGroup = await this.targetGroupRepository.findOne(where);

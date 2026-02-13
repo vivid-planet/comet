@@ -63,7 +63,9 @@ function getArgsIncludingInputArgSubfields(gqlOperation: IntrospectionField, gql
         acc: { name: string; type: string; isInputArgSubfield: boolean }[],
         inputField: IntrospectionInputValue,
     ): { name: string; type: string; isInputArgSubfield: boolean }[] {
-        if (inputField.type.kind !== "NON_NULL" || inputField.defaultValue) return acc;
+        if (inputField.type.kind !== "NON_NULL" || inputField.defaultValue) {
+            return acc;
+        }
 
         const gqlType = inputField.type.ofType;
         if (gqlType.kind === "INPUT_OBJECT") {

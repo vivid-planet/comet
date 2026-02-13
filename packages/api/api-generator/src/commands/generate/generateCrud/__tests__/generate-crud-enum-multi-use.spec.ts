@@ -44,7 +44,9 @@ describe("GenerateCrudEnumMultiUse", () => {
         const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.input.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
         const source = parseSource(file.content);
 
         const imports: string[] = [];

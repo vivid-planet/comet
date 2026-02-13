@@ -116,7 +116,9 @@ export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
     const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
     const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, itemWidths, overflowLinkText, backButtonUrl, slotProps);
 
-    if (!breadcrumbItems) return null;
+    if (!breadcrumbItems) {
+        return null;
+    }
 
     return (
         <Root {...slotProps?.root} {...restProps}>

@@ -39,7 +39,9 @@ export class TargetGroupsService {
     ): boolean {
         if (filters && contactAttributes) {
             for (const [key, value] of Object.entries(filters)) {
-                if (!value || value.length === 0) continue;
+                if (!value || value.length === 0) {
+                    continue;
+                }
 
                 let isFound = false;
 

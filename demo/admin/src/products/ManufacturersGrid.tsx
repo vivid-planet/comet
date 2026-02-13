@@ -146,7 +146,9 @@ export function ManufacturersGrid() {
             sort: muiGridSortToGql(sortModel),
         },
     });
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rows = data?.manufacturers.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);

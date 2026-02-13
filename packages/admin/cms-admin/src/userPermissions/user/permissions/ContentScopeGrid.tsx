@@ -66,7 +66,9 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         },
     );
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     if (!data) {
         return <Loading />;
