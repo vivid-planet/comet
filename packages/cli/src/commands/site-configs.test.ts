@@ -27,7 +27,7 @@ describe("resolveOpReferences", () => {
         expect(result).toBe('{"key":"resolved-secret"}');
     });
 
-    it("should throw error when op CLI is not installed", () => {
+    it("should throw an error when op CLI is not installed", () => {
         mockedExecSync.mockImplementation(() => {
             throw new Error("command not found: op");
         });
@@ -37,7 +37,7 @@ describe("resolveOpReferences", () => {
         );
     });
 
-    it("should throw error when op reference resolution fails", () => {
+    it("should throw an error when op reference resolution fails", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
             if (cmd === "op --version") return Buffer.from("2.0.0");
             if (cmd === 'op read "op://vault/item/password"') {
