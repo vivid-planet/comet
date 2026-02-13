@@ -11,6 +11,32 @@ import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./Final
 export interface FinalFormSelectProps<T> {
     noOptionsText?: ReactNode;
     errorText?: ReactNode;
+    /**
+     * Function or FormatJS MessageDescriptor to get the label for an option.
+     * 
+     * When a function is provided, it receives the option object and returns a string.
+     * 
+     * When a MessageDescriptor is provided, it uses FormatJS `formatMessage` with the option object as values.
+     * This allows using ICU message syntax for dynamic labels.
+     * 
+     * @example
+     * // Function example
+     * getOptionLabel={(option) => option.name}
+     * 
+     * @example
+     * // MessageDescriptor example with template
+     * getOptionLabel={{
+     *   id: "product.manufacturer.label",
+     *   defaultMessage: "{name}, {country}"
+     * }}
+     * 
+     * @example
+     * // MessageDescriptor with ICU formatting
+     * getOptionLabel={{
+     *   id: "person.label",
+     *   defaultMessage: "{givenName} {familyName}, {birthDate, date, short}"
+     * }}
+     */
     getOptionLabel?: ((option: T) => string) | MessageDescriptor;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
