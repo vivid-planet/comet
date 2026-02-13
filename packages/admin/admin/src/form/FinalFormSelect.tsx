@@ -109,6 +109,8 @@ export const FinalFormSelect = <T,>({
             return getOptionLabel(option);
         } else {
             // getOptionLabel is a MessageDescriptor - use formatMessage with option as values
+            // Note: Using 'as any' is intentional as FormatJS formatMessage accepts any object
+            // The developer is responsible for ensuring the MessageDescriptor template references valid fields
             return intl.formatMessage(getOptionLabel, option as any);
         }
     };

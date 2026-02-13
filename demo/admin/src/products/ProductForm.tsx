@@ -254,6 +254,8 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                                 },
                             });
 
+                            // Flatten nested fields for use in FormatJS message templates
+                            // FormatJS only supports top-level properties, not nested paths
                             return data.manufacturers.nodes.map((manufacturer) => ({
                                 ...manufacturer,
                                 country: manufacturer.addressAsEmbeddable.country,
