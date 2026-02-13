@@ -67,7 +67,7 @@
         "cookie-parser": "^1.4.7",
         "date-fns": "^4.1.0",
         "express": "^5.2.1",
-        "graphql": "^16.11.0",
+        "graphql": "^16.12.0",
         "graphql-scalars": "^1.24.2",
         "helmet": "^8.1.0",
         "mjml-browser": "^4.18.0",
