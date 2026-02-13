@@ -174,7 +174,8 @@ export const FinalFormSelect = <T,>({
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
             renderValue={() => {
                 if (Array.isArray(value)) {
-                    return value.map((i) => getLabel(i)).join(", ");
+                    const labels = value.map((i) => getLabel(i));
+                    return intl.formatList(labels, { type: "conjunction" });
                 } else {
                     return getLabel(value);
                 }
