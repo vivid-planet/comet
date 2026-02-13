@@ -17,7 +17,7 @@ interface PGStatActivity {
 }
 
 // Advisory lock key for block_index_dependencies refresh deduplication.
-// Uses the two-integer form pg_try_advisory_xact_lock(key1, key2) to avoid collisions.
+// Uses the two-integer form pg_advisory_xact_lock(key1, key2) to avoid collisions.
 const BLOCK_INDEX_REFRESH_LOCK_KEY1 = 42;
 const BLOCK_INDEX_REFRESH_LOCK_KEY2 = 1;
 
@@ -131,16 +131,28 @@ export class DependenciesService {
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const knex = this.entityManager.getKnex("write");
 
-        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<boolean> => {
-            return knex.transaction(async (trx) => {
-                const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?, ?) AS locked`, [
-                    BLOCK_INDEX_REFRESH_LOCK_KEY1,
-                    BLOCK_INDEX_REFRESH_LOCK_KEY2,
-                ]);
+        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
+            await knex.transaction(async (trx) => {
+                if (refreshOptions?.concurrently) {
+                    // Non-blocking: skip if another refresh is already running
+                    const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?, ?) AS locked`, [
+                        BLOCK_INDEX_REFRESH_LOCK_KEY1,
+                        BLOCK_INDEX_REFRESH_LOCK_KEY2,
+                    ]);
 
-                if (!lockResult.rows[0]?.locked) {
-                    // Another refresh is in progress
-                    return false;
+                    if (!lockResult.rows[0]?.locked) {
+                        return;
+                    }
+                } else {
+                    // Blocking: wait for any active refresh to finish
+                    await trx.raw(`SELECT pg_advisory_xact_lock(?, ?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY1, BLOCK_INDEX_REFRESH_LOCK_KEY2]);
+
+                    // After acquiring the lock, check if a refresh was just completed by the previous holder
+                    const recentRefresh = await trx("BlockIndexRefresh").whereNotNull("finishedAt").orderBy("finishedAt", "desc").first();
+
+                    if (recentRefresh && new Date(recentRefresh.finishedAt) > subMinutes(new Date(), 5)) {
+                        return;
+                    }
                 }
 
                 const id = uuid();
@@ -148,14 +160,11 @@ export class DependenciesService {
 
                 await trx("BlockIndexRefresh").insert({ id, startedAt: new Date(), finishedAt: null });
 
-                await trx.raw(
-                    `REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`,
-                );
+                await trx.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
                 await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
 
                 this.logger.log(`Completed block index refresh ${id}`);
-                return true;
             });
         };
 
@@ -211,7 +220,7 @@ export class DependenciesService {
                 await refreshPromise;
             }
         } else {
-            // Older than 15 minutes -> refresh sync
+            // Older than 15 minutes -> refresh sync (blocking, waits for active refresh)
             await refresh();
         }
     }
