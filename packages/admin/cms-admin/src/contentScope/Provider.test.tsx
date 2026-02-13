@@ -152,10 +152,10 @@ describe("ContentScopeProvider", () => {
         expect(storedAfter).toBeNull();
     });
 
-    it("should clear stored scope when localStorage contains 'undefined' string", async () => {
+    it("should use default scope when localStorage contains 'undefined' string", async () => {
         const allowedScopes = [{ scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "EN" } }];
 
-        // Store "undefined" string (edge case)
+        // Store "undefined" string (edge case that can happen in some scenarios)
         localStorage.setItem(contentScopeLocalStorageKey, "undefined");
 
         const { container } = render(
@@ -171,7 +171,8 @@ describe("ContentScopeProvider", () => {
             expect(container.textContent).toContain("Content");
         });
 
-        // Should use default scope when localStorage contains "undefined"
+        // The "undefined" string should be left as-is since it's handled by the check on line 176
+        // The provider uses the default scope instead of trying to parse "undefined"
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBe("undefined");
     });
 });
