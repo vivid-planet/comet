@@ -89,3 +89,179 @@ export const Default: Story = {
         );
     },
 };
+
+export const WebOnlyProtocols: Story = {
+    render: () => {
+        interface FormValues {
+            secureUrl: string;
+            anotherUrl: string;
+        }
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                initialValues={{
+                    secureUrl: "",
+                    anotherUrl: "",
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => (
+                    <>
+                        <Alert severity="info" title="Web-Only Mode">
+                            These fields only accept https:// and http:// protocols. Try entering:
+                            <ul>
+                                <li>✅ example.com (will be converted to https://example.com)</li>
+                                <li>✅ http://example.com</li>
+                                <li>❌ mailto:test@example.com (will show error)</li>
+                                <li>❌ tel:+1234567890 (will show error)</li>
+                                <li>❌ ftp://files.example.com (will show error)</li>
+                            </ul>
+                        </Alert>
+
+                        <UrlField
+                            name="secureUrl"
+                            label="Secure URL (Web Only)"
+                            placeholder="example.com"
+                            helperText="Only https:// and http:// protocols are allowed"
+                            allowedProtocols="web-only"
+                            fullWidth
+                            variant="horizontal"
+                            required
+                        />
+
+                        <UrlField
+                            name="anotherUrl"
+                            label="Another Web URL"
+                            placeholder="https://example.com"
+                            allowedProtocols="web-only"
+                            fullWidth
+                            variant="horizontal"
+                        />
+
+                        <Alert title="Form Values" severity="info">
+                            <pre>{JSON.stringify(values, null, 2)}</pre>
+                        </Alert>
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};
+
+export const CustomAllowedProtocols: Story = {
+    render: () => {
+        interface FormValues {
+            contactUrl: string;
+            fileUrl: string;
+        }
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                initialValues={{
+                    contactUrl: "",
+                    fileUrl: "",
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => (
+                    <>
+                        <Alert severity="info" title="Custom Protocol Lists">
+                            Each field has a custom list of allowed protocols.
+                        </Alert>
+
+                        <UrlField
+                            name="contactUrl"
+                            label="Contact URL"
+                            placeholder="test@example.com or +1234567890"
+                            helperText="Only mailto: and tel: protocols are allowed (no web URLs)"
+                            allowedProtocols={["mailto", "tel"]}
+                            fullWidth
+                            variant="horizontal"
+                        />
+
+                        <UrlField
+                            name="fileUrl"
+                            label="File/FTP URL"
+                            placeholder="ftp://files.example.com"
+                            helperText="Only https:, ftp:, and file: protocols are allowed"
+                            allowedProtocols={["https", "ftp", "file"]}
+                            fullWidth
+                            variant="horizontal"
+                        />
+
+                        <Alert title="Form Values" severity="info">
+                            <pre>{JSON.stringify(values, null, 2)}</pre>
+                        </Alert>
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};
+
+export const SecurityExample: Story = {
+    render: () => {
+        interface FormValues {
+            safeUrl: string;
+            unsafeAttempt: string;
+        }
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                initialValues={{
+                    safeUrl: "",
+                    unsafeAttempt: "",
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => (
+                    <>
+                        <Alert severity="warning" title="Security Protection">
+                            Dangerous protocols (javascript:, data:, vbscript:) are always blocked, even when allowedProtocols is set to "all". This
+                            prevents XSS attacks. Try entering:
+                            <ul>
+                                <li>❌ javascript:alert(1)</li>
+                                <li>❌ data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;</li>
+                                <li>✅ https://example.com</li>
+                            </ul>
+                        </Alert>
+
+                        <UrlField
+                            name="safeUrl"
+                            label="URL with Security Protection"
+                            placeholder="Try entering 'javascript:alert(1)'"
+                            helperText="Dangerous protocols are automatically blocked"
+                            fullWidth
+                            variant="horizontal"
+                        />
+
+                        <UrlField
+                            name="unsafeAttempt"
+                            label="Another Protected Field"
+                            placeholder="Try 'data:text/html,...'"
+                            allowedProtocols="all"
+                            fullWidth
+                            variant="horizontal"
+                        />
+
+                        <Alert title="Form Values" severity="info">
+                            <pre>{JSON.stringify(values, null, 2)}</pre>
+                        </Alert>
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};

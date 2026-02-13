@@ -28,6 +28,12 @@ const expectedErrorMessages = {
             id: "comet.validateUrlHasProtocol.invalidUrl",
         },
     },
+    protocolNotAllowed: {
+        type: FormattedMessage,
+        props: {
+            id: "comet.validateUrlHasProtocol.protocolNotAllowed",
+        },
+    },
 };
 
 describe("validateUrlHasProtocol", () => {
@@ -296,12 +302,16 @@ describe("validateUrlHasProtocol", () => {
             expect(validateUrl("custom://example.com")).toBeUndefined();
         });
 
-        it("returns undefined for data URI", () => {
-            expect(validateUrl("data:text/plain;base64,SGVsbG8=")).toBeUndefined();
+        it("blocks data URI for security", () => {
+            const result = validateUrl("data:text/plain;base64,SGVsbG8=");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
         });
 
-        it("returns undefined for javascript protocol", () => {
-            expect(validateUrl("javascript:void(0)")).toBeUndefined();
+        it("blocks javascript protocol for security", () => {
+            const result = validateUrl("javascript:void(0)");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
         });
 
         it("returns undefined for file protocol", () => {
@@ -596,6 +606,153 @@ describe("ensureUrlHasProtocol", () => {
 
         it("handles protocol-like prefix that is actually valid", () => {
             expect(ensureUrlHasProtocol("custom:value")).toBe("custom:value");
+        });
+    });
+});
+
+describe("validateUrl with allowedProtocols", () => {
+    describe('allowedProtocols: "web-only"', () => {
+        it("allows https URLs", () => {
+            expect(validateUrl("https://example.com", "web-only")).toBeUndefined();
+        });
+
+        it("allows http URLs", () => {
+            expect(validateUrl("http://example.com", "web-only")).toBeUndefined();
+        });
+
+        it("blocks mailto URLs", () => {
+            const result = validateUrl("mailto:test@example.com", "web-only");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks tel URLs", () => {
+            const result = validateUrl("tel:+1234567890", "web-only");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks ftp URLs", () => {
+            const result = validateUrl("ftp://example.com", "web-only");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks custom protocols", () => {
+            const result = validateUrl("custom://example.com", "web-only");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+    });
+
+    describe("allowedProtocols: custom array", () => {
+        it("allows protocols in the list", () => {
+            expect(validateUrl("https://example.com", ["https", "mailto"])).toBeUndefined();
+            expect(validateUrl("mailto:test@example.com", ["https", "mailto"])).toBeUndefined();
+        });
+
+        it("blocks protocols not in the list", () => {
+            const result = validateUrl("http://example.com", ["https", "mailto"]);
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks tel when not in list", () => {
+            const result = validateUrl("tel:+1234567890", ["https", "http"]);
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("allows ftp when in list", () => {
+            expect(validateUrl("ftp://example.com", ["https", "ftp"])).toBeUndefined();
+        });
+
+        it("is case-insensitive for protocols", () => {
+            expect(validateUrl("HTTPS://example.com", ["https"])).toBeUndefined();
+            expect(validateUrl("https://example.com", ["HTTPS"])).toBeUndefined();
+        });
+    });
+
+    describe('allowedProtocols: "all" (default)', () => {
+        it("allows https", () => {
+            expect(validateUrl("https://example.com", "all")).toBeUndefined();
+        });
+
+        it("allows http", () => {
+            expect(validateUrl("http://example.com", "all")).toBeUndefined();
+        });
+
+        it("allows mailto", () => {
+            expect(validateUrl("mailto:test@example.com", "all")).toBeUndefined();
+        });
+
+        it("allows tel", () => {
+            expect(validateUrl("tel:+1234567890", "all")).toBeUndefined();
+        });
+
+        it("allows ftp", () => {
+            expect(validateUrl("ftp://example.com", "all")).toBeUndefined();
+        });
+
+        it("allows custom protocols", () => {
+            expect(validateUrl("custom://example.com", "all")).toBeUndefined();
+        });
+
+        it("blocks javascript protocol for security", () => {
+            const result = validateUrl("javascript:alert(1)", "all");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks data protocol for security", () => {
+            const result = validateUrl("data:text/html,<script>alert(1)</script>", "all");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks vbscript protocol for security", () => {
+            const result = validateUrl("vbscript:msgbox(1)", "all");
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+    });
+
+    describe("allowedProtocols: undefined (same as all)", () => {
+        it("allows various protocols", () => {
+            expect(validateUrl("https://example.com")).toBeUndefined();
+            expect(validateUrl("mailto:test@example.com")).toBeUndefined();
+            expect(validateUrl("tel:+1234567890")).toBeUndefined();
+            expect(validateUrl("ftp://example.com")).toBeUndefined();
+        });
+
+        it("blocks dangerous protocols", () => {
+            const jsResult = validateUrl("javascript:alert(1)");
+            expect(isValidElement(jsResult)).toBe(true);
+            expect(jsResult).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+
+            const dataResult = validateUrl("data:text/html,<script>alert(1)</script>");
+            expect(isValidElement(dataResult)).toBe(true);
+            expect(dataResult).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+    });
+
+    describe("dangerous protocols always blocked", () => {
+        it("blocks javascript even when explicitly allowed", () => {
+            const result = validateUrl("javascript:alert(1)", ["javascript", "https"]);
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks data even when explicitly allowed", () => {
+            const result = validateUrl("data:text/html,test", ["data", "https"]);
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+        });
+
+        it("blocks vbscript even when explicitly allowed", () => {
+            const result = validateUrl("vbscript:msgbox(1)", ["vbscript", "https"]);
+            expect(isValidElement(result)).toBe(true);
+            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
         });
     });
 });

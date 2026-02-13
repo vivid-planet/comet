@@ -3,10 +3,18 @@ import { type FocusEvent } from "react";
 import { type FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { ensureUrlHasProtocol } from "./helpers/urlProtocol";
+import { type AllowedProtocols, ensureUrlHasProtocol } from "./helpers/urlProtocol";
 
 export type FinalFormUrlInputProps = InputBaseProps & {
     clearable?: boolean;
+    /**
+     * Configuration for allowed protocols in URL fields.
+     * - string[]: Custom list of allowed protocol names (e.g., ["https", "http", "mailto"])
+     * - "web-only": Only allows https and http protocols
+     * - "all": Allows all protocols except dangerous ones (javascript, data, vbscript)
+     * - undefined: Same as "all" (default behavior)
+     */
+    allowedProtocols?: AllowedProtocols;
 };
 
 type FinalFormUrlInputInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
@@ -22,6 +30,7 @@ export function FinalFormUrlInput({
     innerRef,
     endAdornment,
     clearable,
+    allowedProtocols,
     ...props
 }: FinalFormUrlInputProps & FinalFormUrlInputInternalProps) {
     const handleBlur = (event: FocusEvent<HTMLInputElement>) => {

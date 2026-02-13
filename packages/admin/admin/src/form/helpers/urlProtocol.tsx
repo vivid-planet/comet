@@ -10,6 +10,19 @@ const patterns = {
     phoneFormatChars: /[\s\-()./]/g,
 } as const;
 
+/**
+ * Dangerous protocols that could lead to security vulnerabilities like XSS attacks.
+ */
+const DANGEROUS_PROTOCOLS = ["javascript", "data", "vbscript"];
+
+/**
+ * Configuration for allowed protocols in URL fields.
+ * - string[]: Custom list of allowed protocol names (e.g., ["https", "http", "mailto"])
+ * - "web-only": Only allows https and http protocols
+ * - "all": Allows all protocols except dangerous ones (javascript, data, vbscript)
+ */
+export type AllowedProtocols = string[] | "web-only" | "all";
+
 const hasProtocol = (value: string): boolean => {
     const hasProtocolRegex = /^([a-zA-Z][a-zA-Z\d+.-]*):(.*)$/;
     const schemeMatch = hasProtocolRegex.exec(value);
@@ -28,6 +41,26 @@ const hasProtocol = (value: string): boolean => {
 
 const cleanPhoneNumber = (value: string): string => value.replace(patterns.phoneFormatChars, "");
 
+const isProtocolAllowed = (protocol: string, allowedProtocols: AllowedProtocols): boolean => {
+    const normalizedProtocol = protocol.toLowerCase();
+
+    // Always block dangerous protocols for security
+    if (DANGEROUS_PROTOCOLS.includes(normalizedProtocol)) {
+        return false;
+    }
+
+    if (allowedProtocols === "all") {
+        return true;
+    }
+
+    if (allowedProtocols === "web-only") {
+        return normalizedProtocol === "https" || normalizedProtocol === "http";
+    }
+
+    // Custom array of allowed protocols
+    return allowedProtocols.some((allowed) => allowed.toLowerCase() === normalizedProtocol);
+};
+
 /**
  * Validates that a URL has a protocol. Returns an error message if the protocol is missing or invalid.
  * Used for form validation in UrlField.
@@ -37,8 +70,14 @@ const cleanPhoneNumber = (value: string): string => value.replace(patterns.phone
  * - tel: validates the phone part using the phone regex
  * - https/http: validates using validator.isURL
  * - other protocols: just checks if a protocol is present
+ *
+ * @param allowedProtocols - Optional configuration to restrict which protocols are allowed.
+ *   - string[]: Custom list of allowed protocol names
+ *   - "web-only": Only allows https and http
+ *   - "all": Allows all protocols except dangerous ones (javascript, data, vbscript)
+ *   - undefined: Same as "all" (default behavior)
  */
-export const validateUrl = (value: string | undefined): ReactNode | undefined => {
+export const validateUrl = (value: string | undefined, allowedProtocols?: AllowedProtocols): ReactNode | undefined => {
     if (!value || value.trim() === "") {
         return undefined;
     }
@@ -67,6 +106,12 @@ export const validateUrl = (value: string | undefined): ReactNode | undefined =>
 
     const protocol = protocolMatch[1].toLowerCase();
     const rest = protocolMatch[2];
+
+    // Check if protocol is allowed
+    const effectiveAllowedProtocols = allowedProtocols ?? "all";
+    if (!isProtocolAllowed(protocol, effectiveAllowedProtocols)) {
+        return <FormattedMessage id="comet.validateUrlHasProtocol.protocolNotAllowed" defaultMessage="This protocol is not allowed" />;
+    }
 
     // Validate mailto:
     if (protocol === "mailto") {
