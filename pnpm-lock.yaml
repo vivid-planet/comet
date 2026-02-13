@@ -808,6 +808,12 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
+      '@faker-js/faker':
+        specifier: ^10.1.0
+        version: 10.1.0
+      '@graphql-mocks/network-msw':
+        specifier: ^0.4.4
+        version: 0.4.4(graphql-mocks@0.10.0(graphql@16.11.0))(msw@2.12.2(@types/node@24.10.9)(typescript@5.9.3))
       '@mui/material':
         specifier: ^7.3.7
         version: 7.3.7(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -889,6 +895,9 @@ importers:
       graphql:
         specifier: ^16.0.0
         version: 16.11.0
+      graphql-mocks:
+        specifier: ^0.10.0
+        version: 0.10.0(graphql@16.11.0)
       history:
         specifier: ^4.10.1
         version: 4.10.1
