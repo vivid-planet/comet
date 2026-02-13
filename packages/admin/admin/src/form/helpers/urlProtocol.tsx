@@ -110,7 +110,20 @@ export const validateUrl = (value: string | undefined, allowedProtocols?: Allowe
     // Check if protocol is allowed
     const effectiveAllowedProtocols = allowedProtocols ?? "all";
     if (!isProtocolAllowed(protocol, effectiveAllowedProtocols)) {
-        return <FormattedMessage id="comet.validateUrlHasProtocol.protocolNotAllowed" defaultMessage="This protocol is not allowed" />;
+        if (DANGEROUS_PROTOCOLS.includes(protocol)) {
+            return (
+                <FormattedMessage
+                    id="comet.validateUrlHasProtocol.dangerousProtocol"
+                    defaultMessage="This protocol is not allowed for security reasons"
+                />
+            );
+        }
+        return (
+            <FormattedMessage
+                id="comet.validateUrlHasProtocol.protocolNotAllowed"
+                defaultMessage="This protocol is not allowed. Please check the allowed protocols for this field."
+            />
+        );
     }
 
     // Validate mailto:

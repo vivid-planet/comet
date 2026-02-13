@@ -34,6 +34,12 @@ const expectedErrorMessages = {
             id: "comet.validateUrlHasProtocol.protocolNotAllowed",
         },
     },
+    dangerousProtocol: {
+        type: FormattedMessage,
+        props: {
+            id: "comet.validateUrlHasProtocol.dangerousProtocol",
+        },
+    },
 };
 
 describe("validateUrlHasProtocol", () => {
@@ -305,13 +311,13 @@ describe("validateUrlHasProtocol", () => {
         it("blocks data URI for security", () => {
             const result = validateUrl("data:text/plain;base64,SGVsbG8=");
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
 
         it("blocks javascript protocol for security", () => {
             const result = validateUrl("javascript:void(0)");
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
 
         it("returns undefined for file protocol", () => {
@@ -701,19 +707,19 @@ describe("validateUrl with allowedProtocols", () => {
         it("blocks javascript protocol for security", () => {
             const result = validateUrl("javascript:alert(1)", "all");
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
 
         it("blocks data protocol for security", () => {
             const result = validateUrl("data:text/html,<script>alert(1)</script>", "all");
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
 
         it("blocks vbscript protocol for security", () => {
             const result = validateUrl("vbscript:msgbox(1)", "all");
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
     });
 
@@ -728,11 +734,11 @@ describe("validateUrl with allowedProtocols", () => {
         it("blocks dangerous protocols", () => {
             const jsResult = validateUrl("javascript:alert(1)");
             expect(isValidElement(jsResult)).toBe(true);
-            expect(jsResult).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(jsResult).toMatchObject(expectedErrorMessages.dangerousProtocol);
 
             const dataResult = validateUrl("data:text/html,<script>alert(1)</script>");
             expect(isValidElement(dataResult)).toBe(true);
-            expect(dataResult).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(dataResult).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
     });
 
@@ -740,19 +746,19 @@ describe("validateUrl with allowedProtocols", () => {
         it("blocks javascript even when explicitly allowed", () => {
             const result = validateUrl("javascript:alert(1)", ["javascript", "https"]);
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
 
         it("blocks data even when explicitly allowed", () => {
             const result = validateUrl("data:text/html,test", ["data", "https"]);
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
 
         it("blocks vbscript even when explicitly allowed", () => {
             const result = validateUrl("vbscript:msgbox(1)", ["vbscript", "https"]);
             expect(isValidElement(result)).toBe(true);
-            expect(result).toMatchObject(expectedErrorMessages.protocolNotAllowed);
+            expect(result).toMatchObject(expectedErrorMessages.dangerousProtocol);
         });
     });
 });

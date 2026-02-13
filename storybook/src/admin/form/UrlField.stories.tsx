@@ -233,7 +233,7 @@ export const SecurityExample: Story = {
                             prevents XSS attacks. Try entering:
                             <ul>
                                 <li>❌ javascript:alert(1)</li>
-                                <li>❌ data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;</li>
+                                <li>❌ data:text/html,{"<script>alert(1)</script>"}</li>
                                 <li>✅ https://example.com</li>
                             </ul>
                         </Alert>
