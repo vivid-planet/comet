@@ -238,6 +238,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                                             nodes {
                                                 id
                                                 name
+                                                addressAsEmbeddable {
+                                                    country
+                                                }
                                             }
                                         }
                                     }
@@ -251,9 +254,15 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                                 },
                             });
 
-                            return data.manufacturers.nodes;
+                            return data.manufacturers.nodes.map((manufacturer) => ({
+                                ...manufacturer,
+                                country: manufacturer.addressAsEmbeddable.country,
+                            }));
                         }}
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={{
+                            id: "product.manufacturer.label",
+                            defaultMessage: "{name}, {country}",
+                        }}
                         label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                         fullWidth
                         disabled={!values?.manufacturerCountry}
