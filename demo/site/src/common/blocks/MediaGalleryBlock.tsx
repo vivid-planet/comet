@@ -6,6 +6,7 @@ import { type MediaGalleryBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
+import { FadeBoxInOnScroll } from "@src/util/animations/FadeBoxInOnScroll";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -98,7 +99,9 @@ export const MediaGalleryBlock = withPreview(
 export const PageContentMediaGalleryBlock = (props: MediaGalleryBlockProps) => (
     <PageLayout grid>
         <div className={styles.pageLayoutContent}>
-            <MediaGalleryBlock {...props} />
+            <FadeBoxInOnScroll offset={200} delay={300}>
+                <MediaGalleryBlock {...props} />
+            </FadeBoxInOnScroll>
         </div>
     </PageLayout>
 );

@@ -6,6 +6,7 @@ import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { PageLayout } from "@src/layout/PageLayout";
+import { FadeBoxInOnLoad } from "@src/util/animations/FadeBoxInOnLoad";
 
 import styles from "./BasicStageBlock.module.scss";
 
@@ -27,9 +28,15 @@ export const BasicStageBlock = withPreview(
             <div className={styles.imageOverlay} style={{ opacity: `${overlay}%` }} />
             <PageLayout className={styles.absoluteGridRoot} grid>
                 <div className={styles.content} style={{ alignItems: alignment }}>
-                    <HeadingBlock data={heading} />
-                    <RichTextBlock data={text} />
-                    <CallToActionListBlock data={callToActionList} />
+                    <FadeBoxInOnLoad direction="bottom" duration={1200} delay={200}>
+                        <HeadingBlock data={heading} />
+                    </FadeBoxInOnLoad>
+                    <FadeBoxInOnLoad delay={1000} duration={3000}>
+                        <RichTextBlock data={text} />
+                    </FadeBoxInOnLoad>
+                    <FadeBoxInOnLoad delay={1400} duration={3000}>
+                        <CallToActionListBlock data={callToActionList} />
+                    </FadeBoxInOnLoad>
                 </div>
             </PageLayout>
         </div>

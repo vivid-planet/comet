@@ -10,6 +10,8 @@ import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { PageLayout } from "@src/layout/PageLayout";
+import { FadeBoxInOnScroll } from "@src/util/animations/FadeBoxInOnScroll";
+import { FadeGroup } from "@src/util/animations/FadeGroup";
 import clsx from "clsx";
 
 import styles from "./ColumnsBlock.module.scss";
@@ -43,13 +45,17 @@ const layoutToStyleMap: { [key: string]: string } = {
 
 export const ColumnsBlock = withPreview(
     ({ data: { columns, layout } }: PropsWithData<ColumnsBlockData>) => (
-        <PageLayout grid>
-            {columns.map((column) => (
-                <div className={clsx(styles.column, layoutToStyleMap[layout])} key={column.key}>
-                    <ColumnsContentBlock data={column.props} />
-                </div>
-            ))}
-        </PageLayout>
+        <FadeGroup>
+            <PageLayout grid>
+                {columns.map((column, index) => (
+                    <div className={clsx(styles.column, layoutToStyleMap[layout])} key={column.key}>
+                        <FadeBoxInOnScroll delay={300 * index}>
+                            <ColumnsContentBlock data={column.props} />
+                        </FadeBoxInOnScroll>
+                    </div>
+                ))}
+            </PageLayout>
+        </FadeGroup>
     ),
     { label: "Columns" },
 );

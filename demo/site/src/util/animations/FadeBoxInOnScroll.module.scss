@@ -1,0 +1,43 @@
+.overflowContainer {
+    width: 100%;
+}
+
+.scrollContainer {
+    opacity: 0;
+    transition:
+            opacity var(--fade-duration, 500ms) ease-in-out var(--fade-delay, 0ms),
+            transform 1s cubic-bezier(0.22, 1, 0.36, 1) var(--fade-delay, 0ms);
+}
+
+.fullHeight {
+    height: 100%;
+}
+
+.fromLeft {
+    transform: translate3d(-40px, 0, 0);
+}
+
+.fromRight {
+    transform: translate3d(40px, 0, 0);
+}
+
+.fromTop {
+    transform: translate3d(0, -40px, 0);
+}
+
+.fromBottom {
+    transform: translate3d(0, 40px, 0);
+}
+
+.fadeIn {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scrollContainer {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        transition: none;
+    }
+}

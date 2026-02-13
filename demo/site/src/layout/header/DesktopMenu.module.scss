@@ -19,7 +19,7 @@
 }
 
 .subLevelNavigation {
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: var(--spacing-s200);
     position: absolute;
@@ -33,9 +33,15 @@
     border-left: 1px solid var(--brand-grey-200);
     border-bottom: 1px solid var(--brand-grey-200);
     border-right: 1px solid var(--brand-grey-200);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    visibility: hidden;
 
     &--expanded {
-        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
     }
 }
 

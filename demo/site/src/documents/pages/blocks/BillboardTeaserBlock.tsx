@@ -5,6 +5,7 @@ import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { PageLayout } from "@src/layout/PageLayout";
+import { FadeBoxInOnScroll } from "@src/util/animations/FadeBoxInOnScroll";
 
 import styles from "./BillboardTeaserBlock.module.scss";
 
@@ -24,13 +25,23 @@ export const BillboardTeaserBlock = withPreview(
                 <MediaBlock data={media} aspectRatio="3x1" />
             </div>
             <div className={styles.imageOverlay} style={{ opacity: `${overlay}%` }} />
-            <PageLayout className={styles.absoluteGridRoot} grid>
-                <div className={styles.content}>
-                    <HeadingBlock data={heading} />
-                    <RichTextBlock data={text} />
-                    <CallToActionListBlock data={callToActionList} />
-                </div>
-            </PageLayout>
+            <div className={styles.absoluteContentWrapper}>
+                <PageLayout className={styles.absoluteGridRoot} grid>
+                    <div className={styles.content}>
+                        <FadeBoxInOnScroll direction="bottom" offset={300}>
+                            <HeadingBlock data={heading} />
+                        </FadeBoxInOnScroll>
+                        <FadeBoxInOnScroll offset={450} delay={300}>
+                            <RichTextBlock data={text} />
+                        </FadeBoxInOnScroll>
+                        <FadeBoxInOnScroll offset={500} delay={300}>
+                            <div className={styles.callToActionWrapper}>
+                                <CallToActionListBlock data={callToActionList} />
+                            </div>
+                        </FadeBoxInOnScroll>
+                    </div>
+                </PageLayout>
+            </div>
         </div>
     ),
     { label: "Billboard Teaser" },

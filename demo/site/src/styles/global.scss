@@ -46,6 +46,7 @@
 html {
     /* Prevent font size adjustments after orientation changes in mobile devices */
     text-size-adjust: 100%;
+    scroll-behavior: smooth;
 
     --header-height: 100px;
     --full-viewport-height: 100vh;
