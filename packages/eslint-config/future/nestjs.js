@@ -1,4 +1,5 @@
 import nestjsConfig from "../nestjs.js";
+import { restrictedImportPatterns } from "../core.js";
 
 export const restrictedImportPaths = [
     {
@@ -16,6 +17,7 @@ const config = [
                 "error",
                 {
                     paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },

@@ -1,4 +1,4 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 import react from "eslint-plugin-react";
 import globals from "globals";
 import nextPlugin from "@next/eslint-plugin-next";
@@ -29,6 +29,7 @@ const config = [
                 "error",
                 {
                     paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },

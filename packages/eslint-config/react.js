@@ -1,4 +1,4 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
 import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
@@ -111,6 +111,7 @@ const config = [
                 "error",
                 {
                     paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },
