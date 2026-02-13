@@ -165,7 +165,15 @@ export function ContentScopeProvider({
         const parsedStoredScope = JSON.parse(storedScope);
         // Validate that the stored scope is in the user's allowed scopes
         const isStoredScopeAllowed = values.some((value) => {
-            return Object.keys(parsedStoredScope).every((key) => parsedStoredScope[key] === value.scope[key]);
+            // Check that both scopes have the same keys
+            const storedKeys = Object.keys(parsedStoredScope).sort();
+            const valueKeys = Object.keys(value.scope).sort();
+
+            if (storedKeys.length !== valueKeys.length) return false;
+            if (!storedKeys.every((key, index) => key === valueKeys[index])) return false;
+
+            // Check that all values match
+            return storedKeys.every((key) => parsedStoredScope[key] === value.scope[key]);
         });
 
         if (isStoredScopeAllowed) {
