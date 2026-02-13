@@ -16,5 +16,5 @@ export type UrlFieldProps = FieldProps<string, HTMLInputElement> &
 
 export const UrlField = ({ validate, allowedProtocols, ...props }: UrlFieldProps) => {
     const defaultValidate = (value: string | undefined) => validateUrl(value, allowedProtocols);
-    return <Field component={FinalFormUrlInput} validate={validate ?? defaultValidate} allowedProtocols={allowedProtocols} {...props} />;
+    return <Field component={FinalFormUrlInput} validate={validate ?? defaultValidate} {...props} />;
 };
