@@ -134,6 +134,7 @@ export function createEmailCampaignsResolver({
 
             await this.entityManager.flush();
 
+            const now = new Date();
             let hasScheduleRemoved = false;
 
             if (campaign.brevoId) {
@@ -142,7 +143,7 @@ export function createEmailCampaignsResolver({
                 }
 
                 // If campaign is scheduled in the past, check actual status from Brevo
-                if (campaign.sendingState === SendingState.SCHEDULED && campaign.scheduledAt && campaign.scheduledAt < new Date()) {
+                if (campaign.sendingState === SendingState.SCHEDULED && campaign.scheduledAt && campaign.scheduledAt < now) {
                     const brevoCampaign = await this.brevoApiCampaignsService.loadBrevoCampaignById(campaign);
                     const actualState = this.brevoApiCampaignsService.getSendingInformationFromBrevoCampaign(brevoCampaign);
 
