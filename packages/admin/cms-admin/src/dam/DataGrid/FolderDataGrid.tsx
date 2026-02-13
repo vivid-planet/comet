@@ -544,6 +544,24 @@ const FolderDataGrid = ({
               ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
         {
+            field: "usages",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.usages",
+                defaultMessage: "Usages",
+            }),
+            headerAlign: "right",
+            align: "right",
+            minWidth: 100,
+            renderCell: ({ row }) => {
+                if (isFile(row)) {
+                    return row.dependents.totalCount;
+                }
+            },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
             field: "createdAt",
             headerName: intl.formatMessage({
                 id: "comet.dam.file.creationDate",
