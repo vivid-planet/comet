@@ -2,7 +2,7 @@ import { Error } from "@comet/admin-icons";
 import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
@@ -11,7 +11,33 @@ import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./Final
 export interface FinalFormSelectProps<T> {
     noOptionsText?: ReactNode;
     errorText?: ReactNode;
-    getOptionLabel?: (option: T) => string;
+    /**
+     * Function or FormatJS MessageDescriptor to get the label for an option.
+     * 
+     * When a function is provided, it receives the option object and returns a string.
+     * 
+     * When a MessageDescriptor is provided, it uses FormatJS `formatMessage` with the option object as values.
+     * This allows using ICU message syntax for dynamic labels.
+     * 
+     * @example
+     * // Function example
+     * getOptionLabel={(option) => option.name}
+     * 
+     * @example
+     * // MessageDescriptor example with template
+     * getOptionLabel={{
+     *   id: "product.manufacturer.label",
+     *   defaultMessage: "{name}, {country}"
+     * }}
+     * 
+     * @example
+     * // MessageDescriptor with ICU formatting
+     * getOptionLabel={{
+     *   id: "person.label",
+     *   defaultMessage: "{givenName} {familyName}, {birthDate, date, short}"
+     * }}
+     */
+    getOptionLabel?: ((option: T) => string) | MessageDescriptor;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
@@ -74,6 +100,20 @@ export const FinalFormSelect = <T,>({
     required,
     ...rest
 }: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+    const intl = useIntl();
+
+    // Create a function to get the label for an option
+    // Supports both function and MessageDescriptor (for FormatJS translation templates)
+    const getLabel = (option: T): string => {
+        if (typeof getOptionLabel === "function") {
+            return getOptionLabel(option);
+        } else {
+            // getOptionLabel is a MessageDescriptor - use formatMessage with option as values
+            // Note: Using 'as any' is intentional as FormatJS formatMessage accepts any object
+            // The developer is responsible for ensuring the MessageDescriptor template references valid fields
+            return intl.formatMessage(getOptionLabel, option as any);
+        }
+    };
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
@@ -136,9 +176,10 @@ export const FinalFormSelect = <T,>({
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
             renderValue={() => {
                 if (Array.isArray(value)) {
-                    return value.map((i) => getOptionLabel(i));
+                    const labels = value.map((i) => getLabel(i));
+                    return intl.formatList(labels, { type: "conjunction" });
                 } else {
-                    return getOptionLabel(value);
+                    return getLabel(value);
                 }
             }}
         >
@@ -154,12 +195,12 @@ export const FinalFormSelect = <T,>({
                 (Array.isArray(value) ? (
                     value.map((v) => (
                         <MenuItem value={getOptionValue(v)} key={getOptionValue(v)} sx={{ display: "none" }}>
-                            {getOptionLabel(v)}
+                            {getLabel(v)}
                         </MenuItem>
                     ))
                 ) : (
                     <MenuItem value={getOptionValue(value)} key={getOptionValue(value)} sx={{ display: "none" }}>
-                        {getOptionLabel(value)}
+                        {getLabel(value)}
                     </MenuItem>
                 ))}
 
@@ -177,7 +218,7 @@ export const FinalFormSelect = <T,>({
             {showOptions &&
                 options.map((option: T) => (
                     <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
-                        {getOptionLabel(option)}
+                        {getLabel(option)}
                     </MenuItem>
                 ))}
         </Select>
