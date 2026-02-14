@@ -117,6 +117,17 @@ export const moveDamFoldersMutation = gql`
     }
 `;
 
+export const damFileUsagesQuery = gql`
+    query DamFileUsages($id: ID!) {
+        damFile(id: $id) {
+            id
+            dependents(offset: 0, limit: 1) {
+                totalCount
+            }
+        }
+    }
+`;
+
 export const damItemListPosition = gql`
     query DamItemListPosition(
         $id: ID!

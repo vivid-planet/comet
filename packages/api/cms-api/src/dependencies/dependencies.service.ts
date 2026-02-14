@@ -1,5 +1,4 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { AnyEntity, Connection, EntityManager, EntityRepository, Knex, QueryOrder } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, EntityManager, Knex } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
@@ -10,7 +9,6 @@ import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
-import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
 interface PGStatActivity {
     pid: number;
@@ -18,13 +16,17 @@ interface PGStatActivity {
     query: string;
 }
 
+// Advisory lock key for block_index_dependencies refresh deduplication.
+// Uses the two-integer form pg_advisory_xact_lock(key1, key2) to avoid collisions.
+const BLOCK_INDEX_REFRESH_LOCK_KEY1 = 42;
+const BLOCK_INDEX_REFRESH_LOCK_KEY2 = 1;
+
 @Injectable()
 export class DependenciesService {
     private connection: Connection;
     private readonly logger = new Logger(DependenciesService.name);
 
     constructor(
-        @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
         private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
@@ -127,81 +129,98 @@ export class DependenciesService {
     }
 
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
-        const refresh = async (options?: { concurrently: boolean }) => {
-            const id = uuid();
-            // Before forking the entity manager, race conditions occurred frequently
-            // when executing the refresh asynchronous
-            const forkedEntityManager = this.entityManager.fork();
-            console.time(`refresh materialized block dependency ${id}`);
-            const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
-            await forkedEntityManager.persistAndFlush(blockIndexRefresh);
+        const knex = this.entityManager.getKnex("write");
 
-            await forkedEntityManager.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
+            await knex.transaction(async (trx) => {
+                if (refreshOptions?.concurrently) {
+                    // Non-blocking: skip if another refresh is already running
+                    const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?, ?) AS locked`, [
+                        BLOCK_INDEX_REFRESH_LOCK_KEY1,
+                        BLOCK_INDEX_REFRESH_LOCK_KEY2,
+                    ]);
 
-            await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
-            console.timeEnd(`refresh materialized block dependency ${id}`);
+                    if (!lockResult.rows[0]?.locked) {
+                        return;
+                    }
+                } else {
+                    // Blocking: wait for any active refresh to finish
+                    await trx.raw(`SELECT pg_advisory_xact_lock(?, ?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY1, BLOCK_INDEX_REFRESH_LOCK_KEY2]);
+
+                    // After acquiring the lock, check if a refresh was just completed by the previous holder
+                    const recentRefresh = await trx("BlockIndexRefresh").whereNotNull("finishedAt").orderBy("finishedAt", "desc").first();
+
+                    if (recentRefresh && new Date(recentRefresh.finishedAt) > subMinutes(new Date(), 5)) {
+                        return;
+                    }
+                }
+
+                const id = uuid();
+                this.logger.log(`Starting block index refresh ${id}`);
+
+                await trx("BlockIndexRefresh").insert({ id, startedAt: new Date(), finishedAt: null });
+
+                await trx.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+
+                await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
+
+                this.logger.log(`Completed block index refresh ${id}`);
+            });
         };
-
-        const abortActiveRefreshes = async (activeRefreshes: PGStatActivity[]) => {
-            for (const refresh of activeRefreshes) {
-                await this.entityManager.getKnex("write").raw(`SELECT pg_cancel_backend(?);`, [refresh.pid]);
-            }
-        };
-
-        const activeRefreshes: PGStatActivity[] = await this.entityManager
-            .getKnex("read")
-            .select("pid", "state", "query")
-            .from("pg_stat_activity")
-            .where({
-                state: "active",
-            })
-            .andWhereILike("query", "REFRESH MATERIALIZED VIEW%")
-            .andWhereILike("query", "%block_index_dependencies%");
 
         if (options?.force) {
-            // force refresh -> refresh sync
-            await abortActiveRefreshes(activeRefreshes);
-            await this.refreshRepository.qb().truncate();
+            // Cancel any active refresh queries
+            const activeRefreshes: PGStatActivity[] = await this.entityManager
+                .getKnex("read")
+                .select("pid", "state", "query")
+                .from("pg_stat_activity")
+                .where({ state: "active" })
+                .andWhereILike("query", "REFRESH MATERIALIZED VIEW%")
+                .andWhereILike("query", "%block_index_dependencies%");
+
+            for (const activeRefresh of activeRefreshes) {
+                await knex.raw(`SELECT pg_cancel_backend(?)`, [activeRefresh.pid]);
+            }
+
+            // Use blocking advisory lock to wait for cancelled refresh to release
+            await knex.transaction(async (trx) => {
+                await trx.raw(`SELECT pg_advisory_xact_lock(?, ?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY1, BLOCK_INDEX_REFRESH_LOCK_KEY2]);
+                await trx("BlockIndexRefresh").truncate();
+                await trx.raw(`REFRESH MATERIALIZED VIEW block_index_dependencies`);
+                await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
+            });
+
+            return;
+        }
+
+        const lastRefresh = await this.entityManager
+            .getKnex("read")
+            .select("*")
+            .from("BlockIndexRefresh")
+            .whereNotNull("finishedAt")
+            .orderBy("finishedAt", "desc")
+            .first();
+
+        if (!lastRefresh) {
+            // First refresh -> refresh sync
             await refresh();
             return;
         }
 
-        const refreshIsActive = activeRefreshes.length > 0;
-        if (refreshIsActive) {
-            // refresh in progress -> don't refresh
+        const finishedAt = new Date(lastRefresh.finishedAt);
+        const now = new Date();
+
+        if (finishedAt > subMinutes(now, 5)) {
+            // Newer than 5 minutes -> don't refresh
             return;
-        }
-
-        const lastRefreshes = await this.refreshRepository.find(
-            {},
-            { orderBy: [{ finishedAt: QueryOrder.DESC_NULLS_FIRST }, { startedAt: QueryOrder.DESC }], limit: 1 },
-        );
-        const lastRefresh = lastRefreshes[0];
-
-        if (lastRefreshes.length === 0) {
-            // first refresh -> refresh sync
-            await refresh();
-            return;
-        }
-
-        if (!refreshIsActive && lastRefresh.finishedAt === null) {
-            // faulty DB state -> truncate table
-            await this.refreshRepository.qb().truncate();
-        }
-
-        if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
-            // newer than 5 minutes -> don't refresh
-            return;
-        } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
-            // newer than 15 minutes -> refresh async
+        } else if (finishedAt > subMinutes(now, 15)) {
+            // Between 5 and 15 minutes -> refresh concurrently (async)
             const refreshPromise = refresh({ concurrently: true });
             if (options?.awaitRefresh) {
-                // needed if refresh is executed as a console command
-                // otherwise the command exits and the refresh method is interrupted
                 await refreshPromise;
             }
         } else {
-            // older than 15 minutes / faulty previous refresh -> refresh sync
+            // Older than 15 minutes -> refresh sync (blocking, waits for active refresh)
             await refresh();
         }
     }
