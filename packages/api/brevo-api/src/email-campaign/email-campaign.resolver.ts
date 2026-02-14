@@ -134,14 +134,28 @@ export function createEmailCampaignsResolver({
 
             await this.entityManager.flush();
 
+            const now = new Date();
             let hasScheduleRemoved = false;
 
             if (campaign.brevoId) {
-                if (
-                    campaign.sendingState === SendingState.SENT ||
-                    (campaign.sendingState === SendingState.SCHEDULED && campaign.scheduledAt && campaign.scheduledAt < new Date())
-                ) {
+                if (campaign.sendingState === SendingState.SENT) {
                     throw new Error("Cannot update email campaign that has already been sent.");
+                }
+
+                // If campaign is scheduled in the past, check actual status from Brevo
+                if (campaign.sendingState === SendingState.SCHEDULED && campaign.scheduledAt && campaign.scheduledAt < now) {
+                    const brevoCampaign = await this.brevoApiCampaignsService.loadBrevoCampaignById(campaign);
+                    const actualState = this.brevoApiCampaignsService.getSendingInformationFromBrevoCampaign(brevoCampaign);
+
+                    // If campaign was sent, don't allow updates
+                    if (actualState === SendingState.SENT) {
+                        wrap(campaign).assign({ sendingState: SendingState.SENT });
+                        await this.entityManager.flush();
+                        throw new Error("Cannot update email campaign that has already been sent.");
+                    }
+
+                    // If campaign is still scheduled or in draft, allow updates by resetting state
+                    wrap(campaign).assign({ sendingState: actualState });
                 }
 
                 hasScheduleRemoved = input.scheduledAt === null && campaign.scheduledAt !== null;

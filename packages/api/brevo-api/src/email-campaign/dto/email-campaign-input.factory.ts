@@ -33,7 +33,7 @@ export class EmailCampaignInputFactory {
             @IsUndefinable() // When sending undefined, the previous scheduledAt value will be kept
             @IsNullable() // When sending null, the scheduledAt value will be removed
             @IsDate()
-            @MinDate(new Date())
+            @MinDate(() => new Date())
             @Field(() => Date, { nullable: true })
             scheduledAt?: Date | null;
 
