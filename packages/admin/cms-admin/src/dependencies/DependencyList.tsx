@@ -175,7 +175,9 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
         },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (!loading && ((data?.item.dependencies && data?.item.dependents) || (!data?.item.dependents && !data?.item.dependencies))) {
         throw new Error("Either dependencies or dependents must be defined, but not both.");

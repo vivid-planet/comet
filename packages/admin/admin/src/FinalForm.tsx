@@ -137,7 +137,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
         // Explicit cast to set InitialFormValues because FormRenderProps doesn't pass InitialFormValues to RenderableProps here:
         // https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L56-L67.
         // See https://github.com/final-form/react-final-form/pull/998.
-        if (props.apiRef) props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>;
+        if (props.apiRef) {
+            props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>;
+        }
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
         const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
@@ -149,7 +151,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                     // if we are inside a SaveBoundary, save the whole SaveBoundary
                     return saveBoundaryApi.save();
                 }
-                if (!formRenderProps.dirty) return;
+                if (!formRenderProps.dirty) {
+                    return;
+                }
                 return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
                         () => {
@@ -264,7 +268,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
     async function handleSubmit(values: FormValues, form: FormApi<FormValues, InitialFormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
-        if (ret === undefined) return ret;
+        if (ret === undefined) {
+            return ret;
+        }
 
         return Promise.resolve(ret)
             .then((data) => {

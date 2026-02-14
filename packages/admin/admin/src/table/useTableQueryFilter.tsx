@@ -37,7 +37,9 @@ export function useTableQueryFilter<FilterValues>(
     }
 
     useEffect(() => {
-        if (!ref.current) return;
+        if (!ref.current) {
+            return;
+        }
         const unsubscribe = ref.current.subscribe(
             debounce(
                 (formState) => {

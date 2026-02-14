@@ -28,7 +28,9 @@ export const MediaGalleryBlock = withPreview(
         const intl = useIntl();
 
         useEffect(() => {
-            if (!swiper) return;
+            if (!swiper) {
+                return;
+            }
 
             const updateInert = () => {
                 swiper.slides.forEach((slide, index) => {

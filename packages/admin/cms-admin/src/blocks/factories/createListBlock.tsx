@@ -110,10 +110,11 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
     ) => BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>>,
 ): BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
-    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
+    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks) {
         throw new Error(
             `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
         );
+    }
 
     const getDefaultListEntry = () => ({
         key: uuid(),

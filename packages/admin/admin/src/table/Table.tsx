@@ -41,13 +41,17 @@ export interface ITableHeadColumnsProps<TRow extends IRow> {
  */
 export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITableHeadColumnsProps<TRow>) {
     const handleSortClick = (name: string, ev: MouseEvent) => {
-        if (sortApi) sortApi.changeSort(name);
+        if (sortApi) {
+            sortApi.changeSort(name);
+        }
     };
 
     return (
         <>
             {columns.map((column: any, colIndex: number) => {
-                if (!isVisible(VisibleType.Browser, column.visible)) return null;
+                if (!isVisible(VisibleType.Browser, column.visible)) {
+                    return null;
+                }
                 const { name, header, sortable, headerProps } = column;
                 return (
                     <TableCell key={colIndex} {...headerProps}>
@@ -84,7 +88,9 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
     return (
         <>
             {columns.map((column: any, colIndex: number) => {
-                if (!isVisible(VisibleType.Browser, column.visible)) return null;
+                if (!isVisible(VisibleType.Browser, column.visible)) {
+                    return null;
+                }
                 return (
                     <TableCell key={colIndex} {...column.cellProps}>
                         {column.render ? column.render(row) : safeColumnGet(row, column.name)}

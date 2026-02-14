@@ -66,7 +66,9 @@ describe("GenerateCrudInputEmbedded", () => {
             const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithEmbedded"));
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity-with-embedded.resolver.ts");
-            if (!foundFile) throw new Error("File not found");
+            if (!foundFile) {
+                throw new Error("File not found");
+            }
         });
         afterEach(async () => {
             await orm.close();
@@ -74,7 +76,9 @@ describe("GenerateCrudInputEmbedded", () => {
 
         it("filter for embedded field should exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-embedded.filter.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             // console.log(file.content);
             const source = parseSource(file.content);
@@ -102,7 +106,9 @@ describe("GenerateCrudInputEmbedded", () => {
 
         it("input for embedded field should exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-embedded.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             // console.log(file.content);
             const source = parseSource(file.content);
@@ -130,7 +136,9 @@ describe("GenerateCrudInputEmbedded", () => {
 
         it("sort for embedded field should exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-embedded.sort.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             // console.log(file.content);
             const source = parseSource(file.content);
@@ -163,7 +171,9 @@ describe("GenerateCrudInputEmbedded", () => {
             const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithoutEmbedded"));
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity-without-embedded.resolver.ts");
-            if (!foundFile) throw new Error("File not found");
+            if (!foundFile) {
+                throw new Error("File not found");
+            }
         });
         afterEach(async () => {
             await orm.close();
@@ -171,7 +181,9 @@ describe("GenerateCrudInputEmbedded", () => {
 
         it("filter for embedded field should not exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity-without-embedded.filter.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             // console.log(file.content);
             const source = parseSource(file.content);
@@ -197,7 +209,9 @@ describe("GenerateCrudInputEmbedded", () => {
 
         it("input for embedded field should not exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity-without-embedded.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             // console.log(file.content);
             const source = parseSource(file.content);
@@ -224,7 +238,9 @@ describe("GenerateCrudInputEmbedded", () => {
 
         it("sort for embedded field should not exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity-without-embedded.sort.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             // console.log(file.content);
             const source = parseSource(file.content);

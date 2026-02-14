@@ -49,13 +49,17 @@ export type GqlFilter = {
 };
 
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
-    if (!filterModel) return { filter: {} };
+    if (!filterModel) {
+        return { filter: {} };
+    }
     const filterItems = filterModel.items.map((filterItem) => {
         const column = columns.find((col) => col.field === filterItem.field);
         if (column?.toGqlFilter) {
             return column.toGqlFilter(filterItem);
         }
-        if (!filterItem.operator) throw new Error("operator not set");
+        if (!filterItem.operator) {
+            throw new Error("operator not set");
+        }
         const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
         const value = ["isEmpty", "isNotEmpty"].includes(gqlOperator) ? true : filterItem.value;
         return {

@@ -73,11 +73,15 @@ export function findIntrospectionObjectType({
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
         | undefined;
-    if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
+    if (!introspectionObject) {
+        throw new Error(`didn't find object ${gqlType} in gql introspection`);
+    }
 
     function findIntrospectionField(introspectionObject: IntrospectionObjectType, name: string) {
         const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-        if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+        if (!introspectionField) {
+            throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+        }
         let introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
         const multiple = introspectionFieldType?.kind === "LIST";
@@ -86,11 +90,15 @@ export function findIntrospectionObjectType({
                 introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
         }
 
-        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
+        if (introspectionFieldType.kind !== "OBJECT") {
+            throw new Error(`asyncSelect only supports OBJECT types`);
+        }
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
             | IntrospectionObjectType
             | undefined;
-        if (!objectType) throw new Error(`Object type ${introspectionFieldType.name} not found for field ${name}`);
+        if (!objectType) {
+            throw new Error(`Object type ${introspectionFieldType.name} not found for field ${name}`);
+        }
         return { multiple, objectType };
     }
     if (config.type === "asyncSelectFilter") {
@@ -99,7 +107,9 @@ export function findIntrospectionObjectType({
             multiple: false,
             objectType: config.loadValueQueryField.split(".").reduce((acc, fieldName) => {
                 const introspectionField = findIntrospectionField(acc, fieldName);
-                if (introspectionField.multiple) throw new Error(`asyncSelectFilter does not support list fields in loadValueQueryField`);
+                if (introspectionField.multiple) {
+                    throw new Error(`asyncSelectFilter does not support list fields in loadValueQueryField`);
+                }
                 return introspectionField.objectType;
             }, introspectionObject),
         };
@@ -163,7 +173,9 @@ export function generateAsyncSelect({
     if (!labelField) {
         labelField = objectType.fields.find((field) => {
             let type = field.type;
-            if (type.kind == "NON_NULL") type = type.ofType;
+            if (type.kind == "NON_NULL") {
+                type = type.ofType;
+            }
             if ((field.name == "name" || field.name == "title") && type.kind == "SCALAR" && type.name == "String") {
                 return true;
             }
@@ -174,7 +186,9 @@ export function generateAsyncSelect({
     if (!labelField) {
         labelField = objectType.fields.find((field) => {
             let type = field.type;
-            if (type.kind == "NON_NULL") type = type.ofType;
+            if (type.kind == "NON_NULL") {
+                type = type.ofType;
+            }
             if (field.type.kind == "SCALAR" && field.type.name == "String") {
                 return true;
             }

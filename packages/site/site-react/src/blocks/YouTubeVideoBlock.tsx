@@ -91,14 +91,24 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("enablejsapi", "1");
 
         // start playing the video when the preview image has been hidden
-        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
+        if (hasPreviewImage && !showPreviewImage) {
+            searchParams.append("autoplay", "1");
+        }
 
-        if (autoplay) searchParams.append("mute", "1");
+        if (autoplay) {
+            searchParams.append("mute", "1");
+        }
 
-        if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
+        if (showControls !== undefined) {
+            searchParams.append("controls", Number(showControls).toString());
+        }
 
-        if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
-        if (loop && identifier) searchParams.append("playlist", identifier);
+        if (loop !== undefined) {
+            searchParams.append("loop", Number(loop).toString());
+        }
+        if (loop && identifier) {
+            searchParams.append("playlist", identifier);
+        }
 
         const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
         const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);

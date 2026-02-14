@@ -24,7 +24,9 @@ function createPreviewUrl(
     { damFile, cropArea }: ImageBlockState,
     { apiUrl, damBasePath, resize }: { apiUrl: string; resize?: { width: number; height: number }; damBasePath: string },
 ): string {
-    if (!damFile || !damFile.image) return "";
+    if (!damFile || !damFile.image) {
+        return "";
+    }
 
     const urlTemplateRoute = `/${damBasePath}/images/preview/$fileId/crop:$crop/resize:$resizeWidth:$resizeHeight/$fileName`;
     const imageCropArea = cropArea ? cropArea : damFile.image.cropArea;
@@ -234,8 +236,12 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.damFile?.altText) contents.push(state.damFile.altText);
-        if (state.damFile?.title) contents.push(state.damFile.title);
+        if (state.damFile?.altText) {
+            contents.push(state.damFile.altText);
+        }
+        if (state.damFile?.title) {
+            contents.push(state.damFile.title);
+        }
 
         return contents;
     },

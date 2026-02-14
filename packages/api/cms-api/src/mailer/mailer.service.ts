@@ -76,15 +76,23 @@ export class MailerService {
 
         if (logMail && !this.mailerConfig.disableMailLog) {
             await this.entityManager.fork().transactional(async (em) => {
-                if (!logEntryId) return;
+                if (!logEntryId) {
+                    return;
+                }
                 const logEntry = await em.getRepository(MailerLog).findOne({ id: logEntryId });
-                if (!logEntry) return;
+                if (!logEntry) {
+                    return;
+                }
 
-                if (result.messageId) logEntry.assign({ status: MailerLogStatus.sent });
+                if (result.messageId) {
+                    logEntry.assign({ status: MailerLogStatus.sent });
+                }
                 logEntry.assign({ result: result });
             });
         }
-        if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
+        if (!result.messageId) {
+            throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
+        }
 
         // Delete outdated logs, purposely not using await because it is not important for the mail sending process
         this.mailerLogRepository.nativeDelete({ createdAt: { $lt: subDays(new Date(), this.mailerConfig.daysToKeepMailLog ?? 90) } });

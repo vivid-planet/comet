@@ -77,7 +77,9 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
 }
 
 const getTooltipProps = (infoTooltip: SectionHeadlineProps["infoTooltip"]) => {
-    if (!infoTooltip) return null;
+    if (!infoTooltip) {
+        return null;
+    }
 
     if (isValidElement(infoTooltip) || typeof infoTooltip === "string") {
         return {

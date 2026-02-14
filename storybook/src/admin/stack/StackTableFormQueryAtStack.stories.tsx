@@ -133,7 +133,9 @@ function ExampleForm(props: IExampleFormProps) {
 
     const { loading, data, error } = useQuery(detailQuery, { variables: { id: props.id } });
 
-    if (error) return <p>Error :( {error.toString()}</p>;
+    if (error) {
+        return <p>Error :( {error.toString()}</p>;
+    }
 
     return (
         <>

@@ -31,7 +31,9 @@ export class TableDeleteButton extends Component<IProps> {
         return (
             <DeleteMutation mutation={mutation} refetchQueries={refetchQueries}>
                 {(deleteBrand, { loading }) => {
-                    if (loading) return <CircularProgress />;
+                    if (loading) {
+                        return <CircularProgress />;
+                    }
 
                     const onClick = this.handleDeleteClick.bind(this, deleteBrand);
 

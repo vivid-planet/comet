@@ -185,7 +185,9 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                 </sc.InnerBlock>
                 <sc.RowClickContainer
                     onClick={() => {
-                        if (props.onContentClick) props.onContentClick();
+                        if (props.onContentClick) {
+                            props.onContentClick();
+                        }
                     }}
                 />
 

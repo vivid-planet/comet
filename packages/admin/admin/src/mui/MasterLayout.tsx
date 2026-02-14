@@ -76,7 +76,9 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!menuRef.current) return;
+        if (!menuRef.current) {
+            return;
+        }
 
         const resizeObserver = new ResizeObserver(([entry]) => {
             if (entry) {

@@ -166,7 +166,9 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
-                            if (!item) return null;
+                            if (!item) {
+                                return null;
+                            }
 
                             if (isValidElement(item)) {
                                 return item;
@@ -199,7 +201,9 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {
-                            if (!item) return;
+                            if (!item) {
+                                return;
+                            }
 
                             if (isValidElement(item)) {
                                 return item;

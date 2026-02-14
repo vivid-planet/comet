@@ -55,7 +55,9 @@ export type Prop = {
 };
 
 function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; gridPropsParamsCode: string } {
-    if (!props.length) return { gridPropsTypeCode: "", gridPropsParamsCode: "" };
+    if (!props.length) {
+        return { gridPropsTypeCode: "", gridPropsParamsCode: "" };
+    }
     const uniqueProps = props.reduce<Prop[]>((acc, prop) => {
         const propWithSameName = acc.find((filteredProps) => filteredProps.name === prop.name);
         if (propWithSameName) {
@@ -299,7 +301,9 @@ export function generateGrid<T extends { __typename?: string }>(
     const updateInputArg = updateMutationType?.args.find((arg) => arg.name === "input");
     if (allowRowReordering && updateInputArg) {
         const inputType = findInputObjectType(updateInputArg, gqlIntrospection);
-        if (!inputType) throw new Error("Can't find update input type");
+        if (!inputType) {
+            throw new Error("Can't find update input type");
+        }
         if (!inputType.inputFields?.find((field) => field.name === "position")) {
             throw new Error("Position field is needed when using 'rowReordering'");
         }
@@ -348,7 +352,9 @@ export function generateGrid<T extends { __typename?: string }>(
     let filterFields: string[] = [];
     if (filterArg) {
         const filterType = findInputObjectType(filterArg, gqlIntrospection);
-        if (!filterType) throw new Error("Can't find filter type");
+        if (!filterType) {
+            throw new Error("Can't find filter type");
+        }
         filterFields = filterType.inputFields.map((f) => f.name.replace(/_/g, "."));
 
         const {
@@ -388,16 +394,26 @@ export function generateGrid<T extends { __typename?: string }>(
         const sortType = gqlIntrospection.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === sortTypeName) as
             | IntrospectionInputObjectType
             | undefined;
-        if (!sortType) throw new Error("Can't find sort type");
+        if (!sortType) {
+            throw new Error("Can't find sort type");
+        }
         const sortField = sortType.inputFields.find((i) => i.name == "field");
-        if (!sortField) throw new Error("Can't find sortFieldName");
-        if (sortField.type.kind !== "NON_NULL") throw new Error("sortField must be NON_NULL");
-        if (sortField.type.ofType.kind != "ENUM") throw new Error("sortField must be NON_NULL->ENUM");
+        if (!sortField) {
+            throw new Error("Can't find sortFieldName");
+        }
+        if (sortField.type.kind !== "NON_NULL") {
+            throw new Error("sortField must be NON_NULL");
+        }
+        if (sortField.type.ofType.kind != "ENUM") {
+            throw new Error("sortField must be NON_NULL->ENUM");
+        }
         const sortFieldEnumName = sortField.type.ofType.name;
         const sortInputEnum = gqlIntrospection.__schema.types.find((type) => type.kind === "ENUM" && type.name === sortFieldEnumName) as
             | IntrospectionEnumType
             | undefined;
-        if (!sortInputEnum) throw new Error("Can't find sortInputEnum");
+        if (!sortInputEnum) {
+            throw new Error("Can't find sortInputEnum");
+        }
         sortFields = sortInputEnum.enumValues.map((v) => v.name.replace(/_/g, "."));
         if (allowRowReordering && !sortFields.includes("position")) {
             throw new Error("Sort argument must include 'position' field for row reordering");
@@ -409,7 +425,9 @@ export function generateGrid<T extends { __typename?: string }>(
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
         | undefined;
-    if (!schemaEntity) throw new Error("didn't find entity in schema types");
+    if (!schemaEntity) {
+        throw new Error("didn't find entity in schema types");
+    }
 
     const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig<any>;
     const {
@@ -482,7 +500,9 @@ export function generateGrid<T extends { __typename?: string }>(
         } else if (type == "staticSelect") {
             valueFormatter = `(value, row) => row.${name}?.toString()`;
             const introspectionField = schemaEntity.fields.find((field) => field.name === name);
-            if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+            if (!introspectionField) {
+                throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+            }
             const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
             const enumType = gqlIntrospection.__schema.types.find(

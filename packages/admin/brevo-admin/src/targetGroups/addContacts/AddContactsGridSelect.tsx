@@ -154,7 +154,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
     });
 
     const onDeleteClick = (contactId: number) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
         removeContacts({ variables: { id, input: { brevoContactId: contactId } } });
     };
 
@@ -247,7 +249,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
     const assignedContactsRowCount = useBufferedRowCount(assignedContactsData?.manuallyAssignedBrevoContacts.totalCount);
     const assignableContactsRowCount = useBufferedRowCount(assignableContactsData?.brevoContacts.totalCount);
 
-    if (assignedContactsError || assignableContactsError) throw assignedContactsError ?? assignableContactsError;
+    if (assignedContactsError || assignableContactsError) {
+        throw assignedContactsError ?? assignableContactsError;
+    }
 
     return (
         <>

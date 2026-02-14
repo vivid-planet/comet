@@ -25,7 +25,9 @@ interface SendManagerFieldsProps {
 }
 
 const validateScheduledAt = (value: Date, now: Date) => {
-    if (!value) return;
+    if (!value) {
+        return;
+    }
 
     if (value < now) {
         return (

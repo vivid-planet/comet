@@ -104,12 +104,16 @@ export class UserPermissionsService {
     }
 
     async getUser(id: string): Promise<User> {
-        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        if (!this.userService) {
+            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        }
         return this.userService.getUser(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
-        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        if (!this.userService) {
+            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        }
         return this.userService.findUsers(args);
     }
 
@@ -134,15 +138,21 @@ export class UserPermissionsService {
             const availablePermissions = await this.getAvailablePermissions();
             const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
             if (permissionsByRule === UserPermissions.allPermissions) {
-                if (availablePermissions.some((p) => permissions.includes(p))) return true;
+                if (availablePermissions.some((p) => permissions.includes(p))) {
+                    return true;
+                }
             } else {
-                if (permissionsByRule.some((p) => permissions.includes(p.permission))) return true;
+                if (permissionsByRule.some((p) => permissions.includes(p.permission))) {
+                    return true;
+                }
             }
         }
         if (this.manualPermissions === undefined) {
             throw new Error('You need to call "warmupHasPermissionCache" before using "hasPermission" for the first time.');
         }
-        if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) return true;
+        if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) {
+            return true;
+        }
 
         return false;
     }

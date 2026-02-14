@@ -79,7 +79,9 @@ describe("sort by id", () => {
         const formattedOut = await formatGeneratedFiles(out);
 
         const file = formattedOut.find((file) => file.name === "dto/test-entity3s.args.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         expect(file.content).toMatchSnapshot();
         await orm.close();

@@ -62,7 +62,9 @@ export class ImageFixtureService {
             this.svgImageFiles.push(await this.filesService.upload(file, { scope }));
             count++;
 
-            if (count === maximumImageCount) break;
+            if (count === maximumImageCount) {
+                break;
+            }
         }
     }
 

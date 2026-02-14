@@ -106,7 +106,9 @@ describe("Grid Scope", () => {
         );
 
         const match = formOutput.code.match(/import {(.*?)} from "@src\/graphql.generated";/);
-        if (!match) throw new Error("GQL import not found");
+        if (!match) {
+            throw new Error("GQL import not found");
+        }
         const imports = match[1].split(",").map((imp) => imp.trim());
         expect(imports).not.toContain("ProductScope");
         expect(imports).toContain("GQLProductScope");

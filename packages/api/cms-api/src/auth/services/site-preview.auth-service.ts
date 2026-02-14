@@ -17,7 +17,9 @@ export function createSitePreviewAuthService({ sitePreviewSecret }: SitePreviewA
             }
 
             const cookieValue = request.cookies["__comet_site_preview"];
-            if (!cookieValue) return SKIP_AUTH_SERVICE;
+            if (!cookieValue) {
+                return SKIP_AUTH_SERVICE;
+            }
 
             try {
                 const {

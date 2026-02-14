@@ -188,7 +188,9 @@ export class BrevoApiContactsService {
         try {
             const data = await this.getContactsApi(scope).getContactInfo(email);
             const contact = data.body;
-            if (!contact) return null;
+            if (!contact) {
+                return null;
+            }
             return contact;
         } catch (error) {
             // Brevo returns a 404 error if no contact is found and a 400 error if an invalid email is provided.

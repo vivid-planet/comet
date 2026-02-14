@@ -106,7 +106,9 @@ describe("GenerateCrudPosition", () => {
 
         const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithPositionField"));
         const file = out.find((file) => file.name == "test-entity-with-position-fields.service.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         const formattedOut = await formatSource(file.content);
         const source = parseSource(formattedOut);
@@ -142,7 +144,9 @@ describe("GenerateCrudPosition", () => {
 
         const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithPositionFieldAndScope"));
         const file = out.find((file) => file.name == "test-entity-with-position-field-and-scopes.service.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         const formattedOut = await formatSource(file.content);
         const source = parseSource(formattedOut);
@@ -175,7 +179,9 @@ describe("GenerateCrudPosition", () => {
             orm.em.getMetadata().get("TestEntityWithPositionGroup"),
         );
         const file = out.find((file) => file.name == "test-entity-with-position-groups.service.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         const formattedOut = await formatSource(file.content);
         const source = parseSource(formattedOut);
