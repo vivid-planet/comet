@@ -1,18 +1,20 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    CrudContextMenu,
     DataGridToolbar,
     FillSpace,
     type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    RowActionsItem,
     StackSwitchApiContext,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
-import { Chip, IconButton, Typography } from "@mui/material";
+import { Edit, ImpersonateUser, Reset } from "@comet/admin-icons";
+import { Chip, CircularProgress, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
@@ -20,13 +22,17 @@ import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsCompon
 import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { useUserPermissionCheck } from "./hooks/currentUser";
+import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
+import { useCurrentUser, useUserPermissionCheck } from "./hooks/currentUser";
 import {
     type GQLUserAvailablePermissionsAndContentScopesQuery,
     type GQLUserForGridFragment,
     type GQLUserGridQuery,
     type GQLUserGridQueryVariables,
+    type GQLUserImpersonationCheckQuery,
+    type GQLUserImpersonationCheckQueryVariables,
 } from "./UserGrid.generated";
+import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
@@ -185,14 +191,21 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         pinned: "right",
         disableExport: true,
         renderCell: (params) => (
-            <IconButton
-                onClick={() => {
-                    stackApi.activatePage("edit", params.id.toString());
-                }}
-                color="primary"
-            >
-                <Edit />
-            </IconButton>
+            <>
+                <IconButton
+                    onClick={() => {
+                        stackApi.activatePage("edit", params.id.toString());
+                    }}
+                    color="primary"
+                >
+                    <Edit />
+                </IconButton>
+                {isAllowed("impersonation") && (
+                    <CrudContextMenu>
+                        <ImpersonateMenuItem userId={params.row.id} />
+                    </CrudContextMenu>
+                )}
+            </>
         ),
     });
 
@@ -250,3 +263,57 @@ const NameBox = styled("div")({
     fontWeight: "bold",
     fontSize: "small",
 });
+
+const userImpersonationCheckQuery = gql`
+    query UserImpersonationCheck($id: String!) {
+        user: userPermissionsUserById(id: $id) {
+            id
+            impersonationAllowed
+        }
+    }
+`;
+
+function ImpersonateMenuItem({ userId }: { userId: string }) {
+    const currentUser = useCurrentUser();
+
+    if (currentUser.impersonated) {
+        return (
+            <RowActionsItem icon={<Reset />} onClick={() => stopImpersonation()}>
+                {commonImpersonationMessages.stopImpersonation}
+            </RowActionsItem>
+        );
+    }
+
+    return <StartImpersonationMenuItem userId={userId} />;
+}
+
+function StartImpersonationMenuItem({ userId }: { userId: string }) {
+    const currentUser = useCurrentUser();
+    const isSelf = currentUser.id === userId;
+
+    const { data, loading } = useQuery<GQLUserImpersonationCheckQuery, GQLUserImpersonationCheckQueryVariables>(userImpersonationCheckQuery, {
+        variables: { id: userId },
+        skip: isSelf,
+    });
+    const impersonationAllowed = data?.user.impersonationAllowed ?? false;
+
+    const label = loading ? (
+        <FormattedMessage id="comet.userPermissions.evaluatingPermissions" defaultMessage="Evaluating permissions" />
+    ) : isSelf ? (
+        <FormattedMessage id="comet.userPermissions.cannotImpersonateYourself" defaultMessage="Cannot impersonate yourself" />
+    ) : !impersonationAllowed ? (
+        <FormattedMessage id="comet.userPermissions.cannotImpersonate" defaultMessage="Cannot impersonate" />
+    ) : (
+        commonImpersonationMessages.startImpersonation
+    );
+
+    return (
+        <RowActionsItem
+            icon={loading ? <CircularProgress size={16} /> : <ImpersonateUser />}
+            disabled={loading || !impersonationAllowed || isSelf}
+            onClick={() => startImpersonation(userId)}
+        >
+            {label}
+        </RowActionsItem>
+    );
+}
