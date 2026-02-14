@@ -1,3 +1,4 @@
+import isEqual from "lodash.isequal";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
@@ -86,18 +87,6 @@ function defaultCreateUrl(scope: ContentScope) {
     return Object.entries(formattedMatchParams).reduce((a, [, value]) => `${a}/${value}`, "");
 }
 
-function isScopeEqual(scope1: ContentScope, scope2: ContentScope): boolean {
-    // Check that both scopes have the same keys
-    const keys1 = Object.keys(scope1).sort();
-    const keys2 = Object.keys(scope2).sort();
-
-    if (keys1.length !== keys2.length) return false;
-    if (!keys1.every((key, index) => key === keys2[index])) return false;
-
-    // Check that all values match
-    return keys1.every((key) => scope1[key] === scope2[key]);
-}
-
 // @TODO: scope can no longer be undefined
 // @TODO: remove supported attribute
 // @TODO: provide default empty scope "{}"
@@ -176,7 +165,7 @@ export function ContentScopeProvider({
     if (storedScope && storedScope !== "undefined") {
         const parsedStoredScope = JSON.parse(storedScope);
         // Validate that the stored scope is in the user's allowed scopes
-        const isStoredScopeAllowed = values.some((value) => isScopeEqual(parsedStoredScope, value.scope));
+        const isStoredScopeAllowed = values.some((value) => isEqual(parsedStoredScope, value.scope));
 
         if (isStoredScopeAllowed) {
             defaultUrl = location.createUrl(parsedStoredScope);
