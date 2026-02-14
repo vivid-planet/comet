@@ -1,14 +1,19 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { RouterMemoryRouter } from "@comet/admin";
-import { render, waitFor } from "@testing-library/react";
+import { cleanup, render, waitFor } from "@testing-library/react";
 import { type ReactNode } from "react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { useLocation } from "react-router";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
 import { contentScopeLocalStorageKey } from "./ContentScopeSelect";
 import { ContentScopeProvider } from "./Provider";
 
 describe("ContentScopeProvider", () => {
+    afterEach(() => {
+        cleanup();
+    });
+
     beforeEach(() => {
         // Clear localStorage before each test
         localStorage.clear();
@@ -18,6 +23,12 @@ describe("ContentScopeProvider", () => {
             writable: true,
         });
     });
+
+    let currentPathname: string;
+    function LocationCapture() {
+        currentPathname = useLocation().pathname;
+        return null;
+    }
 
     function Wrapper({ children }: { children: ReactNode }) {
         return (
@@ -36,7 +47,10 @@ describe("ContentScopeProvider", () => {
                         isAllowed: () => true,
                     }}
                 >
-                    <RouterMemoryRouter>{children}</RouterMemoryRouter>
+                    <RouterMemoryRouter>
+                        {children}
+                        <LocationCapture />
+                    </RouterMemoryRouter>
                 </CurrentUserContext.Provider>
             </MockedProvider>
         );
@@ -66,8 +80,9 @@ describe("ContentScopeProvider", () => {
         });
 
         // The stored scope should still be in localStorage since it's valid
-        const storedAfter = localStorage.getItem(contentScopeLocalStorageKey);
-        expect(storedAfter).toBe(JSON.stringify(storedScope));
+        expect(localStorage.getItem(contentScopeLocalStorageKey)).toBe(JSON.stringify(storedScope));
+        // URL should reflect the stored scope
+        expect(currentPathname).toBe("/main/de");
     });
 
     it("should clear stored scope when it is not in allowed scopes", async () => {
@@ -94,8 +109,9 @@ describe("ContentScopeProvider", () => {
         });
 
         // The stored scope should be cleared from localStorage since it's invalid
-        const storedAfter = localStorage.getItem(contentScopeLocalStorageKey);
-        expect(storedAfter).toBeNull();
+        expect(localStorage.getItem(contentScopeLocalStorageKey)).toBeNull();
+        // URL should fall back to the default scope
+        expect(currentPathname).toBe("/main/en");
     });
 
     it("should use default scope when no scope is stored", async () => {
@@ -120,8 +136,9 @@ describe("ContentScopeProvider", () => {
         });
 
         // No scope should be stored
-        const storedAfter = localStorage.getItem(contentScopeLocalStorageKey);
-        expect(storedAfter).toBeNull();
+        expect(localStorage.getItem(contentScopeLocalStorageKey)).toBeNull();
+        // URL should use the default scope
+        expect(currentPathname).toBe("/main/en");
     });
 
     it("should handle partial scope matches correctly", async () => {
@@ -148,8 +165,9 @@ describe("ContentScopeProvider", () => {
         });
 
         // The partial scope should be cleared since it doesn't exactly match any allowed scope
-        const storedAfter = localStorage.getItem(contentScopeLocalStorageKey);
-        expect(storedAfter).toBeNull();
+        expect(localStorage.getItem(contentScopeLocalStorageKey)).toBeNull();
+        // URL should fall back to the default scope
+        expect(currentPathname).toBe("/main/en");
     });
 
     it("should use default scope when localStorage contains 'undefined' string", async () => {
@@ -171,8 +189,10 @@ describe("ContentScopeProvider", () => {
             expect(container.textContent).toContain("Content");
         });
 
-        // The "undefined" string should be left as-is since it's handled by the check on line 176
+        // The "undefined" string should be left as-is since it's handled by the check
         // The provider uses the default scope instead of trying to parse "undefined"
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBe("undefined");
+        // URL should use the default scope
+        expect(currentPathname).toBe("/main/en");
     });
 });
