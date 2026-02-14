@@ -15,7 +15,7 @@ import {
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
+import { CircularProgress, DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -37,9 +37,11 @@ import DamContextMenu from "./DamContextMenu";
 import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { DamTableFilter } from "./filter/DamTableFilter";
-import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
+import { damFileUsagesQuery, damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     type GQLDamFileTableFragment,
+    type GQLDamFileUsagesQuery,
+    type GQLDamFileUsagesQueryVariables,
     type GQLDamFolderQuery,
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
@@ -86,6 +88,18 @@ type FolderDataGridToolbarProps = {
         allowedMimetypes?: string[];
     };
 };
+
+function DamFileUsagesCell({ fileId }: { fileId: string }) {
+    const { data, loading } = useQuery<GQLDamFileUsagesQuery, GQLDamFileUsagesQueryVariables>(damFileUsagesQuery, {
+        variables: { id: fileId },
+    });
+
+    if (loading) {
+        return <CircularProgress size={16} />;
+    }
+
+    return data?.damFile?.dependents.totalCount ?? "";
+}
 
 function FolderDataGridToolbar({
     id: currentFolderId,
@@ -554,7 +568,7 @@ const FolderDataGrid = ({
             minWidth: 100,
             renderCell: ({ row }) => {
                 if (isFile(row)) {
-                    return row.dependents.totalCount;
+                    return <DamFileUsagesCell fileId={row.id} />;
                 }
             },
             sortable: false,
