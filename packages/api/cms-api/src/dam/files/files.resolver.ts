@@ -11,13 +11,14 @@ import { CometValidationException } from "../../common/errors/validation.excepti
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FileValidationService } from "../../file-utils/file-validation.service";
 import { createFileUploadInputFromUrl, slugifyFilename } from "../../file-utils/files.utils";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
-import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
+import { CopyDamFilesResponseInterface, createCopyDamFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -27,6 +28,7 @@ import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
+import { FoldersService } from "./folders.service";
 
 export function createFilesResolver({
     File,
@@ -49,7 +51,7 @@ export function createFilesResolver({
     }
 
     const FileArgs = createFileArgs({ Scope });
-    const CopyFilesResponse = createCopyFilesResponseType({ File });
+    const CopyDamFilesResponse = createCopyDamFilesResponseType({ File });
     const FindCopiesOfFileInScopeArgs = createFindCopiesOfFileInScopeArgs({ Scope, hasNonEmptyScope });
 
     @ObjectType()
@@ -60,9 +62,11 @@ export function createFilesResolver({
     class FilesResolver {
         constructor(
             private readonly filesService: FilesService,
+            private readonly foldersService: FoldersService,
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
+            private readonly contentScopeService: ContentScopeService,
             private readonly entityManager: EntityManager,
         ) {}
 
@@ -136,9 +140,8 @@ export function createFilesResolver({
             return this.filesService.moveBatch(files, targetFolder);
         }
 
-        @Mutation(() => CopyFilesResponse)
-        @AffectedEntity(File, { idArg: "fileIds" })
-        @AffectedEntity(Folder, { idArg: "inboxFolderId" })
+        /** @deprecated Use copyDamFiles() instead */
+        @Mutation(() => CopyDamFilesResponse, { deprecationReason: "Use copyDamFiles instead" })
         @SkipBuild()
         async copyFilesToScope(
             @GetCurrentUser() user: CurrentUser,
@@ -147,11 +150,56 @@ export function createFilesResolver({
                 type: () => ID,
             })
             inboxFolderId: string,
-        ): Promise<CopyFilesResponseInterface> {
-            const copyFilesResponse = await this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
+        ): Promise<CopyDamFilesResponseInterface> {
+            return this.copyDamFiles(user, fileIds, inboxFolderId);
+        }
+
+        @Mutation(() => CopyDamFilesResponse)
+        @AffectedEntity(File, { idArg: "fileIds" })
+        @AffectedEntity(Folder, { idArg: "targetFolderId", nullable: true })
+        @SkipBuild()
+        async copyDamFiles(
+            @GetCurrentUser() user: CurrentUser,
+            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
+            @Args("targetFolderId", {
+                type: () => ID,
+                nullable: true,
+            })
+            targetFolderId?: string | null,
+            @Args("targetScope", {
+                type: () => Scope,
+                nullable: true,
+                defaultValue: hasNonEmptyScope ? undefined : {},
+                description: "Not needed when using targetFolderId",
+            })
+            targetScope?: typeof Scope | null,
+        ): Promise<CopyDamFilesResponseInterface> {
+            const targetFolder = targetFolderId ? await this.foldersService.findOneById(targetFolderId) : null;
+            if (targetFolderId && !targetFolder) {
+                throw new Error("Specified target folder doesn't exist.");
+            }
+            if (targetScope && targetFolder?.scope && !this.contentScopeService.scopesAreEqual(targetScope, targetFolder.scope)) {
+                throw new Error("targetScope and targetFolder.scope don't match");
+            }
+
+            const scope = nonEmptyScopeOrNothing(targetScope ?? targetFolder?.scope ?? ({} as DamScopeInterface));
+
+            const files = await this.filesService.findMultipleByIds(fileIds);
+            if (files.length === 0) {
+                throw new Error("No valid file ids provided");
+            }
+
+            const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
+            for (const file of files) {
+                const copiedFile = await this.filesService.createCopyOfFile(file, {
+                    targetFolder,
+                    targetScope: scope,
+                });
+                mappedFiles.push({ rootFile: file, copy: copiedFile });
+            }
 
             await this.entityManager.flush();
-            return copyFilesResponse;
+            return { mappedFiles };
         }
 
         @Mutation(() => File)

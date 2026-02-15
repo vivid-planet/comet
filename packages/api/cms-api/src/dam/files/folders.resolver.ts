@@ -3,6 +3,7 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { DamScopeInterface } from "../types";
@@ -39,7 +40,10 @@ export function createFoldersResolver({
     @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => Folder)
     class FoldersResolver {
-        constructor(private readonly foldersService: FoldersService) {}
+        constructor(
+            private readonly foldersService: FoldersService,
+            private readonly contentScopeService: ContentScopeService,
+        ) {}
 
         @Query(() => [Folder])
         async damFoldersFlat(
@@ -98,6 +102,43 @@ export function createFoldersResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
         ): Promise<FolderInterface[]> {
             return this.foldersService.moveBatch({ folderIds, targetFolderId }, nonEmptyScopeOrNothing(scope));
+        }
+
+        @Mutation(() => [Folder])
+        @AffectedEntity(Folder, { idArg: "folderIds" })
+        @AffectedEntity(Folder, { idArg: "targetFolderId", nullable: true })
+        @SkipBuild()
+        async copyDamFolders(
+            @Args("folderIds", { type: () => [ID] }) folderIds: string[],
+            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId?: string | null,
+            @Args("targetScope", {
+                type: () => Scope,
+                nullable: true,
+                defaultValue: hasNonEmptyScope ? undefined : {},
+                description: "Not needed when using targetFolderId",
+            })
+            targetScope?: typeof Scope | null,
+        ): Promise<FolderInterface[]> {
+            const targetFolder = targetFolderId ? await this.foldersService.findOneById(targetFolderId) : null;
+            if (targetFolderId && !targetFolder) {
+                throw new Error("Specified target folder doesn't exist.");
+            }
+            if (targetScope && targetFolder?.scope && !this.contentScopeService.scopesAreEqual(targetScope, targetFolder.scope)) {
+                throw new Error("targetScope and targetFolder.scope don't match");
+            }
+
+            const scope = nonEmptyScopeOrNothing(targetScope ?? targetFolder?.scope ?? ({} as DamScopeInterface));
+
+            const copiedFolders: FolderInterface[] = [];
+            for (const folderId of folderIds) {
+                const copiedFolder = await this.foldersService.copyFolder(folderId, {
+                    targetParentId: targetFolderId ?? undefined,
+                    targetScope: scope,
+                });
+                copiedFolders.push(copiedFolder);
+            }
+
+            return copiedFolders;
         }
 
         @Mutation(() => Boolean)

@@ -442,7 +442,28 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async createCopyOfFile(file: FileInterface, { inboxFolder }: { inboxFolder: FolderInterface }) {
+    async createCopyOfFile(
+        file: FileInterface,
+        {
+            inboxFolder,
+            targetFolder: inputTargetFolder,
+            targetScope: inputTargetScope,
+        }: {
+            /** @deprecated Use targetFolder instead */
+            inboxFolder?: FolderInterface;
+            targetFolder?: FolderInterface | null;
+            targetScope?: DamScopeInterface;
+        },
+    ) {
+        const targetFolder = inputTargetFolder !== undefined ? inputTargetFolder : inboxFolder;
+        if (targetFolder === undefined) {
+            throw new Error("targetFolder cannot be undefined");
+        }
+        if (inputTargetScope && targetFolder?.scope && !this.contentScopeService.scopesAreEqual(inputTargetScope, targetFolder.scope)) {
+            throw new Error("Passed scope and scope of target folder don't match");
+        }
+        const targetScope = inputTargetScope ?? targetFolder?.scope;
+
         let fileImageInput: ImageFileInput | undefined;
         if (file.image) {
             const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
@@ -465,9 +486,10 @@ export class FilesService {
         const fileInput: CreateFileInput & { copyOf: FileInterface } = {
             ...Utils.copy(fileProps),
             image: fileImageInput,
-            folderId: inboxFolder.id,
+            folderId: targetFolder?.id,
             copyOf: file,
-            scope: inboxFolder.scope,
+            scope: targetScope,
+            name: await this.findNextAvailableFilename({ filePath: fileProps.name, folderId: targetFolder?.id, scope: targetScope }),
         };
 
         const copiedFile = await this.create(fileInput);
@@ -481,7 +503,7 @@ export class FilesService {
                     continue;
                 }
 
-                const copiedAlternativeFile = await this.createCopyOfFile(alternativeFile, { inboxFolder });
+                const copiedAlternativeFile = await this.createCopyOfFile(alternativeFile, { targetFolder, targetScope });
 
                 const { id: ignoreId, for: ignoreFor, alternative: ignoreAlternative, ...alternativeProps } = alternative;
                 const copiedDamMediaAlternative = this.damMediaAlternativesRepository.create({
@@ -500,6 +522,7 @@ export class FilesService {
         return copiedFile;
     }
 
+    /** @deprecated Loop over FilesService.createCopyOfFile() instead */
     async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {

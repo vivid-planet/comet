@@ -1,11 +1,12 @@
-import { CrudMoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
+import { CrudMoreActionsMenu, messages, useEditDialog, useErrorDialog, useSnackbarApi } from "@comet/admin";
+import { AddFolder as AddFolderIcon, Archive, Copy, Delete, Download, Move, Paste, Restore, Upload } from "@comet/admin-icons";
 import { type PopoverOrigin, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { useRef } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
+import { useCopyPasteDamItems } from "../copyPaste/useCopyPasteDamItems";
 import { useDamFileUpload } from "../fileUpload/useDamFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
 
@@ -20,11 +21,13 @@ interface DamMoreActionsProps {
 
 export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps) => {
     const damSelectionActionsApi = useDamSelectionApi();
-    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
+    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected, copySelected } = damSelectionActionsApi;
+    const errorDialogApi = useErrorDialog();
     const snackbarApi = useSnackbarApi();
     const [, , editDialogApi] = useEditDialog();
     const intl = useIntl();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    const { pasteFromClipboard } = useCopyPasteDamItems();
 
     const folderInputRef = useRef<HTMLInputElement>(null);
 
@@ -81,6 +84,16 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         onClick: () => editDialogApi.openAddDialog(folderId),
                         icon: <AddFolderIcon />,
                     },
+                    {
+                        label: <FormattedMessage {...messages.paste} />,
+                        onClick: async () => {
+                            const { error } = await pasteFromClipboard({ targetFolderId: folderId });
+                            if (error) {
+                                errorDialogApi?.showError({ error: "Cannot paste", userMessage: error });
+                            }
+                        },
+                        icon: <Paste />,
+                    },
                 ]}
                 selectiveActions={[
                     !onlyFoldersSelected
@@ -94,6 +107,11 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         label: <FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />,
                         onClick: moveSelected,
                         icon: <Move />,
+                    },
+                    {
+                        label: <FormattedMessage {...messages.copy} />,
+                        onClick: copySelected,
+                        icon: <Copy />,
                         divider: true,
                     },
                     {

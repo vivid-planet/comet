@@ -325,6 +325,68 @@ export class FoldersService {
         return Number(result.rows[0].row_number) - 1;
     }
 
+    async findNextAvailableFolderName({ name, parentId, scope }: { name: string; parentId?: string; scope?: DamScopeInterface }): Promise<string> {
+        let i = 1;
+        let candidateName = name;
+
+        while ((await this.findOneByNameAndParentId({ name: candidateName, parentId }, scope)) !== null) {
+            candidateName = `${name}-copy${i}`;
+            i++;
+        }
+
+        return candidateName;
+    }
+
+    async copyFolder(
+        folderId: string,
+        {
+            targetParentId,
+            targetScope,
+        }: {
+            targetParentId?: string;
+            targetScope?: DamScopeInterface;
+        },
+    ): Promise<FolderInterface> {
+        const sourceFolder = await this.findOneById(folderId);
+        if (!sourceFolder) {
+            throw new CometEntityNotFoundException();
+        }
+
+        const newName = await this.findNextAvailableFolderName({
+            name: sourceFolder.name,
+            parentId: targetParentId,
+            scope: targetScope,
+        });
+
+        const copiedFolder = await this.create(
+            {
+                name: newName,
+                parentId: targetParentId,
+            },
+            targetScope,
+        );
+
+        // Copy all files from source folder into the new folder
+        const files = await this.filesService.findAll({ folderId });
+        for (const file of files) {
+            await this.filesService.createCopyOfFile(file, {
+                targetFolder: copiedFolder,
+                targetScope,
+            });
+        }
+
+        // Recursively copy all subfolders
+        const subFolders = await this.findAllByParentId({ parentId: folderId });
+        for (const subFolder of subFolders) {
+            await this.copyFolder(subFolder.id, {
+                targetParentId: copiedFolder.id,
+                targetScope,
+            });
+        }
+
+        return copiedFolder;
+    }
+
     async isValidParentForFolder(folderId: string, parentId: string | null): Promise<boolean> {
         const ancestors = await this.findAncestorsByParentId(parentId);
         const ancestorIds = ancestors.map((ancestor) => ancestor.id);
