@@ -126,7 +126,7 @@ export class DependenciesService {
         console.timeEnd("creating block index view");
     }
 
-    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
+    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean; backgroundRefresh?: boolean }): Promise<void> {
         const knex = this.entityManager.getKnex("write");
 
         const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
@@ -188,6 +188,12 @@ export class DependenciesService {
             return;
         }
 
+        if (options?.backgroundRefresh) {
+            // Fire-and-forget: trigger an async concurrent refresh regardless of staleness
+            refresh({ concurrently: true });
+            return;
+        }
+
         const lastRefresh = await this.entityManager
             .getKnex("read")
             .select("*")
@@ -226,9 +232,9 @@ export class DependenciesService {
             rootEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean },
+        options?: { forceRefresh: boolean; backgroundRefresh?: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews({ force: options?.forceRefresh });
+        await this.refreshViews({ force: options?.forceRefresh, backgroundRefresh: options?.backgroundRefresh });
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
@@ -268,9 +274,9 @@ export class DependenciesService {
             targetEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean },
+        options?: { forceRefresh: boolean; backgroundRefresh?: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews({ force: options?.forceRefresh });
+        await this.refreshViews({ force: options?.forceRefresh, backgroundRefresh: options?.backgroundRefresh });
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 

@@ -10,12 +10,14 @@ import {
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
+    Tooltip,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { CircularProgress, DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
+import { Info } from "@comet/admin-icons";
+import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -37,11 +39,9 @@ import DamContextMenu from "./DamContextMenu";
 import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { DamTableFilter } from "./filter/DamTableFilter";
-import { damFileUsagesQuery, damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
+import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     type GQLDamFileTableFragment,
-    type GQLDamFileUsagesQuery,
-    type GQLDamFileUsagesQueryVariables,
     type GQLDamFolderQuery,
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
@@ -88,18 +88,6 @@ type FolderDataGridToolbarProps = {
         allowedMimetypes?: string[];
     };
 };
-
-function DamFileUsagesCell({ fileId }: { fileId: string }) {
-    const { data, loading } = useQuery<GQLDamFileUsagesQuery, GQLDamFileUsagesQueryVariables>(damFileUsagesQuery, {
-        variables: { id: fileId },
-    });
-
-    if (loading) {
-        return <CircularProgress size={16} />;
-    }
-
-    return data?.damFile?.dependents.totalCount ?? "";
-}
 
 function FolderDataGridToolbar({
     id: currentFolderId,
@@ -566,9 +554,22 @@ const FolderDataGrid = ({
             headerAlign: "right",
             align: "right",
             minWidth: 100,
+            renderHeader: ({ colDef }) => (
+                <>
+                    <span className="MuiDataGrid-columnHeaderTitle">{colDef.headerName}</span>
+                    <Tooltip
+                        title={intl.formatMessage({
+                            id: "comet.dam.file.usages.tooltip",
+                            defaultMessage: "This value might be slightly outdated",
+                        })}
+                    >
+                        <Info sx={{ fontSize: 16, color: "text.secondary", ml: "4px" }} />
+                    </Tooltip>
+                </>
+            ),
             renderCell: ({ row }) => {
                 if (isFile(row)) {
-                    return <DamFileUsagesCell fileId={row.id} />;
+                    return row.dependents.totalCount;
                 }
             },
             sortable: false,

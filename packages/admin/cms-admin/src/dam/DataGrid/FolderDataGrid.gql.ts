@@ -34,6 +34,9 @@ const damFileTableFragment = gql`
         updatedAt
         createdAt
         importSourceType
+        dependents(offset: 0, limit: 1, backgroundRefresh: true) {
+            totalCount
+        }
     }
     ${damFileThumbnailFragment}
 `;
@@ -113,17 +116,6 @@ export const moveDamFoldersMutation = gql`
         moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId, scope: $scope) {
             id
             mpath
-        }
-    }
-`;
-
-export const damFileUsagesQuery = gql`
-    query DamFileUsages($id: ID!) {
-        damFile(id: $id) {
-            id
-            dependents(offset: 0, limit: 1) {
-                totalCount
-            }
         }
     }
 `;
