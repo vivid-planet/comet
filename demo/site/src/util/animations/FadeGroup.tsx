@@ -11,6 +11,7 @@ const breakpoints = {
 interface FadeGroupContextValue {
     visible: boolean;
     onVisible: () => void;
+    disabled: boolean;
 }
 
 const FadeGroupContext = createContext<FadeGroupContextValue | null>(null);
@@ -59,7 +60,5 @@ export function FadeGroup({ children, disabledBreakpoints = [] }: { children: Re
         return () => window.removeEventListener("resize", checkDisabledBreakpoints);
     }, [disabledBreakpoints]);
 
-    if (disableFadeGroup) return <>{children}</>;
-
-    return <FadeGroupContext.Provider value={{ visible, onVisible }}>{children}</FadeGroupContext.Provider>;
+    return <FadeGroupContext.Provider value={{ visible, onVisible, disabled: disableFadeGroup }}>{children}</FadeGroupContext.Provider>;
 }

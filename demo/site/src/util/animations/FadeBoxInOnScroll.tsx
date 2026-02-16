@@ -40,16 +40,21 @@ export function FadeBoxInOnScroll({
 
     const groupForceVisible = fadeGroup?.visible ?? false;
     const groupOnVisible = fadeGroup?.onVisible;
+    const groupDisabled = fadeGroup?.disabled ?? false;
+
+    // When FadeGroup is used and disabled in some breakpoints,
+    // the delay should be 0 to avoid raised delay on elements below each other
+    const effectiveDelay = groupDisabled ? 0 : delay;
 
     // Dynamic delay and fade duration for speedup fade in on faster scrolling
-    const dynamicDelay = scrollSpeed > 1 ? delay / (scrollSpeed / 2) : delay;
+    const dynamicDelay = scrollSpeed > 1 ? effectiveDelay / (scrollSpeed / 2) : effectiveDelay;
     const dynamicFadeDuration = scrollSpeed > 1 ? Math.min(500 / (scrollSpeed / 2), 200) : 500;
 
     useEffect(() => {
         const scrollContainer = refScrollContainer.current;
         if (!scrollContainer || previewType === "BlockPreview") return;
 
-        // Dynamic offset for trigger fade in earlier on faster scrolling
+        // Dynamic offset for trigger fade-in earlier on faster scrolling
         const dynamicOffsetScrollSpeed = scrollSpeed > 1 ? scrollSpeed * 100 : 0;
         // Dynamic offset page height for adjusting offset relative to page height
         const dynamicOffsetPageHeight = windowSize ? (windowSize?.height / 2.5) * -1 + offset : offset;
@@ -61,7 +66,7 @@ export function FadeBoxInOnScroll({
                     if (entry.isIntersecting) {
                         setFadeIn(true);
                         onChange?.(entry.isIntersecting);
-                        groupOnVisible?.();
+                        if (!groupDisabled) groupOnVisible?.();
                     }
                 });
             },
@@ -84,28 +89,26 @@ export function FadeBoxInOnScroll({
     const style = { "--fade-delay": `${dynamicDelay ?? 0}ms`, "--fade-duration": `${dynamicFadeDuration ?? 0}ms` } as React.CSSProperties;
 
     return (
-        <div className={clsx(styles.overflowContainer, className)}>
-            <div
-                ref={refScrollContainer}
-                onFocus={() => {
-                    setFadeIn(true);
-                    groupOnVisible?.();
-                }}
-                className={clsx(
-                    styles.scrollContainer,
-                    fullHeight && styles.fullHeight,
-                    direction === "left" && styles.fromLeft,
-                    direction === "right" && styles.fromRight,
-                    direction === "top" && styles.fromTop,
-                    direction === "bottom" && styles.fromBottom,
-                    (previewType === "BlockPreview" || fadeIn || groupForceVisible) && styles.fadeIn,
-                    innerClassName,
-                )}
-                style={style}
-                {...props}
-            >
-                {children}
-            </div>
+        <div
+            ref={refScrollContainer}
+            onFocus={() => {
+                setFadeIn(true);
+                groupOnVisible?.();
+            }}
+            className={clsx(
+                styles.scrollContainer,
+                fullHeight && styles.fullHeight,
+                direction === "left" && styles.fromLeft,
+                direction === "right" && styles.fromRight,
+                direction === "top" && styles.fromTop,
+                direction === "bottom" && styles.fromBottom,
+                (previewType === "BlockPreview" || fadeIn || groupForceVisible) && styles.fadeIn,
+                innerClassName,
+            )}
+            style={style}
+            {...props}
+        >
+            {children}
         </div>
     );
 }
