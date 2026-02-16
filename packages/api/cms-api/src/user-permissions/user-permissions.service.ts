@@ -233,6 +233,7 @@ export class UserPermissionsService {
             permissions: await this.getPermissionsAndContentScopes(user),
             impersonated: !!impersonatedUser,
             authenticatedUser: impersonatedUser ? authenticatedUser : undefined,
+            accountUrl: this.userService?.getAccountUrl ? await this.userService.getAccountUrl(user) : undefined,
         };
     }
 

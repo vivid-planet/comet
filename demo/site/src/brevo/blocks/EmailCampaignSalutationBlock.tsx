@@ -1,5 +1,4 @@
-import { type PropsWithData } from "@comet/mail-react";
-import { MjmlColumn, MjmlText } from "@faire/mjml-react";
+import { MjmlColumn, MjmlText, type PropsWithData } from "@comet/mail-react";
 import { type RichTextBlockData } from "@src/blocks.generated";
 import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
 import { type FC } from "react";

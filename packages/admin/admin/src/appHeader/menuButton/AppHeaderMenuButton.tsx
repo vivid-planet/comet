@@ -11,7 +11,11 @@ export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
 export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderMenuButton" });
-    const { toggleOpen, open, drawerVariant } = useMainNavigation();
+    const { toggleOpen, open, drawerVariant, hasMultipleMenuItems } = useMainNavigation();
+
+    if (!hasMultipleMenuItems) {
+        return null;
+    }
 
     const closeIcons: Record<typeof drawerVariant, ReactNode> = {
         temporary: <Close />,
@@ -44,7 +48,7 @@ const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
         border: 1px solid ${theme.palette.grey.A200};
 
         ${theme.breakpoints.up("md")} {
-            margin: 0 14px;
+            margin: 0 0 0 14px;
         }
     `,
 );

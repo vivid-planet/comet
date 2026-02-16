@@ -2,11 +2,9 @@
 
 ## Project-Setup
 
-### Changes in files
+Add the following to the existing files of your project:
 
-#### /api/src/config/environment-variables.ts
-
-```
+```ts title="/api/src/config/environment-variables.ts"
 @IsString()
 MAILER_HOST: string;
 
@@ -27,9 +25,7 @@ MAILER_SEND_ALL_MAILS_TO?: string[];
 MAILER_SEND_ALL_MAILS_BCC?: string[];
 ```
 
-#### /api/src/config/config.ts
-
-```
+```ts title="/api/src/config/config.ts"
 mailer: {
     // Mailer configuration
     defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
@@ -45,38 +41,32 @@ mailer: {
 },
 ```
 
-#### /docker-compose.yml
-
+```yaml title="/docker-compose.yml"
+services:
+    # ... existing services
+    mailpit:
+        image: axllent/mailpit
+        pull_policy: weekly
+        ports:
+            - "127.0.0.1:1025:1025" # SMTP server
+            - "127.0.0.1:8025:8025" # Web UI
 ```
-mailpit:
-    image: axllent/mailpit
-    pull_policy: weekly
-    ports:
-        - "127.0.0.1:1025:1025" # SMTP server
-        - "127.0.0.1:8025:8025" # Web UI
-```
 
-#### /.env
-
-```
+```sh title="/.env"
 # mailer
 MAILER_HOST=localhost
 MAILER_PORT=1025
 MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 
-#### /api/src/app.module.ts
-
-```
+```ts title="/api/src/app.module.ts"
 imports: [
     ...
     MailerModule.register(config.mailer),
 ]
 ```
 
-#### /deployment/helm/values.tpl.yaml
-
-```
+```yaml title="/deployment/helm/values.tpl.yaml"
 api:
   env:
     ...

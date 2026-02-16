@@ -6,7 +6,7 @@ const fs = require("fs");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
-const port = process.env.APP_PORT ?? 3000;
+const port = process.env.ADMIN_PORT ?? 3000;
 const host = process.env.SERVER_HOST ?? "localhost";
 
 let indexFile = fs.readFileSync("./build/index.html", "utf8");
@@ -85,7 +85,7 @@ app.use(
 );
 
 // As a fallback, route everything to index.html
-app.get("*", (req, res) => {
+app.get("/{*splat}", (req, res) => {
     // Don't cache the index.html at all to make sure applications updates are applied
     // implemented as suggested by https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#preventing_storing
     res.setHeader("cache-control", "no-store");
