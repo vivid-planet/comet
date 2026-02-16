@@ -5,6 +5,7 @@ import { createContext, type Dispatch, type ReactNode, type SetStateAction, useC
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
+import { useCopyPasteDamItems } from "../copyPaste/useCopyPasteDamItems";
 import { type DamItemSelectionMap } from "../FolderDataGrid";
 import {
     type GQLArchiveFilesMutation,
@@ -54,6 +55,11 @@ interface DamSelectionApi {
     downloadSelected: () => void;
     downloading: boolean;
     hasDownloadErrors: boolean;
+
+    // copy
+    copySelected: () => Promise<void>;
+    copying: boolean;
+    hasCopyErrors: boolean;
 }
 
 const DamSelectionContext = createContext<DamSelectionApi>({
@@ -91,6 +97,12 @@ const DamSelectionContext = createContext<DamSelectionApi>({
     },
     downloading: false,
     hasDownloadErrors: false,
+
+    copySelected: () => {
+        throw new Error("Missing DamSelectionContext. Please add a <DamSelectionProvider /> somewhere up in the tree.");
+    },
+    copying: false,
+    hasCopyErrors: false,
 });
 
 export const useDamSelectionApi = () => {
@@ -100,6 +112,7 @@ export const useDamSelectionApi = () => {
 export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => {
     const apolloClient = useApolloClient();
     const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
+    const { writeToClipboard } = useCopyPasteDamItems();
 
     const showError = (setError: Dispatch<SetStateAction<boolean>>) => {
         setError(true);
@@ -274,6 +287,26 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
         setDownloading(false);
     };
 
+    // copy
+    const [copying, setCopying] = useState(false);
+    const [hasCopyErrors, setHasCopyErrors] = useState(false);
+
+    const copySelected = useCallback(async () => {
+        setCopying(true);
+
+        const selectedItems = Array.from(selectionMap.entries()).map((item) => {
+            return { id: item[0], type: item[1] };
+        });
+
+        try {
+            await writeToClipboard(selectedItems);
+        } catch {
+            showError(setHasCopyErrors);
+        }
+
+        setCopying(false);
+    }, [selectionMap, writeToClipboard]);
+
     return (
         <DamSelectionContext.Provider
             value={{
@@ -299,6 +332,10 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
                 downloadSelected,
                 downloading,
                 hasDownloadErrors,
+
+                copySelected,
+                copying,
+                hasCopyErrors,
             }}
         >
             {children}

@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { RowActionsItem, RowActionsMenu, useEditDialog, useErrorDialog, useStackSwitchApi } from "@comet/admin";
-import { Archive, Delete, Download, Edit, Move, Restore } from "@comet/admin-icons";
+import { messages, RowActionsItem, RowActionsMenu, useEditDialog, useErrorDialog, useStackSwitchApi } from "@comet/admin";
+import { Archive, Copy, Delete, Download, Edit, Move, Paste, Restore } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import { saveAs } from "file-saver";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import { type GQLDamFile, type GQLDamFolder } from "../../graphql.generated";
 import { useDamBasePath } from "../config/damConfig";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
+import { useCopyPasteDamItems } from "./copyPaste/useCopyPasteDamItems";
 import { type GQLDeleteDamFolderMutation, type GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
 import {
@@ -31,9 +32,11 @@ interface FolderInnerMenuProps {
 const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
     const [, , editDialogApi] = useEditDialog();
     const errorDialog = useErrorDialog();
+    const errorDialogApi = useErrorDialog();
     const apolloClient = useApolloClient();
     const { apiUrl } = useCometConfig();
     const damBasePath = useDamBasePath();
+    const { writeToClipboard, pasteFromClipboard } = useCopyPasteDamItems();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -90,6 +93,25 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
                     >
                         <FormattedMessage id="comet.pages.dam.move" defaultMessage="Move" />
                     </RowActionsItem>
+                    <RowActionsItem
+                        icon={<Copy />}
+                        onClick={async () => {
+                            await writeToClipboard([{ type: "folder", id: folder.id }]);
+                        }}
+                    >
+                        <FormattedMessage {...messages.copy} />
+                    </RowActionsItem>
+                    <RowActionsItem
+                        icon={<Paste />}
+                        onClick={async () => {
+                            const { error } = await pasteFromClipboard({ targetFolderId: folder.id });
+                            if (error) {
+                                errorDialogApi?.showError({ error: "Cannot paste", userMessage: error });
+                            }
+                        }}
+                    >
+                        <FormattedMessage {...messages.paste} />
+                    </RowActionsItem>
                     <Divider />
                     <RowActionsItem
                         icon={<Delete />}
@@ -124,6 +146,7 @@ interface FileInnerMenuProps {
 const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps) => {
     const client = useApolloClient();
     const stackApi = useStackSwitchApi();
+    const { writeToClipboard } = useCopyPasteDamItems();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -146,6 +169,14 @@ const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps) => {
                         }}
                     >
                         <FormattedMessage id="comet.pages.dam.moveFile" defaultMessage="Move file" />
+                    </RowActionsItem>
+                    <RowActionsItem
+                        icon={<Copy />}
+                        onClick={async () => {
+                            await writeToClipboard([{ type: "file", id: file.id }]);
+                        }}
+                    >
+                        <FormattedMessage {...messages.copy} />
                     </RowActionsItem>
                     <RowActionsItem
                         icon={<Download />}

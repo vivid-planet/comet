@@ -323,7 +323,7 @@ input CoordinatesInput {
   longitude: Float!
 }
 
-type CopyFilesResponse {
+type CopyDamFilesResponse {
   mappedFiles: [MappedFile!]!
 }
 
@@ -903,7 +903,21 @@ type Mutation {
   addBrevoContactsToTargetGroup(id: ID!, input: AddBrevoContactsInput!): Boolean!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
+  copyDamFiles(
+    fileIds: [ID!]!
+    targetFolderId: ID
+
+    """Not needed when using targetFolderId"""
+    targetScope: DamScopeInput
+  ): CopyDamFilesResponse!
+  copyDamFolders(
+    folderIds: [ID!]!
+    targetFolderId: ID
+
+    """Not needed when using targetFolderId"""
+    targetScope: DamScopeInput
+  ): [DamFolder!]!
+  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyDamFilesResponse! @deprecated(reason: "Use copyDamFiles instead")
   createBrevoConfig(input: BrevoConfigInput!, scope: EmailCampaignContentScopeInput!): BrevoConfig!
   createBrevoContact(input: BrevoContactInput!, scope: EmailCampaignContentScopeInput!): SubscribeResponse!
   createBrevoEmailCampaign(input: EmailCampaignInput!, scope: EmailCampaignContentScopeInput!): BrevoEmailCampaign!

@@ -57,4 +57,12 @@ export const messages = defineMessages({
     downloadAsExcel: { id: "comet.generic.downloadAsExcel", defaultMessage: "Download as Excel" },
     openInNewTab: { id: "comet.generic.openInNewTab", defaultMessage: "Open in new tab" },
     openInThisTab: { id: "comet.generic.openInThisTab", defaultMessage: "Open in this tab" },
+    failedToReadClipboard: {
+        id: "comet.generic.failedToReadClipboard",
+        defaultMessage: "Can't read clipboard content. Please make sure that clipboard access is given",
+    },
+    emptyClipboard: {
+        id: "comet.generic.emptyClipboard",
+        defaultMessage: "Clipboard is empty",
+    },
 });
