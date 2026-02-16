@@ -17,9 +17,7 @@ interface PGStatActivity {
 }
 
 // Advisory lock key for block_index_dependencies refresh deduplication.
-// Uses the two-integer form pg_advisory_xact_lock(key1, key2) to avoid collisions.
-const BLOCK_INDEX_REFRESH_LOCK_KEY1 = 42;
-const BLOCK_INDEX_REFRESH_LOCK_KEY2 = 1;
+const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
 
 @Injectable()
 export class DependenciesService {
@@ -135,17 +133,14 @@ export class DependenciesService {
             await knex.transaction(async (trx) => {
                 if (refreshOptions?.concurrently) {
                     // Non-blocking: skip if another refresh is already running
-                    const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?, ?) AS locked`, [
-                        BLOCK_INDEX_REFRESH_LOCK_KEY1,
-                        BLOCK_INDEX_REFRESH_LOCK_KEY2,
-                    ]);
+                    const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?) AS locked`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
 
                     if (!lockResult.rows[0]?.locked) {
                         return;
                     }
                 } else {
                     // Blocking: wait for any active refresh to finish
-                    await trx.raw(`SELECT pg_advisory_xact_lock(?, ?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY1, BLOCK_INDEX_REFRESH_LOCK_KEY2]);
+                    await trx.raw(`SELECT pg_advisory_xact_lock(?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
 
                     // After acquiring the lock, check if a refresh was just completed by the previous holder
                     const recentRefresh = await trx("BlockIndexRefresh").whereNotNull("finishedAt").orderBy("finishedAt", "desc").first();
@@ -184,7 +179,7 @@ export class DependenciesService {
 
             // Use blocking advisory lock to wait for cancelled refresh to release
             await knex.transaction(async (trx) => {
-                await trx.raw(`SELECT pg_advisory_xact_lock(?, ?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY1, BLOCK_INDEX_REFRESH_LOCK_KEY2]);
+                await trx.raw(`SELECT pg_advisory_xact_lock(?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
                 await trx("BlockIndexRefresh").truncate();
                 await trx.raw(`REFRESH MATERIALIZED VIEW block_index_dependencies`);
                 await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
