@@ -194,7 +194,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 variant="horizontal"
                                 fullWidth
                                 name="title"
-                                label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                                label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                                 validate={(value: string) =>
                                     value.length < 3 ? (
                                         <FormattedMessage
@@ -229,7 +229,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 variant="horizontal"
                                 fullWidth
                                 name="createdAt"
-                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created At" />}
                             />
 
                             <TextAreaField
@@ -246,7 +246,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                                 options={[
                                     {
-                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="Cap" />,
                                         value: "cap",
                                     },
                                     {
@@ -387,7 +387,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 fullWidth
                                 name="priceRange"
                                 component={FinalFormRangeInput}
-                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}
                                 min={25}
                                 max={500}
                                 disableSlider
@@ -472,7 +472,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 getOptionLabel={(option) => option.name}
                             />
                             <CheckboxField
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
                                 name="inStock"
                                 fullWidth
                                 variant="horizontal"
