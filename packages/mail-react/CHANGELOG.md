@@ -1,5 +1,13 @@
 # @comet/mail-react
 
+## 8.14.0
+
+### Minor Changes
+
+- 57a7c95: Re-export all components from `@faire/mjml-react` and remove it as a `peerDependency`
+
+## 8.13.0
+
 ## 8.12.0
 
 ### Minor Changes

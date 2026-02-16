@@ -1,4 +1,4 @@
-import { MjmlColumn, MjmlDivider } from "@faire/mjml-react";
+import { MjmlColumn, MjmlDivider } from "@comet/mail-react";
 import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
 
 export const EmailCampaignDividerBlock = () => {

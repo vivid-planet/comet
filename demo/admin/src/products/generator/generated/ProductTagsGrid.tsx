@@ -18,7 +18,6 @@ import { DataGridToolbar } from "@comet/admin";
 import { GridFilterButton } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
@@ -29,6 +28,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productTagsFragment = gql`
@@ -113,9 +113,9 @@ export function ProductTagsGrid() {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
+            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
         },
     });
     const rowCount = useBufferedRowCount(data?.productTags.totalCount);

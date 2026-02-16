@@ -210,7 +210,7 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.emailCampaigns" defaultMessage="Contacts" />,
+                    primary: <FormattedMessage id="menu.newsletter.contacts" defaultMessage="Contacts" />,
                     route: {
                         path: "/newsletter/contacts",
                         component: BrevoContactsPage,

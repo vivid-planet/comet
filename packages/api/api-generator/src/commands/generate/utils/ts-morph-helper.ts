@@ -14,7 +14,7 @@ function morphTsSource(metadata: EntityMetadata<any>) {
     return tsSource;
 }
 
-function morphTsClass(metadata: EntityMetadata<any>) {
+export function morphTsClass(metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     const tsClass = tsSource.getClass(metadata.className);
     if (!tsClass) throw new Error(`Class ${metadata.className} not found in ${metadata.path}`);
