@@ -5,7 +5,7 @@ import { type ProductVariant } from "./entities/product-variant.entity";
 import { type ProductVariantInput, type ProductVariantUpdateInput } from "./generated/dto/product-variant.input";
 
 enum ProductVariantMutationErrorCode {
-    nameTooShort = "titleTooShort",
+    nameTooShort = "nameTooShort",
 }
 registerEnumType(ProductVariantMutationErrorCode, {
     name: "ProductVariantMutationErrorCode",
