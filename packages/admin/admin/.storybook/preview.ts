@@ -4,6 +4,7 @@ import { type GlobalTypes } from "storybook/internal/csf";
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
 import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
+import { worker } from "./mocks/browser";
 
 export const globalTypes: GlobalTypes = {
     theme: {
@@ -66,3 +67,5 @@ const preview: Preview = {
 };
 
 export default preview;
+
+worker.start();
