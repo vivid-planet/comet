@@ -14,6 +14,7 @@ interface FadeBoxInOnScrollProps {
     children: ReactElement;
     offset?: number;
     delay?: number;
+    duration?: number;
     fullHeight?: boolean;
     onChange?: (inView: boolean) => void;
     className?: string;
@@ -25,6 +26,7 @@ export function FadeBoxInOnScroll({
     direction = undefined,
     offset = 200,
     delay = 0,
+    duration = 500,
     fullHeight = false,
     onChange,
     className,
@@ -48,7 +50,7 @@ export function FadeBoxInOnScroll({
 
     // Dynamic delay and fade duration for speedup fade in on faster scrolling
     const dynamicDelay = scrollSpeed > 1 ? effectiveDelay / (scrollSpeed / 2) : effectiveDelay;
-    const dynamicFadeDuration = scrollSpeed > 1 ? Math.min(500 / (scrollSpeed / 2), 200) : 500;
+    const dynamicFadeDuration = scrollSpeed > 1 ? Math.min(duration / (scrollSpeed / 2), 200) : duration;
 
     useEffect(() => {
         const scrollContainer = refScrollContainer.current;
@@ -86,7 +88,11 @@ export function FadeBoxInOnScroll({
     }, [offset, previewType, direction, windowSize, onChange, scrollSpeed, groupOnVisible, groupDisabled]);
 
     // Set CSS variable for delay and duration
-    const style = { "--fade-delay": `${dynamicDelay ?? 0}ms`, "--fade-duration": `${dynamicFadeDuration ?? 0}ms` } as React.CSSProperties;
+    const style = {
+        "--fade-delay": `${dynamicDelay ?? 0}ms`,
+        "--fade-duration": `${dynamicFadeDuration ?? 0}ms`,
+        "--fade-transform-duration": `${dynamicFadeDuration ? dynamicFadeDuration * 2 : 0}ms`,
+    } as React.CSSProperties;
 
     return (
         <div
