@@ -149,7 +149,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
         if (mode === "edit") {
             if (!id) throw new Error();
             const { createdAt, ...updateInput } = output;
-            const { data: mutationResponse } = await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
+            await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: updateInput },
             });

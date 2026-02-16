@@ -495,12 +495,12 @@ export function generateForm(
                         ? `
                 ${readOnlyFields.some((field) => field.name === "id") ? "" : "if (!id) throw new Error();"}
                 const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
-                ${createMutationHasPayloadResponse ? `const { data: mutationResponse } = ` : ""}await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
+                ${updateMutationHasPayloadResponse ? `const { data: mutationResponse } = ` : ""}await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
                     variables: { id, input: updateInput },
                 });
                 ${
-                    createMutationHasPayloadResponse && updateMutationType && errorEnums.updateErrorEnum
+                    updateMutationHasPayloadResponse && updateMutationType && errorEnums.updateErrorEnum
                         ? `
                     ${generateErrorHandlingCode({
                         mutationResponsePath: `mutationResponse?.${updateMutationType.name}`,

@@ -95,7 +95,7 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
         const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
-            const { data: mutationResponse } = await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
+            await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: updateInput },
             });
