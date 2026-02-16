@@ -83,7 +83,7 @@ export function FadeBoxInOnScroll({
                 observer.unobserve(scrollContainer);
             }
         };
-    }, [offset, previewType, direction, windowSize, onChange, scrollSpeed, groupOnVisible]);
+    }, [offset, previewType, direction, windowSize, onChange, scrollSpeed, groupOnVisible, groupDisabled]);
 
     // Set CSS variable for delay and duration
     const style = { "--fade-delay": `${dynamicDelay ?? 0}ms`, "--fade-duration": `${dynamicFadeDuration ?? 0}ms` } as React.CSSProperties;
