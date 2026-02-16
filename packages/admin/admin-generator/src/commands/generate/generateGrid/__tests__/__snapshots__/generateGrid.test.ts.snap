@@ -959,6 +959,7 @@ renderCell: (params) => {
         query: booksQuery,
         resolveQueryNodes: (data) => data.booksByAuthor.nodes,
         totalCount: data?.booksByAuthor.totalCount ?? 0,
+        
         exportOptions: {
             fileName: "Books",
         },
@@ -1189,6 +1190,7 @@ renderCell: (params) => {
         query: booksQuery,
         resolveQueryNodes: (data) => data.books.nodes,
         totalCount: data?.books.totalCount ?? 0,
+        
         exportOptions: {
             fileName: "Books",
         },
