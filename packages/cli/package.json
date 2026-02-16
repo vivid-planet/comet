@@ -26,7 +26,9 @@
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc"
+        "lint:tsc": "tsc",
+        "test": "vitest --run",
+        "test:watch": "vitest --watch"
     },
     "dependencies": {
         "commander": "^9.5.0",
@@ -39,7 +41,8 @@
         "eslint": "^9.30.1",
         "npm-run-all2": "^8.0.4",
         "rimraf": "^6.1.2",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.16"
     },
     "engines": {
         "node": ">=22.0.0"
