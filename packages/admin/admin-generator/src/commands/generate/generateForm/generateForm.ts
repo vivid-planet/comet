@@ -114,7 +114,7 @@ export function generateForm(
     const addMode = mode === "add" || mode == "all";
 
     const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
-    const updateMutationType = editMode && findMutationTypeOrThrow(config.createMutation ?? `update${gqlType}`, gqlIntrospection);
+    const updateMutationType = editMode && findMutationTypeOrThrow(`update${gqlType}`, gqlIntrospection);
 
     const createMutationHasPayloadResponse = createMutationType && hasPayloadResponseType(createMutationType, gqlType);
     const updateMutationHasPayloadResponse = updateMutationType && hasPayloadResponseType(updateMutationType, gqlType);
