@@ -11,7 +11,9 @@ import { Product } from "../entities/product.entity";
 import {
     AffectedEntity,
     BlocksTransformerService,
+    CurrentUser,
     DamImageBlock,
+    GetCurrentUser,
     RequiredPermission,
     RootBlockDataScalar,
     extractGraphqlFields,
@@ -19,6 +21,7 @@ import {
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
+import { ProductVariantService } from "../product-variant.service";
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
@@ -26,6 +29,7 @@ export class ProductVariantResolver {
         protected readonly entityManager: EntityManager,
         protected readonly productVariantsService: ProductVariantsService,
         private readonly blocksTransformer: BlocksTransformerService,
+        protected readonly productVariantService: ProductVariantService,
     ) {}
     @Query(() => ProductVariant)
     @AffectedEntity(ProductVariant)
@@ -66,7 +70,10 @@ export class ProductVariantResolver {
         product: string,
         @Args("input", { type: () => ProductVariantInput })
         input: ProductVariantInput,
+        @GetCurrentUser()
+        user: CurrentUser,
     ): Promise<ProductVariant> {
+        await this.productVariantService.validateCreateInput(input, { currentUser: user, args: { product } });
         const lastPosition = await this.productVariantsService.getLastPosition({ product });
         let position = input.position;
         if (position !== undefined && position < lastPosition + 1) {
@@ -91,8 +98,11 @@ export class ProductVariantResolver {
         id: string,
         @Args("input", { type: () => ProductVariantUpdateInput })
         input: ProductVariantUpdateInput,
+        @GetCurrentUser()
+        user: CurrentUser,
     ): Promise<ProductVariant> {
         const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
+        await this.productVariantService.validateUpdateInput(input, { currentUser: user, entity: productVariant });
         if (input.position !== undefined) {
             const lastPosition = await this.productVariantsService.getLastPosition({ product: productVariant.product.id });
             if (input.position > lastPosition) {
