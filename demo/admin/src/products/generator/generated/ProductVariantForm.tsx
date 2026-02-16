@@ -45,9 +45,7 @@ interface FormProps {
     id?: string;
     product: string;
 }
-const submissionErrorMessages: {
-    [K in GQLProductVariantMutationErrorCode]: ReactNode;
-} = {
+const submissionErrorMessages: Record<GQLProductVariantMutationErrorCode, ReactNode> = {
     nameTooShort: (
         <FormattedMessage id="productvariant.form.error.nameTooShort" defaultMessage="Name must be at least 3 characters long, except for foo" />
     ),

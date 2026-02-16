@@ -53,7 +53,7 @@ describe("generateErrorMessagesCode", () => {
             gqlIntrospection: introspection,
         });
 
-        expect(generated).toBe(`const submissionErrorMessages: { [K in GQLProductError]: ReactNode } = {
+        expect(generated).toBe(`const submissionErrorMessages: Record<GQLProductError, ReactNode> = {
 titleRequired: <FormattedMessage id="product.form.error.titleRequired" defaultMessage="Title is required" />,
 titleTooLong: <FormattedMessage id="product.form.error.titleTooLong" defaultMessage="Title Too Long" />,
 };`);

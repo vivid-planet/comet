@@ -38,7 +38,7 @@ export function generateErrorMessagesCode({
         .join(",\n");
 
     // Generate complete error messages object
-    return `const ${variableName}: { [K in GQL${enumName}]: ReactNode } = {
+    return `const ${variableName}: Record<GQL${enumName}, ReactNode> = {
 ${errorEntries},
 };`;
 }

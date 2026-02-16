@@ -82,9 +82,7 @@ interface FormProps {
     manufacturerCountry: string;
     id?: string;
 }
-const submissionErrorMessages: {
-    [K in GQLProductMutationErrorCode]: ReactNode;
-} = {
+const submissionErrorMessages: Record<GQLProductMutationErrorCode, ReactNode> = {
     titleTooShort: (
         <FormattedMessage
             id="product.form.error.titleTooShort"
