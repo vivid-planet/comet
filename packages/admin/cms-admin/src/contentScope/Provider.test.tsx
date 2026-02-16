@@ -1,8 +1,8 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { RouterMemoryRouter } from "@comet/admin";
 import { cleanup, render, waitFor } from "@testing-library/react";
+import { createMemoryHistory } from "history";
 import { type ReactNode } from "react";
-import { useLocation } from "react-router";
+import { Router } from "react-router";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
@@ -24,13 +24,7 @@ describe("ContentScopeProvider", () => {
         });
     });
 
-    let currentPathname: string;
-    function LocationCapture() {
-        currentPathname = useLocation().pathname;
-        return null;
-    }
-
-    function Wrapper({ children }: { children: ReactNode }) {
+    function Wrapper({ children, history }: { children: ReactNode; history: ReturnType<typeof createMemoryHistory> }) {
         return (
             <MockedProvider>
                 <CurrentUserContext.Provider
@@ -47,10 +41,7 @@ describe("ContentScopeProvider", () => {
                         isAllowed: () => true,
                     }}
                 >
-                    <RouterMemoryRouter>
-                        {children}
-                        <LocationCapture />
-                    </RouterMemoryRouter>
+                    <Router history={history}>{children}</Router>
                 </CurrentUserContext.Provider>
             </MockedProvider>
         );
@@ -66,10 +57,11 @@ describe("ContentScopeProvider", () => {
         // Store a scope that is allowed
         localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(storedScope));
 
+        const history = createMemoryHistory();
+
         const { container } = render(
-            <Wrapper>
+            <Wrapper history={history}>
                 <ContentScopeProvider values={allowedScopes} defaultValue={allowedScopes[0].scope}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
                     {() => <div>Content</div>}
                 </ContentScopeProvider>
             </Wrapper>,
@@ -82,7 +74,7 @@ describe("ContentScopeProvider", () => {
         // The stored scope should still be in localStorage since it's valid
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBe(JSON.stringify(storedScope));
         // URL should reflect the stored scope
-        expect(currentPathname).toBe("/main/de");
+        expect(history.location.pathname).toBe("/main/de");
     });
 
     it("should clear stored scope when it is not in allowed scopes", async () => {
@@ -95,10 +87,11 @@ describe("ContentScopeProvider", () => {
         // Store a scope that is NOT allowed
         localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(storedScope));
 
+        const history = createMemoryHistory();
+
         const { container } = render(
-            <Wrapper>
+            <Wrapper history={history}>
                 <ContentScopeProvider values={allowedScopes} defaultValue={allowedScopes[0].scope}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
                     {() => <div>Content</div>}
                 </ContentScopeProvider>
             </Wrapper>,
@@ -111,7 +104,7 @@ describe("ContentScopeProvider", () => {
         // The stored scope should be cleared from localStorage since it's invalid
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBeNull();
         // URL should fall back to the default scope
-        expect(currentPathname).toBe("/main/en");
+        expect(history.location.pathname).toBe("/main/en");
     });
 
     it("should use default scope when no scope is stored", async () => {
@@ -122,10 +115,11 @@ describe("ContentScopeProvider", () => {
 
         // No stored scope
 
+        const history = createMemoryHistory();
+
         const { container } = render(
-            <Wrapper>
+            <Wrapper history={history}>
                 <ContentScopeProvider values={allowedScopes} defaultValue={allowedScopes[0].scope}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
                     {() => <div>Content</div>}
                 </ContentScopeProvider>
             </Wrapper>,
@@ -138,7 +132,7 @@ describe("ContentScopeProvider", () => {
         // No scope should be stored
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBeNull();
         // URL should use the default scope
-        expect(currentPathname).toBe("/main/en");
+        expect(history.location.pathname).toBe("/main/en");
     });
 
     it("should handle partial scope matches correctly", async () => {
@@ -151,10 +145,11 @@ describe("ContentScopeProvider", () => {
         // Store a partial scope
         localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(storedScope));
 
+        const history = createMemoryHistory();
+
         const { container } = render(
-            <Wrapper>
+            <Wrapper history={history}>
                 <ContentScopeProvider values={allowedScopes} defaultValue={allowedScopes[0].scope}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
                     {() => <div>Content</div>}
                 </ContentScopeProvider>
             </Wrapper>,
@@ -167,7 +162,7 @@ describe("ContentScopeProvider", () => {
         // The partial scope should be cleared since it doesn't exactly match any allowed scope
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBeNull();
         // URL should fall back to the default scope
-        expect(currentPathname).toBe("/main/en");
+        expect(history.location.pathname).toBe("/main/en");
     });
 
     it("should use default scope when localStorage contains 'undefined' string", async () => {
@@ -176,10 +171,11 @@ describe("ContentScopeProvider", () => {
         // Store "undefined" string (edge case that can happen in some scenarios)
         localStorage.setItem(contentScopeLocalStorageKey, "undefined");
 
+        const history = createMemoryHistory();
+
         const { container } = render(
-            <Wrapper>
+            <Wrapper history={history}>
                 <ContentScopeProvider values={allowedScopes} defaultValue={allowedScopes[0].scope}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
                     {() => <div>Content</div>}
                 </ContentScopeProvider>
             </Wrapper>,
@@ -193,6 +189,6 @@ describe("ContentScopeProvider", () => {
         // The provider uses the default scope instead of trying to parse "undefined"
         expect(localStorage.getItem(contentScopeLocalStorageKey)).toBe("undefined");
         // URL should use the default scope
-        expect(currentPathname).toBe("/main/en");
+        expect(history.location.pathname).toBe("/main/en");
     });
 });
