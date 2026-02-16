@@ -136,20 +136,6 @@ export function ProductVariantForm({ id, productId }: FormProps) {
                     });
                 }
             }
-            if (mutationResponse?.createProductVariant.errors.length) {
-                return mutationResponse.createProductVariant.errors.reduce(
-                    (submissionErrors, error) => {
-                        const errorMessage = submissionErrorMessages[error.code];
-                        if (error.field) {
-                            submissionErrors[error.field] = errorMessage;
-                        } else {
-                            submissionErrors[FORM_ERROR] = errorMessage;
-                        }
-                        return submissionErrors;
-                    },
-                    {} as Record<string, ReactNode>,
-                );
-            }
         }
     };
 
