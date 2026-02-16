@@ -63,13 +63,8 @@
         "@mui/x-data-grid-pro": "^7.29.12",
         "@mui/x-date-pickers": "^7.29.4",
         "@types/file-saver": "^2.0.7",
-<<<<<<< HEAD
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
-=======
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
->>>>>>> main
         "@types/react-router": "^5.1.20",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.30.1",

@@ -79,15 +79,9 @@
         "@types/history": "^4.7.11",
         "@types/lodash.debounce": "^4.0.9",
         "@types/lodash.isequal": "^4.5.8",
-<<<<<<< HEAD
-        "@types/node": "^24.9.1",
+        "@types/node": "^24.10.9",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
-=======
-        "@types/node": "^24.10.9",
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
->>>>>>> main
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
         "eslint": "^9.30.1",

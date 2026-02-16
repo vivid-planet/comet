@@ -43,9 +43,6 @@ export type DatePickerProps = ThemedComponentBaseProps<{
     };
 } & Omit<MuiDatePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
 
-<<<<<<< HEAD:packages/admin/admin/src/dateTime/DatePicker.tsx
-export const DatePicker = (inProps: DatePickerProps) => {
-=======
 /**
  * The DatePicker component allows users to select a date from a calendar interface. It provides a text field
  * with a calendar icon that opens a date picker dialog. The component handles ISO 8601 date strings and includes
@@ -54,8 +51,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-datepicker--docs)
  * - [MUI X DatePicker Documentation](https://mui.com/x/react-date-pickers/date-picker/)
  */
-export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
->>>>>>> main:packages/admin/admin/src/dateTime/datePicker/DatePicker.tsx
+export const DatePicker = (inProps: DatePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,

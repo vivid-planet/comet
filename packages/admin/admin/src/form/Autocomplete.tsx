@@ -45,7 +45,6 @@ export const FinalFormAutocomplete = <
     loading = false,
     loadingError,
     isAsync = false,
-    required,
     disabled,
     readOnly,
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
@@ -93,7 +92,6 @@ export const FinalFormAutocomplete = <
             multiple={multiple as Multiple}
             renderInput={(params: AutocompleteRenderInputParams) => (
                 <InputBase
-                    required={required}
                     {...restInput}
                     {...params}
                     {...params.InputProps}

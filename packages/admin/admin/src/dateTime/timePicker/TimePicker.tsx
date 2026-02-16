@@ -62,9 +62,6 @@ const getDateFromTimeString = (value: string | undefined): Date | null => {
     return parsedDate;
 };
 
-<<<<<<< HEAD:packages/admin/admin/src/dateTime/TimePicker.tsx
-export const TimePicker = (inProps: TimePickerProps) => {
-=======
 /**
  * The TimePicker component allows users to select a time from a time picker interface. It provides a text field
  * with a time icon that opens a time picker dialog. The component handles time strings in 24-hour format (HH:mm)
@@ -73,8 +70,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-timepicker--docs)
  * - [MUI X TimePicker Documentation](https://mui.com/x/react-date-pickers/time-picker/)
  */
-export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
->>>>>>> main:packages/admin/admin/src/dateTime/timePicker/TimePicker.tsx
+export const TimePicker = (inProps: TimePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,

@@ -89,11 +89,7 @@ export class ProductPriceRange {
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-<<<<<<< HEAD
-@CrudGenerator({ requiredPermission: ["products"] })
-=======
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"], hooksService: ProductService })
->>>>>>> main
+@CrudGenerator({ requiredPermission: ["products"], hooksService: ProductService })
 export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 

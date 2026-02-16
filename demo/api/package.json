@@ -96,16 +96,11 @@
         "@types/cookie-parser": "^1.4.10",
         "@types/express": "^5.0.6",
         "@types/inquirer": "^8.2.12",
-<<<<<<< HEAD
-        "@types/node": "^24.9.1",
-        "@types/react": "^19.2.10",
-        "@types/react-dom": "^19.2.3",
-=======
         "@types/mjml": "^4.7.4",
         "@types/mjml-browser": "^4.15.0",
         "@types/node": "^24.10.9",
-        "@types/react": "^18.3.27",
->>>>>>> main
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
         "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",

@@ -47,9 +47,6 @@ export type DateTimePickerProps = ThemedComponentBaseProps<{
     };
 } & Omit<MuiDateTimePickerProps<Date, true>, "value" | "onChange">;
 
-<<<<<<< HEAD:packages/admin/admin/src/dateTime/DateTimePicker.tsx
-export const DateTimePicker = (inProps: DateTimePickerProps) => {
-=======
 /**
  * The DateTimePicker component allows users to select both a date and time from a combined picker interface.
  * It provides a text field with a calendar icon that opens a date-time picker dialog. The component handles
@@ -58,8 +55,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-datetimepicker--docs)
  * - [MUI X DateTimePicker Documentation](https://mui.com/x/react-date-pickers/date-time-picker/)
  */
-export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
->>>>>>> main:packages/admin/admin/src/dateTime/dateTimePicker/DateTimePicker.tsx
+export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,

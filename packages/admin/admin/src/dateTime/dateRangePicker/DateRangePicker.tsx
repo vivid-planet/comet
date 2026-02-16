@@ -55,9 +55,6 @@ const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | n
     return [getDateValue(value?.start), getDateValue(value?.end)];
 };
 
-<<<<<<< HEAD:packages/admin/admin/src/dateTime/DateRangePicker.tsx
-export const DateRangePicker = (inProps: DateRangePickerProps) => {
-=======
 /**
  * The DateRangePicker component allows users to select a date range from a calendar interface. It provides two
  * text fields with a calendar icon that opens a date range picker dialog. The component handles ISO 8601 date strings
@@ -66,8 +63,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-daterangepicker--docs)
  * - [MUI X DateRangePicker Documentation](https://mui.com/x/react-date-pickers/date-range-picker/)
  */
-export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => {
->>>>>>> main:packages/admin/admin/src/dateTime/dateRangePicker/DateRangePicker.tsx
+export const DateRangePicker = (inProps: DateRangePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,

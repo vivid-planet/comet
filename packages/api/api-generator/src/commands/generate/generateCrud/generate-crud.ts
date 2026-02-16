@@ -451,6 +451,7 @@ export function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
     generatorOptions: CrudGeneratorOptions,
+    targetDirectory: string,
 ): { code: string; imports: Imports } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
@@ -547,7 +548,7 @@ export function generateInputHandling(
 ${inputRelationToManyProps
     .map((prop) => {
         if (prop.orphanRemoval) {
-            imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+            imports.push(generateEntityImport(prop.targetMeta, targetDirectory));
             const { code, imports: nestedImports } = generateInputHandling(
                 {
                     mode: "updateNested",
@@ -562,6 +563,7 @@ ${inputRelationToManyProps
                 },
                 prop.targetMeta,
                 generatorOptions,
+                targetDirectory,
             );
             imports.push(...nestedImports);
             const isAsync = code.includes("await ");
@@ -590,7 +592,7 @@ ${inputRelationToManyProps
 
 ${inputRelationOneToOneProps
     .map((prop) => {
-        imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+        imports.push(generateEntityImport(prop.targetMeta, targetDirectory));
         const { code, imports: nestedImports } = generateInputHandling(
             {
                 mode: "updateNested",
@@ -602,6 +604,7 @@ ${inputRelationOneToOneProps
             },
             prop.targetMeta,
             generatorOptions,
+            targetDirectory,
         );
         imports.push(...nestedImports);
 
@@ -822,6 +825,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         },
         metadata,
         generatorOptions,
+        targetDirectory,
     );
     imports.push(...createInputHandlingImports);
 
@@ -829,6 +833,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
         metadata,
         generatorOptions,
+        targetDirectory,
     );
     imports.push(...updateInputHandlingImports);
 
@@ -847,7 +852,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports.push(generateEntityImport(scopeProp.targetMeta, targetDirectory));
     }
 
-    const hooksService = findHooksService({ generatorOptions, metadata });
+    const hooksService = findHooksService({ generatorOptions, metadata, targetDirectory });
     if (hooksService) {
         imports.push(...hooksService.imports);
         if (
