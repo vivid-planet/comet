@@ -10,7 +10,7 @@ import { type ReactElement, useEffect, useRef, useState } from "react";
 import styles from "./FadeBoxInOnScroll.module.scss";
 
 interface FadeBoxInOnScrollProps {
-    direction?: "top" | "right" | "bottom" | "left" | undefined;
+    direction?: "top" | "right" | "bottom" | "left";
     children: ReactElement;
     offset?: number;
     delay?: number;
