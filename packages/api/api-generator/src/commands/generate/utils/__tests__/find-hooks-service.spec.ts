@@ -42,7 +42,9 @@ describe("find-hooks-service", () => {
             metadata: orm.em.getMetadata().get("TestEntity"),
             targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntityService");
         expect(hooksService.imports).toEqual([]);
         expect(hooksService.validateCreateInput).toBeDefined();
