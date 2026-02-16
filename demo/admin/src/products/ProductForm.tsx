@@ -167,14 +167,6 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
-
-            const id = mutationResponse?.createProduct.product?.id;
-            if (id) {
-                setTimeout(() => {
-                    onCreate?.(id);
-                });
-            }
-
             if (mutationResponse?.createProduct.errors.length) {
                 return mutationResponse.createProduct.errors.reduce(
                     (submissionErrors, error) => {
@@ -188,6 +180,12 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                     },
                     {} as Record<string, ReactNode>,
                 );
+            }
+            const id = mutationResponse?.createProduct.product?.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                });
             }
         }
     };
