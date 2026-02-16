@@ -1,6 +1,16 @@
-import { css } from "@comet/mail-react";
-import { Mjml, MjmlAttributes, MjmlBody, MjmlDivider, MjmlHead, MjmlSection, MjmlStyle, MjmlText, MjmlTitle } from "@faire/mjml-react";
-import { MjmlConditionalComment } from "@faire/mjml-react/extensions";
+import {
+    css,
+    Mjml,
+    MjmlAttributes,
+    MjmlBody,
+    MjmlConditionalComment,
+    MjmlDivider,
+    MjmlHead,
+    MjmlSection,
+    MjmlStyle,
+    MjmlText,
+    MjmlTitle,
+} from "@comet/mail-react";
 import { theme } from "@src/brevo/util/theme";
 import { type FC, type PropsWithChildren } from "react";
 

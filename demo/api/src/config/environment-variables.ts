@@ -1,9 +1,12 @@
 import { BlobStorageConfig, IsUndefinable } from "@comet/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsEmail, IsInt, IsOptional, IsString, IsUrl, Length, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsIn, IsInt, IsOptional, IsString, IsUrl, Length, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
+    @IsIn(["development", "production", "test"])
+    NODE_ENV: "development" | "production" | "test";
+
     @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")
     HELM_RELEASE: string;
@@ -50,6 +53,10 @@ export class EnvironmentVariables {
 
     @IsString()
     ADMIN_URL: string;
+
+    @IsString()
+    @IsUndefinable()
+    SERVER_HOST?: string;
 
     @Type(() => Number)
     @IsInt()

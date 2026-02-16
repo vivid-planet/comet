@@ -45,13 +45,13 @@ export const FinalFormAutocomplete = <
     loading = false,
     loadingError,
     isAsync = false,
-    required,
     disabled,
     readOnly,
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
     errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
+    required,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
@@ -94,10 +94,11 @@ export const FinalFormAutocomplete = <
             multiple={multiple as Multiple}
             renderInput={(params: AutocompleteRenderInputParams) => (
                 <InputBase
-                    required={required}
                     {...restInput}
                     {...params}
                     {...params.InputProps}
+                    // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
+                    required={multiple ? false : required}
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}

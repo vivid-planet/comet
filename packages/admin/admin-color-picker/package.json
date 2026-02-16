@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-color-picker",
-    "version": "8.12.0",
+    "version": "8.14.0",
     "description": "Comet Admin Color Picker component",
     "repository": {
         "directory": "packages/admin/admin-color-picker",
@@ -57,7 +57,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
-        "typescript": "5.9.3"
+        "typescript": "^5.9.3"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",

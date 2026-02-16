@@ -7,10 +7,12 @@ import { singular } from "pluralize";
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { buildNameVariants } from "../utils/build-name-variants";
 import { integerTypes, numberTypes } from "../utils/constants";
+import { findHooksService } from "../utils/find-hooks-service";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
+import { generateServiceHookCall } from "./generate-service-hook-call";
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
@@ -447,13 +449,16 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
     };
 }
 
-function generateInputHandling(
+export function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
     generatorOptions: CrudGeneratorOptions,
-): { code: string } {
+    targetDirectory: string,
+): { code: string; imports: Imports } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
+
+    const imports: Imports = [];
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -513,11 +518,6 @@ function generateInputHandling(
             };
         });
 
-    function innerGenerateInputHandling(...args: Parameters<typeof generateInputHandling>) {
-        const ret = generateInputHandling(...args);
-        return ret.code;
-    }
-
     const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...inputRelationOneToOneProps, ...blockProps];
     const code = `
     ${
@@ -556,13 +556,14 @@ function generateInputHandling(
 ${inputRelationToManyProps
     .map((prop) => {
         if (prop.orphanRemoval) {
-            const code = innerGenerateInputHandling(
+            imports.push(generateEntityImport(prop.targetMeta, targetDirectory));
+            const { code, imports: nestedImports } = generateInputHandling(
                 {
                     mode: "updateNested",
                     inputName: `${prop.singularName}Input`,
 
-                    // alternative `return this.entityManager.create(${prop.type}, {` requires back relation to be set
-                    assignEntityCode: `return this.entityManager.assign(new ${prop.type}(), {`,
+                    // alternative `const ${prop.singularName} = this.entityManager.create(${prop.type}, {` requires back relation to be set
+                    assignEntityCode: `const ${prop.singularName} = this.entityManager.assign(new ${prop.type}(), {`,
 
                     excludeFields: prop.targetMeta.props
                         .filter((prop) => prop.kind == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
@@ -570,7 +571,9 @@ ${inputRelationToManyProps
                 },
                 prop.targetMeta,
                 generatorOptions,
+                targetDirectory,
             );
+            imports.push(...nestedImports);
             const isAsync = code.includes("await ");
             return `if (${prop.name}Input) {
         await ${instanceNameSingular}.${prop.name}.loadItems();
@@ -578,6 +581,7 @@ ${inputRelationToManyProps
             ${isAsync ? `await Promise.all(` : ""}
             ${prop.name}Input.map(${isAsync ? `async ` : ""}(${prop.singularName}Input) => {
                 ${code}
+                return ${prop.singularName};
             })
             ${isAsync ? `)` : ""}
         );
@@ -595,28 +599,33 @@ ${inputRelationToManyProps
     .join("")}
 
 ${inputRelationOneToOneProps
-    .map(
-        (prop) => `
+    .map((prop) => {
+        imports.push(generateEntityImport(prop.targetMeta, targetDirectory));
+        const { code, imports: nestedImports } = generateInputHandling(
+            {
+                mode: "updateNested",
+                inputName: `${prop.name}Input`,
+                assignEntityCode: `this.entityManager.assign(${prop.singularName}, {`,
+                excludeFields: prop.targetMeta.props
+                    .filter((prop) => prop.kind == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                    .map((prop) => prop.name),
+            },
+            prop.targetMeta,
+            generatorOptions,
+            targetDirectory,
+        );
+        imports.push(...nestedImports);
+
+        return `
             ${options.mode != "create" || prop.nullable ? `if (${prop.name}Input) {` : "{"}
                 const ${prop.singularName} = ${
                     (options.mode == "update" || options.mode == "updateNested") && prop.nullable
                         ? `${instanceNameSingular}.${prop.name} ? await ${instanceNameSingular}.${prop.name}.loadOrFail() : new ${prop.type}();`
                         : `new ${prop.type}();`
                 }
-                ${innerGenerateInputHandling(
-                    {
-                        mode: "updateNested",
-                        inputName: `${prop.name}Input`,
-                        assignEntityCode: `this.entityManager.assign(${prop.singularName}, {`,
-                        excludeFields: prop.targetMeta.props
-                            .filter((prop) => prop.kind == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
-                            .map((prop) => prop.name),
-                    },
-                    prop.targetMeta,
-                    generatorOptions,
-                )}
-                ${options.mode != "create" || prop.nullable ? `}` : "}"}`,
-    )
+                ${code}
+                ${options.mode != "create" || prop.nullable ? `}` : "}"}`;
+    })
     .join("")}
 ${
     options.mode == "update"
@@ -646,7 +655,7 @@ ${
 }
     `;
 
-    return { code };
+    return { code, imports };
 }
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
@@ -820,7 +829,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const imports: Imports = [];
 
-    const { code: createInputHandlingCode } = generateInputHandling(
+    const { code: createInputHandlingCode, imports: createInputHandlingImports } = generateInputHandling(
         {
             mode: "create",
             inputName: "input",
@@ -828,13 +837,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         },
         metadata,
         generatorOptions,
+        targetDirectory,
     );
+    imports.push(...createInputHandlingImports);
 
-    const { code: updateInputHandlingCode } = generateInputHandling(
+    const { code: updateInputHandlingCode, imports: updateInputHandlingImports } = generateInputHandling(
         { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
         metadata,
         generatorOptions,
+        targetDirectory,
     );
+    imports.push(...updateInputHandlingImports);
 
     const {
         imports: relationsFieldResolverImports,
@@ -849,6 +862,18 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push(generateEntityImport(metadata, targetDirectory));
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, targetDirectory));
+    }
+
+    const hooksService = findHooksService({ generatorOptions, metadata, targetDirectory });
+    if (hooksService) {
+        imports.push(...hooksService.imports);
+        if (
+            hooksService.validateCreateInput?.options?.includes("currentUser") ||
+            hooksService.validateUpdateInput?.options?.includes("currentUser")
+        ) {
+            imports.push({ name: "GetCurrentUser", importPath: "@comet/cms-api" });
+            imports.push({ name: "CurrentUser", importPath: "@comet/cms-api" });
+        }
     }
 
     function generateIdArg(name: string, metadata: EntityMetadata<any>): string {
@@ -885,6 +910,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 hasPositionProp ? `protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
             }
             ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
+            ${hooksService ? `protected readonly ${instanceNameSingular}Service: ${hooksService.className},` : ""}
         ) {}
 
         ${
@@ -990,7 +1016,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     return `${generateIdArg(dedicatedResolverArgProp.name, metadata)}, `;
                 })
                 .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
+                ${hooksService?.validateCreateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
         ): Promise<${metadata.className}> {
+            ${generateServiceHookCall("validateCreateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
+
             ${
                 // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
@@ -1049,8 +1078,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async update${classNameSingular}(
             ${generateIdArg("id", metadata)},
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
+            ${hooksService?.validateUpdateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
+            ${generateServiceHookCall("validateUpdateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
 
             ${
                 hasPositionProp

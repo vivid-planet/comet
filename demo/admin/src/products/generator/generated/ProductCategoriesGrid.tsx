@@ -167,9 +167,9 @@ export function ProductCategoriesGrid() {
     );
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
+            sort: { field: "position", direction: "ASC" },
             offset: 0,
             limit: 100,
-            sort: { field: "position", direction: "ASC" },
         },
     });
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
