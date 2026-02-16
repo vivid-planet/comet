@@ -24,7 +24,6 @@ import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
@@ -32,6 +31,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -112,8 +112,6 @@ export function ManufacturersGrid() {
             {
                 field: "address_street",
                 headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Address Street" }),
-                filterable: false,
-                sortable: false,
                 valueGetter: (params, row) => row.address?.street,
                 flex: 1,
                 minWidth: 150,
@@ -122,8 +120,6 @@ export function ManufacturersGrid() {
                 field: "address_streetNumber",
                 headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Address Street Number" }),
                 type: "number",
-                filterable: false,
-                sortable: false,
                 valueGetter: (params, row) => row.address?.streetNumber,
                 renderCell: ({ value }) => {
                     return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
@@ -134,8 +130,6 @@ export function ManufacturersGrid() {
             {
                 field: "address_zip",
                 headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Address Zip" }),
-                filterable: false,
-                sortable: false,
                 valueGetter: (params, row) => row.address?.zip,
                 flex: 1,
                 minWidth: 150,
@@ -161,8 +155,6 @@ export function ManufacturersGrid() {
                     </>
                 ),
                 headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Address Street" }),
-                filterable: false,
-                sortable: false,
                 valueGetter: (params, row) => row.address?.alternativeAddress?.street,
                 flex: 1,
                 minWidth: 150,
@@ -195,8 +187,6 @@ export function ManufacturersGrid() {
                     defaultMessage: "Alt-Address Street Number",
                 }),
                 type: "number",
-                filterable: false,
-                sortable: false,
                 valueGetter: (params, row) => row.address?.alternativeAddress?.streetNumber,
                 renderCell: ({ value }) => {
                     return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
@@ -225,8 +215,6 @@ export function ManufacturersGrid() {
                     </>
                 ),
                 headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Address Zip" }),
-                filterable: false,
-                sortable: false,
                 valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
                 flex: 1,
                 minWidth: 150,

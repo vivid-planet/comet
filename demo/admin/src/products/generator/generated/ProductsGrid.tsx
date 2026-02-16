@@ -32,7 +32,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { useTheme } from "@mui/material";
 import { CircularProgress } from "@mui/material";
@@ -43,6 +42,7 @@ import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { muiGridSortToGql } from "@comet/admin";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
@@ -149,7 +149,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             {
                 field: "overview",
                 headerName: intl.formatMessage({ id: "product.overview.headerName", defaultMessage: "Over-view" }),
-                filterable: false,
                 renderCell: ({ row }) => {
                     const typeLabels: Record<string, ReactNode> = {
                         Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="Cap" />,
@@ -304,7 +303,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 ...dataGridManyToManyColumn,
                 field: "tags",
                 headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
-                sortable: false,
                 renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
                 flex: 1,
                 disableExport: true,
@@ -314,7 +312,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 ...dataGridOneToManyColumn,
                 field: "variants",
                 headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
-                sortable: false,
                 renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
                 flex: 1,
                 disableExport: true,

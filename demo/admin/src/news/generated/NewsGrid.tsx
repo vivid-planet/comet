@@ -23,7 +23,6 @@ import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
@@ -33,6 +32,7 @@ import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
+import { useDataGridRemote } from "@comet/admin";
 import { useContentScope } from "@comet/cms-admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
@@ -116,8 +116,6 @@ export function NewsGrid() {
             {
                 field: "image",
                 headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
-                filterable: false,
-                sortable: false,
                 renderCell: (params) => {
                     return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
                 },
@@ -127,8 +125,6 @@ export function NewsGrid() {
             {
                 field: "content",
                 headerName: intl.formatMessage({ id: "news.content", defaultMessage: "Content" }),
-                filterable: false,
-                sortable: false,
                 renderCell: (params) => {
                     return <BlockPreviewContent block={NewsContentBlock} input={params.row.content} />;
                 },
