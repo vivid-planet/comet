@@ -4,6 +4,7 @@
     "description": "A set of ESLint rules and configurations for Comet projects",
     "type": "commonjs",
     "main": "lib/index.js",
+    "license": "BSD-2-Clause",
     "scripts": {
         "build": "pnpm run clean && tsc",
         "clean": "rimraf lib",
