@@ -7,9 +7,10 @@ import { type CustomMiddleware } from "./chain";
 const normalizeDomain = (host: string) => (host.startsWith("www.") ? host.substring(4) : host);
 
 const matchesHostWithAdditionalDomain = (siteConfig: PublicSiteConfig, host: string) => {
+    // non-www redirect
     if (normalizeDomain(siteConfig.domains.main) === normalizeDomain(host)) {
         return true;
-    } // non-www redirect
+    }
     if (siteConfig.domains.additional?.map(normalizeDomain).includes(normalizeDomain(host))) {
         return true;
     }

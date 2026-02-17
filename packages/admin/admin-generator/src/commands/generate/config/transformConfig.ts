@@ -69,9 +69,10 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                 if (ts.isArrowFunction(node)) {
                     if (supportedInlineCodePaths.includes(path)) {
                         let code = node.getText();
+                        // for some unknown reason node can contain the trailing comma
                         if (code.endsWith(",")) {
                             code = code.slice(0, -1);
-                        } // for some unknown reason node can contain the trailing comma
+                        }
                         const imports = findUsedImports(node.body, importedIdentifiers); //find all imports used in the function body
                         // replace inline code with { code, imports } object
                         return ts.factory.createObjectLiteralExpression(
@@ -122,9 +123,10 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                                     throw new Error(`Only JsxAttributes are supported in FormattedMessage in this context: ${path}`);
                                 }
                                 let name = attr.name?.getText();
+                                // rename to identify as formattedMessage
                                 if (name === "id") {
                                     name = "formattedMessageId";
-                                } // rename to identify as formattedMessage
+                                }
                                 if (!attr.initializer || !ts.isStringLiteral(attr.initializer)) {
                                     throw new Error(`Only string literals are supported in FormattedMessage in this context: ${path}.${name}`);
                                 }

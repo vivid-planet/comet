@@ -21,9 +21,10 @@ export function findRootBlocks({ gqlType, targetDirectory }: { gqlType: string; 
         throw new Error("didn't find entity in schema types");
     }
     schemaEntity.fields.forEach((field) => {
+        // already defined
         if (ret[field.name]) {
             return;
-        } // already defined
+        }
         let type = field.type;
         if (type.kind == "NON_NULL") {
             type = type.ofType;

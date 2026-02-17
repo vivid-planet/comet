@@ -377,9 +377,10 @@ export function createReadApi(
 
         async preloadNodes(scope?: ScopeInterface) {
             const hash = scopeHash(scope);
+            //don't double-preload
             if (preloadedNodes.has(hash)) {
                 return;
-            } //don't double-preload
+            }
             return tracer.startActiveSpan("preload PageTreeNode", async (span) => {
                 span.setAttribute("scope", JSON.stringify(scope));
                 preloadRunning = true;

@@ -62,17 +62,19 @@ export function getCenteredPosition(crop: ImageDimensions, area: ImageDimensions
     if (x + crop.width > area.width) {
         x -= x + crop.width - area.width;
     }
+    // Can happen because width is rounded and x not
     if (x < 0) {
         x = 0;
-    } // Can happen because width is rounded and x not
+    }
 
     let y = Math.max(focalPoint.y - crop.height / 2, 0);
     if (y + crop.height > area.height) {
         y -= y + crop.height - area.height;
     }
+    // Can happen because height is rounded and y not
     if (y < 0) {
         y = 0;
-    } // Can happen because height is rounded and y not
+    }
 
     return { x: x + area.x, y: y + area.y };
 }

@@ -154,9 +154,10 @@ export const EditPage = ({ id }: Props) => {
                 {hasChanges && (
                     <RouterPrompt
                         message={(location) => {
+                            //we navigated within our self
                             if (location.pathname.startsWith(match.url)) {
                                 return true;
-                            } //we navigated within our self
+                            }
                             return intl.formatMessage({
                                 id: "editPage.discardChanges",
                                 defaultMessage: "Discard unsaved changes?",

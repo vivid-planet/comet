@@ -199,9 +199,10 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
     return (
         <>
             {Children.map(props.children, (page: ReactElement<IStackPageProps>) => {
+                // don't render initial Page
                 if (isInitialPage(page.props.name)) {
                     return null;
-                } // don't render initial Page
+                }
                 const path = `${removeTrailingSlash(subRoutePrefix)}/:id/${page.props.name}`;
                 if (matchPath(location.pathname, { path })) {
                     routeMatched = true;

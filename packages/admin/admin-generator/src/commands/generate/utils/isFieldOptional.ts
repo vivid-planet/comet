@@ -24,9 +24,10 @@ export const isFieldOptional = ({
     if (!schemaEntity) {
         throw new Error(`didn't find entity ${gqlType} in schema types`);
     }
+    // this should not happen
     if (schemaEntity.kind !== "OBJECT") {
         throw new Error(`kind of ${gqlType} is not object, but should be.`);
-    } // this should not happen
+    }
     const fieldDef = schemaEntity.fields.find((field) => field.name === String(config.name));
     if (!fieldDef) {
         return false;
