@@ -40,7 +40,9 @@
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.3",
         "commander": "^14.0.2",
-        "nest-commander": "^3.20.1"
+        "nest-commander": "^3.20.1",
+        "reflect-metadata": "^0.2.2",
+        "rxjs": "^7.8.2"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
@@ -68,9 +70,7 @@
         "jest-junit": "^15.0.0",
         "lodash.isequal": "^4.5.0",
         "prettier": "^3.4.2",
-        "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
-        "rxjs": "^7.8.2",
         "ts-jest": "^29.0.5",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",

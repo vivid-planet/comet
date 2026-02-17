@@ -86,7 +86,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
                         variant="horizontal"
                         fullWidth
                         name="title"
-                        label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                        label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         validate={validateTitle}
                     />
 
@@ -130,7 +130,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
                         getOptionLabel={(option) => option.title}
                     />
                     <CheckboxField
-                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                        label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
                         name="inStock"
                         fullWidth
                         variant="horizontal"
