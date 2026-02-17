@@ -5,15 +5,13 @@ import { styled } from "@mui/material/styles";
 import { type GridColumnHeaderParams } from "@mui/x-data-grid";
 import { type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { v4 as uuid } from "uuid";
 
-import { type TableBlockData } from "../../blocks.generated";
+import { type RichTextBlock, type TableBlockState } from "../factories/createTableBlock";
 import {
     columnInsertSchema,
     type ColumnSize,
     getDuplicatedColumnInsertData,
     getInsertDataFromColumnById,
-    getNewColumnInsertData,
     insertColumnDataAtIndex,
     removeColumnFromState,
     setColumnSize,
@@ -24,10 +22,11 @@ import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
     highlighted: boolean;
-    state: TableBlockData;
-    updateState: Dispatch<SetStateAction<TableBlockData>>;
+    state: TableBlockState;
+    updateState: Dispatch<SetStateAction<TableBlockState>>;
     columnIndex: number;
     addToRecentlyPastedIds: (id: string) => void;
+    RichTextBlock: RichTextBlock;
 };
 
 const columnSizes: Record<ColumnSize, ReactNode> = {
@@ -38,13 +37,26 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
     extraLarge: <FormattedMessage id="comet.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
 };
 
-export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
+export const ColumnHeader = ({
+    columnSize,
+    highlighted,
+    state,
+    updateState,
+    columnIndex,
+    field: columnId,
+    addToRecentlyPastedIds,
+    RichTextBlock,
+}: Props) => {
     const snackbarApi = useSnackbarApi();
     const intl = useIntl();
 
     const handleInsertColumnAtIndex = (newColumnIndex: number) => {
         updateState((state) => {
-            const newColumnInsertData = getNewColumnInsertData(state.rows.length);
+            const newColumnInsertData = {
+                size: "standard" as const,
+                highlighted: false,
+                cellValues: state.rows.map(() => RichTextBlock.defaultValues()),
+            };
             return insertColumnDataAtIndex(state, newColumnInsertData, newColumnIndex);
         });
     };
@@ -81,7 +93,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                 return state;
             }
 
-            const newColumnId = uuid();
+            const newColumnId = crypto.randomUUID();
             addToRecentlyPastedIds(newColumnId);
             return insertColumnDataAtIndex(state, duplicatedColumnInsertData, columnIndex + 1, newColumnId);
         });
@@ -117,7 +129,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
         }
 
         updateState((state) => {
-            const newColumnId = uuid();
+            const newColumnId = crypto.randomUUID();
             addToRecentlyPastedIds(newColumnId);
             return insertColumnDataAtIndex(state, clipboardData, columnIndex + 1, newColumnId);
         });

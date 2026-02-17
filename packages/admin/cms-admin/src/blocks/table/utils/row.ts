@@ -1,21 +1,30 @@
-import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
-import { type TableBlockData } from "../../../blocks.generated";
+import { type RichTextBlockState } from "../../createRichTextBlock";
+import { type TableBlockRowState, type TableBlockState } from "../../factories/createTableBlock";
 import { getNewColumn } from "./column";
 
-export const getNewRow = (cellValues: TableBlockData["rows"][number]["cellValues"], newRowId: string = uuid()): TableBlockData["rows"][number] => {
+export const getNewRow = (cellValues: TableBlockRowState["cellValues"], newRowId: string = crypto.randomUUID()): TableBlockRowState => {
     return { id: newRowId, highlighted: false, cellValues };
 };
 
+// Schema for clipboard validation - uses serializable format
 export const rowInsertSchema = z.object({
     highlighted: z.boolean(),
-    cellValues: z.array(z.string()),
+    cellValues: z.array(z.unknown()), // Can be RichTextBlockState or serialized format
 });
 
-export type RowInsertData = z.infer<typeof rowInsertSchema>;
+export interface RowInsertData<T = RichTextBlockState> {
+    highlighted: boolean;
+    cellValues: T[];
+}
 
-export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInsertData, index: number, newRowId: string = uuid()): TableBlockData => {
+export const insertRowDataAtIndex = <T>(
+    state: TableBlockState,
+    insertData: RowInsertData<T>,
+    index: number,
+    newRowId: string = crypto.randomUUID(),
+): TableBlockState => {
     const updatedColumns = [...state.columns];
     const newColumnIds: string[] = [];
 
@@ -30,12 +39,13 @@ export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInser
 
     const numberOfColumnsWithoutNewValue = updatedColumns.length - cellValuesToInsert.length;
     Array.from({ length: numberOfColumnsWithoutNewValue }).forEach(() => {
-        cellValuesToInsert.push("");
+        // This shouldn't happen in normal usage, but provide a fallback
+        cellValuesToInsert.push(cellValuesToInsert[0]);
     });
 
     const newRow = getNewRow(
-        cellValuesToInsert.map((value, index) => {
-            return { columnId: updatedColumns[index].id, value };
+        cellValuesToInsert.map((value, idx) => {
+            return { columnId: updatedColumns[idx].id, value: value as RichTextBlockState };
         }),
         newRowId,
     );
@@ -46,11 +56,11 @@ export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInser
     newColumnIds.forEach((newColumnId) => {
         rowsBeforeTargetIndex = rowsBeforeTargetIndex.map((row) => ({
             ...row,
-            cellValues: [...row.cellValues, { columnId: newColumnId, value: "" }],
+            cellValues: [...row.cellValues, { columnId: newColumnId, value: cellValuesToInsert[0] as RichTextBlockState }],
         }));
         rowsAfterTargetIndex = rowsAfterTargetIndex.map((row) => ({
             ...row,
-            cellValues: [...row.cellValues, { columnId: newColumnId, value: "" }],
+            cellValues: [...row.cellValues, { columnId: newColumnId, value: cellValuesToInsert[0] as RichTextBlockState }],
         }));
     });
 
@@ -61,21 +71,21 @@ export const insertRowDataAtIndex = (state: TableBlockData, insertData: RowInser
     };
 };
 
-export const deleteRowById = (state: TableBlockData, rowIdToDelete: string): TableBlockData => {
+export const deleteRowById = (state: TableBlockState, rowIdToDelete: string): TableBlockState => {
     return {
         ...state,
         rows: state.rows.filter(({ id }) => id !== rowIdToDelete),
     };
 };
 
-export const getInsertDataFromRowById = (state: TableBlockData, rowId: string): RowInsertData | null => {
+export const getInsertDataFromRowById = (state: TableBlockState, rowId: string): RowInsertData | null => {
     const row = state.rows.find(({ id }) => id === rowId);
     if (!row) {
         return null;
     }
 
-    const cellValuesInOrderOfColumns = state.columns.map((column) => {
-        return row.cellValues.find((cellValue) => cellValue.columnId === column.id)?.value ?? "";
+    const cellValuesInOrderOfColumns = state.columns.map((column: TableBlockState["columns"][number]) => {
+        return row.cellValues.find((cellValue) => cellValue.columnId === column.id)?.value as RichTextBlockState;
     });
 
     return {

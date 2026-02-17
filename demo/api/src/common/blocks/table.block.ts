@@ -1,5 +1,5 @@
 import { createTableBlock } from "@comet/cms-api";
 
-export const TableBlock = createTableBlock({
-    // TODO: Configure table block
-});
+import { RichTextBlock } from "./rich-text.block";
+
+export const TableBlock = createTableBlock({ cellContent: RichTextBlock });

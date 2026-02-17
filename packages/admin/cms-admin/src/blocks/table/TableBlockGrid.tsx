@@ -11,14 +11,13 @@ import {
 } from "@mui/x-data-grid-pro";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
-import { type TableBlockData } from "../../blocks.generated";
+import { type RichTextBlockState } from "../createRichTextBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
+import { type ColumnSize, type RichTextBlock, type TableBlockColumn, type TableBlockState } from "../factories/createTableBlock";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
-import { type ColumnSize } from "./utils/column";
-import { ensureMinimumTableData } from "./utils/tableData";
 import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
@@ -38,22 +37,55 @@ const flexForColumnSize: Record<ColumnSize, number> = {
 };
 
 type Props = {
-    state: TableBlockData;
-    updateState: Dispatch<SetStateAction<TableBlockData>>;
+    state: TableBlockState;
+    updateState: Dispatch<SetStateAction<TableBlockState>>;
+    RichTextBlock: RichTextBlock;
 };
 
-export const TableBlockGrid = ({ state, updateState }: Props) => {
+export const TableBlockGrid = ({ state, updateState, RichTextBlock }: Props) => {
     const apiRef = useGridApiRef();
     const { recentlyPastedIds: recentlyPastedRowIds, addToRecentlyPastedIds: addToRecentlyPastedRowIds } = useRecentlyPastedIds();
     const { recentlyPastedIds: recentlyPastedColumnIds, addToRecentlyPastedIds: addToRecentlyPastedColumnIds } = useRecentlyPastedIds();
 
     useEffect(() => {
         if (state.columns.length === 0 || state.rows.length === 0) {
-            updateState(ensureMinimumTableData);
-        }
-    }, [state.columns.length, state.rows.length, updateState]);
+            updateState((prevState) => {
+                let result = prevState;
 
-    const setRowData: Dispatch<SetStateAction<TableBlockData["rows"]>> = (newRows) => {
+                if (result.columns.length === 0) {
+                    const newColumnId = crypto.randomUUID();
+                    result = {
+                        ...result,
+                        columns: [{ id: newColumnId, size: "standard", highlighted: false }],
+                        rows: result.rows.map((row) => ({
+                            ...row,
+                            cellValues: [...row.cellValues, { columnId: newColumnId, value: RichTextBlock.defaultValues() }],
+                        })),
+                    };
+                }
+
+                if (result.rows.length === 0) {
+                    result = {
+                        ...result,
+                        rows: [
+                            {
+                                id: crypto.randomUUID(),
+                                highlighted: false,
+                                cellValues: result.columns.map((col: TableBlockColumn) => ({
+                                    columnId: col.id,
+                                    value: RichTextBlock.defaultValues(),
+                                })),
+                            },
+                        ],
+                    };
+                }
+
+                return result;
+            });
+        }
+    }, [state.columns.length, state.rows.length, updateState, RichTextBlock]);
+
+    const setRowData: Dispatch<SetStateAction<TableBlockState["rows"]>> = (newRows) => {
         updateState((state) => {
             return { ...state, rows: typeof newRows === "function" ? newRows(state.rows) : newRows };
         });
@@ -69,7 +101,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                         ...existingRow,
                         cellValues: Object.entries(newRowValuesRecord).map(([columnId, value]) => ({
                             columnId,
-                            value,
+                            value: value as RichTextBlockState,
                         })),
                     };
                 }
@@ -100,12 +132,12 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
 
             updateState((state) => {
-                const movingColumn = state.columns.find((column) => column.id === columnId);
+                const movingColumn = state.columns.find((column: TableBlockColumn) => column.id === columnId);
                 if (!movingColumn) {
                     return state;
                 }
 
-                const otherColumns = state.columns.filter((column) => column.id !== columnId);
+                const otherColumns = state.columns.filter((column: TableBlockColumn) => column.id !== columnId);
                 return {
                     ...state,
                     columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
@@ -122,7 +154,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             minWidth: 36,
             maxWidth: 36,
         },
-        ...state.columns.map(({ id: columnId, highlighted, size }, index) => ({
+        ...state.columns.map(({ id: columnId, highlighted, size }: TableBlockColumn, index: number) => ({
             field: columnId,
             editable: true,
             sortable: false,
@@ -137,6 +169,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                     updateState={updateState}
                     columnIndex={index}
                     addToRecentlyPastedIds={addToRecentlyPastedColumnIds}
+                    RichTextBlock={RichTextBlock}
                 />
             ),
             renderCell: ({ value, row, field: columnId }: GridRenderCellParams) => {
@@ -152,7 +185,9 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                     />
                 );
             },
-            renderEditCell: (params: GridRenderEditCellParams) => <EditCell {...params} />,
+            renderEditCell: (params: GridRenderEditCellParams) => {
+                return <EditCell {...params} RichTextBlock={RichTextBlock} />;
+            },
         })),
         {
             field: "actions",
@@ -162,7 +197,13 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             maxWidth: 36,
             disableReorder: true,
             renderCell: ({ row }) => (
-                <RowActionsCell row={row} updateState={updateState} state={state} addToRecentlyPastedIds={addToRecentlyPastedRowIds} />
+                <RowActionsCell
+                    row={row}
+                    updateState={updateState}
+                    state={state}
+                    addToRecentlyPastedIds={addToRecentlyPastedRowIds}
+                    RichTextBlock={RichTextBlock}
+                />
             ),
         },
     ];

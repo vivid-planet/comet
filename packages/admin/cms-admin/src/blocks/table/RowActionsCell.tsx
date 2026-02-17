@@ -3,20 +3,20 @@ import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from 
 import { Divider, Snackbar } from "@mui/material";
 import { type Dispatch, type SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { v4 as uuid } from "uuid";
 
-import { type TableBlockData } from "../../blocks.generated";
+import { type RichTextBlock, type TableBlockState } from "../factories/createTableBlock";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 import { deleteRowById, getInsertDataFromRowById, insertRowDataAtIndex, type RowInsertData, rowInsertSchema } from "./utils/row";
 
 type Props = {
     row: Record<string, unknown> & { id: string };
-    updateState: Dispatch<SetStateAction<TableBlockData>>;
-    state: TableBlockData;
+    updateState: Dispatch<SetStateAction<TableBlockState>>;
+    state: TableBlockState;
     addToRecentlyPastedIds: (id: string) => void;
+    RichTextBlock: RichTextBlock;
 };
 
-export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
+export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds, RichTextBlock }: Props) => {
     const snackbarApi = useSnackbarApi();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
     const intl = useIntl();
@@ -28,7 +28,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
 
             const insertData: RowInsertData = {
                 highlighted: false,
-                cellValues: state.columns.map(() => ""),
+                cellValues: state.columns.map(() => RichTextBlock.defaultValues()),
             };
             return insertRowDataAtIndex(state, insertData, newRowIndex);
         });
@@ -70,7 +70,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         }
 
         updateState((state) => {
-            const newRowId = uuid();
+            const newRowId = crypto.randomUUID();
             addToRecentlyPastedIds(newRowId);
             return insertRowDataAtIndex(state, duplicatedRowInsertData, currentRowIndex + 1, newRowId);
         });
@@ -111,7 +111,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         }
 
         updateState((state) => {
-            const newRowId = uuid();
+            const newRowId = crypto.randomUUID();
             addToRecentlyPastedIds(newRowId);
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
             return insertRowDataAtIndex(state, clipboardData, currentRowIndex + 1, newRowId);

@@ -1,13 +1,24 @@
-import { instanceToPlain, plainToInstance, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
+import { Expose, plainToInstance, Transform, Type } from "class-transformer";
+import { IsArray, IsBoolean, IsEnum, IsString, ValidateNested } from "class-validator";
 
-import { Block, BlockData, BlockDataInterface, BlockInput, BlockInputInterface, blockInputToData, createBlock } from "../block";
+import {
+    Block,
+    BlockData,
+    BlockDataInterface,
+    BlockInput,
+    BlockInputInterface,
+    blockInputToData,
+    createBlock,
+    ExtractBlockData,
+    ExtractBlockInput,
+    isBlockDataInterface,
+    isBlockInputInterface,
+} from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type CreateTableBlockOptions = {
-    // TODO: Allow configuring the RichText block here
+type CreateTableBlockOptions<CellContentBlock extends Block> = {
+    cellContent: CellContentBlock;
 };
 
 enum ColumnSize {
@@ -47,72 +58,116 @@ class TableBlockColumnInput extends BlockInput {
     }
 }
 
-class TableBlockRowColumnValueData extends BlockData {
-    @BlockField()
+interface TableBlockCellValueDataInterface<CellContentData extends BlockDataInterface> {
     columnId: string;
-
-    @BlockField({ type: "string" })
-    value: string;
+    value: CellContentData;
 }
 
-class TableBlockRowColumnValueInput extends BlockInput {
-    @BlockField()
-    @IsString()
+interface TableBlockCellValueInputInterface<CellContentInput extends BlockInputInterface> {
     columnId: string;
-
-    @BlockField({ type: "string" })
-    @IsString()
-    value: string;
-
-    transformToBlockData(): TableBlockRowColumnValueData {
-        return blockInputToData(TableBlockRowColumnValueData, this);
-    }
+    value: CellContentInput;
 }
 
-class TableBlockRowData extends BlockData {
-    @BlockField()
+interface TableBlockRowDataInterface<CellContentData extends BlockDataInterface> {
     id: string;
-
-    @BlockField()
     highlighted: boolean;
-
-    @BlockField(TableBlockRowColumnValueData)
-    @Type(() => TableBlockRowColumnValueData)
-    cellValues: TableBlockRowColumnValueData[] = [];
+    cellValues: TableBlockCellValueDataInterface<CellContentData>[];
 }
 
-class TableBlockRowInput extends BlockInput {
-    @BlockField()
-    @IsString()
+interface TableBlockRowInputInterface<CellContentInput extends BlockInputInterface> {
     id: string;
-
-    @BlockField()
-    @IsBoolean()
     highlighted: boolean;
-
-    @BlockField(TableBlockRowColumnValueInput)
-    @Type(() => TableBlockRowColumnValueInput)
-    cellValues: TableBlockRowColumnValueInput[] = [];
-
-    transformToBlockData(): TableBlockRowData {
-        return blockInputToData(TableBlockRowData, this);
-    }
+    cellValues: TableBlockCellValueInputInterface<CellContentInput>[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface TableBlockDataInterface extends BlockDataInterface {
-    // TODO: Add richText block here
+interface TableBlockDataInterface<CellContentData extends BlockDataInterface> extends BlockDataInterface {
+    columns: TableBlockColumnData[];
+    rows: TableBlockRowDataInterface<CellContentData>[];
 }
 
-interface TableBlockInputInterface extends BlockInputInterface<BlockDataInterface, { columns: TableBlockColumnInput[]; rows: TableBlockRowInput[] }> {
+interface TableBlockInputInterface<CellContentInput extends BlockInputInterface>
+    extends BlockInputInterface<BlockDataInterface, { columns: TableBlockColumnInput[]; rows: TableBlockRowInputInterface<CellContentInput>[] }> {
     columns: TableBlockColumnInput[];
-    rows: TableBlockRowInput[];
+    rows: TableBlockRowInputInterface<CellContentInput>[];
 }
 
-export function createTableBlock(
-    options: CreateTableBlockOptions,
+export function createTableBlock<CellContentBlock extends Block>(
+    options: CreateTableBlockOptions<CellContentBlock>,
     nameOrOptions: BlockFactoryNameOrOptions = "Table",
-): Block<TableBlockDataInterface, TableBlockInputInterface> {
+): Block<TableBlockDataInterface<ExtractBlockData<CellContentBlock>>, TableBlockInputInterface<ExtractBlockInput<CellContentBlock>>> {
+    const { cellContent: CellContentBlock } = options;
+
+    class TableBlockRowColumnValueData extends BlockData {
+        @BlockField()
+        columnId: string;
+
+        @BlockField({ type: "block", block: CellContentBlock })
+        @Transform(
+            ({ value }) => {
+                if (isBlockDataInterface(value)) {
+                    return value;
+                }
+                return CellContentBlock.blockDataFactory(value);
+            },
+            { toClassOnly: true },
+        )
+        value: BlockDataInterface;
+    }
+
+    class TableBlockRowColumnValueInput extends BlockInput {
+        @BlockField()
+        @IsString()
+        columnId: string;
+
+        @ValidateNested()
+        @BlockField({ type: "block", block: CellContentBlock })
+        @Expose()
+        @Transform(
+            ({ value }) => {
+                if (isBlockInputInterface(value)) {
+                    return value;
+                }
+                return CellContentBlock.blockInputFactory(value);
+            },
+            { toClassOnly: true },
+        )
+        value: ExtractBlockInput<CellContentBlock>;
+
+        transformToBlockData(): TableBlockRowColumnValueData {
+            return blockInputToData(TableBlockRowColumnValueData, this);
+        }
+    }
+
+    class TableBlockRowData extends BlockData {
+        @BlockField()
+        id: string;
+
+        @BlockField()
+        highlighted: boolean;
+
+        @BlockField(TableBlockRowColumnValueData)
+        @Type(() => TableBlockRowColumnValueData)
+        cellValues: TableBlockRowColumnValueData[] = [];
+    }
+
+    class TableBlockRowInput extends BlockInput {
+        @BlockField()
+        @IsString()
+        id: string;
+
+        @BlockField()
+        @IsBoolean()
+        highlighted: boolean;
+
+        @BlockField(TableBlockRowColumnValueInput)
+        @Type(() => TableBlockRowColumnValueInput)
+        cellValues: TableBlockRowColumnValueInput[] = [];
+
+        transformToBlockData(): TableBlockRowData {
+            return blockInputToData(TableBlockRowData, this);
+        }
+    }
+
     class TableBlockData extends BlockData {
         @BlockField(TableBlockColumnData)
         @Type(() => TableBlockColumnData)
@@ -123,7 +178,7 @@ export function createTableBlock(
         rows: TableBlockRowData[] = [];
     }
 
-    class TableBlockInput implements TableBlockInputInterface {
+    class TableBlockInput extends BlockInput {
         @BlockField(TableBlockColumnInput)
         @IsArray()
         @Type(() => TableBlockColumnInput)
@@ -141,11 +196,10 @@ export function createTableBlock(
                 rows: this.rows.map((row) => row.transformToBlockData()),
             });
         }
-
-        toPlain(): ReturnType<TableBlockInputInterface["toPlain"]> {
-            return instanceToPlain(this) as ReturnType<TableBlockInputInterface["toPlain"]>;
-        }
     }
 
-    return createBlock(TableBlockData, TableBlockInput, nameOrOptions);
+    return createBlock(TableBlockData, TableBlockInput, nameOrOptions) as unknown as Block<
+        TableBlockDataInterface<ExtractBlockData<CellContentBlock>>,
+        TableBlockInputInterface<ExtractBlockInput<CellContentBlock>>
+    >;
 }

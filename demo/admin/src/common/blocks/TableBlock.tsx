@@ -1,5 +1,10 @@
 import { createTableBlock } from "@comet/cms-admin";
 
+import { LinkBlock } from "../blocks/LinkBlock";
+
 export const TableBlock = createTableBlock({
-    // TODO: Configure table block
+    rte: {
+        link: LinkBlock,
+        minHeight: 0,
+    },
 });
