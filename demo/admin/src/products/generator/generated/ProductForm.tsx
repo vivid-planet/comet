@@ -472,7 +472,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 getOptionLabel={(option) => option.name}
                             />
                             <CheckboxField
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
+                                fieldLabel={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
                                 name="inStock"
                                 fullWidth
                                 variant="horizontal"
