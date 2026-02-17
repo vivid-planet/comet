@@ -1,0 +1,67 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateFormField - boolean > should generate boolean field with both fieldLabel and checkboxLabel 1`] = `
+"<CheckboxField
+                        fieldLabel={<FormattedMessage id="product.hasParticipated" defaultMessage="Has Participated" />}
+                        label={<FormattedMessage id="product.hasParticipated.checkboxLabel" defaultMessage="Yes/No" />}
+                        name="hasParticipated"
+                        fullWidth
+                        variant="horizontal"
+                        
+                        
+                        
+                    />"
+`;
+
+exports[`generateFormField - boolean > should generate boolean field with both fieldLabel and checkboxLabel 2`] = `
+[
+  {
+    "defaultInitializationCode": "false",
+    "fieldName": "hasParticipated",
+  },
+]
+`;
+
+exports[`generateFormField - boolean > should generate boolean field with initial value 1`] = `
+"<CheckboxField
+                        fieldLabel={<FormattedMessage id="product.hasParticipated" defaultMessage="Has Participated" />}
+                        
+                        name="hasParticipated"
+                        fullWidth
+                        variant="horizontal"
+                        
+                        
+                        
+                    />"
+`;
+
+exports[`generateFormField - boolean > should generate boolean field with initial value 2`] = `
+[
+  {
+    "defaultInitializationCode": "true",
+    "fieldName": "hasParticipated",
+  },
+]
+`;
+
+exports[`generateFormField - boolean > should generate simple boolean field with label as fieldLabel 1`] = `
+"<CheckboxField
+                        fieldLabel={<FormattedMessage id="product.hasParticipated" defaultMessage="Has Participated" />}
+                        
+                        name="hasParticipated"
+                        fullWidth
+                        variant="horizontal"
+                        
+                        
+                        
+                    />"
+`;
+
+exports[`generateFormField - boolean > should generate simple boolean field with label as fieldLabel 2`] = `
+[
+  {
+    "defaultInitializationCode": "false",
+    "fieldName": "hasParticipated",
+  },
+]
+`;
