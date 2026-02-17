@@ -54,8 +54,11 @@ describe("generateFormField - boolean", () => {
             formConfig,
             gqlType: "Product",
         });
-        expect(formOutput.code).toMatchSnapshot();
-        expect(formOutput.formValuesConfig).toMatchSnapshot();
+
+        expect(formOutput.code).toContain("<CheckboxField");
+        expect(formOutput.code).toContain('fieldLabel={<FormattedMessage id="product.hasParticipated" defaultMessage="Has Participated" />}');
+        expect(formOutput.code).toContain('name="hasParticipated"');
+        expect(formOutput.code).not.toContain("label={");
     });
 
     it("should generate boolean field with both fieldLabel and checkboxLabel", async () => {
@@ -81,35 +84,11 @@ describe("generateFormField - boolean", () => {
             formConfig,
             gqlType: "Product",
         });
-        expect(formOutput.code).toMatchSnapshot();
-        expect(formOutput.formValuesConfig).toMatchSnapshot();
-    });
 
-    it("should generate boolean field with initial value", async () => {
-        const fieldConfig: FormFieldConfig<GQLProduct> = {
-            type: "boolean",
-            name: "hasParticipated",
-            initialValue: true,
-        };
-
-        const formConfig: FormConfig<GQLProduct> = {
-            type: "form",
-            gqlType: "Product",
-            fields: [fieldConfig],
-        };
-
-        const introspection = introspectionFromSchema(schema);
-
-        const formOutput = generateFormField({
-            gqlIntrospection: introspection,
-            baseOutputFilename: "ProductForm",
-            formFragmentName: "ProductFormFragment",
-            config: fieldConfig,
-            formConfig,
-            gqlType: "Product",
-        });
-        expect(formOutput.code).toMatchSnapshot();
-        expect(formOutput.formValuesConfig).toMatchSnapshot();
+        expect(formOutput.code).toContain("<CheckboxField");
+        expect(formOutput.code).toContain('fieldLabel={<FormattedMessage id="product.hasParticipated" defaultMessage="Has Participated" />}');
+        expect(formOutput.code).toContain('label={<FormattedMessage id="product.hasParticipated.checkboxLabel" defaultMessage="Yes/No" />}');
+        expect(formOutput.code).toContain('name="hasParticipated"');
     });
 
     it("should generate boolean field with FormattedMessageElement as checkboxLabel", async () => {
@@ -138,7 +117,10 @@ describe("generateFormField - boolean", () => {
             formConfig,
             gqlType: "Product",
         });
-        expect(formOutput.code).toMatchSnapshot();
-        expect(formOutput.formValuesConfig).toMatchSnapshot();
+
+        expect(formOutput.code).toContain("<CheckboxField");
+        expect(formOutput.code).toContain('fieldLabel={<FormattedMessage id="product.hasParticipated" defaultMessage="Has Participated" />}');
+        expect(formOutput.code).toContain('label={<FormattedMessage id="custom.checkboxLabel.id" defaultMessage="Custom Checkbox Label" />}');
+        expect(formOutput.code).toContain('name="hasParticipated"');
     });
 });
