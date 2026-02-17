@@ -174,7 +174,6 @@ export function generateFormField({
             ? generateFormattedMessage({
                   config: config.checkboxLabel,
                   id: `${formattedMessageRootId}.${name}.checkboxLabel`,
-                  defaultMessage: config.checkboxLabel,
                   type: "jsx",
               })
             : "";

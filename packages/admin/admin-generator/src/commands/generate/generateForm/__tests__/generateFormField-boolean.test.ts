@@ -1,7 +1,7 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { describe, expect, it } from "vitest";
 
-import type { FormConfig, FormFieldConfig } from "../../generate-command";
+import type { FormattedMessageElement, FormConfig, FormFieldConfig } from "../../generate-command";
 import { generateFormField } from "../generateFormField";
 
 const schema = buildSchema(`
@@ -90,6 +90,36 @@ describe("generateFormField - boolean", () => {
             type: "boolean",
             name: "hasParticipated",
             initialValue: true,
+        };
+
+        const formConfig: FormConfig<GQLProduct> = {
+            type: "form",
+            gqlType: "Product",
+            fields: [fieldConfig],
+        };
+
+        const introspection = introspectionFromSchema(schema);
+
+        const formOutput = generateFormField({
+            gqlIntrospection: introspection,
+            baseOutputFilename: "ProductForm",
+            formFragmentName: "ProductFormFragment",
+            config: fieldConfig,
+            formConfig,
+            gqlType: "Product",
+        });
+        expect(formOutput.code).toMatchSnapshot();
+        expect(formOutput.formValuesConfig).toMatchSnapshot();
+    });
+
+    it("should generate boolean field with FormattedMessageElement as checkboxLabel", async () => {
+        const fieldConfig: FormFieldConfig<GQLProduct> = {
+            type: "boolean",
+            name: "hasParticipated",
+            checkboxLabel: {
+                formattedMessageId: "custom.checkboxLabel.id",
+                defaultMessage: "Custom Checkbox Label",
+            } as unknown as FormattedMessageElement,
         };
 
         const formConfig: FormConfig<GQLProduct> = {
