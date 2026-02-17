@@ -1,0 +1,28 @@
+import { type ReactNode } from "react";
+
+import styles from "./FieldContainer.module.scss";
+
+export type FieldContainerProps = {
+    label?: ReactNode;
+    required?: boolean;
+    errorText?: string;
+    helperText?: ReactNode;
+    children: ReactNode;
+};
+
+export type FieldContainerFieldProps = Pick<FieldContainerProps, "label" | "helperText">;
+
+export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required = false, errorText, helperText, children }) => {
+    return (
+        <div>
+            {label && (
+                <div className={styles.labelWrapper}>
+                    <label className={styles.label}>{label}</label>
+                    {!required && <span className={styles.optionalText}>(optional)</span>}
+                </div>
+            )}
+            <div className={`${styles.fieldBase} ${errorText ? styles.fieldBaseError : ""}`}>{children}</div>
+            {errorText ? <div className={styles.errorWrapper}>{errorText}</div> : helperText && <div className={styles.helperText}>{helperText}</div>}
+        </div>
+    );
+};
