@@ -1,4 +1,3 @@
-//import { parseSource } from "../../utils/test-helper";
 import { generateEnumFilterDto } from "../generate-enum-filter-dto";
 
 describe("generateEnumFilterDto", () => {
