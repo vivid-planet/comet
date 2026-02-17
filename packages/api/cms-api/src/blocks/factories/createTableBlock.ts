@@ -3,7 +3,6 @@ import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
 
 import { Block, BlockData, BlockDataInterface, BlockInput, BlockInputInterface, blockInputToData, createBlock } from "../block";
 import { BlockField } from "../decorators/field";
-import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
 import { BlockFactoryNameOrOptions } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -114,10 +113,6 @@ export function createTableBlock(
     options: CreateTableBlockOptions,
     nameOrOptions: BlockFactoryNameOrOptions = "Table",
 ): Block<TableBlockDataInterface, TableBlockInputInterface> {
-    const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
-    const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
-
-    @BlockDataMigrationVersion(migrate.version)
     class TableBlockData extends BlockData {
         @BlockField(TableBlockColumnData)
         @Type(() => TableBlockColumnData)
@@ -152,5 +147,5 @@ export function createTableBlock(
         }
     }
 
-    return createBlock(TableBlockData, TableBlockInput, blockName);
+    return createBlock(TableBlockData, TableBlockInput, nameOrOptions);
 }
