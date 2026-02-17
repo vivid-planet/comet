@@ -23,8 +23,8 @@ export const TextareaField = <TFieldValues extends FieldValues>({
             control={control}
             rules={rules}
             render={({ field, fieldState }) => (
-                <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message}>
-                    <Typography as="textarea" variant="paragraph200" {...inputProps} {...field} />
+                <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={name}>
+                    <Typography as="textarea" variant="paragraph200" {...inputProps} {...field} id={name} />
                 </FieldContainer>
             )}
         />

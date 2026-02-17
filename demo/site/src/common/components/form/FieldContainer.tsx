@@ -9,16 +9,19 @@ export type FieldContainerProps = {
     errorText?: string;
     helperText?: ReactNode;
     children: ReactNode;
+    htmlFor?: string;
 };
 
 export type FieldContainerFieldProps = Pick<FieldContainerProps, "label" | "helperText">;
 
-export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required = false, errorText, helperText, children }) => {
+export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required = false, errorText, helperText, children, htmlFor }) => {
     return (
         <div>
             {label && (
                 <div className={styles.labelWrapper}>
-                    <label className={styles.label}>{label}</label>
+                    <label className={styles.label} htmlFor={htmlFor}>
+                        {label}
+                    </label>
                     {!required && <span className={styles.optionalText}>(optional)</span>}
                 </div>
             )}
