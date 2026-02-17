@@ -34,7 +34,6 @@
         "start:prod": "node dist/main",
         "storybook": "storybook dev -p 4004 --no-open",
         "test": "vitest --run",
-        "test:ci": "vitest --run --reporter=default --reporter=junit --outputFile.junit=./junit.xml",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
