@@ -34,8 +34,6 @@ function generateFilterDto({
     imports.push({ name: "Field", importPath: "@nestjs/graphql" });
     imports.push({ name: "InputType", importPath: "@nestjs/graphql" });
 
-    const enumFiltersOut = "";
-
     crudFilterProps.map((prop) => {
         if (prop.type == "EnumArrayType" || prop.enum) {
             const enumName = findEnumName(prop.name, metadata);
@@ -54,8 +52,6 @@ function generateFilterDto({
     });
 
     const filterOut = `
-    ${enumFiltersOut}
-
     @InputType()
     export class ${classNameSingular}Filter {
         ${crudFilterProps
