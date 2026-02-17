@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 
 import styles from "./FieldContainer.module.scss";
 
-export type FieldContainerProps = {
+type FieldContainerProps = {
     label?: ReactNode;
     required?: boolean;
     errorText?: string;
