@@ -13,3 +13,8 @@ junit.xml
 **/.idea
 
 *storybook.log
+
+# Agent files
+.agents/skills/
+.cursor/skills/
+.claude/skills/
