@@ -246,7 +246,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                                 options={[
                                     {
-                                        label: <FormattedMessage id="product.type.cap" defaultMessage="Cap" />,
+                                        label: <FormattedMessage id="product.type.greatCap" defaultMessage="Great Cap" />,
                                         value: "cap",
                                     },
                                     {
