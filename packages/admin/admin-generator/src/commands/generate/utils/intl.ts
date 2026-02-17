@@ -1,4 +1,4 @@
-import { isValidElement, type ReactElement } from "react";
+import { type ComponentProps, isValidElement, type ReactElement } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type FormattedMessageElement } from "../generate-command";
@@ -8,9 +8,7 @@ type GenerateFormattedMessageOptions = (
     | { config: string | FormattedMessageElement }
 ) & { id: string; type: "jsx" | "intlCall" };
 
-export function isFormattedMessageElement(
-    node: unknown,
-): node is ReactElement<React.ComponentProps<typeof FormattedMessage>, typeof FormattedMessage> {
+export function isFormattedMessageElement(node: unknown): node is ReactElement<ComponentProps<typeof FormattedMessage>, typeof FormattedMessage> {
     return isValidElement(node) && node.type === FormattedMessage;
 }
 
