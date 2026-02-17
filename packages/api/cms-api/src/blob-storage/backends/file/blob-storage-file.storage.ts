@@ -91,6 +91,33 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         });
     }
 
+    async listFiles(folderName: string): Promise<string[]> {
+        const basePath = path.resolve(this.path);
+        const dirPath = path.join(basePath, folderName);
+
+        try {
+            const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
+            const files: string[] = [];
+
+            for (const entry of entries) {
+                if (!entry.isFile() || entry.name.endsWith(`-${this.headersFile}`)) {
+                    continue;
+                }
+
+                files.push(entry.name);
+            }
+
+            return files;
+        } catch (error) {
+            // The directory may not exist yet (e.g., no files have been uploaded for this folder).
+            // In that case, readdir throws ENOENT, and we treat it as an empty listing.
+            if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                return [];
+            }
+            throw error;
+        }
+    }
+
     async removeFile(folderName: string, fileName: string): Promise<void> {
         await Promise.all([
             await fs.promises.rm(`${this.path}/${folderName}/${fileName}`, { force: true }),

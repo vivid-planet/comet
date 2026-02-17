@@ -85,6 +85,17 @@ export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
         return Readable.from(response.readableStreamBody!); // is defined in node.js but not for browsers
     }
 
+    async listFiles(folderName: string): Promise<string[]> {
+        const containerClient = this.client.getContainerClient(folderName);
+        const files: string[] = [];
+
+        for await (const blob of containerClient.listBlobsFlat()) {
+            files.push(blob.name);
+        }
+
+        return files;
+    }
+
     async removeFile(folderName: string, fileName: string): Promise<void> {
         await this.client.getContainerClient(folderName).deleteBlob(fileName);
     }
