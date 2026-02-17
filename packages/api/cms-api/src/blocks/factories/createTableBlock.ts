@@ -1,21 +1,8 @@
 import { instanceToPlain, plainToInstance, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
 
-import {
-    Block,
-    BlockData,
-    BlockDataFactory,
-    BlockDataInterface,
-    BlockInput,
-    BlockInputFactory,
-    BlockInputInterface,
-    blockInputToData,
-    registerBlock,
-} from "../block";
-import { AnnotationBlockMeta, BlockField } from "../decorators/field";
-import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator";
-import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator";
-import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
+import { Block, BlockData, BlockDataInterface, BlockInput, BlockInputInterface, blockInputToData, createBlock } from "../block";
+import { BlockField } from "../decorators/field";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
 import { BlockFactoryNameOrOptions } from "./types";
 
@@ -165,26 +152,5 @@ export function createTableBlock(
         }
     }
 
-    const blockDataFactory: BlockDataFactory<TableBlockData> = (o) => plainToInstance(TableBlockData, o);
-    const blockInputFactory: BlockInputFactory<TableBlockInputInterface> = (o) => plainToInstance(TableBlockInput, o);
-
-    let decoratedBlockDataFactory = blockDataFactory;
-    if (migrate.migrations) {
-        const migrationsDecorator = createAppliedMigrationsBlockDataFactoryDecorator(migrate.migrations, blockName);
-        decoratedBlockDataFactory = migrationsDecorator(decoratedBlockDataFactory);
-    }
-    decoratedBlockDataFactory = strictBlockDataFactoryDecorator(decoratedBlockDataFactory);
-
-    const decoratedBlockInputFactory = strictBlockInputFactoryDecorator(blockInputFactory);
-
-    const TableBlock: Block<TableBlockDataInterface, TableBlockInputInterface> = {
-        name: blockName,
-        blockDataFactory: decoratedBlockDataFactory,
-        blockInputFactory: decoratedBlockInputFactory,
-        blockMeta: new AnnotationBlockMeta(TableBlockData),
-        blockInputMeta: new AnnotationBlockMeta(TableBlockInput),
-    };
-
-    registerBlock(TableBlock);
-    return TableBlock;
+    return createBlock(TableBlockData, TableBlockInput, blockName);
 }
