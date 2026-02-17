@@ -61,6 +61,15 @@ services:
             - "127.0.0.1:1025:1025" # SMTP server
             - "127.0.0.1:8025:8025" # Web UI
 
+    localstack:
+        # Pinned: LocalStack community edition enters maintenance mode in March 2026.
+        # See https://blog.localstack.cloud/the-road-ahead-for-localstack/
+        image: localstack/localstack:4.13.1
+        ports:
+            - "127.0.0.1:${LOCALSTACK_PORT}:4566"
+        environment:
+            SERVICES: s3
+
 networks:
     postgres:
         driver: bridge
