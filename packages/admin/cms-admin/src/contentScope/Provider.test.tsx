@@ -17,11 +17,6 @@ describe("ContentScopeProvider", () => {
     beforeEach(() => {
         // Clear localStorage before each test
         localStorage.clear();
-        // Mock location
-        Object.defineProperty(window, "location", {
-            value: { pathname: "/" },
-            writable: true,
-        });
     });
 
     function Wrapper({ children, history }: { children: ReactNode; history: ReturnType<typeof createMemoryHistory> }) {
