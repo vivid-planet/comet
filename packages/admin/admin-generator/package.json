@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "8.14.0",
+    "version": "8.15.0",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -57,9 +57,14 @@
         "@types/node": "^24.10.9",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",
+<<<<<<< HEAD
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
         "eslint": "^9.30.1",
+=======
+        "@types/react": "^18.3.27",
+        "eslint": "^9.39.2",
+>>>>>>> main
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",

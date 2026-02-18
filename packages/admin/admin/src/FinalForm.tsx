@@ -289,7 +289,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     form.reset(values as unknown as InitialFormValues);
-                    return undefined;
+                    return data;
                 },
                 (error) => {
                     if (props.resolveSubmitErrors) {

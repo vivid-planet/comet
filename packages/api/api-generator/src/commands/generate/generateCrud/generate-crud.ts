@@ -12,7 +12,11 @@ import { generateImportsCode, type Imports } from "../utils/generate-imports-cod
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
+<<<<<<< HEAD
 import { generateEnumFilterDto } from "./generate-enum-filter-dto";
+=======
+import { generatePayloadObjectTypes } from "./generate-payload-object-types";
+>>>>>>> main
 import { generateServiceHookCall } from "./generate-service-hook-call";
 
 function generateFilterDto({
@@ -872,6 +876,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
+<<<<<<< HEAD
+=======
+    const payloadObjectTypes = generatePayloadObjectTypes({ hooksService, instanceNameSingular, entityName: metadata.className });
+    imports.push(...payloadObjectTypes.imports);
+
+    imports.push({ name: "extractGraphqlFields", importPath: "@comet/cms-api" });
+>>>>>>> main
     imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
     imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
     imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
@@ -889,6 +900,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
     ${generateImportsCode(imports)}
+
+    ${payloadObjectTypes.code}
 
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
@@ -992,7 +1005,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             generatorOptions.create
                 ? `
 
-        @Mutation(() => ${metadata.className})
+        @Mutation(() => ${payloadObjectTypes.createPayloadType || metadata.className})
         ${dedicatedResolverArgProps
             .map((dedicatedResolverArgProp) => {
                 return `@AffectedEntity(${dedicatedResolverArgProp.targetMeta?.className}, { idArg: "${dedicatedResolverArgProp.name}" })`;
@@ -1005,7 +1018,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 })
                 .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
                 ${hooksService?.validateCreateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
-        ): Promise<${metadata.className}> {
+        ): Promise<${payloadObjectTypes.createPayloadType || metadata.className}> {
             ${generateServiceHookCall("validateCreateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
 
             ${
@@ -1052,7 +1065,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             await this.entityManager.flush();
 
-            return ${instanceNameSingular};
+            return ${payloadObjectTypes.createPayloadType ? `{ ${instanceNameSingular}, errors: [] }` : instanceNameSingular};
         }
         `
                 : ""
@@ -1061,13 +1074,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ${
             generatorOptions.update
                 ? `
-        @Mutation(() => ${metadata.className})
+        @Mutation(() => ${payloadObjectTypes.updatePayloadType || metadata.className})
         @AffectedEntity(${metadata.className})
         async update${classNameSingular}(
             ${generateIdArg("id", metadata)},
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
             ${hooksService?.validateUpdateInput?.options?.includes("currentUser") ? `, @GetCurrentUser() user: CurrentUser` : ""}
-        ): Promise<${metadata.className}> {
+        ): Promise<${payloadObjectTypes.updatePayloadType || metadata.className}> {
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
             ${generateServiceHookCall("validateUpdateInput", { hooksService, instanceNameSingular, scopeProp, dedicatedResolverArgProps })}
 
@@ -1131,7 +1144,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             await this.entityManager.flush();
 
-            return ${instanceNameSingular};
+            return ${payloadObjectTypes.updatePayloadType ? `{ ${instanceNameSingular}, errors: [] }` : instanceNameSingular};
         }
         `
                 : ""
