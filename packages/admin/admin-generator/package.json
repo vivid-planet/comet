@@ -54,7 +54,7 @@
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",
         "@types/react": "^18.3.27",
-        "eslint": "^9.30.1",
+        "eslint": "^9.39.2",
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
