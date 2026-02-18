@@ -35,6 +35,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useStackSwitchApi } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -111,6 +112,7 @@ export function ProductVariantsGrid({ product }: Props) {
         }),
         ...usePersistentColumnState("ProductVariantsGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = useMemo(
         () => [
             { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
@@ -197,6 +199,7 @@ export function ProductVariantsGrid({ product }: Props) {
             slotProps={{
                 toolbar: { exportApi } as ProductVariantsGridToolbarToolbarProps,
             }}
+            onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}
         />
     );
 }

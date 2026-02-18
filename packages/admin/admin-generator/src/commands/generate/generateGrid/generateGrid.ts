@@ -348,7 +348,7 @@ export function generateGrid<T extends { __typename?: string }>(
     const showCrudContextMenuInActionsColumn = allowDeleting;
     const showEditInActionsColumn = allowEditing && !forwardRowAction;
 
-    const enableRowClick = allowEditing && !config.disableRowClick;
+    const enableRowClick = allowEditing && !forwardRowAction && !config.disableRowClick;
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
@@ -1064,13 +1064,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
                 ${config.density ? `density="${config.density}"` : ""}
-                ${
-                    enableRowClick
-                        ? forwardRowAction
-                            ? `onRowClick={(params) => rowAction && rowAction(params)}`
-                            : `onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}`
-                        : ""
-                }
+                ${enableRowClick ? `onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}` : ""}
             />
         );
     }

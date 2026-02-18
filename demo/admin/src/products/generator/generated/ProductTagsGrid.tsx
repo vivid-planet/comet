@@ -28,6 +28,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useStackSwitchApi } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -74,6 +75,7 @@ export function ProductTagsGrid() {
         }),
         ...usePersistentColumnState("ProductTagsGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
     const columns: GridColDef<GQLProductTagsGridFragment>[] = useMemo(
         () => [
             { field: "title", headerName: intl.formatMessage({ id: "productTag.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
@@ -131,6 +133,7 @@ export function ProductTagsGrid() {
             slots={{
                 toolbar: ProductTagsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}
         />
     );
 }

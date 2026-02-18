@@ -29,6 +29,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useStackSwitchApi } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productCategoriesFragment = gql`
@@ -86,6 +87,7 @@ export function ProductCategoriesGrid() {
         }),
         ...usePersistentColumnState("ProductCategoriesGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
     const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
         await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
             mutation: updateProductCategoryPositionMutation,
@@ -192,6 +194,7 @@ export function ProductCategoriesGrid() {
             rowReordering
             onRowOrderChange={handleRowOrderChange}
             hideFooterPagination
+            onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}
         />
     );
 }

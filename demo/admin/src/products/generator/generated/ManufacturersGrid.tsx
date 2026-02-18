@@ -32,6 +32,7 @@ import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useStackSwitchApi } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -99,6 +100,7 @@ export function ManufacturersGrid() {
         }),
         ...usePersistentColumnState("ManufacturersGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(
         () => [
             {
@@ -347,6 +349,7 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}
         />
     );
 }

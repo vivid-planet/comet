@@ -34,6 +34,7 @@ import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useContentScope } from "@comet/cms-admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -80,6 +81,7 @@ export function NewsGrid() {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
+    const stackSwitchApi = useStackSwitchApi();
     const columns: GridColDef<GQLNewsGridFragment>[] = useMemo(
         () => [
             { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
@@ -190,6 +192,7 @@ export function NewsGrid() {
             slots={{
                 toolbar: NewsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}
         />
     );
 }
