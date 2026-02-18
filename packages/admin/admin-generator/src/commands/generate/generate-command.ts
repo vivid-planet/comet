@@ -324,6 +324,11 @@ export type GridConfig<T extends { __typename?: string }> = {
         deleteType?: "delete" | "remove";
         deleteText?: string;
     };
+    /**
+     * If true, disables the default onRowClick behavior that navigates to the edit page
+     * @default false
+     */
+    disableRowClick?: boolean;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;

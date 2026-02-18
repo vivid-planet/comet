@@ -348,6 +348,8 @@ export function generateGrid<T extends { __typename?: string }>(
     const showCrudContextMenuInActionsColumn = allowDeleting;
     const showEditInActionsColumn = allowEditing && !forwardRowAction;
 
+    const enableRowClick = allowEditing && !config.disableRowClick;
+
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
     let useScopeFromContext = false;
@@ -367,6 +369,9 @@ export function generateGrid<T extends { __typename?: string }>(
     }
     if (useScopeFromContext) {
         imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
+    }
+    if (enableRowClick) {
+        imports.push({ name: "useStackSwitchApi", importPath: "@comet/admin" });
     }
 
     const renderToolbar = config.toolbar ?? true;
@@ -821,6 +826,7 @@ export function generateGrid<T extends { __typename?: string }>(
         } };
         ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
+        ${enableRowClick ? `const stackSwitchApi = useStackSwitchApi();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
@@ -1058,6 +1064,13 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
                 ${config.density ? `density="${config.density}"` : ""}
+                ${
+                    enableRowClick
+                        ? forwardRowAction
+                            ? `onRowClick={(params) => rowAction && rowAction(params)}`
+                            : `onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}`
+                        : ""
+                }
             />
         );
     }
