@@ -1,5 +1,94 @@
 # @comet/admin
 
+## 8.14.0
+
+### Minor Changes
+
+- f31b52e: Add FinalFormDebug component to display React Final Form state for debugging purposes
+- d0a7c96: Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
+
+### Patch Changes
+
+- 5075f7a: Render `ToolbarBackButton` as a link for improved accessibility
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- dbf8774: Don't open the mobile `MainNavigation` when resizing the window to a smaller width
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
+### Patch Changes
+
+- @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- a498b80: Fix uppercase styling of tabs
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 2580c61: Set cursor of DataGrid rows to "pointer" if `onRowClick` is set
+- f0b1eb1: Allow passing `data-testid` to FieldContainer/Field-based fields
+
+    This enables easier element selection in end-to-end tests (e.g., with Playwright).
+
+    **Example usage:**
+
+    ```ts
+    <SelectField
+        data-testid="test-select"
+        ...
+    />
+    ```
+
+- f293762: Grid: Add support for column visible=false (not just breakpoints)
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- 5337c20: Style the `button` typography variant
+- ed03e8d: **Toolbar:** add `topBarActions` prop to render custom actions in the top bar, and introduce `<HelpDialogButton />` for a built-in help dialog trigger
+
+    **What’s new**
+    - `Toolbar` now supports a new prop: `topBarActions` (class key & slot name: `"topBarActions"`). Use it to place action controls on the right side of the top bar.
+    - New component: `HelpDialogButton`. It renders an icon button that toggles a modal dialog with a title and rich help content.
+
+    **Usage**
+
+    ```tsx
+    import { Toolbar, HelpDialogButton } from "@comet/admin";
+    import { FormattedMessage } from "react-intl";
+
+    <Toolbar
+        topBarActions={
+            <HelpDialogButton
+                dialogTitle={<FormattedMessage id="toolbar.help.title" defaultMessage="Help" />}
+                dialogDescription={<Typography>Put any explanatory text, images, or markup here.</Typography>}
+            />
+        }
+    >
+        {/* your toolbar items */}
+    </Toolbar>;
+    ```
+
+### Patch Changes
+
+- 198da7b: Fix pagination labels for empty DataGrids
+- 9c091ec: Fix DatePicker from possibly crashing when starting to type a date
+- Updated dependencies [7e34c0b]
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

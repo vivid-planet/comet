@@ -26,8 +26,8 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
 
     return {
         ...cometConfig,
-        debug: processEnv.NODE_ENV !== "production",
-        serverHost: processEnv.SERVER_HOST ?? "localhost",
+        debug: envVars.NODE_ENV !== "production",
+        serverHost: envVars.SERVER_HOST ?? "localhost",
         helmRelease: envVars.HELM_RELEASE,
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
@@ -113,6 +113,23 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         },
         sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
         siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
+        brevo: {
+            apiKey: envVars.BREVO_API_KEY,
+            redirectUrlForImport: envVars.BREVO_REDIRECT_URL_FOR_IMPORT,
+            campaign: {
+                basicAuth: {
+                    username: envVars.BREVO_CAMPAIGN_BASIC_AUTH_USERNAME,
+                    password: envVars.BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD,
+                },
+            },
+            ecgRtrList: {
+                apiKey: envVars.BREVO_ECG_RTR_LIST_API_KEY,
+            },
+            contactsWithoutDoi: {
+                allowAddingContactsWithoutDoi: envVars.BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI,
+                emailHashKey: envVars.BREVO_EMAIL_HASH_KEY,
+            },
+        },
     };
 }
 

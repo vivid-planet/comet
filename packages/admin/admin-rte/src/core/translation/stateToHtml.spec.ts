@@ -1,4 +1,5 @@
 import { convertFromRaw, EditorState, type RawDraftContentState } from "draft-js";
+import { describe, expect, it } from "vitest";
 
 import { type IRteOptions } from "../Rte";
 import { stateToHtml } from "./stateToHtml";
@@ -7,15 +8,6 @@ import { stateToHtml } from "./stateToHtml";
 function trimHtml(html: string) {
     return html.replace(/\s|\n/g, "");
 }
-
-// TODO Remove mock once we've updated the test setup to support ESM modules
-jest.mock("../BlockElement", () => {
-    return {
-        BlockElement: () => {
-            return null;
-        },
-    };
-});
 
 describe("stateToHtml", () => {
     const options = {

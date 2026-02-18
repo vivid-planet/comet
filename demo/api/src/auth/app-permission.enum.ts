@@ -5,6 +5,7 @@ export enum AppPermission {
     products = "products",
     manufacturers = "manufacturers",
 }
+
 registerEnumType(AppPermission, {
     name: "AppPermission",
 });

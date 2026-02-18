@@ -135,23 +135,9 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `parseFloat($fieldName)`;
-        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `$fieldName ? ${assignment} : null`;
+        if (!required && !config.readOnly) {
+            formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
         }
-        formValueConfig.formValueToGqlInputCode = `${assignment}`;
-
-        let initializationAssignment = `String(data.${dataRootName}.${nameWithPrefix})`;
-        if (!required) {
-            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
-        }
-        formValueConfig.omitFromFragmentType = true;
-        formValueConfig.typeCode = {
-            nullable: !required,
-            type: "string",
-        };
-        formValueConfig.initializationCode = `${initializationAssignment}`;
         if (config.initialValue !== undefined) {
             formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
@@ -185,8 +171,16 @@ export function generateFormField({
             formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "boolean") {
+        const checkboxLabel = config.checkboxLabel
+            ? generateFormattedMessage({
+                  config: config.checkboxLabel,
+                  id: `${formattedMessageRootId}.${name}.checkboxLabel`,
+                  type: "jsx",
+              })
+            : "";
         code = `<CheckboxField
-                        label={${fieldLabel}}
+                        fieldLabel={${fieldLabel}}
+                        ${config.checkboxLabel ? `label={${checkboxLabel}}` : ""}
                         name="${nameWithPrefix}"
                         fullWidth
                         variant="horizontal"

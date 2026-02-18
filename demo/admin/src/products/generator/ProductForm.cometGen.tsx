@@ -16,6 +16,7 @@ export default defineConfig<GQLProduct>({
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
     navigateOnCreate: false,
+<<<<<<< HEAD
 
     validate: injectFormVariables(({ client }: InjectedFormVariables) => async (formValues: FormValues) => {
         // this just demonstrates record level validation via api call, in real world scenario this could be done as client side field validation
@@ -44,6 +45,9 @@ export default defineConfig<GQLProduct>({
         }
     }),
 
+=======
+    initialValuesAsProp: true,
+>>>>>>> main
     fields: [
         {
             type: "fieldSet",
@@ -55,7 +59,7 @@ export default defineConfig<GQLProduct>({
                 {
                     type: "text",
                     name: "title",
-                    label: "Titel", // default is generated from name (camelCaseToHumanReadable)
+                    label: "Title", // default is generated from name (camelCaseToHumanReadable)
                     required: true, // default is inferred from gql schema
                     initialValue: "New Product",
                     validate: (value: string) =>
@@ -75,7 +79,7 @@ export default defineConfig<GQLProduct>({
                             },
                     ),
                 },
-                { type: "date", name: "createdAt", label: "Created", readOnly: true },
+                { type: "date", name: "createdAt", label: "Created At", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
                 {
                     type: "staticSelect",
@@ -92,6 +96,7 @@ export default defineConfig<GQLProduct>({
                 {
                     type: "numberRange",
                     name: "priceRange",
+                    label: "Price range",
                     minValue: 25,
                     maxValue: 500,
                     disableSlider: true,
@@ -125,7 +130,7 @@ export default defineConfig<GQLProduct>({
                     },
                     startAdornment: { icon: "Location" },
                 },
-                { type: "boolean", name: "inStock", initialValue: true },
+                { type: "boolean", name: "inStock", label: "In stock", initialValue: true },
                 { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" }, initialValue: "2025-01-01" },
                 { type: "component", component: FutureProductNotice },
                 { type: "block", name: "image", label: "Image", block: DamImageBlock },
@@ -154,7 +159,7 @@ export const tabsConfig2: TabsConfig = {
                 type: "form",
                 gqlType: "Product",
                 fields: [
-                    { type: "text", name: "title", label: "Titel" },
+                    { type: "text", name: "title", label: "Title" },
                     { type: "text", name: "slug", label: "Slug" },
                     { type: "text", name: "description", label: "Description", multiline: true },
                     { type: "staticSelect", name: "type", label: "Type" / *, values: from gql schema (overridable)* / },

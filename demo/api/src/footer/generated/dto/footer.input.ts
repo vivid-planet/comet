@@ -2,8 +2,8 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsNotEmpty, ValidateNested } from "class-validator";
 import { BlockInputInterface, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { IsNotEmpty, ValidateNested } from "class-validator";
 import { FooterContentBlock } from "../../blocks/footer-content.block";
 @InputType()
 export class FooterInput {

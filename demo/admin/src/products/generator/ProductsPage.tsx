@@ -66,7 +66,7 @@ export function ProductsPage() {
                         />
                     </StackMainContent>
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
                             <>
@@ -158,12 +158,15 @@ export function ProductsPage() {
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
+                <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
                             <ProductForm
                                 manufacturerCountry="DE"
+                                initialValues={{
+                                    lastCheckedAt: new Date(),
+                                }}
                                 onCreate={(id) => {
                                     productsStackSwitchApi.activatePage("edit", id);
                                 }}

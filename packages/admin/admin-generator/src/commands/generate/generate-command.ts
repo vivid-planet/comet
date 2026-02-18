@@ -14,6 +14,7 @@ import {
     type GridSortDirection,
     type GridValidRowModel,
 } from "@mui/x-data-grid";
+import { exec as execCallback } from "child_process";
 import { Command } from "commander";
 import { type FieldValidator, type FormApi, type ValidationErrors } from "final-form";
 import { promises as fs } from "fs";
@@ -22,6 +23,7 @@ import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 import type { ComponentType, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
+import { promisify } from "util";
 
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
@@ -29,6 +31,8 @@ import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
+
+const exec = promisify(execCallback);
 
 export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
 
@@ -95,7 +99,7 @@ export type FormFieldConfig<T> = (
           disableSlider?: boolean;
           initialValue?: { min: number; max: number };
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean }
+    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean; checkboxLabel?: string | FormattedMessageElement }
     | ({ type: "date"; name: UsableFormFields<T>; initialValue?: string } & InputBaseFieldConfig)
     | ({ type: "dateTime"; name: UsableFormFields<T>; initialValue?: Date } & InputBaseFieldConfig)
     | ({
@@ -196,6 +200,11 @@ export type FormConfig<T extends { __typename?: string }> = {
      * @default true
      */
     navigateOnCreate?: boolean;
+    /**
+     * If true, the generated form will have an initialValues prop to set initial form values.
+     * @default false
+     */
+    initialValuesAsProp?: boolean;
     validate?: (values: any) => ValidationErrors | Promise<ValidationErrors>;
 };
 export type InjectedFormVariables = {
@@ -312,6 +321,10 @@ export type GridConfig<T extends { __typename?: string }> = {
      */
     scopeAsProp?: boolean;
     density?: "comfortable" | "compact" | "standard";
+    crudContextMenu?: {
+        deleteType?: "delete" | "remove";
+        deleteText?: string;
+    };
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
@@ -332,6 +345,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         loaders: [new GraphQLFileLoader()],
     });
     const gqlIntrospection = introspectionFromSchema(schema);
+    const writtenFiles: string[] = [];
 
     const files: string[] = await glob(filePattern);
     for (const file of files) {
@@ -365,6 +379,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         }
 
         await writeGenerated(codeOuputFilename, outputCode);
+        writtenFiles.push(codeOuputFilename);
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
@@ -375,8 +390,13 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
                 ${gqlDocumentsOutputCode}
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
+            writtenFiles.push(gqlDocumentsOuputFilename);
         }
         console.log("");
+    }
+    if (writtenFiles.length > 0) {
+        console.log("Formatting generated files...");
+        await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
     }
 }
 

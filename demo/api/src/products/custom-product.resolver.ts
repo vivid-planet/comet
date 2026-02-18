@@ -4,7 +4,7 @@ import { Args, Field, InputType, Mutation, ObjectType, Query, Resolver } from "@
 import { IsString } from "class-validator";
 
 import { Product, ProductStatus } from "./entities/product.entity";
-import { ProductPublishedMail } from "./product-published.mail";
+import { ProductPublishedMail } from "./published-mail/product-published.mail";
 
 @ObjectType()
 class ValidationResponse {

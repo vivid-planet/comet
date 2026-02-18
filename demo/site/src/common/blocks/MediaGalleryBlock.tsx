@@ -8,8 +8,8 @@ import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { useIntl } from "react-intl";
-import { Navigation, Pagination } from "swiper/modules";
+import { FormattedMessage, useIntl } from "react-intl";
+import { Navigation } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 import { type Swiper as SwiperClass } from "swiper/types";
 
@@ -55,8 +55,7 @@ export const MediaGalleryBlock = withPreview(
                     className={styles.swiper}
                     slidesPerView={1}
                     slidesPerGroup={1}
-                    modules={[Pagination, Navigation]}
-                    pagination={{ clickable: true }}
+                    modules={[Navigation]}
                     navigation={{ prevEl: prevButtonRef.current, nextEl: nextButtonRef.current }}
                     longSwipesRatio={0.1}
                     threshold={3}
@@ -77,6 +76,13 @@ export const MediaGalleryBlock = withPreview(
                         </SwiperSlide>
                     ))}
                 </BasicSwiper>
+                <Typography variant="paragraph300" className={styles.customPagination} role="status" aria-live="polite" aria-atomic="true">
+                    <FormattedMessage
+                        id="mediaGalleryBlock.pagination"
+                        defaultMessage="{current} of {total}"
+                        values={{ current: activeItem + 1, total: data.items.blocks.length }}
+                    />
+                </Typography>
                 <button
                     ref={nextButtonRef}
                     className={clsx(styles.navigationButton, styles["navigationButton--next"])}
