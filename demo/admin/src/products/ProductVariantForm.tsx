@@ -48,8 +48,8 @@ type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
 const submissionErrorMessages: { [K in GQLProductVariantMutationErrorCode]: ReactNode } = {
     nameTooShort: (
         <FormattedMessage
-            id="productVariant.form.error.titleTooShort"
-            defaultMessage="Title must be at least 3 characters long when creating a product variant, except for foo"
+            id="productVariant.form.error.nameTooShort"
+            defaultMessage="Name must be at least 3 characters long when creating a product variant, except for foo"
         />
     ),
 };
