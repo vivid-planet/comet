@@ -6,7 +6,7 @@ import styles from "./FieldContainer.module.scss";
 type FieldContainerProps = {
     label?: ReactNode;
     required?: boolean;
-    errorText?: string;
+    errorText?: ReactNode;
     helperText?: ReactNode;
     children: ReactNode;
     htmlFor?: string;
