@@ -37,9 +37,9 @@ export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required,
                     <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
                     {errorText}
                 </div>
-            ) : (
-                helperText && <div className={styles.helperText}>{helperText}</div>
-            )}
+            ) : helperText ? (
+                <div className={styles.helperText}>{helperText}</div>
+            ) : null}
         </div>
     );
 };
