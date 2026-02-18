@@ -1,4 +1,5 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
+import clsx from "clsx";
 import { type ReactNode } from "react";
 
 import styles from "./FieldContainer.module.scss";
@@ -25,7 +26,7 @@ export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required,
                     {!required && <span className={styles.optionalText}>(optional)</span>}
                 </div>
             )}
-            <div className={clsx({styles.fieldBase, errorText ? styles.fieldBaseError : "")}>{children}</div>
+            <div className={clsx(styles.fieldBase, errorText ? styles.fieldBaseError : "")}>{children}</div>
             {errorText ? (
                 <div className={styles.errorWrapper}>
                     <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
