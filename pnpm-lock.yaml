@@ -1655,6 +1655,9 @@ importers:
       '@types/final-form-set-field-touched':
         specifier: ^1.0.3
         version: 1.0.3
+      '@types/history':
+        specifier: ^4.7.11
+        version: 4.7.11
       '@types/js-cookie':
         specifier: ^3.0.6
         version: 3.0.6
@@ -1700,6 +1703,9 @@ importers:
       graphql:
         specifier: ^16.0.0
         version: 16.11.0
+      history:
+        specifier: ^4.10.1
+        version: 4.10.1
       jsdom:
         specifier: ^28.0.0
         version: 28.0.0(@noble/hashes@1.8.0)
