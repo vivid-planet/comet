@@ -53,7 +53,7 @@ function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
     return arg && arg.type === "component";
 }
 
-export type StaticSelectValue = { value: string; label: string } | string;
+export type StaticSelectValue = { value: string; label: string | FormattedMessageElement } | string;
 type AsyncSelectFilter =
     | {
           /**

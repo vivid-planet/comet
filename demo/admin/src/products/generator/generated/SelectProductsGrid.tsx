@@ -101,7 +101,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
                 valueOptions: [
                     {
                         value: "cap",
-                        label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }),
+                        label: intl.formatMessage({ id: "product.type.greatCap", defaultMessage: "Great Cap" }),
                     },
                     {
                         value: "shirt",
