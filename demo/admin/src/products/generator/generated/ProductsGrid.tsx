@@ -51,6 +51,7 @@ import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import { Info as InfoIcon } from "@comet/admin-icons";
 import { Excel as ExcelIcon } from "@comet/admin-icons";
 import { Education as EducationIcon } from "@comet/admin-icons";
+import { GridRowParams } from "@mui/x-data-grid-pro";
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
@@ -125,9 +126,10 @@ type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: ReactNode;
     rowAction?: (params: GridRenderCellParams<GQLProductsGridFutureFragment>) => ReactNode;
+    onRowClick?: (params: GridRowParams<GQLProductsGridFutureFragment>) => void;
     actionsColumnWidth?: number;
 };
-export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction, onRowClick, actionsColumnWidth = 52 }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -394,6 +396,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             slotProps={{
                 toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
+            onRowClick={onRowClick}
         />
     );
 }

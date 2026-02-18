@@ -348,7 +348,7 @@ export function generateGrid<T extends { __typename?: string }>(
     const showCrudContextMenuInActionsColumn = allowDeleting;
     const showEditInActionsColumn = allowEditing && !forwardRowAction;
 
-    const enableRowClick = allowEditing && !forwardRowAction && !config.disableRowClick;
+    const enableRowClick = allowEditing && !config.disableRowClick;
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
@@ -370,7 +370,7 @@ export function generateGrid<T extends { __typename?: string }>(
     if (useScopeFromContext) {
         imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
     }
-    if (enableRowClick) {
+    if (enableRowClick && !forwardRowAction) {
         imports.push({ name: "useStackSwitchApi", importPath: "@comet/admin" });
     }
 
@@ -665,9 +665,15 @@ export function generateGrid<T extends { __typename?: string }>(
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
     if (forwardRowAction) {
+        imports.push({ name: "GridRowParams", importPath: muiXGridVariant.package });
         props.push({
             name: "rowAction",
             type: `(params: GridRenderCellParams<GQL${fragmentName}Fragment>) => ReactNode`,
+            optional: true,
+        });
+        props.push({
+            name: "onRowClick",
+            type: `(params: GridRowParams<GQL${fragmentName}Fragment>) => void`,
             optional: true,
         });
         props.push({
@@ -826,7 +832,7 @@ export function generateGrid<T extends { __typename?: string }>(
         } };
         ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
-        ${enableRowClick ? `const stackSwitchApi = useStackSwitchApi();` : ""}
+        ${enableRowClick && !forwardRowAction ? `const stackSwitchApi = useStackSwitchApi();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
@@ -1064,7 +1070,13 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
                 ${config.density ? `density="${config.density}"` : ""}
-                ${enableRowClick ? `onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}` : ""}
+                ${
+                    enableRowClick
+                        ? forwardRowAction
+                            ? `onRowClick={onRowClick}`
+                            : `onRowClick={(params) => stackSwitchApi.activatePage("edit", params.row.id)}`
+                        : ""
+                }
             />
         );
     }
