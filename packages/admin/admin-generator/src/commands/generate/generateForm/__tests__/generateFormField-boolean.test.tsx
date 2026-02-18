@@ -1,7 +1,8 @@
 import { buildSchema, introspectionFromSchema } from "graphql";
+import { FormattedMessage } from "react-intl";
 import { describe, expect, it } from "vitest";
 
-import type { FormattedMessageElement, FormConfig, FormFieldConfig } from "../../generate-command";
+import type { FormConfig, FormFieldConfig } from "../../generate-command";
 import { generateFormField } from "../generateFormField";
 
 const schema = buildSchema(`
@@ -95,10 +96,7 @@ describe("generateFormField - boolean", () => {
         const fieldConfig: FormFieldConfig<GQLProduct> = {
             type: "boolean",
             name: "hasParticipated",
-            checkboxLabel: {
-                formattedMessageId: "custom.checkboxLabel.id",
-                defaultMessage: "Custom Checkbox Label",
-            } as unknown as FormattedMessageElement,
+            checkboxLabel: <FormattedMessage id="custom.checkboxLabel.id" defaultMessage="Custom Checkbox Label" />,
         };
 
         const formConfig: FormConfig<GQLProduct> = {
