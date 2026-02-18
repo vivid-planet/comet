@@ -4,7 +4,9 @@ import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createSitePath } from "./createSitePath";
 
 export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], host = ""): string | undefined {
-    if (!block) return undefined;
+    if (!block) {
+        return undefined;
+    }
     switch (block.type) {
         case "internal": {
             const internalLink = block.props as InternalLinkBlockData;
