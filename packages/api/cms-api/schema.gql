@@ -514,7 +514,7 @@ input RedirectFilter {
   source: StringFilter
   target: StringFilter
   active: BooleanFilter
-  sourceType: RedirectSourceTypeValuesEnumFilter
+  sourceType: RedirectSourceTypeEnumFilter
   activatedAt: DateTimeFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -538,7 +538,7 @@ input BooleanFilter {
   equal: Boolean
 }
 
-input RedirectSourceTypeValuesEnumFilter {
+input RedirectSourceTypeEnumFilter {
   isAnyOf: [RedirectSourceTypeValues!]
   equal: RedirectSourceTypeValues
   notEqual: RedirectSourceTypeValues

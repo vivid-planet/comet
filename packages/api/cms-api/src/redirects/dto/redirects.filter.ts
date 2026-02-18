@@ -9,7 +9,7 @@ import { StringFilter } from "../../common/filter/string.filter";
 import { RedirectSourceTypeValues } from "../redirects.enum";
 
 @InputType()
-class RedirectSourceTypeValuesEnumFilter extends createEnumFilter(RedirectSourceTypeValues) {}
+class RedirectSourceTypeEnumFilter extends createEnumFilter(RedirectSourceTypeValues) {}
 
 @InputType()
 export class RedirectFilter {
@@ -33,11 +33,11 @@ export class RedirectFilter {
     @Type(() => BooleanFilter)
     active?: BooleanFilter;
 
-    @Field(() => RedirectSourceTypeValuesEnumFilter, { nullable: true })
+    @Field(() => RedirectSourceTypeEnumFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => RedirectSourceTypeValuesEnumFilter)
-    sourceType?: RedirectSourceTypeValuesEnumFilter;
+    @Type(() => RedirectSourceTypeEnumFilter)
+    sourceType?: RedirectSourceTypeEnumFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
