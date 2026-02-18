@@ -62,6 +62,8 @@ id?: string;
 scope: GQLProductScope;
         }
 
+    
+
     export function ProductForm({onCreate, id, scope}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -114,6 +116,7 @@ scope: GQLProductScope;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -121,6 +124,8 @@ scope: GQLProductScope;
                     variables: {
                         input: output, scope },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
@@ -238,6 +243,8 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 id?: string;
         }
 
+    
+
     export function ProductForm({onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -290,6 +297,7 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -297,6 +305,8 @@ id?: string;
                     variables: {
                         input: output, scope },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
@@ -414,6 +424,8 @@ import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
 id?: string;
         }
 
+    
+
     export function ProductForm({onCreate, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -466,6 +478,7 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -473,6 +486,8 @@ id?: string;
                     variables: {
                         input: output, scope },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {

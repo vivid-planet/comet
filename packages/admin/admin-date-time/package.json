@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "8.14.0",
+    "version": "8.15.0",
     "description": "Comet Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
@@ -44,7 +44,7 @@
         "@types/react": "^18.3.27",
         "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^18.3.7",
-        "eslint": "^9.30.1",
+        "eslint": "^9.39.2",
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
