@@ -1,6 +1,7 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import clsx from "clsx";
 import { type ReactNode } from "react";
+import { FormattedMessage } from "react-intl";
 
 import styles from "./FieldContainer.module.scss";
 
@@ -23,7 +24,11 @@ export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required,
                     <label className={styles.label} htmlFor={htmlFor}>
                         {label}
                     </label>
-                    {!required && <span className={styles.optionalText}>(optional)</span>}
+                    {!required && (
+                        <span className={styles.optionalText}>
+                            <FormattedMessage id="fieldContainer.optional" defaultMessage="(optional)" />
+                        </span>
+                    )}
                 </div>
             )}
             <div className={clsx(styles.fieldBase, errorText ? styles.fieldBaseError : "")}>{children}</div>
