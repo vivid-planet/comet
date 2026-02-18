@@ -132,12 +132,12 @@ function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter): 
     return false;
 }
 
-function enumMatchesFilter<TEnum>(value: TEnum | undefined, filter: EnumFilterInterface<TEnum>): boolean {
+function enumMatchesFilter<TEnum>(value: TEnum, filter: EnumFilterInterface<TEnum>): boolean {
     if (filter.equal !== undefined && value === filter.equal) {
         return true;
     } else if (filter.notEqual !== undefined && value !== filter.notEqual) {
         return true;
-    } else if (filter.isAnyOf && filter.isAnyOf.includes(value as TEnum)) {
+    } else if (filter.isAnyOf && filter.isAnyOf.includes(value)) {
         return true;
     }
     return false;
