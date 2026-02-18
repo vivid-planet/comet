@@ -2,6 +2,7 @@ import { DeleteObjectsCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/c
 import * as crypto from "crypto";
 import { Readable } from "stream";
 
+import type { BlobStorageFileEntry } from "../blob-storage-backend.interface";
 import { BlobStorageS3Storage } from "./blob-storage-s3.storage";
 
 const S3_ENDPOINT = process.env.S3_ENDPOINT || "http://localhost:4566";
@@ -14,6 +15,15 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
         const chunks: Buffer[] = [];
         stream.on("data", (chunk) => chunks.push(chunk));
         stream.on("end", () => resolve(Buffer.concat(chunks)));
+        stream.on("error", reject);
+    });
+}
+
+function collectStream<T>(stream: Readable): Promise<T[]> {
+    return new Promise((resolve, reject) => {
+        const items: T[] = [];
+        stream.on("data", (item) => items.push(item));
+        stream.on("end", () => resolve(items));
         stream.on("error", reject);
     });
 }
@@ -155,28 +165,44 @@ describeLocalRunOnly("BlobStorageS3Storage (LocalStack integration)", () => {
     });
 
     describe("listFiles", () => {
-        it("should return an empty array when no files exist in the folder", async () => {
-            const files = await storage.listFiles("empty-folder");
-            expect(files).toEqual([]);
+        it("should return an empty stream when no files exist in the folder", async () => {
+            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("empty-folder"));
+            expect(entries).toEqual([]);
         });
 
         it("should list files within a folder prefix", async () => {
-            await storage.createFile("listing", "a.txt", Buffer.from("a"), { contentType: "text/plain", size: 1 });
-            await storage.createFile("listing", "b.txt", Buffer.from("b"), { contentType: "text/plain", size: 1 });
+            await storage.createFile("listing", "a.txt", Buffer.from("aaa"), { contentType: "text/plain", size: 3 });
+            await storage.createFile("listing", "b.txt", Buffer.from("bb"), { contentType: "text/html", size: 2 });
 
-            const files = await storage.listFiles("listing");
-            expect(files.sort()).toEqual(["a.txt", "b.txt"]);
+            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("listing"));
+            entries.sort((a, b) => a.name.localeCompare(b.name));
+
+            expect(entries).toHaveLength(2);
+
+            expect(entries[0].name).toBe("a.txt");
+            expect(entries[0].size).toBe(3);
+            expect(entries[0].contentType).toBe("text/plain");
+            expect((await streamToBuffer(entries[0].stream)).toString()).toBe("aaa");
+
+            expect(entries[1].name).toBe("b.txt");
+            expect(entries[1].size).toBe(2);
+            expect(entries[1].contentType).toBe("text/html");
+            expect((await streamToBuffer(entries[1].stream)).toString()).toBe("bb");
         });
 
         it("should not include files from other folders", async () => {
             await storage.createFile("folder-a", "file.txt", Buffer.from("a"), { contentType: "text/plain", size: 1 });
             await storage.createFile("folder-b", "file.txt", Buffer.from("b"), { contentType: "text/plain", size: 1 });
 
-            const filesA = await storage.listFiles("folder-a");
-            expect(filesA).toEqual(["file.txt"]);
+            const entriesA = await collectStream<BlobStorageFileEntry>(await storage.listFiles("folder-a"));
+            expect(entriesA).toHaveLength(1);
+            expect(entriesA[0].name).toBe("file.txt");
+            expect((await streamToBuffer(entriesA[0].stream)).toString()).toBe("a");
 
-            const filesB = await storage.listFiles("folder-b");
-            expect(filesB).toEqual(["file.txt"]);
+            const entriesB = await collectStream<BlobStorageFileEntry>(await storage.listFiles("folder-b"));
+            expect(entriesB).toHaveLength(1);
+            expect(entriesB[0].name).toBe("file.txt");
+            expect((await streamToBuffer(entriesB[0].stream)).toString()).toBe("b");
         });
     });
 
