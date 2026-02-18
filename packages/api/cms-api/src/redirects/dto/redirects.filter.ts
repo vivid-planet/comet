@@ -4,7 +4,12 @@ import { IsOptional, ValidateNested } from "class-validator";
 
 import { BooleanFilter } from "../../common/filter/boolean.filter";
 import { DateTimeFilter } from "../../common/filter/date-time.filter";
+import { createEnumFilter } from "../../common/filter/enum.filter.factory";
 import { StringFilter } from "../../common/filter/string.filter";
+import { RedirectSourceTypeValues } from "../redirects.enum";
+
+@InputType()
+class RedirectSourceTypeValuesEnumFilter extends createEnumFilter(RedirectSourceTypeValues) {}
 
 @InputType()
 export class RedirectFilter {
@@ -27,6 +32,12 @@ export class RedirectFilter {
     @ValidateNested()
     @Type(() => BooleanFilter)
     active?: BooleanFilter;
+
+    @Field(() => RedirectSourceTypeValuesEnumFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => RedirectSourceTypeValuesEnumFilter)
+    sourceType?: RedirectSourceTypeValuesEnumFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()

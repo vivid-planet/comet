@@ -1677,6 +1677,7 @@ input RedirectFilter {
   generationType: StringFilter
   or: [RedirectFilter!]
   source: StringFilter
+  sourceType: RedirectSourceTypeValuesEnumFilter
   target: StringFilter
   updatedAt: DateTimeFilter
 }
@@ -1717,6 +1718,12 @@ enum RedirectSortField {
 enum RedirectSourceTypeValues {
   domain
   path
+}
+
+input RedirectSourceTypeValuesEnumFilter {
+  equal: RedirectSourceTypeValues
+  isAnyOf: [RedirectSourceTypeValues!]
+  notEqual: RedirectSourceTypeValues
 }
 
 input RedirectUpdateActivenessInput {
