@@ -14,7 +14,7 @@ type FieldContainerProps = {
 
 export type FieldContainerFieldProps = Pick<FieldContainerProps, "label" | "helperText">;
 
-export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required = false, errorText, helperText, children, htmlFor }) => {
+export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required, errorText, helperText, children, htmlFor }) => {
     return (
         <div>
             {label && (
