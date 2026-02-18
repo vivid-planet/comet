@@ -69,7 +69,9 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
         });
     };
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     if (!data) {
         return <Loading />;

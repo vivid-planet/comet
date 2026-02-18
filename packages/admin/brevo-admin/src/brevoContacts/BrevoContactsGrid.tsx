@@ -211,7 +211,9 @@ export function BrevoContactsGrid({
     });
 
     const rowCount = useBufferedRowCount(data?.brevoContacts.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoContacts.nodes ?? [];
 
     return (

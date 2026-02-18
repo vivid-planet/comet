@@ -112,7 +112,9 @@ export function ProductTagsGrid() {
         },
     });
     const rowCount = useBufferedRowCount(data?.productTags.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.productTags.nodes ?? [];
     return (
         <DataGridPro

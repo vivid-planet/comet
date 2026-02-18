@@ -212,7 +212,9 @@ export function TargetGroupsGrid({
             filterable: false,
             type: "actions",
             renderCell: ({ row }) => {
-                if (row.isMainList) return;
+                if (row.isMainList) {
+                    return;
+                }
                 return (
                     <>
                         <IconButton component={StackLink} pageName="edit" payload={row.id}>
@@ -260,7 +262,9 @@ export function TargetGroupsGrid({
         },
     });
     const rowCount = useBufferedRowCount(data?.brevoTargetGroups.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoTargetGroups.nodes ?? [];
 
     return (

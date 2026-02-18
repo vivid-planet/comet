@@ -129,7 +129,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
     });
 
     const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
 
         const output = {
             ...formValues,
@@ -148,7 +150,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         };
 
         if (mode === "edit") {
-            if (!id) throw new Error();
+            if (!id) {
+                throw new Error();
+            }
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: output },
@@ -167,7 +171,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         }
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

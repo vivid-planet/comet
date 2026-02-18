@@ -43,7 +43,9 @@ describe("GenerateCrudInputExtendEntity", () => {
         const formattedOut = await formatGeneratedFiles(out);
 
         const file = formattedOut.find((file) => file.name === "dto/test-entity-with-timestamps.filter.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         const source = parseSource(file.content);
 

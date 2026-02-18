@@ -61,11 +61,21 @@ const withFilesSelect = (
     if (args.query) {
         qb.andWhere("file.name ILIKE ANY (ARRAY[?])", [args.query.split(" ").map((term) => `%${term}%`)]);
     }
-    if (args.id) qb.andWhere({ id: args.id });
-    if (args.copyOfId) qb.andWhere({ copyOf: { id: args.copyOfId } });
-    if (args.filename) qb.andWhere({ name: args.filename });
-    if (args.contentHash) qb.andWhere({ contentHash: args.contentHash });
-    if (args.archived !== undefined) qb.andWhere({ archived: args.archived });
+    if (args.id) {
+        qb.andWhere({ id: args.id });
+    }
+    if (args.copyOfId) {
+        qb.andWhere({ copyOf: { id: args.copyOfId } });
+    }
+    if (args.filename) {
+        qb.andWhere({ name: args.filename });
+    }
+    if (args.contentHash) {
+        qb.andWhere({ contentHash: args.contentHash });
+    }
+    if (args.archived !== undefined) {
+        qb.andWhere({ archived: args.archived });
+    }
     if (args.folderId !== undefined) {
         if (args.folderId) {
             qb.andWhere({ folder: { id: args.folderId } });
@@ -80,7 +90,9 @@ const withFilesSelect = (
         qb.andWhere({ mimetype: { $in: args.mimetypes } });
     }
 
-    if (args.imageId) qb.andWhere({ image: { id: args.imageId } });
+    if (args.imageId) {
+        qb.andWhere({ image: { id: args.imageId } });
+    }
     if (args.imageCropArea) {
         qb.andWhere({ image: { cropArea: args.imageCropArea } });
     }
@@ -289,7 +301,9 @@ export class FilesService {
 
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
         const file = await this.findOneById(id);
-        if (!file) throw new CometEntityNotFoundException();
+        if (!file) {
+            throw new CometEntityNotFoundException();
+        }
         return this.updateByEntity(file, data);
     }
 
@@ -332,7 +346,9 @@ export class FilesService {
 
     async delete(id: string): Promise<boolean> {
         const file = await this.findOneById(id);
-        if (!file) throw new CometEntityNotFoundException();
+        if (!file) {
+            throw new CometEntityNotFoundException();
+        }
 
         const result = await this.filesRepository.nativeDelete(id);
         const deleted = result === 1;
@@ -636,7 +652,9 @@ export class FilesService {
         let image: probe.ProbeResult | undefined;
         try {
             image = await probe(createReadStream(file.path));
-            if (image.type == "svg") image = undefined;
+            if (image.type == "svg") {
+                image = undefined;
+            }
             if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
                 image = {
                     ...image,

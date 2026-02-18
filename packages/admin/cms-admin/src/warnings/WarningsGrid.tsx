@@ -221,7 +221,9 @@ export function WarningsGrid() {
         },
     });
     const rowCount = useBufferedRowCount(data?.warnings.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.warnings.nodes ?? [];
 
     return (

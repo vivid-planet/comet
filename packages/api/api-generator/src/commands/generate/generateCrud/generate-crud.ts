@@ -250,7 +250,9 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     } else if (metadata.props.some((prop) => prop.name === "createdAt" && prop.type === "Date")) {
         defaultSortField = "createdAt";
     }
-    if (!crudSortProps.includes(defaultSortField)) defaultSortField = null;
+    if (!crudSortProps.includes(defaultSortField)) {
+        defaultSortField = null;
+    }
 
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
@@ -473,7 +475,9 @@ export function generateInputHandling(
         })
         .map((prop) => {
             const targetMeta = prop.targetMeta;
-            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            if (!targetMeta) {
+                throw new Error("targetMeta is not set for relation");
+            }
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -486,7 +490,9 @@ export function generateInputHandling(
         .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             const targetMeta = prop.targetMeta;
-            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            if (!targetMeta) {
+                throw new Error("targetMeta is not set for relation");
+            }
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -499,7 +505,9 @@ export function generateInputHandling(
         .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             const targetMeta = prop.targetMeta;
-            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            if (!targetMeta) {
+                throw new Error("targetMeta is not set for relation");
+            }
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -662,7 +670,9 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
         hasOutputRelations,
         needsBlocksTransformer,
     } = generateRelationsFieldResolver({ generatorOptions, metadata });
-    if (!hasOutputRelations) return null;
+    if (!hasOutputRelations) {
+        return null;
+    }
     imports.push(...fieldImports);
 
     imports.push(generateEntityImport(metadata, targetDirectory));
@@ -720,7 +730,9 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     const imports: Imports = [];
 
     for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
-        if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
+        if (!prop.targetMeta) {
+            throw new Error(`Relation ${prop.name} has targetMeta not set`);
+        }
         imports.push(generateEntityImport(prop.targetMeta, targetDirectory));
     }
 
@@ -1231,7 +1243,9 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         metadata.props
             .filter((prop) => {
                 if (prop.kind === "1:m" && prop.orphanRemoval) {
-                    if (!prop.targetMeta) throw new Error(`Target metadata not set`);
+                    if (!prop.targetMeta) {
+                        throw new Error(`Target metadata not set`);
+                    }
                     const hasOwnCrudGenerator = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, prop.targetMeta.class);
                     if (!hasOwnCrudGenerator) {
                         //generate nested resolver only if target entity has no own crud generator
@@ -1240,7 +1254,9 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
                 }
             })
             .forEach((prop) => {
-                if (!prop.targetMeta) throw new Error(`Target metadata not set`);
+                if (!prop.targetMeta) {
+                    throw new Error(`Target metadata not set`);
+                }
                 const { fileNameSingular } = buildNameVariants(prop.targetMeta);
                 const content = generateNestedEntityResolver({ generatorOptions, metadata: prop.targetMeta });
 

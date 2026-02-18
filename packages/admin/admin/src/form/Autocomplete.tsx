@@ -79,7 +79,9 @@ export const FinalFormAutocomplete = <
                 </Typography>
             }
             isOptionEqualToValue={(option: T, value: T) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 return option === value;
             }}
             onChange={(_e, option) => {

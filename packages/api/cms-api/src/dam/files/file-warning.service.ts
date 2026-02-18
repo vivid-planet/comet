@@ -66,7 +66,10 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
             });
         }
 
-        if (!this.config.enableLicenseFeature) return warnings; // license feature not enabled, no warnings
+        // license feature not enabled, no warnings
+        if (!this.config.enableLicenseFeature) {
+            return warnings;
+        }
 
         if (entity.license?.durationTo) {
             const soonToExpireDate = new Date();

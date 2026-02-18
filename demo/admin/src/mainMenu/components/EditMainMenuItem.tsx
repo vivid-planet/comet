@@ -156,7 +156,10 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
-                        if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                        //we navigated within our self
+                        if (location.pathname.startsWith(match.url)) {
+                            return true;
+                        }
                         return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}

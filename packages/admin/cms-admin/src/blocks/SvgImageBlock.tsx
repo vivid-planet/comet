@@ -16,7 +16,9 @@ import { BlockCategory, type BlockDependency, type BlockInterface } from "./type
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
 function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl }: { apiUrl: string }): string {
-    if (!damFile) return "";
+    if (!damFile) {
+        return "";
+    }
     return `${apiUrl}${damFile.fileUrl}`;
 }
 
@@ -154,8 +156,12 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.damFile?.altText) contents.push(state.damFile.altText);
-        if (state.damFile?.title) contents.push(state.damFile.title);
+        if (state.damFile?.altText) {
+            contents.push(state.damFile.altText);
+        }
+        if (state.damFile?.title) {
+            contents.push(state.damFile.title);
+        }
 
         return contents;
     },

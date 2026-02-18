@@ -142,8 +142,12 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.file?.altText) contents.push(state.file.altText);
-        if (state.file?.title) contents.push(state.file.title);
+        if (state.file?.altText) {
+            contents.push(state.file.altText);
+        }
+        if (state.file?.title) {
+            contents.push(state.file.title);
+        }
 
         return contents;
     },

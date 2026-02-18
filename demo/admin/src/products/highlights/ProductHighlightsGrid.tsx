@@ -111,7 +111,9 @@ export function ProductHighlightsGrid() {
         },
     });
     const rowCount = useBufferedRowCount(data?.productHighlights.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.productHighlights.nodes ?? [];
     return (
         <DataGridPro

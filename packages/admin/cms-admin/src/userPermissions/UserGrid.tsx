@@ -225,7 +225,9 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     );
 
     const rowCount = useBufferedRowCount(data?.users.totalCount);
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     return (
         <DataGrid<GQLUserForGridFragment>

@@ -246,7 +246,9 @@ export function EmailCampaignsGrid({
         },
     });
     const rowCount = useBufferedRowCount(data?.brevoEmailCampaigns.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoEmailCampaigns.nodes ?? [];
 
     return (
