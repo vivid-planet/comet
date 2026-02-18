@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    CrudContextMenu,
     DataGridToolbar,
     FillSpace,
     type GridColDef,
@@ -21,6 +22,7 @@ import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
+import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
 import {
     type GQLUserAvailablePermissionsAndContentScopesQuery,
     type GQLUserForGridFragment,
@@ -185,14 +187,21 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         pinned: "right",
         disableExport: true,
         renderCell: (params) => (
-            <IconButton
-                onClick={() => {
-                    stackApi.activatePage("edit", params.id.toString());
-                }}
-                color="primary"
-            >
-                <Edit />
-            </IconButton>
+            <>
+                <IconButton
+                    onClick={() => {
+                        stackApi.activatePage("edit", params.id.toString());
+                    }}
+                    color="primary"
+                >
+                    <Edit />
+                </IconButton>
+                {isAllowed("impersonation") && (
+                    <CrudContextMenu>
+                        <ImpersonateMenuItem userId={params.row.id} />
+                    </CrudContextMenu>
+                )}
+            </>
         ),
     });
 

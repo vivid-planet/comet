@@ -78,9 +78,9 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($scope: ProductScope!, $offset: Int!, $limit: Int!) {
-        products(scope: $scope, offset: $offset, limit: $limit) {
-            nodes { ...ProductsForm } totalCount
+    query ProductsGrid($scope: ProductScope!) {
+        products(scope: $scope) {
+            ...ProductsForm
         }
     }
     \${productsFragment}
@@ -147,12 +147,12 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize
+                scope
             },
         });
-        const rowCount = useBufferedRowCount(data?.products.totalCount);
+        
         if (error) throw error;
-        const rows = data?.products.nodes ?? [];
+        const rows = data?.products ?? [];
 
         
 
@@ -160,7 +160,7 @@ renderCell: (params) => {
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
-                rowCount={rowCount}
+                
                 columns={columns}
                 loading={loading}
                 slots={{
@@ -254,9 +254,9 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     \`;
 
     const productsQuery = gql\`
-    query ProductsGrid($scope: ProductScope!, $offset: Int!, $limit: Int!) {
-        products(scope: $scope, offset: $offset, limit: $limit) {
-            nodes { ...ProductsForm } totalCount
+    query ProductsGrid($scope: ProductScope!) {
+        products(scope: $scope) {
+            ...ProductsForm
         }
     }
     \${productsFragment}
@@ -321,12 +321,12 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
             variables: {
-                scope, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize
+                scope
             },
         });
-        const rowCount = useBufferedRowCount(data?.products.totalCount);
+        
         if (error) throw error;
-        const rows = data?.products.nodes ?? [];
+        const rows = data?.products ?? [];
 
         
 
@@ -334,7 +334,7 @@ renderCell: (params) => {
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
-                rowCount={rowCount}
+                
                 columns={columns}
                 loading={loading}
                 slots={{
