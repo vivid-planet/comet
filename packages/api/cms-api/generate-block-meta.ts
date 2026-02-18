@@ -4,6 +4,7 @@ import {
     createLinkBlock,
     createRichTextBlock,
     createSeoBlock,
+    createTableBlock,
     createTextImageBlock,
     createTextLinkBlock,
     EmailLinkBlock,
@@ -30,6 +31,9 @@ async function generateBlockMeta(): Promise<void> {
 
     // Create SeoBlock for block types generation in client libraries
     createSeoBlock();
+
+    // Create TableBlock for block types generation in client libraries
+    createTableBlock({});
 
     const metaJson = getBlocksMeta();
     await fs.writeFile("block-meta.json", JSON.stringify(metaJson, null, 4));

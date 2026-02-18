@@ -10,7 +10,6 @@ import {
     createBlock,
     createBlocksBlock,
     ExtractBlockInput,
-    TableBlock,
 } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
@@ -19,6 +18,7 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-c
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
 import { StandaloneRichTextBlock } from "@src/common/blocks/standalone-rich-text.block";
+import { TableBlock } from "@src/common/blocks/table.block";
 import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";

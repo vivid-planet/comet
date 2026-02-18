@@ -88,6 +88,7 @@ export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/facto
 export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
 export { createSeoBlock, type SeoBlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
 export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
+export { createTableBlock } from "./blocks/factories/createTableBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
@@ -106,7 +107,6 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
-export { TableBlock } from "./blocks/table.block";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";

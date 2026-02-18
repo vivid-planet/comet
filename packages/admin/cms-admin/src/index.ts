@@ -20,6 +20,7 @@ export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
 export { createRichTextBlock, isRichTextEmpty, isRichTextEqual } from "./blocks/createRichTextBlock";
 export { createSeoBlock } from "./blocks/createSeoBlock";
+export { createTableBlock, type TableBlockFactoryOptions } from "./blocks/createTableBlock";
 export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock";
 export { createTextImageBlock } from "./blocks/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
@@ -79,7 +80,6 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
-export { TableBlock } from "./blocks/table/TableBlock";
 export type {
     BlockAdminComponent,
     BlockAdminComponentPart,
