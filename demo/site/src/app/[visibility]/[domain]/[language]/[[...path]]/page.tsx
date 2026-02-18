@@ -1,7 +1,6 @@
 export const dynamic = "error";
 
 import { gql } from "@comet/site-nextjs";
-import { type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { type VisibilityParam } from "@src/middleware/domainRewrite";
 import { getRedirectTargetUrl } from "@src/util/getRedirectTargetUrl";
@@ -65,8 +64,8 @@ export default async function Page({ params }: PageProps<"/[visibility]/[domain]
 
     if (!data.pageTreeNodeByPath?.documentType) {
         if (data.redirectBySource?.target) {
-            const target = data.redirectBySource?.target as RedirectsLinkBlockData;
-            const destination = target.block ? getRedirectTargetUrl(target.block, domain) : undefined;
+            const target = data.redirectBySource?.target;
+            const destination = getRedirectTargetUrl(target.block);
             if (destination) {
                 redirect(destination);
             }

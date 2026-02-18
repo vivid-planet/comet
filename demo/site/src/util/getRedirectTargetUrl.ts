@@ -3,7 +3,7 @@ import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 
 import { createSitePath } from "./createSitePath";
 
-export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], host: string): string | undefined {
+export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], host = ""): string | undefined {
     if (!block) return undefined;
     switch (block.type) {
         case "internal": {
@@ -11,11 +11,10 @@ export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], hos
             if (internalLink.targetPage) {
                 let destination = createSitePath({
                     path: internalLink.targetPage.path,
-                    scope: internalLink.targetPage.scope as Pick<GQLPageTreeNodeScope, "language">,
+                    scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
                 });
-                if (destination && destination.startsWith("/")) {
-                    destination = `https://${host}${destination}`;
-                }
+                destination = `${host}${destination}`;
+
                 return destination;
             }
             break;
@@ -25,8 +24,11 @@ export function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], hos
         case "news": {
             const newsLink = block.props as NewsLinkBlockData;
             if (newsLink.news) {
-                const destination = `/${newsLink.news.scope.language}/news/${newsLink.news.slug}`;
-                return destination.startsWith("/") ? `https://${host}${destination}` : destination;
+                const destination = createSitePath({
+                    path: `/news/${newsLink.news.slug}`,
+                    scope: newsLink.news.scope,
+                });
+                return `${host}${destination}`;
             }
             break;
         }
