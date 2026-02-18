@@ -6,22 +6,6 @@ import { Node, ts, type Type } from "ts-morph";
 import { type Imports } from "./generate-imports-code";
 import { findImportPath, morphTsClass } from "./ts-morph-helper";
 
-<<<<<<< HEAD
-export function findHooksService({
-    generatorOptions,
-    metadata,
-    targetDirectory,
-}: {
-    generatorOptions: CrudGeneratorOptions;
-    metadata: EntityMetadata;
-    targetDirectory: string;
-}): {
-    validateCreateInput: { options?: string[] } | null;
-    validateUpdateInput: { options?: string[] } | null;
-    imports: Imports;
-    className: string;
-} | null {
-=======
 function findReturnTypeImport(type: Type, serviceSourceFile: Node, targetDirectory: string): { name: string; importPath: string } | null {
     const symbol = type.getSymbol() ?? type.getAliasSymbol();
     if (!symbol) {
@@ -72,8 +56,13 @@ function unwrapArrayType(type: Type): Type {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function findHooksService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
->>>>>>> main
+export function findHooksService({
+    generatorOptions,
+    metadata,
+}: {
+    generatorOptions: CrudGeneratorOptions & { targetDirectory: string };
+    metadata: EntityMetadata<any>;
+}) {
     if (!generatorOptions.hooksService) {
         return null;
     }
@@ -107,7 +96,7 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
                 throw new Error("hooksService initializer is not an identifier");
             }
             const hooksServiceClassName = initializer.getText();
-            const { importPath } = findImportPath(hooksServiceClassName, targetDirectory, metadata);
+            const { importPath } = findImportPath(hooksServiceClassName, generatorOptions.targetDirectory, metadata);
             if (importPath) {
                 imports.push({ name: hooksServiceClassName, importPath });
             }

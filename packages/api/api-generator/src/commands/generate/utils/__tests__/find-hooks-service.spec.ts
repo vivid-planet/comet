@@ -75,9 +75,8 @@ describe("find-hooks-service", () => {
         );
 
         const hooksService = findHooksService({
-            generatorOptions: { requiredPermission: testPermission, hooksService: TestEntityService },
+            generatorOptions: { requiredPermission: testPermission, hooksService: TestEntityService, targetDirectory: __dirname },
             metadata: orm.em.getMetadata().get("TestEntity"),
-            targetDirectory: __dirname,
         });
         if (!hooksService) throw new Error("hooksService not found");
         expect(hooksService.className).toEqual("TestEntityService");

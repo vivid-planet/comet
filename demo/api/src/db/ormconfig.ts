@@ -1,10 +1,6 @@
 import { migrationsList as brevoMigrationsList } from "@comet/brevo-api";
 import { createMigrationsList, createOrmConfig } from "@comet/cms-api";
-<<<<<<< HEAD
-import { DataloaderType } from "@mikro-orm/core";
-=======
-import { TextType, Type } from "@mikro-orm/core";
->>>>>>> main
+import { DataloaderType, TextType, Type } from "@mikro-orm/core";
 import { defineConfig, EntityCaseNamingStrategy } from "@mikro-orm/postgresql";
 import path from "path";
 
@@ -22,9 +18,7 @@ export const ormConfig = createOrmConfig(
         },
         namingStrategy: EntityCaseNamingStrategy,
         debug: false,
-<<<<<<< HEAD
         dataloader: DataloaderType.ALL,
-=======
         discovery: {
             getMappedType(type: string, platform) {
                 // Map all string types to TEXT instead of VARCHAR
@@ -34,7 +28,6 @@ export const ormConfig = createOrmConfig(
                 return platform.getDefaultMappedType(type);
             },
         },
->>>>>>> main
         migrations: {
             tableName: "Migrations",
             //  `path` is only used to tell MikroORM where to place newly generated migrations. Available migrations are defined using `migrationsList`.
