@@ -22,6 +22,22 @@ import {
 } from "@comet/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductVariantService } from "../product-variant.service";
+import { ProductVariantMutationError } from "./../product-variant.service";
+import { Field, ObjectType } from "@nestjs/graphql";
+@ObjectType()
+class CreateProductVariantPayload {
+    @Field(() => ProductVariant, { nullable: true })
+    productVariant?: ProductVariant;
+    @Field(() => [ProductVariantMutationError], { nullable: false })
+    errors: ProductVariantMutationError[];
+}
+@ObjectType()
+class UpdateProductVariantPayload {
+    @Field(() => ProductVariant, { nullable: true })
+    productVariant?: ProductVariant;
+    @Field(() => [ProductVariantMutationError], { nullable: false })
+    errors: ProductVariantMutationError[];
+}
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
@@ -63,7 +79,7 @@ export class ProductVariantResolver {
         const [entities, totalCount] = await this.entityManager.findAndCount(ProductVariant, where, options);
         return new PaginatedProductVariants(entities, totalCount);
     }
-    @Mutation(() => ProductVariant)
+    @Mutation(() => CreateProductVariantPayload)
     @AffectedEntity(Product, { idArg: "product" })
     async createProductVariant(
         @Args("product", { type: () => ID })
@@ -72,8 +88,11 @@ export class ProductVariantResolver {
         input: ProductVariantInput,
         @GetCurrentUser()
         user: CurrentUser,
-    ): Promise<ProductVariant> {
-        await this.productVariantService.validateCreateInput(input, { currentUser: user, args: { product } });
+    ): Promise<CreateProductVariantPayload> {
+        const errors = await this.productVariantService.validateCreateInput(input, { currentUser: user, args: { product } });
+        if (errors.length > 0) {
+            return { errors };
+        }
         const lastPosition = await this.productVariantsService.getLastPosition({ product });
         let position = input.position;
         if (position !== undefined && position < lastPosition + 1) {
@@ -89,9 +108,9 @@ export class ProductVariantResolver {
             image: imageInput.transformToBlockData(),
         });
         await this.entityManager.flush();
-        return productVariant;
+        return { productVariant, errors: [] };
     }
-    @Mutation(() => ProductVariant)
+    @Mutation(() => UpdateProductVariantPayload)
     @AffectedEntity(ProductVariant)
     async updateProductVariant(
         @Args("id", { type: () => ID })
@@ -100,9 +119,12 @@ export class ProductVariantResolver {
         input: ProductVariantUpdateInput,
         @GetCurrentUser()
         user: CurrentUser,
-    ): Promise<ProductVariant> {
+    ): Promise<UpdateProductVariantPayload> {
         const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
-        await this.productVariantService.validateUpdateInput(input, { currentUser: user, entity: productVariant });
+        const errors = await this.productVariantService.validateUpdateInput(input, { currentUser: user, entity: productVariant });
+        if (errors.length > 0) {
+            return { errors };
+        }
         if (input.position !== undefined) {
             const lastPosition = await this.productVariantsService.getLastPosition({ product: productVariant.product.id });
             if (input.position > lastPosition) {
@@ -122,7 +144,7 @@ export class ProductVariantResolver {
             productVariant.image = imageInput.transformToBlockData();
         }
         await this.entityManager.flush();
-        return productVariant;
+        return { productVariant, errors: [] };
     }
     @Mutation(() => Boolean)
     @AffectedEntity(ProductVariant)

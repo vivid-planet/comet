@@ -1,9 +1,59 @@
 import { type CrudGeneratorOptions } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/core";
-import { Node } from "ts-morph";
+import * as path from "path";
+import { Node, ts, type Type } from "ts-morph";
 
 import { type Imports } from "./generate-imports-code";
 import { findImportPath, morphTsClass } from "./ts-morph-helper";
+
+function findReturnTypeImport(type: Type, serviceSourceFile: Node, targetDirectory: string): { name: string; importPath: string } | null {
+    const symbol = type.getSymbol() ?? type.getAliasSymbol();
+    if (!symbol) {
+        // Primitive type, no import needed
+        return null;
+    }
+
+    const typeName = symbol.getName();
+    const declarations = symbol.getDeclarations();
+    if (!declarations || declarations.length === 0) {
+        return null;
+    }
+
+    const declaration = declarations[0];
+    const declarationSourceFile = declaration.getSourceFile();
+    const serviceFile = serviceSourceFile.getSourceFile();
+
+    if (declarationSourceFile === serviceFile) {
+        // Return type is defined in the same file as the hooks service
+        const exportedDeclarations = serviceFile.getExportedDeclarations().get(typeName);
+        if (!exportedDeclarations || exportedDeclarations.length === 0) {
+            throw new Error(`Return type "${typeName}" is defined in ${serviceFile.getFilePath()} but is not exported`);
+        }
+        const importPath = `./${path.relative(targetDirectory, serviceFile.getFilePath()).replace(/\.ts$/, "")}`;
+        return { name: typeName, importPath };
+    } else {
+        // Return type is imported from another file
+        const importPath = `./${path.relative(targetDirectory, declarationSourceFile.getFilePath()).replace(/\.ts$/, "")}`;
+        return { name: typeName, importPath };
+    }
+}
+
+function unwrapPromiseType(type: Type): Type {
+    if (type.getSymbol()?.getName() === "Promise") {
+        const typeArgs = type.getTypeArguments();
+        if (typeArgs.length > 0) {
+            return typeArgs[0];
+        }
+    }
+    return type;
+}
+
+function unwrapArrayType(type: Type): Type {
+    if (type.isArray()) {
+        return type.getArrayElementTypeOrThrow();
+    }
+    throw new Error(`Return type must be an array`);
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findHooksService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
@@ -54,6 +104,13 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
             for (const method of serviceClassDeclaration.getMethods()) {
                 if (method.getName() == "validateCreateInput") {
                     validateCreateInput = {};
+                    const unwrappedType = unwrapArrayType(unwrapPromiseType(method.getReturnType()));
+
+                    const returnType = unwrappedType.getText(method, ts.TypeFormatFlags.None);
+                    const returnTypeImport = findReturnTypeImport(unwrappedType, serviceClassDeclaration, generatorOptions.targetDirectory);
+                    if (returnTypeImport) {
+                        imports.push(returnTypeImport);
+                    }
                     const parameters = method.getParameters();
                     if (parameters.length >= 2) {
                         //has options
@@ -64,12 +121,19 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
 
                         validateCreateInput = {
                             options,
+                            returnType,
                         };
                     } else {
-                        validateCreateInput = {};
+                        validateCreateInput = { returnType };
                     }
                 } else if (method.getName() == "validateUpdateInput") {
                     validateUpdateInput = {};
+                    const unwrappedType = unwrapArrayType(unwrapPromiseType(method.getReturnType()));
+                    const returnType = unwrappedType.getText(method, ts.TypeFormatFlags.None);
+                    const returnTypeImport = findReturnTypeImport(unwrappedType, serviceClassDeclaration, generatorOptions.targetDirectory);
+                    if (returnTypeImport) {
+                        imports.push(returnTypeImport);
+                    }
                     const parameters = method.getParameters();
                     if (parameters.length >= 2) {
                         //has options
@@ -80,9 +144,10 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
 
                         validateUpdateInput = {
                             options,
+                            returnType,
                         };
                     } else {
-                        validateUpdateInput = {};
+                        validateUpdateInput = { returnType };
                     }
                 }
             }
