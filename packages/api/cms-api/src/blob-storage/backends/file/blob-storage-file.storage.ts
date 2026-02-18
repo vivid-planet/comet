@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { type Readable, Stream } from "stream";
+import { PassThrough, type Readable, Stream } from "stream";
 
 import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
 import { type BlobStorageFileConfig } from "./blob-storage-file.config";
@@ -91,31 +91,51 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         });
     }
 
-    async listFiles(folderName: string): Promise<string[]> {
+    async listFiles(folderName: string): Promise<Readable> {
+        const stream = new PassThrough({ objectMode: true });
+        this.populateListFilesStream(folderName, stream).catch((error) => stream.destroy(error));
+        return stream;
+    }
+
+    private async populateListFilesStream(folderName: string, stream: PassThrough): Promise<void> {
         const basePath = path.resolve(this.path);
         const dirPath = path.join(basePath, folderName);
 
+        let entries: fs.Dirent[];
         try {
-            const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
-            const files: string[] = [];
-
-            for (const entry of entries) {
-                if (!entry.isFile() || entry.name.endsWith(`-${this.headersFile}`)) {
-                    continue;
-                }
-
-                files.push(entry.name);
-            }
-
-            return files;
+            entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
         } catch (error) {
             // The directory may not exist yet (e.g., no files have been uploaded for this folder).
             // In that case, readdir throws ENOENT, and we treat it as an empty listing.
             if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-                return [];
+                stream.end();
+                return;
             }
-            throw error;
+            stream.destroy(error as Error);
+            return;
         }
+
+        for (const entry of entries) {
+            if (!entry.isFile() || entry.name.endsWith(`-${this.headersFile}`)) {
+                continue;
+            }
+
+            const filePath = path.join(dirPath, entry.name);
+            const headersPath = `${filePath}-${this.headersFile}`;
+
+            const stat = await fs.promises.stat(filePath);
+            const rawHeaders = await fs.promises.readFile(headersPath, { encoding: "utf-8" });
+            const headers = JSON.parse(rawHeaders);
+
+            stream.push({
+                name: entry.name,
+                stream: fs.createReadStream(filePath),
+                size: stat.size,
+                contentType: headers["content-type"],
+            });
+        }
+
+        stream.end();
     }
 
     async removeFile(folderName: string, fileName: string): Promise<void> {

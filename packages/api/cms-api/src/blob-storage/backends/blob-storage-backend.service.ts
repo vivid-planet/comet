@@ -61,7 +61,7 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface {
         return this.backend.removeFile(folderName, fileName);
     }
 
-    async listFiles(folderName: string): Promise<string[]> {
+    async listFiles(folderName: string): Promise<Readable> {
         return this.backend.listFiles(folderName);
     }
 
