@@ -1,5 +1,19 @@
 # @comet/admin-generator
 
+## 8.15.0
+
+### Minor Changes
+
+- 82ff4c2: Form field boolean: use `label` as field label (before: checkbox label) and add new `checkboxLabel` option
+- 14f9ef0: Add support for `<FormattedMessage />` in staticSelect values label
+- 39a9bb0: Make paging conditional in grid generation: only add paging args (`offset`, `limit`) and paging return (`totalCount`, nested `nodes`) when the GQL schema query returns a paginated type
+- cc96333: Add support for custom error responses in update and create mutation and show it in form as submission error
+
+### Patch Changes
+
+- 33ac500: Use the GraphQL schema scope type in generated grids when scope comes from context.
+- 47ed8cf: Only emit grid sort variables and helpers when the schema supports sorting.
+
 ## 8.14.0
 
 ### Patch Changes

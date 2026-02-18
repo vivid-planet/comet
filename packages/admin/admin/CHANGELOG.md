@@ -1,5 +1,20 @@
 # @comet/admin
 
+## 8.15.0
+
+### Minor Changes
+
+- 39a9bb0: Add support for non-paginated apis in useDataGridExcelExport
+- 5b52998: Add tooltip for childless items in closed `MainNavigation`
+
+### Patch Changes
+
+- cc96333: Fix FinalForm to forward submissionErrors (return from submit handler) correctly
+- 180d1e3: Fix required validation for `AsyncAutocompleteField` with multiple select
+- f7b9de9: Fix DataGrid singleSelect filter height to prevent autocomplete values from being truncated
+- 0c2435a: Hide `filesInfoText` from FileSelect
+    - @comet/admin-icons@8.15.0
+
 ## 8.14.0
 
 ### Minor Changes
