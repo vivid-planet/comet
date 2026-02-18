@@ -21,9 +21,15 @@ export const productVariantFormQuery = gql`
 export const createProductVariantFormMutation = gql`
     mutation CreateProductVariant($product: ID!, $input: ProductVariantInput!) {
         createProductVariant(product: $product, input: $input) {
-            id
-            updatedAt
-            ...ProductVariantForm
+            productVariant {
+                id
+                updatedAt
+                ...ProductVariantForm
+            }
+            errors {
+                code
+                field
+            }
         }
     }
     ${productVariantFormFragment}
@@ -32,9 +38,15 @@ export const createProductVariantFormMutation = gql`
 export const updateProductVariantFormMutation = gql`
     mutation UpdateProductVariant($id: ID!, $input: ProductVariantUpdateInput!) {
         updateProductVariant(id: $id, input: $input) {
-            id
-            updatedAt
-            ...ProductVariantForm
+            productVariant {
+                id
+                updatedAt
+                ...ProductVariantForm
+            }
+            errors {
+                code
+                field
+            }
         }
     }
     ${productVariantFormFragment}

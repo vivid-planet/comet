@@ -170,8 +170,16 @@ export function generateFormField({
             formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "boolean") {
+        const checkboxLabel = config.checkboxLabel
+            ? generateFormattedMessage({
+                  config: config.checkboxLabel,
+                  id: `${formattedMessageRootId}.${name}.checkboxLabel`,
+                  type: "jsx",
+              })
+            : "";
         code = `<CheckboxField
-                        label={${fieldLabel}}
+                        fieldLabel={${fieldLabel}}
+                        ${config.checkboxLabel ? `label={${checkboxLabel}}` : ""}
                         name="${nameWithPrefix}"
                         fullWidth
                         variant="horizontal"

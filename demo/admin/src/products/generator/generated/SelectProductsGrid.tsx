@@ -71,7 +71,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
         () => [
             {
                 field: "title",
-                headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
+                headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
                 flex: 1,
                 minWidth: 200,
                 maxWidth: 250,
@@ -101,7 +101,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
                 valueOptions: [
                     {
                         value: "cap",
-                        label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                        label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }),
                     },
                     {
                         value: "shirt",
