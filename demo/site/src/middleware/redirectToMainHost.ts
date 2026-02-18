@@ -11,8 +11,8 @@ import { type CustomMiddleware } from "./chain";
 import { type GQLDomainRedirectsQuery, type GQLDomainRedirectsQueryVariables } from "./redirectToMainHost.generated";
 
 const domainRedirectsQuery = gql`
-    query DomainRedirects($scope: RedirectScopeInput!, $offset: Int, $limit: Int) {
-        paginatedRedirects(scope: $scope, offset: $offset, limit: $limit) {
+    query DomainRedirects($scope: RedirectScopeInput!, $filter: RedirectFilter, $offset: Int, $limit: Int) {
+        paginatedRedirects(scope: $scope, filter: $filter, offset: $offset, limit: $limit) {
             nodes {
                 id
                 source
@@ -42,6 +42,7 @@ async function fetchDomainRedirects(scope: GQLRedirectScopeInput) {
         do {
             const data = await graphQLFetch<GQLDomainRedirectsQuery, GQLDomainRedirectsQueryVariables>(domainRedirectsQuery, {
                 scope,
+                filter: { sourceType: { equal: "domain" } },
                 offset: currentCount,
                 limit,
             });
@@ -91,10 +92,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
 
                 const domainRedirects = await fetchDomainRedirects(scope);
 
-                //TODO: Source type check is unneccessary, if filter for sourceType
-                const redirect = domainRedirects.find(
-                    (redirect) => redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host),
-                );
+                const redirect = domainRedirects.find((redirect) => normalizeHost(redirect.source) === normalizeHost(host));
 
                 if (redirect) {
                     const destination = getRedirectTargetUrl(redirect.target.block, `https://${redirectSiteConfig.domains.main}`);
@@ -110,10 +108,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
             } else {
                 const domainRedirects = await fetchDomainRedirectsForAllScopes();
 
-                //TODO: Source type check is unneccessary, if filter for sourceType
-                const redirect = domainRedirects.find(
-                    (redirect) => redirect.sourceType === "domain" && normalizeHost(redirect.source) === normalizeHost(host),
-                );
+                const redirect = domainRedirects.find((redirect) => normalizeHost(redirect.source) === normalizeHost(host));
                 if (redirect) {
                     const scopedSiteConfig = getSiteConfigs().find((config) => config.scope.domain === redirect.scope.domain);
 
