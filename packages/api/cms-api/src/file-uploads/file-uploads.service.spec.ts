@@ -156,35 +156,9 @@ describe("FileUploadsService", () => {
         });
     });
 
-    describe("URL generation with custom timeout", () => {
-        let customService: FileUploadsService;
-
-        beforeEach(async () => {
-            const customConfig: FileUploadsConfig = {
-                ...mockConfig,
-                download: {
-                    secret: "test-secret",
-                    urlTimeout: 2, // 2 hours
-                },
-            };
-
-            const module: TestingModule = await Test.createTestingModule({
-                providers: [
-                    FileUploadsService,
-                    { provide: getRepositoryToken(FileUpload), useValue: mockRepository },
-                    { provide: BlobStorageBackendService, useValue: mockBlobStorageBackendService },
-                    { provide: FILE_UPLOADS_CONFIG, useValue: customConfig },
-                    { provide: EntityManager, useValue: mockEntityManager },
-                    { provide: MikroORM, useValue: mockOrm },
-                    FileUploadExpirationSubscriber,
-                ],
-            }).compile();
-
-            customService = module.get<FileUploadsService>(FileUploadsService);
-        });
-
+    describe("URL generation with custom timeout parameter", () => {
         it("should generate download URL with custom 2 hour timeout", () => {
-            const url = customService.createDownloadUrl(fileUpload);
+            const url = service.createDownloadUrl(fileUpload, 2);
             const parts = url.split("/");
             const timeout = parseInt(parts[4], 10);
             const expectedTimeout = baseDate.getTime() + 2 * 60 * 60 * 1000; // 2 hours in ms
@@ -193,7 +167,7 @@ describe("FileUploadsService", () => {
         });
 
         it("should generate preview URL with custom 2 hour timeout", () => {
-            const url = customService.createPreviewUrl(fileUpload);
+            const url = service.createPreviewUrl(fileUpload, 2);
             const parts = url.split("/");
             const timeout = parseInt(parts[5], 10);
             const expectedTimeout = baseDate.getTime() + 2 * 60 * 60 * 1000; // 2 hours in ms
@@ -203,7 +177,7 @@ describe("FileUploadsService", () => {
 
         it("should generate image URL with custom 2 hour timeout", () => {
             const imageFileUpload = { ...fileUpload, mimetype: "image/png" } as FileUpload;
-            const url = customService.createImageUrl(imageFileUpload, 200);
+            const url = service.createImageUrl(imageFileUpload, 200, 2);
             expect(url).toBeDefined();
             if (!url) return;
             const parts = url.split("/");

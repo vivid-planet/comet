@@ -23,12 +23,5 @@ export interface FileUploadsConfig {
          * @default true
          */
         createFieldResolvers?: boolean;
-        /**
-         * Timeout duration for generated URLs (download, image, preview) in hours.
-         * After this duration, the URL will become invalid.
-         *
-         * @default 1
-         */
-        urlTimeout?: number;
     };
 }

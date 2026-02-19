@@ -80,12 +80,12 @@ export class FileUploadsService {
         return createHmac("sha1", this.config.download.secret).update(hash).digest("hex");
     }
 
-    createDownloadUrl(file: FileUpload): string {
+    createDownloadUrl(file: FileUpload, urlTimeoutHours = 1): string {
         if (!this.config.download) {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        const timeout = addHours(new Date(), this.config.download.urlTimeout ?? 1).getTime();
+        const timeout = addHours(new Date(), urlTimeoutHours).getTime();
 
         const hash = this.createHash({
             id: file.id,
@@ -95,7 +95,7 @@ export class FileUploadsService {
         return ["/file-uploads", hash, file.id, timeout].join("/");
     }
 
-    createImageUrl(file: FileUpload, resizeWidth: number): string | undefined {
+    createImageUrl(file: FileUpload, resizeWidth: number, urlTimeoutHours = 1): string | undefined {
         if (!ALL_TYPES.includes(file.mimetype)) {
             return undefined;
         }
@@ -104,7 +104,7 @@ export class FileUploadsService {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        const timeout = addHours(new Date(), this.config.download.urlTimeout ?? 1).getTime();
+        const timeout = addHours(new Date(), urlTimeoutHours).getTime();
 
         const hash = this.createHash({
             id: file.id,
@@ -117,12 +117,12 @@ export class FileUploadsService {
         return ["/file-uploads", hash, file.id, timeout, resizeWidth, filename].join("/");
     }
 
-    createPreviewUrl(file: FileUpload): string {
+    createPreviewUrl(file: FileUpload, urlTimeoutHours = 1): string {
         if (!this.config.download) {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        const timeout = addHours(new Date(), this.config.download.urlTimeout ?? 1).getTime();
+        const timeout = addHours(new Date(), urlTimeoutHours).getTime();
 
         const hash = this.createHash({
             id: file.id,
