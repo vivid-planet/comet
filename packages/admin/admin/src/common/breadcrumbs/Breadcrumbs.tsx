@@ -1,12 +1,13 @@
+/* eslint-disable react/jsx-no-literals */
 import { ChevronRight } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { Fragment, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
-type BreadcrumbsClassKey = "root" | "item" | "separator";
+type BreadcrumbsClassKey = "root" | "item" | "separator" | "ellipsis" | "menuContainer";
 
 export interface Breadcrumb {
     url: string;
@@ -18,6 +19,8 @@ interface BreadcrumbsProps
         root: "div";
         item: typeof Typography;
         separator: typeof ChevronRight;
+        ellipsis: "span";
+        menuContainer: "div";
     }> {
     items: Breadcrumb[];
 }
@@ -61,29 +64,60 @@ const Separator = createComponentSlot(ChevronRight)<BreadcrumbsClassKey>({
     margin: 0 5px;
 `);
 
+const Ellipsis = createComponentSlot("span")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "ellipsis",
+})(css`
+    margin-right: 5px;
+    color: inherit;
+`);
+
+const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "menuContainer",
+})(
+    ({ theme }) => css`
+        display: none;
+
+        ${theme.breakpoints.up("sm")} {
+            display: block;
+        }
+    `,
+);
+
 export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
     const { items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
     return (
         <Root {...slotProps?.root} {...restProps}>
             {items.map((item, index) => {
                 const isCurrentPage = index === items.length - 1;
+                const hasMultipleItems = items.length > 1;
 
                 if (isCurrentPage) {
                     return (
-                        <Item key={item.url} {...slotProps?.item}>
-                            {item.title}
-                        </Item>
+                        <>
+                            {hasMultipleItems && (
+                                <>
+                                    <Ellipsis {...slotProps?.ellipsis}>. . .</Ellipsis>
+                                    <Separator {...slotProps?.separator} />
+                                </>
+                            )}
+
+                            <Item key={item.url} {...slotProps?.item}>
+                                {item.title}
+                            </Item>
+                        </>
                     );
                 }
 
                 return (
-                    <Fragment key={item.url}>
+                    <MenuContainer key={item.url}>
                         {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
                         <Item component="a" href={item.url} {...slotProps?.item}>
                             {item.title}
                         </Item>
                         <Separator {...slotProps?.separator} />
-                    </Fragment>
+                    </MenuContainer>
                 );
             })}
         </Root>
