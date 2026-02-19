@@ -1,6 +1,5 @@
 import { type DocumentNode, type OperationVariables, useApolloClient } from "@apollo/client";
 import { type GridValidRowModel } from "@mui/x-data-grid";
-import { saveAs } from "file-saver";
 import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -43,7 +42,15 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
             const workbook = generateExcelFile<Row>(columns, data, { worksheetName, styling });
 
             workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+                const blob = new Blob([buffer]);
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = safeFileNameWithExtension(fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
             });
         },
         [intl],

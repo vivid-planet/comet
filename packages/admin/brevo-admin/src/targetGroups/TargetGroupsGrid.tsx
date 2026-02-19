@@ -20,7 +20,6 @@ import { Add as AddIcon, Download, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { DialogContent, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import saveAs from "file-saver";
 import { type DocumentNode } from "graphql";
 import { type ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -192,7 +191,14 @@ export function TargetGroupsGrid({
         const csvData = convertToCsv(allContacts);
 
         const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-        saveAs(blob, `${title}.csv`);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${title}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     const columns: GridColDef<GQLTargetGroupsListFragment>[] = [

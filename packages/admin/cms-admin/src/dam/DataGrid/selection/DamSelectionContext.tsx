@@ -1,5 +1,4 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { saveAs } from "file-saver";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useState } from "react";
 
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
@@ -267,7 +266,12 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
             if (downloadInfo === null) {
                 showError(setHasDownloadErrors);
             } else {
-                saveAs(downloadInfo.fileUrl, downloadInfo.name);
+                const link = document.createElement("a");
+                link.href = downloadInfo.fileUrl;
+                link.download = downloadInfo.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         }
 

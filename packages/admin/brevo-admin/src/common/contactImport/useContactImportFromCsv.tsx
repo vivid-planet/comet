@@ -4,7 +4,6 @@ import { Alert, Button, CheckboxField, Dialog, FinalForm, Loading, messages, use
 import { Upload } from "@comet/admin-icons";
 import { Box, DialogActions, DialogContent, DialogTitle, type MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import saveAs from "file-saver";
 import { type ComponentProps, type ReactNode, type RefObject, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -215,7 +214,14 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
 
         // Create and download the file
         const file = new Blob([errorData], { type: "text/csv;charset=utf-8" });
-        saveAs(file, `error-log-${new Date().toISOString()}.csv`);
+        const url = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `error-log-${new Date().toISOString()}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const saveBlacklistedContactsFile = () => {
@@ -243,7 +249,14 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
 
         // Create and download the file
         const file = new Blob([blacklistedContactsData], { type: "text/csv;charset=utf-8" });
-        saveAs(file, `blacklisted-contact-log-${new Date().toISOString()}.csv`);
+        const url = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `blacklisted-contact-log-${new Date().toISOString()}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const { getInputProps } = useDropzone({

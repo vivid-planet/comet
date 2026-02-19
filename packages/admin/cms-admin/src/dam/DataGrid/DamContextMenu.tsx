@@ -2,7 +2,6 @@ import { gql, useApolloClient } from "@apollo/client";
 import { RowActionsItem, RowActionsMenu, useEditDialog, useErrorDialog, useStackSwitchApi } from "@comet/admin";
 import { Archive, Delete, Download, Edit, Move, Restore } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
-import { saveAs } from "file-saver";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -150,7 +149,12 @@ const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps) => {
                     <RowActionsItem
                         icon={<Download />}
                         onClick={() => {
-                            saveAs(file.fileUrl, file.name);
+                            const link = document.createElement("a");
+                            link.href = file.fileUrl;
+                            link.download = file.name;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
                         }}
                     >
                         <FormattedMessage id="comet.pages.dam.downloadFile" defaultMessage="Download file" />

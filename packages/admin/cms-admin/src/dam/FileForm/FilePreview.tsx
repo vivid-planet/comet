@@ -3,7 +3,6 @@ import { Button, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import saveAs from "file-saver";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -81,7 +80,12 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     variant="textLight"
                     startIcon={<Download />}
                     onClick={() => {
-                        saveAs(file.fileUrl, file.name);
+                        const link = document.createElement("a");
+                        link.href = file.fileUrl;
+                        link.download = file.name;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />

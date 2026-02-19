@@ -768,9 +768,6 @@ importers:
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
-      file-saver:
-        specifier: ^2.0.5
-        version: 2.0.5
       final-form-set-field-data:
         specifier: ^1.0.2
         version: 1.0.2(final-form@4.20.10)
@@ -865,9 +862,6 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
-      '@types/file-saver':
-        specifier: ^2.0.7
-        version: 2.0.7
       '@types/final-form-set-field-data':
         specifier: ^1.0.3
         version: 1.0.3
@@ -1401,9 +1395,6 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      file-saver:
-        specifier: ^2.0.5
-        version: 2.0.5
       react-dropzone:
         specifier: ^14.2.3
         version: 14.3.8(react@19.2.4)
@@ -1459,9 +1450,6 @@ importers:
       '@mui/x-date-pickers':
         specifier: ^7.29.4
         version: 7.29.4(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react@19.2.4))(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mui/system@7.3.7(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(date-fns@4.1.0)(dayjs@1.11.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@types/file-saver':
-        specifier: ^2.0.7
-        version: 2.0.7
       '@types/react':
         specifier: ^19.2.10
         version: 19.2.10
@@ -1537,9 +1525,6 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      file-saver:
-        specifier: ^2.0.5
-        version: 2.0.5
       final-form-arrays:
         specifier: ^3.1.0
         version: 3.1.0(final-form@4.20.10)
@@ -1658,9 +1643,6 @@ importers:
       '@types/draft-js':
         specifier: ^0.11.20
         version: 0.11.20
-      '@types/file-saver':
-        specifier: ^2.0.7
-        version: 2.0.7
       '@types/final-form-set-field-touched':
         specifier: ^1.0.3
         version: 1.0.3
@@ -9435,9 +9417,6 @@ packages:
   '@types/express@5.0.6':
     resolution: {integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==}
 
-  '@types/file-saver@2.0.7':
-    resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
-
   '@types/final-form-set-field-data@1.0.3':
     resolution: {integrity: sha512-N8G5aowjhOhbrigJp3UXIlx4nxfNH7STs12ikQRY8qPM2kJh9UIY/jjYrGnF1mZlCzobRrMiCsaQScdr+YUG+A==}
 
@@ -12607,9 +12586,6 @@ packages:
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       webpack: ^4.0.0 || ^5.0.0
-
-  file-saver@2.0.5:
-    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
 
   file-selector@2.1.0:
     resolution: {integrity: sha512-ZuXAqGePcSPz4JuerOY06Dzzq0hrmQ6VGoXVzGyFI1npeOfBgqGIKKpznfYWRkSLJlXutkqVC5WvGZtkFVhu9Q==}
@@ -28283,8 +28259,6 @@ snapshots:
       '@types/express-serve-static-core': 5.0.6
       '@types/serve-static': 2.2.0
 
-  '@types/file-saver@2.0.7': {}
-
   '@types/final-form-set-field-data@1.0.3':
     dependencies:
       final-form: 4.20.10
@@ -32167,8 +32141,6 @@ snapshots:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
       webpack: 5.103.0(@swc/core@1.15.3)
-
-  file-saver@2.0.5: {}
 
   file-selector@2.1.0:
     dependencies:

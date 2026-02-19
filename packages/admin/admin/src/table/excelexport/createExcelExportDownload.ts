@@ -2,7 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
-import { saveAs } from "file-saver";
 import { type ReactNode } from "react";
 
 import { isVisible } from "../isVisible";
@@ -89,7 +88,15 @@ export async function createExcelExportDownload<TRow extends IRow>(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         (buffer) => {
-            saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+            const blob = new Blob([buffer]);
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = safeFileNameWithExtension(fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         },
     );
 }
