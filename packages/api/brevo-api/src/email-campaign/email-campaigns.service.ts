@@ -2,7 +2,6 @@ import { BlocksTransformerService, filtersToMikroOrmQuery, searchToMikroOrmQuery
 import { UpdateCampaignStatus } from "@getbrevo/brevo";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, ObjectQuery, wrap } from "@mikro-orm/postgresql";
-import { HttpService } from "@nestjs/axios";
 import { Inject, Injectable } from "@nestjs/common";
 import { BrevoConfigInterface } from "src/brevo-config/entities/brevo-config-entity.factory";
 import { EmailCampaignScopeInterface } from "src/types";
@@ -22,7 +21,6 @@ export class EmailCampaignsService {
         @Inject(BREVO_MODULE_CONFIG) private readonly config: BrevoModuleConfig,
         @InjectRepository("BrevoEmailCampaign") private readonly repository: EntityRepository<EmailCampaignInterface>,
         @InjectRepository("BrevoConfig") private readonly brevoConfigRepository: EntityRepository<BrevoConfigInterface>,
-        private readonly httpService: HttpService,
         private readonly brevoApiCampaignService: BrevoApiCampaignsService,
         private readonly brevoApiContactsService: BrevoApiContactsService,
         private readonly entityManager: EntityManager,
@@ -55,21 +53,20 @@ export class EmailCampaignsService {
             campaignConfig = this.config.emailCampaigns.frontend;
         }
 
-        const { data: htmlContent, status } = await this.httpService.axiosRef.post(
-            campaignConfig.url,
-            { id: campaign.id, title: campaign.title, content, scope: campaign.scope },
-            {
-                headers: { "Content-Type": "application/json" },
-                auth: {
-                    username: campaignConfig.basicAuth.username,
-                    password: campaignConfig.basicAuth.password,
-                },
+        const response = await fetch(campaignConfig.url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Basic ${Buffer.from(`${campaignConfig.basicAuth.username}:${campaignConfig.basicAuth.password}`).toString("base64")}`,
             },
-        );
+            body: JSON.stringify({ id: campaign.id, title: campaign.title, content, scope: campaign.scope }),
+        });
 
-        if (!htmlContent || status !== 200) {
+        if (!response.ok) {
             throw new Error("Could not generate campaign content");
         }
+
+        const htmlContent = await response.text();
 
         let brevoId = campaign.brevoId;
         if (!brevoId) {
