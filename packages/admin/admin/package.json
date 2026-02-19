@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "8.14.0",
+    "version": "8.15.0",
     "description": "Comet Admin package",
     "repository": {
         "directory": "packages/admin/admin",
@@ -64,6 +64,7 @@
         "@mui/material": "^7.3.7",
         "@mui/system": "^7.3.7",
         "@mui/x-data-grid": "^7.29.12",
+        "@mui/x-data-grid-premium": "^7.29.12",
         "@mui/x-data-grid-pro": "^7.29.12",
         "@mui/x-date-pickers": "^7.29.4",
         "@mui/x-date-pickers-pro": "^7.29.4",
@@ -84,7 +85,7 @@
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
-        "eslint": "^9.30.1",
+        "eslint": "^9.39.2",
         "eslint-plugin-storybook": "^9.1.10",
         "final-form": "^4.20.10",
         "graphql": "^16.0.0",
