@@ -853,15 +853,29 @@ export function generateGrid<T extends { __typename?: string }>(
                         }
                     }
 
-                    let isColumnFilterable = hasPaging
+                    let isColumnFilterable = !hasPaging
                         ? true // local (client side) sorting is always possible (no api support needed)
                         : filterFields.includes(column.name) || !!column.filterOperators;
-                    if (allowRowReordering) isColumnFilterable = false; //disable filter if rowReordering is enabled
+                    if (allowRowReordering) {
+                        //disable filter if rowReordering is enabled
+                        isColumnFilterable = false;
+                    }
+                    if (column.type == "block" && !hasPaging) {
+                        //blocks can't be sorted (client side)
+                        isColumnFilterable = false;
+                    }
 
-                    let isColumnSortable = hasPaging
+                    let isColumnSortable = !hasPaging
                         ? true // local (client side) sorting is always possible (no api support needed)
                         : sortFields.includes(column.name) || !!column.sortBy;
-                    if (allowRowReordering) isColumnSortable = false; //disable sort if rowReordering is enabled
+                    if (allowRowReordering) {
+                        //disable sort if rowReordering is enabled
+                        isColumnSortable = false;
+                    }
+                    if (column.type == "block" && !hasPaging) {
+                        //blocks can't be sorted (client side)
+                        isColumnSortable = false;
+                    }
 
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: column.fieldName ? `"${column.fieldName}"` : `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore

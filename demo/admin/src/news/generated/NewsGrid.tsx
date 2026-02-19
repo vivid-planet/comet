@@ -116,6 +116,8 @@ export function NewsGrid() {
             {
                 field: "image",
                 headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
+                filterable: false,
+                sortable: false,
                 renderCell: (params) => {
                     return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
                 },
@@ -125,6 +127,8 @@ export function NewsGrid() {
             {
                 field: "content",
                 headerName: intl.formatMessage({ id: "news.content", defaultMessage: "Content" }),
+                filterable: false,
+                sortable: false,
                 renderCell: (params) => {
                     return <BlockPreviewContent block={NewsContentBlock} input={params.row.content} />;
                 },
