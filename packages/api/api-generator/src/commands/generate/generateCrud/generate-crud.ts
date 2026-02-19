@@ -12,11 +12,8 @@ import { generateImportsCode, type Imports } from "../utils/generate-imports-cod
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
-<<<<<<< HEAD
 import { generateEnumFilterDto } from "./generate-enum-filter-dto";
-=======
 import { generatePayloadObjectTypes } from "./generate-payload-object-types";
->>>>>>> main
 import { generateServiceHookCall } from "./generate-service-hook-call";
 
 function generateFilterDto({
@@ -876,13 +873,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
-<<<<<<< HEAD
-=======
     const payloadObjectTypes = generatePayloadObjectTypes({ hooksService, instanceNameSingular, entityName: metadata.className });
     imports.push(...payloadObjectTypes.imports);
 
-    imports.push({ name: "extractGraphqlFields", importPath: "@comet/cms-api" });
->>>>>>> main
     imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
     imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
     imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });

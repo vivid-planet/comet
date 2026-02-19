@@ -34,6 +34,7 @@ try {
 const jiti = createJiti(import.meta.url, {
     alias,
     fsCache: false,
+    jsx: { runtime: "automatic" },
 });
 
 export async function parseConfig(file: string) {

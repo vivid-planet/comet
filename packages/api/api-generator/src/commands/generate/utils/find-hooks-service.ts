@@ -6,22 +6,6 @@ import { Node, ts, type Type } from "ts-morph";
 import { type Imports } from "./generate-imports-code";
 import { findImportPath, morphTsClass } from "./ts-morph-helper";
 
-<<<<<<< HEAD
-export function findHooksService({
-    generatorOptions,
-    metadata,
-    targetDirectory,
-}: {
-    generatorOptions: CrudGeneratorOptions;
-    metadata: EntityMetadata;
-    targetDirectory: string;
-}): {
-    validateCreateInput: { options?: string[] } | null;
-    validateUpdateInput: { options?: string[] } | null;
-    imports: Imports;
-    className: string;
-} | null {
-=======
 function findReturnTypeImport(type: Type, serviceSourceFile: Node, targetDirectory: string): { name: string; importPath: string } | null {
     const symbol = type.getSymbol() ?? type.getAliasSymbol();
     if (!symbol) {
@@ -71,9 +55,20 @@ function unwrapArrayType(type: Type): Type {
     throw new Error(`Return type must be an array`);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function findHooksService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
->>>>>>> main
+export function findHooksService({
+    generatorOptions,
+    metadata,
+    targetDirectory,
+}: {
+    generatorOptions: CrudGeneratorOptions;
+    metadata: EntityMetadata;
+    targetDirectory: string;
+}): {
+    validateCreateInput: { options?: string[]; returnType: string } | null;
+    validateUpdateInput: { options?: string[]; returnType: string } | null;
+    imports: Imports;
+    className: string;
+} | null {
     if (!generatorOptions.hooksService) {
         return null;
     }
@@ -124,7 +119,7 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
                     const unwrappedType = unwrapArrayType(unwrapPromiseType(method.getReturnType()));
 
                     const returnType = unwrappedType.getText(method, ts.TypeFormatFlags.None);
-                    const returnTypeImport = findReturnTypeImport(unwrappedType, serviceClassDeclaration, generatorOptions.targetDirectory);
+                    const returnTypeImport = findReturnTypeImport(unwrappedType, serviceClassDeclaration, targetDirectory);
                     if (returnTypeImport) {
                         imports.push(returnTypeImport);
                     }
@@ -147,7 +142,7 @@ export function findHooksService({ generatorOptions, metadata }: { generatorOpti
                     validateUpdateInput = {};
                     const unwrappedType = unwrapArrayType(unwrapPromiseType(method.getReturnType()));
                     const returnType = unwrappedType.getText(method, ts.TypeFormatFlags.None);
-                    const returnTypeImport = findReturnTypeImport(unwrappedType, serviceClassDeclaration, generatorOptions.targetDirectory);
+                    const returnTypeImport = findReturnTypeImport(unwrappedType, serviceClassDeclaration, targetDirectory);
                     if (returnTypeImport) {
                         imports.push(returnTypeImport);
                     }
