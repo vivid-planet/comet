@@ -118,11 +118,6 @@ export class EntityInfoService {
                                 "${metadata.tableName}"."${primary}"::text "id",
                                 '${entityName}' "entityName"
                             FROM "${metadata.tableName}"`;
-
-                    if (entityName === "ProductVariant") {
-                        console.log("select ", select);
-                    }
-
                     indexSelects.push(select);
                 }
             }
