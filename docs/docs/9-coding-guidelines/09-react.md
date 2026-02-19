@@ -7,8 +7,8 @@ sidebar_position: -5
 
 - Prefer Function Components over Class Components.
 - Create one file per "logical component." Multiple Function Components per file are allowed for structuring, styling, etc.
-- Always use JSX (use React.createElement only for app initialization).
-- Use `React.PropsWithChildren` instead of defining children manually.
+- Always use JSX (use React's `createElement` only for app initialization).
+- Use React's `PropsWithChildren` instead of defining children manually.
 - Inject dependencies to services/APIs via Context.
 - How to structure folders: "Move files around until it feels right."
   Recommendation: separate by modules instead of by type ([File Structure – React](https://legacy.reactjs.org/docs/faq-structure.html#grouping-by-features-or-routes)).
@@ -193,7 +193,7 @@ Name the state value in camelCase, and the setter function as the value name pre
 :::warning Bad
 
 ```tsx
-const [UserName, setName] = React.useState();
+const [UserName, setName] = useState();
 ```
 
 :::
@@ -201,7 +201,7 @@ const [UserName, setName] = React.useState();
 :::tip Good
 
 ```tsx
-const [userName, setUserName] = React.useState();
+const [userName, setUserName] = useState();
 ```
 
 :::
@@ -352,7 +352,7 @@ Components or functions declared as constants inside a component are recreated o
 :::warning Bad
 
 ```tsx
-const Foo: React.FC = (jobs) => {
+const Foo = (jobs) => {
     const sortJobs = (a: Job, b: Job) => {
         return a.createdAt - b.createdAt;
     };
@@ -376,7 +376,7 @@ const sortJobs = (a: Job, b: Job) => {
 
 const Wrapper = styled.div`...`;
 
-const Foo: React.FC = (jobs) => {
+const Foo = (jobs) => {
     return <Wrapper>...</Wrapper>;
 };
 ```
