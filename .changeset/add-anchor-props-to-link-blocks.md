@@ -1,5 +1,5 @@
 ---
-"@comet/site-react": patch
+"@comet/site-react": minor
 ---
 
 Add HTML anchor props pass-through to `ExternalLinkBlock`, `PhoneLinkBlock`, and `EmailLinkBlock`
