@@ -8,7 +8,7 @@ import {
     GridFilterButton,
     StackLink,
     useBufferedRowCount,
-    useDataGridLocationState,
+    useDataGridUrlState,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
@@ -61,7 +61,7 @@ function ProductHighlightsGridToolbar() {
 export function ProductHighlightsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridLocationState(), ...usePersistentColumnState("ProductHighlightsGrid") };
+    const dataGridProps = { ...useDataGridUrlState(), ...usePersistentColumnState("ProductHighlightsGrid") };
     const columns: GridColDef<GQLProductHighlightsFormFragment>[] = [
         {
             field: "description",

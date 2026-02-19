@@ -253,7 +253,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { useDataGridLocationState } from "@comet/admin";
+import { useDataGridUrlState } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -303,7 +303,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     export function BooksGrid() {
         const client = useApolloClient();
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridLocationState(), ...usePersistentColumnState("BooksGrid") };
+        const dataGridProps = { ...useDataGridUrlState(), ...usePersistentColumnState("BooksGrid") };
         
         
 
@@ -443,7 +443,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { useDataGridLocationState } from "@comet/admin";
+import { useDataGridUrlState } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -491,7 +491,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     export function BooksGrid() {
         const client = useApolloClient();
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridLocationState(), ...usePersistentColumnState("BooksGrid") };
+        const dataGridProps = { ...useDataGridUrlState(), ...usePersistentColumnState("BooksGrid") };
         
         
 

@@ -1,8 +1,8 @@
 import { type DataGridProps, type GridFilterModel, type GridSortDirection } from "@mui/x-data-grid";
 
-import { useDataGridLocationState } from "./useDataGridLocationState";
+import { useDataGridUrlState } from "./useDataGridUrlState";
 
-type UseDataGridRemoteReturnValue = ReturnType<typeof useDataGridLocationState> & {
+type UseDataGridRemoteReturnValue = ReturnType<typeof useDataGridUrlState> & {
     filterMode: DataGridProps["filterMode"];
     paginationMode: DataGridProps["paginationMode"];
     pagination: DataGridProps["pagination"];
@@ -23,7 +23,7 @@ export function useDataGridRemote({
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     initialFilter?: GridFilterModel;
 } = {}): UseDataGridRemoteReturnValue {
-    const state = useDataGridLocationState({
+    const state = useDataGridUrlState({
         queryParamsPrefix,
         pageSize: initialPageSize,
         initialSort,
