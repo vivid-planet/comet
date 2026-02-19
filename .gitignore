@@ -15,3 +15,8 @@ junit.xml
 *storybook.log
 .claude
 .context
+
+# Agent files
+.agents/skills/
+.cursor/skills/
+.claude/skills/
