@@ -1,5 +1,15 @@
 # @comet/api-generator
 
+## 8.16.0
+
+### Minor Changes
+
+- 9ce5bb4: Add optional paging. It is now possible to create a non-paginated list query using @CrudGenerator paging=false option. Use with care.
+
+### Patch Changes
+
+- @comet/cms-api@8.16.0
+
 ## 8.15.0
 
 ### Minor Changes

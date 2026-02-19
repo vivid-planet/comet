@@ -1,5 +1,13 @@
 # @comet/admin-rte
 
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-icons@8.16.0
+
 ## 8.15.0
 
 ### Patch Changes

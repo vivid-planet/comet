@@ -1,5 +1,17 @@
 # @comet/admin
 
+## 8.16.0
+
+### Minor Changes
+
+- 472b496: useDataGridRemote: store sort/filter/paging state additionally to query-param in local state and fall back to it if the query-param is lost
+
+    Avoids losing grid state, for instance, when opening an EditDialog that creates its own sub-route.
+
+### Patch Changes
+
+- @comet/admin-icons@8.16.0
+
 ## 8.15.0
 
 ### Minor Changes
