@@ -255,6 +255,7 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
         { name: "StackLink", importPath: "@comet/admin" },
+        { name: "useStackSwitchApi", importPath: "@comet/admin" },
         { name: "FillSpace", importPath: "@comet/admin" },
         { name: "Tooltip", importPath: "@comet/admin" },
         { name: "useBufferedRowCount", importPath: "@comet/admin" },
@@ -671,6 +672,11 @@ export function generateGrid<T extends { __typename?: string }>(
             optional: true,
             defaultValue: defaultActionsColumnWidth,
         });
+        props.push({
+            name: "onRowClick",
+            type: `${muiXGridVariant.gridComponent}Props["onRowClick"]`,
+            optional: true,
+        });
     }
 
     if (config.selectionProps) {
@@ -821,8 +827,17 @@ export function generateGrid<T extends { __typename?: string }>(
         } };
         ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
+        ${showEditInActionsColumn ? `const stackSwitchApi = useStackSwitchApi();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
+
+        ${
+            showEditInActionsColumn
+                ? `const handleRowClick: ${muiXGridVariant.gridComponent}Props["onRowClick"] = (params) => {
+            stackSwitchApi.activatePage("edit", params.row.id);
+        };`
+                : ""
+        }
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>[
             ${gridColumnFields
@@ -1058,6 +1073,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
                 ${config.density ? `density="${config.density}"` : ""}
+                ${showEditInActionsColumn ? `onRowClick={handleRowClick}` : forwardRowAction ? `onRowClick={onRowClick}` : ""}
             />
         );
     }
