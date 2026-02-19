@@ -2,12 +2,12 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
-type BreadcrumbsClassKey = "root" | "item" | "separator" | "ellipsis" | "menuContainer";
+type BreadcrumbsClassKey = "root" | "item" | "separator" | "ellipsis" | "menuContainer" | "expandedMenu" | "expandedMenuItem";
 
 export interface Breadcrumb {
     url: string;
@@ -21,6 +21,8 @@ interface BreadcrumbsProps
         separator: typeof ChevronRight;
         ellipsis: "span";
         menuContainer: "div";
+        expandedMenu: "div";
+        expandedMenuItem: typeof Typography;
     }> {
     items: Breadcrumb[];
 }
@@ -30,6 +32,7 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
     slotName: "root",
 })(
     ({ theme }) => css`
+        position: relative;
         display: flex;
         align-items: center;
         height: 50px;
@@ -70,6 +73,7 @@ const Ellipsis = createComponentSlot("span")<BreadcrumbsClassKey>({
 })(css`
     margin-right: 5px;
     color: inherit;
+    cursor: pointer;
 `);
 
 const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
@@ -85,8 +89,47 @@ const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
     `,
 );
 
+const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenu",
+})(
+    ({ theme }) => css`
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        background-color: ${theme.palette.background.paper};
+        box-shadow: ${theme.shadows[2]};
+        padding: ${theme.spacing(2)};
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: ${theme.spacing(1)};
+    `,
+);
+
+const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+        white-space: nowrap;
+
+        &:hover {
+            color: ${theme.palette.primary.main};
+        }
+    `,
+) as typeof Typography;
+
 export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
     const { items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen((prev) => !prev);
+    };
+
     return (
         <Root {...slotProps?.root} {...restProps}>
             {items.map((item, index) => {
@@ -98,7 +141,9 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                         <>
                             {hasMultipleItems && (
                                 <>
-                                    <Ellipsis {...slotProps?.ellipsis}>. . .</Ellipsis>
+                                    <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
+                                        . . .
+                                    </Ellipsis>
                                     <Separator {...slotProps?.separator} />
                                 </>
                             )}
@@ -120,6 +165,31 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                     </MenuContainer>
                 );
             })}
+
+            {isMenuOpen && (
+                <ExpandedMenu {...slotProps?.expandedMenu}>
+                    {items.map((item, index) => {
+                        const isCurrentPage = index === items.length - 1;
+
+                        return !isCurrentPage ? (
+                            // @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
+                            <ExpandedMenuItem
+                                key={item.url}
+                                component="a"
+                                href={item.url}
+                                {...slotProps?.expandedMenuItem}
+                                style={{ paddingLeft: `${index * 20}px` }}
+                            >
+                                {item.title}
+                            </ExpandedMenuItem>
+                        ) : (
+                            <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem} style={{ paddingLeft: `${index * 20}px` }}>
+                                {item.title}
+                            </ExpandedMenuItem>
+                        );
+                    })}
+                </ExpandedMenu>
+            )}
         </Root>
     );
 };
