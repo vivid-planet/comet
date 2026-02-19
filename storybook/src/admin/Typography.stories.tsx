@@ -71,5 +71,15 @@ export const _Typography = () => (
                 </Typography>
             </Grid>
         </Grid>
+
+        <Typography variant="body1" pt={4}>
+            Button
+        </Typography>
+        <Divider />
+        <Grid container>
+            <Grid py={4} size={12}>
+                <Typography variant="button">Button text</Typography>
+            </Grid>
+        </Grid>
     </Paper>
 );

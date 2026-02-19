@@ -1,5 +1,4 @@
-import { Slide, Snackbar, type SnackbarProps } from "@mui/material";
-import { type SlideProps } from "@mui/material/Slide/Slide";
+import { Slide, type SlideProps, Snackbar, type SnackbarProps } from "@mui/material";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 

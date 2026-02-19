@@ -44,9 +44,13 @@ export interface DocumentInterface<
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => ReactNode;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => ReactNode;
-    InfoTag?: ComponentType<{ page: PageTreePage }>;
+    InfoTag?: ComponentType<InfoTagProps>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
     hasNoSitePreview?: true;
 }
+
+export type InfoTagProps<PageTreeNodeAdditionalFields extends object = object> = {
+    page: PageTreePage<PageTreeNodeAdditionalFields>;
+};

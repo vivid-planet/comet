@@ -2,7 +2,6 @@ import { XMLParser } from "fast-xml-parser";
 import FileType from "file-type";
 import fs from "fs";
 import { unlink } from "fs/promises";
-import got from "got";
 import * as mimedb from "mime-db";
 import os from "os";
 import { basename, extname } from "path";
@@ -128,7 +127,12 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
     const tempFile = `${tempDir}/${fakeName}`;
 
     if (url.substring(0, 4) === "http") {
-        await pipeline(got.stream(url), fs.createWriteStream(tempFile));
+        const response = await fetch(url);
+        if (!response.ok || !response.body) {
+            throw new Error(`Failed to fetch file from URL: ${url}`);
+        }
+        const fileStream = fs.createWriteStream(tempFile);
+        await pipeline(response.body, fileStream);
         //TODO when downloading the file from http use mime type from response header
     } else {
         fs.copyFileSync(url, tempFile);

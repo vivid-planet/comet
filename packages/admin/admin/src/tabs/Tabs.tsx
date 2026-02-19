@@ -104,7 +104,7 @@ export function Tabs(inProps: TabsProps) {
         }
 
         if (child.type !== Tab) {
-            throw new Error("RouterTabs must contain only Tab children");
+            throw new Error("Tabs must contain only Tab children");
         }
     });
 

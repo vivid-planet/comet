@@ -7,7 +7,6 @@ import {
     GridCellContent,
     type GridColDef,
     type IFilterApi,
-    type ISelectionApi,
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
@@ -59,7 +58,7 @@ import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 export { damFolderQuery } from "./FolderDataGrid.gql";
 export { moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
-export {
+export type {
     GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
@@ -76,8 +75,6 @@ interface FolderDataGridProps extends DamConfig {
     id?: string;
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
-    selectionApi: ISelectionApi;
-    renderWithFullHeightMainContent?: boolean;
 }
 
 type FolderDataGridToolbarProps = {
@@ -136,12 +133,10 @@ const FolderDataGrid = ({
     id: currentFolderId,
     filterApi,
     breadcrumbs,
-    selectionApi,
     hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
-    renderWithFullHeightMainContent,
     ...props
 }: FolderDataGridProps) => {
     const intl = useIntl();
@@ -505,25 +500,6 @@ const FolderDataGrid = ({
             hideSortIcons: true,
             disableColumnMenu: true,
         },
-        {
-            field: "totalCount",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.usages",
-                defaultMessage: "Usages",
-            }),
-            headerAlign: "right",
-            align: "right",
-            minWidth: 100,
-            renderCell: ({ row }) => {
-                if (isFile(row) && row.dependents?.totalCount !== undefined) {
-                    return row.dependents.totalCount;
-                }
-                return "";
-            },
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
         ...(enableLicenseFeature
             ? ([
                   {
@@ -567,7 +543,6 @@ const FolderDataGrid = ({
                   },
               ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
-
         {
             field: "createdAt",
             headerName: intl.formatMessage({
@@ -637,7 +612,6 @@ const FolderDataGrid = ({
                     checkboxSelection={!hideMultiselect}
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
-                    autoHeight={!renderWithFullHeightMainContent}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
                         contextMenu: !hideContextMenu,
@@ -650,7 +624,6 @@ const FolderDataGrid = ({
                             id: currentFolderId,
                             breadcrumbs,
                             filterApi,
-                            selectionApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
                         } as FolderDataGridToolbarProps,
@@ -667,8 +640,8 @@ const FolderDataGrid = ({
                 {({ selectedId, selectionMode }) => {
                     return (
                         <DialogContent>
-                            {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
-                            {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
+                            {selectionMode === "add" && <AddFolder parentId={selectedId} />}
+                            {selectionMode === "edit" && <EditFolder id={selectedId as string} />}
                         </DialogContent>
                     );
                 }}

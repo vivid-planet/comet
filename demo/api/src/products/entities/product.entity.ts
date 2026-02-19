@@ -1,4 +1,14 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import {
+    BlockDataInterface,
+    CrudField,
+    CrudGenerator,
+    DamImageBlock,
+    FileUpload,
+    ImportTargetInterface,
+    RootBlock,
+    RootBlockEntity,
+    RootBlockType,
+} from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -20,6 +30,7 @@ import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { ProductService } from "../product.service";
 import { ProductCategory } from "./product-category.entity";
 import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
@@ -78,8 +89,8 @@ export class ProductPriceRange {
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
-export class Product extends BaseEntity {
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"], hooksService: ProductService })
+export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -100,7 +111,7 @@ export class Product extends BaseEntity {
     @Field(() => ProductStatus)
     status: ProductStatus = ProductStatus.Unpublished;
 
-    @Property()
+    @Property({ unique: true })
     @Field()
     slug: string;
 
@@ -128,7 +139,7 @@ export class Product extends BaseEntity {
     @Field()
     inStock: boolean = true;
 
-    @Property({ type: types.decimal, nullable: true })
+    @Property({ type: types.integer, nullable: true })
     @Field(() => Int, { nullable: true })
     @CrudField({
         input: false,

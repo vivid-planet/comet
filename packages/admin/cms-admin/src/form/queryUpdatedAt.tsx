@@ -1,5 +1,4 @@
-import { type ApolloClient } from "@apollo/client";
-import gql from "graphql-tag";
+import { type ApolloClient, gql } from "@apollo/client";
 
 export async function queryUpdatedAt(client: ApolloClient<object>, rootQueryName: string, id: string | undefined): Promise<string | undefined> {
     if (!id) return undefined;

@@ -65,7 +65,7 @@ describe("GenerateCrud", () => {
             expect(structure.properties?.length).toBe(0);
             expect(structure.methods?.length).toBe(5);
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -104,7 +104,7 @@ describe("GenerateCrud", () => {
             expect(filterProp.name).toBe("title");
             expect(filterProp.type).toBe("StringFilter");
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -143,7 +143,7 @@ describe("GenerateCrud", () => {
             expect(filterProp.name).toBe("foo");
             expect(filterProp.type).toBe("NumberFilter");
 
-            orm.close();
+            await orm.close();
         });
     });
 
@@ -181,7 +181,7 @@ describe("GenerateCrud", () => {
             expect(filterProp.name).toBe("title");
             expect(filterProp.type).toBe("StringFilter");
 
-            orm.close();
+            await orm.close();
         });
     });
 });

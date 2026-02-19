@@ -30,16 +30,19 @@ export default defineConfig<GQLProduct>({
     initialFilter: {
         items: [{ field: "type", operator: "is", value: "shirt" }],
     },
+    crudContextMenu: {
+        deleteText: "Extinguish",
+    },
     columns: [
         {
             type: "virtual",
             name: "overview",
             queryFields: ["category.title"],
-            headerName: "Overview",
+            headerName: <FormattedMessage id="product.overview.headerName" defaultMessage="Over-view" />,
             minWidth: 200,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="Cap" />,
                     Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };
@@ -119,7 +122,7 @@ export default defineConfig<GQLProduct>({
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "date")
         { type: "date", name: "availableSince", width: 140 },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "dateTime")
-        { type: "dateTime", name: "createdAt", width: 170 },
+        { type: "dateTime", name: "createdAt", width: 170, visible: false },
         {
             type: "text",
             name: "manufacturer.name",
@@ -130,17 +133,20 @@ export default defineConfig<GQLProduct>({
         {
             type: "manyToMany",
             name: "tags",
+            disableExport: true,
             headerName: "Tags",
             labelField: "title",
         },
         {
             type: "oneToMany",
             name: "variants",
+            disableExport: true,
             headerName: "Variants",
             labelField: "name",
         },
         {
             type: "actions",
+            queryFields: ["slug"],
             component: ProductsGridPreviewAction,
         },
     ],

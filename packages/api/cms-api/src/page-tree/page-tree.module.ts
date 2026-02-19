@@ -4,6 +4,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { InternalLinkBlockTransformerService } from "./blocks/internal-link-block-transformer.service";
 import { InternalLinkBlockWarningsService } from "./blocks/internal-link-block-warnings.service";
@@ -32,7 +33,7 @@ interface PageTreeModuleOptions {
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
-    sitePreviewSecret: string;
+    sitePreviewSecret: string | ((scope: ContentScope) => string);
 }
 
 @Global()

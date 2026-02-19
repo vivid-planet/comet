@@ -49,18 +49,35 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
         @Get(":hash/:id/:timeout")
         async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            const file = await this.fileUploadsRepository.findOne(params.id);
+
+            if (!file) {
+                throw new NotFoundException();
+            }
+
+            res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+            await this.streamFile(file, { hash, ...params }, res, range);
+        }
+
+        @Get("preview/:hash/:id/:timeout")
+        async preview(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            const file = await this.fileUploadsRepository.findOne(params.id);
+
+            if (!file) {
+                throw new NotFoundException();
+            }
+
+            res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+            await this.streamFile(file, { hash, ...params }, res, range);
+        }
+
+        private async streamFile(file: FileUpload, { hash, ...params }: HashDownloadParams, res: Response, range?: string) {
             if (!this.isValidHash(hash, params)) {
                 throw new BadRequestException("Invalid hash");
             }
 
             if (Date.now() > params.timeout) {
                 throw new GoneException();
-            }
-
-            const file = await this.fileUploadsRepository.findOne(params.id);
-
-            if (!file) {
-                throw new NotFoundException();
             }
 
             const filePath = createHashedPath(file.contentHash);
@@ -71,7 +88,6 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             }
 
             const headers = {
-                "content-disposition": `attachment; filename="${file.name}"`,
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
                 "content-length": file.size,

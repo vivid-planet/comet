@@ -9,6 +9,9 @@ export default defineConfig<GQLProductCategory>({
     rowReordering: {
         enabled: true,
     },
+    crudContextMenu: {
+        deleteType: "remove",
+    },
     columns: [
         {
             type: "text",
@@ -19,6 +22,11 @@ export default defineConfig<GQLProductCategory>({
             type: "text",
             name: "slug",
             headerName: "Slug",
+        },
+        {
+            type: "text",
+            name: "type.title",
+            headerName: "Type",
         },
         {
             type: "number",

@@ -14,7 +14,7 @@ function morphTsSource(metadata: EntityMetadata<any>) {
     return tsSource;
 }
 
-function morphTsClass(metadata: EntityMetadata<any>) {
+export function morphTsClass(metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     const tsClass = tsSource.getClass(metadata.className);
     if (!tsClass) throw new Error(`Class ${metadata.className} not found in ${metadata.path}`);
@@ -31,7 +31,7 @@ export function morphTsProperty(name: string, metadata: EntityMetadata<any>) {
     throw new Error(`Property ${name} not found in ${metadata.className}`);
 }
 
-function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
+export function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     for (const tsImport of tsSource.getImportDeclarations()) {
         for (const namedImport of tsImport.getNamedImports()) {
@@ -50,8 +50,12 @@ function findImportPath(importName: string, targetDirectory: string, metadata: E
 
                 if (importPath.startsWith("./") || importPath.startsWith("../")) {
                     const absolutePath = path.resolve(path.dirname(metadata.path), importPath);
+                    let relativePath = path.relative(targetDirectory, absolutePath);
+                    if (!relativePath.startsWith(".")) {
+                        relativePath = `./${relativePath}`;
+                    }
                     return {
-                        importPath: path.relative(targetDirectory, absolutePath),
+                        importPath: relativePath,
                         exportedDeclaration,
                     };
                 } else {
@@ -60,7 +64,18 @@ function findImportPath(importName: string, targetDirectory: string, metadata: E
             }
         }
     }
-    throw new Error(`${importName} import not found in ${metadata.path}`);
+    return {
+        importPath: null,
+        exportedDeclaration: undefined,
+    };
+}
+
+function findImportPathOrThrow(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
+    const ret = findImportPath(importName, targetDirectory, metadata);
+    if (!ret.importPath) {
+        throw new Error(`${importName} import not found in ${metadata.path}`);
+    }
+    return ret;
 }
 
 export function findEnumName(propertyName: string, metadata: EntityMetadata<any>): string {
@@ -82,7 +97,7 @@ export function findEnumImportPath(enumName: string, targetDirectory: string, me
         return path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "");
     } else {
         //try to find import where enum is imported from
-        const { importPath } = findImportPath(enumName, targetDirectory, metadata);
+        const { importPath } = findImportPathOrThrow(enumName, targetDirectory, metadata);
         return importPath;
     }
 }
@@ -96,7 +111,7 @@ export function findValidatorImportPath(validatorName: string, generatorOptions:
         }
         return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
     } else {
-        const { importPath } = findImportPath(validatorName, generatorOptions.targetDirectory, metadata);
+        const { importPath } = findImportPathOrThrow(validatorName, generatorOptions.targetDirectory, metadata);
         return importPath;
     }
 }
@@ -120,7 +135,7 @@ export function findBlockImportPath(blockName: string, targetDirectory: string, 
         return path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "");
     } else {
         //try to find import where block is imported from
-        const { importPath } = findImportPath(blockName, targetDirectory, metadata);
+        const { importPath } = findImportPathOrThrow(blockName, targetDirectory, metadata);
         return importPath;
     }
 }
@@ -141,7 +156,7 @@ export function findInputClassImportPath(className: string, targetDirectory: str
         returnImportPath = path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "");
     } else {
         //try to find import where block is imported from
-        const { importPath, exportedDeclaration } = findImportPath(className, targetDirectory, metadata);
+        const { importPath, exportedDeclaration } = findImportPathOrThrow(className, targetDirectory, metadata);
         if (!(exportedDeclaration instanceof ClassDeclaration)) {
             throw new Error(`Exported declaration for ${className} is not a class`);
         }

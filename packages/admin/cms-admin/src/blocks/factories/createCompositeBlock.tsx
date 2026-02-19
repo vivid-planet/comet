@@ -1,7 +1,7 @@
 import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { Fragment, type ReactNode } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { BlockAdminComponentNestedButton } from "../common/BlockAdminComponentNestedButton";
 import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
@@ -18,18 +18,45 @@ import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { BlockCategory, type BlockInputApi, type BlockInterface, type BlockOutputApi, type BlockState, type CustomBlockCategory } from "../types";
 
 interface BlockConfiguration {
+    /**
+     * User facing label displayed above the block.
+     */
     title?: ReactNode;
+    /**
+     * Render the block as a nested page with a navigation button instead of displaying it inline.
+     */
     nested?: boolean;
+    /**
+     * The block to render.
+     */
     block: BlockInterface | BlockInterfaceWithOptions;
+    /**
+     * Hides this block when navigating into a sibling block's sub-route (e.g., when editing items of a list block).
+     */
     hiddenInSubroute?: boolean;
     divider?: boolean;
+    /**
+     * Wrap the block within a paper for visual grouping.
+     */
     paper?: boolean;
+    /**
+     * Conditionally hide the block based on it's current state. Return `true` to hide.
+     */
     hiddenForState?: (state: unknown) => boolean;
 }
 
 interface GroupConfiguration {
+    /**
+     * The blocks to render.
+     */
     blocks: Record<string, BlockConfiguration>;
+    /**
+     * User facing section headline displayed above the group, more prominent than the individual block's titles.
+     */
     title?: ReactNode;
+    /**
+     * Wrap the group's within a paper for visual grouping.
+     */
     paper?: boolean;
 }
 
@@ -38,12 +65,24 @@ interface NormalizedBlockConfiguration extends BlockConfiguration {
 }
 
 interface CreateCompositeBlockOptionsBase {
+    /**
+     * Unique identifier for the block. Must match the name used in the API and Site.
+     */
     name: string;
+    /**
+     * User-facing label shown in the Add Block Drawer.
+     */
     displayName: ReactNode;
+    /**
+     * Category under which the block appears in the Add Block Drawer.
+     */
     category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
-
+    /**
+     * Tags used for searching in the Add Block Drawer.
+     */
+    tags?: Array<MessageDescriptor | string>;
     /**
      * Function to determine the order of the blocks in the admin component. If a block is not included in the array, it will not be rendered.
      * @param state The current state of the composite block
@@ -84,7 +123,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         block: CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
     ) => CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
 ): CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>> => {
-    const { name, displayName, category = BlockCategory.Other, visibleOrderedBlocksForState } = options;
+    const { name, displayName, category = BlockCategory.Other, tags, visibleOrderedBlocksForState } = options;
 
     let groups: Record<string, GroupConfiguration>;
 
@@ -95,6 +134,14 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
     }
 
     const blockConfigs: Record<string, BlockConfiguration> = Object.values(groups).reduce((blocks, group) => ({ ...blocks, ...group.blocks }), {});
+
+    const childTags = Object.values(blockConfigs).reduce<Array<MessageDescriptor | string>>((acc, blockConfig) => {
+        const [blockInterface] = normalizedBlockConfig(blockConfig.block);
+        if (isBlockInterface(blockInterface) && blockInterface.tags) {
+            return [...acc, ...blockInterface.tags];
+        }
+        return acc;
+    }, []);
 
     // internally use the lower level composeBlocks-api
     const {
@@ -127,6 +174,8 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         displayName,
 
         category,
+
+        tags: tags ? tags : childTags,
 
         createPreviewState: (state, previewContext) => {
             const blockPreviewState = block.createPreviewState(state, previewContext);

@@ -39,6 +39,7 @@ schema.json
 block-meta.json
 src/**/*.generated.ts
 src/site-configs.d.ts
+src/**/*.scss.d.ts
 
 public/sitemap.xml
 public/robots.txt
@@ -46,6 +47,7 @@ public/robots.txt
 tsconfig.tsbuildinfo
 
 src/comet-config.json
+persisted-queries.json
 
 lang
 lang-extracted

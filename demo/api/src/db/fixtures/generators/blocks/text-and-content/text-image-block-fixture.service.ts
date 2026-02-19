@@ -18,7 +18,7 @@ export class TextImageBlockFixtureService {
             image: await this.damImageBlockFixtureService.generateBlockInput(),
             text: await this.richTextBlockFixtureService.generateBlockInput(),
             imagePosition: faker.helpers.arrayElement(Object.values(ImagePosition)),
-            imageAspectRatio: "16:9",
+            imageAspectRatio: "16x9",
         };
     }
 }

@@ -1,7 +1,6 @@
-import { type ObservableQuery, useApolloClient } from "@apollo/client";
+import { gql, type ObservableQuery, useApolloClient } from "@apollo/client";
 import { type IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
 import {
     type Dispatch,
@@ -399,7 +398,7 @@ function getLinkedPages(pages: PageTreePage[], index: number): [PageTreePage | u
 
 const PageTreeWithRef = forwardRef(PageTree);
 
-export { PageTreeWithRef as PageTree, PageTreeRefApi };
+export { PageTreeWithRef as PageTree, type PageTreeRefApi };
 
 const Root = styled("div")`
     height: 100%;

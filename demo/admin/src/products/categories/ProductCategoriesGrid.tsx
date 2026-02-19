@@ -13,12 +13,13 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } from "@mui/x-data-grid-pro";
+import { useMemo } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
     type GQLDeleteProductCategoryMutation,
     type GQLDeleteProductCategoryMutationVariables,
-    type GQLProductCategoriesGridFragment,
+    type GQLProductCategoriesGridHandmadeFragment,
     type GQLProductCategoriesGridQuery,
     type GQLProductCategoriesGridQueryVariables,
     type GQLUpdateProductCategoryPositionMutation,
@@ -26,7 +27,7 @@ import {
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
-    fragment ProductCategoriesGrid on ProductCategory {
+    fragment ProductCategoriesGridHandmade on ProductCategory {
         id
         title
         slug
@@ -38,7 +39,7 @@ const productCategoriesQuery = gql`
     query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
         productCategories(offset: $offset, limit: $limit, sort: $sort) {
             nodes {
-                ...ProductCategoriesGrid
+                ...ProductCategoriesGridHandmade
             }
             totalCount
         }
@@ -86,64 +87,66 @@ export function ProductCategoriesGrid() {
             refetchQueries: [productCategoriesQuery],
         });
     };
-    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = [
-        {
-            field: "title",
-            headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
-            filterable: false,
-            sortable: false,
-            flex: 1,
-            minWidth: 150,
-        },
-        {
-            field: "slug",
-            headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
-            filterable: false,
-            sortable: false,
-            flex: 1,
-            minWidth: 150,
-        },
-        {
-            field: "position",
-            headerName: intl.formatMessage({ id: "productCategory.position", defaultMessage: "Position" }),
-            type: "number",
-            filterable: false,
-            sortable: false,
-            renderCell: ({ value }) => {
-                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+    const columns: GridColDef<GQLProductCategoriesGridHandmadeFragment>[] = useMemo(() => {
+        return [
+            {
+                field: "title",
+                headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
+                filterable: false,
+                sortable: false,
+                flex: 1,
+                minWidth: 150,
             },
-            flex: 1,
-            minWidth: 150,
-        },
-        {
-            field: "actions",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            type: "actions",
-            align: "right",
-            pinned: "right",
-            width: 84,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
-                            <EditIcon />
-                        </IconButton>
-                        <CrudContextMenu
-                            onDelete={async () => {
-                                await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
-                                    mutation: deleteProductCategoryMutation,
-                                    variables: { id: params.row.id },
-                                });
-                            }}
-                            refetchQueries={[productCategoriesQuery]}
-                        />
-                    </>
-                );
+            {
+                field: "slug",
+                headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
+                filterable: false,
+                sortable: false,
+                flex: 1,
+                minWidth: 150,
             },
-        },
-    ];
+            {
+                field: "position",
+                headerName: intl.formatMessage({ id: "productCategory.position", defaultMessage: "Position" }),
+                type: "number",
+                filterable: false,
+                sortable: false,
+                renderCell: ({ value }) => {
+                    return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+                },
+                flex: 1,
+                minWidth: 150,
+            },
+            {
+                field: "actions",
+                headerName: "",
+                sortable: false,
+                filterable: false,
+                type: "actions",
+                align: "right",
+                pinned: "right",
+                width: 84,
+                renderCell: (params) => {
+                    return (
+                        <>
+                            <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                <EditIcon />
+                            </IconButton>
+                            <CrudContextMenu
+                                onDelete={async () => {
+                                    await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
+                                        mutation: deleteProductCategoryMutation,
+                                        variables: { id: params.row.id },
+                                    });
+                                }}
+                                refetchQueries={[productCategoriesQuery]}
+                            />
+                        </>
+                    );
+                },
+            },
+        ];
+    }, [client, intl]);
 
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {

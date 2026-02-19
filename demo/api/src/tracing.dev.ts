@@ -10,15 +10,17 @@ const sdk = new NodeSDK({
     traceExporter: new OTLPTraceExporter({
         url: `http://localhost:${process.env.JAEGER_OLTP_PORT}/v1/traces`,
     }),
-    metricReader: new PrometheusExporter(
-        {
-            port: 9465,
-        },
-        () => {
-            const { endpoint } = PrometheusExporter.DEFAULT_OPTIONS;
-            console.log(`prometheus scrape endpoint: http://localhost:9465${endpoint}`);
-        },
-    ),
+    metricReaders: [
+        new PrometheusExporter(
+            {
+                port: 9465,
+            },
+            () => {
+                const { endpoint } = PrometheusExporter.DEFAULT_OPTIONS;
+                console.log(`prometheus scrape endpoint: http://localhost:9465${endpoint}`);
+            },
+        ),
+    ],
     instrumentations: [
         getNodeAutoInstrumentations({
             "@opentelemetry/instrumentation-pg": {

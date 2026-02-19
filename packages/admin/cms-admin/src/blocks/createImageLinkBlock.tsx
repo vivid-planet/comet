@@ -1,4 +1,4 @@
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { createCompositeBlock } from "./factories/createCompositeBlock";
 import { PixelImageBlock } from "./PixelImageBlock";
@@ -8,10 +8,11 @@ interface CreateImageLinkBlockOptions {
     link: BlockInterface;
     image?: BlockInterface;
     name?: string;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export function createImageLinkBlock(
-    { link: LinkBlock, image = PixelImageBlock, name = "ImageLink" }: CreateImageLinkBlockOptions,
+    { link: LinkBlock, image = PixelImageBlock, name = "ImageLink", tags }: CreateImageLinkBlockOptions,
     override?: (block: BlockInterface) => BlockInterface,
 ): BlockInterface {
     return createCompositeBlock(
@@ -30,6 +31,7 @@ export function createImageLinkBlock(
                     paper: true,
                 },
             },
+            tags,
         },
         override,
     );

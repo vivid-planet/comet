@@ -1,5 +1,6 @@
 import {
     type GridActionsColDef as MuiGridActionsColDef,
+    type GridFilterItem,
     type GridSingleSelectColDef as MuiGridSingleSelectColDef,
     type GridValidRowModel,
     type GridValueOptionsParams,
@@ -7,6 +8,8 @@ import {
 import { type GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
 import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
 import { type ReactNode } from "react";
+
+import { type GqlFilter } from "./muiGridFilterToGql";
 
 type ValueOption =
     | string
@@ -21,9 +24,10 @@ type GridColDefExtension<R extends GridValidRowModel = any> = {
     valueOptions?: Array<ValueOption> | ((params: GridValueOptionsParams<R>) => Array<ValueOption>);
     /**
      * Media query to define when the column is visible.
+     * Set to false to initially hide the column.
      * Requires DataGridPro or DataGridPremium.
      */
-    visible?: string;
+    visible?: string | false;
     /**
      * Requires DataGridPro or DataGridPremium.
      */
@@ -32,6 +36,10 @@ type GridColDefExtension<R extends GridValidRowModel = any> = {
      * Requires DataGridPro or DataGridPremium.
      */
     pinned?: keyof GridPinnedColumns;
+    /**
+     * Callback to convert a filter item to a GQL filter.
+     */
+    toGqlFilter?: (filterItem: GridFilterItem) => GqlFilter;
 };
 
 export type GridBaseColDef<R extends GridValidRowModel = any, V = any, F = V> = MuiGridBaseColDef<R, V, F> & GridColDefExtension<R>;

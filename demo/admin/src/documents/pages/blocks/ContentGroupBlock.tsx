@@ -2,11 +2,11 @@ import { AnchorBlock, BlockCategory, createBlocksBlock, createCompositeBlock, cr
 import { type ContentGroupBlockData } from "@src/blocks.generated";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
-import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
@@ -26,7 +26,7 @@ const ContentGroupContentBlock = createBlocksBlock({
         anchor: AnchorBlock,
         space: SpaceBlock,
         teaser: TeaserBlock,
-        richtext: RichTextBlock,
+        richtext: StandaloneRichTextBlock,
         heading: StandaloneHeadingBlock,
         columns: ColumnsBlock,
         callToActionList: StandaloneCallToActionListBlock,

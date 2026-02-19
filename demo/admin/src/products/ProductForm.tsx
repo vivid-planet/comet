@@ -13,7 +13,6 @@ import {
     TextAreaField,
     TextField,
     useFormApiRef,
-    useStackSwitchApi,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
 import {
@@ -27,16 +26,16 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
-import { type GQLProductType } from "@src/graphql.generated";
+import { type GQLProductMutationErrorCode, type GQLProductType } from "@src/graphql.generated";
 import {
     type GQLManufacturerCountriesQuery,
     type GQLManufacturerCountriesQueryVariables,
     type GQLManufacturersQuery,
     type GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
-import { type FormApi } from "final-form";
+import { FORM_ERROR, type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "./helpers/FutureProductNotice";
@@ -60,6 +59,7 @@ import {
 interface FormProps {
     id?: string;
     width?: number;
+    onCreate?: (id: string) => void;
 }
 
 const rootBlocks = {
@@ -83,11 +83,19 @@ type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
 };
 
-export function ProductForm({ id, width }: FormProps) {
+const submissionErrorMessages: { [K in GQLProductMutationErrorCode]: ReactNode } = {
+    titleTooShort: (
+        <FormattedMessage
+            id="product.form.error.titleTooShort"
+            defaultMessage="Title must be at least 3 characters long when creating a product, except for foo"
+        />
+    ),
+};
+
+export function ProductForm({ id, width, onCreate }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
-    const stackSwitchApi = useStackSwitchApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
@@ -159,13 +167,25 @@ export function ProductForm({ id, width }: FormProps) {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
-            if (!event.navigatingBack) {
-                const id = mutationResponse?.createProduct.id;
-                if (id) {
-                    setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
-                    });
-                }
+            if (mutationResponse?.createProduct.errors.length) {
+                return mutationResponse.createProduct.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
+            const id = mutationResponse?.createProduct.product?.id;
+            if (id) {
+                setTimeout(() => {
+                    onCreate?.(id);
+                });
             }
         }
     };

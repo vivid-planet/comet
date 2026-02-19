@@ -1,6 +1,7 @@
-import { type EntityMetadata, type FilterQuery, type ObjectQuery, raw } from "@mikro-orm/postgresql";
+import { type EntityMetadata, type FilterQuery, type ObjectQuery, type OrderDefinition, raw } from "@mikro-orm/postgresql";
 
 import { type CrudSearchField, getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
+import { type SortDirection } from "../sorting/sort-direction.enum";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
@@ -367,4 +368,21 @@ export function gqlArgsToMikroOrmQuery({ search, filter }: { search?: string; fi
     }
 
     return andFilters.length > 0 ? { $and: andFilters } : {};
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function gqlSortToMikroOrmOrderBy(sort: Array<{ field: string; direction: SortDirection }>): OrderDefinition<any> {
+    return sort.map((sortItem) => {
+        const parts = sortItem.field.split("_");
+        const direction = sortItem.direction;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return parts.reduceRight((acc: any, key, index) => {
+            if (index === parts.length - 1) {
+                return { [key]: direction };
+            }
+            return { [key]: acc };
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }, {} as OrderDefinition<any>);
+    });
 }

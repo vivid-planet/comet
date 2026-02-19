@@ -2,7 +2,7 @@ import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
-import { TeaserItemBlock } from "@src/documents/pages/blocks/teaser-item.block";
+import { TeaserItemBlock, TeaserItemTitleHtmlTag } from "@src/documents/pages/blocks/teaser-item.block";
 
 import { MediaBlockFixtureService } from "../media/media-block.fixture.service";
 import { TextLinkBlockFixtureService } from "../navigation/text-link-block-fixture.service";
@@ -22,6 +22,7 @@ export class TeaserBlockFixtureService {
             title: faker.lorem.words({ min: 3, max: 9 }),
             description: await this.richTextBlockFixtureService.generateBlockInput(),
             link: await this.textLinkBlockFixtureService.generateBlockInput(),
+            titleHtmlTag: faker.helpers.arrayElement(Object.values(TeaserItemTitleHtmlTag)),
         };
     }
 

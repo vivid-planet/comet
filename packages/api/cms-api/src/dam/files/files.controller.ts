@@ -166,8 +166,10 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
-            const { fileId, ...transformedBody } = plainToInstance(ReplaceFileByIdBody, body);
+            const transformedBody = plainToInstance(ReplaceFileByIdBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            const { fileId, ...restBody } = transformedBody;
 
             if (errors.length > 0) {
                 throw new CometValidationException("Validation failed", errors);
@@ -181,7 +183,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new ForbiddenException();
             }
 
-            const replacedFile = await this.filesService.replace(fileToReplace, file, transformedBody);
+            const replacedFile = await this.filesService.replace(fileToReplace, file, restBody);
 
             const fileUrl = await this.filesService.createFileUrl(replacedFile, {
                 previewDamUrls: Boolean(previewDamUrls),

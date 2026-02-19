@@ -50,7 +50,7 @@ interface CreateSeoBlockOptions<ImageBlock extends Block> {
     image?: ImageBlock;
 }
 
-interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
+export interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
     htmlTitle?: string;
     metaDescription?: string;
     openGraphTitle?: string;

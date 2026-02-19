@@ -4,7 +4,9 @@ import { type StringFilter } from "../common/filter/string.filter";
 import { type RedirectFilter } from "./dto/redirects.filter";
 import { type RedirectInterface } from "./entities/redirect-entity.factory";
 
-export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt"> & { target?: string };
+export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt" | "activatedAt"> & {
+    target?: string;
+};
 
 export function redirectMatchesFilter(redirect: FilterableRedirect, filter: RedirectFilter): boolean {
     let matches: boolean | undefined;
@@ -22,30 +24,29 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     }
 
     if (filter.target) {
-        if (redirect.target) {
-            const isAbsoluteUrl = redirect.target.startsWith("http://") || redirect.target.startsWith("https://");
+        const isAbsoluteUrl = redirect.target?.startsWith("http://") || redirect.target?.startsWith("https://");
 
-            if (isAbsoluteUrl) {
-                const url = new URL(redirect.target);
-                matches = stringMatchesFilter(redirect.target, filter.target) || stringMatchesFilter(url.pathname, filter.target);
-            } else {
-                matches = stringMatchesFilter(redirect.target, filter.target);
-            }
+        if (isAbsoluteUrl && redirect.target) {
+            const url = new URL(redirect.target);
+            matches = stringMatchesFilter(redirect.target, filter.target) || stringMatchesFilter(url.pathname, filter.target);
         } else {
-            matches = false;
+            matches = stringMatchesFilter(redirect.target, filter.target);
         }
     }
 
     if (filter.active) {
         matches = booleanMatchesFilter(redirect.active, filter.active);
     }
-
     if (filter.createdAt) {
         matches = dateTimeMatchesFilter(redirect.createdAt, filter.createdAt);
     }
 
     if (filter.updatedAt) {
         matches = dateTimeMatchesFilter(redirect.updatedAt, filter.updatedAt);
+    }
+
+    if (filter.activatedAt) {
+        matches = dateTimeMatchesFilter(redirect.activatedAt, filter.activatedAt);
     }
 
     if (filter.and) {
@@ -69,8 +70,10 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     return matches ?? false;
 }
 
-function stringMatchesFilter(string: string, filter: StringFilter) {
-    if (filter.contains && string.includes(filter.contains)) {
+function stringMatchesFilter(string: string | undefined, filter: StringFilter) {
+    if (!string) {
+        return filter.isEmpty === true;
+    } else if (filter.contains && string.includes(filter.contains)) {
         return true;
     } else if (filter.notContains && !string.includes(filter.notContains)) {
         return true;
@@ -84,21 +87,25 @@ function stringMatchesFilter(string: string, filter: StringFilter) {
         return true;
     } else if (filter.isAnyOf && filter.isAnyOf.includes(string)) {
         return true;
+    } else if (filter.isNotEmpty && string !== undefined) {
+        return true;
     }
-
-    return false;
 }
 
 function booleanMatchesFilter(boolean: boolean, filter: BooleanFilter) {
-    if (filter.equal && boolean === filter.equal) {
+    if (filter.equal !== undefined && boolean === filter.equal) {
+        return true;
+    } else if (filter.equal === undefined) {
         return true;
     }
 
     return false;
 }
 
-function dateTimeMatchesFilter(date: Date, filter: DateTimeFilter) {
-    if (filter.equal && date.getTime() === filter.equal.getTime()) {
+function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter): boolean {
+    if (!date) {
+        return filter.isEmpty === true;
+    } else if (filter.equal && date.getTime() === filter.equal.getTime()) {
         return true;
     } else if (filter.lowerThan && date.getTime() < filter.lowerThan.getTime()) {
         return true;
@@ -110,8 +117,9 @@ function dateTimeMatchesFilter(date: Date, filter: DateTimeFilter) {
         return true;
     } else if (filter.notEqual && date.getTime() !== filter.notEqual.getTime()) {
         return true;
+    } else if (filter.isNotEmpty) {
+        return true;
     }
-
     return false;
 }
 

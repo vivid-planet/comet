@@ -5,7 +5,7 @@ export const renderStaticSelectCell: GridColDef["renderCell"] = ({ value, colDef
     const gridColDef = colDef as GridColDef;
     if (Array.isArray(gridColDef.valueOptions)) {
         const renderCellValue = gridColDef.valueOptions.find((option) => {
-            return typeof option === "object" && option.value === value.toString();
+            return typeof option === "object" && option.value === value ? value.toString() : "";
         });
 
         if (typeof renderCellValue === "object") {

@@ -14,6 +14,11 @@ export class FileUploadsResolver {
         return this.fileUploadsService.createDownloadUrl(fileUpload);
     }
 
+    @ResolveField(() => String)
+    previewUrl(@Parent() fileUpload: FileUpload): string {
+        return this.fileUploadsService.createPreviewUrl(fileUpload);
+    }
+
     @ResolveField(() => String, { nullable: true })
     imageUrl(@Parent() fileUpload: FileUpload, @Args("resizeWidth", { type: () => Int }) resizeWidth: number): string | null {
         return this.fileUploadsService.createImageUrl(fileUpload, resizeWidth) ?? null;

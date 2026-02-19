@@ -1,6 +1,7 @@
 export type Imports = Array<{
     name: string;
     importPath: string;
+    defaultImport?: boolean;
 }>;
 
 // generate imports code and filter duplicates
@@ -21,7 +22,11 @@ export function generateImportsCode(imports: Imports): string {
 
     const importsString = filteredImports
         .map((imp) => {
-            return `import { ${imp.name} } from "${imp.importPath}";`;
+            if (imp.defaultImport) {
+                return `import ${imp.name} from "${imp.importPath}";`;
+            } else {
+                return `import { ${imp.name} } from "${imp.importPath}";`;
+            }
         })
         .join("\n");
     return importsString;

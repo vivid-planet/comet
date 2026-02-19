@@ -11,8 +11,8 @@ export const Basic = {
     render: () => {
         const gridRows = Array.from({ length: 5 }).map((_, index) => ({
             id: index + 1,
-            name: faker.name.fullName(),
-            occupation: faker.name.jobTitle(),
+            name: faker.person.fullName(),
+            occupation: faker.person.jobTitle(),
             email: faker.internet.email(),
             onlineStatus: faker.datatype.boolean(),
         }));

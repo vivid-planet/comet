@@ -6,7 +6,8 @@ import { IsEnum } from "class-validator";
 export enum ProductTagSortField {
     title = "title",
     createdAt = "createdAt",
-    updatedAt = "updatedAt"
+    updatedAt = "updatedAt",
+    id = "id",
 }
 registerEnumType(ProductTagSortField, {
     name: "ProductTagSortField",

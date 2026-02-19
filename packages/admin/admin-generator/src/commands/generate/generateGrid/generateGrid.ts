@@ -2,16 +2,19 @@
 import { type GridColDef } from "@comet/admin";
 import {
     type IntrospectionEnumType,
+    type IntrospectionField,
     type IntrospectionInputObjectType,
     type IntrospectionNamedTypeRef,
     type IntrospectionObjectType,
     type IntrospectionQuery,
+    type IntrospectionType,
 } from "graphql";
 import { plural, singular } from "pluralize";
 import { type ReactNode } from "react";
 
 import {
     type ActionsGridColumnConfig,
+    type FormattedMessageElement,
     type GeneratorReturn,
     type GQLDocumentConfigMap,
     type GridColumnConfig,
@@ -24,12 +27,15 @@ import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationType } from "../utils/findMutationType";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
+import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
+import { generateFormattedMessage, isFormattedMessageElement } from "../utils/intl";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { detectMuiXGridVariant } from "./detectMuiXVersion";
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
-import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
+import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./getPropsForFilterProp";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
@@ -98,40 +104,66 @@ type LabelData = {
     gridCellContent?: ReactNode;
 };
 
-const getValueOptionsLabelData = (messageId: string, label: string | GridColumnStaticSelectLabelCellContent): LabelData => {
-    if (typeof label === "string") {
+const getValueOptionsLabelData = (messageId: string, label: string | FormattedMessageElement | GridColumnStaticSelectLabelCellContent): LabelData => {
+    if (typeof label === "string" || isFormattedMessageElement(label)) {
         return {
-            textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
+            textLabel: generateFormattedMessage({
+                config: label as FormattedMessageElement | string,
+                id: messageId,
+                type: "intlCall",
+            }),
         };
     }
 
     const textLabelParts: string[] = [];
     const gridCellContentProps: Record<string, string> = {};
 
-    if (label.primaryText) {
+    if ("primaryText" in label && label.primaryText) {
         const primaryMessageId = `${messageId}.primary`;
-        textLabelParts.push(`intl.formatMessage({ id: "${primaryMessageId}", defaultMessage: "${label.primaryText}" })`);
-        gridCellContentProps.primaryText = `<FormattedMessage id="${primaryMessageId}" defaultMessage="${label.primaryText}" />`;
+        textLabelParts.push(
+            generateFormattedMessage({
+                config: label.primaryText,
+                id: primaryMessageId,
+                type: "intlCall",
+            }),
+        );
+        gridCellContentProps.primaryText = generateFormattedMessage({
+            config: label.primaryText,
+            id: primaryMessageId,
+            type: "jsx",
+        });
     }
 
-    if (label.secondaryText) {
+    if ("secondaryText" in label && label.secondaryText) {
         const secondaryMessageId = `${messageId}.secondary`;
-        textLabelParts.push(`intl.formatMessage({ id: "${secondaryMessageId}", defaultMessage: "${label.secondaryText}" })`);
-        gridCellContentProps.secondaryText = `<FormattedMessage id="${secondaryMessageId}" defaultMessage="${label.secondaryText}" />`;
+        textLabelParts.push(
+            generateFormattedMessage({
+                config: label.secondaryText,
+                id: secondaryMessageId,
+                type: "intlCall",
+            }),
+        );
+        gridCellContentProps.secondaryText = generateFormattedMessage({
+            config: label.secondaryText,
+            id: secondaryMessageId,
+            type: "jsx",
+        });
     }
 
-    if (typeof label.icon === "string") {
-        gridCellContentProps.icon = `<${label.icon}Icon />`;
-    } else if (typeof label.icon === "object") {
-        if ("import" in label.icon) {
-            gridCellContentProps.icon = `<${label.icon.name} />`;
-        } else {
-            const { name, ...iconProps } = label.icon;
-            gridCellContentProps.icon = `<${name}Icon
+    if ("icon" in label) {
+        if (typeof label.icon === "string") {
+            gridCellContentProps.icon = `<${label.icon}Icon />`;
+        } else if (typeof label.icon === "object") {
+            if ("import" in label.icon) {
+                gridCellContentProps.icon = `<${label.icon.name} />`;
+            } else {
+                const { name, ...iconProps } = label.icon;
+                gridCellContentProps.icon = `<${name}Icon
                 ${Object.entries(iconProps)
                     .map(([key, value]) => `${key}="${value}"`)
                     .join("\n")}
             />`;
+            }
         }
     }
 
@@ -146,6 +178,34 @@ const getValueOptionsLabelData = (messageId: string, label: string | GridColumnS
         gridCellContent,
     };
 };
+
+function queryHasPaging(gridQueryType: IntrospectionField, gqlIntrospection: IntrospectionQuery): boolean {
+    // Unwrap NON_NULL to get the named return type
+    let returnType = gridQueryType.type;
+    if (returnType.kind === "NON_NULL") {
+        returnType = returnType.ofType;
+    }
+
+    // If the return type is a LIST, there's no pagination wrapper
+    if (returnType.kind === "LIST") {
+        return false;
+    }
+
+    // If it's a named OBJECT type, check for nodes and totalCount fields
+    if (returnType.kind === "OBJECT") {
+        const typeName = returnType.name;
+        const objectType = gqlIntrospection.__schema.types.find((type: IntrospectionType) => type.kind === "OBJECT" && type.name === typeName) as
+            | IntrospectionObjectType
+            | undefined;
+        if (objectType) {
+            const hasNodes = objectType.fields.some((f) => f.name === "nodes");
+            const hasTotalCount = objectType.fields.some((f) => f.name === "totalCount");
+            return hasNodes && hasTotalCount;
+        }
+    }
+
+    return false;
+}
 
 export function generateGrid<T extends { __typename?: string }>(
     {
@@ -162,6 +222,7 @@ export function generateGrid<T extends { __typename?: string }>(
         throw new Error("gqlType is required in grid config");
     }
 
+    const muiXGridVariant = detectMuiXGridVariant();
     const gqlTypePlural = plural(gqlType);
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -193,7 +254,6 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "renderStaticSelectCell", importPath: "@comet/admin" },
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
-        { name: "muiGridSortToGql", importPath: "@comet/admin" },
         { name: "StackLink", importPath: "@comet/admin" },
         { name: "FillSpace", importPath: "@comet/admin" },
         { name: "Tooltip", importPath: "@comet/admin" },
@@ -202,7 +262,6 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "useDataGridRemote", importPath: "@comet/admin" },
         { name: "usePersistentColumnState", importPath: "@comet/admin" },
         { name: "BlockPreviewContent", importPath: "@comet/cms-admin" },
-        { name: "useContentScope", importPath: "@comet/cms-admin" },
         { name: "Alert", importPath: "@mui/material" },
         { name: "Box", importPath: "@mui/material" },
         { name: "IconButton", importPath: "@mui/material" },
@@ -213,23 +272,22 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "ListItemIcon", importPath: "@mui/material" },
         { name: "ListItemText", importPath: "@mui/material" },
         { name: "CircularProgress", importPath: "@mui/material" },
-        { name: "DataGridPro", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridLogicOperator", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridRenderCellParams", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridSlotsComponent", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridToolbarProps", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridColumnHeaderTitle", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridToolbarQuickFilter", importPath: "@mui/x-data-grid-pro" },
-        { name: "GridRowOrderChangeParams", importPath: "@mui/x-data-grid-pro" },
+        { name: muiXGridVariant.gridComponent, importPath: muiXGridVariant.package },
+        { name: `${muiXGridVariant.gridComponent}Props`, importPath: muiXGridVariant.package },
+        { name: "GridLogicOperator", importPath: muiXGridVariant.package },
+        { name: "GridRenderCellParams", importPath: muiXGridVariant.package },
+        { name: "GridSlotsComponent", importPath: muiXGridVariant.package },
+        { name: "GridToolbarProps", importPath: muiXGridVariant.package },
+        { name: "GridColumnHeaderTitle", importPath: muiXGridVariant.package },
+        { name: "GridToolbarQuickFilter", importPath: muiXGridVariant.package },
+        { name: "GridRowOrderChangeParams", importPath: muiXGridVariant.package },
+        { name: "useMemo", importPath: "react" },
     ];
 
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({
-        // exclude id because it's always required
-        columns: config.columns.filter((column) => column.type !== "actions" && column.name !== "id"),
-    });
+    const fieldList = generateGqlFieldList({ columns: config.columns });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
@@ -254,8 +312,8 @@ export function generateGrid<T extends { __typename?: string }>(
     });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
+    const hasPaging = queryHasPaging(gridQueryType, gqlIntrospection);
 
-    const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
@@ -292,13 +350,24 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
-    const {
-        imports: forwardedGqlArgsImports,
-        props: forwardedGqlArgsProps,
-        gqlArgs,
-    } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
-    imports.push(...forwardedGqlArgsImports);
-    props.push(...forwardedGqlArgsProps);
+    let useScopeFromContext = false;
+    const gqlArgs: GqlArg[] = [];
+    {
+        const forwardedArgs = getForwardedGqlArgs([gridQueryType]);
+        for (const forwardedArg of forwardedArgs) {
+            imports.push(...forwardedArg.imports);
+            if (forwardedArg.gqlArg.name === "scope" && !config.scopeAsProp) {
+                useScopeFromContext = true;
+                gqlArgs.push(forwardedArg.gqlArg);
+            } else {
+                props.push(forwardedArg.prop);
+                gqlArgs.push(forwardedArg.gqlArg);
+            }
+        }
+    }
+    if (useScopeFromContext) {
+        imports.push({ name: "useContentScope", importPath: "@comet/cms-admin" });
+    }
 
     const renderToolbar = config.toolbar ?? true;
 
@@ -330,16 +399,22 @@ export function generateGrid<T extends { __typename?: string }>(
     const hasSort = !!sortArg;
     let sortFields: string[] = [];
     if (sortArg) {
-        if (sortArg.type.kind !== "LIST") {
+        imports.push({ name: "muiGridSortToGql", importPath: "@comet/admin" });
+        let sortArgType = sortArg.type;
+        if (sortArgType.kind === "NON_NULL") {
+            sortArgType = sortArgType.ofType;
+        }
+
+        if (sortArgType.kind !== "LIST") {
             throw new Error("Sort argument must be LIST");
         }
-        if (sortArg.type.ofType.kind !== "NON_NULL") {
+        if (sortArgType.ofType.kind !== "NON_NULL") {
             throw new Error("Sort argument must be LIST->NON_NULL");
         }
-        if (sortArg.type.ofType.ofType.kind !== "INPUT_OBJECT") {
+        if (sortArgType.ofType.ofType.kind !== "INPUT_OBJECT") {
             throw new Error("Sort argument must be LIST->NON_NULL->INPUT_OBJECT");
         }
-        const sortTypeName = sortArg.type.ofType.ofType.name;
+        const sortTypeName = sortArgType.ofType.ofType.name;
         const sortType = gqlIntrospection.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === sortTypeName) as
             | IntrospectionInputObjectType
             | undefined;
@@ -360,14 +435,13 @@ export function generateGrid<T extends { __typename?: string }>(
     }
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search") && !allowRowReordering;
-    const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
 
-    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
+    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig<any>;
     const {
         component: actionsColumnComponent,
         type: actionsColumnType,
@@ -375,6 +449,8 @@ export function generateGrid<T extends { __typename?: string }>(
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = defaultActionsColumnWidth,
         visible: actionsColumnVisible = undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        queryFields: actionsColumnQueryFields = [], // not needed here, but needs to be removed from restActionsColumnConfig because it's directly used in to generate component props in tsCodeRecordToString
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
     if (actionsColumnComponent) {
@@ -395,6 +471,7 @@ export function generateGrid<T extends { __typename?: string }>(
         let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
         let valueFormatter: string | undefined = undefined;
+        let valueGetter = name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
@@ -410,8 +487,14 @@ export function generateGrid<T extends { __typename?: string }>(
 
         if (type == "dateTime") {
             gridColumnType = "...dataGridDateTimeColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "date") {
             gridColumnType = "...dataGridDateColumn,";
+            valueGetter = name.includes(".")
+                ? `(params, row) => row.${name.replace(/\./g, "?.")} && new Date(row.${name.replace(/\./g, "?.")})`
+                : undefined;
         } else if (type == "number") {
             gridType = "number";
             const defaultDecimals = column.currency ? 2 : 0;
@@ -422,7 +505,6 @@ export function generateGrid<T extends { __typename?: string }>(
             }`;
         } else if (type == "boolean") {
             gridType = "boolean";
-            valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;
         } else if (column.type == "block") {
             renderCell = `(params) => {
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
@@ -438,7 +520,7 @@ export function generateGrid<T extends { __typename?: string }>(
             ) as IntrospectionEnumType | undefined;
 
             column.values?.forEach((value) => {
-                if (typeof value === "object" && typeof value.label === "object" && typeof value.label.icon !== "undefined") {
+                if (typeof value === "object" && typeof value.label === "object" && "icon" in value.label) {
                     if (typeof value.label.icon === "string") {
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
@@ -502,7 +584,8 @@ export function generateGrid<T extends { __typename?: string }>(
                 maxWidth: column.maxWidth,
                 flex: column.flex,
                 headerInfoTooltip: column.headerInfoTooltip,
-                visible: column.visible && `theme.breakpoints.${column.visible}`,
+                visible:
+                    column.visible !== undefined ? (typeof column.visible == "string" ? `theme.breakpoints.${column.visible}` : "false") : undefined,
                 pinned: column.pinned,
                 disableExport: column.disableExport,
             };
@@ -552,7 +635,7 @@ export function generateGrid<T extends { __typename?: string }>(
             gridType,
             columnType: gridColumnType,
             renderCell,
-            valueGetter: name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined,
+            valueGetter,
             filterOperators: filterOperators,
             valueFormatter,
             width: column.width,
@@ -560,7 +643,7 @@ export function generateGrid<T extends { __typename?: string }>(
             maxWidth: column.maxWidth,
             flex: column.flex,
             headerInfoTooltip: column.headerInfoTooltip,
-            visible: column.visible && `theme.breakpoints.${column.visible}`,
+            visible: column.visible !== undefined ? (typeof column.visible == "string" ? `theme.breakpoints.${column.visible}` : "false") : undefined,
             pinned: column.pinned,
             disableExport: column.disableExport,
             sortBy: "sortBy" in column ? column.sortBy : undefined,
@@ -579,7 +662,7 @@ export function generateGrid<T extends { __typename?: string }>(
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
-            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => ReactNode`,
+            type: `(params: GridRenderCellParams<GQL${fragmentName}Fragment>) => ReactNode`,
             optional: true,
         });
         props.push({
@@ -591,15 +674,14 @@ export function generateGrid<T extends { __typename?: string }>(
     }
 
     if (config.selectionProps) {
-        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
             name: "rowSelectionModel",
-            type: `DataGridProProps["rowSelectionModel"]`,
+            type: `${muiXGridVariant.gridComponent}Props["rowSelectionModel"]`,
             optional: true,
         });
         props.push({
             name: "onRowSelectionModelChange",
-            type: `DataGridProProps["onRowSelectionModelChange"]`,
+            type: `${muiXGridVariant.gridComponent}Props["onRowSelectionModelChange"]`,
             optional: true,
         });
     }
@@ -655,31 +737,33 @@ export function generateGrid<T extends { __typename?: string }>(
         }
     \`;
 
-    const ${instanceGqlTypePlural}Query = gql\`
-        query ${gqlTypePlural}Grid(${[
-            ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-            ...[`$offset: Int!`, `$limit: Int!`],
-            ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
-            ...(hasSearch ? [`$search: String`] : []),
-            ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
-            ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-        ].join(", ")}) {
-    ${gridQuery}(${[
-        ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-        ...[`offset: $offset`, `limit: $limit`],
-        ...(hasSort ? [`sort: $sort`] : []),
-        ...(hasSearch ? [`search: $search`] : []),
-        ...(filterArg && (hasFilter || hasFilterProp) ? [`filter: $filter`] : []),
-        ...(hasScope ? [`scope: $scope`] : []),
-    ].join(", ")}) {
-                nodes {
-                    ...${fragmentName}
-                }
-                totalCount
-            }
-        }
-        \${${instanceGqlTypePlural}Fragment}
-    \`;
+    const ${instanceGqlTypePlural}Query = gql\`${generateGqlOperation({
+        type: "query",
+        operationName: `${gqlTypePlural}Grid`,
+        rootOperation: gridQuery,
+        fields: hasPaging ? [`nodes...${fragmentName}`, "totalCount"] : [`...${fragmentName}`],
+        fragmentVariables: [`\${${instanceGqlTypePlural}Fragment}`],
+        variables: [
+            ...gqlArgs
+                .filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name)
+                .map((gqlArg) => ({ name: gqlArg.name, type: `${gqlArg.type}!` })),
+            ...(hasPaging
+                ? [
+                      {
+                          name: "offset",
+                          type: "Int!",
+                      },
+                      {
+                          name: "limit",
+                          type: "Int!",
+                      },
+                  ]
+                : []),
+            ...(hasSort ? [{ name: "sort", type: `[${gqlType}Sort!]` }] : []),
+            ...(hasSearch ? [{ name: "search", type: "String" }] : []),
+            ...(filterArg && (hasFilter || hasFilterProp) ? [{ name: "filter", type: `${gqlType}Filter` }] : []),
+        ],
+    })}\`;
 
     ${
         allowRowReordering
@@ -732,15 +816,15 @@ export function generateGrid<T extends { __typename?: string }>(
             config.selectionProps === "multiSelect"
                 ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
                 : config.selectionProps === "singleSelect"
-                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: true`
+                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
                   : ``
         } };
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
-        const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
+        const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>[
             ${gridColumnFields
                 .map((column) => {
                     const defaultMinWidth = 150;
@@ -769,25 +853,34 @@ export function generateGrid<T extends { __typename?: string }>(
                         renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
-                                        <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
-                                            column.name
-                                        }",   defaultMessage: "${
-                                            column.headerName || camelCaseToHumanReadable(column.name)
-                                        }"})} columnWidth= {${tooltipColumnWidth}}
+                                        <GridColumnHeaderTitle label={${generateFormattedMessage({
+                                            config: column.headerName,
+                                            id: `${instanceGqlType}.${column.name}`,
+                                            defaultMessage: camelCaseToHumanReadable(column.name),
+                                            type: "intlCall",
+                                        })}} columnWidth= {${tooltipColumnWidth}}
                               />
                                         <Tooltip
-                                            title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
-                                                column.headerInfoTooltip
-                                            }" />}
+                                            title={${generateFormattedMessage({
+                                                config: column.headerInfoTooltip,
+                                                id: `${instanceGqlType}.${column.name}.tooltip`,
+                                                type: "jsx",
+                                            })}}
                                         >
                                             <InfoIcon sx={{ marginLeft: 1 }} />
                                         </Tooltip>
                                     </>
                                 )`
                             : undefined,
-                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                            column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })`,
+                        headerName:
+                            column.headerName === ""
+                                ? `""`
+                                : generateFormattedMessage({
+                                      config: column.headerName,
+                                      id: `${instanceGqlType}.${column.name}`,
+                                      defaultMessage: camelCaseToHumanReadable(column.name),
+                                      type: "intlCall",
+                                  }),
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
                         sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
@@ -821,7 +914,11 @@ export function generateGrid<T extends { __typename?: string }>(
                         ? tsCodeRecordToString({
                               field: '"actions"',
                               headerName: actionsColumnHeaderName
-                                  ? `intl.formatMessage({ id: "${instanceGqlType}.actions", defaultMessage: "${actionsColumnHeaderName}" })`
+                                  ? generateFormattedMessage({
+                                        config: actionsColumnHeaderName,
+                                        id: `${instanceGqlType}.actions`,
+                                        type: "intlCall",
+                                    })
                                   : `""`,
                               sortable: "false",
                               filterable: "false",
@@ -829,8 +926,20 @@ export function generateGrid<T extends { __typename?: string }>(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: forwardRowAction ? "actionsColumnWidth" : actionsColumnWidth,
-                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
+                              visible:
+                                  actionsColumnVisible !== undefined
+                                      ? typeof actionsColumnVisible == "string"
+                                          ? `theme.breakpoints.${actionsColumnVisible}`
+                                          : "false"
+                                      : undefined,
                               ...restActionsColumnConfig,
+                              headerInfoTooltip: restActionsColumnConfig.headerInfoTooltip
+                                  ? generateFormattedMessage({
+                                        config: restActionsColumnConfig.headerInfoTooltip,
+                                        id: `${instanceGqlType}.actions`,
+                                        type: "intlCall",
+                                    })
+                                  : undefined,
                               disableExport: config.excelExport ? "true" : undefined,
                               renderCell: `(params) => {
                             return (
@@ -861,6 +970,8 @@ export function generateGrid<T extends { __typename?: string }>(
                                                     : ""
                                             }
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
+                                            ${config.crudContextMenu?.deleteType ? `deleteType="${config.crudContextMenu.deleteType}"` : ""}
+                                            ${config.crudContextMenu?.deleteText ? `messagesMapping={{ delete: <FormattedMessage id="${instanceGqlType}.crudContextMenu.delete" defaultMessage="${config.crudContextMenu.deleteText}" /> }}` : ""}
                                         />
                                     `
                                         : ""
@@ -871,7 +982,7 @@ export function generateGrid<T extends { __typename?: string }>(
                           })
                         : ""
                 }
-        ];
+        ],[intl${gridNeedsTheme ? ", theme" : ""}${showCrudContextMenuInActionsColumn ? ", client" : ""}${forwardRowAction ? ", rowAction, actionsColumnWidth" : ""}]);
 
         ${
             hasFilter || hasSearch
@@ -885,7 +996,6 @@ export function generateGrid<T extends { __typename?: string }>(
             variables: {
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
-                    ...(hasScope ? ["scope"] : []),
                     ...(filterArg
                         ? hasFilter && hasFilterProp
                             ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]
@@ -896,30 +1006,40 @@ export function generateGrid<T extends { __typename?: string }>(
                                 : []
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
-                    ...(!allowRowReordering
-                        ? [
-                              `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
-                              `limit: dataGridProps.paginationModel.pageSize`,
-                              `sort: muiGridSortToGql(dataGridProps.sortModel, columns)`,
-                          ]
-                        : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
-                          [`offset: 0`, `limit: 100`, `sort: { field: "position", direction: "ASC" }`]),
+                    ...(hasSort
+                        ? !allowRowReordering
+                            ? ["sort: muiGridSortToGql(dataGridProps.sortModel, columns)"]
+                            : [`sort: { field: "position", direction: "ASC" }`]
+                        : []),
+                    ...(hasPaging
+                        ? !allowRowReordering
+                            ? [
+                                  `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
+                                  `limit: dataGridProps.paginationModel.pageSize`,
+                              ]
+                            : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
+                              [`offset: 0`, `limit: 100`]
+                        : []),
                 ].join(", ")}
             },
         });
-        const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
+        ${hasPaging ? `const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);` : ""}
         if (error) throw error;
         const rows = ${
-            !allowRowReordering ? `data?.${gridQuery}.nodes` : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
+            !allowRowReordering
+                ? hasPaging
+                    ? `data?.${gridQuery}.nodes`
+                    : `data?.${gridQuery}`
+                : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
-        ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery)}
+        ${generateGridExportApi(config.excelExport, gqlTypePlural, instanceGqlTypePlural, gridQuery, gqlArgs, hasPaging)}
 
         return (
-            <DataGridPro
+            <${muiXGridVariant.gridComponent}
                 {...dataGridProps}
                 rows={rows}
-                rowCount={rowCount}
+                ${hasPaging ? `rowCount={rowCount}` : ""}
                 columns={columns}
                 loading={loading}
                 ${
@@ -937,6 +1057,7 @@ export function generateGrid<T extends { __typename?: string }>(
                            hideFooterPagination`
                         : ""
                 }
+                ${config.density ? `density="${config.density}"` : ""}
             />
         );
     }
@@ -990,19 +1111,35 @@ const getDataGridSlotProps = (componentName: string, forwardToolbarAction: boole
     }}`;
 };
 
-const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: string, gridQuery: string) => {
+const generateGridExportApi = (
+    excelExport: boolean | undefined,
+    gqlTypePlural: string,
+    instanceGqlTypePlural: string,
+    gridQuery: string,
+    gqlArgs: GqlArg[],
+    hasPaging: boolean,
+) => {
     if (!excelExport) {
         return "";
     }
 
-    return `const exportApi = useDataGridExcelExport<GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0], GQL${gqlTypePlural}GridQuery, Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">>({
+    const queryNodeType = hasPaging ? `GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0]` : `GQL${gqlTypePlural}GridQuery["${gridQuery}"][0]`;
+    const variablesType = hasPaging ? `Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">` : `GQL${gqlTypePlural}GridQueryVariables`;
+    const resolveQueryNodes = hasPaging ? `(data) => data.${gridQuery}.nodes` : `(data) => data.${gridQuery}`;
+    const totalCount = hasPaging ? `data?.${gridQuery}.totalCount ?? 0` : `data?.${gridQuery}.length ?? 0`;
+
+    return `const exportApi = useDataGridExcelExport<${queryNodeType}, GQL${gqlTypePlural}GridQuery, ${variablesType}>({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ${[
+                ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQuery).map((arg) => arg.name),
+                `...muiGridFilterToGql(columns, dataGridProps.filterModel)`,
+            ].join(", ")}
         },
-        query: ${gridQuery}Query,
-        resolveQueryNodes: (data) => data.${gridQuery}.nodes,
-        totalCount: data?.${gridQuery}.totalCount ?? 0,
+        query: ${instanceGqlTypePlural}Query,
+        resolveQueryNodes: ${resolveQueryNodes},
+        totalCount: ${totalCount},
+        ${!hasPaging ? `hasPaging: false,` : ""}
         exportOptions: {
             fileName: "${gqlTypePlural}",
         },

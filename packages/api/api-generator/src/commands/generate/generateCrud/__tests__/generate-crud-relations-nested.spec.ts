@@ -95,7 +95,7 @@ describe("GenerateCrudRelationsNested", () => {
                 expect(structure.properties?.length).toBe(1);
             }
 
-            orm.close();
+            await orm.close();
         });
     });
 });

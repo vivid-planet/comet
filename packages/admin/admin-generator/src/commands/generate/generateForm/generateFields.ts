@@ -18,14 +18,19 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     imports: Imports;
     hooksCode: string;
     formFragmentFields: string[];
-    formValueToGqlInputCode: string;
     formProps: Prop[];
     formValuesConfig: {
-        omitFromFragmentType?: string;
-        destructFromFormValues?: string; // equals omitting from formValues copied directly to mutation-input
-        typeCode?: string;
+        fieldName: string;
+        omitFromFragmentType?: boolean;
+        destructFromFormValues?: boolean; // equals omitting from formValues copied directly to mutation-input
+        typeCode?: {
+            nullable: boolean;
+            type: string;
+        };
         initializationCode?: string;
         defaultInitializationCode?: string;
+        formValueToGqlInputCode?: string;
+        wrapFormValueToGqlInputCode?: string;
     }[];
     finalFormConfig?: {
         subscription?: { values?: true };
@@ -68,7 +73,6 @@ export function generateFields({
 }): GenerateFieldsReturn {
     const gqlDocuments: GQLDocumentConfigMap = {};
     let hooksCode = "";
-    let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
     const formProps: Prop[] = [];
@@ -113,7 +117,6 @@ export function generateFields({
             imports.push(...generated.imports);
             formProps.push(...generated.formProps);
             hooksCode += generated.hooksCode;
-            formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
             formValuesConfig.push(...generated.formValuesConfig);
 
@@ -127,7 +130,6 @@ export function generateFields({
     return {
         code,
         hooksCode,
-        formValueToGqlInputCode,
         formFragmentFields,
         gqlDocuments,
         imports,

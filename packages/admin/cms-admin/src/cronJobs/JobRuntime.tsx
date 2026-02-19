@@ -13,26 +13,24 @@ export function JobRuntime(props: RuntimeProps) {
         const runtime = differenceInMinutes(completionTime, startTime);
 
         return (
-            <>
-                <FormattedDate value={startTime} day="2-digit" month="2-digit" year="numeric" /> <FormattedTime value={startTime} /> -{" "}
-                {isSameDay(new Date(), completionTime) ? (
-                    <FormattedTime value={completionTime} />
-                ) : (
-                    <>
-                        <FormattedDate value={completionTime} day="2-digit" month="2-digit" year="numeric" /> <FormattedTime value={completionTime} />
-                    </>
-                )}{" "}
-                ({runtime > 0 ? runtime : "< 1 "} <FormattedMessage id="comet.pages.publisher.runtime.minutes" defaultMessage="min" />)
-            </>
+            <FormattedMessage
+                id="comet.jobRuntime.startCompletionTime"
+                defaultMessage="{start} - {completion} ({runtime} min)"
+                values={{
+                    start: <FormattedDate value={startTime} dateStyle="short" timeStyle="short" />,
+                    completion: isSameDay(new Date(), completionTime) ? (
+                        <FormattedTime value={completionTime} />
+                    ) : (
+                        <FormattedDate value={completionTime} dateStyle="short" timeStyle="short" />
+                    ),
+                    runtime: runtime <= 0 ? <FormattedMessage id="comet.jobRuntime.runtimeSmallerThanOneMinute" defaultMessage="< 1" /> : runtime,
+                }}
+            />
         );
     }
 
     if (startTime) {
-        return (
-            <>
-                <FormattedDate value={startTime} day="2-digit" month="2-digit" year="numeric" /> <FormattedTime value={startTime} />
-            </>
-        );
+        return <FormattedDate value={startTime} dateStyle="short" timeStyle="short" />;
     }
 
     return null;

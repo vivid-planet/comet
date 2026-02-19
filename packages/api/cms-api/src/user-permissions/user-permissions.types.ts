@@ -19,7 +19,7 @@ export type Users = [User[], number];
 
 export type SystemUser = string;
 
-type PermissionForUser = {
+export type PermissionForUser = {
     permission: Permission;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
@@ -40,9 +40,10 @@ export interface UserPermissionsUserServiceInterface {
     getUserForLogin?: (id: string) => Promise<User> | User;
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    getAccountUrl?: (user: User) => Promise<string> | string;
 }
 
-type ContentScopeWithLabel = {
+export type ContentScopeWithLabel = {
     scope: ContentScope;
     label?: { [key in keyof ContentScope]?: string };
 };
@@ -83,4 +84,17 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
  */
 export const CombinedPermission: Record<string, string> = {
     ...CorePermission,
+};
+
+/**
+ * Helper to register additional permissions into the permission enum used for the GraphQL schema.
+ * Only use this if you're building a library that requires additional permissions.
+ * For application-level permissions, use the `AppPermission` option in the module registration methods.
+ *
+ * @param additionalPermissions
+ */
+export const registerAdditionalPermissions = (additionalPermissions: Record<string, string>): void => {
+    Object.entries(additionalPermissions).forEach(([key, value]) => {
+        CombinedPermission[key] = value;
+    });
 };

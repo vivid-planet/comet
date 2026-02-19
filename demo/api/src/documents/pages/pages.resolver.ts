@@ -6,8 +6,7 @@ import {
     RequiredPermission,
     validateNotModified,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
@@ -19,15 +18,14 @@ import { Page } from "./entities/page.entity";
 @RequiredPermission(["pageTree"])
 export class PagesResolver {
     constructor(
-        @InjectRepository(Page) private readonly repository: EntityRepository<Page>,
-        private readonly pageTreeService: PageTreeService,
         private readonly entityManager: EntityManager,
+        private readonly pageTreeService: PageTreeService,
     ) {}
 
     @Query(() => Page)
     @AffectedEntity(Page)
     async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
-        return this.repository.findOneOrFail({ id });
+        return this.entityManager.findOneOrFail(Page, { id });
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
@@ -51,7 +49,7 @@ export class PagesResolver {
             }
         }
 
-        let page = await this.repository.findOne(pageId);
+        let page = await this.entityManager.findOne(Page, pageId);
 
         if (page) {
             if (lastUpdatedAt) {
@@ -64,7 +62,7 @@ export class PagesResolver {
                 stage: input.stage.transformToBlockData(),
             });
         } else {
-            page = this.repository.create({
+            page = this.entityManager.create(Page, {
                 id: pageId,
                 content: input.content.transformToBlockData(),
                 seo: input.seo.transformToBlockData(),

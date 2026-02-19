@@ -1,9 +1,10 @@
+import isEqual from "lodash.isequal";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
 import { useCurrentUser } from "../userPermissions/hooks/currentUser";
-import { StopImpersonationButton } from "../userPermissions/user/ImpersonationButtons";
 import { contentScopeLocalStorageKey } from "./ContentScopeSelect";
+import { NoContentScopeFallback } from "./noContentScopeFallback/NoContentScopeFallback";
 import { defaultCreatePath } from "./utils/defaultCreatePath";
 
 export interface ContentScope {
@@ -125,9 +126,22 @@ export interface ContentScopeProviderProps {
     values?: ContentScopeValues;
     children: (p: { match: match<NonNullRecord<ContentScope>> }) => ReactNode;
     location?: ContentScopeLocation;
+
+    /**
+     * Fallback UI for users who have no content scopes.
+     *
+     * @default <NoContentScopeFallback />
+     */
+    noContentScopeFallback?: ReactNode;
 }
 
-export function ContentScopeProvider({ children, defaultValue, values, location = defaultContentScopeLocation }: ContentScopeProviderProps) {
+export function ContentScopeProvider({
+    children,
+    defaultValue,
+    values,
+    location = defaultContentScopeLocation,
+    noContentScopeFallback = <NoContentScopeFallback />,
+}: ContentScopeProviderProps) {
     const user = useCurrentUser();
     if (values === undefined) {
         values = user.allowedContentScopes;
@@ -141,12 +155,7 @@ export function ContentScopeProvider({ children, defaultValue, values, location 
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     if (values.length === 0) {
-        return (
-            <>
-                Error: user does not have access to any scopes.
-                {user.impersonated && <StopImpersonationButton />}
-            </>
-        );
+        return noContentScopeFallback;
     }
 
     const storedScope = localStorage.getItem(contentScopeLocalStorageKey);
@@ -154,7 +163,17 @@ export function ContentScopeProvider({ children, defaultValue, values, location 
     let defaultUrl: string;
 
     if (storedScope && storedScope !== "undefined") {
-        defaultUrl = location.createUrl(JSON.parse(storedScope));
+        const parsedStoredScope = JSON.parse(storedScope);
+        // Validate that the stored scope is in the user's allowed scopes
+        const isStoredScopeAllowed = values.some((value) => isEqual(parsedStoredScope, value.scope));
+
+        if (isStoredScopeAllowed) {
+            defaultUrl = location.createUrl(parsedStoredScope);
+        } else {
+            // If stored scope is not allowed, clear it and use default
+            localStorage.removeItem(contentScopeLocalStorageKey);
+            defaultUrl = location.createUrl(defaultValue);
+        }
     } else {
         defaultUrl = location.createUrl(defaultValue);
     }

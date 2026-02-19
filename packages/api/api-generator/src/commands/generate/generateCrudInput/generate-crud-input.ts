@@ -1,16 +1,18 @@
 import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
+import { SyntaxKind } from "ts-morph";
 
-import { buildOptions } from "../generateCrud/generate-crud";
+import { buildOptions } from "../generateCrud/build-options";
 import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes } from "../utils/constants";
+import { integerTypes, numberTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import {
     findBlockImportPath,
     findBlockName,
     findEnumImportPath,
     findEnumName,
+    findImportPath,
     findInputClassImportPath,
     findValidatorImportPath,
     getFieldDecoratorClassName,
@@ -32,6 +34,8 @@ function findReferenceTargetType(
     if (!referencedColumnProp) throw new Error("referencedColumnProp not found");
     if (referencedColumnProp.type == "uuid") {
         return "uuid";
+    } else if (referencedColumnProp.type == "text") {
+        return "string";
     } else if (referencedColumnProp.type == "string") {
         return "string";
     } else if (referencedColumnProp.type == "integer" || referencedColumnProp.type == "int") {
@@ -76,6 +80,18 @@ export async function generateCrudInput(
         { name: "PartialType", importPath: "@comet/cms-api" },
         { name: "BlockInputInterface", importPath: "@comet/cms-api" },
         { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "IsString", importPath: "class-validator" },
+        { name: "IsNotEmpty", importPath: "class-validator" },
+        { name: "ValidateNested", importPath: "class-validator" },
+        { name: "IsNumber", importPath: "class-validator" },
+        { name: "IsBoolean", importPath: "class-validator" },
+        { name: "IsDate", importPath: "class-validator" },
+        { name: "IsDateString", importPath: "class-validator" },
+        { name: "IsOptional", importPath: "class-validator" },
+        { name: "IsEnum", importPath: "class-validator" },
+        { name: "IsUUID", importPath: "class-validator" },
+        { name: "IsArray", importPath: "class-validator" },
+        { name: "IsInt", importPath: "class-validator" },
     ];
     for (const prop of props) {
         let type = prop.type;
@@ -144,7 +160,7 @@ export async function generateCrudInput(
             }
             decorators.push(`@Field(${fieldOptions})`);
             type = "string";
-        } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
+        } else if (numberTypes.includes(prop.type)) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
@@ -220,6 +236,7 @@ export async function generateCrudInput(
                 decorators.push("@IsInt()");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
+                continue;
             }
         } else if (prop.kind == "1:m") {
             if (prop.orphanRemoval) {
@@ -243,7 +260,7 @@ export async function generateCrudInput(
                     generatedFiles.push(...nestedInputFiles);
                     imports.push({
                         name: inputNameClassName,
-                        importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
+                        importPath: nestedInputFiles[nestedInputFiles.length - 1].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
                     });
                 }
                 decorators.push(`@Field(() => [${inputNameClassName}], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
@@ -361,6 +378,15 @@ export async function generateCrudInput(
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
                 } else {
+                    const typeNode = tsProp.getTypeNodeOrThrow().asKindOrThrow(SyntaxKind.ArrayType);
+                    const elementTypeNode = typeNode.getElementTypeNode();
+                    if (elementTypeNode.isKind(SyntaxKind.TypeReference)) {
+                        // if the element type is a type reference, we need to find the import path
+                        const { importPath } = findImportPath(elementTypeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                        if (importPath) {
+                            imports.push({ name: elementTypeNode.getText(), importPath });
+                        }
+                    }
                     decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
             } else if (tsType.isClass()) {
@@ -371,6 +397,14 @@ export async function generateCrudInput(
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
             } else {
+                const typeNode = tsProp.getTypeNodeOrThrow();
+                if (typeNode.isKind(SyntaxKind.TypeReference)) {
+                    // if the element type is a type reference, we need to find the import path
+                    const { importPath } = findImportPath(typeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                    if (importPath) {
+                        imports.push({ name: typeNode.getText(), importPath });
+                    }
+                }
                 decorators.push(
                     `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
                 );
@@ -434,7 +468,6 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsDateString, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 

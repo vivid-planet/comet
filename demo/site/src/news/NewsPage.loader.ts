@@ -4,6 +4,19 @@ import { createGraphQLFetch } from "@src/util/graphQLClient";
 
 import { type GQLNewsIndexPageQuery, type GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";
 
+const newsFragment = gql`
+    fragment NewsListItem on News {
+        id
+        title
+        slug
+        image
+        createdAt
+        scope {
+            language
+        }
+    }
+`;
+
 type NewsListParams = {
     scope: GQLNewsContentScopeInput;
     offset?: number;
@@ -18,18 +31,12 @@ export async function fetchNewsList(params: NewsListParams) {
             query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!, $offset: Int!, $limit: Int!) {
                 newsList(scope: $scope, sort: $sort, offset: $offset, limit: $limit) {
                     nodes {
-                        id
-                        title
-                        slug
-                        image
-                        createdAt
-                        scope {
-                            language
-                        }
+                        ...NewsListItem
                     }
                     totalCount
                 }
             }
+            ${newsFragment}
         `,
         {
             scope: params.scope,

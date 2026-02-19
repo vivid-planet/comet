@@ -31,6 +31,7 @@ import { useRef, useState } from "react";
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
 import { storyRouterDecorator } from "../../../story-router.decorator";
+import { snackbarDecorator } from "../Snackbar/snackbar.decorator";
 
 type Launch = {
     id: string;
@@ -57,7 +58,7 @@ interface GQLQuery {
 
 export default {
     title: "Docs/Components/DataGrid",
-    decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql")],
+    decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql"), snackbarDecorator()],
 };
 
 export const UseDataGridRemote = {

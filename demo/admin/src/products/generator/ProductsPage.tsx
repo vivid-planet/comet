@@ -12,11 +12,11 @@ import {
     StackLink,
     StackMainContent,
     StackPage,
-    StackSwitch,
     StackToolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
+    useStackSwitch,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
@@ -42,9 +42,12 @@ const FormToolbar = () => (
 
 export function ProductsPage() {
     const intl = useIntl();
+    const [ProductsStackSwitch, productsStackSwitchApi] = useStackSwitch();
+    const [ProductVariantsStackSwitch, productVariantsStackSwitchApi] = useStackSwitch();
+
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
-            <StackSwitch>
+            <ProductsStackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <StackMainContent fullHeight>
@@ -63,7 +66,7 @@ export function ProductsPage() {
                         />
                     </StackMainContent>
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
                             <>
@@ -88,7 +91,7 @@ export function ProductsPage() {
                                             path="/variants"
                                             label={intl.formatMessage({ id: "products.variants", defaultMessage: "Variants" })}
                                         >
-                                            <StackSwitch initialPage="table">
+                                            <ProductVariantsStackSwitch initialPage="table">
                                                 <StackPage name="table">
                                                     <FullHeightContent>
                                                         <ProductVariantsGrid product={selectedProductId} />
@@ -137,12 +140,17 @@ export function ProductsPage() {
                                                         </StackToolbar>
                                                         <StackMainContent>
                                                             <FieldSet>
-                                                                <ProductVariantForm product={selectedProductId} />
+                                                                <ProductVariantForm
+                                                                    product={selectedProductId}
+                                                                    onCreate={(id) => {
+                                                                        productVariantsStackSwitchApi.activatePage("edit", id);
+                                                                    }}
+                                                                />
                                                             </FieldSet>
                                                         </StackMainContent>
                                                     </SaveBoundary>
                                                 </StackPage>
-                                            </StackSwitch>
+                                            </ProductVariantsStackSwitch>
                                         </RouterTab>
                                     </RouterTabs>
                                 </StackMainContent>
@@ -150,15 +158,23 @@ export function ProductsPage() {
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
+                <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <ProductForm manufacturerCountry="DE" />
+                            <ProductForm
+                                manufacturerCountry="DE"
+                                initialValues={{
+                                    lastCheckedAt: new Date(),
+                                }}
+                                onCreate={(id) => {
+                                    productsStackSwitchApi.activatePage("edit", id);
+                                }}
+                            />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>
-            </StackSwitch>
+            </ProductsStackSwitch>
         </Stack>
     );
 }

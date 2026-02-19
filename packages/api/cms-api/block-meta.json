@@ -259,7 +259,7 @@
                                     }
                                 ]
                             },
-                            "nullable": false
+                            "nullable": true
                         }
                     ]
                 },

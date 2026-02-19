@@ -57,6 +57,6 @@ describe("GenerateCrudEnumOptional", () => {
         expect(decorators).toContain("IsEnum");
         expect(decorators).toContain("IsNullable");
 
-        orm.close();
+        await orm.close();
     });
 });

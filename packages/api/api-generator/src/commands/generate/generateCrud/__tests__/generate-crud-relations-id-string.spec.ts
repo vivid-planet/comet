@@ -57,7 +57,7 @@ describe("GenerateCrudRelationsIdString", () => {
             expect(decorators).toContain("IsString");
             expect(decorators).not.toContain("IsUUID");
 
-            orm.close();
+            await orm.close();
         });
     });
 });

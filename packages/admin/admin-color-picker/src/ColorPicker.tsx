@@ -57,7 +57,6 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     fullWidth?: boolean;
     startAdornment?: InputBaseProps["startAdornment"];
     endAdornment?: InputBaseProps["endAdornment"];
-    invalidIndicatorCharacter?: string;
     required?: boolean;
     titleText?: ReactNode;
     clearButtonText?: ReactNode;

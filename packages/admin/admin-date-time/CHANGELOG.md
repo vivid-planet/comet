@@ -1,5 +1,368 @@
 # @comet/admin-date-time
 
+## 8.15.0
+
+### Patch Changes
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
+## 8.10.0
+
+### Patch Changes
+
+- Updated dependencies [1918d88]
+    - @comet/admin@8.10.0
+    - @comet/admin-icons@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @comet/admin@8.9.0
+- @comet/admin-icons@8.9.0
+
+## 8.8.0
+
+### Patch Changes
+
+- @comet/admin@8.8.0
+- @comet/admin-icons@8.8.0
+
+## 8.7.1
+
+### Patch Changes
+
+- @comet/admin@8.7.1
+- @comet/admin-icons@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- Updated dependencies [a8e8132]
+    - @comet/admin@8.7.0
+    - @comet/admin-icons@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- Updated dependencies [6c5578a]
+    - @comet/admin@8.6.0
+    - @comet/admin-icons@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/admin@8.5.2
+- @comet/admin-icons@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- @comet/admin@8.5.1
+- @comet/admin-icons@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- Updated dependencies [a2af2c6]
+- Updated dependencies [c8359f6]
+    - @comet/admin@8.5.0
+    - @comet/admin-icons@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- Updated dependencies [a57d092]
+    - @comet/admin@8.4.2
+    - @comet/admin-icons@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- Updated dependencies [9374018]
+    - @comet/admin@8.4.1
+    - @comet/admin-icons@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- Updated dependencies [a85e7cb]
+- Updated dependencies [ff6d79a]
+- Updated dependencies [ff6d79a]
+    - @comet/admin@8.4.0
+    - @comet/admin-icons@8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- Updated dependencies [422328b]
+- Updated dependencies [ae1dbab]
+- Updated dependencies [becc06c]
+- Updated dependencies [12e9230]
+- Updated dependencies [6f30126]
+- Updated dependencies [1bd73a0]
+- Updated dependencies [d682135]
+- Updated dependencies [ae1dbab]
+- Updated dependencies [becc06c]
+    - @comet/admin@8.3.0
+    - @comet/admin-icons@8.3.0
+
+## 8.2.0
+
+### Patch Changes
+
+- Updated dependencies [ea545c4]
+- Updated dependencies [dfafdb3]
+- Updated dependencies [d7ab390]
+- Updated dependencies [08ad5fe]
+- Updated dependencies [01ef80b]
+- Updated dependencies [0b08988]
+- Updated dependencies [85141bf]
+- Updated dependencies [0cfcf90]
+    - @comet/admin@8.2.0
+    - @comet/admin-icons@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/admin@8.1.1
+- @comet/admin-icons@8.1.1
+
+## 8.1.0
+
+### Minor Changes
+
+- 00e6a12: Add new `Future_DateRangePicker` and `Future_DateRangePickerField` components
+
+    These will replace the existing `DateRangePicker`, `FinalFormDateRangePicker`, and `DateRangeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers-pro` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/api/date-pickers/date-range-picker/) for more details.
+    Unlike the MUI components, these components use an object with `start` and `end` properties, both of which use a `string` (`YYYY-MM-DD`) as the value, instead of an array of two `Date` objects, just like the existing components from `@comet/admin-date-time`.
+
+    Note: Using these components requires a [MUI X Pro license](https://v7.mui.com/x/introduction/licensing/).
+
+    **Using the new `DateRangePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { type DateRange, DateRangePicker } from "@comet/admin-date-time";
+    +import { type DateRange, FieldContainer, Future_DateRangePicker as DateRangePicker } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateRangeValue, setDateRangeValue] = useState<DateRange | undefined>();
+
+         return (
+             <FieldContainer label="Date-Range Picker">
+                 <DateRangePicker value={dateRangeValue} onChange={setDateRangeValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DateRangePickerField` in Final Form**
+
+    ```diff
+    -import { type DateRange, DateRangeField } from "@comet/admin-date-time";
+    +import { type DateRange, Future_DateRangePickerField as DateRangePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         dateRange: DateRange;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ dateRange: { start: "2025-07-23", end: "2025-07-25" } }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateRangeField name="dateRange" label="Date-Range Picker" />
+    +                <DateRangePickerField name="dateRange" label="Date-Range Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- 2f33286: Add new `Future_DateTimePicker` and `Future_DateTimePickerField` components
+
+    These will replace the existing `DateTimePicker`, `FinalFormDateTimePicker` and `DateTimeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/date-time-picker/) for more details.
+
+    **Using the new `DateTimePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { DateTimePicker } from "@comet/admin-date-time";
+    +import { Future_DateTimePicker as DateTimePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [dateTime, setDateTime] = useState<Date | undefined>();
+
+         return (
+             <FieldContainer label="Date-Time Picker">
+                 <DateTimePicker value={dateTime} onChange={setDateTime} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `DateTimePickerField` in Final Form**
+
+    ```diff
+    -import { DateTimeField } from "@comet/admin-date-time";
+    +import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         dateTime: Date;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ dateTime: new Date("2025-07-23 14:30") }} onSubmit={() => {}}>
+                 {() => (
+    -                <DateTimeField name="dateTime" label="Date-Time Picker" />
+    +                <DateTimePickerField name="dateTime" label="Date-Time Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+- ec9bce5: Add new `Future_TimePicker` and `Future_TimePickerField` components
+
+    These will replace the existing `TimePicker`, `FinalFormTimePicker` and `TimeField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
+
+    The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/time-picker/) for more details.
+    Unlike the MUI components, these components use a 24h `string` (`HH:mm`) as the value, instead of `Date`, just like the existing components from `@comet/admin-date-time`.
+
+    **Using the new `TimePicker`**
+
+    ```diff
+    -import { FieldContainer } from "@comet/admin";
+    -import { TimePicker } from "@comet/admin-date-time";
+    +import { Future_TimePicker as TimePicker, FieldContainer } from "@comet/admin";
+     import { useState } from "react";
+
+     export const Example = () => {
+         const [timeValue, setTimeValue] = useState<string | undefined>();
+
+         return (
+             <FieldContainer label="Time Picker">
+                 <TimePicker value={timeValue} onChange={setTimeValue} />
+             </FieldContainer>
+         );
+     };
+    ```
+
+    **Using the new `TimePickerField` in Final Form**
+
+    ```diff
+    -import { TimeField } from "@comet/admin-date-time";
+    +import { Future_TimePickerField as TimePickerField } from "@comet/admin";
+     import { Form } from "react-final-form";
+
+     type Values = {
+         time: string;
+     };
+
+     export const Example = () => {
+         return (
+             <Form<Values> initialValues={{ time: "11:30" }} onSubmit={() => {}}>
+                 {() => (
+    -                <TimeField name="time" label="Time Picker" />
+    +                <TimePickerField name="time" label="Time Picker" />
+                 )}
+             </Form>
+         );
+     };
+    ```
+
+### Patch Changes
+
+- Updated dependencies [00e6a12]
+- Updated dependencies [2f33286]
+- Updated dependencies [ec9bce5]
+- Updated dependencies [3323fa9]
+- Updated dependencies [e70eb31]
+- Updated dependencies [911a6da]
+    - @comet/admin@8.1.0
+    - @comet/admin-icons@8.1.0
+
 ## 8.0.0
 
 ### Major Changes

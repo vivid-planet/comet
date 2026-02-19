@@ -195,8 +195,8 @@ export const FilterbarWithAllKindsOfFilters = {
                 horsepower: faker.number.int({ min: 50, max: 200 }),
                 price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
                 owner: {
-                    firstname: faker.name.firstName(),
-                    lastname: faker.name.lastName(),
+                    firstname: faker.person.firstName(),
+                    lastname: faker.person.lastName(),
                 },
             };
         });

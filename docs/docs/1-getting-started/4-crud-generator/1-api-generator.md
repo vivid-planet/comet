@@ -12,7 +12,7 @@ The API Generator uses the entity and the fields defined within it to generate r
 DTOs for the feature. For this, the entity must be annotated with the `CrudGenerator` decorator:
 
 ```ts
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
 export class Product extends BaseEntity {
     ...
 }
@@ -27,15 +27,15 @@ decorator. The usage of both decorators is the same.
 
 ### `@CrudGenerator()` options
 
-| Parameter            | Type                 | Default     | Description                                                                                                                                                                                                                             |
-| -------------------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.                                                                                                                                                                                  |
-| `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.                                                                                                                                                                                   |
-| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                                                                                                                                                                                             |
-| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                                                                                                                                                                                             |
-| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                                                                                                                                                                                             |
-| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                                                                                                                                                                                               |
-| `position`           | `object`             | `undefined` | Only relevant if the entity has the magic `position` field. This option allows to split the position by specific fields. E.g. `{ groupByFields: ["country"] }` means the `position` starts over at 1 for each distinct `country` value. |
+| Parameter            | Type                 | Default     | Description                                                  |
+| -------------------- | -------------------- | ----------- | ------------------------------------------------------------ |
+| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.       |
+| `requiredPermission` | `string[] \| string` | Required    | Permission(s) required to access the CRUD operations.        |
+| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                  |
+| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                  |
+| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                  |
+| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                    |
+| `position`           | `object`             | `undefined` | Configures the optional [magic `position` field](#position). |
 
 ## Annotate field
 
@@ -149,6 +149,26 @@ The API generator supports the following magic fields:
 Adding a `position` field enables item ordering. The generated code ensures unique positions and updates them during
 create, update, or delete actions.
 
+```ts
+@Field(() => Int)
+@Property({ columnType: "integer" })
+@Min(1)
+position: number;
+```
+
+#### Grouping by a specific field
+
+Using the `position.groupByFields` option in the [`@CrudGenerator` decorator](#crudgenerator-options), you can group the entries by a specific field, or a combination of fields, ensuring the `position` starts over at 1 for each distinct value of the grouped field(s).
+
+For example, if your entity is listed separately for each value of its `country` field, you can group the positions by country:
+
+```ts
+@CrudGenerator({
+    // ...
+    position: { groupByFields: ["country"] },
+})
+```
+
 ### status
 
 A `status` field lets you filter items by status in the list query.
@@ -261,7 +281,7 @@ If the generated code doesn't fit your needs at all, you can "scaffold" the code
   @ObjectType()
   @Entity()
   @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-- @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+- @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
   export class Product extends BaseEntity<Product, "id"> {
       // ...
   }
@@ -316,7 +336,7 @@ Instead, deactivate `create` in the `@CrudGenerator` decorator:
 
 ```ts
 @CrudGenerator({
-    targetDirectory: `${__dirname}/../generated/`,
+    // ...
     create: false,
 })
 export class Product extends BaseEntity<Product, "id"> {

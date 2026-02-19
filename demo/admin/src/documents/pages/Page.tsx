@@ -1,10 +1,15 @@
 import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
-import { type PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import {
+    createDocumentDependencyMethods,
+    createDocumentRootBlocksMethods,
+    type DependencyInterface,
+    type DocumentInterface,
+    type InfoTagProps,
+} from "@comet/cms-admin";
 import { Chip } from "@mui/material";
-import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode.generated";
+import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { type GQLPage, type GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import { FormattedMessage } from "react-intl";
@@ -51,7 +56,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             }
         }
     `,
-    InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+    InfoTag: ({ page }: InfoTagProps<GQLPageTreeNodeAdditionalFieldsFragment>) => {
         if (page.userGroup !== "all") {
             return <Chip size="small" label={page.userGroup} />;
         }

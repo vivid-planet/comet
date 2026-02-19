@@ -1,6 +1,6 @@
 {
     "name": "@comet/cli",
-    "version": "8.0.0",
+    "version": "8.15.0",
     "description": "A collection of CLI tools for Comet projects",
     "repository": {
         "directory": "packages/cli",
@@ -19,13 +19,16 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc",
+        "build": "pnpm run clean && tsc",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc"
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc",
+        "test": "vitest --run",
+        "test:watch": "vitest --watch"
     },
     "dependencies": {
         "commander": "^9.5.0",
@@ -34,11 +37,12 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
-        "@types/node": "^22.16.3",
-        "eslint": "^9.30.1",
-        "npm-run-all2": "^5.0.2",
-        "rimraf": "^6.0.1",
-        "typescript": "^5.7.3"
+        "@types/node": "^24.10.9",
+        "eslint": "^9.39.2",
+        "npm-run-all2": "^8.0.4",
+        "rimraf": "^6.1.2",
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.16"
     },
     "engines": {
         "node": ">=22.0.0"

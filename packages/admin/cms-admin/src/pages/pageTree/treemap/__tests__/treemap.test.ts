@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { subTreeFromNodes, TreeMap, type TreeMapNode } from "../TreeMapUtils";
 
 export const sampleTree = (): TreeMap<TreeMapNode> => {

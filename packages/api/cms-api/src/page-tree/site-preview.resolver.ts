@@ -10,7 +10,7 @@ import { ContentScope } from "../user-permissions/interfaces/content-scope.inter
 import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 
 type SitePreviewConfig = {
-    secret: string;
+    secret: string | ((scope: ContentScope) => string);
 };
 
 @Resolver()
@@ -18,13 +18,14 @@ export class SitePreviewResolver {
     constructor(@Inject(SITE_PREVIEW_CONFIG) private readonly config: SitePreviewConfig) {}
 
     @Query(() => String)
-    @RequiredPermission("pageTree")
+    @RequiredPermission(["pageTree", "sitePreview"])
     async sitePreviewJwt(
         @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
         @Args("path") path: string,
         @Args("includeInvisible") includeInvisible: boolean,
         @GetCurrentUser() user: CurrentUser,
     ): Promise<string> {
+        const secret = typeof this.config.secret === "function" ? this.config.secret(scope) : this.config.secret;
         return new SignJWT({
             userId: user.id,
             scope,
@@ -35,16 +36,17 @@ export class SitePreviewResolver {
         })
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("10 seconds")
-            .sign(new TextEncoder().encode(this.config.secret));
+            .sign(new TextEncoder().encode(secret));
     }
 
     @Query(() => String)
-    @RequiredPermission("pageTree")
+    @RequiredPermission(["pageTree", "blockPreview"])
     async blockPreviewJwt(
         @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
         @Args("url") url: string,
         @Args("includeInvisible") includeInvisible: boolean,
     ): Promise<string> {
+        const secret = typeof this.config.secret === "function" ? this.config.secret(scope) : this.config.secret;
         return new SignJWT({
             scope,
             url,
@@ -54,6 +56,6 @@ export class SitePreviewResolver {
         })
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("1 day")
-            .sign(new TextEncoder().encode(this.config.secret));
+            .sign(new TextEncoder().encode(secret));
     }
 }

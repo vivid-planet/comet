@@ -7,8 +7,7 @@ import {
     PageTreeService,
 } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
+import { CreateRequestContext, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
@@ -32,15 +31,6 @@ import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
-export interface PageTreeNodesFixtures {
-    home?: PageTreeNodeInterface;
-    sub?: PageTreeNodeInterface;
-    test2?: PageTreeNodeInterface;
-    test3?: PageTreeNodeInterface;
-    link1?: PageTreeNodeInterface;
-    testSiteVisibility?: PageTreeNodeInterface;
-}
-
 const getDefaultPageInput = (): PageInput => {
     const pageInput = new PageInput();
     pageInput.seo = generateSeoBlock();
@@ -63,16 +53,15 @@ export class FixturesCommand extends CommandRunner {
 
     constructor(
         @Inject(CONFIG) private readonly config: Config,
+        private readonly orm: MikroORM,
+        private readonly entityManager: EntityManager,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly documentGeneratorService: DocumentGeneratorService,
         private readonly dependenciesService: DependenciesService,
-        private readonly entityManager: EntityManager,
         private readonly productsFixtureService: ProductsFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
-        private readonly orm: MikroORM,
-        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         private readonly pageTreeService: PageTreeService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
@@ -150,12 +139,14 @@ export class FixturesCommand extends CommandRunner {
 
                 for (let i = 0; i < faker.number.int({ min: 100, max: 200 }); i++) {
                     const name = faker.lorem.sentence();
+                    const pageId = faker.string.uuid();
+
                     const page = await this.pageTreeService.createNode(
                         {
                             name: name,
                             slug: slugify(name),
                             parentId: level > 0 ? faker.helpers.arrayElement(pages[level - 1]).id : undefined,
-                            attachedDocument: { type: "Page" },
+                            attachedDocument: { id: pageId, type: "Page" },
                             userGroup: UserGroup.all,
                         } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                         PageTreeNodeCategory.mainNavigation,
@@ -169,17 +160,14 @@ export class FixturesCommand extends CommandRunner {
 
                     const pageInput = getDefaultPageInput();
 
-                    const pageId = faker.string.uuid();
-
                     await this.entityManager.persistAndFlush(
-                        this.pagesRepository.create({
+                        this.entityManager.create(Page, {
                             id: pageId,
                             content: pageInput.content.transformToBlockData(),
                             seo: pageInput.seo.transformToBlockData(),
                             stage: pageInput.stage.transformToBlockData(),
                         }),
                     );
-                    await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
 
                     await this.pageTreeService.updateNodeVisibility(
                         page.id,
@@ -194,6 +182,7 @@ export class FixturesCommand extends CommandRunner {
                 pages.push(pagesForLevel);
             }
             this.logger.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
+            this.entityManager.clear();
         }
 
         this.logger.log("Generate File Uploads...");

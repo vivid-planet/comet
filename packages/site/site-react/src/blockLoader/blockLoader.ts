@@ -61,7 +61,10 @@ interface BetterBlockMetaNestedObject {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BlockLoader<BlockData = any> = (options: { blockData: BlockData } & BlockLoaderDependencies) => Promise<any> | any;
+export type BlockLoader<BlockData = any> = (options: BlockLoaderOptions<BlockData>) => Promise<any> | any;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BlockLoaderOptions<BlockData = any> = { blockData: BlockData } & BlockLoaderDependencies;
 
 export interface BlockLoaderDependencies {
     graphQLFetch: GraphQLFetch;

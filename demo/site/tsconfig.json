@@ -9,7 +9,7 @@
         "jsx": "preserve",
         "lib": ["dom", "dom.iterable", "esnext"],
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "noEmit": true,
         "paths": {
             "@src/*": ["src/*"]
@@ -21,8 +21,7 @@
         ],
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "strict": false,
-        "strictNullChecks": true,
+        "strict": true,
         "target": "es5"
     },
     "exclude": ["node_modules"],

@@ -1,0 +1,14 @@
+.root {
+    position: relative;
+    height: 100%;
+}
+
+.video {
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: var(--aspect-ratio);
+}
+
+.fill {
+    height: 100%;
+}

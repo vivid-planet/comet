@@ -292,6 +292,10 @@ export function createPageTreeResolver({
             });
 
             if (input.parentId !== null) {
+                if (ids.includes(input.parentId)) {
+                    throw new GraphQLError("A page cannot be its own parent.");
+                }
+
                 const newParentNode = await pageTreeReadApi.getNodeOrFail(input.parentId);
 
                 let parentId = newParentNode.parentId;

@@ -1,6 +1,5 @@
 import { Clear } from "@comet/admin-icons";
-import { type Theme, useThemeProps } from "@mui/material/styles";
-import { type ComponentsOverrides } from "@mui/material/styles/overrides";
+import { type ComponentsOverrides, type Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";

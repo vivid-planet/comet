@@ -9,6 +9,7 @@ import {
     FullHeightContent,
     type GridColDef,
     GridFilterButton,
+    HelpDialogButton,
     Loading,
     RouterTab,
     RouterTabs,
@@ -28,9 +29,10 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { DialogContent, IconButton, Typography } from "@mui/material";
+import { Box, DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -622,47 +624,45 @@ export const NestedGridsAndFormsWithTabs = {
         );
 
         return (
-            <>
-                <StackSwitch>
-                    <StackPage name="grid">
-                        <StackToolbar>
-                            <ToolbarBackButton />
-                            <ToolbarAutomaticTitleItem />
-                        </StackToolbar>
-                        <StackMainContent fullHeight>
-                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
-                        </StackMainContent>
-                    </StackPage>
-                    <StackPage name="edit">
-                        {(id) => {
-                            return (
-                                <SaveBoundary>
-                                    <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
-                                    <StackMainContent>
-                                        <RouterTabs>
-                                            <RouterTab path="" label="Details Form">
-                                                <FieldSet>
-                                                    <Form id={id} />
-                                                </FieldSet>
-                                            </RouterTab>
-                                            <RouterTab path="/child-items" label="Child items in Grid">
-                                                <FullHeightContent>
-                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
-                                                </FullHeightContent>
-                                            </RouterTab>
-                                        </RouterTabs>
-                                    </StackMainContent>
-                                </SaveBoundary>
-                            );
-                        }}
-                    </StackPage>
-                </StackSwitch>
-                <EditDialog title="Add new item">
-                    <DialogContent>
-                        <Form />
-                    </DialogContent>
-                </EditDialog>
-            </>
+            <StackSwitch>
+                <StackPage name="grid">
+                    <StackToolbar>
+                        <ToolbarBackButton />
+                        <ToolbarAutomaticTitleItem />
+                    </StackToolbar>
+                    <StackMainContent fullHeight>
+                        <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                    </StackMainContent>
+                    <EditDialog title="Add new item">
+                        <DialogContent>
+                            <Form />
+                        </DialogContent>
+                    </EditDialog>
+                </StackPage>
+                <StackPage name="edit">
+                    {(id) => {
+                        return (
+                            <SaveBoundary>
+                                <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
+                                <StackMainContent>
+                                    <RouterTabs>
+                                        <RouterTab path="" label="Details Form">
+                                            <FieldSet>
+                                                <Form id={id} />
+                                            </FieldSet>
+                                        </RouterTab>
+                                        <RouterTab path="/child-items" label="Child items in Grid">
+                                            <FullHeightContent>
+                                                <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
+                                            </FullHeightContent>
+                                        </RouterTab>
+                                    </RouterTabs>
+                                </StackMainContent>
+                            </SaveBoundary>
+                        );
+                    }}
+                </StackPage>
+            </StackSwitch>
         );
     },
 };
@@ -934,6 +934,50 @@ export const GridWithSelectionInDialog = {
                         onRowSelectionModelChange={setSelectionModel}
                     />
                 </EditDialog>
+            </>
+        );
+    },
+};
+
+export const PageWithHelpInToolbarModal = {
+    render: () => {
+        const { rows, loading } = useData();
+
+        const GridToolbar = () => {
+            return (
+                <DataGridToolbar>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                </DataGridToolbar>
+            );
+        };
+
+        const columns: GridColDef[] = [
+            { field: "title", headerName: "Title", flex: 1 },
+            { field: "description", headerName: "Description", flex: 2 },
+        ];
+
+        return (
+            <>
+                <StackToolbar
+                    topBarActions={
+                        <HelpDialogButton
+                            dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}
+                            dialogDescription={
+                                <>
+                                    <Box sx={{ width: 150, height: 150 }} component="img" src="https://picsum.photos/id/35/300/300" />
+                                    <Typography>This is some helpful text inside the help dialog.</Typography>
+                                </>
+                            }
+                        />
+                    }
+                >
+                    <ToolbarBackButton />
+                    <ToolbarAutomaticTitleItem />´
+                </StackToolbar>
+                <StackMainContent>
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight />
+                </StackMainContent>
             </>
         );
     },

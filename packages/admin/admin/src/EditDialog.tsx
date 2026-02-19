@@ -138,7 +138,7 @@ const EditDialogInner = ({
         setTimeout(() => {
             // TODO DirtyHandler removal: do we need a onReset functionality here?
             if (!disableCloseAfterSave) {
-                api.closeDialog({ delay: true });
+                api.closeDialog();
             }
         });
         onAfterSave?.();

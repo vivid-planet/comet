@@ -1,50 +1,53 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { useErrorDialog } from "@comet/admin";
 import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
 import { useSeoTagGeneration } from "./useSeoTagGeneration";
 
-jest.mock("../../documents/ContentGenerationConfigContext", () => {
+vi.mock("../../documents/ContentGenerationConfigContext", () => {
     return {
-        useContentGenerationConfig: jest.fn(),
+        useContentGenerationConfig: vi.fn(),
     };
 });
 
-jest.mock("../../contentScope/Provider", () => {
+vi.mock("../../contentScope/Provider", () => {
     return {
-        useContentScope: jest.fn(),
+        useContentScope: vi.fn(),
     };
 });
 
-jest.mock("../../contentLanguage/useContentLanguage", () => {
+vi.mock("../../contentLanguage/useContentLanguage", () => {
     return {
-        useContentLanguage: jest.fn(),
+        useContentLanguage: vi.fn(),
     };
 });
 
-jest.mock("@comet/admin", () => {
+vi.mock(import("@comet/admin"), async (importOriginal) => {
+    const originalModule = await importOriginal();
     return {
-        useErrorDialog: jest.fn(),
+        ...originalModule,
+        useErrorDialog: vi.fn(),
     };
 });
 
 const mockContentGenerationConfig = {
     seo: {
-        getRelevantContent: jest.fn(),
+        getRelevantContent: vi.fn(),
     },
 };
 
 const mockErrorDialog = {
-    showError: jest.fn(),
+    showError: vi.fn(),
 };
 
 const mockApolloClient = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
-jest.mock("@apollo/client", () => {
-    const originalModule = jest.requireActual("@apollo/client");
+vi.mock(import("@apollo/client"), async (importOriginal) => {
+    const originalModule = await importOriginal();
     return {
         ...originalModule,
         useApolloClient: () => mockApolloClient,
@@ -53,10 +56,10 @@ jest.mock("@apollo/client", () => {
 
 describe("useSeoTagGeneration", () => {
     beforeEach(() => {
-        jest.resetModules();
-        jest.resetAllMocks();
-        (useContentGenerationConfig as jest.Mock).mockReturnValue(mockContentGenerationConfig);
-        (useErrorDialog as jest.Mock).mockReturnValue(mockErrorDialog);
+        vi.resetModules();
+        vi.resetAllMocks();
+        (useContentGenerationConfig as Mock).mockReturnValue(mockContentGenerationConfig);
+        (useErrorDialog as Mock).mockReturnValue(mockErrorDialog);
     });
 
     it("shows error when no content is available", async () => {
@@ -80,7 +83,7 @@ describe("useSeoTagGeneration", () => {
         };
 
         mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([content]);
-        mockApolloClient.mutate = jest.fn().mockResolvedValue({
+        mockApolloClient.mutate = vi.fn().mockResolvedValue({
             data: {
                 generateSeoTags: seoTags,
             },
@@ -104,7 +107,7 @@ describe("useSeoTagGeneration", () => {
         };
 
         mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([content]);
-        mockApolloClient.mutate = jest.fn().mockResolvedValue({
+        mockApolloClient.mutate = vi.fn().mockResolvedValue({
             data: {
                 generateSeoTags: seoTags,
             },
@@ -122,7 +125,7 @@ describe("useSeoTagGeneration", () => {
             expect(mockApolloClient.mutate).toHaveBeenCalledTimes(1);
         });
 
-        jest.resetModules();
+        vi.resetModules();
     });
 
     it("handles pending request correctly", async () => {
@@ -135,7 +138,7 @@ describe("useSeoTagGeneration", () => {
         };
 
         mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([content]);
-        mockApolloClient.mutate = jest.fn().mockResolvedValue({
+        mockApolloClient.mutate = vi.fn().mockResolvedValue({
             data: {
                 generateSeoTags: seoTags,
             },

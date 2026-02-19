@@ -4,16 +4,10 @@ import { FinalFormFileUpload, type FinalFormFileUploadProps } from "./FinalFormF
 import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment, HTMLInputElement> &
-    Partial<FinalFormFileUploadProps<false>> & {
-        multiple?: false;
-        maxFiles?: 1;
-    };
+    FinalFormFileUploadProps<false>;
 
 type MultipleFileUploadProps = FieldProps<Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>, HTMLInputElement> &
-    Partial<FinalFormFileUploadProps<true>> & {
-        multiple: true;
-        maxFiles?: number;
-    };
+    FinalFormFileUploadProps<true>;
 
 export type FileUploadFieldProps<Multiple extends boolean | undefined> = Multiple extends true ? MultipleFileUploadProps : SingleFileUploadProps;
 

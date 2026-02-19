@@ -11,7 +11,7 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
 } from "@comet/admin";
-import { ContentScopeIndicator, useContentScope, useContentScopeConfig } from "@comet/cms-admin";
+import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
 import { NewsForm } from "./generated/NewsForm";
@@ -30,7 +30,6 @@ const FormToolbar = () => (
 
 export function NewsPage() {
     const intl = useIntl();
-    const { scope } = useContentScope();
 
     useContentScopeConfig({ redirectPathAfterChange: "/structured-content/news" });
 
@@ -43,21 +42,21 @@ export function NewsPage() {
                         <NewsGrid />
                     </MainContent>
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "news.news", defaultMessage: "Edit News" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "news.editNews", defaultMessage: "Edit News" })}>
                     {(selectedNewsId) => (
                         <SaveBoundary>
                             <FormToolbar />
                             <MainContent>
-                                <NewsForm id={selectedNewsId} scope={scope} />
+                                <NewsForm id={selectedNewsId} />
                             </MainContent>
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "news.news", defaultMessage: "Add News" })}>
+                <StackPage name="add" title={intl.formatMessage({ id: "news.addNews", defaultMessage: "Add News" })}>
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <NewsForm scope={scope} />
+                            <NewsForm />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>

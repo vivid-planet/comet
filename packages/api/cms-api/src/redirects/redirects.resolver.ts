@@ -132,10 +132,6 @@ export function createRedirectsResolver({
                             targetUrl = await this.targetUrlService.resolveTargetUrl(targetBlock);
                             targetUrlCache.set(targetBlockKey, targetUrl);
                         }
-
-                        if (!targetUrl) {
-                            continue;
-                        }
                     }
 
                     let searchMatches = true;

@@ -11,7 +11,7 @@ import { type FolderTreeMap } from "./useFolderTree";
 import { type FolderWithMatches } from "./useFolderTreeSearch";
 
 export { allFoldersQuery } from "./ChooseFolder.gql";
-export { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder.gql.generated";
+export type { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder.gql.generated";
 
 interface ChooseFolderProps {
     folderTree: FolderTreeMap;

@@ -1,10 +1,10 @@
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 
-import { type CrudFieldOptions } from "../decorators/crud-generator.decorator";
+import { CRUD_FIELD_METADATA_KEY, type CrudFieldOptions } from "../decorators/crud-generator.decorator";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasCrudFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
-    const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
+    const crudField = (Reflect.getMetadata(CRUD_FIELD_METADATA_KEY, metadataClass, propName) ?? {}) as CrudFieldOptions;
     const defaultValue = option == "dedicatedResolverArg" ? false : true;
     return !!(crudField[option] ?? defaultValue);
 }

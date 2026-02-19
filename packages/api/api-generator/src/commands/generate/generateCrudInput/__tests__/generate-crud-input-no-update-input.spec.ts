@@ -35,6 +35,6 @@ describe("GenerateCrudInput", () => {
 
         expect(formattedOut).not.toContain("TestEntityUpdateInput");
 
-        orm.close();
+        await orm.close();
     });
 });

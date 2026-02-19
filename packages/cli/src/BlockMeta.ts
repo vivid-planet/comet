@@ -16,6 +16,7 @@ export type BlockMetaField =
           kind: "Enum";
           nullable: boolean;
           enum: string[];
+          array?: boolean;
       }
     | {
           name: string;

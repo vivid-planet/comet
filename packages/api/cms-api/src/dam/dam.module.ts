@@ -2,7 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory, WarningsModule } from "..";
+import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
@@ -103,12 +103,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [
-                MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]),
-                BlobStorageModule,
-                ImgproxyModule,
-                WarningsModule,
-            ],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]), BlobStorageModule, ImgproxyModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,

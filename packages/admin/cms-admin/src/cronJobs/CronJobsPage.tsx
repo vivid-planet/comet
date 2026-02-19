@@ -1,6 +1,7 @@
-import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import { MainContent, Stack, StackPage, StackSwitch, StackToolbar, ToolbarAutomaticTitleItem, ToolbarBackButton } from "@comet/admin";
 import { useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { CronJobsGrid } from "./CronJobsGrid";
 import { JobLogs } from "./JobLogs";
 import { JobsGrid } from "./JobsGrid";
@@ -12,7 +13,10 @@ export function CronJobsPage() {
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.cronJobs", defaultMessage: "Cron Jobs" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <CronJobsGrid />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <MainContent fullHeight>
+                        <CronJobsGrid />
+                    </MainContent>
                 </StackPage>
                 <StackPage name="jobs">
                     {(selectedCronJobName) => (
@@ -20,7 +24,19 @@ export function CronJobsPage() {
                             <StackPage name="grid">
                                 <JobsGrid cronJob={selectedCronJobName} />
                             </StackPage>
-                            <StackPage name="logs">{(selectedJobName) => <JobLogs jobName={selectedJobName} />}</StackPage>
+                            <StackPage name="logs">
+                                {(selectedJobName) => (
+                                    <>
+                                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                                            <ToolbarBackButton />
+                                            <ToolbarAutomaticTitleItem />
+                                        </StackToolbar>
+                                        <MainContent>
+                                            <JobLogs jobName={selectedJobName} />
+                                        </MainContent>
+                                    </>
+                                )}
+                            </StackPage>
                         </StackSwitch>
                     )}
                 </StackPage>

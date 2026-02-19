@@ -53,7 +53,13 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                         value = column.valueFormatter(value, row) ?? "";
                     }
 
-                    if (typeof value !== "string" && typeof value !== "number" && value !== null && !(value instanceof Date)) {
+                    if (
+                        typeof value !== "string" &&
+                        typeof value !== "boolean" &&
+                        typeof value !== "number" &&
+                        value !== null &&
+                        !(value instanceof Date)
+                    ) {
                         throw new Error(`The type of the provided value "${typeof value}" is not supported for excel export.`);
                     }
 

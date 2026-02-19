@@ -3,7 +3,6 @@ import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPrevi
 import { type HeadingBlockData } from "@src/blocks.generated";
 import { Typography } from "@src/common/components/Typography";
 import { type Renderers } from "redraft";
-import styled from "styled-components";
 
 import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "./RichTextBlock";
 
@@ -14,12 +13,12 @@ const eyebrowRenderers: Renderers = {
 const getHeadlineRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers => ({
     inline: defaultRichTextInlineStyleMap,
     blocks: {
-        "header-one": createTextBlockRenderFn({ variant: "h600", as: htmlTag, bottomSpacing: true }),
-        "header-two": createTextBlockRenderFn({ variant: "h550", as: htmlTag, bottomSpacing: true }),
-        "header-three": createTextBlockRenderFn({ variant: "h500", as: htmlTag, bottomSpacing: true }),
-        "header-four": createTextBlockRenderFn({ variant: "h450", as: htmlTag, bottomSpacing: true }),
-        "header-five": createTextBlockRenderFn({ variant: "h400", as: htmlTag, bottomSpacing: true }),
-        "header-six": createTextBlockRenderFn({ variant: "h350", as: htmlTag, bottomSpacing: true }),
+        "header-one": createTextBlockRenderFn({ variant: "headline600", as: htmlTag, bottomSpacing: true }),
+        "header-two": createTextBlockRenderFn({ variant: "headline550", as: htmlTag, bottomSpacing: true }),
+        "header-three": createTextBlockRenderFn({ variant: "headline500", as: htmlTag, bottomSpacing: true }),
+        "header-four": createTextBlockRenderFn({ variant: "headline450", as: htmlTag, bottomSpacing: true }),
+        "header-five": createTextBlockRenderFn({ variant: "headline400", as: htmlTag, bottomSpacing: true }),
+        "header-six": createTextBlockRenderFn({ variant: "headline350", as: htmlTag, bottomSpacing: true }),
     },
 });
 
@@ -41,16 +40,16 @@ export const HeadingBlock = withPreview(
         return (
             <>
                 {hasRichTextBlockContent(eyebrow) && (
-                    <Typography variant="h400" as="h5" bottomSpacing>
+                    <Typography variant="headline400" as="p" bottomSpacing>
                         <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
                     </Typography>
                 )}
                 <PreviewSkeleton
                     hasContent={hasRichTextBlockContent(headline)}
                     title={
-                        <HeadlineSkeleton variant="h550" as="span">
+                        <Typography variant="headline550" as="span">
                             Headline
-                        </HeadlineSkeleton>
+                        </Typography>
                     }
                 >
                     <RichTextBlock data={headline} renderers={getHeadlineRenderers(headlineTag)} />
@@ -60,7 +59,3 @@ export const HeadingBlock = withPreview(
     },
     { label: "Heading" },
 );
-
-const HeadlineSkeleton = styled(Typography)`
-    color: inherit;
-`;

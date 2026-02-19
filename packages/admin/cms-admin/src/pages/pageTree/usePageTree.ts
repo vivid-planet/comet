@@ -6,7 +6,7 @@ import { type PageSearchMatch } from "../pageSearch/usePageSearch";
 import { arrayToTreeMap, subTreeFromNodes, type TreeMap } from "./treemap/TreeMapUtils";
 import { type GQLPageTreePageFragment } from "./usePageTree.generated";
 
-export { GQLPageTreePageFragment } from "./usePageTree.generated";
+export type { GQLPageTreePageFragment } from "./usePageTree.generated";
 
 export const pageTreePageFragment = gql`
     fragment PageTreePage on PageTreeNode {
@@ -30,7 +30,7 @@ interface PageTreePageAdditionalFieldsForUi {
     level: number;
     matches: PageSearchMatch[];
 }
-export type PageTreePage = GQLPageTreePageFragment & PageTreePageAdditionalFieldsForUi;
+export type PageTreePage<AdditionalFields = object> = GQLPageTreePageFragment & AdditionalFields & PageTreePageAdditionalFieldsForUi;
 
 interface UsePageTreeProps {
     pages: GQLPageTreePageFragment[];

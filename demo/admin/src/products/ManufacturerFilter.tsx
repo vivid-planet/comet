@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { InputBase } from "@mui/material";
+import { ClearInputAdornment } from "@comet/admin";
 import Autocomplete from "@mui/material/Autocomplete";
-import { type GridFilterInputValueProps, type GridFilterOperator } from "@mui/x-data-grid-pro";
-import { useState } from "react";
+import { type GridFilterInputValueProps, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid-pro";
+import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
@@ -21,10 +21,11 @@ const manufacturersQuery = gql`
 `;
 
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
-function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
+function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValueProps) {
     const intl = useIntl();
     const [search, setSearch] = useState<string | undefined>(undefined);
     const [debouncedSearch] = useDebounce(search, 500);
+    const rootProps = useGridRootProps();
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
         variables: {
@@ -34,12 +35,26 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
         },
     });
 
+    const handleApplyValue = useCallback(
+        (value: string | undefined) => {
+            // value can't be "{ id: value.id, name: value.name }" because value is sent to api
+            applyValue({
+                ...item,
+                id: item.id,
+                operator: "equals",
+                value,
+            });
+        },
+        [applyValue, item],
+    );
+
     // source https://mui.com/material-ui/react-autocomplete/
     return (
         <Autocomplete
             size="small"
             options={data?.manufacturers.nodes ?? []}
             autoHighlight
+            disableClearable
             value={item.value ? item.value : null}
             filterOptions={(x) => x} // disable local filtering
             isOptionEqualToValue={(option, value) => {
@@ -51,18 +66,34 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
                 return option.name ?? data?.manufacturers.nodes.find((item) => item.id === option)?.name ?? option;
             }}
             onChange={(event, value, reason) => {
-                // value can't be "{ id: value.id, name: value.name }" because value is sent to api
-                applyValue({ id: item.id, operator: "equals", value: value ? value.id : undefined, field: "manufacturer" });
+                handleApplyValue(value ? value.id : undefined);
             }}
             renderInput={(params) => (
-                <InputBase
+                <rootProps.slots.baseTextField
                     {...params}
-                    {...params.InputProps}
-                    autoComplete="off"
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
                     value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
+                    }}
+                    label={apiRef.current.getLocaleText("filterPanelInputLabel")}
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                        input: {
+                            ...params.InputProps,
+                            endAdornment: (
+                                <>
+                                    <ClearInputAdornment
+                                        position="end"
+                                        hasClearableContent={Boolean(item.value)}
+                                        onClick={() => handleApplyValue(undefined)}
+                                    />
+                                    {params.InputProps.endAdornment}
+                                </>
+                            ),
+                        },
                     }}
                 />
             )}

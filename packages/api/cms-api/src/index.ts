@@ -37,6 +37,7 @@ export {
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
     BlockWarning,
+    ChildBlockInfo,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
@@ -85,7 +86,7 @@ export {
 } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
-export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
+export { createSeoBlock, type SeoBlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
 export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
@@ -116,9 +117,12 @@ export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export {
+    CRUD_GENERATOR_METADATA_KEY,
+    CRUD_SINGLE_GENERATOR_METADATA_KEY,
     CrudField,
     CrudFieldOptions,
     CrudGenerator,
+    CrudGeneratorHooksService,
     CrudGeneratorOptions,
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
@@ -141,11 +145,12 @@ export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { IdFilter } from "./common/filter/id.filter";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
-export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { MutationError } from "./common/graphql/mutation-error";
 export { CdnGuard } from "./common/guards/cdn.guard";
 export { getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "./common/helper/crud-generator.helper";
 export { PartialType } from "./common/helper/partial-type.helper";
@@ -189,6 +194,7 @@ export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";
 export { ImageCropArea } from "./dam/images/entities/image-crop-area.entity";
 export { ImagesService } from "./dam/images/images.service";
+export { calculateInheritAspectRatio } from "./dam/images/images.util";
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
@@ -212,11 +218,24 @@ export { IMGPROXY_CONFIG } from "./imgproxy/imgproxy.constants";
 export { Extension, Gravity, ResizingType } from "./imgproxy/imgproxy.enum";
 export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
+export { ImporterDataStream } from "./importer/data-streams/data-stream";
+export { ImporterLocalFileDataStream } from "./importer/data-streams/local-file-data-stream";
+export { CsvColumn, CsvColumnType } from "./importer/decorators/csv-column.decorator";
+export { ImportTargetInterface } from "./importer/import-target.interface";
+export { ImporterInputClass } from "./importer/importer-input.type";
+export { ImporterEndPipe } from "./importer/pipes/end.pipe";
+export { ImporterPipe } from "./importer/pipes/importer-pipe.type";
+export { ImporterCsvParseAndTransformPipes } from "./importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
+export { KubernetesService } from "./kubernetes/kubernetes.service";
+export { MailTemplate, MailTemplateInterface, PreparedTestProps } from "./mail-templates/mail-template.decorator";
+export { MailTemplateService } from "./mail-templates/mail-template.service";
+export { MailTemplatesModule } from "./mail-templates/mail-templates.module";
+export { MailerLog } from "./mailer/entities/mailer-log.entity";
 export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
 export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
-export { MailerService } from "./mailer/mailer.service";
+export { MailerService, SendMailParams } from "./mailer/mailer.service";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
@@ -253,8 +272,9 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
+export { AffectedScope } from "./user-permissions/decorators/affected-scope.decorator";
 export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
-export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
+export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { CurrentUserPermission } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
@@ -262,10 +282,13 @@ export { ContentScope } from "./user-permissions/interfaces/content-scope.interf
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
+export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
+export { registerAdditionalPermissions } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
     Permission,
+    PermissionForUser,
     PermissionOverrides,
     PermissionsForUser,
     UserPermissions,

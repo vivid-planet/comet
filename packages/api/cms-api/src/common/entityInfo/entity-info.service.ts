@@ -1,8 +1,8 @@
-import { Injectable, Logger, Type } from "@nestjs/common";
-import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { Injectable, Logger } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 
-import { EntityInfoGetter, EntityInfoInterface, EntityInfoServiceInterface } from "./entity-info.decorator";
+import { isInjectableService } from "../helper/is-injectable-service.helper";
+import { ENTITY_INFO_METADATA_KEY, EntityInfoGetter, EntityInfoInterface } from "./entity-info.decorator";
 
 @Injectable()
 export class EntityInfoService {
@@ -11,7 +11,7 @@ export class EntityInfoService {
     constructor(private readonly moduleRef: ModuleRef) {}
 
     async getEntityInfo(instance: object): Promise<EntityInfoInterface | undefined> {
-        const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(`data:entityInfo`, instance.constructor);
+        const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, instance.constructor);
 
         if (entityInfoGetter === undefined) {
             this.logger.warn(
@@ -20,7 +20,7 @@ export class EntityInfoService {
             return undefined;
         }
 
-        if (this.isService(entityInfoGetter)) {
+        if (isInjectableService(entityInfoGetter)) {
             const service = this.moduleRef.get(entityInfoGetter, { strict: false });
             const { name, secondaryInformation } = await service.getEntityInfo(instance);
             return { name, secondaryInformation };
@@ -28,10 +28,5 @@ export class EntityInfoService {
             const { name, secondaryInformation } = await entityInfoGetter(instance);
             return { name, secondaryInformation };
         }
-    }
-
-    private isService(entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> {
-        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
     }
 }

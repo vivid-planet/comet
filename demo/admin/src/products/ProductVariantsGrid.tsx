@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import {
     Button,
     DataGridToolbar,
@@ -15,7 +15,6 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {

@@ -1,5 +1,7 @@
 "use client";
 
+import type { HTMLAttributes } from "react";
+
 import { type SvgImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
@@ -11,7 +13,12 @@ interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
 }
 
 export const SvgImageBlock = withPreview(
-    ({ data: { damFile }, width = "100%", height = "auto" }: SvgImageBlockProps) => {
+    ({
+        data: { damFile },
+        width = "100%",
+        height = "auto",
+        ...restProps
+    }: SvgImageBlockProps & Omit<HTMLAttributes<HTMLImageElement>, "width" | "height">) => {
         if (!damFile) return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;
         return (
             <img
@@ -19,6 +26,8 @@ export const SvgImageBlock = withPreview(
                 width={width === "auto" ? undefined : width}
                 height={height === "auto" ? undefined : height}
                 alt={damFile.altText ?? ""}
+                title={damFile.title ?? ""}
+                {...restProps}
             />
         );
     },

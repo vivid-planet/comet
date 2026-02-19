@@ -1,14 +1,23 @@
 import console from "node:console";
+import { realpathSync } from "node:fs";
 
-import type { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "@comet/cms-api";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    CRUD_SINGLE_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    type CrudSingleGeneratorOptions,
+} from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
 import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { exec as execCallback } from "child_process";
+import { promisify } from "util";
 
 import { generateCrud } from "./generateCrud/generate-crud";
 import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
 
+const exec = promisify(execCallback);
 /**
  * Generate mode for the generator.
  *
@@ -31,6 +40,8 @@ export const generateFiles = async (
     }
 
     if (orm != null) {
+        const writtenFiles: string[] = [];
+
         const entities = orm.em.getMetadata().getAll();
         LazyMetadataStorage.load();
 
@@ -42,24 +53,30 @@ export const generateFiles = async (
             }
             if (file == null || entity.path === `./${file}`) {
                 {
-                    const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
+                    const generatorOptions = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, entity.class) as CrudGeneratorOptions | undefined;
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrud for Entity ${entity.path}`);
                         const files = await generateCrud(generatorOptions, entity);
                         await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
+                        writtenFiles.push(...files.map((f) => realpathSync(`${generatorOptions.targetDirectory}/${f.name}`)));
                     }
                 }
                 {
-                    const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as
+                    const generatorOptions = Reflect.getMetadata(CRUD_SINGLE_GENERATOR_METADATA_KEY, entity.class) as
                         | CrudSingleGeneratorOptions
                         | undefined;
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrudSingle for Entity ${entity.path}`);
                         const files = await generateCrudSingle(generatorOptions, entity);
                         await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
+                        writtenFiles.push(...files.map((f) => realpathSync(`${generatorOptions.targetDirectory}/${f.name}`)));
                     }
                 }
             }
+        }
+        if (writtenFiles.length > 0) {
+            console.log("Formatting generated files...");
+            await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
         }
     }
 };

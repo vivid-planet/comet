@@ -47,7 +47,7 @@ describe("GenerateCrud with ScopedEntity", () => {
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
 
-        orm.close();
+        await orm.close();
     });
 });
 
@@ -95,6 +95,6 @@ describe("GenerateCrud with Scope", () => {
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
 
-        orm.close();
+        await orm.close();
     });
 });

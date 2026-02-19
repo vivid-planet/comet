@@ -2,7 +2,8 @@
     "compilerOptions": {
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "lib": ["ES2020"],
+        "jsx": "react-jsx",
+        "lib": ["ES2023"],
         "outDir": "lib",
         "rootDir": "src",
         "strict": true,

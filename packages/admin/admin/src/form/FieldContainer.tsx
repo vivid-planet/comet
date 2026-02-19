@@ -136,6 +136,11 @@ const InnerContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
             [class*="${inputBaseClasses.root}"]:hover:not([class*="${inputBaseClasses.focused}"]) {
                 border-color: ${theme.palette.error.main};
             }
+
+            .CometAdminRte-root:not(:focus-within),
+            .CometAdminRte-root:hover:not(:focus-within) {
+                --comet-admin-rte-outer-border-color: ${theme.palette.error.main};
+            }
         `}
 
         ${ownerState.hasWarning &&
@@ -146,6 +151,11 @@ const InnerContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
 
             [class*="${inputBaseClasses.root}"]:hover:not([class*="${inputBaseClasses.focused}"]) {
                 border-color: ${theme.palette.warning.main};
+            }
+
+            .CometAdminRte-root:not(:focus-within),
+            .CometAdminRte-root:hover:not(:focus-within) {
+                --comet-admin-rte-outer-border-color: ${theme.palette.warning.main};
             }
         `}
     `,

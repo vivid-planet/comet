@@ -1,5 +1,171 @@
 # @comet/eslint-config
 
+## 8.15.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- af265a8: Clarify `next/image` import restriction in `@comet/eslint-config/nextjs.js`
+
+### Patch Changes
+
+- 3d0af69: Fix extending Next.js' ESLint config in `@comet/eslint-config/nextjs.js`
+    - @comet/eslint-plugin@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 4b448f6: Format.JS: enforce literal default messages
+
+    Prevent function calls or variables in `defaultMessage` which are not supported in our internationalization workflow.
+
+- e5427a0: Future: Ban `node-cache` because it's unmaintained
+
+    Introduce a new rule in `future/nestjs` and `future/nextjs` that bans importing `node-cache` and recommends `cache-manager` / `@cacheable/node-cache` / `@nestjs/cache-manager` instead.
+
+    This rule is now in the future configs and will be enforced generally in v9.
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.0
+
+## 8.10.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.10.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.9.0
+
+## 8.8.0
+
+### Minor Changes
+
+- f8bf3f5: Detect React version in `@comet/eslint-config/react.js` and `@comet/eslint-config/nextjs.js`
+
+    Removes the `React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration.` warning.
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.8.0
+
+## 8.7.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.7.1
+
+## 8.7.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.6.0
+
+## 8.5.2
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.5.2
+
+## 8.5.1
+
+### Patch Changes
+
+- dcb9712: Disable `@next/next/no-img-element` rule
+    - @comet/eslint-plugin@8.5.1
+
+## 8.5.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.5.0
+
+## 8.4.2
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.4.2
+
+## 8.4.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.4.1
+
+## 8.4.0
+
+### Patch Changes
+
+- 576731f: Allow `%` as a string literal in `future/react.js`
+    - @comet/eslint-plugin@8.4.0
+
+## 8.3.0
+
+### Minor Changes
+
+- dd4e4a8: Introduce a new future/react.js configuration and enable the ESLint rule react/jsx-no-literals.
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.3.0
+
+## 8.2.0
+
+### Patch Changes
+
+- 594331e: Fix import restriction of `@mui/material` components: `Alert`, `Button`, `Dialog`, `Tooltip`
+
+    The restriction was not working for deep imports like `import Button from "@mui/material/Button"`.
+    - @comet/eslint-plugin@8.2.0
+
+## 8.1.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.1.1
+
+## 8.1.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.1.0
+
 ## 8.0.0
 
 ### Major Changes

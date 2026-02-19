@@ -32,7 +32,8 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
             content += "[]";
         }
     } else if (field.kind === "Enum") {
-        content += `"${field.enum.join('" | "')}"`;
+        const enumType = `"${field.enum.join('" | "')}"`;
+        content += field.array ? `(${enumType})[]` : enumType;
     } else if (field.kind === "Block") {
         content += `${field.block}${blockNamePostfix}`;
     } else if (field.kind === "OneOfBlocks") {

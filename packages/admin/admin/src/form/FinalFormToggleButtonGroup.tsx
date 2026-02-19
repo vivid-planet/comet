@@ -3,10 +3,12 @@ import { css, styled } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 
-export interface FinalFormToggleButtonGroupProps<FieldValue> extends FieldRenderProps<FieldValue, HTMLDivElement> {
+export type FinalFormToggleButtonGroupProps<FieldValue> = {
     options: Array<{ value: FieldValue; label: ReactNode }>;
     optionsPerRow?: number;
-}
+};
+
+type FinalFormToggleButtonGroupInternalProps<FieldValue> = FieldRenderProps<FieldValue, HTMLDivElement>;
 
 /**
  * Final Form-compatible ToggleButtonGroup component.
@@ -17,7 +19,7 @@ export function FinalFormToggleButtonGroup<FieldValue = unknown>({
     input: { value, onChange },
     options,
     optionsPerRow,
-}: FinalFormToggleButtonGroupProps<FieldValue>) {
+}: FinalFormToggleButtonGroupProps<FieldValue> & FinalFormToggleButtonGroupInternalProps<FieldValue>) {
     return (
         <Root $optionsPerRow={optionsPerRow}>
             {options.map(({ value: optionValue, label }, index) => (

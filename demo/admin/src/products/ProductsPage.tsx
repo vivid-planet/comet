@@ -14,6 +14,7 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
+    useStackSwitch,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
@@ -38,9 +39,11 @@ const FormToolbar = () => (
 const ProductsPage = () => {
     const intl = useIntl();
 
+    const [ProductsStackSwitch, productsStackSwitchApi] = useStackSwitch();
+
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
-            <StackSwitch initialPage="grid">
+            <ProductsStackSwitch initialPage="grid">
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <StackMainContent fullHeight>
@@ -138,12 +141,16 @@ const ProductsPage = () => {
                         <FormToolbar />
                         <StackMainContent>
                             <FieldSet>
-                                <ProductForm />
+                                <ProductForm
+                                    onCreate={(id) => {
+                                        productsStackSwitchApi.activatePage("edit", id);
+                                    }}
+                                />
                             </FieldSet>
                         </StackMainContent>
                     </SaveBoundary>
                 </StackPage>
-            </StackSwitch>
+            </ProductsStackSwitch>
         </Stack>
     );
 };

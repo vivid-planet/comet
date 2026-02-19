@@ -21,6 +21,9 @@ class FooterContentBlockData extends BlockData {
     @ChildBlock(DamImageBlock)
     image: BlockDataInterface;
 
+    @BlockField()
+    caption: string;
+
     @ChildBlock(LinkListBlock)
     linkList: BlockDataInterface;
 
@@ -34,6 +37,10 @@ class FooterContentBlockInput extends BlockInput {
 
     @ChildBlockInput(DamImageBlock)
     image: ExtractBlockInput<typeof DamImageBlock>;
+
+    @BlockField()
+    @IsString()
+    caption: string;
 
     @ChildBlockInput(LinkListBlock)
     linkList: ExtractBlockInput<typeof LinkListBlock>;

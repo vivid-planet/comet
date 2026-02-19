@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { generateGridToolbar } from "../generateGridToolbar";
 
 describe("generateGridToolbar", () => {
@@ -59,6 +61,23 @@ describe("generateGridToolbar", () => {
             hasSearch: false,
             hasFilter: false,
             excelExport: false,
+            allowAdding: false,
+            instanceGqlType: "booksMessages",
+            gqlType: "Book",
+            newEntryText: undefined,
+            fragmentName: "bookFragment",
+        });
+
+        expect(output).toMatchSnapshot();
+    });
+
+    it("generates valid Toolbar props for only excelExport enabled", () => {
+        const output = generateGridToolbar({
+            componentName: "BooksGridToolbar",
+            forwardToolbarAction: false,
+            hasSearch: false,
+            hasFilter: false,
+            excelExport: true,
             allowAdding: false,
             instanceGqlType: "booksMessages",
             gqlType: "Book",

@@ -22,7 +22,13 @@ const recursiveStringify = (obj: FieldsObjectType): string => {
 
 export function generateGqlFieldList<T extends { __typename?: string }>({ columns }: { columns: GridConfig<T>["columns"] }) {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
-        if (field.type !== "actions") {
+        if (field.type === "actions") {
+            field.queryFields?.forEach((queryField) => {
+                objectPath.set(acc, queryField, true);
+            });
+        } else if (field.name === "id") {
+            // exclude id because it's always required
+        } else {
             let hasCustomFields = false;
 
             if ("labelField" in field && field.labelField) {

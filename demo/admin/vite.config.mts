@@ -18,10 +18,9 @@ const adminPackagesHotReloadPlugin: Plugin = {
         this.addWatchFile("../../packages/admin/admin-color-picker/src");
         this.addWatchFile("../../packages/admin/admin-date-time/src");
         this.addWatchFile("../../packages/admin/admin-icons/src");
-        this.addWatchFile("../../packages/admin/admin-react-select/src");
         this.addWatchFile("../../packages/admin/admin-rte/src");
-        this.addWatchFile("../../packages/admin/blocks-admin/src");
         this.addWatchFile("../../packages/admin/cms-admin/src");
+        this.addWatchFile("../../packages/admin/brevo-admin/src");
     },
     async handleHotUpdate({ file, server }) {
         const isChangeInAdminPackage = adminPackagesPathRegex.test(file);
@@ -77,19 +76,20 @@ export default defineConfig(({ mode }) => {
         server: {
             host: process.env.SERVER_HOST ?? "localhost",
             port: Number(process.env.ADMIN_PORT),
+            cors: false,
             proxy: process.env.API_URL_INTERNAL
                 ? {
-                    "/api": {
-                        target: new URL(process.env.API_URL_INTERNAL).origin,
-                        changeOrigin: true,
-                        secure: false,
-                    },
-                    "/dam": {
-                        target: process.env.API_URL_INTERNAL,
-                        changeOrigin: true,
-                        secure: false,
-                    },
-                }
+                      "/api": {
+                          target: new URL(process.env.API_URL_INTERNAL).origin,
+                          changeOrigin: true,
+                          secure: false,
+                      },
+                      "/dam": {
+                          target: process.env.API_URL_INTERNAL,
+                          changeOrigin: true,
+                          secure: false,
+                      },
+                  }
                 : undefined,
         },
         define: {
@@ -104,7 +104,15 @@ export default defineConfig(({ mode }) => {
                     global: "globalThis",
                 },
             },
-            include: ["@comet/admin", "@comet/admin-rte", "@comet/admin-date-time", "@comet/admin-icons", "@comet/cms-admin"],
+            include: [
+                "@comet/admin",
+                "@comet/admin-color-picker",
+                "@comet/admin-date-time",
+                "@comet/admin-icons",
+                "@comet/admin-rte",
+                "@comet/cms-admin",
+                "@comet/brevo-admin",
+            ],
         },
         resolve: {
             alias: {

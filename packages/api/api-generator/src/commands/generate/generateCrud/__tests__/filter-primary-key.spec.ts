@@ -37,6 +37,9 @@ describe("filter primary key", () => {
             const foundFile = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
             if (!foundFile) throw new Error("File not found");
         });
+        afterEach(async () => {
+            await orm.close();
+        });
 
         it("filter for embedded field should exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
@@ -61,8 +64,6 @@ describe("filter primary key", () => {
                 expect(structure.properties?.[3].name).toBe("or");
                 expect(structure.properties?.[3].type).toBe("TestEntityFilter[]");
             }
-
-            orm.close();
         });
     });
 });

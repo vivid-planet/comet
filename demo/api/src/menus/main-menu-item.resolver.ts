@@ -7,8 +7,7 @@ import {
     RequiredPermission,
     validateNotModified,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
@@ -19,9 +18,8 @@ import { MainMenuItem } from "./entities/main-menu-item.entity";
 @RequiredPermission(["pageTree"])
 export class MainMenuItemResolver {
     constructor(
-        @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
-        private readonly pageTreeService: PageTreeService,
         private readonly entityManager: EntityManager,
+        private readonly pageTreeService: PageTreeService,
     ) {}
 
     @Query(() => MainMenuItem)
@@ -36,11 +34,11 @@ export class MainMenuItemResolver {
             })
             .getNodeOrFail(pageTreeNodeId);
 
-        const item = await this.mainMenuItemRepository.findOne({ node: node.id });
+        const item = await this.entityManager.findOne(MainMenuItem, { node: node.id });
 
         return (
             item ??
-            this.mainMenuItemRepository.create({
+            this.entityManager.create(MainMenuItem, {
                 node: node as unknown as PageTreeNode,
                 content: null,
             })
@@ -56,7 +54,7 @@ export class MainMenuItemResolver {
     ): Promise<MainMenuItem> {
         const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(pageTreeNodeId);
 
-        const existingItem = await this.mainMenuItemRepository.findOne({ node: node.id });
+        const existingItem = await this.entityManager.findOne(MainMenuItem, { node: node.id });
 
         if (existingItem) {
             if (lastUpdatedAt) {
@@ -67,13 +65,13 @@ export class MainMenuItemResolver {
             await this.entityManager.persistAndFlush(existingItem);
         } else {
             await this.entityManager.persistAndFlush(
-                this.mainMenuItemRepository.create({
+                this.entityManager.create(MainMenuItem, {
                     node: node as unknown as PageTreeNode,
                     content: input.content ? input.content.transformToBlockData() : null,
                 }),
             );
         }
 
-        return this.mainMenuItemRepository.findOneOrFail({ node: node.id });
+        return this.entityManager.findOneOrFail(MainMenuItem, { node: node.id });
     }
 }
