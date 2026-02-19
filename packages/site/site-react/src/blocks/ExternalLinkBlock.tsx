@@ -48,27 +48,15 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
 
         const href = targetUrl;
         const target = openInNewWindow ? "_blank" : anchorProps.target;
-        // Ensure rel includes noopener noreferrer for target="_blank" for security
-        const rel = target === "_blank" ? mergeRel(anchorProps.rel, "noopener noreferrer") : anchorProps.rel;
 
         if (legacyBehavior) {
-            return cloneElement(children, { ...anchorProps, href, target, rel });
+            return cloneElement(children, { ...anchorProps, href, target });
         }
 
         return (
-            <a {...anchorProps} href={href} target={target} rel={rel}>
+            <a {...anchorProps} href={href} target={target}>
                 {children}
             </a>
         );
     }
-}
-
-function mergeRel(existingRel: string | undefined, securityRel: string): string {
-    if (!existingRel) {
-        return securityRel;
-    }
-    const existingTokens = new Set(existingRel.split(/\s+/));
-    const securityTokens = securityRel.split(/\s+/);
-    securityTokens.forEach((token) => existingTokens.add(token));
-    return Array.from(existingTokens).join(" ");
 }
