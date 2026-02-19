@@ -10,10 +10,13 @@ export function downloadFile(source: Blob | string, filename: string): void {
     link.download = filename;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
 
-    // Clean up object URL if we created one
-    if (typeof source !== "string") {
-        URL.revokeObjectURL(url);
-    }
+    // Remove link asynchronously to ensure download is initiated
+    setTimeout(() => {
+        document.body.removeChild(link);
+        // Clean up object URL if we created one
+        if (typeof source !== "string") {
+            URL.revokeObjectURL(url);
+        }
+    }, 100);
 }

@@ -190,8 +190,9 @@ export function TargetGroupsGrid({
         }
 
         const csvData = convertToCsv(allContacts);
+        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
 
-        downloadFile(new Blob([csvData], { type: "text/csv;charset=utf-8;" }), `${title}.csv`);
+        downloadFile(blob, `${title}.csv`);
     }
 
     const columns: GridColDef<GQLTargetGroupsListFragment>[] = [
