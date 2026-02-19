@@ -5,15 +5,13 @@ import {
     DataGridToolbar,
     FillSpace,
     type GridColDef,
-    GridFilterButton,
     StackLink,
-    useBufferedRowCount,
     useDataGridUrlState,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, type GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -33,10 +31,7 @@ const productHighlightsFragment = gql`
 const productHighlightsQuery = gql`
     query ProductHighlightsGrid {
         productHighlights {
-            nodes {
-                ...ProductHighlightsForm
-            }
-            totalCount
+            ...ProductHighlightsForm
         }
     }
     ${productHighlightsFragment}
@@ -49,8 +44,6 @@ const deleteProductHighlightMutation = gql`
 function ProductHighlightsGridToolbar() {
     return (
         <DataGridToolbar>
-            <GridToolbarQuickFilter />
-            <GridFilterButton />
             <FillSpace />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="productHighlight.productHighlightsForm.newEntry" defaultMessage="New Product Highlight" />
@@ -99,14 +92,12 @@ export function ProductHighlightsGrid() {
         },
     ];
     const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery);
-    const rowCount = useBufferedRowCount(data?.productHighlights.nodes.length);
     if (error) throw error;
-    const rows = data?.productHighlights.nodes ?? [];
+    const rows = data?.productHighlights ?? [];
     return (
         <DataGridPro
             {...dataGridProps}
             rows={rows}
-            rowCount={rowCount}
             columns={columns}
             loading={loading}
             slots={{

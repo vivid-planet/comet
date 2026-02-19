@@ -1,5 +1,32 @@
 # @comet/admin
 
+## 8.16.0
+
+### Minor Changes
+
+- 472b496: useDataGridRemote: store sort/filter/paging state additionally to query-param in local state and fall back to it if the query-param is lost
+
+    Avoids losing grid state, for instance, when opening an EditDialog that creates its own sub-route.
+
+### Patch Changes
+
+- @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 39a9bb0: Add support for non-paginated apis in useDataGridExcelExport
+- 5b52998: Add tooltip for childless items in closed `MainNavigation`
+
+### Patch Changes
+
+- cc96333: Fix FinalForm to forward submissionErrors (return from submit handler) correctly
+- 180d1e3: Fix required validation for `AsyncAutocompleteField` with multiple select
+- f7b9de9: Fix DataGrid singleSelect filter height to prevent autocomplete values from being truncated
+- 0c2435a: Hide `filesInfoText` from FileSelect
+    - @comet/admin-icons@8.15.0
+
 ## 8.14.0
 
 ### Minor Changes

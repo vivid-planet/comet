@@ -29,8 +29,8 @@ import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
-import { generateFormattedMessage } from "../utils/intl";
-import { isGeneratorConfigCode, isGeneratorConfigFormattedMessage, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { generateFormattedMessage, isFormattedMessageElement } from "../utils/intl";
+import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { detectMuiXGridVariant } from "./detectMuiXVersion";
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
@@ -105,7 +105,7 @@ type LabelData = {
 };
 
 const getValueOptionsLabelData = (messageId: string, label: string | FormattedMessageElement | GridColumnStaticSelectLabelCellContent): LabelData => {
-    if (typeof label === "string" || isGeneratorConfigFormattedMessage(label)) {
+    if (typeof label === "string" || isFormattedMessageElement(label)) {
         return {
             textLabel: generateFormattedMessage({
                 config: label as FormattedMessageElement | string,
