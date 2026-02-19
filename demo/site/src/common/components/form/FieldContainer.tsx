@@ -1,5 +1,4 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import clsx from "clsx";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -31,7 +30,7 @@ export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required,
                     )}
                 </div>
             )}
-            <div className={clsx(styles.fieldBase, errorText ? styles.fieldBaseError : "")}>{children}</div>
+            {children}
             {errorText ? (
                 <div className={styles.errorWrapper}>
                     <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />

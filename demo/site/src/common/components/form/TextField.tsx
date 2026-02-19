@@ -1,8 +1,10 @@
+import clsx from "clsx";
 import { type InputHTMLAttributes } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 
 import { Typography } from "../Typography";
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
+import styles from "./TextField.module.scss";
 
 type TextFieldProps<TFieldValues extends FieldValues> = Omit<InputHTMLAttributes<HTMLInputElement>, "name"> &
     Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
@@ -25,7 +27,14 @@ export const TextField = <TFieldValues extends FieldValues>({
             rules={rules}
             render={({ field, fieldState }) => (
                 <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={name}>
-                    <Typography as="input" variant="paragraph200" {...inputProps} {...field} id={name} />
+                    <Typography
+                        as="input"
+                        variant="paragraph200"
+                        {...inputProps}
+                        {...field}
+                        id={name}
+                        className={clsx(styles.input, fieldState.error && styles.inputError)}
+                    />
                 </FieldContainer>
             )}
         />
