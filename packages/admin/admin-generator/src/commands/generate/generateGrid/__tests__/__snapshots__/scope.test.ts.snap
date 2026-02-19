@@ -119,6 +119,8 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
+filterable: false,
+sortable: false,
 flex: 1,
 minWidth: 150,},
                 {field: "actions",
@@ -291,6 +293,8 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
+filterable: false,
+sortable: false,
 flex: 1,
 minWidth: 150,},
                 {field: "actions",
