@@ -316,7 +316,7 @@ export function generateGrid<T extends { __typename?: string }>(
     if (hasPaging) {
         imports.push({ name: "useDataGridRemote", importPath: "@comet/admin" });
     } else {
-        imports.push({ name: "useDataGridLocationState", importPath: "@comet/admin" });
+        imports.push({ name: "useDataGridUrlState", importPath: "@comet/admin" });
     }
 
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
@@ -817,7 +817,7 @@ export function generateGrid<T extends { __typename?: string }>(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}) {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...${hasPaging ? "useDataGridRemote" : "useDataGridLocationState"}(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        const dataGridProps = { ...${hasPaging ? "useDataGridRemote" : "useDataGridUrlState"}(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
             config.selectionProps === "multiSelect"
                 ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
                 : config.selectionProps === "singleSelect"

@@ -5,7 +5,7 @@ import queryString from "query-string";
 import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router";
 
-type UseDataGridLocationStateReturnValue = {
+type UseDataGridUrlStateReturnValue = {
     filterModel: DataGridProps["filterModel"];
     onFilterModelChange: DataGridProps["onFilterModelChange"];
 
@@ -19,7 +19,7 @@ type UseDataGridLocationStateReturnValue = {
 /**
  * Returns props for DataGrid that turns it into a controlled component that stores it's state as location params
  **/
-export function useDataGridLocationState({
+export function useDataGridUrlState({
     queryParamsPrefix = "",
     pageSize: initialPageSize = 25,
     initialSort,
@@ -29,7 +29,7 @@ export function useDataGridLocationState({
     pageSize?: number;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     initialFilter?: GridFilterModel;
-} = {}): UseDataGridLocationStateReturnValue {
+} = {}): UseDataGridUrlStateReturnValue {
     const history = useHistory();
     const location = useLocation();
 
