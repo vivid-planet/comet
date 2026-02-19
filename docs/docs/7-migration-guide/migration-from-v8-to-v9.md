@@ -5,6 +5,12 @@ sidebar_position: -9
 
 # Migrating from v8 to v9
 
+## API
+
+### Rename `RedirectSourceTypeValues` to `RedirectSourceType``
+
+Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
+
 ## Admin
 
 ### Tooltip-related Changes
