@@ -857,13 +857,21 @@ export function generateGrid<T extends { __typename?: string }>(
                         ? true // local (client side) sorting is always possible (no api support needed)
                         : filterFields.includes(column.name) || !!column.filterOperators;
                     if (allowRowReordering) isColumnFilterable = false; //disable filter if rowReordering is enabled
-                    if (column.type == "block") isColumnFilterable = false; //disable filter for block columns as blocks cannot be filtered
+                    if (column.type == "block") {
+                        // For block columns, only enable filtering if remote (server-side) filtering is available and API supports it
+                        // Disable for client-side filtering as blocks cannot be filtered on the client
+                        isColumnFilterable = (filterArg && filterFields.includes(column.name)) || !!column.filterOperators;
+                    }
 
                     let isColumnSortable = hasPaging
                         ? true // local (client side) sorting is always possible (no api support needed)
                         : sortFields.includes(column.name) || !!column.sortBy;
                     if (allowRowReordering) isColumnSortable = false; //disable sort if rowReordering is enabled
-                    if (column.type == "block") isColumnSortable = false; //disable sort for block columns as blocks cannot be sorted
+                    if (column.type == "block") {
+                        // For block columns, only enable sorting if remote (server-side) sorting is available and API supports it
+                        // Disable for client-side sorting as blocks cannot be sorted on the client
+                        isColumnSortable = (sortArg && sortFields.includes(column.name)) || !!column.sortBy;
+                    }
 
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: column.fieldName ? `"${column.fieldName}"` : `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
