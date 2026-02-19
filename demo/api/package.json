@@ -20,10 +20,16 @@
         "fixtures:prod": "pnpm console:prod fixtures --",
         "intl:compile": "pnpm run intl:compile:comet-demo",
         "intl:compile:comet-demo": "formatjs compile-folder --format simple --ast lang/comet-demo-lang/api lang-compiled/comet-demo-api",
+<<<<<<< lintci-apistart-schema
         "intl:extract": "formatjs extract \"src/**/*.ts*\" --ignore ./**.d.ts --out-file lang-extracted/en.json --format simple --throws",
         "lint": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:api-can-start",
         "lint:api-can-start": "MIKRO_ORM_NO_CONNECT=true dotenv -e ../../.env.secrets -e ../../.env.local -e ../../.env -e ../.env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts --help",
         "lint:ci": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:api-can-start && pnpm run lint:generated-files-not-modified",
+=======
+        "intl:extract": "formatjs extract \"src/**/*.ts*\" --ignore '**/*.{test,spec}.{ts,tsx}' --ignore ./**.d.ts --out-file lang-extracted/en.json --format simple --throws",
+        "lint": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:generated-files-not-modified",
+>>>>>>> main
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:generated-files-not-modified": "git diff --exit-code HEAD -- schema.gql block-meta.json $(find src -type f -path '*/generated/*')",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
@@ -33,7 +39,9 @@
         "start": "pnpm clean && pnpm intl:compile && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
         "start:dev": "pnpm check-node-version && run-p dev:*",
         "start:prod": "node dist/main",
-        "storybook": "storybook dev -p 4004 --no-open"
+        "storybook": "storybook dev -p 4004 --no-open",
+        "test": "pnpm api-generator && vitest --run",
+        "test:watch": "vitest --watch"
     },
     "dependencies": {
         "@apollo/server": "^5.2.0",
@@ -89,6 +97,7 @@
         "@formatjs/cli": "^6.7.4",
         "@nestjs/cli": "^11.0.14",
         "@nestjs/schematics": "^11.0.9",
+        "@nestjs/testing": "^11.1.11",
         "@storybook/addon-docs": "^10.1.11",
         "@storybook/react-vite": "^10.1.11",
         "@types/cli-progress": "^3.11.6",
@@ -104,7 +113,7 @@
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^9.0.0",
-        "eslint": "^9.30.1",
+        "eslint": "^9.39.2",
         "eslint-plugin-storybook": "^10.1.11",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
@@ -112,7 +121,9 @@
         "storybook": "^10.1.11",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^3.15.0",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vite-tsconfig-paths": "^6.0.4",
+        "vitest": "^4.0.16"
     },
     "mikro-orm": {
         "configPaths": [
