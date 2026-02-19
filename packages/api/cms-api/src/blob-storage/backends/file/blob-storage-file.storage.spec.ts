@@ -191,6 +191,19 @@ describe("BlobStorageFileStorage", () => {
             expect((await streamToBuffer(entries[1].stream)).toString()).toBe("bb");
         });
 
+        it("should yield the file entry with default contentType when the sidecar headers file is missing", async () => {
+            await storage.createFolder("listing");
+            // Write a file directly without its sidecar headers file (e.g. uploaded by another service)
+            await fs.promises.writeFile(path.join(tmpDir, "listing/orphan.txt"), "orphan");
+
+            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("listing"));
+            expect(entries).toHaveLength(1);
+            expect(entries[0].name).toBe("orphan.txt");
+            expect(entries[0].size).toBe(6);
+            expect(entries[0].contentType).toBe("application/octet-stream");
+            expect((await streamToBuffer(entries[0].stream)).toString()).toBe("orphan");
+        });
+
         it("should not include subdirectories in the listing", async () => {
             await storage.createFolder("parent");
             await storage.createFile("parent", "file.txt", Buffer.from("f"), { contentType: "text/plain", size: 1 });

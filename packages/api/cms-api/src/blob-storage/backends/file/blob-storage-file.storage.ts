@@ -124,14 +124,20 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
             const headersPath = `${filePath}-${this.headersFile}`;
 
             const stat = await fs.promises.stat(filePath);
-            const rawHeaders = await fs.promises.readFile(headersPath, { encoding: "utf-8" });
-            const headers = JSON.parse(rawHeaders);
-
+            let contentType = "application/octet-stream";
+            try {
+                const rawHeaders = await fs.promises.readFile(headersPath, { encoding: "utf-8" });
+                contentType = JSON.parse(rawHeaders)["content-type"] ?? contentType;
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+                    throw error;
+                }
+            }
             stream.push({
                 name: entry.name,
                 stream: fs.createReadStream(filePath),
                 size: stat.size,
-                contentType: headers["content-type"],
+                contentType,
             });
         }
 
