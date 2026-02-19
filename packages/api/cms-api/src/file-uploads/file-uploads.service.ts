@@ -85,7 +85,7 @@ export class FileUploadsService {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        const timeout = addHours(new Date(), 1).getTime();
+        const timeout = addHours(new Date(), this.config.download.urlTimeout ?? 1).getTime();
 
         const hash = this.createHash({
             id: file.id,
@@ -100,7 +100,11 @@ export class FileUploadsService {
             return undefined;
         }
 
-        const timeout = addHours(new Date(), 1).getTime();
+        if (!this.config.download) {
+            throw new Error("File Uploads: Missing download configuration");
+        }
+
+        const timeout = addHours(new Date(), this.config.download.urlTimeout ?? 1).getTime();
 
         const hash = this.createHash({
             id: file.id,
@@ -114,7 +118,11 @@ export class FileUploadsService {
     }
 
     createPreviewUrl(file: FileUpload): string {
-        const timeout = addHours(new Date(), 1).getTime();
+        if (!this.config.download) {
+            throw new Error("File Uploads: Missing download configuration");
+        }
+
+        const timeout = addHours(new Date(), this.config.download.urlTimeout ?? 1).getTime();
 
         const hash = this.createHash({
             id: file.id,

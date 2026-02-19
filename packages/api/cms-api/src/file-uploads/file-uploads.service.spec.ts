@@ -123,4 +123,94 @@ describe("FileUploadsService", () => {
             await expect(service.getFileContent(fileUpload)).rejects.toThrow("File not found");
         });
     });
+
+    describe("URL generation with default timeout", () => {
+        it("should generate download URL with default 1 hour timeout", () => {
+            const url = service.createDownloadUrl(fileUpload);
+            const parts = url.split("/");
+            const timeout = parseInt(parts[4], 10);
+            const expectedTimeout = baseDate.getTime() + 60 * 60 * 1000; // 1 hour in ms
+
+            expect(timeout).toBe(expectedTimeout);
+        });
+
+        it("should generate preview URL with default 1 hour timeout", () => {
+            const url = service.createPreviewUrl(fileUpload);
+            const parts = url.split("/");
+            const timeout = parseInt(parts[5], 10);
+            const expectedTimeout = baseDate.getTime() + 60 * 60 * 1000; // 1 hour in ms
+
+            expect(timeout).toBe(expectedTimeout);
+        });
+
+        it("should generate image URL with default 1 hour timeout", () => {
+            const imageFileUpload = { ...fileUpload, mimetype: "image/png" } as FileUpload;
+            const url = service.createImageUrl(imageFileUpload, 200);
+            expect(url).toBeDefined();
+            if (!url) return;
+            const parts = url.split("/");
+            const timeout = parseInt(parts[4], 10);
+            const expectedTimeout = baseDate.getTime() + 60 * 60 * 1000; // 1 hour in ms
+
+            expect(timeout).toBe(expectedTimeout);
+        });
+    });
+
+    describe("URL generation with custom timeout", () => {
+        let customService: FileUploadsService;
+
+        beforeEach(async () => {
+            const customConfig: FileUploadsConfig = {
+                ...mockConfig,
+                download: {
+                    secret: "test-secret",
+                    urlTimeout: 2, // 2 hours
+                },
+            };
+
+            const module: TestingModule = await Test.createTestingModule({
+                providers: [
+                    FileUploadsService,
+                    { provide: getRepositoryToken(FileUpload), useValue: mockRepository },
+                    { provide: BlobStorageBackendService, useValue: mockBlobStorageBackendService },
+                    { provide: FILE_UPLOADS_CONFIG, useValue: customConfig },
+                    { provide: EntityManager, useValue: mockEntityManager },
+                    { provide: MikroORM, useValue: mockOrm },
+                    FileUploadExpirationSubscriber,
+                ],
+            }).compile();
+
+            customService = module.get<FileUploadsService>(FileUploadsService);
+        });
+
+        it("should generate download URL with custom 2 hour timeout", () => {
+            const url = customService.createDownloadUrl(fileUpload);
+            const parts = url.split("/");
+            const timeout = parseInt(parts[4], 10);
+            const expectedTimeout = baseDate.getTime() + 2 * 60 * 60 * 1000; // 2 hours in ms
+
+            expect(timeout).toBe(expectedTimeout);
+        });
+
+        it("should generate preview URL with custom 2 hour timeout", () => {
+            const url = customService.createPreviewUrl(fileUpload);
+            const parts = url.split("/");
+            const timeout = parseInt(parts[5], 10);
+            const expectedTimeout = baseDate.getTime() + 2 * 60 * 60 * 1000; // 2 hours in ms
+
+            expect(timeout).toBe(expectedTimeout);
+        });
+
+        it("should generate image URL with custom 2 hour timeout", () => {
+            const imageFileUpload = { ...fileUpload, mimetype: "image/png" } as FileUpload;
+            const url = customService.createImageUrl(imageFileUpload, 200);
+            expect(url).toBeDefined();
+            if (!url) return;
+            const parts = url.split("/");
+            const timeout = parseInt(parts[4], 10);
+            const expectedTimeout = baseDate.getTime() + 2 * 60 * 60 * 1000; // 2 hours in ms
+
+            expect(timeout).toBe(expectedTimeout);
+        });
+    });
 });
