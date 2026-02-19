@@ -1,5 +1,11 @@
 # @comet/eslint-config
 
+## 8.16.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.16.0
+
 ## 8.15.0
 
 ### Patch Changes
