@@ -19,7 +19,7 @@ export class EntityInfoService {
 
     /**
      * Resolves a field path (e.g., "title" or "manufacturer.name") to a SQL expression.
-     * Supports direct fields and n-level deep ManyToOne/OneToOne relations using subqueries.
+     * Supports direct fields, embeddables, and n-level deep ManyToOne/OneToOne relations using subqueries.
      */
     private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
         const parts = fieldPath.split(".");
@@ -44,8 +44,23 @@ export class EntityInfoService {
             throw new Error(`Relation "${relationName}" not found in entity "${metadata.className}"`);
         }
 
+        // Handle embedded properties - fields are columns on the same table
+        if (relationProp.kind === "embedded") {
+            let currentProp = relationProp;
+            for (const part of remainingParts) {
+                const childProp = currentProp.embeddedProps?.[part];
+                if (!childProp) {
+                    throw new Error(`Embedded field "${part}" not found in embeddable "${currentProp.name}" of entity "${metadata.className}"`);
+                }
+                currentProp = childProp;
+            }
+            return `"${tableName}"."${currentProp.fieldNames[0]}"`;
+        }
+
         if (relationProp.kind !== "m:1" && relationProp.kind !== "1:1") {
-            throw new Error(`Only ManyToOne and OneToOne relations are supported for EntityInfo. "${relationName}" is "${relationProp.kind}"`);
+            throw new Error(
+                `Only ManyToOne, OneToOne relations and embeddables are supported for EntityInfo. "${relationName}" is "${relationProp.kind}"`,
+            );
         }
 
         if (!relationProp.targetMeta) {
@@ -103,6 +118,11 @@ export class EntityInfoService {
                                 "${metadata.tableName}"."${primary}"::text "id",
                                 '${entityName}' "entityName"
                             FROM "${metadata.tableName}"`;
+
+                    if (entityName === "ProductVariant") {
+                        console.log("select ", select);
+                    }
+
                     indexSelects.push(select);
                 }
             }
