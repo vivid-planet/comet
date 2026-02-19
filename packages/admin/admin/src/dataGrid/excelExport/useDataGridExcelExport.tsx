@@ -3,6 +3,7 @@ import { type GridValidRowModel } from "@mui/x-data-grid";
 import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 
+import { downloadFile } from "../../helpers/downloadFile";
 import { type GridColDef } from "../GridColDef";
 import { type ExcelGenerationOptions, generateExcelFile } from "./generateExcelFile";
 
@@ -42,15 +43,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
             const workbook = generateExcelFile<Row>(columns, data, { worksheetName, styling });
 
             workbook.xlsx.writeBuffer().then((buffer) => {
-                const blob = new Blob([buffer]);
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = safeFileNameWithExtension(fileName);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
+                downloadFile(new Blob([buffer]), safeFileNameWithExtension(fileName));
             });
         },
         [intl],

@@ -4,6 +4,7 @@
 import * as Excel from "exceljs/dist/exceljs.js";
 import { type ReactNode } from "react";
 
+import { downloadFile } from "../../helpers/downloadFile";
 import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
 import { type IRow, type ITableColumn, VisibleType } from "../Table";
@@ -88,15 +89,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         (buffer) => {
-            const blob = new Blob([buffer]);
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = safeFileNameWithExtension(fileName);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            downloadFile(new Blob([buffer]), safeFileNameWithExtension(fileName));
         },
     );
 }

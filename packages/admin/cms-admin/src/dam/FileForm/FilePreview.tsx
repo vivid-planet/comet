@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { Button, useStackApi } from "@comet/admin";
+import { Button, downloadFile, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -80,12 +80,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     variant="textLight"
                     startIcon={<Download />}
                     onClick={() => {
-                        const link = document.createElement("a");
-                        link.href = file.fileUrl;
-                        link.download = file.name;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                        downloadFile(file.fileUrl, file.name);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />

@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { type RefetchQueriesInclude } from "@apollo/client/core/types";
-import { Alert, Button, CheckboxField, Dialog, FinalForm, Loading, messages, useErrorDialog } from "@comet/admin";
+import { Alert, Button, CheckboxField, Dialog, downloadFile, FinalForm, Loading, messages, useErrorDialog } from "@comet/admin";
 import { Upload } from "@comet/admin-icons";
 import { Box, DialogActions, DialogContent, DialogTitle, type MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -213,15 +213,7 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
         }
 
         // Create and download the file
-        const file = new Blob([errorData], { type: "text/csv;charset=utf-8" });
-        const url = URL.createObjectURL(file);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `error-log-${new Date().toISOString()}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        downloadFile(new Blob([errorData], { type: "text/csv;charset=utf-8" }), `error-log-${new Date().toISOString()}.csv`);
     };
 
     const saveBlacklistedContactsFile = () => {
@@ -248,15 +240,10 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
         }
 
         // Create and download the file
-        const file = new Blob([blacklistedContactsData], { type: "text/csv;charset=utf-8" });
-        const url = URL.createObjectURL(file);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `blacklisted-contact-log-${new Date().toISOString()}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        downloadFile(
+            new Blob([blacklistedContactsData], { type: "text/csv;charset=utf-8" }),
+            `blacklisted-contact-log-${new Date().toISOString()}.csv`,
+        );
     };
 
     const { getInputProps } = useDropzone({

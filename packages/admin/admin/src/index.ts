@@ -177,6 +177,7 @@ export { FinalFormSwitch, type FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
 export { FullPageAlert, type FullPageAlertClassKey, type FullPageAlertProps } from "./fullPageAlert/FullPageAlert";
 export { createComponentSlot } from "./helpers/createComponentSlot";
+export { downloadFile } from "./helpers/downloadFile";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export type { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { type IWindowSize, useWindowSize } from "./helpers/useWindowSize";
