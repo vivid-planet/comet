@@ -78,7 +78,7 @@ export async function generateCrudInput(
         { name: "RootBlockInputScalar", importPath: "@comet/cms-api" },
         { name: "IsNullable", importPath: "@comet/cms-api" },
         { name: "PartialType", importPath: "@comet/cms-api" },
-        { name: "ExtractBlockInput", importPath: "@comet/cms-api" },
+        { name: "BlockInputInterface", importPath: "@comet/cms-api" },
         { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
         { name: "IsString", importPath: "class-validator" },
         { name: "IsNotEmpty", importPath: "class-validator" },
@@ -203,6 +203,10 @@ export async function generateCrudInput(
             const blockName = findBlockName(prop.name, metadata);
             const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}/dto`, metadata);
             imports.push({ name: blockName, importPath });
+
+            if (!imports.find((imp) => imp.name === "ExtractBlockInput")) {
+                imports.push({ name: "ExtractBlockInput", importPath: "@comet/cms-api" });
+            }
 
             decorators.push(`@Field(() => RootBlockInputScalar(${blockName})${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
