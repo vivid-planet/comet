@@ -1,10 +1,12 @@
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
-import { type TableBlockData } from "../../../blocks.generated";
+import { type RichTextBlock, type RichTextBlockState } from "../../createRichTextBlock";
+import { type TableBlockColumn, type TableBlockState } from "../../createTableBlock";
 import { insertRowDataAtIndex, type RowInsertData } from "./row";
+import { rteSchema } from "./rteSchema";
 
-export const getNewColumn = (): TableBlockData["columns"][number] => {
+export const getNewColumn = (): TableBlockColumn => {
     return { id: uuid(), highlighted: false, size: "standard" };
 };
 
@@ -14,19 +16,24 @@ export type ColumnSize = z.infer<typeof columnSizeSchema>;
 export const columnInsertSchema = z.object({
     size: columnSizeSchema,
     highlighted: z.boolean(),
-    cellValues: z.array(z.string()),
+    cellValues: z.array(rteSchema),
 });
-export type ColumnInsertData = z.infer<typeof columnInsertSchema>;
 
-export const getNewColumnInsertData = (numberOfRows: number): ColumnInsertData => {
+export type ColumnInsertData = {
+    size: ColumnSize;
+    highlighted: boolean;
+    cellValues: RichTextBlockState[];
+};
+
+export const getNewColumnInsertData = (numberOfRows: number, RichTextBlock: RichTextBlock): ColumnInsertData => {
     return {
         size: "standard",
         highlighted: false,
-        cellValues: Array.from({ length: numberOfRows }).map(() => ""),
+        cellValues: Array.from({ length: numberOfRows }).map(() => RichTextBlock.defaultValues()),
     };
 };
 
-export const getDuplicatedColumnInsertData = (state: TableBlockData, columnIndex: number): ColumnInsertData | null => {
+export const getDuplicatedColumnInsertData = (state: TableBlockState, columnIndex: number, RichTextBlock: RichTextBlock): ColumnInsertData | null => {
     const sourceColumn = state.columns[columnIndex];
 
     if (!sourceColumn) {
@@ -34,7 +41,7 @@ export const getDuplicatedColumnInsertData = (state: TableBlockData, columnIndex
     }
 
     const sourceCellsValues = state.rows.map(({ cellValues }) => cellValues.find((cellValue) => cellValue.columnId === sourceColumn.id));
-    const newCellValues = sourceCellsValues.map((sourceCellValue) => sourceCellValue?.value ?? "");
+    const newCellValues = sourceCellsValues.map((sourceCellValue) => sourceCellValue?.value ?? RichTextBlock.defaultValues());
 
     return {
         size: sourceColumn.size,
@@ -43,7 +50,7 @@ export const getDuplicatedColumnInsertData = (state: TableBlockData, columnIndex
     };
 };
 
-export const getInsertDataFromColumnById = (state: TableBlockData, columnId: string): ColumnInsertData | null => {
+export const getInsertDataFromColumnById = (state: TableBlockState, columnId: string, RichTextBlock: RichTextBlock): ColumnInsertData | null => {
     const column = state.columns.find(({ id }) => id === columnId);
     if (!column) {
         return null;
@@ -54,25 +61,26 @@ export const getInsertDataFromColumnById = (state: TableBlockData, columnId: str
         highlighted: column.highlighted,
         cellValues: state.rows.map((row) => {
             const cellValueOfColumn = row.cellValues.find((cellValue) => cellValue.columnId === columnId);
-            return cellValueOfColumn?.value ?? "";
+            return cellValueOfColumn?.value ?? RichTextBlock.defaultValues();
         }),
     };
 };
 
 export const insertColumnDataAtIndex = (
-    state: TableBlockData,
-    columnInsertData: ColumnInsertData,
+    state: TableBlockState,
+    columnInsertData: { size: ColumnSize; highlighted: boolean; cellValues: RichTextBlockState[] },
     index: number,
+    RichTextBlock: RichTextBlock,
     newColumnId: string = uuid(),
-): TableBlockData => {
+): TableBlockState => {
     const numberOfRowsToBeAdded = columnInsertData.cellValues.length - state.rows.length;
 
     for (let i = 0; i < numberOfRowsToBeAdded; i++) {
         const newRowInsertData: RowInsertData = {
             highlighted: false,
-            cellValues: state.columns.map(() => ""),
+            cellValues: state.columns.map(() => RichTextBlock.defaultValues()),
         };
-        state = insertRowDataAtIndex(state, newRowInsertData, state.rows.length);
+        state = insertRowDataAtIndex(state, newRowInsertData, state.rows.length, RichTextBlock);
     }
 
     const columnsBeforeIndex = state.columns.slice(0, index);
@@ -86,8 +94,8 @@ export const insertColumnDataAtIndex = (
     return {
         ...state,
         columns: [...columnsBeforeIndex, newColumn, ...columnsAfterIndex],
-        rows: state.rows.map((row, index) => {
-            const newCell = { columnId: newColumn.id, value: columnInsertData.cellValues[index] ?? "" };
+        rows: state.rows.map((row, rowIndex) => {
+            const newCell = { columnId: newColumn.id, value: columnInsertData.cellValues[rowIndex] ?? RichTextBlock.defaultValues() };
             return {
                 ...row,
                 cellValues: [...row.cellValues, newCell],
@@ -96,7 +104,7 @@ export const insertColumnDataAtIndex = (
     };
 };
 
-export const removeColumnFromState = (state: TableBlockData, columnId: string): TableBlockData => {
+export const removeColumnFromState = (state: TableBlockState, columnId: string): TableBlockState => {
     return {
         ...state,
         columns: state.columns.filter((column) => column.id !== columnId),
@@ -107,7 +115,7 @@ export const removeColumnFromState = (state: TableBlockData, columnId: string): 
     };
 };
 
-export const toggleColumnHighlight = (state: TableBlockData, columnId: string): TableBlockData => {
+export const toggleColumnHighlight = (state: TableBlockState, columnId: string): TableBlockState => {
     return {
         ...state,
         columns: state.columns.map((column) => {
@@ -119,7 +127,7 @@ export const toggleColumnHighlight = (state: TableBlockData, columnId: string): 
     };
 };
 
-export const setColumnSize = (state: TableBlockData, columnId: string, size: ColumnSize): TableBlockData => {
+export const setColumnSize = (state: TableBlockState, columnId: string, size: ColumnSize): TableBlockState => {
     return {
         ...state,
         columns: state.columns.map((column) => (column.id === columnId ? { ...column, size } : column)),

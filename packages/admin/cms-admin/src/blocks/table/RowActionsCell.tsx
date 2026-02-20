@@ -5,19 +5,23 @@ import { type Dispatch, type SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { type TableBlockData } from "../../blocks.generated";
+import { useBlockContext } from "../context/useBlockContext";
+import { type RichTextBlock } from "../createRichTextBlock";
+import { type TableBlockState } from "../createTableBlock";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 import { deleteRowById, getInsertDataFromRowById, insertRowDataAtIndex, type RowInsertData, rowInsertSchema } from "./utils/row";
 
 type Props = {
     row: Record<string, unknown> & { id: string };
-    updateState: Dispatch<SetStateAction<TableBlockData>>;
-    state: TableBlockData;
+    updateState: Dispatch<SetStateAction<TableBlockState>>;
+    state: TableBlockState;
     addToRecentlyPastedIds: (id: string) => void;
+    RichTextBlock: RichTextBlock;
 };
 
-export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
+export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds, RichTextBlock }: Props) => {
     const snackbarApi = useSnackbarApi();
+    const blockContext = useBlockContext();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
     const intl = useIntl();
 
@@ -28,9 +32,9 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
 
             const insertData: RowInsertData = {
                 highlighted: false,
-                cellValues: state.columns.map(() => ""),
+                cellValues: state.columns.map(() => RichTextBlock.defaultValues()),
             };
-            return insertRowDataAtIndex(state, insertData, newRowIndex);
+            return insertRowDataAtIndex(state, insertData, newRowIndex, RichTextBlock);
         });
     };
 
@@ -55,7 +59,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
     };
 
     const handleDuplicateRow = () => {
-        const duplicatedRowInsertData = getInsertDataFromRowById(state, row.id);
+        const duplicatedRowInsertData = getInsertDataFromRowById(state, row.id, RichTextBlock);
         const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
 
         if (!duplicatedRowInsertData) {
@@ -72,12 +76,12 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         updateState((state) => {
             const newRowId = uuid();
             addToRecentlyPastedIds(newRowId);
-            return insertRowDataAtIndex(state, duplicatedRowInsertData, currentRowIndex + 1, newRowId);
+            return insertRowDataAtIndex(state, duplicatedRowInsertData, currentRowIndex + 1, RichTextBlock, newRowId);
         });
     };
 
     const handleCopyRowToClipboard = () => {
-        const rowInsertData = getInsertDataFromRowById(state, row.id);
+        const rowInsertData = getInsertDataFromRowById(state, row.id, RichTextBlock);
         if (!rowInsertData) {
             snackbarApi.showSnackbar(
                 <Snackbar autoHideDuration={5000}>
@@ -89,7 +93,11 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
             return;
         }
 
-        writeClipboardText(JSON.stringify(rowInsertData));
+        const serializableData = {
+            ...rowInsertData,
+            cellValues: rowInsertData.cellValues.map((cellValue) => RichTextBlock.state2Output(cellValue)),
+        };
+        writeClipboardText(JSON.stringify(serializableData));
     };
 
     const showFailedToParseDataSnackbar = () => {
@@ -110,11 +118,21 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
             return;
         }
 
+        const deserializedCellValues = await Promise.all(
+            clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)),
+        );
+
         updateState((state) => {
             const newRowId = uuid();
             addToRecentlyPastedIds(newRowId);
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
-            return insertRowDataAtIndex(state, clipboardData, currentRowIndex + 1, newRowId);
+            return insertRowDataAtIndex(
+                state,
+                { ...clipboardData, cellValues: deserializedCellValues },
+                currentRowIndex + 1,
+                RichTextBlock,
+                newRowId,
+            );
         });
     };
 
