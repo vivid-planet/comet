@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { BlockInputInterface, DamImageBlock, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { DamImageBlock, ExtractBlockInput, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import { IsInt, IsNotEmpty, IsOptional, IsString, Min, ValidateNested } from "class-validator";
 @InputType()
 export class ProductVariantInput {
@@ -14,7 +14,7 @@ export class ProductVariantInput {
     @Field(() => RootBlockInputScalar(DamImageBlock))
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
-    image: BlockInputInterface;
+    image: ExtractBlockInput<typeof DamImageBlock>;
     @IsOptional()
     @Min(1)
     @IsInt()

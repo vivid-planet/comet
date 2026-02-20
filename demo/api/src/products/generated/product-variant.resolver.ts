@@ -7,7 +7,6 @@ import { ProductVariantsService } from "./product-variants.service";
 import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-variant.input";
 import { PaginatedProductVariants } from "./dto/paginated-product-variants";
 import { ProductVariantsArgs } from "./dto/product-variants.args";
-import { Product } from "../entities/product.entity";
 import {
     AffectedEntity,
     BlocksTransformerService,
@@ -20,6 +19,7 @@ import {
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
+import { Product } from "../entities/product.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductVariantService } from "../product-variant.service";
 import { ProductVariantMutationError } from "./../product-variant.service";
@@ -105,7 +105,7 @@ export class ProductVariantResolver {
             ...assignInput,
             position,
             product: Reference.create(await this.entityManager.findOneOrFail(Product, product)),
-            image: imageInput.transformToBlockData(),
+            image: DamImageBlock.blockDataFactory(imageInput.toPlain()),
         });
         await this.entityManager.flush();
         return { productVariant, errors: [] };
@@ -141,7 +141,7 @@ export class ProductVariantResolver {
             ...assignInput,
         });
         if (imageInput) {
-            productVariant.image = imageInput.transformToBlockData();
+            productVariant.image = DamImageBlock.blockDataFactory(imageInput.toPlain());
         }
         await this.entityManager.flush();
         return { productVariant, errors: [] };

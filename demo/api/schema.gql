@@ -1383,6 +1383,7 @@ type Product {
   datasheets: [FileUpload!]!
   description: String
   dimensions: ProductDimensions
+  disclaimer: RichTextBlockData!
   discounts: [ProductDiscounts!]!
   id: ID!
   image: DamImageBlockData!
@@ -1577,6 +1578,7 @@ input ProductInput {
   datasheets: [ID!]! = []
   description: String = null
   dimensions: ProductDimensionsInput
+  disclaimer: RichTextBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   image: DamImageBlockInput!
   inStock: Boolean! = true
@@ -1791,6 +1793,7 @@ input ProductUpdateInput {
   datasheets: [ID!]
   description: String
   dimensions: ProductDimensionsInput
+  disclaimer: RichTextBlockInput
   discounts: [ProductDiscountsInput!]
   image: DamImageBlockInput
   inStock: Boolean

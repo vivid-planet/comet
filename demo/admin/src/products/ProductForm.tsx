@@ -26,6 +26,7 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { type GQLProductMutationErrorCode, type GQLProductType } from "@src/graphql.generated";
 import {
     type GQLManufacturerCountriesQuery,
@@ -64,6 +65,7 @@ interface FormProps {
 
 const rootBlocks = {
     image: DamImageBlock,
+    disclaimer: RichTextBlock,
 };
 
 // Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
@@ -72,8 +74,9 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
+type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt" | "disclaimer"> & {
     image: BlockState<typeof rootBlocks.image>;
+    disclaimer: BlockState<typeof rootBlocks.disclaimer>;
     manufacturerCountry?: { id: string; label: string };
     lastCheckedAt?: Date | null;
 };
@@ -154,6 +157,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
             datasheets: formValues.datasheets?.map(({ id }) => id),
             manufacturer: formValues.manufacturer?.id,
             lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
+            disclaimer: rootBlocks.disclaimer.state2Output(formValues.disclaimer),
         };
 
         if (mode === "edit") {

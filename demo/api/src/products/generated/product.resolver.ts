@@ -6,11 +6,6 @@ import { GraphQLResolveInfo } from "graphql";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
-import { ProductColor } from "../entities/product-color.entity";
-import { ProductToTag } from "../entities/product-to-tag.entity";
-import { ProductStatistics } from "../entities/product-statistics.entity";
-import { ProductCategory } from "../entities/product-category.entity";
-import { Manufacturer } from "../entities/manufacturer.entity";
 import {
     AffectedEntity,
     BlocksTransformerService,
@@ -24,6 +19,12 @@ import {
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
+import { ProductColor } from "../entities/product-color.entity";
+import { ProductToTag } from "../entities/product-to-tag.entity";
+import { ProductStatistics } from "../entities/product-statistics.entity";
+import { ProductCategory } from "../entities/product-category.entity";
+import { Manufacturer } from "../entities/manufacturer.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { Product } from "../entities/product.entity";
@@ -128,6 +129,7 @@ export class ProductResolver {
             priceList: priceListInput,
             statistics: statisticsInput,
             image: imageInput,
+            disclaimer: disclaimerInput,
             ...assignInput
         } = input;
         const product = this.entityManager.create(Product, {
@@ -135,7 +137,8 @@ export class ProductResolver {
             category: categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined,
             manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined,
             priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
-            image: imageInput.transformToBlockData(),
+            image: DamImageBlock.blockDataFactory(imageInput.toPlain()),
+            disclaimer: RichTextBlock.blockDataFactory(disclaimerInput.toPlain()),
         });
         if (colorsInput) {
             await product.colors.loadItems();
@@ -203,6 +206,7 @@ export class ProductResolver {
             priceList: priceListInput,
             statistics: statisticsInput,
             image: imageInput,
+            disclaimer: disclaimerInput,
             ...assignInput
         } = input;
         product.assign({
@@ -264,7 +268,10 @@ export class ProductResolver {
             product.priceList = priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined;
         }
         if (imageInput) {
-            product.image = imageInput.transformToBlockData();
+            product.image = DamImageBlock.blockDataFactory(imageInput.toPlain());
+        }
+        if (disclaimerInput) {
+            product.disclaimer = RichTextBlock.blockDataFactory(disclaimerInput.toPlain());
         }
         await this.entityManager.flush();
         return product;
@@ -349,5 +356,12 @@ export class ProductResolver {
         product: Product,
     ): Promise<object> {
         return this.blocksTransformer.transformToPlain(product.image);
+    }
+    @ResolveField(() => RootBlockDataScalar(RichTextBlock))
+    async disclaimer(
+        @Parent()
+        product: Product,
+    ): Promise<object> {
+        return this.blocksTransformer.transformToPlain(product.disclaimer);
     }
 }

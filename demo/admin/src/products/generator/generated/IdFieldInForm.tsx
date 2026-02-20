@@ -24,6 +24,7 @@ import { ReactNode } from "react";
 import { FORM_ERROR } from "final-form";
 import { GQLProductType } from "@src/graphql.generated";
 import { DamImageBlock } from "@comet/cms-admin";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { productFormFragment } from "./IdFieldInForm.gql";
 import { GQLIdFieldInFormFragment } from "./IdFieldInForm.gql.generated";
 import { productQuery } from "./IdFieldInForm.gql";
@@ -39,9 +40,11 @@ import { GQLProductMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
+    disclaimer: RichTextBlock,
 };
-type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
+type FormValues = Omit<GQLIdFieldInFormFragment, "image" | "disclaimer"> & {
     image: BlockState<typeof rootBlocks.image>;
+    disclaimer: BlockState<typeof rootBlocks.disclaimer>;
 };
 interface FormProps {
     onCreate?: (id: string) => void;
@@ -72,9 +75,11 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
                 ? {
                       ...filterByFragment<GQLIdFieldInFormFragment>(productFormFragment, data.product),
                       image: rootBlocks.image.input2State(data.product.image),
+                      disclaimer: rootBlocks.disclaimer.input2State(data.product.disclaimer),
                   }
                 : {
                       image: rootBlocks.image.defaultValues(),
+                      disclaimer: rootBlocks.disclaimer.defaultValues(),
                   },
         [data],
     );
@@ -90,7 +95,11 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
+        const output = {
+            ...formValues,
+            image: rootBlocks.image.state2Output(formValues.image),
+            disclaimer: rootBlocks.disclaimer.state2Output(formValues.disclaimer),
+        };
         if (mode === "edit") {
             const { id, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
@@ -175,6 +184,15 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
                             fullWidth
                         >
                             {createFinalFormBlock(rootBlocks.image)}
+                        </Field>
+                        <Field
+                            name="disclaimer"
+                            isEqual={isEqual}
+                            label={<FormattedMessage id="product.disclaimer" defaultMessage="Disclaimer" />}
+                            variant="horizontal"
+                            fullWidth
+                        >
+                            {createFinalFormBlock(rootBlocks.disclaimer)}
                         </Field>
                     </>
                 </>

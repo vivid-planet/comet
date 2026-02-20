@@ -41,6 +41,7 @@ export const productFormFragment = gql`
             ...FinalFormFileUpload
         }
         lastCheckedAt
+        disclaimer
     }
 
     ${finalFormFileUploadFragment}

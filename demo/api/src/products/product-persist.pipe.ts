@@ -1,6 +1,7 @@
-import { type BlockDataInterface, DamImageBlock, type ImporterPipe } from "@comet/cms-api";
+import { type BlockDataInterface, DamImageBlock, type ExtractBlockData, type ImporterPipe } from "@comet/cms-api";
 import { type Connection, type EntityManager, type FilterQuery, type IDatabaseDriver, type Reference } from "@mikro-orm/core";
 import { type LoggerService } from "@nestjs/common";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { Transform, type TransformCallback } from "stream";
 import { v4 } from "uuid";
 
@@ -14,6 +15,7 @@ type ProductData = Omit<ProductImporterInput, "image"> & {
     colors: string;
     category: Reference<ProductCategory>;
     image: BlockDataInterface;
+    disclaimer: ExtractBlockData<typeof RichTextBlock>;
 };
 
 export class ProductPersistPipe implements ImporterPipe {
@@ -59,6 +61,23 @@ class ProductPersist extends Transform {
                     },
                 ],
             }).transformToBlockData();
+
+            productData.disclaimer = RichTextBlock.blockDataFactory({
+                draftContent: {
+                    blocks: [
+                        {
+                            key: v4(),
+                            text: "",
+                            type: "unstyled",
+                            depth: 0,
+                            inlineStyleRanges: [],
+                            entityRanges: [],
+                            data: {},
+                        },
+                    ],
+                    entityMap: {},
+                },
+            });
 
             // TODO: use upsert
             // const product = await this.em.upsert(Product, productInput, {

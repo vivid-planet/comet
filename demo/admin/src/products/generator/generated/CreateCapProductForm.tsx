@@ -19,6 +19,7 @@ import { ReactNode } from "react";
 import { FORM_ERROR } from "final-form";
 import { GQLProductType } from "@src/graphql.generated";
 import { DamImageBlock } from "@comet/cms-admin";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { validateTitle } from "../validateTitle";
 import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
@@ -33,9 +34,11 @@ import { GQLProductMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
+    disclaimer: RichTextBlock,
 };
-type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image"> & {
+type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image" | "disclaimer"> & {
     image: BlockState<typeof rootBlocks.image>;
+    disclaimer: BlockState<typeof rootBlocks.disclaimer>;
 };
 interface FormProps {
     onCreate?: (id: string) => void;
@@ -56,6 +59,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const initialValues = {
         inStock: false,
         image: rootBlocks.image.defaultValues(),
+        disclaimer: rootBlocks.disclaimer.defaultValues(),
     };
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         const output = {
@@ -64,6 +68,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
             category: formValues.category ? formValues.category.id : null,
             availableSince: formValues.availableSince ?? null,
             image: rootBlocks.image.state2Output(formValues.image),
+            disclaimer: rootBlocks.disclaimer.state2Output(formValues.disclaimer),
         };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
@@ -180,6 +185,15 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
                         fullWidth
                     >
                         {createFinalFormBlock(rootBlocks.image)}
+                    </Field>
+                    <Field
+                        name="disclaimer"
+                        isEqual={isEqual}
+                        label={<FormattedMessage id="product.disclaimer" defaultMessage="Disclaimer" />}
+                        variant="horizontal"
+                        fullWidth
+                    >
+                        {createFinalFormBlock(rootBlocks.disclaimer)}
                     </Field>
                 </>
             )}

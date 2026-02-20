@@ -13,6 +13,7 @@ const productFormFragment = gql`
         inStock
         availableSince
         image
+        disclaimer
     }
 `;
 export const createProductMutation = gql`

@@ -2,12 +2,14 @@ import { DamImageBlock } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product, ProductStatus } from "@src/products/entities/product.entity";
 import { ProductCategory } from "@src/products/entities/product-category.entity";
 import { ProductCategoryType } from "@src/products/entities/product-category-type.entity";
 import { ProductType } from "@src/products/entities/product-type.enum";
 import { format } from "date-fns";
+import { v4 } from "uuid";
 
 @Injectable()
 export class ProductsFixtureService {
@@ -104,6 +106,22 @@ export class ProductsFixtureService {
                     activeType: "pixelImage",
                 }).transformToBlockData(),
                 manufacturer: faker.helpers.arrayElement(manufacturers),
+                disclaimer: RichTextBlock.blockDataFactory({
+                    draftContent: {
+                        blocks: [
+                            {
+                                key: v4(),
+                                text: faker.lorem.paragraph(),
+                                type: "unstyled",
+                                depth: 0,
+                                inlineStyleRanges: [],
+                                entityRanges: [],
+                                data: {},
+                            },
+                        ],
+                        entityMap: {},
+                    },
+                }),
             });
 
             this.entityManager.persist(product);

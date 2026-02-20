@@ -30,6 +30,7 @@ import { useMemo } from "react";
 import { ReactNode } from "react";
 import { FORM_ERROR } from "final-form";
 import { DamImageBlock } from "@comet/cms-admin";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { validateProductSlug } from "../validateProductSlug";
@@ -66,15 +67,17 @@ import { GQLProductMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
+    disclaimer: RichTextBlock,
 };
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
     priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
-type FormValues = Omit<ProductFormDetailsFragment, "image" | "lastCheckedAt"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "image" | "lastCheckedAt" | "disclaimer"> & {
     dimensionsEnabled: boolean;
     image: BlockState<typeof rootBlocks.image>;
     lastCheckedAt?: Date | null;
+    disclaimer: BlockState<typeof rootBlocks.disclaimer>;
 };
 interface FormProps {
     initialValues?: Partial<FormValues>;
@@ -107,6 +110,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                       dimensionsEnabled: !!data.product.dimensions,
                       image: rootBlocks.image.input2State(data.product.image),
                       lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
+                      disclaimer: rootBlocks.disclaimer.input2State(data.product.disclaimer),
                   }
                 : {
                       title: "New Product",
@@ -116,6 +120,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                       availableSince: "2025-01-01",
                       image: rootBlocks.image.defaultValues(),
                       lastCheckedAt: new Date("2018-01-12T00:00:00.000Z"),
+                      disclaimer: rootBlocks.disclaimer.defaultValues(),
                       ...passedInitialValues,
                   },
         [data],
@@ -143,6 +148,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
             priceList: formValuesRest.priceList ? formValuesRest.priceList.id : null,
             datasheets: formValuesRest.datasheets?.map(({ id }) => id),
             lastCheckedAt: formValuesRest.lastCheckedAt ? formValuesRest.lastCheckedAt.toISOString() : null,
+            disclaimer: rootBlocks.disclaimer.state2Output(formValuesRest.disclaimer),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -543,6 +549,15 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 name="lastCheckedAt"
                                 label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
                             />
+                            <Field
+                                name="disclaimer"
+                                isEqual={isEqual}
+                                label={<FormattedMessage id="product.disclaimer" defaultMessage="Disclaimer" />}
+                                variant="horizontal"
+                                fullWidth
+                            >
+                                {createFinalFormBlock(rootBlocks.disclaimer)}
+                            </Field>
                         </FieldSet>
                     </>
                 </>

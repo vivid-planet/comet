@@ -6,6 +6,7 @@ export const productFormFragment = gql`
         id
         title
         image
+        disclaimer
     }
 `;
 export const productQuery = gql`

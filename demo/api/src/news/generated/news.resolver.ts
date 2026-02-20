@@ -6,7 +6,6 @@ import { GraphQLResolveInfo } from "graphql";
 import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { PaginatedNews } from "./dto/paginated-news";
 import { NewsListArgs } from "./dto/news-list.args";
-import { NewsComment } from "../entities/news-comment.entity";
 import {
     AffectedEntity,
     BlocksTransformerService,
@@ -18,6 +17,7 @@ import {
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
 import { NewsContentBlock } from "../blocks/news-content.block";
+import { NewsComment } from "../entities/news-comment.entity";
 import { News, NewsContentScope } from "../entities/news.entity";
 @Resolver(() => News)
 @RequiredPermission(["news"])
@@ -78,8 +78,8 @@ export class NewsResolver {
         const news = this.entityManager.create(News, {
             ...assignInput,
             scope,
-            image: imageInput.transformToBlockData(),
-            content: contentInput.transformToBlockData(),
+            image: DamImageBlock.blockDataFactory(imageInput.toPlain()),
+            content: NewsContentBlock.blockDataFactory(contentInput.toPlain()),
         });
         await this.entityManager.flush();
         return news;
@@ -98,10 +98,10 @@ export class NewsResolver {
             ...assignInput,
         });
         if (imageInput) {
-            news.image = imageInput.transformToBlockData();
+            news.image = DamImageBlock.blockDataFactory(imageInput.toPlain());
         }
         if (contentInput) {
-            news.content = contentInput.transformToBlockData();
+            news.content = NewsContentBlock.blockDataFactory(contentInput.toPlain());
         }
         await this.entityManager.flush();
         return news;

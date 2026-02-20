@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { BlockInputInterface, DamImageBlock, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { DamImageBlock, ExtractBlockInput, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import { IsDate, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { NewsCategory, NewsStatus } from "../../entities/news.entity";
 import { NewsContentBlock } from "../../blocks/news-content.block";
@@ -33,12 +33,12 @@ export class NewsInput {
     @Field(() => RootBlockInputScalar(DamImageBlock))
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
-    image: BlockInputInterface;
+    image: ExtractBlockInput<typeof DamImageBlock>;
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(NewsContentBlock))
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : NewsContentBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
-    content: BlockInputInterface;
+    content: ExtractBlockInput<typeof NewsContentBlock>;
 }
 @InputType()
 export class NewsUpdateInput extends PartialType(NewsInput) {}
