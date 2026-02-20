@@ -1,6 +1,6 @@
+import { FormattedMessage } from "react-intl";
 import { describe, expect, it } from "vitest";
 
-import { type FormattedMessageElement } from "../../generate-command";
 import { generateFormattedMessage } from "../intl";
 
 describe("generateFormattedMessage", () => {
@@ -29,10 +29,7 @@ describe("generateFormattedMessage", () => {
         it("generates JSX with FormattedMessage config object", () => {
             const result = generateFormattedMessage({
                 id: "test.message",
-                config: {
-                    formattedMessageId: "custom.id",
-                    defaultMessage: "Custom default message",
-                } as unknown as FormattedMessageElement,
+                config: <FormattedMessage id="custom.id" defaultMessage="Custom default message" />,
                 type: "jsx",
             });
 
@@ -42,10 +39,7 @@ describe("generateFormattedMessage", () => {
         it("generates JSX with FormattedMessage config object overriding defaultMessage", () => {
             const result = generateFormattedMessage({
                 id: "test.message",
-                config: {
-                    formattedMessageId: "custom.id",
-                    defaultMessage: "Config message",
-                } as unknown as FormattedMessageElement,
+                config: <FormattedMessage id="custom.id" defaultMessage="Config message" />,
                 defaultMessage: "Fallback message",
                 type: "jsx",
             });

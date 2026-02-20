@@ -20,12 +20,14 @@ import { CrudContextMenu } from "@comet/admin";
 import { DataGridToolbar } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
@@ -86,6 +88,7 @@ export function ProductCategoriesGrid() {
         }),
         ...usePersistentColumnState("ProductCategoriesGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
     const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
         await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
             mutation: updateProductCategoryPositionMutation,
@@ -93,6 +96,9 @@ export function ProductCategoriesGrid() {
             awaitRefetchQueries: true,
             refetchQueries: [productCategoriesQuery],
         });
+    };
+    const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
+        stackSwitchApi.activatePage("edit", params.row.id);
     };
     const columns: GridColDef<GQLProductCategoriesGridFragment>[] = useMemo(
         () => [
@@ -192,6 +198,7 @@ export function ProductCategoriesGrid() {
             rowReordering
             onRowOrderChange={handleRowOrderChange}
             hideFooterPagination
+            onRowClick={handleRowClick}
         />
     );
 }

@@ -21,6 +21,7 @@ import { GridColDef } from "@comet/admin";
 import { dataGridIdColumn } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
@@ -28,6 +29,7 @@ import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -99,6 +101,10 @@ export function ManufacturersGrid() {
         }),
         ...usePersistentColumnState("ManufacturersGrid"),
     };
+    const stackSwitchApi = useStackSwitchApi();
+    const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
+        stackSwitchApi.activatePage("edit", params.row.id);
+    };
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(
         () => [
             {
@@ -111,7 +117,7 @@ export function ManufacturersGrid() {
             { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
             {
                 field: "address_street",
-                headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
+                headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Address Street" }),
                 filterable: false,
                 sortable: false,
                 valueGetter: (params, row) => row.address?.street,
@@ -120,7 +126,7 @@ export function ManufacturersGrid() {
             },
             {
                 field: "address_streetNumber",
-                headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" }),
+                headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Address Street Number" }),
                 type: "number",
                 filterable: false,
                 sortable: false,
@@ -133,7 +139,7 @@ export function ManufacturersGrid() {
             },
             {
                 field: "address_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Zip" }),
+                headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Address Zip" }),
                 filterable: false,
                 sortable: false,
                 valueGetter: (params, row) => row.address?.zip,
@@ -145,7 +151,7 @@ export function ManufacturersGrid() {
                 renderHeader: () => (
                     <>
                         <GridColumnHeaderTitle
-                            label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
+                            label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Address Street" })}
                             columnWidth={150}
                         />
                         <Tooltip
@@ -160,7 +166,7 @@ export function ManufacturersGrid() {
                         </Tooltip>
                     </>
                 ),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" }),
+                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Address Street" }),
                 filterable: false,
                 sortable: false,
                 valueGetter: (params, row) => row.address?.alternativeAddress?.street,
@@ -174,7 +180,7 @@ export function ManufacturersGrid() {
                         <GridColumnHeaderTitle
                             label={intl.formatMessage({
                                 id: "manufacturer.address.alternativeAddress.streetNumber",
-                                defaultMessage: "Alt-Street number",
+                                defaultMessage: "Alt-Address Street Number",
                             })}
                             columnWidth={150}
                         />
@@ -190,7 +196,10 @@ export function ManufacturersGrid() {
                         </Tooltip>
                     </>
                 ),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.address.alternativeAddress.streetNumber",
+                    defaultMessage: "Alt-Address Street Number",
+                }),
                 type: "number",
                 filterable: false,
                 sortable: false,
@@ -206,7 +215,7 @@ export function ManufacturersGrid() {
                 renderHeader: () => (
                     <>
                         <GridColumnHeaderTitle
-                            label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" })}
+                            label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Address Zip" })}
                             columnWidth={150}
                         />
                         <Tooltip
@@ -221,7 +230,7 @@ export function ManufacturersGrid() {
                         </Tooltip>
                     </>
                 ),
-                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" }),
+                headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Address Zip" }),
                 filterable: false,
                 sortable: false,
                 valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
@@ -230,14 +239,17 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable_street",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
+                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Address As Embeddable Street" }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.street,
                 flex: 1,
                 minWidth: 150,
             },
             {
                 field: "addressAsEmbeddable_streetNumber",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.addressAsEmbeddable.streetNumber",
+                    defaultMessage: "Address As Embeddable Street Number",
+                }),
                 type: "number",
                 valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
                 renderCell: ({ value }) => {
@@ -248,14 +260,17 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.zip", defaultMessage: "Zip 2" }),
+                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.zip", defaultMessage: "Address As Embeddable Zip" }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
                 flex: 1,
                 minWidth: 150,
             },
             {
                 field: "addressAsEmbeddable_alternativeAddress_street",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.addressAsEmbeddable.alternativeAddress.street",
+                    defaultMessage: "Address As Embeddable Alternative Address Street",
+                }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.street,
                 flex: 1,
                 minWidth: 150,
@@ -264,7 +279,7 @@ export function ManufacturersGrid() {
                 field: "addressAsEmbeddable_alternativeAddress_streetNumber",
                 headerName: intl.formatMessage({
                     id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber",
-                    defaultMessage: "Alt-Street number 2",
+                    defaultMessage: "Address As Embeddable Alternative Address Street Number",
                 }),
                 type: "number",
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
@@ -276,7 +291,10 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable_alternativeAddress_zip",
-                headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip", defaultMessage: "Alt-Zip 2" }),
+                headerName: intl.formatMessage({
+                    id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip",
+                    defaultMessage: "Address As Embeddable Alternative Address Zip",
+                }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
                 flex: 1,
                 minWidth: 150,
@@ -335,6 +353,7 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={handleRowClick}
         />
     );
 }

@@ -37,6 +37,7 @@ import { usePersistentColumnState } from "@comet/admin";
 import { useTheme } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridRenderCellParams } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
@@ -126,8 +127,9 @@ type Props = {
     toolbarAction?: ReactNode;
     rowAction?: (params: GridRenderCellParams<GQLProductsGridFutureFragment>) => ReactNode;
     actionsColumnWidth?: number;
+    onRowClick?: DataGridProProps["onRowClick"];
 };
-export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52, onRowClick }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -152,7 +154,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 filterable: false,
                 renderCell: ({ row }) => {
                     const typeLabels: Record<string, ReactNode> = {
-                        Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                        Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="Cap" />,
                         Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
                         Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                     };
@@ -394,6 +396,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             slotProps={{
                 toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
+            onRowClick={onRowClick}
         />
     );
 }

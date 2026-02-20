@@ -14,7 +14,8 @@ export type MainNavigationItemClassKey =
     | "hasSecondaryText"
     | "hasSecondaryAction"
     | "icon"
-    | "text";
+    | "text"
+    | "tooltip";
 
 export type OwnerState = {
     level: MainNavigationItemLevel;
