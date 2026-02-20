@@ -1,8 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import { createMemoryHistory } from "history";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { IntlProvider } from "react-intl";
-import { Router, useRouteMatch } from "react-router";
+import { MemoryRouter, Route, Routes, UNSAFE_RouteContext } from "react-router";
 import { fireEvent, render } from "test-utils";
 import { expect, test } from "vitest";
 
@@ -15,8 +14,10 @@ import { RouterTab, RouterTabs } from "./RouterTabs";
 
 test("RouterTabs in SubRoute", async () => {
     function Cmp1() {
-        const match = useRouteMatch();
-        return <p>matchUrl={match?.url}</p>;
+        const routeContext = useContext(UNSAFE_RouteContext);
+        const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+        const matchUrl = currentMatch?.pathnameBase ?? "";
+        return <p>matchUrl={matchUrl}</p>;
     }
     function Story() {
         const urlPrefix = useSubRoutePrefix();
@@ -35,14 +36,14 @@ test("RouterTabs in SubRoute", async () => {
         );
     }
 
-    const history = createMemoryHistory();
-
     const rendered = render(
         <IntlProvider locale="en">
             <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <Story />
-                </Router>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="*" element={<Story />} />
+                    </Routes>
+                </MemoryRouter>
             </MuiThemeProvider>
         </IntlProvider>,
     );
@@ -93,14 +94,14 @@ test("RouterTabs must not remount content", async () => {
         );
     }
 
-    const history = createMemoryHistory();
-
     const rendered = render(
         <IntlProvider locale="en">
             <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <Story />
-                </Router>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="*" element={<Story />} />
+                    </Routes>
+                </MemoryRouter>
             </MuiThemeProvider>
         </IntlProvider>,
     );

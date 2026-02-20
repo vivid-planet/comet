@@ -1,7 +1,6 @@
 import { createTheme } from "@mui/material/styles";
-import { createMemoryHistory } from "history";
 import { IntlProvider } from "react-intl";
-import { Router } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { fireEvent, render, waitFor } from "test-utils";
 import { expect, test } from "vitest";
 
@@ -45,14 +44,14 @@ test("multiple stacks on same page", async () => {
         );
     }
 
-    const history = createMemoryHistory();
-
     const rendered = render(
         <IntlProvider locale="en">
             <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <Story />
-                </Router>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="*" element={<Story />} />
+                    </Routes>
+                </MemoryRouter>
             </MuiThemeProvider>
         </IntlProvider>,
     );

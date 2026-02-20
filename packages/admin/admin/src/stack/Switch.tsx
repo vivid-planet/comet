@@ -13,7 +13,7 @@ import {
     useRef,
     useState,
 } from "react";
-import { matchPath, Route, type RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
+import { matchPath, type PathMatch, UNSAFE_RouteContext, useLocation, useNavigate } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
@@ -48,9 +48,6 @@ export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
     getTargetUrl: (pageName: string, payload: string, subUrl?: string) => string;
     updatePageBreadcrumbTitle: (title?: ReactNode) => void;
-    id?: string;
-}
-interface IRouteParams {
     id?: string;
 }
 
@@ -101,8 +98,8 @@ interface IHookProps {
 const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHookProps> = (props, ref) => {
     const { id } = props;
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = useState<Record<string, string | undefined>>({});
-    const history = useHistory();
-    const match = useRouteMatch<IRouteParams>();
+    const navigate = useNavigate();
+    const routeContext = useContext(UNSAFE_RouteContext);
     const subRoutePrefix = useSubRoutePrefix();
     const location = useLocation();
 
@@ -135,14 +132,14 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
     const activatePage = useCallback(
         (pageName: string, payload: string, subUrl?: string) => {
             const targetUrl = getTargetUrl(pageName, payload, subUrl);
-            history.push(targetUrl);
+            navigate(targetUrl);
 
             if (isInitialPage(pageName)) {
                 if (payload) throw new Error("activating the initialPage must not have a payload");
                 if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
             }
         },
-        [getTargetUrl, history, isInitialPage],
+        [getTargetUrl, navigate, isInitialPage],
     );
 
     const api: IStackSwitchApi = useMemo(() => {
@@ -162,12 +159,12 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
     }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle]);
     useImperativeHandle(ref, () => api);
 
-    function renderRoute(page: ReactElement<IStackPageProps>, routeProps: RouteChildrenProps<IRouteParams>) {
+    function renderRoute(page: ReactElement<IStackPageProps>, routeMatch: PathMatch<string>) {
         activePage = page.props.name;
         const ret = (
             <StackSwitchMeta id={id} activePage={page.props.name} isInitialPageActive={isInitialPage(page.props.name)}>
                 <StackSwitchApiContext.Provider value={api}>
-                    {typeof page.props.children === "function" ? page.props.children(routeProps.match!.params.id!) : page.props.children}
+                    {typeof page.props.children === "function" ? page.props.children(routeMatch.params.id!) : page.props.children}
                 </StackSwitchApiContext.Provider>
             </StackSwitchMeta>
         );
@@ -176,7 +173,7 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
         } else {
             return (
                 <StackBreadcrumb
-                    url={removeTrailingSlash(routeProps.match!.url)}
+                    url={removeTrailingSlash(routeMatch.pathname)}
                     title={pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
                 >
                     {ret}
@@ -185,7 +182,7 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
         }
     }
 
-    if (!match) return null;
+    if (!routeContext.matches.length) return null;
 
     let routeMatched = false; //to prevent rendering the initial page when a route is matched (as the initial would also match)
     return (
@@ -193,23 +190,21 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
             {Children.map(props.children, (page: ReactElement<IStackPageProps>) => {
                 if (isInitialPage(page.props.name)) return null; // don't render initial Page
                 const path = `${removeTrailingSlash(subRoutePrefix)}/:id/${page.props.name}`;
-                if (matchPath(location.pathname, { path })) {
+                const pageMatch = matchPath({ path, end: false }, location.pathname);
+                if (pageMatch) {
                     routeMatched = true;
                 }
-                const RouteComponent = props.disableForcePromptRoute ? Route : ForcePromptRoute;
-                return (
-                    <RouteComponent path={path}>
-                        {(routeProps: RouteChildrenProps<IRouteParams>) => {
-                            if (!routeProps.match) return null;
-                            return renderRoute(page, routeProps);
-                        }}
-                    </RouteComponent>
-                );
+                if (!pageMatch) return null;
+                const content = renderRoute(page, pageMatch);
+                if (props.disableForcePromptRoute) {
+                    return content;
+                }
+                return <ForcePromptRoute path={path}>{content}</ForcePromptRoute>;
             })}
             {!routeMatched && (
                 <SubRouteIndexRoute>
-                    {(routeProps: RouteChildrenProps<IRouteParams>) => {
-                        if (!routeProps.match) return null;
+                    {(routeMatch: PathMatch | null) => {
+                        if (!routeMatch) return null;
                         // now render initial page (as last route so it's a fallback)
                         let initialPage: ReactElement<IStackPageProps> | null = null;
                         Children.forEach(props.children, (page: ReactElement<IStackPageProps>) => {
@@ -217,7 +212,7 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
                                 initialPage = page;
                             }
                         });
-                        return renderRoute(initialPage!, routeProps);
+                        return renderRoute(initialPage!, routeMatch);
                     }}
                 </SubRouteIndexRoute>
             )}

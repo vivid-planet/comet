@@ -1,8 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import { createMemoryHistory } from "history";
 import { useContext } from "react";
 import { IntlProvider } from "react-intl";
-import { Router } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { fireEvent, render, waitFor } from "test-utils";
 import { expect, test } from "vitest";
 
@@ -57,14 +56,15 @@ test("StackNested basic test", async () => {
             </Stack>
         );
     }
-    const history = createMemoryHistory();
 
     const rendered = render(
         <IntlProvider locale="en">
             <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <Story />
-                </Router>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="*" element={<Story />} />
+                    </Routes>
+                </MemoryRouter>
             </MuiThemeProvider>
         </IntlProvider>,
     );

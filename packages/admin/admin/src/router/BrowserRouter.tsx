@@ -9,14 +9,8 @@ import { type PromptHandlerApi, RouterPromptHandler } from "./PromptHandler";
 export const RouterBrowserRouter = ({ children, ...props }: BrowserRouterProps) => {
     const apiRef = useRef<PromptHandlerApi>();
 
-    const getConfirmation = (message: string, callback: (ok: boolean) => void) => {
-        if (apiRef.current) {
-            apiRef.current.showDialog(message, callback);
-        }
-    };
-
     return (
-        <ReactBrowserRouter getUserConfirmation={getConfirmation} {...props}>
+        <ReactBrowserRouter {...props}>
             <RouterPromptHandler apiRef={apiRef}>{children}</RouterPromptHandler>
         </ReactBrowserRouter>
     );

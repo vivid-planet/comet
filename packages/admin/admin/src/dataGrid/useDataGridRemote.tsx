@@ -3,7 +3,7 @@ import { type GridCallbackDetails } from "@mui/x-data-grid/models/api";
 import { type GridPaginationModel } from "@mui/x-data-grid/models/gridPaginationProps";
 import queryString from "query-string";
 import { useCallback, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 type UseDataGridRemoteReturnValue = {
     filterMode: DataGridProps["filterMode"];
@@ -33,7 +33,7 @@ export function useDataGridRemote({
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     initialFilter?: GridFilterModel;
 } = {}): UseDataGridRemoteReturnValue {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     // fallback states are used when query param in the Url is lost (e.g. when the user open an EditDialog that creates a new sub route)
@@ -55,14 +55,14 @@ export function useDataGridRemote({
 
     const onPaginationModelChange = useCallback(
         (model: GridPaginationModel, details: GridCallbackDetails) => {
-            history.replace({
-                ...location,
-                search: queryString.stringify({ ...parsedSearch, [pageParamName]: model.page, [pageSizeParamName]: model.pageSize }),
-            });
+            navigate(
+                { ...location, search: queryString.stringify({ ...parsedSearch, [pageParamName]: model.page, [pageSizeParamName]: model.pageSize }) },
+                { replace: true },
+            );
             setFallbackPage(model.page);
             setFallbackPageSize(model.pageSize);
         },
-        [history, location, pageParamName, pageSizeParamName, parsedSearch],
+        [navigate, location, pageParamName, pageSizeParamName, parsedSearch],
     );
 
     const sortModel =
@@ -87,10 +87,10 @@ export function useDataGridRemote({
     const handleSortModelChange = useCallback(
         (sortModel: GridSortModel) => {
             const sort = sortModel.length > 0 ? sortModel.map((i) => `${i.field}:${i.sort}`) : ["none"];
-            history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [sortParamName]: sort }) });
+            navigate({ ...location, search: queryString.stringify({ ...parsedSearch, [sortParamName]: sort }) }, { replace: true });
             setFallbackSort(sortModel);
         },
-        [history, location, parsedSearch, sortParamName],
+        [navigate, location, parsedSearch, sortParamName],
     );
 
     const filterModel = parsedSearch[filterParamName]
@@ -98,10 +98,13 @@ export function useDataGridRemote({
         : (fallbackFilter ?? initialFilter ?? { items: [] });
     const handleFilterChange = useCallback(
         (filterModel: GridFilterModel) => {
-            history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) });
+            navigate(
+                { ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) },
+                { replace: true },
+            );
             setFallbackFilter(filterModel);
         },
-        [history, location, parsedSearch, filterParamName],
+        [navigate, location, parsedSearch, filterParamName],
     );
 
     return {

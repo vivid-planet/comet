@@ -17,7 +17,7 @@ export const StackLink = forwardRef<HTMLAnchorElement, StackLinkProps>(
         const _switchApi = externalSwitchApi !== undefined ? externalSwitchApi : internalSwitchApi;
 
         return (
-            <RouterLink ref={ref} to={() => _switchApi.getTargetUrl(pageName, payload, subUrl)} {...props}>
+            <RouterLink ref={ref} to={_switchApi.getTargetUrl(pageName, payload, subUrl)} {...props}>
                 {children}
             </RouterLink>
         );

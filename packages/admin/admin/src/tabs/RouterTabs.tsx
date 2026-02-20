@@ -1,7 +1,7 @@
 import { type ComponentsOverrides, Tab as MuiTab, type TabProps as MuiTabProps, Tabs, type TabsProps } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, type SyntheticEvent } from "react";
-import { Route, useHistory, useRouteMatch } from "react-router-dom";
+import { Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, type SyntheticEvent, useContext } from "react";
+import { matchPath, UNSAFE_RouteContext, useLocation, useNavigate } from "react-router";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -74,9 +74,12 @@ export function RouterTabs(inProps: Props) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminRouterTabs" });
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const subRoutePrefix = useSubRoutePrefix();
-    const routeMatch = useRouteMatch();
+    const location = useLocation();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const routeMatchPath = currentMatch?.route?.path ?? currentMatch?.pathnameBase ?? "";
     const isActiveStackSwitch = useIsActiveStackSwitch();
 
     const childrenArr = Children.toArray(children);
@@ -85,7 +88,7 @@ export function RouterTabs(inProps: Props) {
         const paths = childrenArr.map((child) => {
             return isValidElement<TabProps>(child) ? child.props.path : null;
         });
-        history.push(deduplicateSlashesInUrl(subRoutePrefix + paths[value]));
+        navigate(deduplicateSlashesInUrl(subRoutePrefix + paths[value]));
     };
 
     const paths = childrenArr.map((child) => {
@@ -119,61 +122,54 @@ export function RouterTabs(inProps: Props) {
     return (
         <Root {...slotProps?.root} {...restProps}>
             {/* When inside a Stack show only the last TabBar */}
-            {isActiveStackSwitch && (
-                <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`)}>
-                    {({ match }) => {
-                        const routePath = match ? `/${match.params.tab}` : "";
-                        const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
-                        return (
-                            <StyledTabs
-                                value={value}
-                                onChange={handleChange}
-                                ScrollButtonComponent={ScrollButtonComponent}
-                                scrollButtons="auto"
-                                variant="scrollable"
-                                {...slotProps?.tabs}
-                                {...tabsProps}
-                            >
-                                {Children.map(children, (child) => {
-                                    if (!isValidElement<TabProps>(child)) {
-                                        return null;
-                                    }
-                                    const { path, forceRender, children, label, ...restTabProps } = child.props;
-                                    return <TabComponent label={label} {...restTabProps} />;
-                                })}
-                            </StyledTabs>
-                        );
-                    }}
-                </Route>
-            )}
+            {isActiveStackSwitch &&
+                (() => {
+                    const tabMatch = matchPath({ path: deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`), end: false }, location.pathname);
+                    const routePath = tabMatch ? `/${(tabMatch.params as Record<string, string>).tab}` : "";
+                    const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
+                    return (
+                        <StyledTabs
+                            value={value}
+                            onChange={handleChange}
+                            ScrollButtonComponent={ScrollButtonComponent}
+                            scrollButtons="auto"
+                            variant="scrollable"
+                            {...slotProps?.tabs}
+                            {...tabsProps}
+                        >
+                            {Children.map(children, (child) => {
+                                if (!isValidElement<TabProps>(child)) {
+                                    return null;
+                                }
+                                const { path, forceRender, children, label, ...restTabProps } = child.props;
+                                return <TabComponent label={label} {...restTabProps} />;
+                            })}
+                        </StyledTabs>
+                    );
+                })()}
             {Children.map(rearrangedChildren, (child) => {
                 if (!isValidElement<TabProps>(child)) {
                     return null;
                 }
-                const path = child.props.path != "" ? deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`) : routeMatch.path;
-                return (
-                    <Route path={path}>
-                        {({ match }) => {
-                            if (match && !foundFirstMatch) {
-                                foundFirstMatch = true;
-                                return (
-                                    <Content ownerState={{ contentHidden: false }} {...slotProps?.content}>
-                                        {child.props.children}
-                                    </Content>
-                                );
-                            } else if (child.props.forceRender) {
-                                return (
-                                    <Content ownerState={{ contentHidden: true }} {...slotProps?.content}>
-                                        {child.props.children}
-                                    </Content>
-                                );
-                            } else {
-                                // don't render tab contents
-                                return null;
-                            }
-                        }}
-                    </Route>
-                );
+                const path = child.props.path != "" ? deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`) : routeMatchPath;
+                const tabMatch = matchPath({ path, end: false }, location.pathname);
+                if (tabMatch && !foundFirstMatch) {
+                    foundFirstMatch = true;
+                    return (
+                        <Content ownerState={{ contentHidden: false }} {...slotProps?.content}>
+                            {child.props.children}
+                        </Content>
+                    );
+                } else if (child.props.forceRender) {
+                    return (
+                        <Content ownerState={{ contentHidden: true }} {...slotProps?.content}>
+                            {child.props.children}
+                        </Content>
+                    );
+                } else {
+                    // don't render tab contents
+                    return null;
+                }
             })}
         </Root>
     );

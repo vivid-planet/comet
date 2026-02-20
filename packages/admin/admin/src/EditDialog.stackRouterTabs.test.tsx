@@ -1,10 +1,9 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
-import { Router } from "react-router";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router";
 import { render, screen, waitFor, within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
@@ -70,6 +69,12 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                 {toolbarAction}
             </DataGridToolbar>
         );
+    }
+
+    let currentLocation: ReturnType<typeof useLocation> | null = null;
+    function LocationTracker() {
+        currentLocation = useLocation();
+        return null;
     }
 
     function EditDialogInStackTabs() {
@@ -160,12 +165,20 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
     }
 
     it("should not open edit dialog when navigating back to products page", async () => {
-        const history = createMemoryHistory();
-
         const rendered = render(
-            <Router history={history}>
-                <EditDialogInStackTabs />
-            </Router>,
+            <MemoryRouter>
+                <Routes>
+                    <Route
+                        path="*"
+                        element={
+                            <>
+                                <LocationTracker />
+                                <EditDialogInStackTabs />
+                            </>
+                        }
+                    />
+                </Routes>
+            </MemoryRouter>,
         );
 
         rendered.getByText("Products").click();
@@ -175,7 +188,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         });
         rendered.queryAllByTestId("edit.row")[5].click();
 
-        expect(history.location.pathname).toBe("/5/productEdit");
+        expect(currentLocation?.pathname).toBe("/5/productEdit");
         await waitFor(() => {
             expect(rendered.getByTestId("editPage.backButton")).toBeInTheDocument();
         });
@@ -183,7 +196,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         await waitFor(() => {
             expect(screen.getByText("Products")).toBeInTheDocument();
         });
-        expect(history.location.pathname).toBe("/index/products");
+        expect(currentLocation?.pathname).toBe("/index/products");
 
         // Check that the Edit Dialog is not open, there was a bug that was fixed
         // where the edit dialog was open when navigating to a page

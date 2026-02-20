@@ -1,4 +1,5 @@
-import { Redirect, Route, Switch } from "react-router";
+import { type ReactNode } from "react";
+import { matchPath, Navigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { cleanup, fireEvent, render, waitFor } from "test-utils";
 import { afterEach, expect, test } from "vitest";
@@ -9,25 +10,51 @@ import { useSubRoutePrefix } from "./SubRoute";
 
 afterEach(cleanup);
 
+/**
+ * Helper component that acts like a v5 Switch+Route.
+ */
+function SwitchRoutes({ children, routes }: { children?: ReactNode; routes: Array<{ path: string; element: ReactNode; exact?: boolean }> }) {
+    const location = useLocation();
+    for (const route of routes) {
+        if (matchPath({ path: route.path, end: route.exact ?? false }, location.pathname)) {
+            return <>{route.element}</>;
+        }
+    }
+    return <>{children}</>;
+}
+
+function MatchRoute({ path, children, exact }: { path: string; children: ReactNode; exact?: boolean }) {
+    const location = useLocation();
+    const match = matchPath({ path, end: exact ?? false }, location.pathname);
+    if (!match) return null;
+    return <>{children}</>;
+}
+
 test("Nested route in Prompt", async () => {
     function Story() {
         return (
-            <Switch>
-                <Route path="/foo">
-                    <RouterPrompt
-                        message={() => {
-                            return "sure?";
-                        }}
-                        subRoutePath="/foo/s"
-                    >
-                        <Link to="/foo/s/sub">subLink</Link>
-                        <Route path="/foo/s/sub">
-                            <div>sub</div>
-                        </Route>
-                    </RouterPrompt>
-                </Route>
-                <Redirect to="/foo" />
-            </Switch>
+            <SwitchRoutes
+                routes={[
+                    {
+                        path: "/foo",
+                        element: (
+                            <RouterPrompt
+                                message={() => {
+                                    return "sure?";
+                                }}
+                                subRoutePath="/foo/s"
+                            >
+                                <Link to="/foo/s/sub">subLink</Link>
+                                <MatchRoute path="/foo/s/sub">
+                                    <div>sub</div>
+                                </MatchRoute>
+                            </RouterPrompt>
+                        ),
+                    },
+                ]}
+            >
+                <Navigate to="/foo" replace />
+            </SwitchRoutes>
         );
     }
 
@@ -45,6 +72,8 @@ test("Nested route in Prompt", async () => {
 test("Nested dynamic route in Prompt", async () => {
     function FooPage() {
         const subRoutePrefix = useSubRoutePrefix();
+        const location = useLocation();
+        const subMatch = matchPath({ path: `${subRoutePrefix}/s/sub`, end: false }, location.pathname);
         return (
             <RouterPrompt
                 message={() => {
@@ -54,20 +83,22 @@ test("Nested dynamic route in Prompt", async () => {
             >
                 <Link to={`${subRoutePrefix}/s/sub`}>subLink</Link>
                 <Link to={`${subRoutePrefix}`}>back</Link>
-                <Route path={`${subRoutePrefix}/s/sub`}>
-                    <div>sub</div>
-                </Route>
+                {subMatch && <div>sub</div>}
             </RouterPrompt>
         );
     }
     function Story() {
         return (
-            <Switch>
-                <Route path="/foo/:param">
-                    <FooPage />
-                </Route>
-                <Redirect to="/foo/paramvalue" />
-            </Switch>
+            <SwitchRoutes
+                routes={[
+                    {
+                        path: "/foo/:param",
+                        element: <FooPage />,
+                    },
+                ]}
+            >
+                <Navigate to="/foo/paramvalue" replace />
+            </SwitchRoutes>
         );
     }
 
@@ -93,26 +124,32 @@ test("Nested dynamic route in Prompt", async () => {
 test("Nested route with non-sub-path route in Prompt", async () => {
     function Story() {
         return (
-            <Switch>
-                <Route path="/foo">
-                    <RouterPrompt
-                        message={() => {
-                            return "sure?";
-                        }}
-                        subRoutePath="/foo/s"
-                    >
-                        <Link to="/foo/s/sub">subLink</Link>
-                        <Link to="/foo">fooLink</Link>
-                        <Route path="/foo">
-                            <div>foo</div>
-                        </Route>
-                        <Route path="/foo/s/sub">
-                            <div>sub</div>
-                        </Route>
-                    </RouterPrompt>
-                </Route>
-                <Redirect to="/foo" />
-            </Switch>
+            <SwitchRoutes
+                routes={[
+                    {
+                        path: "/foo",
+                        element: (
+                            <RouterPrompt
+                                message={() => {
+                                    return "sure?";
+                                }}
+                                subRoutePath="/foo/s"
+                            >
+                                <Link to="/foo/s/sub">subLink</Link>
+                                <Link to="/foo">fooLink</Link>
+                                <MatchRoute path="/foo" exact>
+                                    <div>foo</div>
+                                </MatchRoute>
+                                <MatchRoute path="/foo/s/sub">
+                                    <div>sub</div>
+                                </MatchRoute>
+                            </RouterPrompt>
+                        ),
+                    },
+                ]}
+            >
+                <Navigate to="/foo" replace />
+            </SwitchRoutes>
         );
     }
 
@@ -138,19 +175,25 @@ test("Nested route with non-sub-path route in Prompt", async () => {
 test("route outside Prompt", async () => {
     function Story() {
         return (
-            <Switch>
-                <Route path="/" exact={true}>
-                    <RouterPrompt
-                        message={() => {
-                            return "sure?";
-                        }}
-                        subRoutePath="/s"
-                    >
-                        <Link to="/bar">barLink</Link>
-                    </RouterPrompt>
-                </Route>
-                <Route path="/bar">bar</Route>
-            </Switch>
+            <SwitchRoutes
+                routes={[
+                    {
+                        path: "/",
+                        exact: true,
+                        element: (
+                            <RouterPrompt
+                                message={() => {
+                                    return "sure?";
+                                }}
+                                subRoutePath="/s"
+                            >
+                                <Link to="/bar">barLink</Link>
+                            </RouterPrompt>
+                        ),
+                    },
+                    { path: "/bar", element: <>bar</> },
+                ]}
+            />
         );
     }
 
@@ -173,36 +216,44 @@ test("route outside Prompt", async () => {
 
 test("ForcePromptRoute", async () => {
     function Story() {
+        const location = useLocation();
+        const sub1Match = matchPath({ path: "/foo/sub1", end: false }, location.pathname);
         return (
-            <Switch>
-                <Route path="/foo">
-                    <RouterPrompt
-                        message={() => {
-                            return "sure?";
-                        }}
-                        subRoutePath="/foo"
-                    >
-                        <ul>
-                            <li>
-                                <Link to="/foo/sub1">/foo/sub1</Link> (no prompt)
-                            </li>
-                            <li>
-                                <Link to="/foo/sub2">/foo/sub2</Link> (force prompt)
-                            </li>
-                            <li>
-                                <Link to="/foo">/foo</Link> (back)
-                            </li>
-                        </ul>
-                        <Route path="/foo/sub1">
-                            <div>sub1</div>
-                        </Route>
-                        <ForcePromptRoute path="/foo/sub2">
-                            <div>sub2</div>
-                        </ForcePromptRoute>
-                    </RouterPrompt>
-                </Route>
-                <Redirect to="/foo" />
-            </Switch>
+            <SwitchRoutes
+                routes={[
+                    {
+                        path: "/foo",
+                        element: (
+                            <RouterPrompt
+                                message={() => {
+                                    return "sure?";
+                                }}
+                                subRoutePath="/foo"
+                            >
+                                <ul>
+                                    <li>
+                                        <Link to="/foo/sub1">/foo/sub1</Link> (no prompt)
+                                    </li>
+                                    <li>
+                                        <Link to="/foo/sub2">/foo/sub2</Link> (force prompt)
+                                    </li>
+                                    <li>
+                                        <Link to="/foo">/foo</Link> (back)
+                                    </li>
+                                </ul>
+                                {sub1Match && <div>sub1</div>}
+                                <ForcePromptRoute path="/foo/sub2">
+                                    <MatchRoute path="/foo/sub2">
+                                        <div>sub2</div>
+                                    </MatchRoute>
+                                </ForcePromptRoute>
+                            </RouterPrompt>
+                        ),
+                    },
+                ]}
+            >
+                <Navigate to="/foo" replace />
+            </SwitchRoutes>
         );
     }
     const rendered = render(<Story />);
