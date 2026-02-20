@@ -2,8 +2,7 @@ import { userEvent } from "@testing-library/user-event";
 import { cleanup, waitFor } from "test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
-import { type ColumnInsertData } from "../utils/column";
+import { createRteInput, mockStates } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfColumnAtIndex, getCellValuesPerColumn, renderTableBlock } from "./utils";
 
 afterEach(cleanup);
@@ -15,7 +14,7 @@ describe("TableBlock: Paste a column with different values", () => {
     });
 
     it("should paste a column with less values than rows in the table", async () => {
-        const rendered = renderTableBlock(mockBlockDataObjects.default);
+        const rendered = renderTableBlock(mockStates.default);
         const initialColumnHeaders = rendered.getAllByRole("columnheader");
         const originalCellValuesPerColumn = getCellValuesPerColumn(rendered);
 
@@ -26,11 +25,11 @@ describe("TableBlock: Paste a column with different values", () => {
             });
         };
 
-        const insertValues = ["Value 1", "Value 2"];
-        const insertData: ColumnInsertData = {
+        const insertTexts = ["Value 1", "Value 2"];
+        const insertData = {
             size: "standard",
             highlighted: false,
-            cellValues: insertValues,
+            cellValues: insertTexts.map(createRteInput),
         };
 
         await navigator.clipboard.writeText(JSON.stringify(insertData));
@@ -49,10 +48,10 @@ describe("TableBlock: Paste a column with different values", () => {
                 if (!isInsertedColumn) return;
 
                 newCellValues.forEach((newCellValue, index) => {
-                    const cellWasIncludedInInsertValues = index < insertValues.length;
+                    const cellWasIncludedInInsertValues = index < insertTexts.length;
 
                     if (cellWasIncludedInInsertValues) {
-                        expect(newCellValue).toBe(insertValues[index]);
+                        expect(newCellValue).toBe(insertTexts[index]);
                     } else {
                         expect(newCellValue).toBe("");
                     }
@@ -65,7 +64,7 @@ describe("TableBlock: Paste a column with different values", () => {
     });
 
     it("should paste a column with more values than rows in the table", async () => {
-        const rendered = renderTableBlock(mockBlockDataObjects.default);
+        const rendered = renderTableBlock(mockStates.default);
         const initialColumnHeaders = rendered.getAllByRole("columnheader");
         const originalCellValuesPerColumn = getCellValuesPerColumn(rendered);
         const pasteTargetColumnIndex = 0;
@@ -77,11 +76,11 @@ describe("TableBlock: Paste a column with different values", () => {
             });
         };
 
-        const insertValues = ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5", "Value 6", "Value 7", "Value 8"];
-        const insertData: ColumnInsertData = {
+        const insertTexts = ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5", "Value 6", "Value 7", "Value 8"];
+        const insertData = {
             size: "standard",
             highlighted: false,
-            cellValues: insertValues,
+            cellValues: insertTexts.map(createRteInput),
         };
 
         await navigator.clipboard.writeText(JSON.stringify(insertData));
@@ -91,11 +90,11 @@ describe("TableBlock: Paste a column with different values", () => {
         const newCellValuesPerColumn = getCellValuesPerColumn(rendered);
 
         newCellValuesPerColumn.forEach((newCellValues, columnIndex) => {
-            expect(newCellValues).toHaveLength(insertValues.length);
+            expect(newCellValues).toHaveLength(insertTexts.length);
             const isPastedColumn = columnIndex === pasteTargetColumnIndex + 1;
 
             if (isPastedColumn) {
-                expect(newCellValues).toEqual(insertValues);
+                expect(newCellValues).toEqual(insertTexts);
             } else {
                 newCellValues.forEach((newCellValue, rowIndex) => {
                     const isNewlyAddedCell = rowIndex >= originalCellValuesPerColumn[0].length;

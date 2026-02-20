@@ -1,12 +1,12 @@
 import { within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
-import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
+import { getPlainTextFromState, mockStates } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfRowAtIndex, renderTableBlock } from "./utils";
 
 describe("TableBlock: Duplicate a row", () => {
     it("should have a new row with the same values as the source row", async () => {
-        const initialBlockData = mockBlockDataObjects.default;
+        const initialBlockData = mockStates.default;
         const rendered = renderTableBlock(initialBlockData);
         const sourceRowIndex = 2;
 
@@ -23,7 +23,7 @@ describe("TableBlock: Duplicate a row", () => {
         const numberOfRowsAfterInsertingOne = initialBlockData.rows.length + 1;
         expect(rows).toHaveLength(numberOfRowsAfterInsertingOne);
 
-        const sourceRowValues = initialBlockData.rows[sourceRowIndex].cellValues.map((cellValue) => cellValue.value);
+        const sourceRowValues = initialBlockData.rows[sourceRowIndex].cellValues.map((cellValue) => getPlainTextFromState(cellValue.value));
 
         sourceRowValues.forEach((originalCellValueInSourceRow, index) => {
             const offsetForCellsWithActualContent = 1;
