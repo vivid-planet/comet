@@ -21,10 +21,10 @@ async function generateBlockMeta(): Promise<void> {
         supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, email: EmailLinkBlock, phone: PhoneLinkBlock },
     });
 
-    const TextBlock = createRichTextBlock({ link: LinkBlock });
+    const RichTextBlock = createRichTextBlock({ link: LinkBlock });
 
     // Create TextImageBlock for block types generation in client libraries
-    createTextImageBlock({ text: TextBlock });
+    createTextImageBlock({ text: RichTextBlock });
 
     // Create TextLinkBlock for block types generation in client libraries
     createTextLinkBlock({ link: LinkBlock });
@@ -33,7 +33,7 @@ async function generateBlockMeta(): Promise<void> {
     createSeoBlock();
 
     // Create TableBlock for block types generation in client libraries
-    createTableBlock({});
+    createTableBlock({ richText: RichTextBlock });
 
     const metaJson = getBlocksMeta();
     await fs.writeFile("block-meta.json", JSON.stringify(metaJson, null, 4));
