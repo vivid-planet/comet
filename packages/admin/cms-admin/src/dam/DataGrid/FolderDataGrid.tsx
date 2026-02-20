@@ -16,9 +16,16 @@ import {
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { Info } from "@comet/admin-icons";
+import { Info as InfoIcon } from "@comet/admin-icons";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
+import {
+    DataGrid,
+    GridColumnHeaderTitle,
+    type GridRowClassNameParams,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
+    useGridApiRef,
+} from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
@@ -554,19 +561,29 @@ const FolderDataGrid = ({
             headerAlign: "right",
             align: "right",
             minWidth: 100,
-            renderHeader: ({ colDef }) => (
-                <>
-                    <span className="MuiDataGrid-columnHeaderTitle">{colDef.headerName}</span>
-                    <Tooltip
-                        title={intl.formatMessage({
-                            id: "comet.dam.file.usages.tooltip",
-                            defaultMessage: "This value might be slightly outdated",
-                        })}
-                    >
-                        <Info sx={{ fontSize: 16, color: "text.secondary", ml: "4px" }} />
-                    </Tooltip>
-                </>
-            ),
+            renderHeader: (props) => {
+                return (
+                    <>
+                        <GridColumnHeaderTitle
+                            label={intl.formatMessage({
+                                id: "comet.dam.file.usages",
+                                defaultMessage: "Usages",
+                            })}
+                            columnWidth={150}
+                        />
+                        <Tooltip
+                            title={
+                                <FormattedMessage
+                                    id="comet.dam.file.usages.tooltip"
+                                    defaultMessage="Cached for performance, can be slightly outdated"
+                                />
+                            }
+                        >
+                            <InfoIcon sx={{ marginLeft: 1 }} />
+                        </Tooltip>
+                    </>
+                );
+            },
             renderCell: ({ row }) => {
                 if (isFile(row)) {
                     return row.dependents.totalCount;
