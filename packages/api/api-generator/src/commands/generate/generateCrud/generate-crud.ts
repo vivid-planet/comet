@@ -448,6 +448,14 @@ export function generateInputHandling(
 
     const imports: Imports = [];
 
+    if (blockProps.length > 0) {
+        blockProps.forEach((prop) => {
+            const blockName = findBlockName(prop.name, metadata);
+            const importPath = findBlockImportPath(blockName, generatorOptions.targetDirectory, metadata);
+            imports.push({ name: blockName, importPath });
+        });
+    }
+
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
     const relationManyToOneProps = props.filter((prop) => prop.kind === "m:1");
@@ -531,7 +539,12 @@ export function generateInputHandling(
         }
         ${
             options.mode == "create" || options.mode == "updateNested"
-                ? blockProps.map((prop) => `${prop.name}: ${prop.name}Input.transformToBlockData(),`).join("")
+                ? blockProps
+                      .map((prop) => {
+                          const blockName = findBlockName(prop.name, metadata);
+                          return `${prop.name}: ${blockName}.blockDataFactory(${prop.name}Input.toPlain()),`;
+                      })
+                      .join("")
                 : ""
         }
 });
@@ -624,12 +637,13 @@ ${
 ${
     options.mode == "update"
         ? blockProps
-              .map(
-                  (prop) => `
+              .map((prop) => {
+                  const blockName = findBlockName(prop.name, metadata);
+                  return `
                     if (${prop.name}Input) {
-                        ${instanceNameSingular}.${prop.name} = ${prop.name}Input.transformToBlockData();
-                    }`,
-              )
+                        ${instanceNameSingular}.${prop.name} = ${blockName}.blockDataFactory(${prop.name}Input.toPlain());
+                    }`;
+              })
               .join("")
         : ""
 }
