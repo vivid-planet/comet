@@ -4,7 +4,7 @@ exports[`GenerateCrudInputJsonImport should generate import for array class prop
 "import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
-import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { ExtractBlockInput, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import {
     IsArray,
     IsBoolean,
@@ -39,7 +39,7 @@ exports[`GenerateCrudInputJsonImport should generate import for array type prope
 "import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
-import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { ExtractBlockInput, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import {
     IsArray,
     IsBoolean,
@@ -73,7 +73,7 @@ exports[`GenerateCrudInputJsonImport should generate import for class property 1
 "import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
-import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { ExtractBlockInput, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import {
     IsArray,
     IsBoolean,
@@ -108,7 +108,7 @@ exports[`GenerateCrudInputJsonImport should generate import for type property 1`
 "import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
-import { BlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { ExtractBlockInput, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import {
     IsArray,
     IsBoolean,
