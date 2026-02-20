@@ -78,7 +78,7 @@ export async function generateCrudInput(
         { name: "RootBlockInputScalar", importPath: "@comet/cms-api" },
         { name: "IsNullable", importPath: "@comet/cms-api" },
         { name: "PartialType", importPath: "@comet/cms-api" },
-        { name: "BlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "ExtractBlockInput", importPath: "@comet/cms-api" },
         { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
         { name: "IsString", importPath: "class-validator" },
         { name: "IsNotEmpty", importPath: "class-validator" },
@@ -209,7 +209,7 @@ export async function generateCrudInput(
                 `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockName}.blockInputFactory(value)), { toClassOnly: true })`,
             );
             decorators.push("@ValidateNested()");
-            type = "BlockInputInterface";
+            type = `ExtractBlockInput<typeof ${blockName}>`;
         } else if (prop.kind == "m:1") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined);
