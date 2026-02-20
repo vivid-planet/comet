@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GenerateCrudBlockField should generate correct input and resolver for block fields: TestEntityWithBlockInput 1`] = `
+"@InputType()
+export class TestEntityWithBlockInput {
+    @IsNotEmpty()
+    @IsString()
+    @Field()
+    title: string;
+
+    @IsNotEmpty()
+    @Field(() => RootBlockInputScalar(TestBlock))
+    @Transform(({ value }) => (isBlockInputInterface(value) ? value : TestBlock.blockInputFactory(value)), { toClassOnly: true })
+    @ValidateNested()
+    content: ExtractBlockInput<typeof TestBlock>;
+}"
+`;
+
+exports[`GenerateCrudBlockField should generate correct input and resolver for block fields: TestEntityWithBlockResolver 1`] = `
+"@Resolver(() => TestEntityWithBlock)
+@RequiredPermission("crud", { skipScopeCheck: true })
+export class TestEntityWithBlockResolver {
+    constructor(
+        protected readonly entityManager: EntityManager,
+        private readonly blocksTransformer: BlocksTransformerService,
+    ) {}
+
+    @Query(() => TestEntityWithBlock)
+    @AffectedEntity(TestEntityWithBlock)
+    async testEntityWithBlock(@Args("id", { type: () => ID }) id: string): Promise<TestEntityWithBlock> {
+        const testEntityWithBlock = await this.entityManager.findOneOrFail(TestEntityWithBlock, id);
+        return testEntityWithBlock;
+    }
+
+    @Query(() => PaginatedTestEntityWithBlocks)
+    async testEntityWithBlocks(@Args() { search, filter, sort, offset, limit }: TestEntityWithBlocksArgs): Promise<PaginatedTestEntityWithBlocks> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(TestEntityWithBlock));
+
+        const options: FindOptions<TestEntityWithBlock> = { offset, limit };
+
+        if (sort) {
+            options.orderBy = gqlSortToMikroOrmOrderBy(sort);
+        }
+
+        const [entities, totalCount] = await this.entityManager.findAndCount(TestEntityWithBlock, where, options);
+        return new PaginatedTestEntityWithBlocks(entities, totalCount);
+    }
+
+    @Mutation(() => TestEntityWithBlock)
+    async createTestEntityWithBlock(
+        @Args("input", { type: () => TestEntityWithBlockInput }) input: TestEntityWithBlockInput,
+    ): Promise<TestEntityWithBlock> {
+        const { content: contentInput, ...assignInput } = input;
+        const testEntityWithBlock = this.entityManager.create(TestEntityWithBlock, {
+            ...assignInput,
+
+            content: TestBlock.blockDataFactory(contentInput.toPlain()),
+        });
+
+        await this.entityManager.flush();
+
+        return testEntityWithBlock;
+    }
+
+    @Mutation(() => TestEntityWithBlock)
+    @AffectedEntity(TestEntityWithBlock)
+    async updateTestEntityWithBlock(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("input", { type: () => TestEntityWithBlockUpdateInput }) input: TestEntityWithBlockUpdateInput,
+    ): Promise<TestEntityWithBlock> {
+        const testEntityWithBlock = await this.entityManager.findOneOrFail(TestEntityWithBlock, id);
+
+        const { content: contentInput, ...assignInput } = input;
+        testEntityWithBlock.assign({
+            ...assignInput,
+        });
+
+        if (contentInput) {
+            testEntityWithBlock.content = TestBlock.blockDataFactory(contentInput.toPlain());
+        }
+
+        await this.entityManager.flush();
+
+        return testEntityWithBlock;
+    }
+
+    @Mutation(() => Boolean)
+    @AffectedEntity(TestEntityWithBlock)
+    async deleteTestEntityWithBlock(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+        const testEntityWithBlock = await this.entityManager.findOneOrFail(TestEntityWithBlock, id);
+        this.entityManager.remove(testEntityWithBlock);
+
+        await this.entityManager.flush();
+        return true;
+    }
+
+    @ResolveField(() => RootBlockDataScalar(TestBlock))
+    async content(@Parent() testEntityWithBlock: TestEntityWithBlock): Promise<object> {
+        return this.blocksTransformer.transformToPlain(testEntityWithBlock.content);
+    }
+}"
+`;
