@@ -15,7 +15,7 @@ import {
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { matchPath, Route, Switch, useLocation } from "react-router";
+import { matchPath, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -30,7 +30,7 @@ const AppMenu = () => {
 
     let useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
-    if (matchPath(location.pathname, { path: pathsToAlwaysUseTemporaryMenu, strict: true })) {
+    if (pathsToAlwaysUseTemporaryMenu.some((path) => matchPath({ path, end: true }, location.pathname))) {
         useTemporaryMenu = true;
     }
 
@@ -122,19 +122,24 @@ export default {
 };
 
 export const MenuDynamicVariants = {
-    render: () => (
-        <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
-            <Switch>
-                <Route path="/" exact render={() => <Content>Root</Content>} />
-                <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
-                <Route path="/settings" render={() => <Content>Settings</Content>} />
-                <Route path="/foo1" render={() => <Content>Foo 1</Content>} />
-                <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
-                <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
-                <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
-            </Switch>
-        </MasterLayout>
-    ),
+    render: () => {
+        const location = useLocation();
+        const routes: { path: string; exact?: boolean; content: string }[] = [
+            { path: "/", exact: true, content: "Root" },
+            { path: "/dashboard", content: "Dashboard" },
+            { path: "/settings", content: "Settings" },
+            { path: "/foo1", content: "Foo 1" },
+            { path: "/foo2", content: "Foo 2" },
+            { path: "/foo3", content: "Foo 3" },
+            { path: "/foo4", content: "Foo 4" },
+        ];
+        const matchedRoute = routes.find(({ path, exact }) => matchPath({ path, end: !!exact }, location.pathname));
+        return (
+            <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
+                {matchedRoute ? <Content>{matchedRoute.content}</Content> : null}
+            </MasterLayout>
+        );
+    },
 
     name: "Menu (dynamic variants)",
     parameters: { layout: "fullscreen" },

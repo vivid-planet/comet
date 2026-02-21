@@ -1,6 +1,6 @@
 import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -54,14 +54,9 @@ export default {
 };
 
 export const StackNestedOnInitialPage = () => {
-    return (
-        <Switch>
-            <Route exact path="/">
-                <Redirect to="/foo" />
-            </Route>
-            <Route path="/foo">
-                <Story />
-            </Route>
-        </Switch>
-    );
+    const location = useLocation();
+    if (matchPath({ path: "/", end: true }, location.pathname)) {
+        return <Navigate to="/foo" replace />;
+    }
+    return <Story />;
 };

@@ -1,64 +1,55 @@
 import { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "@comet/admin";
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Cmp1() {
     const urlPrefix = useSubRoutePrefix();
-    return (
-        <Switch>
-            <Route path={`${urlPrefix}/sub`}>
-                <div>Cmp1 Sub</div>
-            </Route>
-            <SubRouteIndexRoute>
-                <div>
-                    <Link to={`${urlPrefix}/sub`}>Cmp1 SubLink</Link>
-                </div>
-            </SubRouteIndexRoute>
-        </Switch>
+    const location = useLocation();
+    return matchPath({ path: `${urlPrefix}/sub`, end: false }, location.pathname) ? (
+        <div>Cmp1 Sub</div>
+    ) : (
+        <SubRouteIndexRoute>
+            <div>
+                <Link to={`${urlPrefix}/sub`}>Cmp1 SubLink</Link>
+            </div>
+        </SubRouteIndexRoute>
     );
 }
 
 function Cmp2() {
     const urlPrefix = useSubRoutePrefix();
-    return (
-        <Switch>
-            <Route path={`${urlPrefix}/sub`}>
-                <div>
-                    <Link to={`${urlPrefix}/sub`}>Sub</Link>
-                    <br />
-                    <Link to={`${urlPrefix}/sub/sub2`}>Sub2</Link>
-                </div>
-                <Switch>
-                    <Route path={`${urlPrefix}/sub/sub2`}>
-                        <div>Cmp2 Sub2</div>
-                    </Route>
-                    <Route>
-                        <div>Cmp2 Sub</div>
-                    </Route>
-                </Switch>
-            </Route>
-            <SubRouteIndexRoute>
-                <div>
-                    <Link to={`${urlPrefix}/sub`}>Cmp2 SubLink</Link>
-                </div>
-            </SubRouteIndexRoute>
-        </Switch>
+    const location = useLocation();
+    return matchPath({ path: `${urlPrefix}/sub`, end: false }, location.pathname) ? (
+        <>
+            <div>
+                <Link to={`${urlPrefix}/sub`}>Sub</Link>
+                <br />
+                <Link to={`${urlPrefix}/sub/sub2`}>Sub2</Link>
+            </div>
+            {matchPath({ path: `${urlPrefix}/sub/sub2`, end: false }, location.pathname) ? <div>Cmp2 Sub2</div> : <div>Cmp2 Sub</div>}
+        </>
+    ) : (
+        <SubRouteIndexRoute>
+            <div>
+                <Link to={`${urlPrefix}/sub`}>Cmp2 SubLink</Link>
+            </div>
+        </SubRouteIndexRoute>
     );
 }
 
 function Story() {
-    const match = useRouteMatch();
+    const urlPrefix = useSubRoutePrefix();
     return (
         <div>
-            <SubRoute path={`${match.url}/cmp1`}>
+            <SubRoute path={`${urlPrefix}/cmp1`}>
                 <div>
                     <Cmp1 />
                 </div>
             </SubRoute>
-            <SubRoute path={`${match.url}/cmp2`}>
+            <SubRoute path={`${urlPrefix}/cmp2`}>
                 <div>
                     <Cmp2 />
                 </div>
@@ -85,17 +76,11 @@ export default {
 };
 
 export const Subroute = () => {
+    const location = useLocation();
     return (
         <>
             <Path />
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/foo" />
-                </Route>
-                <Route path="/foo">
-                    <Story />
-                </Route>
-            </Switch>
+            {matchPath({ path: "/", end: true }, location.pathname) ? <Navigate to="/foo" replace /> : <Story />}
         </>
     );
 };

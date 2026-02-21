@@ -1,6 +1,6 @@
 import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { useState } from "react";
-import { Redirect, Route, Switch } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -91,17 +91,11 @@ export default {
 };
 
 export const _StackPageTitle = () => {
+    const location = useLocation();
     return (
         <div>
             <p>This story is mainly for testing the StackPageTitle component under various situations.</p>
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/foo" />
-                </Route>
-                <Route path="/foo">
-                    <Story />
-                </Route>
-            </Switch>
+            {matchPath({ path: "/", end: true }, location.pathname) ? <Navigate to="/foo" replace /> : <Story />}
         </div>
     );
 };

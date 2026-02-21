@@ -1,32 +1,26 @@
 import { RouterPrompt } from "@comet/admin";
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
-    return (
-        <Switch>
-            <Route path="/foo">
-                <RouterPrompt
-                    message={() => {
-                        return "sure?";
-                    }}
-                    subRoutePath="/foo/s"
-                >
-                    <Link to="/foo/s/sub">subLink</Link>
-                    <Link to="/foo">fooLink</Link>
-                    <Route path="/foo">
-                        <div>foo</div>
-                    </Route>
-                    <Route path="/foo/s/sub">
-                        <div>sub</div>
-                    </Route>
-                </RouterPrompt>
-            </Route>
-            <Redirect to="/foo" />
-        </Switch>
+    const location = useLocation();
+    return matchPath({ path: "/foo", end: false }, location.pathname) ? (
+        <RouterPrompt
+            message={() => {
+                return "sure?";
+            }}
+            subRoutePath="/foo/s"
+        >
+            <Link to="/foo/s/sub">subLink</Link>
+            <Link to="/foo">fooLink</Link>
+            {matchPath({ path: "/foo", end: true }, location.pathname) && <div>foo</div>}
+            {matchPath({ path: "/foo/s/sub", end: false }, location.pathname) && <div>sub</div>}
+        </RouterPrompt>
+    ) : (
+        <Navigate to="/foo" replace />
     );
 }
 
