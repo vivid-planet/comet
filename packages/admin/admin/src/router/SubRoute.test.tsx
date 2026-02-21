@@ -175,7 +175,11 @@ test("Route below Subroute", async () => {
         return (
             <>
                 <Link to={`${urlPrefix}/sub`}>Sub</Link>
-                {isSubMatch && <Cmp2 />}
+                {isSubMatch && (
+                    <SubRoute path={`${urlPrefix}/sub`}>
+                        <Cmp2 />
+                    </SubRoute>
+                )}
             </>
         );
     }

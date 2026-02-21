@@ -15,7 +15,7 @@ export function SubRouteIndexRoute({ children }: { children?: ReactNode | ((matc
 
     const matchIndex = matchPath({ path: matchUrl, end: true }, location.pathname);
     const path = matchIndex ? matchUrl : urlPrefix;
-    const match = matchPath({ path, end: !matchIndex }, location.pathname);
+    const match = matchPath({ path, end: !!matchIndex }, location.pathname);
 
     return (
         <SubRoute path={`${urlPrefix}/index`}>{typeof children === "function" ? <>{children(match)}</> : match ? <>{children}</> : null}</SubRoute>
