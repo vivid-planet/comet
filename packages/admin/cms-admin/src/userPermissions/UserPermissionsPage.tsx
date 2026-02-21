@@ -1,8 +1,9 @@
 import { MainContent, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
+import { useContext } from "react";
 import { FormattedMessage } from "react-intl";
-import { useRouteMatch } from "react-router";
+import { UNSAFE_RouteContext } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
@@ -16,8 +17,10 @@ import { UserPermissionsUserGrid } from "./UserGrid";
 export const UserPermissionsPage = () => {
     const isAllowed = useUserPermissionCheck();
     const { match } = useContentScope();
-    const routeMatch = useRouteMatch();
-    const location = routeMatch.url.replace(match.url, "");
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentRouteMatch = routeContext.matches[routeContext.matches.length - 1];
+    const routeMatchUrl = currentRouteMatch?.pathnameBase ?? "";
+    const location = routeMatchUrl.replace(match.url, "");
     useContentScopeConfig({ redirectPathAfterChange: location });
 
     return (

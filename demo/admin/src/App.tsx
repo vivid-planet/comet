@@ -23,7 +23,7 @@ import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { Route, Switch } from "react-router";
+import { matchPath, useLocation } from "react-router";
 
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
@@ -51,6 +51,27 @@ const GlobalStyle = () => (
 );
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
+
+function ContentScopeRoutes({ match }: { match: { pathnameBase: string } }) {
+    const location = useLocation();
+    const isPreview = !!matchPath({ path: `${match.pathnameBase}/preview`, end: false }, location.pathname);
+
+    if (isPreview) {
+        return (
+            <SitePreview
+                resolvePath={(path: string, scope) => {
+                    return `/${scope.language}${path}`;
+                }}
+            />
+        );
+    }
+
+    return (
+        <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+            <AppMasterMenuRoutes />
+        </MasterLayout>
+    );
+}
 
 declare module "@comet/cms-admin" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -155,30 +176,7 @@ export function App() {
                                         <CurrentUserProvider>
                                             <RouterBrowserRouter>
                                                 <GlobalStyle />
-                                                <ContentScopeProvider>
-                                                    {({ match }) => (
-                                                        <Switch>
-                                                            <Route
-                                                                path={`${match.path}/preview`}
-                                                                render={(props) => (
-                                                                    <SitePreview
-                                                                        resolvePath={(path: string, scope) => {
-                                                                            return `/${scope.language}${path}`;
-                                                                        }}
-                                                                        {...props}
-                                                                    />
-                                                                )}
-                                                            />
-                                                            <Route
-                                                                render={() => (
-                                                                    <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                        <AppMasterMenuRoutes />
-                                                                    </MasterLayout>
-                                                                )}
-                                                            />
-                                                        </Switch>
-                                                    )}
-                                                </ContentScopeProvider>
+                                                <ContentScopeProvider>{({ match }) => <ContentScopeRoutes match={match} />}</ContentScopeProvider>
                                             </RouterBrowserRouter>
                                         </CurrentUserProvider>
                                     </SnackbarProvider>

@@ -1,12 +1,13 @@
-import { type ReactNode } from "react";
-import { Route, useRouteMatch } from "react-router";
+import { type ReactNode, useContext } from "react";
+import { matchPath, UNSAFE_RouteContext, useLocation } from "react-router";
 
 export const HiddenInSubroute = ({ children }: { children?: ReactNode }) => {
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
+    const location = useLocation();
+    const isExact = !!matchPath({ path: matchUrl, end: true }, location.pathname);
 
-    return (
-        <Route path={match.url} exact>
-            {children}
-        </Route>
-    );
+    if (!isExact) return null;
+    return <>{children}</>;
 };

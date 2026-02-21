@@ -1,6 +1,6 @@
 import { useStoredState } from "@comet/admin";
-import { useEffect, useRef } from "react";
-import { Redirect, useLocation, useRouteMatch } from "react-router";
+import { useContext, useEffect, useRef } from "react";
+import { matchPath, Navigate, UNSAFE_RouteContext, useLocation } from "react-router";
 
 interface RedirectToPersistedDamLocationProps {
     stateKey: string;
@@ -8,7 +8,10 @@ interface RedirectToPersistedDamLocationProps {
 
 export const RedirectToPersistedDamLocation = ({ stateKey }: RedirectToPersistedDamLocationProps) => {
     const location = useLocation();
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
+    const isExact = !!matchPath({ path: matchUrl, end: true }, location.pathname);
 
     const isInitialRender = useRef(true);
     const [persistedDamLocation, setPersistedDamLocation] = useStoredState<string>(stateKey, location.pathname, window.sessionStorage);
@@ -25,9 +28,9 @@ export const RedirectToPersistedDamLocation = ({ stateKey }: RedirectToPersisted
         // the redirect should only happen on initial render
         isInitialRender.current &&
         // only redirect on exact match ("/" in image block and "/{domain}/{lang}/assets" in DAM)
-        match.isExact
+        isExact
     ) {
-        return <Redirect to={persistedDamLocation} />;
+        return <Navigate to={persistedDamLocation} replace />;
     }
 
     return null;

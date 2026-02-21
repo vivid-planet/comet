@@ -18,8 +18,9 @@ import {
     useSiteConfig,
 } from "@comet/cms-admin";
 import { IconButton, Stack } from "@mui/material";
+import { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useRouteMatch } from "react-router";
+import { matchPath, UNSAFE_RouteContext, useLocation } from "react-router";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { SeoBlock } from "./blocks/SeoBlock";
@@ -101,7 +102,10 @@ export const EditPage = ({ id }: Props) => {
         pageId: id,
     });
 
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
+    const matchRoutePath = currentMatch?.route?.path ?? "";
     const stackApi = useStackApi();
     const { match: contentScopeMatch, scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
@@ -109,7 +113,8 @@ export const EditPage = ({ id }: Props) => {
 
     const blockContext = useBlockContext();
 
-    const tabRouteMatch = useRouteMatch<{ tab: string }>(`${match.path}/:tab`);
+    const location = useLocation();
+    const tabRouteMatch = matchPath({ path: `${matchRoutePath}/:tab`, end: false }, location.pathname);
 
     if (pageState == null || pageState.document == null) {
         return null;
@@ -126,14 +131,14 @@ export const EditPage = ({ id }: Props) => {
         previewUrl = `${siteConfig.blockPreviewBaseUrl}/stage`;
         previewState = StageBlock.createPreviewState(pageState.document.stage, {
             ...blockContext,
-            parentUrl: `${match.url}/stage`,
+            parentUrl: `${matchUrl}/stage`,
             showVisibleOnly: previewApi.showOnlyVisible,
         });
     } else {
         previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
         previewState = PageContentBlock.createPreviewState(pageState.document.content, {
             ...blockContext,
-            parentUrl: match.url,
+            parentUrl: matchUrl,
             showVisibleOnly: previewApi.showOnlyVisible,
         });
     }
@@ -152,7 +157,7 @@ export const EditPage = ({ id }: Props) => {
                 {hasChanges && (
                     <RouterPrompt
                         message={(location) => {
-                            if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                            if (location.pathname.startsWith(matchUrl)) return true; //we navigated within our self
                             return intl.formatMessage({
                                 id: "editPage.discardChanges",
                                 defaultMessage: "Discard unsaved changes?",

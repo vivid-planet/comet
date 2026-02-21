@@ -1,8 +1,8 @@
 import { Box, Divider } from "@mui/material";
 import isEqual from "lodash.isequal";
-import { type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useContext } from "react";
 import { type MessageDescriptor } from "react-intl";
-import { Route, useRouteMatch } from "react-router";
+import { matchPath, UNSAFE_RouteContext, useLocation } from "react-router";
 
 import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { Collapsible } from "../common/Collapsible";
@@ -100,7 +100,11 @@ export function createOptionalBlock<T extends BlockInterface>(
         definesOwnTitle: true,
 
         AdminComponent: ({ state, updateState }) => {
-            const match = useRouteMatch();
+            const routeContext = useContext(UNSAFE_RouteContext);
+            const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+            const matchUrl = currentMatch?.pathnameBase ?? "";
+            const location = useLocation();
+            const isExact = !!matchPath({ path: matchUrl, end: true }, location.pathname);
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const updateSubBlocksFn: Dispatch<SetStateAction<any>> = (setStateAction) => {
@@ -110,66 +114,57 @@ export function createOptionalBlock<T extends BlockInterface>(
                 }));
             };
 
-            return (
-                <Route path={match.url}>
-                    {({ match }) =>
-                        match?.isExact ? (
-                            <BlockAdminComponentPaper disablePadding>
-                                <Collapsible
-                                    open={state.visible}
-                                    header={<CollapsibleSwitchButtonHeader checked={state.visible} title={options?.title} />}
-                                    onChange={(open) => {
-                                        updateState((prevState) => {
-                                            if (open) {
-                                                // we need the default state of the decorated block now
-                                                if (!prevState.block) {
-                                                    return {
-                                                        ...prevState,
-                                                        block: decoratedBlock.defaultValues(),
-                                                        visible: open,
-                                                    };
-                                                } else {
-                                                    return {
-                                                        ...prevState,
-                                                        visible: open,
-                                                    };
-                                                }
-                                            } else {
-                                                // decorated block is turned off, clean up the state of decorated block
-                                                // we do not save the default state
-                                                if (isEqual(decoratedBlock.defaultValues(), prevState.block)) {
-                                                    return {
-                                                        ...prevState,
-                                                        block: undefined,
-                                                        visible: open,
-                                                    };
-                                                } else {
-                                                    return {
-                                                        ...prevState,
-                                                        visible: open,
-                                                    };
-                                                }
-                                            }
-                                        });
-                                    }}
-                                >
-                                    <Divider />
-                                    <Box padding={decoratedBlock.definesOwnPadding ? 0 : 3}>
-                                        <decoratedBlock.AdminComponent
-                                            updateState={updateSubBlocksFn}
-                                            state={state.block ? state.block : decoratedBlock.defaultValues()}
-                                        />
-                                    </Box>
-                                </Collapsible>
-                            </BlockAdminComponentPaper>
-                        ) : (
+            return isExact ? (
+                <BlockAdminComponentPaper disablePadding>
+                    <Collapsible
+                        open={state.visible}
+                        header={<CollapsibleSwitchButtonHeader checked={state.visible} title={options?.title} />}
+                        onChange={(open) => {
+                            updateState((prevState) => {
+                                if (open) {
+                                    // we need the default state of the decorated block now
+                                    if (!prevState.block) {
+                                        return {
+                                            ...prevState,
+                                            block: decoratedBlock.defaultValues(),
+                                            visible: open,
+                                        };
+                                    } else {
+                                        return {
+                                            ...prevState,
+                                            visible: open,
+                                        };
+                                    }
+                                } else {
+                                    // decorated block is turned off, clean up the state of decorated block
+                                    // we do not save the default state
+                                    if (isEqual(decoratedBlock.defaultValues(), prevState.block)) {
+                                        return {
+                                            ...prevState,
+                                            block: undefined,
+                                            visible: open,
+                                        };
+                                    } else {
+                                        return {
+                                            ...prevState,
+                                            visible: open,
+                                        };
+                                    }
+                                }
+                            });
+                        }}
+                    >
+                        <Divider />
+                        <Box padding={decoratedBlock.definesOwnPadding ? 0 : 3}>
                             <decoratedBlock.AdminComponent
                                 updateState={updateSubBlocksFn}
                                 state={state.block ? state.block : decoratedBlock.defaultValues()}
                             />
-                        )
-                    }
-                </Route>
+                        </Box>
+                    </Collapsible>
+                </BlockAdminComponentPaper>
+            ) : (
+                <decoratedBlock.AdminComponent updateState={updateSubBlocksFn} state={state.block ? state.block : decoratedBlock.defaultValues()} />
             );
         },
         previewContent: ({ block, visible }, ctx) => {

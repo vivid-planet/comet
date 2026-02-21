@@ -3,8 +3,9 @@ import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@co
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
+import { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useRouteMatch } from "react-router";
+import { UNSAFE_RouteContext } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
@@ -34,8 +35,10 @@ const DataGridContainer = styled("div")`
 
 export function PublisherPage() {
     const { match } = useContentScope();
-    const routeMatch = useRouteMatch();
-    const location = routeMatch.url.replace(match.url, "");
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentRouteMatch = routeContext.matches[routeContext.matches.length - 1];
+    const routeMatchUrl = currentRouteMatch?.pathnameBase ?? "";
+    const location = routeMatchUrl.replace(match.url, "");
     useContentScopeConfig({ redirectPathAfterChange: location });
 
     const intl = useIntl();

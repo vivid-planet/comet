@@ -49,7 +49,7 @@ import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Redirect, type RouteComponentProps } from "react-router";
+import { Navigate, useParams } from "react-router";
 
 import { EditPageNode } from "./EditPageNode";
 
@@ -59,6 +59,38 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Link,
     PredefinedPage,
 };
+
+function PageTreeCategoryRoute() {
+    const { category: categoryParam = "" } = useParams<{ category: string }>();
+    const category = urlParamToCategory(categoryParam);
+
+    if (category === undefined) {
+        return <Navigate to="dashboard" replace />;
+    }
+
+    return (
+        <PagesPage
+            path={`/pages/pagetree/${categoryParam}`}
+            documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+                if (category === "TopMenu") {
+                    return {
+                        Page,
+                        PredefinedPage,
+                    };
+                }
+
+                return {
+                    Page,
+                    PredefinedPage,
+                    Link,
+                };
+            }}
+            editPageNode={EditPageNode}
+            category={category}
+            renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
+        />
+    );
+}
 
 const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoContactConfig }): MasterMenuData => {
     const BrevoContactsPage = createBrevoContactsPage({
@@ -110,36 +142,7 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
             })),
             route: {
                 path: "/pages/pagetree/:category",
-                render: ({ match }: RouteComponentProps<{ category: string }>) => {
-                    const category = urlParamToCategory(match.params.category);
-
-                    if (category === undefined) {
-                        return <Redirect to={`${match.url}/dashboard`} />;
-                    }
-
-                    return (
-                        <PagesPage
-                            path={`/pages/pagetree/${match.params.category}`}
-                            documentTypes={(category): Record<DocumentType, DocumentInterface> => {
-                                if (category === "TopMenu") {
-                                    return {
-                                        Page,
-                                        PredefinedPage,
-                                    };
-                                }
-
-                                return {
-                                    Page,
-                                    PredefinedPage,
-                                    Link,
-                                };
-                            }}
-                            editPageNode={EditPageNode}
-                            category={category}
-                            renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
-                        />
-                    );
-                },
+                render: () => <PageTreeCategoryRoute />,
             },
             requiredPermission: "pageTree",
         },

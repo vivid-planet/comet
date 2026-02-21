@@ -11,8 +11,9 @@ import {
     useContentScope,
 } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
+import { useContext } from "react";
 import { FormattedMessage } from "react-intl";
-import { useRouteMatch } from "react-router";
+import { UNSAFE_RouteContext } from "react-router";
 
 import { useBrevoConfig } from "../../common/BrevoConfigProvider";
 import { emailCampaignViewQuery } from "./EmailCampaignView.gql";
@@ -27,7 +28,9 @@ export function EmailCampaignView({ id, EmailCampaignContentBlock }: EmailCampai
     const stackApi = useStackApi();
     const previewApi = useBlockPreview();
     const blockContext = useBlockContext();
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
     const { scope } = useContentScope();
     const { previewUrl } = useBrevoConfig();
 
@@ -47,7 +50,7 @@ export function EmailCampaignView({ id, EmailCampaignContentBlock }: EmailCampai
 
     const previewContext = {
         ...blockContext,
-        parentUrl: match.url,
+        parentUrl: matchUrl,
         showVisibleOnly: previewApi.showOnlyVisible,
     };
 

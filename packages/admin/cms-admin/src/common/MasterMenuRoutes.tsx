@@ -1,11 +1,19 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
-import { type ReactNode } from "react";
-import { Redirect, type RouteProps, Switch, useRouteMatch } from "react-router-dom";
+import { type ReactNode, useContext } from "react";
+import { Navigate, UNSAFE_RouteContext } from "react-router";
 
 import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 import { type MasterMenuData, type MasterMenuItem } from "./MasterMenu";
 
-export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
+interface RouteConfig {
+    path?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    component?: React.ComponentType<any>;
+    render?: () => ReactNode;
+    children?: ReactNode;
+}
+
+export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteConfig[] {
     const isAllowed = useUserPermissionCheck();
     const checkPermission = (item: MasterMenuItem, ancestors: MasterMenuItem[]): boolean => {
         function getRequiredPermissionsArray(permission: Permission | Permission[]): Permission[] {
@@ -28,30 +36,30 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
     };
 
     const flat = (
-        routes: RouteProps[],
+        routes: RouteConfig[],
         item: MasterMenuItem & { icon?: ReactNode },
         ancestors: Array<MasterMenuItem & { icon?: ReactNode }>,
-    ): RouteProps[] => {
+    ): RouteConfig[] => {
         if (item.type === "externalLink") {
             return routes;
         }
         if (item.type === "group") {
-            return routes.concat(item.items.reduce((routes, child) => flat(routes, child, [...ancestors, item]), [] as RouteProps[]));
+            return routes.concat(item.items.reduce((routes, child) => flat(routes, child, [...ancestors, item]), [] as RouteConfig[]));
         }
         if (item.route && checkPermission(item, ancestors)) {
-            routes = routes.concat(item.route);
+            routes = routes.concat(item.route as RouteConfig);
         }
         if (item.type === "collapsible" && !!item.items?.length) {
             routes = routes.concat(
                 (item.items as Array<MasterMenuItem & { icon?: ReactNode }>).reduce(
                     (routes, child) => flat(routes, child, [...ancestors, item]),
-                    [] as RouteProps[],
+                    [] as RouteConfig[],
                 ),
             );
         }
         return routes;
     };
-    return items.reduce((routes, item) => flat(routes, item, []), [] as RouteProps[]);
+    return items.reduce((routes, item) => flat(routes, item, []), [] as RouteConfig[]);
 }
 
 export interface MasterMenuRoutesProps {
@@ -60,14 +68,18 @@ export interface MasterMenuRoutesProps {
 
 export const MasterMenuRoutes = ({ menu }: MasterMenuRoutesProps) => {
     const routes = useRoutePropsFromMasterMenuData(menu);
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
 
     return (
-        <Switch>
-            <Redirect to={`${match.url}${routes[0].path}`} exact={true} from={match.path} />
+        <>
             {routes.map((route, index) => (
-                <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
+                <RouteWithErrorBoundary key={index} path={`${matchUrl}${route.path}`}>
+                    {route.children}
+                </RouteWithErrorBoundary>
             ))}
-        </Switch>
+            <Navigate to={`${matchUrl}${routes[0].path}`} replace />
+        </>
     );
 };

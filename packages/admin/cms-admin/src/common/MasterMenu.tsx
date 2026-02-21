@@ -11,10 +11,18 @@ import {
     useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
-import { type ReactNode, useEffect } from "react";
-import { type RouteProps, useRouteMatch } from "react-router-dom";
+import { type ReactNode, useContext, useEffect } from "react";
+import { UNSAFE_RouteContext } from "react-router";
 
 import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
+
+interface MasterMenuRouteProps {
+    path?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    component?: React.ComponentType<any>;
+    render?: () => ReactNode;
+    children?: ReactNode;
+}
 
 type MasterMenuItemBase = {
     requiredPermission?: Permission | Permission[];
@@ -23,7 +31,7 @@ type MasterMenuItemBase = {
 type MasterMenuItemRoute = MasterMenuItemBase &
     Omit<MainNavigationItemRouterLinkProps, "to"> & {
         type: "route";
-        route?: RouteProps;
+        route?: MasterMenuRouteProps;
         to?: string;
         badgeContent?: ReactNode;
     };
@@ -32,7 +40,7 @@ type MasterMenuItemCollapsible = MasterMenuItemBase &
     Omit<MainNavigationCollapsibleItemProps, "children"> & {
         type: "collapsible";
         items?: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
-        route?: RouteProps;
+        route?: MasterMenuRouteProps;
     };
 
 type MasterMenuItemAnchor = MasterMenuItemBase &
@@ -140,7 +148,9 @@ export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuPro
     const menuItems = useMenuFromMasterMenuData(menu);
     const { setHasMultipleMenuItems } = useMainNavigation();
     const windowSize = useWindowSize();
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
     useEffect(() => {
@@ -162,7 +172,7 @@ export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuPro
             } else if (item.type === "externalLink") {
                 return <MainNavigationItemAnchorLink key={index} {...item.menuElement} />;
             } else if (item.type === "route") {
-                return <MainNavigationItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
+                return <MainNavigationItemRouterLink key={index} {...item.menuElement} to={`${matchUrl}${item.menuElement.to}`} />;
             }
             return [];
         });
@@ -187,7 +197,7 @@ export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuPro
                         return <MainNavigationItemAnchorLink key={index} {...menuElement.menuElement} />;
                     case "route":
                         return (
-                            <MainNavigationItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />
+                            <MainNavigationItemRouterLink key={index} {...menuElement.menuElement} to={`${matchUrl}${menuElement.menuElement.to}`} />
                         );
                 }
             })}

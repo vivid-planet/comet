@@ -15,7 +15,7 @@ import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
@@ -84,7 +84,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     const { entityDependencyMap } = useDependenciesConfig();
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const dataGridProps = {
         ...useDataGridRemote({
@@ -156,7 +156,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                             onClick={async () => {
                                 const url = await loadUrl();
 
-                                history.push(url);
+                                navigate(url);
                             }}
                         >
                             <ArrowRight />

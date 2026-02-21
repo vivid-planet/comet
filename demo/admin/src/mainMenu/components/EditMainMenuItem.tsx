@@ -30,9 +30,9 @@ import {
 import { Box } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import isEqual from "lodash.isequal";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useRouteMatch } from "react-router-dom";
+import { UNSAFE_RouteContext } from "react-router";
 
 import {
     type GQLEditMainMenuItemFragment,
@@ -74,7 +74,9 @@ type RichTextBlockOutput = BlockOutputApi<typeof RichTextBlock>;
 
 const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
     const previewApi = useBlockPreview();
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
     const [updateMainMenuItem, { loading: saving, error: saveError }] = useMutation<
         GQLUpdateMainMenuItemMutation,
         GQLUpdateMainMenuItemMutationVariables
@@ -101,7 +103,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
     if (content) {
         previewState = RichTextBlock.createPreviewState(content, {
             ...blockContext,
-            parentUrl: match.url,
+            parentUrl: matchUrl,
             showVisibleOnly: previewApi.showOnlyVisible,
         });
     }
@@ -156,7 +158,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
-                        if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                        if (location.pathname.startsWith(matchUrl)) return true; //we navigated within our self
                         return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}

@@ -1,6 +1,6 @@
 import isEqual from "lodash.isequal";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
-import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
+import { matchPath, Navigate, type PathMatch, UNSAFE_RouteContext, useLocation, useNavigate } from "react-router";
 
 import { useCurrentUser } from "../userPermissions/hooks/currentUser";
 import { contentScopeLocalStorageKey } from "./ContentScopeSelect";
@@ -43,10 +43,15 @@ type NonNullRecord<T> = {
 
 type SetContentScopeAction = (state: ContentScope) => ContentScope;
 
+export type ContentScopeMatch = PathMatch & {
+    /** @deprecated Use pathnameBase instead */
+    url: string;
+};
+
 export type UseContentScopeApi = {
     scope: ContentScope;
     setScope: (action: SetContentScopeAction) => void;
-    match: match;
+    match: ContentScopeMatch;
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     supported: boolean;
     createUrl: (scope: ContentScope) => string;
@@ -92,10 +97,20 @@ function defaultCreateUrl(scope: ContentScope) {
 // @TODO: provide default empty scope "{}"
 export function useContentScope(): UseContentScopeApi {
     const context = useContext(Context);
-    const history = useHistory();
-    const matchContextScope = useRouteMatch<NonNullRecord<ContentScope>>(context?.path || "");
-    const matchDefault = useRouteMatch();
-    const match = matchContextScope || matchDefault;
+    const navigate = useNavigate();
+    const location = useLocation();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentRouteMatch = routeContext.matches[routeContext.matches.length - 1];
+
+    // Try to match the context path first, fall back to current route match
+    const matchContextScope = context?.path ? matchPath({ path: context.path as string, end: false }, location.pathname) : null;
+    const defaultMatch: PathMatch = {
+        params: currentRouteMatch?.params ?? {},
+        pathname: currentRouteMatch?.pathname ?? location.pathname,
+        pathnameBase: currentRouteMatch?.pathnameBase ?? "",
+        pattern: { path: currentRouteMatch?.route?.path ?? "", end: false },
+    };
+    const match = matchContextScope || defaultMatch;
 
     const matchParamsString = JSON.stringify(match.params); // convert matchParams to string, like this we can memoize or callbacks more easily
     const scope = useMemo(() => parseScopeFromRouterMatchParams(JSON.parse(matchParamsString)), [matchParamsString]);
@@ -105,15 +120,20 @@ export function useContentScope(): UseContentScopeApi {
             const newContentScope = action(scope);
             const pathAfterScopePath = redirectPath || "";
             const url = context.location.createUrl(newContentScope);
-            history.push({ pathname: url + pathAfterScopePath });
+            navigate(url + pathAfterScopePath);
         },
-        [scope, history, redirectPath, context.location],
+        [scope, navigate, redirectPath, context.location],
     );
+
+    const matchWithUrl: ContentScopeMatch = {
+        ...match,
+        url: match.pathnameBase,
+    };
 
     return {
         scope,
         setScope,
-        match,
+        match: matchWithUrl,
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
         values: context.values as ContentScopeValues, // @TODO:
@@ -124,7 +144,7 @@ export function useContentScope(): UseContentScopeApi {
 export interface ContentScopeProviderProps {
     defaultValue?: ContentScope;
     values?: ContentScopeValues;
-    children: (p: { match: match<NonNullRecord<ContentScope>> }) => ReactNode;
+    children: (p: { match: PathMatch<string> }) => ReactNode;
     location?: ContentScopeLocation;
 
     /**
@@ -151,7 +171,8 @@ export function ContentScopeProvider({
     }
 
     const path = location.createPath(values);
-    const match = useRouteMatch<NonNullRecord<ContentScope>>(path);
+    const loc = useLocation();
+    const routeMatch = matchPath({ path: path as string, end: false }, loc.pathname);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     if (values.length === 0) {
@@ -188,14 +209,7 @@ export function ContentScopeProvider({
                 location: location as ContentScopeLocation,
             }}
         >
-            <Switch>
-                {match && (
-                    <Route exact={false} strict={false} path={path}>
-                        {children({ match })}
-                    </Route>
-                )}
-                <Redirect to={defaultUrl} />
-            </Switch>
+            {routeMatch ? children({ match: routeMatch }) : <Navigate to={defaultUrl} replace />}
         </Context.Provider>
     );
 }
