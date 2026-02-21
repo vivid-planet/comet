@@ -1,4 +1,4 @@
 import { forwardRef } from "react";
-import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
+import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router";
 
 export const BreadcrumbLink = forwardRef<HTMLAnchorElement, RouterLinkProps>(({ to, ...rest }, ref) => <RouterLink ref={ref} to={to} {...rest} />);

@@ -1,12 +1,8 @@
-import { createTheme } from "@mui/material/styles";
 import { type ReactNode } from "react";
-import { IntlProvider } from "react-intl";
-import { matchPath, MemoryRouter, Route, Routes, useLocation } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router";
 import { cleanup, fireEvent, render, waitFor } from "test-utils";
 import { afterEach, expect, test } from "vitest";
 
-import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 
 afterEach(cleanup);
@@ -83,17 +79,7 @@ test("Subrote other route hidden", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <MemoryRouter>
-                    <Routes>
-                        <Route path="*" element={<Story />} />
-                    </Routes>
-                </MemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("Cmp1 SubLink"));
 
@@ -161,17 +147,7 @@ test("Subrote other route hidden 2", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <MemoryRouter>
-                    <Routes>
-                        <Route path="*" element={<Story />} />
-                    </Routes>
-                </MemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("Cmp2 SubLink"));
 
@@ -211,17 +187,7 @@ test("Route below Subroute", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <MemoryRouter>
-                    <Routes>
-                        <Route path="*" element={<Story />} />
-                    </Routes>
-                </MemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("Sub"));
     expect(rendered.getByText("urlPrefix=/foo/sub")).toBeInTheDocument();
@@ -252,17 +218,7 @@ test("SubRouteIndexRoute nested Switch", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <MemoryRouter>
-                    <Routes>
-                        <Route path="*" element={<Story />} />
-                    </Routes>
-                </MemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("Cmp1 SubLink"));
 

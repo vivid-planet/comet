@@ -1,7 +1,7 @@
 import { Badge } from "@mui/material";
 import { type ListItemProps } from "@mui/material/ListItem";
 import { type ReactNode } from "react";
-import { Link, type LinkProps, matchPath, useLocation } from "react-router-dom";
+import { Link, type LinkProps, matchPath, useLocation } from "react-router";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MainNavigationItem, type MainNavigationItemProps } from "./Item";

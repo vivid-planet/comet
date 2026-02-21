@@ -1,11 +1,8 @@
-import { createTheme } from "@mui/material/styles";
 import { useContext, useEffect } from "react";
-import { IntlProvider } from "react-intl";
-import { MemoryRouter, Route, Routes, UNSAFE_RouteContext } from "react-router";
+import { UNSAFE_RouteContext } from "react-router";
 import { fireEvent, render } from "test-utils";
 import { expect, test } from "vitest";
 
-import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackPage } from "../stack/Page";
 import { Stack } from "../stack/Stack";
@@ -36,17 +33,7 @@ test("RouterTabs in SubRoute", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <MemoryRouter>
-                    <Routes>
-                        <Route path="*" element={<Story />} />
-                    </Routes>
-                </MemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
     expect(rendered.getByText("foo tab content")).toBeInTheDocument();
 
     fireEvent.click(rendered.getByText("Bar"));
@@ -94,17 +81,7 @@ test("RouterTabs must not remount content", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <MemoryRouter>
-                    <Routes>
-                        <Route path="*" element={<Story />} />
-                    </Routes>
-                </MemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
     expect(rendered.getByText("FooContent")).toBeInTheDocument();
     expect(mountCountFoo).toBe(1);
     expect(mountCountBar).toBe(1);

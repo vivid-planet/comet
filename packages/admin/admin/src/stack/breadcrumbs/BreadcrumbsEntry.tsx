@@ -1,7 +1,7 @@
 import { LevelUp } from "@comet/admin-icons";
 import { IconButton as MuiIconButton, type Link as MuiLink, Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type BreadcrumbItem } from "../Stack";

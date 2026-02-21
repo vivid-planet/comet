@@ -3,10 +3,11 @@ import { type GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommun
 import { type GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
 import queryString from "query-string";
 import { type ReactNode } from "react";
-import { MemoryRouter, Route, Routes, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { act, renderHook } from "test-utils";
 import { describe, expect, it } from "vitest";
 
+import { RouterMemoryRouter } from "../router/MemoryRouter";
 import { useDataGridRemote } from "./useDataGridRemote";
 
 const mockedSortField = "description";
@@ -34,19 +35,10 @@ function createWrapper(initialEntries: string[] = ["/"]) {
 
     function Wrapper({ children }: { children: ReactNode }) {
         return (
-            <MemoryRouter initialEntries={initialEntries}>
-                <Routes>
-                    <Route
-                        path="*"
-                        element={
-                            <>
-                                <LocationTracker />
-                                {children}
-                            </>
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
+            <RouterMemoryRouter initialEntries={initialEntries}>
+                <LocationTracker />
+                {children}
+            </RouterMemoryRouter>
         );
     }
 
