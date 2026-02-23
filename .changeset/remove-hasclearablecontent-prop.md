@@ -1,7 +1,6 @@
 ---
 "@comet/admin": major
 "@comet/admin-color-picker": major
-"@comet/admin-date-time": major
 "@comet/cms-admin": major
 ---
 
@@ -12,11 +11,15 @@ The component now always renders when included in the component tree. Callers sh
 **Migration:**
 
 Before:
+
 ```tsx
 <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
 ```
 
 After:
+
 ```tsx
-{value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+{
+    value && <ClearInputAdornment position="end" onClick={() => onChange("")} />;
+}
 ```
