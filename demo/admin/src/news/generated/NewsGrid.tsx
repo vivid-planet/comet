@@ -21,12 +21,14 @@ import { dataGridDateColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
@@ -80,6 +82,10 @@ export function NewsGrid() {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
+    const stackSwitchApi = useStackSwitchApi();
+    const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
+        stackSwitchApi.activatePage("edit", params.row.id);
+    };
     const columns: GridColDef<GQLNewsGridFragment>[] = useMemo(
         () => [
             { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
@@ -190,6 +196,7 @@ export function NewsGrid() {
             slots={{
                 toolbar: NewsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={handleRowClick}
         />
     );
 }
