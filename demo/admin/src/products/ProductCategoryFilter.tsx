@@ -86,12 +86,7 @@ function ProductCategoryFilter({ item, applyValue, apiRef }: GridFilterInputValu
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    {item.value && (
-                                        <ClearInputAdornment
-                                            position="end"
-                                            onClick={() => handleApplyValue(undefined)}
-                                        />
-                                    )}
+                                    {item.value && <ClearInputAdornment position="end" onClick={() => handleApplyValue(undefined)} />}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),
