@@ -52,7 +52,7 @@ const productMeta = createMetadata({
     props: [
         createProp({ name: "id", kind: ReferenceKind.SCALAR, fieldNames: ["id"] }),
         createProp({ name: "name", kind: ReferenceKind.SCALAR, fieldNames: ["name"] }),
-        createProp({ name: "slug", kind: ReferenceKind.SCALAR, fieldNames: ["slug"] }),
+        createProp({ name: "slug", kind: ReferenceKind.SCALAR, fieldNames: ["url_slug"] }),
         createProp({
             name: "manufacturer",
             kind: ReferenceKind.MANY_TO_ONE,
@@ -126,7 +126,7 @@ describe("EntityInfoService", () => {
             });
 
             it("resolves a field with a different column name", () => {
-                expect(callResolveFieldToSql("slug", productMeta, "Product")).toBe('"Product"."slug"');
+                expect(callResolveFieldToSql("slug", productMeta, "Product")).toBe('"Product"."url_slug"');
             });
 
             it("throws for a non-existent field", () => {
