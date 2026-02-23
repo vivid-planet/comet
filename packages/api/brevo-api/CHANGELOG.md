@@ -1,5 +1,13 @@
 # @comet/brevo-api
 
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Update axios to 1.13.5 to fix CVE-2026-25639 (DoS via **proto** key in mergeConfig)
+- Updated dependencies [91e9a8f]
+    - @comet/cms-api@8.17.1
+
 ## 8.17.0
 
 ### Patch Changes
