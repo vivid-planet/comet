@@ -1,4 +1,6 @@
+import { RteReadOnly } from "@comet/admin-rte";
 import { alpha, styled } from "@mui/material/styles";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { type RichTextBlockState } from "../createRichTextBlock";
 
@@ -9,11 +11,34 @@ type Props = {
 };
 
 export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
-    const plainTextValue = value.editorState.getCurrentContent().getPlainText();
+    const rteContentWrapperRef = useRef<HTMLDivElement>(null);
+    const rteContentRef = useRef<HTMLDivElement>(null);
+    const [valueOverflowsCell, setValueOverflowsCell] = useState(false);
+
+    useLayoutEffect(() => {
+        const minimumSpaceAroundCellContent = 10;
+        const rteContent = rteContentRef.current;
+        const rteContentWrapper = rteContentWrapperRef.current;
+
+        if (!rteContent || !rteContentWrapper) return;
+
+        const updateValueOverflowsCell = () => {
+            setValueOverflowsCell(rteContent.offsetHeight > rteContentWrapper.clientHeight - minimumSpaceAroundCellContent);
+        };
+
+        updateValueOverflowsCell();
+        const observer = new ResizeObserver(updateValueOverflowsCell);
+        observer.observe(rteContent);
+        return () => observer.disconnect();
+    }, [value.editorState]);
 
     return (
         <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
-            <TextValue $highlighted={highlighted}>{plainTextValue}</TextValue>
+            <RteContentWrapper ref={rteContentWrapperRef} $valueOverflowsCell={valueOverflowsCell}>
+                <div ref={rteContentRef}>
+                    <RteReadOnly value={value.editorState} />
+                </div>
+            </RteContentWrapper>
         </CellValueContainer>
     );
 };
@@ -41,9 +66,23 @@ const CellValueContainer = styled("div")<{ $highlighted: boolean; $recentlyPaste
     },
 }));
 
-const TextValue = styled("div")<{ $highlighted: boolean }>(({ $highlighted }) => ({
+const RteContentWrapper = styled("div")<{ $valueOverflowsCell: boolean }>(({ $valueOverflowsCell, theme }) => ({
     overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    fontWeight: $highlighted ? 700 : 400,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+
+    ...($valueOverflowsCell && {
+        justifyContent: "flex-start",
+        paddingTop: theme.spacing(1),
+    }),
+
+    ".CometAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
+        marginTop: 0,
+    },
+
+    ".CometAdminRteBlockElement-root:last-child, .MuiTypography-root:last-child": {
+        marginBottom: 0,
+    },
 }));
