@@ -20,6 +20,7 @@ export interface CrudGeneratorOptions {
     single?: boolean;
     position?: { groupByFields: string[] };
     hooksService?: Type<CrudGeneratorHooksService>;
+    paging?: boolean;
 }
 
 export const CRUD_GENERATOR_METADATA_KEY = "data:crudGeneratorOptions";
@@ -33,12 +34,17 @@ export function CrudGenerator({
     single = true,
     position,
     hooksService,
+    paging = true,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(
             CRUD_GENERATOR_METADATA_KEY,
+<<<<<<< HEAD
             { requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService },
+=======
+            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService, paging },
+>>>>>>> main
             target,
         );
     };

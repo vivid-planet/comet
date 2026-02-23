@@ -1,5 +1,34 @@
 # @comet/admin
 
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+
+## 8.17.0
+
+### Minor Changes
+
+- 45163f1: Add DataGrid helper `useDataGridUrlState` that can be used like `useDataGridRemote` to store state as location params but for client side (non paginated) filter/sort
+
+### Patch Changes
+
+- @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Minor Changes
+
+- 472b496: useDataGridRemote: store sort/filter/paging state additionally to query-param in local state and fall back to it if the query-param is lost
+
+    Avoids losing grid state, for instance, when opening an EditDialog that creates its own sub-route.
+
+### Patch Changes
+
+- @comet/admin-icons@8.16.0
+
 ## 8.15.0
 
 ### Minor Changes

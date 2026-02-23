@@ -32,17 +32,18 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { useTheme } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridRenderCellParams } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { muiGridSortToGql } from "@comet/admin";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
@@ -126,8 +127,9 @@ type Props = {
     toolbarAction?: ReactNode;
     rowAction?: (params: GridRenderCellParams<GQLProductsGridFutureFragment>) => ReactNode;
     actionsColumnWidth?: number;
+    onRowClick?: DataGridProProps["onRowClick"];
 };
-export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52, onRowClick }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -394,6 +396,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             slotProps={{
                 toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
+            onRowClick={onRowClick}
         />
     );
 }

@@ -96,6 +96,7 @@ export {
 export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
+export { useDataGridUrlState } from "./dataGrid/useDataGridUrlState";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DatePicker, type DatePickerClassKey, type DatePickerProps } from "./dateTime/datePicker/DatePicker";
 export { DatePickerField, type DatePickerFieldProps } from "./dateTime/datePickerField/DatePickerField";

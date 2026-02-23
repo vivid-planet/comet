@@ -7,7 +7,7 @@ import { generateGrid } from "../generateGrid";
 describe("Grid Scope", () => {
     const schema = buildSchema(`
         type Query {
-            products(scope: ProductScope!): [Product!]!
+            products(scope: ProductScope!, limit: Int! = 25, offset: Int! = 0): PaginatedProducts!
         }
 
         type Mutation {
@@ -25,6 +25,11 @@ describe("Grid Scope", () => {
         type Product {
             id: ID!
             title: String
+        }
+
+        type PaginatedProducts {
+            nodes: [Product!]!
+            totalCount: Int!
         }
     `);
     type GQLProduct = {
