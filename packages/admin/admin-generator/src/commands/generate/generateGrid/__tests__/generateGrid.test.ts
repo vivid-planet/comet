@@ -64,6 +64,7 @@ describe("generateGrid", () => {
 
             enum BookSortField {
                 title
+                author_birthDate
             }
 
             enum SortDirection {
@@ -390,5 +391,37 @@ describe("generateGrid", () => {
         );
 
         expect(result.code).toMatchSnapshot();
+    });
+
+    it("should generate onRowClick prop when rowActionProp is true", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            rowActionProp: true,
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+        // Should contain the onRowClick prop type definition
+        expect(result.code).toMatch(/onRowClick\?: DataGridProps\["onRowClick"\]/);
+        // Should forward onRowClick to the DataGrid component
+        expect(result.code).toMatch(/onRowClick={onRowClick}/);
+        // Should NOT contain the handleRowClick function
+        expect(result.code).not.toMatch(/const handleRowClick:/);
     });
 });

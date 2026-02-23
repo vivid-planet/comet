@@ -134,6 +134,9 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
+    const hasPaging = generatorOptions.paging !== false;
+    const hasArgsClass = hasPaging || !!scopeProp || dedicatedResolverArgProps.length > 0;
+
     const blockProps = metadata.props.filter((prop) => {
         return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
     });
@@ -155,6 +158,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         skipScopeCheck,
         argsClassName,
         argsFileName,
+        hasPaging,
+        hasArgsClass,
         blockProps,
         dedicatedResolverArgProps,
         targetDirectory,

@@ -238,6 +238,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         dedicatedResolverArgProps,
         hasPositionProp,
         crudSortProps,
+        hasPaging,
         targetDirectory,
     } = buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
@@ -256,14 +257,14 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
-    import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
-    import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
-    import { ${classNameSingular}Sort, ${classNameSingular}SortField } from "./${fileNameSingular}.sort";
+    ${hasPaging ? `import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";` : ``}
+    ${hasPaging && hasFilterArg ? `import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";` : ``}
+    ${hasPaging && hasSortArg ? `import { ${classNameSingular}Sort, ${classNameSingular}SortField } from "./${fileNameSingular}.sort";` : ``}
 
     ${generateImportsCode(imports)}
 
     @ArgsType()
-    export class ${argsClassName} extends OffsetBasedPaginationArgs {
+    export class ${argsClassName}${hasPaging ? ` extends OffsetBasedPaginationArgs` : ""} {
         ${
             scopeProp
                 ? `
@@ -291,7 +292,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
             .join("")}
 
         ${
-            hasSearchArg
+            hasPaging && hasSearchArg
                 ? `
         @Field({ nullable: true })
         @IsOptional()
@@ -302,7 +303,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         }
 
         ${
-            hasFilterArg
+            hasPaging && hasFilterArg
                 ? `
         @Field(() => ${classNameSingular}Filter, { nullable: true })
         @ValidateNested()
@@ -314,7 +315,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         }
 
         ${
-            hasSortArg
+            hasPaging && hasSortArg
                 ? `
         @Field(() => [${classNameSingular}Sort], { ${defaultSortField === null ? "nullable: true" : `defaultValue: [{ field: ${classNameSingular}SortField.${defaultSortField}, direction: SortDirection.ASC }]`} })
         @ValidateNested({ each: true })
@@ -814,6 +815,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasDeletedAtProp,
         dedicatedResolverArgProps,
         targetDirectory,
+        hasPaging,
+        hasArgsClass,
     } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
@@ -890,8 +893,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     ${hasPositionProp ? `import { ${classNamePlural}Service } from "./${fileNamePlural}.service";` : ``}
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
-    import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
-    import { ${argsClassName} } from "./dto/${argsFileName}";
+    ${hasPaging ? `import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";` : ""}
+    ${hasArgsClass ? `import { ${argsClassName} } from "./dto/${argsFileName}";` : ""}
     ${generateImportsCode(imports)}
 
     ${payloadObjectTypes.code}
@@ -939,34 +942,38 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ${
             generatorOptions.list
                 ? `
-        @Query(() => Paginated${classNamePlural})
+        @Query(() => ${hasPaging ? `Paginated${classNamePlural}` : `[${metadata.className}]`})
         ${dedicatedResolverArgProps
             .map((dedicatedResolverArgProp) => {
                 return `@AffectedEntity(${dedicatedResolverArgProp.targetMeta?.className}, { idArg: "${dedicatedResolverArgProp.name}" })`;
             })
             .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            @Args() {${Object.entries({
-                scope: !!scopeProp,
-                ...dedicatedResolverArgProps.reduce(
-                    (acc, dedicatedResolverArgProp) => {
-                        acc[dedicatedResolverArgProp.name] = true;
-                        return acc;
-                    },
-                    {} as Record<string, boolean>,
-                ),
-                search: !!hasSearchArg,
-                filter: !!hasFilterArg,
-                sort: !!hasSortArg,
-                offset: true,
-                limit: true,
-            })
-                .filter(([key, use]) => use)
-                .map(([key]) => key)
-                .join(", ")}}: ${argsClassName}
-        ): Promise<Paginated${classNamePlural}> {
+            ${
+                hasArgsClass
+                    ? `@Args() {${Object.entries({
+                          scope: !!scopeProp,
+                          ...dedicatedResolverArgProps.reduce(
+                              (acc, dedicatedResolverArgProp) => {
+                                  acc[dedicatedResolverArgProp.name] = true;
+                                  return acc;
+                              },
+                              {} as Record<string, boolean>,
+                          ),
+                          search: hasPaging && !!hasSearchArg,
+                          filter: hasPaging && !!hasFilterArg,
+                          sort: hasPaging && !!hasSortArg,
+                          offset: hasPaging,
+                          limit: hasPaging,
+                      })
+                          .filter(([key, use]) => use)
+                          .map(([key]) => key)
+                          .join(", ")}}: ${argsClassName}`
+                    : ""
+            }
+        ): Promise<${hasPaging ? `Paginated${classNamePlural}` : `${metadata.className}[]`}> {
             const where${
-                hasSearchArg || hasFilterArg
+                hasPaging && (hasSearchArg || hasFilterArg)
                     ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.entityManager.getMetadata(${metadata.className}));`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
@@ -977,18 +984,23 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 })
                 .join("\n")}
 
-            const options: FindOptions<${metadata.className}> = { offset, limit };
+            const options: FindOptions<${metadata.className}> = { ${hasPaging ? "offset, limit" : ""}};
 
             ${
-                hasSortArg
+                hasPaging && hasSortArg
                     ? `if (sort) {
                 options.orderBy = gqlSortToMikroOrmOrderBy(sort);
             }`
                     : ""
             }
 
-            const [entities, totalCount] = await this.entityManager.findAndCount(${metadata.className}, where, options);
-            return new Paginated${classNamePlural}(entities, totalCount);
+            ${
+                hasPaging
+                    ? `const [entities, totalCount] = await this.entityManager.findAndCount(${metadata.className}, where, options);
+            return new Paginated${classNamePlural}(entities, totalCount);`
+                    : `const entities = await this.entityManager.find(${metadata.className}, where, options);
+            return entities;`
+            }
         }
         `
                 : ""
@@ -1198,29 +1210,33 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
-    const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata, generatorOptions);
+    const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp, hasPaging, hasArgsClass } = buildOptions(metadata, generatorOptions);
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
-        if (hasFilterArg) {
+        if (hasPaging && hasFilterArg) {
             generatedFiles.push(...generateFilterDto({ generatorOptions, metadata }));
         }
-        if (hasSortArg) {
+        if (hasPaging && hasSortArg) {
             generatedFiles.push({
                 name: `dto/${fileNameSingular}.sort.ts`,
                 content: generateSortDto({ generatorOptions, metadata }),
                 type: "sort",
             });
         }
-        generatedFiles.push({
-            name: `dto/paginated-${fileNamePlural}.ts`,
-            content: generatePaginatedDto({ generatorOptions, metadata }),
-            type: "sort",
-        });
-        generatedFiles.push({
-            name: `dto/${argsFileName}.ts`,
-            content: generateArgsDto({ generatorOptions, metadata }),
-            type: "args",
-        });
+        if (hasPaging) {
+            generatedFiles.push({
+                name: `dto/paginated-${fileNamePlural}.ts`,
+                content: generatePaginatedDto({ generatorOptions, metadata }),
+                type: "sort",
+            });
+        }
+        if (hasArgsClass) {
+            generatedFiles.push({
+                name: `dto/${argsFileName}.ts`,
+                content: generateArgsDto({ generatorOptions, metadata }),
+                type: "args",
+            });
+        }
         if (hasPositionProp) {
             generatedFiles.push({
                 name: `${fileNamePlural}.service.ts`,

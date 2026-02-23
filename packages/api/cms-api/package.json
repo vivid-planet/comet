@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.15.0",
+    "version": "8.17.1",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -46,7 +46,7 @@
         "dataloader": "^2.2.3",
         "date-fns": "^4.1.0",
         "exifr": "^7.1.3",
-        "fast-xml-parser": "^5.3.4",
+        "fast-xml-parser": "^5.3.6",
         "file-type": "^16.5.4",
         "graphql-parse-resolve-info": "^4.14.1",
         "graphql-scalars": "^1.24.2",
