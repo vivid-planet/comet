@@ -87,6 +87,7 @@
     "devDependencies": {
         "@comet/api-generator": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+        "@eslint/compat": "^2.0.2",
         "@formatjs/cli": "^6.7.4",
         "@nestjs/cli": "^11.0.14",
         "@nestjs/schematics": "^11.0.9",

@@ -48,6 +48,7 @@
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+        "@eslint/compat": "^2.0.2",
         "@mui/material": "^7.3.7",
         "@mui/x-data-grid": "^7.29.12",
         "@types/node": "^24.10.9",
