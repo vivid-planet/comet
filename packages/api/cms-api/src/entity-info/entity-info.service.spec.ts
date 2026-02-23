@@ -1,7 +1,14 @@
 import { ReferenceKind } from "@mikro-orm/core";
-import { type EntityMetadata, type EntityProperty } from "@mikro-orm/postgresql";
+import { EntityManager, type EntityMetadata, type EntityProperty } from "@mikro-orm/postgresql";
+import { Test, type TestingModule } from "@nestjs/testing";
 
+import { DiscoverService } from "../dependencies/discover.service";
 import { EntityInfoService } from "./entity-info.service";
+
+const mockDiscoverService = {};
+const mockEntityManager = {
+    getConnection: jest.fn().mockReturnValue({}),
+};
 
 function createMetadata(overrides: Partial<EntityMetadata>): EntityMetadata {
     return { className: "TestEntity", tableName: "TestEntity", props: [], primaryKeys: ["id"], ...overrides } as EntityMetadata;
@@ -112,13 +119,26 @@ const productVariantMeta = createMetadata({
     ],
 });
 
-function callResolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const service = new (EntityInfoService as any)({}, { getConnection: () => ({}) });
-    return service.resolveFieldToSql(fieldPath, metadata, tableName);
-}
-
 describe("EntityInfoService", () => {
+    let service: EntityInfoService;
+
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                EntityInfoService,
+                { provide: DiscoverService, useValue: mockDiscoverService },
+                { provide: EntityManager, useValue: mockEntityManager },
+            ],
+        }).compile();
+
+        service = module.get<EntityInfoService>(EntityInfoService);
+    });
+
+    function callResolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (service as any).resolveFieldToSql(fieldPath, metadata, tableName);
+    }
+
     describe("resolveFieldToSql", () => {
         describe("direct fields", () => {
             it("resolves a simple field to its column name", () => {
