@@ -2,7 +2,7 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -67,7 +67,6 @@ const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
         }
 
         &:last-child {
-            font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -143,25 +142,19 @@ const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
         white-space: nowrap;
         padding-top: 12.5px;
         padding-bottom: 12.5px;
-
-        &:hover {
-            color: ${theme.palette.primary.main};
-        }
     `,
 ) as typeof Typography;
 
 const ExpandedMenuSubItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "expandedMenuSubItemWrapper",
-})(
-    ({ theme }) => css`
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        height: 45px;
-        align-self: flex-start;
-    `,
-);
+})(css`
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 45px;
+    align-self: flex-start;
+`);
 
 const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -194,7 +187,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
 
                     if (isCurrentPage) {
                         return (
-                            <>
+                            <Fragment key={item.url}>
                                 {hasMultipleItems && isMobile && (
                                     <>
                                         <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
@@ -203,11 +196,10 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                         <Separator {...slotProps?.separator} />
                                     </>
                                 )}
-
-                                <Item key={item.url} {...slotProps?.item}>
+                                <Item key={item.url} {...slotProps?.item} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
                                     {item.title}
                                 </Item>
-                            </>
+                            </Fragment>
                         );
                     }
 
@@ -221,22 +213,17 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                         </MenuContainer>
                     );
                 })}
-                {isMenuOpen && isMobile && (
+                {isMenuOpen && (
                     <ExpandedMenu {...slotProps?.expandedMenu}>
                         {items.map((item, index) => {
-                            const isCurrentPage = index === items.length - 1;
-
-                            return !isCurrentPage ? (
-                                <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 20}px` }}>
+                            return (
+                                <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 16}px` }}>
                                     {index > 0 && <PageTreeVerticalLine />}
-                                    <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem}>
-                                        {item.title}
-                                    </ExpandedMenuItem>
-                                </ExpandedMenuSubItemWrapper>
-                            ) : (
-                                <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 20}px` }}>
-                                    {index > 0 && <PageTreeVerticalLine />}
-                                    <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem}>
+                                    <ExpandedMenuItem
+                                        key={item.url}
+                                        {...slotProps?.expandedMenuItem}
+                                        fontWeight={index === items.length - 1 ? "bold" : "standard"}
+                                    >
                                         {item.title}
                                     </ExpandedMenuItem>
                                 </ExpandedMenuSubItemWrapper>
