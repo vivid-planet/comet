@@ -41,7 +41,6 @@
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
         "date-fns": "^4.1.0",
-        "file-saver": "^2.0.5",
         "react-dropzone": "^14.2.3"
     },
     "devDependencies": {
@@ -62,7 +61,6 @@
         "@mui/x-data-grid": "^7.29.12",
         "@mui/x-data-grid-pro": "^7.29.12",
         "@mui/x-date-pickers": "^7.29.4",
-        "@types/file-saver": "^2.0.7",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
