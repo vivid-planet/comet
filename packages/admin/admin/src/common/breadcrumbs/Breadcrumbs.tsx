@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-literals */
-import { ChevronRight } from "@comet/admin-icons";
+import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useState } from "react";
@@ -13,6 +13,7 @@ type BreadcrumbsClassKey =
     | "separator"
     | "ellipsis"
     | "menuContainer"
+    | "toolbarContainer"
     | "expandedMenu"
     | "expandedMenuItem"
     | "pageTreeVerticalLine"
@@ -30,6 +31,7 @@ interface BreadcrumbsProps
         separator: typeof ChevronRight;
         ellipsis: "span";
         menuContainer: "div";
+        toolbarContainer: "div";
         expandedMenu: "div";
         expandedMenuItem: typeof Typography;
         pageTreeVerticalLine: "div";
@@ -46,6 +48,7 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
         position: relative;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         height: 50px;
         padding: 0 ${theme.spacing(2)};
     `,
@@ -97,6 +100,19 @@ const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
         ${theme.breakpoints.up("sm")} {
             display: block;
         }
+    `,
+);
+
+const ToolbarContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "toolbarContainer",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 50px;
+        padding: 0 ${theme.spacing(2)};
     `,
 );
 
@@ -170,63 +186,66 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            {items.map((item, index) => {
-                const isCurrentPage = index === items.length - 1;
-                const hasMultipleItems = items.length > 1;
+            <ToolbarContainer>
+                {items.map((item, index) => {
+                    const isCurrentPage = index === items.length - 1;
+                    const hasMultipleItems = items.length > 1;
 
-                if (isCurrentPage) {
+                    if (isCurrentPage) {
+                        return (
+                            <>
+                                {hasMultipleItems && isMobile && (
+                                    <>
+                                        <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
+                                            . . .
+                                        </Ellipsis>
+                                        <Separator {...slotProps?.separator} />
+                                    </>
+                                )}
+
+                                <Item key={item.url} {...slotProps?.item}>
+                                    {item.title}
+                                </Item>
+                            </>
+                        );
+                    }
+
                     return (
-                        <>
-                            {hasMultipleItems && isMobile && (
-                                <>
-                                    <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
-                                        . . .
-                                    </Ellipsis>
-                                    <Separator {...slotProps?.separator} />
-                                </>
-                            )}
-
-                            <Item key={item.url} {...slotProps?.item}>
+                        <MenuContainer key={item.url}>
+                            {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+                            <Item component="a" href={item.url} {...slotProps?.item}>
                                 {item.title}
                             </Item>
-                        </>
+                            <Separator {...slotProps?.separator} />
+                        </MenuContainer>
                     );
-                }
+                })}
+                {isMenuOpen && isMobile && (
+                    <ExpandedMenu {...slotProps?.expandedMenu}>
+                        {items.map((item, index) => {
+                            const isCurrentPage = index === items.length - 1;
 
-                return (
-                    <MenuContainer key={item.url}>
-                        {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                        <Item component="a" href={item.url} {...slotProps?.item}>
-                            {item.title}
-                        </Item>
-                        <Separator {...slotProps?.separator} />
-                    </MenuContainer>
-                );
-            })}
+                            return !isCurrentPage ? (
+                                <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 20}px` }}>
+                                    {index > 0 && <PageTreeVerticalLine />}
+                                    <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem}>
+                                        {item.title}
+                                    </ExpandedMenuItem>
+                                </ExpandedMenuSubItemWrapper>
+                            ) : (
+                                <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 20}px` }}>
+                                    {index > 0 && <PageTreeVerticalLine />}
+                                    <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem}>
+                                        {item.title}
+                                    </ExpandedMenuItem>
+                                </ExpandedMenuSubItemWrapper>
+                            );
+                        })}
+                    </ExpandedMenu>
+                )}
+            </ToolbarContainer>
 
-            {isMenuOpen && isMobile && (
-                <ExpandedMenu {...slotProps?.expandedMenu}>
-                    {items.map((item, index) => {
-                        const isCurrentPage = index === items.length - 1;
-
-                        return !isCurrentPage ? (
-                            <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 20}px` }}>
-                                {index > 0 && <PageTreeVerticalLine />}
-                                <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem}>
-                                    {item.title}
-                                </ExpandedMenuItem>
-                            </ExpandedMenuSubItemWrapper>
-                        ) : (
-                            <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 20}px` }}>
-                                {index > 0 && <PageTreeVerticalLine />}
-                                <ExpandedMenuItem key={item.url} {...slotProps?.expandedMenuItem}>
-                                    {item.title}
-                                </ExpandedMenuItem>
-                            </ExpandedMenuSubItemWrapper>
-                        );
-                    })}
-                </ExpandedMenu>
-            )}
+            {isMobile && (isMenuOpen ? <ChevronUp onClick={toggleMenu} /> : <ChevronDown onClick={toggleMenu} />)}
         </Root>
     );
 };
