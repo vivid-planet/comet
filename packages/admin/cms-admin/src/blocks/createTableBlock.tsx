@@ -145,6 +145,7 @@ export const createTableBlock = ({ richText: RichTextBlock }: TableBlockFactoryO
                                 onClose={closeTableBlock}
                                 title={intl.formatMessage({ id: "comet.blocks.table.displayName", defaultMessage: "Table" })}
                                 PaperProps={{ sx: { height: "100%", maxHeight: 880 } }}
+                                sx={(theme) => ({ zIndex: theme.zIndex.modal - 2 })}
                             >
                                 <TableBlockGrid state={state} updateState={updateState} />
                                 <DialogActions>
