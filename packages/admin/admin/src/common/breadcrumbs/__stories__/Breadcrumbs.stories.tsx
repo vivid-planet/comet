@@ -2,6 +2,13 @@ import { type Breadcrumb, Breadcrumbs } from "../Breadcrumbs";
 
 export default {
     title: "components/breadcrumbs/Breadcrumbs",
+    decorators: [
+        (Story: any) => (
+            <div style={{ height: "400px", display: "flex", flexDirection: "column" }}>
+                <Story />
+            </div>
+        ),
+    ],
 };
 
 const singleItem: Breadcrumb[] = [{ url: "/one", title: "Breadcrumb One" }];
