@@ -1,4 +1,5 @@
 import console from "node:console";
+import { realpathSync } from "node:fs";
 
 import {
     CRUD_GENERATOR_METADATA_KEY,
@@ -9,11 +10,15 @@ import {
 import { CLIHelper } from "@mikro-orm/cli";
 import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { exec as execCallback } from "child_process";
+import { promisify } from "util";
 
+import { buildOptions } from "./generateCrud/build-options";
 import { generateCrud } from "./generateCrud/generate-crud";
 import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
 
+const exec = promisify(execCallback);
 /**
  * Generate mode for the generator.
  *
@@ -36,6 +41,8 @@ export const generateFiles = async (
     }
 
     if (orm != null) {
+        const writtenFiles: string[] = [];
+
         const entities = orm.em.getMetadata().getAll();
         LazyMetadataStorage.load();
 
@@ -51,7 +58,9 @@ export const generateFiles = async (
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrud for Entity ${entity.path}`);
                         const files = await generateCrud(generatorOptions, entity);
-                        await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
+                        const { targetDirectory } = buildOptions(entity, generatorOptions);
+                        await writeGeneratedFiles(files, targetDirectory);
+                        writtenFiles.push(...files.map((f) => realpathSync(`${f.targetDirectory ?? targetDirectory}/${f.name}`)));
                     }
                 }
                 {
@@ -61,10 +70,16 @@ export const generateFiles = async (
                     if (generatorOptions) {
                         console.log(`🚀 start generateCrudSingle for Entity ${entity.path}`);
                         const files = await generateCrudSingle(generatorOptions, entity);
-                        await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
+                        const { targetDirectory } = buildOptions(entity, generatorOptions);
+                        await writeGeneratedFiles(files, targetDirectory);
+                        writtenFiles.push(...files.map((f) => realpathSync(`${f.targetDirectory ?? targetDirectory}/${f.name}`)));
                     }
                 }
             }
+        }
+        if (writtenFiles.length > 0) {
+            console.log("Formatting generated files...");
+            await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
         }
     }
 };

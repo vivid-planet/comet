@@ -64,7 +64,7 @@ describe("generate-crud relations two levels", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("Product"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("Product"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {

@@ -55,10 +55,7 @@ describe("GenerateCrudInputJson", () => {
                 }),
             );
 
-            const out = await generateCrudInput(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"),
-            );
+            const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"));
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -99,10 +96,7 @@ describe("GenerateCrudInputJson", () => {
                 }),
             );
 
-            const out = await generateCrudInput(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityWithJsonObject"),
-            );
+            const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithJsonObject"));
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -142,10 +136,7 @@ describe("GenerateCrudInputJson", () => {
                 }),
             );
 
-            const out = await generateCrudInput(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityWithRecord"),
-            );
+            const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithRecord"));
             const formattedOut = await formatSource(out[0].content);
             const source = parseSource(formattedOut);
 

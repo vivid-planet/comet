@@ -31,7 +31,7 @@ import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {
-        dialogApiRef: RefObject<IEditDialogApi>;
+        dialogApiRef: RefObject<IEditDialogApi | null>;
     };
 
     const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
@@ -179,7 +179,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         await waitFor(() => {
             expect(rendered.getByTestId("editPage.backButton")).toBeInTheDocument();
         });
-        within(rendered.getByTestId("editPage.backButton")).getByRole("button").click();
+        within(rendered.getByTestId("editPage.backButton")).getByRole("link").click();
         await waitFor(() => {
             expect(screen.getByText("Products")).toBeInTheDocument();
         });

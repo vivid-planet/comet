@@ -1,4 +1,4 @@
-import { type Decorator } from "@storybook/react/*";
+import { type Decorator } from "@storybook/react-webpack5";
 import { useEffect } from "react";
 
 export const componentDocsDecorator = (): Decorator => {

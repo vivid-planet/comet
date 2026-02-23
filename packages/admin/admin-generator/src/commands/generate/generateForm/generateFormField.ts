@@ -170,8 +170,16 @@ export function generateFormField({
             formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "boolean") {
+        const checkboxLabel = config.checkboxLabel
+            ? generateFormattedMessage({
+                  config: config.checkboxLabel,
+                  id: `${formattedMessageRootId}.${name}.checkboxLabel`,
+                  type: "jsx",
+              })
+            : "";
         code = `<CheckboxField
-                        label={${fieldLabel}}
+                        fieldLabel={${fieldLabel}}
+                        ${config.checkboxLabel ? `label={${checkboxLabel}}` : ""}
                         name="${nameWithPrefix}"
                         fullWidth
                         variant="horizontal"
@@ -188,11 +196,11 @@ export function generateFormField({
         formValueConfig.defaultInitializationCode = config.initialValue ? "true" : "false";
     } else if (config.type == "date") {
         imports.push({
-            name: "Future_DatePickerField",
+            name: "DatePickerField",
             importPath: "@comet/admin",
         });
         code = `
-            <Future_DatePickerField
+            <DatePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
@@ -218,7 +226,7 @@ export function generateFormField({
         }
     } else if (config.type == "dateTime") {
         imports.push({
-            name: "Future_DateTimePickerField as DateTimePickerField",
+            name: "DateTimePickerField",
             importPath: "@comet/admin",
         });
         code = `<DateTimePickerField
@@ -291,12 +299,28 @@ export function generateFormField({
 
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {
+                const messageId = `${formattedMessageRootId}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
+                const valueLabel = generateFormattedMessage({
+                    config: undefined,
+                    defaultMessage: camelCaseToHumanReadable(value),
+                    id: messageId,
+                    type: "jsx",
+                });
                 return {
                     value,
-                    label: camelCaseToHumanReadable(value),
+                    labelCode: valueLabel,
                 };
             } else {
-                return value;
+                const messageId = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                const valueLabel = generateFormattedMessage({
+                    config: value.label,
+                    id: messageId,
+                    type: "jsx",
+                });
+                return {
+                    value: value.value,
+                    labelCode: valueLabel,
+                };
             }
         });
 
@@ -334,9 +358,7 @@ export function generateFormField({
                   ${values
                       .map((value) => {
                           return `{
-                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
-                                    value.value.charAt(0).toLowerCase() + value.value.slice(1)
-                                }" defaultMessage="${value.label}" />,
+                                label: ${value.labelCode},
                                 value: "${value.value}",
                             }`;
                       })
@@ -365,11 +387,9 @@ export function generateFormField({
                                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                                 ${multiple ? "multiple" : ""}
                                 options={[${values.map((value) => {
-                                    const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
-
                                     return `{
                                         value: "${value.value}",
-                                        label: <FormattedMessage id="${id}" defaultMessage="${value.label}" />
+                                        label: ${value.labelCode}
                                     }`;
                                 })}]}
                             />`;

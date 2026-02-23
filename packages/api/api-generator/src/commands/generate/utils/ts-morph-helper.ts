@@ -14,7 +14,7 @@ function morphTsSource(metadata: EntityMetadata<any>) {
     return tsSource;
 }
 
-function morphTsClass(metadata: EntityMetadata<any>) {
+export function morphTsClass(metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     const tsClass = tsSource.getClass(metadata.className);
     if (!tsClass) throw new Error(`Class ${metadata.className} not found in ${metadata.path}`);
@@ -50,8 +50,12 @@ export function findImportPath(importName: string, targetDirectory: string, meta
 
                 if (importPath.startsWith("./") || importPath.startsWith("../")) {
                     const absolutePath = path.resolve(path.dirname(metadata.path), importPath);
+                    let relativePath = path.relative(targetDirectory, absolutePath);
+                    if (!relativePath.startsWith(".")) {
+                        relativePath = `./${relativePath}`;
+                    }
                     return {
-                        importPath: path.relative(targetDirectory, absolutePath),
+                        importPath: relativePath,
                         exportedDeclaration,
                     };
                 } else {
@@ -98,16 +102,16 @@ export function findEnumImportPath(enumName: string, targetDirectory: string, me
     }
 }
 
-export function findValidatorImportPath(validatorName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+export function findValidatorImportPath(validatorName: string, targetDirectory: string, metadata: EntityMetadata<any>): string {
     const tsSource = morphTsSource(metadata);
     //validator defined in same file as entity
     if (tsSource.getVariableDeclaration(validatorName) || tsSource.getFunction(validatorName)) {
         if (!(tsSource.getVariableDeclaration(validatorName)?.isExported() || tsSource.getFunction(validatorName)?.isExported())) {
             throw new Error(`Validator ${validatorName} is not exported in ${metadata.path}`);
         }
-        return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
+        return path.relative(`${targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
     } else {
-        const { importPath } = findImportPathOrThrow(validatorName, generatorOptions.targetDirectory, metadata);
+        const { importPath } = findImportPathOrThrow(validatorName, targetDirectory, metadata);
         return importPath;
     }
 }
