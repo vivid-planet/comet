@@ -1,5 +1,26 @@
 # @comet/brevo-admin
 
+## 9.0.0-beta.0
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [3fda20b]
+- Updated dependencies [f066335]
+- Updated dependencies [ee24125]
+- Updated dependencies [5f1566a]
+- Updated dependencies [790e8d0]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-date-time@9.0.0-beta.0
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+    - @comet/cms-admin@9.0.0-beta.0
+
 ## 8.17.1
 
 ### Patch Changes

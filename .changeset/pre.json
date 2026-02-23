@@ -27,5 +27,22 @@
     "@comet/site-react": "8.14.0",
     "comet-storybook": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "curly-mirrors-agree",
+    "dirty-months-tickle",
+    "empty-trams-allow",
+    "fuzzy-paths-press",
+    "green-badgers-smell",
+    "heavy-swans-help",
+    "light-peas-design",
+    "little-pots-beg",
+    "many-bikes-bathe",
+    "old-kiwis-draw",
+    "olive-nails-kneel",
+    "petite-ears-return",
+    "pink-geckos-carry",
+    "rich-clubs-enjoy",
+    "thick-lights-taste",
+    "violet-peaches-march"
+  ]
 }
