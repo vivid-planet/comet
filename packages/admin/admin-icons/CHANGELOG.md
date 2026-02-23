@@ -1,5 +1,15 @@
 # @comet/admin-icons
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
 ## 8.17.1
 
 ### Patch Changes
