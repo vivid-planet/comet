@@ -3,9 +3,11 @@ import {
     CrudField,
     CrudGenerator,
     DamImageBlock,
+    ExtractBlockData,
     FileUpload,
     ImportTargetInterface,
     RootBlock,
+    RootBlockDataScalar,
     RootBlockEntity,
     RootBlockType,
 } from "@comet/cms-api";
@@ -25,6 +27,7 @@ import {
     types,
 } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
@@ -235,4 +238,9 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
+
+    @Property({ type: new RootBlockType(RichTextBlock) })
+    @RootBlock(RichTextBlock)
+    @Field(() => RootBlockDataScalar(RichTextBlock))
+    disclaimer: ExtractBlockData<typeof RichTextBlock>;
 }

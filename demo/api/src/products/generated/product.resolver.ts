@@ -24,6 +24,7 @@ import {
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { Product } from "../entities/product.entity";
@@ -128,6 +129,7 @@ export class ProductResolver {
             priceList: priceListInput,
             statistics: statisticsInput,
             image: imageInput,
+            disclaimer: disclaimerInput,
             ...assignInput
         } = input;
         const product = this.entityManager.create(Product, {
@@ -136,6 +138,8 @@ export class ProductResolver {
             manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined,
             priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
             image: imageInput.transformToBlockData(),
+            disclaimer: disclaimerInput.transformToBlockData(),
+            // disclaimer: RichTextBlock.blockDataFactory(disclaimerInput), // this would work and has no type error
         });
         if (colorsInput) {
             await product.colors.loadItems();
@@ -203,6 +207,7 @@ export class ProductResolver {
             priceList: priceListInput,
             statistics: statisticsInput,
             image: imageInput,
+            disclaimer: disclaimerInput,
             ...assignInput
         } = input;
         product.assign({
@@ -265,6 +270,9 @@ export class ProductResolver {
         }
         if (imageInput) {
             product.image = imageInput.transformToBlockData();
+        }
+        if (disclaimerInput) {
+            product.disclaimer = disclaimerInput.transformToBlockData();
         }
         await this.entityManager.flush();
         return product;
@@ -349,5 +357,12 @@ export class ProductResolver {
         product: Product,
     ): Promise<object> {
         return this.blocksTransformer.transformToPlain(product.image);
+    }
+    @ResolveField(() => RootBlockDataScalar(RichTextBlock))
+    async disclaimer(
+        @Parent()
+        product: Product,
+    ): Promise<object> {
+        return this.blocksTransformer.transformToPlain(product.disclaimer);
     }
 }

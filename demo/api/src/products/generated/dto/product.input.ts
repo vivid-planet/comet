@@ -10,6 +10,7 @@ import { ProductType } from "../../entities/product-type.enum";
 import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";
 import { ProductNestedProductColorInput } from "./product-nested-product-color.input";
 import { ProductNestedProductToTagInput } from "./product-nested-product-to-tag.input";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 @InputType()
 export class ProductInput {
     @IsNotEmpty()
@@ -111,6 +112,11 @@ export class ProductInput {
     @IsArray()
     @IsString({ each: true })
     datasheets: string[];
+    @IsNotEmpty()
+    @Field(() => RootBlockInputScalar(RichTextBlock))
+    @Transform(({ value }) => (isBlockInputInterface(value) ? value : RichTextBlock.blockInputFactory(value)), { toClassOnly: true })
+    @ValidateNested()
+    disclaimer: BlockInputInterface;
 }
 @InputType()
 export class ProductUpdateInput extends PartialType(ProductInput) {}
