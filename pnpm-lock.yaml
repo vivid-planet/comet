@@ -258,18 +258,21 @@ importers:
       vite:
         specifier: ^7.2.6
         version: 7.2.6(@types/node@24.10.13)(jiti@2.6.1)(sass@1.93.0)(terser@5.46.0)(yaml@2.8.1)
+      vite-plugin-compression2:
+        specifier: ^2.3.1
+        version: 2.4.0(rollup@4.53.3)
       vite-plugin-html:
         specifier: ^3.2.2
         version: 3.2.2(vite@7.2.6(@types/node@24.10.13)(jiti@2.6.1)(sass@1.93.0)(terser@5.46.0)(yaml@2.8.1))
 
   demo/admin/server:
     dependencies:
-      compression:
-        specifier: ^1.8.1
-        version: 1.8.1
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      express-static-gzip:
+        specifier: ^3.0.0
+        version: 3.0.0
       helmet:
         specifier: ^7.2.0
         version: 7.2.0
@@ -11867,6 +11870,9 @@ packages:
     resolution: {integrity: sha512-2Zks0hf1VLFYI1kbh0I5jP3KHHyCHpkfyHBzsSXRFgl/Bg9mWYfMW8oD+PdMPlEwy5HNsR9JutYy6pMeOh61nw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
+  express-static-gzip@3.0.0:
+    resolution: {integrity: sha512-36O10S0asHl3QojOBQQ0ZjXNtElmhgPS6erSUCCZymXkB/CK1mnGqOj4BTJN+FYRDIzVFnzo3wLFCZJvAk6rQQ==}
+
   express@4.22.1:
     resolution: {integrity: sha512-F2X8g9P1X7uCPZMA3MVf9wcTqlyNp7IhH5qPCI0izhaOIYXaW9L535tGA3qmjRzpH+bZczqq7hVKxTR4NWnu+g==}
     engines: {node: '>= 0.10.0'}
@@ -17061,6 +17067,9 @@ packages:
   tar-fs@3.1.1:
     resolution: {integrity: sha512-LZA0oaPOc2fVo82Txf3gw+AkEd38szODlptMYejQUhndHMLQ9M059uXR+AfS7DNo0NpINvSqDsvyaCrBVkptWg==}
 
+  tar-mini@0.2.0:
+    resolution: {integrity: sha512-+qfUHz700DWnRutdUsxRRVZ38G1Qr27OetwaMYTdg8hcPxf46U0S1Zf76dQMWRBmusOt2ZCK5kbIaiLkoGO7WQ==}
+
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
     engines: {node: '>=6'}
@@ -17727,6 +17736,9 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  vite-plugin-compression2@2.4.0:
+    resolution: {integrity: sha512-8J4CBF1+dM1I06azba/eXJuJHinLF0Am7lUvRH8AZpu0otJoBaDEnxrIEr5iPZJSwH0AEglJGYCveh7pN52jCg==}
 
   vite-plugin-dts@4.5.4:
     resolution: {integrity: sha512-d4sOM8M/8z7vRXHHq/ebbblfaxENjogAAekcfcDCCwAyvGqnPrc7f4NZbvItS+g4WTgerW0xDwSz5qz11JT3vg==}
@@ -30490,6 +30502,14 @@ snapshots:
       jest-message-util: 29.7.0
       jest-util: 29.7.0
 
+  express-static-gzip@3.0.0:
+    dependencies:
+      mime-types: 3.0.2
+      parseurl: 1.3.3
+      serve-static: 2.2.0
+    transitivePeerDependencies:
+      - supports-color
+
   express@4.22.1:
     dependencies:
       accepts: 1.3.8
@@ -37109,6 +37129,8 @@ snapshots:
     transitivePeerDependencies:
       - bare-buffer
 
+  tar-mini@0.2.0: {}
+
   tar-stream@2.2.0:
     dependencies:
       bl: 4.1.0
@@ -37795,6 +37817,13 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
+
+  vite-plugin-compression2@2.4.0(rollup@4.53.3):
+    dependencies:
+      '@rollup/pluginutils': 5.1.4(rollup@4.53.3)
+      tar-mini: 0.2.0
+    transitivePeerDependencies:
+      - rollup
 
   vite-plugin-dts@4.5.4(@types/node@24.10.13)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@24.10.13)(sass@1.93.0)(terser@5.46.0)):
     dependencies:

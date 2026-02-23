@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
 import { defineConfig, type Plugin } from "vite";
+import { compression } from "vite-plugin-compression2";
 import { createHtmlPlugin } from "vite-plugin-html";
 
 import { environment as envVarsToLoad } from "./src/environment";
@@ -59,6 +60,7 @@ export default defineConfig(({ mode }) => {
                     ],
                 ],
             }),
+            compression(),
             createHtmlPlugin({
                 minify: true,
                 entry: resolve(__dirname, "src/loader.ts"),
