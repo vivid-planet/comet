@@ -4,7 +4,16 @@ import storybook from "eslint-plugin-storybook";
 /** @type {import('eslint')} */
 const config = [
     {
-        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**", "block-meta.json"],
+        ignores: [
+            "src/db/migrations/**",
+            "dist/**",
+            "src/**/*.generated.ts",
+            "src/**/generated/**",
+            "block-meta.json",
+            "lang/**",
+            "lang-compiled/**",
+            "lang-extracted/**",
+        ],
     },
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],
