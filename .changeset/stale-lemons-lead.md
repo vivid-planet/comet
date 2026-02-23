@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Remove DataGrid Pro usages to allow usage of @comet/admin without Pro
+Remove Data Grid Pro usages to allow usage without the Pro version
