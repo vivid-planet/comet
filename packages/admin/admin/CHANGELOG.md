@@ -1,5 +1,15 @@
 # @comet/admin
 
+## 8.17.0
+
+### Minor Changes
+
+- 45163f1: Add DataGrid helper `useDataGridUrlState` that can be used like `useDataGridRemote` to store state as location params but for client side (non paginated) filter/sort
+
+### Patch Changes
+
+- @comet/admin-icons@8.17.0
+
 ## 8.16.0
 
 ### Minor Changes
