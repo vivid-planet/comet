@@ -1,1 +1,14 @@
 addAssignees: author
+
+addReviewers: true
+
+reviewers:
+    - johnnyomair
+
+skipKeywords:
+    - Merge main into next
+    - Version Packages
+
+skipUsers:
+    - renovate[bot]
+    - Copilot
