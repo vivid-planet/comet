@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-literals */
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
@@ -80,7 +79,7 @@ const Separator = createComponentSlot(ChevronRight)<BreadcrumbsClassKey>({
     margin: 0 5px;
 `);
 
-const Ellipsis = createComponentSlot("span")<BreadcrumbsClassKey>({
+const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "ellipsis",
 })(css`
@@ -173,6 +172,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
     const { items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+    const ellipsis = ". . .";
 
     const toggleMenu = () => {
         setIsMenuOpen((prev) => !prev);
@@ -191,7 +191,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                 {hasMultipleItems && isMobile && (
                                     <>
                                         <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
-                                            . . .
+                                            {ellipsis}
                                         </Ellipsis>
                                         <Separator {...slotProps?.separator} />
                                     </>
