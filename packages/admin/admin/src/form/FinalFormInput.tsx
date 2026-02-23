@@ -46,9 +46,7 @@ export function FinalFormInput({
                 endAdornment={
                     (endAdornment || clearable || isTranslatable) && (
                         <>
-                            {clearable && input.value && (
-                                <ClearInputAdornment position="end" onClick={() => input.onChange("")} />
-                            )}
+                            {clearable && input.value && <ClearInputAdornment position="end" onClick={() => input.onChange("")} />}
                             {isTranslatable && (
                                 <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
                                     <IconButton

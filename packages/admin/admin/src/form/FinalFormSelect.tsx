@@ -72,12 +72,8 @@ export const FinalFormSelect = <T,>({
 
     const hasClearableContent = !disabled && (multiple && Array.isArray(value) ? value.length > 0 : value !== undefined && value !== "");
 
-    const endAdornment = !required && hasClearableContent ? (
-        <ClearInputAdornment
-            position="end"
-            onClick={() => onChange(multiple ? [] : undefined)}
-        />
-    ) : null;
+    const endAdornment =
+        !required && hasClearableContent ? <ClearInputAdornment position="end" onClick={() => onChange(multiple ? [] : undefined)} /> : null;
 
     const selectProps = {
         ...rest,
