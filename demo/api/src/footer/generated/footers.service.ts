@@ -1,4 +1,3 @@
 import { Injectable } from "@nestjs/common";
 @Injectable()
-export class FootersService {
-}
+export class FootersService {}

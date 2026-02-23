@@ -66,7 +66,7 @@ export class UserPermissionsGuard implements CanActivate {
         } else {
             if (requiredContentScopes.length === 0)
                 throw new Error(
-                    `Could not get content scope. Either pass a scope-argument or add an @AffectedEntity()-decorator or enable skipScopeCheck in the @RequiredPermission()-decorator of ${location}`,
+                    `Could not get content scope. Either pass a scope-argument or add an @AffectedEntity()/@AffectedScope()-decorator or enable skipScopeCheck in the @RequiredPermission()-decorator of ${location}`,
                 );
 
             // requiredContentScopes is an two level array of scopes

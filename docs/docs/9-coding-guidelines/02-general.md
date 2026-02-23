@@ -3,7 +3,34 @@ title: General (all programming languages)
 sidebar_position: -5
 ---
 
-## Boolean Naming
+## Use Descriptive Naming
+
+The goal of names is to help developers understand the code without having to read the detailed implementation.
+
+Try to avoid comments as descriptions, as they may not always be up to date with the code.
+
+:::warning Bad
+
+```ts
+// calculates the sum of all products in the cart and removes the discount
+const price = (c: C) => {
+    return c.prods.reduce((s, p) => s + p.price - p.disc, 0);
+};
+```
+
+:::
+
+:::tip Good
+
+```ts
+const getCartPriceWithDiscounts = (cart: Cart) => {
+    return cart.products.reduce((total, product) => total + product.price - product.discount, 0);
+};
+```
+
+:::
+
+### Boolean Naming
 
 The name should indicate that the variable is a boolean.
 

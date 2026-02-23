@@ -32,44 +32,6 @@
 }
 
 .swiper {
-    :global(.swiper-pagination) {
-        width: auto;
-        position: absolute;
-        bottom: 35px;
-        left: 0;
-        gap: var(--spacing-s400);
-
-        @media (min-width: $breakpoint-sm) {
-            bottom: var(--spacing-s100);
-            left: auto;
-            right: 0;
-        }
-
-        :global(.swiper-pagination-bullet) {
-            color: var(--media-gallery-dot-navigation-default);
-            margin-right: var(--spacing-s400);
-            margin-left: 0;
-
-            &:hover {
-                background-color: var(--media-gallery-dot-navigation-hover);
-            }
-
-            @media (min-width: $breakpoint-sm) {
-                bottom: var(--spacing-s100);
-                margin-left: var(--spacing-s400);
-                margin-right: 0;
-            }
-        }
-
-        :global(.swiper-pagination-bullet-active) {
-            background-color: var(--media-gallery-dot-navigation-active);
-
-            &:hover {
-                background-color: var(--media-gallery-dot-navigation-active-hover);
-            }
-        }
-    }
-
     .mediaCaption {
         opacity: 0;
         transition: opacity 0.3s linear 0s;
@@ -142,5 +104,17 @@
         &--next {
             right: -48px;
         }
+    }
+}
+
+.customPagination {
+    position: absolute;
+    bottom: 35px;
+    left: 0;
+
+    @media (min-width: $breakpoint-sm) {
+        bottom: var(--spacing-s100);
+        left: auto;
+        right: 0;
     }
 }

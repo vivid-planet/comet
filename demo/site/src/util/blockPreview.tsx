@@ -3,12 +3,14 @@
 import { BlockPreviewProvider, IFrameBridgeProvider } from "@comet/site-nextjs";
 import { type FunctionComponent } from "react";
 
-export const withBlockPreview = (Component: FunctionComponent) => () => {
-    return (
-        <IFrameBridgeProvider>
-            <BlockPreviewProvider>
-                <Component />
-            </BlockPreviewProvider>
-        </IFrameBridgeProvider>
-    );
-};
+export const withBlockPreview =
+    <P extends object>(Component: FunctionComponent<P>) =>
+    (props: P) => {
+        return (
+            <IFrameBridgeProvider>
+                <BlockPreviewProvider>
+                    <Component {...props} />
+                </BlockPreviewProvider>
+            </IFrameBridgeProvider>
+        );
+    };

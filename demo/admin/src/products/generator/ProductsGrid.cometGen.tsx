@@ -42,7 +42,7 @@ export default defineConfig<GQLProduct>({
             minWidth: 200,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="Cap" />,
                     Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };
@@ -122,7 +122,7 @@ export default defineConfig<GQLProduct>({
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "date")
         { type: "date", name: "availableSince", width: 140 },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "dateTime")
-        { type: "dateTime", name: "createdAt", width: 170 },
+        { type: "dateTime", name: "createdAt", width: 170, visible: false },
         {
             type: "text",
             name: "manufacturer.name",

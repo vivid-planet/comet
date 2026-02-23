@@ -7,6 +7,21 @@ sidebar_position: -9
 
 ## Admin
 
+### Admin packages are now ESM-only
+
+Make the following changes to your `admin/tsconfig.json`:
+
+```diff title="admin/tsconfig.json"
+{
+    "compilerOptions": {
+-       "module": "ESNext",
+-       "moduleResolution": "Node",
++       "module": "preserve",
++       "moduleResolution": "bundler"
+    }
+}
+```
+
 ### Tooltip-related Changes
 
 #### 🤖 Replace the `variant` prop with `color` in `Tooltip`
@@ -54,6 +69,155 @@ The `createHttpClient` function has been removed. Use native fetch instead.
 ### Remove `clearable` prop from `Autocomplete`, `FinalFormInput`, `FinalFormNumberInput` and `FinalFormSearchTextField`
 
 Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
+
+### Replacement of `@comet/admin-date-time`
+
+Most components of `@comet/admin-date-time` are now deprecated and are being replaced by new components in `@comet/admin`.
+
+#### Use the new components from `@comet/admin` (recommended)
+
+In most cases, the new components will be a drop-in replacement for the legacy components, so you can simply replace the imports:
+
+| Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`                  |
+| ---------------------------------------------- | -------------------------------------------------- |
+| `DatePicker`                                   | `DatePicker`                                       |
+| `DateField`                                    | `DatePickerField`                                  |
+| `FinalFormDatePicker`                          | `DatePickerField` (without using `<Field />`)      |
+| `DateRangePicker`                              | `DateRangePicker`                                  |
+| `DateRangeField`                               | `DateRangePickerField`                             |
+| `FinalFormDateRangePicker`                     | `DateRangePickerField` (without using `<Field />`) |
+| `TimePicker`                                   | `TimePicker`                                       |
+| `TimeField`                                    | `TimePickerField`                                  |
+| `FinalFormTimePicker`                          | `TimePickerField` (without using `<Field />`)      |
+| `DateTimePicker`                               | `DateTimePicker`                                   |
+| `DateTimeField`                                | `DateTimePickerField`                              |
+| `FinalFormDateTimePicker`                      | `DateTimePickerField` (without using `<Field />`)  |
+
+```diff title="Example of replacing DatePicker"
+-import { DatePicker } from "@comet/admin-date-time";
++import { DatePicker } from "@comet/admin";
+```
+
+```diff title="Example of replacing DateField"
+-import { DateField } from "@comet/admin-date-time";
++import { DatePickerField } from "@comet/admin";
+```
+
+When using final-form, only the field-components are available for the new components. Therefore, usage of the `FinalForm*` components with `<Field />` must be updated to use the respective `*Field` directly, without using `<Field />`.
+
+```diff title="Example of replacing FinalFormDatePicker"
+-import { Field } from "@comet/admin";
+-import { FinalFormDatePicker } from "@comet/admin-date-time";
++import { DatePickerField } from "@comet/admin";
+
+export const ExampleFields = () => {
+    return (
+        <>
+-           <Field component={FinalFormDatePicker} name="date" label="Date Picker" />
++           <DatePickerField name="date" label="Date Picker" />
+        </>
+    );
+};
+```
+
+#### Continue using the deprecated components
+
+The legacy components will continue to work as they did previously. The only change is that the class-names and theme component-keys are now prefixed with "Legacy".
+
+Update any use of class-names of the component's slots:
+
+- `CometAdminDatePicker-*` -> `CometAdminLegacyDatePicker-*`
+- `CometAdminDateRangePicker-*` -> `CometAdminLegacyDateRangePicker-*`
+- `CometAdminDateTimePicker-*` -> `CometAdminLegacyDateTimePicker-*`
+- `CometAdminTimePicker-*` -> `CometAdminLegacyTimePicker-*`
+
+```diff title="Example of updating the class-names"
+const WrapperForStyling = styled(Box)(({ theme }) => ({
+-   ".CometAdminDatePicker-calendar": {
++   ".CometAdminLegacyDatePicker-calendar": {
+        backgroundColor: "magenta",
+    },
+}));
+```
+
+Update the component-keys when using `defaultProps` or `styleOverrides` in the theme:
+
+- `CometAdminDatePicker` -> `CometAdminLegacyDatePicker`
+- `CometAdminDateRangePicker` -> `CometAdminLegacyDateRangePicker`
+- `CometAdminDateTimePicker` -> `CometAdminLegacyDateTimePicker`
+- `CometAdminTimePicker` -> `CometAdminLegacyTimePicker`
+
+```diff title="Example of updating the component-keys"
+export const theme = createCometTheme({
+    components: {
+-       CometAdminDatePicker: {
++       CometAdminLegacyDatePicker: {
+            defaultProps: {
+                startAdornment: <FancyCalendarIcon />,
+            },
+        },
+    },
+});
+```
+
+#### Update usages of "Future" (now stable) components
+
+The "Future" prefix has been removed from date/time components that are now considered stable.
+
+**If already in use, update the imports of these components and their types:**
+
+DatePicker:
+
+- `Future_DatePicker` -> `DatePicker`
+- `Future_DatePickerProps` -> `DatePickerProps`
+- `Future_DatePickerClassKey` -> `DatePickerClassKey`
+- `Future_DatePickerField` -> `DatePickerField`
+- `Future_DatePickerFieldProps` -> `DatePickerFieldProps`
+
+DateRangePicker:
+
+- `Future_DateRangePicker` -> `DateRangePicker`
+- `Future_DateRangePickerProps` -> `DateRangePickerProps`
+- `Future_DateRangePickerClassKey` -> `DateRangePickerClassKey`
+- `Future_DateRangePickerField` -> `DateRangePickerField`
+- `Future_DateRangePickerFieldProps` -> `DateRangePickerFieldProps`
+
+TimePicker:
+
+- `Future_TimePicker` -> `TimePicker`
+- `Future_TimePickerProps` -> `TimePickerProps`
+- `Future_TimePickerClassKey` -> `TimePickerClassKey`
+- `Future_TimePickerField` -> `TimePickerField`
+- `Future_TimePickerFieldProps` -> `TimePickerFieldProps`
+
+DateTimePicker:
+
+- `Future_DateTimePicker` -> `DateTimePicker`
+- `Future_DateTimePickerProps` -> `DateTimePickerProps`
+- `Future_DateTimePickerClassKey` -> `DateTimePickerClassKey`
+- `Future_DateTimePickerField` -> `DateTimePickerField`
+- `Future_DateTimePickerFieldProps` -> `DateTimePickerFieldProps`
+
+**If your theme is using `defaultProps` or `styleOverrides` for any of these components, update their component-keys:**
+
+- `CometAdminFutureDatePicker` -> `CometAdminDatePicker`
+- `CometAdminFutureDateRangePicker` -> `CometAdminDateRangePicker`
+- `CometAdminFutureTimePicker` -> `CometAdminTimePicker`
+- `CometAdminFutureDateTimePicker` -> `CometAdminDateTimePicker`
+
+**If you are using class-names to access these components' slots, update them:**
+
+- `CometAdminFuture_DatePicker-*` -> `CometAdminDatePicker-*`
+- `CometAdminFuture_DateRangePicker-*` -> `CometAdminDateRangePicker-*`
+- `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
+- `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
+
+## Api
+
+### Api Generator `targetDirectory` config removed
+
+The `targetDirectory` config of `@CrudGenerator` decorator is not needed anymore and must be removed. Generated files are now always written to `${__dirname}/../generated/`, which was a commonly used default.
+
 
 ## Site
 
@@ -238,3 +402,25 @@ export function createGraphQLFetch() {
     );
 }
 ```
+
+## API
+
+### Enable MikroORM dataloader for generated CRUD resolvers
+
+Generated list resolvers from `@comet/api-generator` no longer inspect GraphQL selection sets to build `populate` options.
+Relation loading is now expected to be handled by MikroORM's dataloader.
+
+Enable dataloader in your MikroORM config:
+
+```diff title="api/src/db/ormconfig.ts"
++import { DataloaderType } from "@mikro-orm/core";
++
+ export const ormConfig = createOrmConfig(
+     defineConfig({
+         // ...
++        dataloader: DataloaderType.ALL,
+     }),
+ );
+```
+
+Without enabling dataloader, relation fields resolved by generated resolvers can lead to significantly more SQL queries.

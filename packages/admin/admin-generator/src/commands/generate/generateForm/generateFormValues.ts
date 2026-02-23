@@ -112,15 +112,15 @@ export function generateFormValuesType({
 
 function generateInitialValuesFromTree(
     tree: FormValuesConfigTree,
-    dataObject: string,
+    dataObject: string | null,
     generationType: "initializationCode" | "defaultInitializationCode",
 ): string {
     let code = "";
     for (const [key, value] of Object.entries(tree)) {
         if (Object.keys(value.children).length > 0) {
-            let childCode = generateInitialValuesFromTree(value.children, `${dataObject}.${key}`, generationType);
+            let childCode = generateInitialValuesFromTree(value.children, dataObject ? `${dataObject}.${key}` : null, generationType);
             if (childCode.length) {
-                if (generationType == "initializationCode") {
+                if (dataObject) {
                     childCode = `{ ...${dataObject}.${key}, ${childCode} }`;
                     if (value.nullable) {
                         code += `${key}: ${dataObject}.${key} ? ${childCode} : undefined, `;
@@ -149,12 +149,14 @@ export function generateInitialValues({
     filterByFragmentType,
     gqlIntrospection,
     gqlType,
+    initialValuesAsProp,
 }: {
     mode: "all" | "edit" | "add";
     formValuesConfig: GenerateFieldsReturn["formValuesConfig"];
     filterByFragmentType: string;
     gqlIntrospection: IntrospectionQuery;
     gqlType: string;
+    initialValuesAsProp: boolean;
 }) {
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
@@ -168,12 +170,14 @@ export function generateInitialValues({
                 ${generateInitialValuesFromTree(tree, `data.${instanceGqlType}`, "initializationCode")}
             }
             : {
-                ${generateInitialValuesFromTree(tree, `data.${instanceGqlType}`, "defaultInitializationCode")}
+                ${generateInitialValuesFromTree(tree, initialValuesAsProp ? `passedInitialValues` : null, "defaultInitializationCode")}
+                ${initialValuesAsProp ? `...passedInitialValues,` : ""}
             }
         , [data]);`;
     } else {
         return `const initialValues = {
-            ${generateInitialValuesFromTree(tree, `data.${instanceGqlType}`, "defaultInitializationCode")}
+            ${generateInitialValuesFromTree(tree, initialValuesAsProp ? `passedInitialValues` : null, "defaultInitializationCode")}
+            ${initialValuesAsProp ? `...passedInitialValues,` : ""}
         };`;
     }
 }

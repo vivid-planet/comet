@@ -6,7 +6,7 @@ export type FinalFormDateRangePickerProps = DateRangePickerProps;
 type FinalFormDateRangePickerInternalProps = FieldRenderProps<DateRange, HTMLInputElement | HTMLTextAreaElement>;
 
 /**
- * @deprecated `FinalFormDateRangePicker` from `@comet/admin-date-time` will be replaced by `DateRangePickerField` (currently `Future_DateRangePickerField`) from `@comet/admin` in a future major release.
+ * @deprecated Use `DateRangePickerField` from `@comet/admin` instead.
  *
  * Final Form-compatible DateRangerPicker component.
  *
