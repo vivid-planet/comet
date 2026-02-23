@@ -412,9 +412,6 @@ importers:
       response-time:
         specifier: ^2.3.4
         version: 2.3.4
-      rimraf:
-        specifier: ^6.1.2
-        version: 6.1.2
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -500,6 +497,9 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      rimraf:
+        specifier: ^6.1.2
+        version: 6.1.2
       storybook:
         specifier: ^10.1.11
         version: 10.1.11(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
