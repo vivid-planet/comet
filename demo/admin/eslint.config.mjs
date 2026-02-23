@@ -6,7 +6,7 @@ import path from "node:path";
 const config = [
     includeIgnoreFile(path.resolve(import.meta.dirname, ".gitignore")),
     {
-        ignores: ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts", "src/**/generated/**", "block-meta.json"],
+        ignores: ["dist/**", "src/**/generated/**"],
     },
     ...eslintConfigReact,
 ];

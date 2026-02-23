@@ -6,7 +6,7 @@ import path from "node:path";
 const config = [
     includeIgnoreFile(path.resolve(import.meta.dirname, ".gitignore")),
     {
-        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "lib/**", "block-meta.json"],
+        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "block-meta.json"],
     },
     ...eslintConfigNestJs,
     {

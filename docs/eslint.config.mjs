@@ -5,9 +5,6 @@ import path from "node:path";
 /** @type {import('eslint')} */
 const config = [
     includeIgnoreFile(path.resolve(import.meta.dirname, ".gitignore")),
-    {
-        ignores: [".docusaurus", "build"],
-    },
     ...eslintConfigReact,
     {
         rules: {

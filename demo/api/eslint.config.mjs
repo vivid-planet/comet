@@ -7,7 +7,7 @@ import storybook from "eslint-plugin-storybook";
 const config = [
     includeIgnoreFile(path.resolve(import.meta.dirname, ".gitignore")),
     {
-        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**", "block-meta.json"],
+        ignores: ["src/db/migrations/**", "src/**/*.generated.ts", "src/**/generated/**", "block-meta.json"],
     },
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],
