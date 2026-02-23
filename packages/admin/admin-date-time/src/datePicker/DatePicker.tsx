@@ -58,9 +58,9 @@ export const DatePicker = (inProps: DatePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required && !inputWithPopperProps.disabled ? (
+                !required && !inputWithPopperProps.disabled && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
                     </>
                 ) : (

@@ -106,7 +106,6 @@ export const AllIcons = () => {
                             <InputAdornment position="end">
                                 <ClearInputAdornment
                                     position="end"
-                                    hasClearableContent={Boolean(debouncedSearchQuery.length !== 0)}
                                     onClick={() => setSearchQuery("")}
                                 />
                             </InputAdornment>

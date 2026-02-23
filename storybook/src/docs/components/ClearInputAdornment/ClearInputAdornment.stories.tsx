@@ -24,7 +24,9 @@ export const Basic = {
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             endAdornment={
-                                <ClearInputAdornment position="end" hasClearableContent={Boolean(inputText)} onClick={() => setInputText("")} />
+                                inputText ? (
+                                    <ClearInputAdornment position="end" onClick={() => setInputText("")} />
+                                ) : undefined
                             }
                         />
                     </FieldContainer>
@@ -40,12 +42,13 @@ export const Basic = {
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             endAdornment={
-                                <ClearInputAdornment
-                                    position="end"
-                                    hasClearableContent={Boolean(inputText)}
-                                    onClick={() => setInputText("")}
-                                    icon={<Cut />}
-                                />
+                                inputText ? (
+                                    <ClearInputAdornment
+                                        position="end"
+                                        onClick={() => setInputText("")}
+                                        icon={<Cut />}
+                                    />
+                                ) : undefined
                             }
                         />
                     </FieldContainer>
