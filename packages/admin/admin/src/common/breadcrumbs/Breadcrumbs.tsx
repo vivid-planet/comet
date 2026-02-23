@@ -126,9 +126,7 @@ const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
         background-color: ${theme.palette.background.paper};
         box-shadow: ${theme.shadows[2]};
         padding: ${theme.spacing(4)};
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
+        z-index: 1;
     `,
 );
 
@@ -138,7 +136,6 @@ const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
 })(
     ({ theme }) => css`
         color: ${theme.palette.grey[900]};
-        white-space: nowrap;
         padding-top: 12.5px;
         padding-bottom: 12.5px;
     `,
