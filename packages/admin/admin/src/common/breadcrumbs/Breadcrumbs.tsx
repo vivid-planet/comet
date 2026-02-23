@@ -172,6 +172,7 @@ const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
         height: 22.5px;
         border-left: 2px solid ${theme.palette.grey[100]};
         border-bottom: 2px solid ${theme.palette.grey[100]};
+        align-self: flex-start;
     `,
 );
 
