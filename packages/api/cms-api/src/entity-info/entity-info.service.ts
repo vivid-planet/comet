@@ -47,11 +47,13 @@ export class EntityInfoService {
         // Handle embedded properties - fields are columns on the same table
         if (relationProp.kind === "embedded") {
             let currentProp = relationProp;
+            let currentName = relationName;
             for (const part of remainingParts) {
                 const childProp = currentProp.embeddedProps?.[part];
                 if (!childProp) {
-                    throw new Error(`Embedded field "${part}" not found in embeddable "${currentProp.name}" of entity "${metadata.className}"`);
+                    throw new Error(`Embedded field "${part}" not found in embeddable "${currentName}" of entity "${metadata.className}"`);
                 }
+                currentName = part;
                 currentProp = childProp;
             }
             return `"${tableName}"."${currentProp.fieldNames[0]}"`;
