@@ -80,7 +80,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
         function checkIfPathInLocation(
             child: ReactElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>,
         ) {
-            return "to" in child.props && matchPath(location.pathname, { path: child.props.to, strict: true });
+            return "to" in child.props && matchPath({ path: child.props.to as string, end: false }, location.pathname);
         }
         hasSelectedChild.current = false;
 

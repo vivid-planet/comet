@@ -1,5 +1,5 @@
 import { Stack, StackBreadcrumbs, StackPage, useStackSwitch } from "@comet/admin";
-import { Redirect, Route, Switch } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -36,14 +36,9 @@ export default {
 };
 
 export const StackRefApi = () => {
-    return (
-        <Switch>
-            <Route exact path="/">
-                <Redirect to="/foo" />
-            </Route>
-            <Route path="/foo">
-                <Story />
-            </Route>
-        </Switch>
-    );
+    const location = useLocation();
+    if (matchPath({ path: "/", end: true }, location.pathname)) {
+        return <Navigate to="/foo" replace />;
+    }
+    return <Story />;
 };

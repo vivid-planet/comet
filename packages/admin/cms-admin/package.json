@@ -87,7 +87,6 @@
         "@types/draft-js": "^0.11.20",
         "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-touched": "^1.0.3",
-        "@types/history": "^4.7.11",
         "@types/js-cookie": "^3.0.6",
         "@types/lodash.escaperegexp": "^4.1.9",
         "@types/lodash.isequal": "^4.5.8",
@@ -95,15 +94,12 @@
         "@types/node": "^24.10.9",
         "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
-        "@types/react-router": "^5.1.20",
-        "@types/react-router-dom": "^5.3.3",
         "@types/react-window": "^1.8.8",
         "chokidar-cli": "^3.0.0",
         "draft-js": "^0.11.7",
         "eslint": "^9.39.2",
         "final-form": "^4.20.10",
         "graphql": "^16.0.0",
-        "history": "^4.10.1",
         "jsdom": "^28.0.0",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
@@ -113,8 +109,8 @@
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
-        "react-router": "^5.3.4",
-        "react-router-dom": "^5.3.4",
+        "react-router": "^7.13.0",
+        "react-router-dom": "^7.13.0",
         "typescript": "^5.9.3",
         "vitest": "^4.0.16"
     },
@@ -132,8 +128,8 @@
         "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0",
         "react-final-form": "^6.0.0",
         "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0",
-        "react-router": "^5.0.0",
-        "react-router-dom": "^5.0.0"
+        "react-router": "^7.0.0",
+        "react-router-dom": "^7.0.0"
     },
     "engines": {
         "node": ">=22.0.0"

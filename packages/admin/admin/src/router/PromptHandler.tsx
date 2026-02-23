@@ -1,6 +1,5 @@
-import type * as History from "history";
-import { type MutableRefObject, type PropsWithChildren, useRef, useState } from "react";
-import { matchPath, Prompt } from "react-router";
+import { type MutableRefObject, type PropsWithChildren, useCallback, useRef, useState } from "react";
+import { type Location, matchPath, type NavigationType, useBlocker } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
@@ -9,7 +8,6 @@ import { type PromptRoutes } from "./Prompt";
 interface PromptHandlerState {
     showConfirmationDialog: boolean;
     message: string;
-    callback?: (ok: boolean) => void;
 }
 export interface PromptHandlerApi {
     showDialog: (message: string, callback: (ok: boolean) => void) => void;
@@ -24,40 +22,46 @@ function InnerPromptHandler({
     const [state, setState] = useState<PromptHandlerState>({
         showConfirmationDialog: false,
         message: "",
-        callback: undefined,
     });
+    const blockerMessageRef = useRef<string>("");
+
     if (apiRef)
         apiRef.current = {
             showDialog: (message: string, callback: (ok: boolean) => void) => {
                 setState({
                     showConfirmationDialog: true,
                     message,
-                    callback,
                 });
             },
         };
 
-    const promptMessage = (location: History.Location, action: History.Action): boolean | string => {
-        for (const id of Object.keys(registeredMessages.current)) {
-            const path = registeredMessages.current[id].path;
-            const subRoutePath = registeredMessages.current[id].subRoutePath;
-            const promptRoutes = registeredMessages.current[id].promptRoutes?.current ?? {};
+    const shouldBlock = useCallback(
+        ({ nextLocation, historyAction }: { nextLocation: Location; historyAction: NavigationType }): boolean => {
+            for (const id of Object.keys(registeredMessages.current)) {
+                const path = registeredMessages.current[id].path;
+                const subRoutePath = registeredMessages.current[id].subRoutePath;
+                const promptRoutes = registeredMessages.current[id].promptRoutes?.current ?? {};
 
-            const promptRouteMatches = Object.values(promptRoutes).some((route) => {
-                return matchPath(location.pathname, { path: route.path, exact: true });
-            });
-            const subRouteMatches = subRoutePath && location.pathname.startsWith(subRoutePath);
-            const pathMatches = matchPath(location.pathname, { path, exact: true });
+                const promptRouteMatches = Object.values(promptRoutes).some((route) => {
+                    return matchPath({ path: route.path, end: true }, nextLocation.pathname);
+                });
+                const subRouteMatches = subRoutePath && nextLocation.pathname.startsWith(subRoutePath);
+                const pathMatches = matchPath({ path, end: true }, nextLocation.pathname);
 
-            if (promptRouteMatches || (!subRouteMatches && !pathMatches)) {
-                const message = registeredMessages.current[id].message(location, action);
-                if (message !== true) {
-                    return message;
+                if (promptRouteMatches || (!subRouteMatches && !pathMatches)) {
+                    const message = registeredMessages.current[id].message(nextLocation, historyAction);
+                    if (message !== true) {
+                        blockerMessageRef.current = typeof message === "string" ? message : "";
+                        return true;
+                    }
                 }
             }
-        }
-        return true;
-    };
+            return false;
+        },
+        [registeredMessages],
+    );
+
+    const blocker = useBlocker(shouldBlock);
 
     const handleClose = async (action: PromptAction) => {
         let allowTransition = false;
@@ -77,32 +81,32 @@ function InnerPromptHandler({
                 msg.resetAction?.();
             }
         }
-        if (state.callback) {
-            state.callback(allowTransition);
+        if (allowTransition && blocker.state === "blocked") {
+            blocker.proceed();
+        } else if (blocker.state === "blocked") {
+            blocker.reset();
         }
         setState({
             showConfirmationDialog: false,
             message: "",
-            callback: undefined,
         });
     };
 
+    const isBlocked = blocker.state === "blocked";
+
     return (
-        <>
-            <RouterConfirmationDialog
-                isOpen={state.showConfirmationDialog}
-                message={state.message}
-                handleClose={handleClose}
-                showSaveButton={Object.values(registeredMessages.current).some((registeredMessage) => !!registeredMessage.saveAction)}
-            />
-            <Prompt when={true} message={promptMessage} />
-        </>
+        <RouterConfirmationDialog
+            isOpen={isBlocked || state.showConfirmationDialog}
+            message={isBlocked ? blockerMessageRef.current : state.message}
+            handleClose={handleClose}
+            showSaveButton={Object.values(registeredMessages.current).some((registeredMessage) => !!registeredMessage.saveAction)}
+        />
     );
 }
 
 interface PromptMessages {
     [id: string]: {
-        message: (location: History.Location, action: History.Action) => boolean | string;
+        message: (location: Location, action: NavigationType) => boolean | string;
         path: string;
         subRoutePath?: string;
         saveAction?: SaveAction;
@@ -131,7 +135,7 @@ export const RouterPromptHandler = function ({ children, apiRef }: PropsWithChil
         promptRoutes,
     }: {
         id: string;
-        message: (location: History.Location, action: History.Action) => string | boolean;
+        message: (location: Location, action: NavigationType) => string | boolean;
         saveAction?: SaveAction;
         resetAction?: ResetAction;
         path: string;

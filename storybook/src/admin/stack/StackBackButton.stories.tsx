@@ -1,6 +1,6 @@
 import { Stack, StackBackButton, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { useContext } from "react";
-import { Redirect, Route, Switch } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -40,14 +40,9 @@ export default {
 };
 
 export const _StackBackButton = () => {
-    return (
-        <Switch>
-            <Route exact path="/">
-                <Redirect to="/foo" />
-            </Route>
-            <Route path="/foo">
-                <Story />
-            </Route>
-        </Switch>
-    );
+    const location = useLocation();
+    if (matchPath({ path: "/", end: true }, location.pathname)) {
+        return <Navigate to="/foo" replace />;
+    }
+    return <Story />;
 };

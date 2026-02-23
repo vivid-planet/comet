@@ -1,7 +1,7 @@
 import { Badge } from "@mui/material";
 import { type ListItemProps } from "@mui/material/ListItem";
 import { type ReactNode } from "react";
-import { Link, type LinkProps, Route } from "react-router-dom";
+import { Link, type LinkProps, matchPath, useLocation } from "react-router";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MainNavigationItem, type MainNavigationItemProps } from "./Item";
@@ -23,6 +23,8 @@ export const MainNavigationItemRouterLink = ({
     ...restProps
 }: MainNavigationItemRouterLinkProps) => {
     const { badge, ...mainNavigationItemSlotProps } = slotProps ?? {};
+    const location = useLocation();
+    const match = matchPath({ path: restProps.to, end: false }, location.pathname);
 
     const secondaryAction = badgeContent ? ( // prioritize badgeContent over passed secondaryAction
         <Badge
@@ -38,18 +40,12 @@ export const MainNavigationItemRouterLink = ({
     );
 
     return (
-        <Route path={restProps.to} strict={false}>
-            {({ match }) => {
-                return (
-                    <MainNavigationItem
-                        selected={!!match}
-                        secondaryAction={secondaryAction}
-                        component={Link}
-                        slotProps={mainNavigationItemSlotProps}
-                        {...restProps}
-                    />
-                );
-            }}
-        </Route>
+        <MainNavigationItem
+            selected={!!match}
+            secondaryAction={secondaryAction}
+            component={Link}
+            slotProps={mainNavigationItemSlotProps}
+            {...restProps}
+        />
     );
 };

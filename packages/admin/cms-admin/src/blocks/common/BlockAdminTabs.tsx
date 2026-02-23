@@ -1,7 +1,8 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
 import { Tab as MuiTab, type TabProps, Tabs as MuiTabs } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Switch, useRouteMatch } from "react-router";
+import { useContext } from "react";
+import { matchPath, UNSAFE_RouteContext, useLocation } from "react-router";
 import { Link, type LinkProps } from "react-router-dom";
 
 import { type BlockAdminComponentPart } from "../types";
@@ -12,9 +13,13 @@ export interface BlockAdminTabsProps {
 }
 
 export function BlockAdminTabs({ children }: BlockAdminTabsProps): JSX.Element | null {
-    const match = useRouteMatch();
-    const tabRouteMatch = useRouteMatch<{ tab: string }>(`${match.path}/:tab`);
-    const selected = tabRouteMatch?.params.tab;
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
+    const matchRoutePath = currentMatch?.route?.path ?? "";
+    const location = useLocation();
+    const tabMatch = matchPath({ path: `${matchRoutePath}/:tab`, end: false }, location.pathname);
+    const selected = tabMatch?.params?.tab;
     if (children.length < 1) {
         return null;
     }
@@ -24,21 +29,19 @@ export function BlockAdminTabs({ children }: BlockAdminTabsProps): JSX.Element |
         <Root key="tabs">
             <Tabs value={selectedTab} variant="scrollable" scrollButtons="auto">
                 {children.map((tab, index) => {
-                    const url = index === 0 ? match.url : `${match.url}/${tab.key}`;
+                    const url = index === 0 ? matchUrl : `${matchUrl}/${tab.key}`;
                     return <Tab key={tab.key} value={tab.key} label={tab.label} component={Link} to={url} />;
                 })}
             </Tabs>
             <TabContent selectedTab={selectedTab}>
-                <Switch>
-                    {otherTabs.map((tab) => (
-                        <RouteWithErrorBoundary key={tab.key} path={`${match.url}/${tab.key}`}>
-                            {tab.content}
-                        </RouteWithErrorBoundary>
-                    ))}
+                {otherTabs.map((tab) => (
+                    <RouteWithErrorBoundary key={tab.key} path={`${matchUrl}/${tab.key}`}>
+                        {tab.content}
+                    </RouteWithErrorBoundary>
+                ))}
 
-                    {/* first tab is default route, last in <Switch> */}
-                    <RouteWithErrorBoundary path={match.url}>{firstTab.content}</RouteWithErrorBoundary>
-                </Switch>
+                {/* first tab is default route, last in rendering order */}
+                <RouteWithErrorBoundary path={matchUrl}>{firstTab.content}</RouteWithErrorBoundary>
             </TabContent>
         </Root>
     );

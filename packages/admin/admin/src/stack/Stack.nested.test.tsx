@@ -1,12 +1,7 @@
-import { createTheme } from "@mui/material/styles";
-import { createMemoryHistory } from "history";
 import { useContext } from "react";
-import { IntlProvider } from "react-intl";
-import { Router } from "react-router";
 import { fireEvent, render, waitFor } from "test-utils";
 import { expect, test } from "vitest";
 
-import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { StackBreadcrumbs } from "./breadcrumbs/StackBreadcrumbs";
 import { StackPage } from "./Page";
 import { Stack } from "./Stack";
@@ -57,17 +52,8 @@ test("StackNested basic test", async () => {
             </Stack>
         );
     }
-    const history = createMemoryHistory();
 
-    const rendered = render(
-        <IntlProvider locale="en">
-            <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <Story />
-                </Router>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("activate page2"));
 

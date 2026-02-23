@@ -1,41 +1,35 @@
 import { ForcePromptRoute, RouterPrompt } from "@comet/admin";
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
-    return (
-        <Switch>
-            <Route path="/foo">
-                <RouterPrompt
-                    message={() => {
-                        return "rly?";
-                    }}
-                    subRoutePath="/foo"
-                >
-                    <ul>
-                        <li>
-                            <Link to="/foo/sub1">/foo/sub1</Link> (no prompt)
-                        </li>
-                        <li>
-                            <Link to="/foo/sub2">/foo/sub2</Link> (force prompt)
-                        </li>
-                        <li>
-                            <Link to="/foo">/foo</Link> (back)
-                        </li>
-                    </ul>
-                    <Route path="/foo/sub1">
-                        <div>sub1</div>
-                    </Route>
-                    <ForcePromptRoute path="/foo/sub2">
-                        <div>sub2</div>
-                    </ForcePromptRoute>
-                </RouterPrompt>
-            </Route>
-            <Redirect to="/foo" />
-        </Switch>
+    const location = useLocation();
+    return matchPath({ path: "/foo", end: false }, location.pathname) ? (
+        <RouterPrompt
+            message={() => {
+                return "rly?";
+            }}
+            subRoutePath="/foo"
+        >
+            <ul>
+                <li>
+                    <Link to="/foo/sub1">/foo/sub1</Link> (no prompt)
+                </li>
+                <li>
+                    <Link to="/foo/sub2">/foo/sub2</Link> (force prompt)
+                </li>
+                <li>
+                    <Link to="/foo">/foo</Link> (back)
+                </li>
+            </ul>
+            {matchPath({ path: "/foo/sub1", end: false }, location.pathname) && <div>sub1</div>}
+            <ForcePromptRoute path="/foo/sub2">{matchPath({ path: "/foo/sub2", end: false }, location.pathname) && <div>sub2</div>}</ForcePromptRoute>
+        </RouterPrompt>
+    ) : (
+        <Navigate to="/foo" replace />
     );
 }
 

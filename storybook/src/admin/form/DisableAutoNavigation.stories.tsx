@@ -15,7 +15,6 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
 import { useContext } from "react";
-import { Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -103,17 +102,15 @@ export default {
 
 export const DisableAutoNavigation = () => {
     return (
-        <Switch>
-            <Stack topLevelTitle="Sample">
-                <StackSwitch initialPage="table">
-                    <StackPage name="table">
-                        <SampleTable />
-                    </StackPage>
-                    <StackPage name="edit" title="Edit">
-                        <SampleForm />
-                    </StackPage>
-                </StackSwitch>
-            </Stack>
-        </Switch>
+        <Stack topLevelTitle="Sample">
+            <StackSwitch initialPage="table">
+                <StackPage name="table">
+                    <SampleTable />
+                </StackPage>
+                <StackPage name="edit" title="Edit">
+                    <SampleForm />
+                </StackPage>
+            </StackSwitch>
+        </Stack>
     );
 };

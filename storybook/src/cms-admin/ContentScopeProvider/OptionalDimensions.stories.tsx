@@ -41,10 +41,10 @@ export const OptionalDimensions = function () {
                                 the content scope select.
                             </Typography>
                             <Typography>
-                                Path: <strong>{match.path}</strong>
+                                Path: <strong>{match.pattern.path}</strong>
                             </Typography>
                             <Typography>
-                                URL: <strong>{match.url}</strong>
+                                URL: <strong>{match.pathnameBase}</strong>
                             </Typography>
                             <Typography>
                                 Scope:{" "}

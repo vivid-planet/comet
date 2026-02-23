@@ -1,23 +1,33 @@
-import { useRef } from "react";
-import { BrowserRouter as ReactBrowserRouter, type BrowserRouterProps } from "react-router-dom";
+import { createContext, type ReactNode, useContext, useRef } from "react";
+import { createBrowserRouter, RouterProvider, type RouterProviderProps } from "react-router";
 
 import { type PromptHandlerApi, RouterPromptHandler } from "./PromptHandler";
+
+export interface BrowserRouterProps {
+    basename?: string;
+    children?: ReactNode;
+}
 
 // BrowserRouter that sets up a material-ui confirmation dialog
 // plus a PromptHandler that works with our Prompt (supporting multiple Prompts)
 
-export const RouterBrowserRouter = ({ children, ...props }: BrowserRouterProps) => {
-    const apiRef = useRef<PromptHandlerApi>();
+const ChildrenContext = createContext<ReactNode>(null);
 
-    const getConfirmation = (message: string, callback: (ok: boolean) => void) => {
-        if (apiRef.current) {
-            apiRef.current.showDialog(message, callback);
-        }
-    };
+function LayoutRoute() {
+    const children = useContext(ChildrenContext);
+    const apiRef = useRef<PromptHandlerApi>();
+    return <RouterPromptHandler apiRef={apiRef}>{children}</RouterPromptHandler>;
+}
+
+export const RouterBrowserRouter = ({ children, basename }: BrowserRouterProps) => {
+    const routerRef = useRef<RouterProviderProps["router"]>();
+    if (!routerRef.current) {
+        routerRef.current = createBrowserRouter([{ path: "*", Component: LayoutRoute }], { basename });
+    }
 
     return (
-        <ReactBrowserRouter getUserConfirmation={getConfirmation} {...props}>
-            <RouterPromptHandler apiRef={apiRef}>{children}</RouterPromptHandler>
-        </ReactBrowserRouter>
+        <ChildrenContext.Provider value={children}>
+            <RouterProvider router={routerRef.current} />
+        </ChildrenContext.Provider>
     );
 };

@@ -1,16 +1,19 @@
-import { useContext, useEffect } from "react";
-import { Route, type RouteProps } from "react-router";
+import { type PropsWithChildren, useContext, useEffect } from "react";
 import useConstant from "use-constant";
 import { v4 as uuid } from "uuid";
 
 import { PromptContext } from "./Prompt";
 
-export function ForcePromptRoute(props: RouteProps) {
+interface ForcePromptRouteProps {
+    path: string;
+}
+
+export function ForcePromptRoute({ path, children }: PropsWithChildren<ForcePromptRouteProps>) {
     const id = useConstant<string>(() => uuid());
     const context = useContext(PromptContext);
     useEffect(() => {
         if (context) {
-            context.register(id, props.path as string);
+            context.register(id, path);
         }
         return function cleanup() {
             if (context) {
@@ -18,5 +21,5 @@ export function ForcePromptRoute(props: RouteProps) {
             }
         };
     });
-    return <Route {...props} />;
+    return <>{children}</>;
 }

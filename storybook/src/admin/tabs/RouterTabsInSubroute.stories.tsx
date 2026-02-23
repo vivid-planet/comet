@@ -1,14 +1,14 @@
-import { RouterTab, RouterTabs, SubRoute } from "@comet/admin";
+import { RouterTab, RouterTabs, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
-    const match = useRouteMatch();
+    const urlPrefix = useSubRoutePrefix();
     return (
         <div>
-            <SubRoute path={`${match.url}/cmp1`}>
+            <SubRoute path={`${urlPrefix}/cmp1`}>
                 <RouterTabs>
                     <RouterTab label="Tab 1" path="">
                         Tab 1 Content
@@ -41,17 +41,11 @@ export default {
 
 export const RouterTabsInSubRoute = {
     render: () => {
+        const location = useLocation();
         return (
             <>
                 <Path />
-                <Switch>
-                    <Route exact path="/">
-                        <Redirect to="/foo" />
-                    </Route>
-                    <Route path="/foo">
-                        <Story />
-                    </Route>
-                </Switch>
+                {matchPath({ path: "/", end: true }, location.pathname) ? <Navigate to="/foo" replace /> : <Story />}
             </>
         );
     },

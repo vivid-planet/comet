@@ -1,36 +1,38 @@
 import { SubRouteIndexRoute, useSubRoutePrefix } from "@comet/admin";
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Cmp1() {
     const urlPrefix = useSubRoutePrefix();
+    const location = useLocation();
     return (
         <div>
-            <Switch>
-                <Route path={`${urlPrefix}/sub`}>
-                    <p>Cmp1-Sub</p>
-                </Route>
+            {matchPath({ path: `${urlPrefix}/sub`, end: false }, location.pathname) ? (
+                <p>Cmp1-Sub</p>
+            ) : (
                 <SubRouteIndexRoute>
                     <p>Cmp1-Index</p>
                     <Link to={`${urlPrefix}/sub`}>to-cmp1-sub</Link>
                 </SubRouteIndexRoute>
-            </Switch>
+            )}
         </div>
     );
 }
 
 function Story() {
+    const location = useLocation();
     return (
         <div>
-            <Switch>
+            {matchPath({ path: "/sub", end: false }, location.pathname) ? (
+                <>Sub</>
+            ) : (
                 <SubRouteIndexRoute>
                     <Cmp1 />
                 </SubRouteIndexRoute>
-                <Route path="/sub">Sub</Route>
-            </Switch>
+            )}
         </div>
     );
 }
@@ -54,17 +56,11 @@ export default {
 
 export const SubrouteNestedIndex = {
     render: () => {
+        const location = useLocation();
         return (
             <>
                 <Path />
-                <Switch>
-                    <Route exact path="/">
-                        <Redirect to="/foo" />
-                    </Route>
-                    <Route path="/foo">
-                        <Story />
-                    </Route>
-                </Switch>
+                {matchPath({ path: "/", end: true }, location.pathname) ? <Navigate to="/foo" replace /> : <Story />}
             </>
         );
     },

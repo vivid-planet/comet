@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { useRouteMatch } from "react-router";
+import { type ReactNode, useContext } from "react";
+import { UNSAFE_RouteContext } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { type ContentScope, useContentScope } from "../contentScope/Provider";
@@ -29,8 +29,10 @@ const DefaultContentScopeIndicator = () => {
 
 function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
     const { scope, match } = useContentScope();
-    const routeMatch = useRouteMatch();
-    const damRouteLocation = routeMatch.url.replace(match.url, "");
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentRouteMatch = routeContext.matches[routeContext.matches.length - 1];
+    const routeMatchUrl = currentRouteMatch?.pathnameBase ?? "";
+    const damRouteLocation = routeMatchUrl.replace(match.url, "");
     useContentScopeConfig({ redirectPathAfterChange: damRouteLocation });
     const damConfig = useDamConfig();
 

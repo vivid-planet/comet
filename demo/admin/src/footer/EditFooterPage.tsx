@@ -15,9 +15,9 @@ import {
 } from "@comet/cms-admin";
 import { type FooterContentBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import { useRouteMatch } from "react-router";
+import { UNSAFE_RouteContext } from "react-router";
 
 import { FooterContentBlock } from "./blocks/FooterContentBlock";
 import {
@@ -36,7 +36,9 @@ export function EditFooterPage(): JSX.Element | null {
     const [footerState, setFooterState] = useState<BlockState<typeof FooterContentBlock>>(FooterContentBlock.defaultValues());
     const [hasChanges, setHasChanges] = useState(false);
     const [referenceContent, setReferenceContent] = useState<FooterContentBlockInput | null>(null);
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
     const previewApi = useBlockPreview();
     const blockContext = useBlockContext();
 
@@ -123,7 +125,7 @@ export function EditFooterPage(): JSX.Element | null {
 
     const previewState = FooterContentBlock.createPreviewState(footerState, {
         ...blockContext,
-        parentUrl: match.url,
+        parentUrl: matchUrl,
         showVisibleOnly: previewApi.showOnlyVisible,
     });
 

@@ -1,6 +1,6 @@
 import { Alert, MainNavigation, MainNavigationItemRouterLink, MasterLayout, RouteWithErrorBoundary } from "@comet/admin";
 import { Card, CardContent, Typography } from "@mui/material";
-import { Redirect, Route, Switch } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -45,15 +45,12 @@ export default {
 
 export const _RouteWithErrorBoundary = {
     render: () => {
+        const location = useLocation();
         return (
             <MasterLayout menuComponent={MasterMenu}>
-                <Switch>
-                    <RouteWithErrorBoundary path="/no-error-route" component={ViewWithNoError} />
-                    <RouteWithErrorBoundary path="/error-route" component={ViewWithError} />
-                    <Route exact path="/">
-                        <Redirect to="/no-error-route" />
-                    </Route>
-                </Switch>
+                <RouteWithErrorBoundary path="/no-error-route" component={ViewWithNoError} />
+                <RouteWithErrorBoundary path="/error-route" component={ViewWithError} />
+                {matchPath({ path: "/", end: true }, location.pathname) && <Navigate to="/no-error-route" replace />}
             </MasterLayout>
         );
     },

@@ -1,7 +1,7 @@
 import { Selection, SelectionRoute, useSelection, useSelectionRoute } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { List, ListItemButton, ListItemIcon, ListItemText, Paper } from "@mui/material";
-import { Redirect, Route, useLocation } from "react-router";
+import { matchPath, Navigate, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
@@ -113,12 +113,8 @@ export const UseSelectionRouteHook = {
                 <p>
                     <strong>Current URL: </strong> {location.pathname}
                 </p>
-                <Route exact path="/">
-                    <Redirect to="/example" />
-                </Route>
-                <Route path="/example">
-                    <SelectionList />
-                </Route>
+                {matchPath({ path: "/", end: true }, location.pathname) && <Navigate to="/example" replace />}
+                {matchPath({ path: "/example", end: false }, location.pathname) && <SelectionList />}
             </Paper>
         );
     },
@@ -165,12 +161,8 @@ export const SelectionRouteComponent = {
                 <p>
                     <strong>Current URL: </strong> {location.pathname}
                 </p>
-                <Route exact path="/">
-                    <Redirect to="/example" />
-                </Route>
-                <Route path="/example">
-                    <SelectionList />
-                </Route>
+                {matchPath({ path: "/", end: true }, location.pathname) && <Navigate to="/example" replace />}
+                {matchPath({ path: "/example", end: false }, location.pathname) && <SelectionList />}
             </Paper>
         );
     },

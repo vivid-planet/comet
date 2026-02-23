@@ -1,5 +1,5 @@
-import { type PropsWithChildren, useEffect, useRef } from "react";
-import { useRouteMatch } from "react-router";
+import { type PropsWithChildren, useContext, useEffect, useRef } from "react";
+import { UNSAFE_RouteContext } from "react-router";
 import scrollIntoView from "scroll-into-view-if-needed";
 
 import * as sc from "./HoverPreviewComponent.sc";
@@ -10,11 +10,13 @@ interface HoverPreviewComponentProps {
 }
 
 export const HoverPreviewComponent = ({ children, componentSlug }: PropsWithChildren<HoverPreviewComponentProps>) => {
-    const match = useRouteMatch();
+    const routeContext = useContext(UNSAFE_RouteContext);
+    const currentMatch = routeContext.matches[routeContext.matches.length - 1];
+    const matchUrl = currentMatch?.pathnameBase ?? "";
     const iFrameBridge = useIFrameBridge();
     const rootEl = useRef<HTMLDivElement | null>(null);
 
-    const componentRoute = componentSlug.startsWith("#") ? `${match.url}${componentSlug}` : `${match.url}/${componentSlug}`;
+    const componentRoute = componentSlug.startsWith("#") ? `${matchUrl}${componentSlug}` : `${matchUrl}/${componentSlug}`;
 
     const isHovered = iFrameBridge.hoveredSiteRoute?.includes(componentRoute) ?? false;
     useEffect(() => {
