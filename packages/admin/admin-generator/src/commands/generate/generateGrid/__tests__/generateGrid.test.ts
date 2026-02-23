@@ -64,6 +64,7 @@ describe("generateGrid", () => {
 
             enum BookSortField {
                 title
+                author_birthDate
             }
 
             enum SortDirection {

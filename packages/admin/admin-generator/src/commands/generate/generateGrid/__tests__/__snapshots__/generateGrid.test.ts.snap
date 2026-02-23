@@ -42,7 +42,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -65,6 +64,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -239,7 +239,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -262,6 +261,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridUrlState } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -311,7 +311,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     export function BooksGrid() {
         const client = useApolloClient();
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("BooksGrid") };
+        const dataGridProps = { ...useDataGridUrlState(), ...usePersistentColumnState("BooksGrid") };
         
         
         const stackSwitchApi = useStackSwitchApi();
@@ -436,7 +436,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -459,6 +458,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridUrlState } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";
@@ -506,7 +506,7 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
     export function BooksGrid() {
         const client = useApolloClient();
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("BooksGrid") };
+        const dataGridProps = { ...useDataGridUrlState(), ...usePersistentColumnState("BooksGrid") };
         
         
         const stackSwitchApi = useStackSwitchApi();
@@ -520,8 +520,6 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         const columns: GridColDef<GQLBooksFormFragment>[] = useMemo(()=>[
             {field: "title",
 headerName: intl.formatMessage({ id: "book.title", defaultMessage: "Title" }),
-filterable: false,
-sortable: false,
 flex: 1,
 minWidth: 150,},
                 {field: "actions",
@@ -633,7 +631,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -656,6 +653,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -830,7 +828,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -853,6 +850,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -1026,7 +1024,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -1049,6 +1046,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -1259,7 +1257,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -1282,6 +1279,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -1369,7 +1367,6 @@ minWidth: 150,},
 {...dataGridDateColumn,field: "author_birthDate",
 headerName: intl.formatMessage({ id: "book.author.birthDate", defaultMessage: "Author Birthdate" }),
 filterable: false,
-sortable: false,
 valueGetter: (params, row) => row.author?.birthDate && new Date(row.author?.birthDate),
 flex: 1,
 minWidth: 150,},
@@ -1497,7 +1494,6 @@ import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -1520,6 +1516,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 import { Info as InfoIcon } from "@comet/admin-icons";

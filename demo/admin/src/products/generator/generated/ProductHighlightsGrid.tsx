@@ -19,13 +19,13 @@ import { GridColDef } from "@comet/admin";
 import { StackLink } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridUrlState } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const productHighlightsFragment = gql`
@@ -60,7 +60,7 @@ function ProductHighlightsGridToolbar() {
 export function ProductHighlightsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductHighlightsGrid") };
+    const dataGridProps = { ...useDataGridUrlState(), ...usePersistentColumnState("ProductHighlightsGrid") };
     const stackSwitchApi = useStackSwitchApi();
     const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
         stackSwitchApi.activatePage("edit", params.row.id);
@@ -70,8 +70,6 @@ export function ProductHighlightsGrid() {
             {
                 field: "description",
                 headerName: intl.formatMessage({ id: "productHighlight.description", defaultMessage: "Description" }),
-                filterable: false,
-                sortable: false,
                 flex: 1,
                 minWidth: 150,
             },
