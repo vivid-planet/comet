@@ -17,10 +17,6 @@ export class DependenciesArgs extends OffsetBasedPaginationArgs {
     @Field(() => Boolean, { defaultValue: false })
     @IsBoolean()
     forceRefresh: boolean;
-
-    @Field(() => Boolean, { defaultValue: false })
-    @IsBoolean()
-    backgroundRefresh: boolean;
 }
 
 @ArgsType()
@@ -34,8 +30,4 @@ export class DependentsArgs extends OffsetBasedPaginationArgs {
     @Field(() => Boolean, { defaultValue: false })
     @IsBoolean()
     forceRefresh: boolean;
-
-    @Field(() => Boolean, { defaultValue: false })
-    @IsBoolean()
-    backgroundRefresh: boolean;
 }

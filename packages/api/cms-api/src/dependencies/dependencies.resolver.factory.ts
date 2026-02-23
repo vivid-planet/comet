@@ -17,9 +17,9 @@ export class DependenciesResolverFactory {
             @ResolveField(() => PaginatedDependencies)
             async dependencies(
                 @Parent() node: AnyEntity<{ id: string }>,
-                @Args() { filter, offset, limit, forceRefresh, backgroundRefresh }: DependenciesArgs,
+                @Args() { filter, offset, limit, forceRefresh }: DependenciesArgs,
             ): Promise<PaginatedDependencies> {
-                return this.dependenciesService.getDependencies(node, filter, { offset, limit }, { forceRefresh, backgroundRefresh });
+                return this.dependenciesService.getDependencies(node, filter, { offset, limit }, { forceRefresh });
             }
         }
 

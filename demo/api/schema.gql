@@ -381,7 +381,7 @@ type DamFile {
   contentHash: String!
   createdAt: DateTime!
   damPath: String!
-  dependents(backgroundRefresh: Boolean! = false, filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   duplicates: [DamFile!]!
   fileUrl: String!
   folder: DamFolder
@@ -669,7 +669,7 @@ input FolderFilterInput {
 type Footer {
   content: FooterContentBlockData!
   createdAt: DateTime!
-  dependencies(backgroundRefresh: Boolean! = false, filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   id: ID!
   scope: FooterScope!
   updatedAt: DateTime!
@@ -799,7 +799,7 @@ type MainMenu {
 type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
-  dependencies(backgroundRefresh: Boolean! = false, filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   id: ID!
   node: PageTreeNode!
   updatedAt: DateTime!
@@ -1006,8 +1006,8 @@ type News {
   content: NewsContentBlockData!
   createdAt: DateTime!
   date: DateTime!
-  dependencies(backgroundRefresh: Boolean! = false, filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  dependents(backgroundRefresh: Boolean! = false, filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   id: ID!
   image: DamImageBlockData!
   scope: NewsContentScope!
@@ -1162,7 +1162,7 @@ input PageInput {
 type PageTreeNode {
   category: PageTreeNodeCategory!
   childNodes: [PageTreeNode!]!
-  dependents(backgroundRefresh: Boolean! = false, filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   document: PageContentUnion
   documentType: String!
   hideInMenu: Boolean!
@@ -1970,7 +1970,7 @@ type Redirect {
   active: Boolean!
   comment: String
   createdAt: DateTime!
-  dependencies(backgroundRefresh: Boolean! = false, filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
   generationType: RedirectGenerationType!
   id: ID!
   scope: RedirectScope!

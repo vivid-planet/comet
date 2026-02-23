@@ -141,11 +141,10 @@ export class DependenciesService {
      * @param options - Configuration options for the refresh operation
      * @param options.force - If true, cancels any running refresh and performs a full synchronous refresh
      * @param options.awaitRefresh - If true, waits for background concurrent refreshes to complete. Intended to be used by CLI commands.
-     * @param options.backgroundRefresh - If true, triggers an async concurrent refresh regardless of staleness
      *
      * @returns A promise that resolves when the refresh completes (or immediately if skipped or backgrounded)
      */
-    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean; backgroundRefresh?: boolean }): Promise<void> {
+    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const knex = this.entityManager.getKnex("write");
 
         const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
@@ -217,13 +216,6 @@ export class DependenciesService {
             return;
         }
 
-        if (options?.backgroundRefresh) {
-            // Background refresh: trigger an async concurrent refresh regardless of staleness.
-            // The caller gets the current (possibly stale) view data immediately.
-            refresh({ concurrently: true });
-            return;
-        }
-
         // Decide refresh strategy based on age of the last completed refresh
         const lastRefresh = await this.entityManager
             .getKnex("read")
@@ -264,9 +256,9 @@ export class DependenciesService {
             rootEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean; backgroundRefresh?: boolean },
+        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews({ force: options?.forceRefresh, backgroundRefresh: options?.backgroundRefresh });
+        await this.refreshViews({ force: options?.forceRefresh });
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
@@ -306,9 +298,9 @@ export class DependenciesService {
             targetEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean; backgroundRefresh?: boolean },
+        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews({ force: options?.forceRefresh, backgroundRefresh: options?.backgroundRefresh });
+        await this.refreshViews({ force: options?.forceRefresh });
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 

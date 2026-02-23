@@ -34,7 +34,7 @@ const damFileTableFragment = gql`
         updatedAt
         createdAt
         importSourceType
-        dependents(offset: 0, limit: 1, backgroundRefresh: true) {
+        dependents(offset: 0, limit: 1) {
             totalCount
         }
     }
