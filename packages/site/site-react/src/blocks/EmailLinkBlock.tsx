@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
-=======
-import { type AnchorHTMLAttributes, cloneElement, type ReactElement } from "react";
->>>>>>> main
 
 import { type EmailLinkBlockData } from "../blocks.generated";
 import { type PropsWithData } from "./PropsWithData";
@@ -24,14 +20,10 @@ export const EmailLinkBlock = ({ data: { email }, children, legacyBehavior, ...a
     const href = `mailto:${email}`;
 
     if (legacyBehavior) {
-<<<<<<< HEAD
-        return cloneElement(
-            children as ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>,
-            { href, title },
-        );
-=======
-        return cloneElement(children, { ...anchorProps, href });
->>>>>>> main
+        return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+            ...anchorProps,
+            href,
+        });
     }
 
     return (

@@ -229,7 +229,6 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-<<<<<<< HEAD
     const {
         scopeProp,
         argsClassName,
@@ -239,12 +238,9 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         dedicatedResolverArgProps,
         hasPositionProp,
         crudSortProps,
+        hasPaging,
         targetDirectory,
     } = buildOptions(metadata, generatorOptions);
-=======
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps, hasPositionProp, crudSortProps, hasPaging } =
-        buildOptions(metadata, generatorOptions);
->>>>>>> main
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${targetDirectory}/dto`));
@@ -818,12 +814,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         positionGroupProps,
         hasDeletedAtProp,
         dedicatedResolverArgProps,
-<<<<<<< HEAD
         targetDirectory,
-=======
         hasPaging,
         hasArgsClass,
->>>>>>> main
     } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
@@ -956,27 +949,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             })
             .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-<<<<<<< HEAD
-            @Args() {${Object.entries({
-                scope: !!scopeProp,
-                ...dedicatedResolverArgProps.reduce(
-                    (acc, dedicatedResolverArgProp) => {
-                        acc[dedicatedResolverArgProp.name] = true;
-                        return acc;
-                    },
-                    {} as Record<string, boolean>,
-                ),
-                search: !!hasSearchArg,
-                filter: !!hasFilterArg,
-                sort: !!hasSortArg,
-                offset: true,
-                limit: true,
-            })
-                .filter(([key, use]) => use)
-                .map(([key]) => key)
-                .join(", ")}}: ${argsClassName}
-        ): Promise<Paginated${classNamePlural}> {
-=======
             ${
                 hasArgsClass
                     ? `@Args() {${Object.entries({
@@ -999,9 +971,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                           .join(", ")}}: ${argsClassName}`
                     : ""
             }
-            ${hasOutputRelations ? `${hasArgsClass ? `,` : ""} @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<${hasPaging ? `Paginated${classNamePlural}` : `${metadata.className}[]`}> {
->>>>>>> main
             const where${
                 hasPaging && (hasSearchArg || hasFilterArg)
                     ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.entityManager.getMetadata(${metadata.className}));`
@@ -1014,27 +984,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 })
                 .join("\n")}
 
-<<<<<<< HEAD
-            const options: FindOptions<${metadata.className}> = { offset, limit };
-=======
-            ${
-                hasOutputRelations
-                    ? `const fields = extractGraphqlFields(info${hasPaging ? `, { root: "nodes" }` : ""});
-            const populate: string[] = [];`
-                    : ""
-            }
-            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps, ...outputRelationOneToOneProps]
-                .map(
-                    (r) =>
-                        `if (fields.includes("${r.name}")) {
-                            populate.push("${r.name}");
-                        }`,
-                )
-                .join("\n")}
-
-            ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
-            const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { ${hasPaging ? `offset, limit${hasOutputRelations ? `, populate` : ""}` : `${hasOutputRelations ? `populate` : ""}`}};
->>>>>>> main
+            const options: FindOptions<${metadata.className}> = { ${hasPaging ? "offset, limit" : ""}};
 
             ${
                 hasPaging && hasSortArg
@@ -1263,17 +1213,8 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp, hasPaging, hasArgsClass } = buildOptions(metadata, generatorOptions);
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
-<<<<<<< HEAD
-        if (hasFilterArg) {
-            generatedFiles.push(...generateFilterDto({ generatorOptions, metadata }));
-=======
         if (hasPaging && hasFilterArg) {
-            generatedFiles.push({
-                name: `dto/${fileNameSingular}.filter.ts`,
-                content: generateFilterDto({ generatorOptions, metadata }),
-                type: "filter",
-            });
->>>>>>> main
+            generatedFiles.push(...generateFilterDto({ generatorOptions, metadata }));
         }
         if (hasPaging && hasSortArg) {
             generatedFiles.push({

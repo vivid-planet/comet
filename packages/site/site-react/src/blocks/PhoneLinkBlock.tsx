@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
-=======
-import { type AnchorHTMLAttributes, cloneElement, type ReactElement } from "react";
->>>>>>> main
 
 import { type PhoneLinkBlockData } from "../blocks.generated";
 import { type PropsWithData } from "./PropsWithData";
@@ -12,11 +8,7 @@ interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData>, Omit<An
     legacyBehavior?: boolean;
 }
 
-<<<<<<< HEAD
-export const PhoneLinkBlock = ({ data: { phone }, children, title, className, legacyBehavior }: PhoneLinkBlockProps): React.ReactNode => {
-=======
 export const PhoneLinkBlock = ({ data: { phone }, children, legacyBehavior, ...anchorProps }: PhoneLinkBlockProps) => {
->>>>>>> main
     if (!phone) {
         if (legacyBehavior) {
             return children;
@@ -28,14 +20,10 @@ export const PhoneLinkBlock = ({ data: { phone }, children, legacyBehavior, ...a
     const href = `tel:${phone}`;
 
     if (legacyBehavior) {
-<<<<<<< HEAD
-        return cloneElement(
-            children as ReactElement<Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "title">>,
-            { href, title },
-        );
-=======
-        return cloneElement(children, { ...anchorProps, href });
->>>>>>> main
+        return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+            ...anchorProps,
+            href,
+        });
     }
 
     return (

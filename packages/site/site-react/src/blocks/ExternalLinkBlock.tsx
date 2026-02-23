@@ -1,10 +1,6 @@
 "use client";
 
-<<<<<<< HEAD
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type MouseEventHandler, type ReactElement } from "react";
-=======
-import { type AnchorHTMLAttributes, cloneElement, type MouseEventHandler, type ReactElement } from "react";
->>>>>>> main
 
 import { type ExternalLinkBlockData } from "../blocks.generated";
 import { usePreview } from "../preview/usePreview";
@@ -33,16 +29,11 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         };
 
         if (legacyBehavior) {
-<<<<<<< HEAD
-            return cloneElement(
-                children as ReactElement<
-                    Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "onClick" | "target" | "title">
-                >,
-                { href: "#", onClick, title },
-            );
-=======
-            return cloneElement(children, { ...anchorProps, href: "#", onClick });
->>>>>>> main
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                ...anchorProps,
+                href: "#",
+                onClick,
+            });
         }
 
         return (
@@ -63,16 +54,11 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         const target = openInNewWindow ? "_blank" : anchorProps.target;
 
         if (legacyBehavior) {
-<<<<<<< HEAD
-            return cloneElement(
-                children as ReactElement<
-                    Pick<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "href" | "onClick" | "target" | "title">
-                >,
-                { href, target, title },
-            );
-=======
-            return cloneElement(children, { ...anchorProps, href, target });
->>>>>>> main
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                ...anchorProps,
+                href,
+                target,
+            });
         }
 
         return (

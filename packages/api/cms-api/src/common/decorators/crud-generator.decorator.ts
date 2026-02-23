@@ -40,11 +40,7 @@ export function CrudGenerator({
     return function (target: Function) {
         Reflect.defineMetadata(
             CRUD_GENERATOR_METADATA_KEY,
-<<<<<<< HEAD
-            { requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService },
-=======
-            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService, paging },
->>>>>>> main
+            { requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService, paging },
             target,
         );
     };
