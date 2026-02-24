@@ -42,10 +42,21 @@ describe("generateGrid", () => {
                 birthDate: LocalDate
             }
 
+            enum BookStatus {
+                PUBLISHED
+                DRAFT
+                ARCHIVED
+            }
+
+            type BookDetails {
+                status: BookStatus!
+            }
+
             type Book {
                 id: ID!
                 title: String!
                 author: Author!
+                details: BookDetails!
             }
 
             input BookFilter {
@@ -88,6 +99,10 @@ describe("generateGrid", () => {
             __typename: "Author";
             name: string;
             birthDate?: string;
+        };
+        details?: {
+            __typename: "BookDetails";
+            status: string;
         };
     };
 
@@ -306,6 +321,36 @@ describe("generateGrid", () => {
                 baseOutputFilename: "BooksGrid",
                 targetDirectory: "/test",
                 gqlIntrospection: introspectionWithoutSort,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
+    });
+
+    it("should generate a grid with nested staticSelect field", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "books",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+                {
+                    type: "staticSelect",
+                    name: "details.status",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
             },
             config,
         );

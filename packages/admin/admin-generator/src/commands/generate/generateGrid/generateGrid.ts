@@ -22,6 +22,7 @@ import {
 } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
+import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
 import { findMutationType } from "../utils/findMutationType";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
@@ -480,9 +481,8 @@ export function generateGrid<T extends { __typename?: string }>(
                 }`;
         } else if (type == "staticSelect") {
             valueFormatter = `(value, row) => row.${name}?.toString()`;
-            const introspectionField = schemaEntity.fields.find((field) => field.name === name);
-            if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-            const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+            const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
+            if (!introspectionFieldType) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
 
             const enumType = gqlIntrospection.__schema.types.find(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
