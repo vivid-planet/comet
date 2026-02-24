@@ -9,7 +9,7 @@ These link block component now accept and pass through standard HTML anchor elem
 **Example**:
 
 ```tsx
-<DamFileDownloadLinkBlock data={linkData} className="custom-link" aria-label="Opens external site" data-tracking="external-click">
-    <span>External Link</span>
+<DamFileDownloadLinkBlock data={linkData} className="custom-link">
+    <span>Download file</span>
 </DamFileDownloadLinkBlock>
 ```
