@@ -3,6 +3,7 @@ import {
     Alert,
     DataGridToolbar,
     FillSpace,
+    GridCellContent,
     type GridColDef,
     messages,
     Tooltip,
@@ -11,7 +12,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -20,7 +21,6 @@ import { useHistory } from "react-router";
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
-import * as sc from "./DependentsList.sc";
 import { type DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
@@ -99,20 +99,15 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.nameAndInfo", defaultMessage: "Name/Info" }),
             sortable: false,
             flex: 1,
-            renderCell: ({ row }) => {
-                return (
-                    <sc.NameInfoWrapper>
-                        <sc.NameInfoTypography color="text.primary">{row.name ?? <FormattedMessage {...messages.unknown} />}</sc.NameInfoTypography>
-                        <sc.NameInfoTypography color="text.secondary">{row.secondaryInformation}</sc.NameInfoTypography>
-                    </sc.NameInfoWrapper>
-                );
-            },
+            renderCell: ({ row }) => (
+                <GridCellContent primaryText={row.name ?? <FormattedMessage {...messages.unknown} />} secondaryText={row.secondaryInformation} />
+            ),
         },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
             sortable: false,
-            renderCell: ({ row }) => <sc.StyledChip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
+            renderCell: ({ row }) => <Chip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
         },
         {
             field: "actions",
