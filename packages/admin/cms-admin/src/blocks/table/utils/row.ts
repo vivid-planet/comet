@@ -79,6 +79,22 @@ export const deleteRowById = (state: TableBlockState, rowIdToDelete: string): Ta
     };
 };
 
+export const getDuplicatedRowInsertData = (state: TableBlockState, rowId: string, RichTextBlock: RichTextBlock): RowInsertData | null => {
+    const row = state.rows.find(({ id }) => id === rowId);
+    if (!row) {
+        return null;
+    }
+
+    const cellValuesInOrderOfColumns = state.columns.map((column) => {
+        return row.cellValues.find((cellValue) => cellValue.columnId === column.id)?.value ?? RichTextBlock.defaultValues();
+    });
+
+    return {
+        highlighted: row.highlighted,
+        cellValues: cellValuesInOrderOfColumns,
+    };
+};
+
 export const getInsertDataFromRowById = (state: TableBlockState, rowId: string, RichTextBlock: RichTextBlock): RowInsertData | null => {
     const row = state.rows.find(({ id }) => id === rowId);
     if (!row) {

@@ -10,7 +10,14 @@ import { type RichTextBlock, type RichTextBlockState } from "../createRichTextBl
 import { type TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
-import { deleteRowById, getInsertDataFromRowById, insertRowDataAtIndex, type RowInsertData, rowInsertSchema } from "./utils/row";
+import {
+    deleteRowById,
+    getDuplicatedRowInsertData,
+    getInsertDataFromRowById,
+    insertRowDataAtIndex,
+    type RowInsertData,
+    rowInsertSchema,
+} from "./utils/row";
 
 type Props = {
     row: Record<string, unknown> & { id: string };
@@ -60,7 +67,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
     };
 
     const handleDuplicateRow = () => {
-        const duplicatedRowInsertData = getInsertDataFromRowById(state, row.id, RichTextBlock);
+        const duplicatedRowInsertData = getDuplicatedRowInsertData(state, row.id, RichTextBlock);
         const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
 
         if (!duplicatedRowInsertData) {
