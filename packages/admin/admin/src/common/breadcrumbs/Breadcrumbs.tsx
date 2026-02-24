@@ -28,7 +28,7 @@ interface BreadcrumbsProps
         root: "div";
         item: typeof Typography;
         separator: typeof ChevronRight;
-        ellipsis: "span";
+        ellipsis: typeof Typography;
         menuContainer: "div";
         toolbarContainer: "div";
         expandedMenu: "div";
