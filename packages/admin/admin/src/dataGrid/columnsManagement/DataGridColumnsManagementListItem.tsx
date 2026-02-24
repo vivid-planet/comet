@@ -8,8 +8,9 @@ import {
     type Theme,
     useThemeProps,
 } from "@mui/material";
+import { GridPinnedColumnPosition, useGridApiContext } from "@mui/x-data-grid";
 import { type GridStateColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
-import { GridPinnedColumnPosition, useGridApiContext } from "@mui/x-data-grid-pro";
+import type { GridApiPro } from "@mui/x-data-grid-pro";
 import { type ChangeEvent, type FunctionComponent } from "react";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -52,7 +53,7 @@ export const DataGridColumnsManagementListItem: FunctionComponent<DataGridColumn
         name: "CometAdminDataGridColumnsManagementListItem",
     });
 
-    const apiRef = useGridApiContext();
+    const apiRef = useGridApiContext<GridApiPro>();
 
     const isPinnable = column.pinnable ?? false;
 

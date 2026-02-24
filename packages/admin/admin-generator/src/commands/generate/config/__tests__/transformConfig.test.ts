@@ -256,6 +256,6 @@ describe("transformConfig", () => {
             });
         `);
         expect(config).toContain('type: "grid"');
-        expect(config).toContain('newEntryText: { formattedMessageId: "product.newEntryText", defaultMessage: "Create new product" }');
+        expect(config).toContain('newEntryText: <FormattedMessage id="product.newEntryText" defaultMessage="Create new product"/>');
     });
 });

@@ -37,11 +37,11 @@ import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -64,6 +64,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { GQLProductScope } from "@src/graphql.generated";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -113,8 +114,13 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
         
         
+        const stackSwitchApi = useStackSwitchApi();
 
         
+
+        const handleRowClick: DataGridProps["onRowClick"] = (params) => {
+            stackSwitchApi.activatePage("edit", params.row.id);
+        };
 
         const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>[
             {field: "title",
@@ -169,6 +175,7 @@ renderCell: (params) => {
                             
                 
                 
+                onRowClick={handleRowClick}
             />
         );
     }
@@ -212,11 +219,11 @@ import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { Alert } from "@mui/material";
@@ -239,6 +246,7 @@ import { GridColumnHeaderTitle } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { GQLProductScope } from "@src/graphql.generated";
 import { useContentScope } from "@comet/cms-admin";
 import { Add as AddIcon } from "@comet/admin-icons";
@@ -287,8 +295,13 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
         const { scope } = useContentScope();
         
+        const stackSwitchApi = useStackSwitchApi();
 
         
+
+        const handleRowClick: DataGridProps["onRowClick"] = (params) => {
+            stackSwitchApi.activatePage("edit", params.row.id);
+        };
 
         const columns: GridColDef<GQLProductsFormFragment>[] = useMemo(()=>[
             {field: "title",
@@ -343,6 +356,7 @@ renderCell: (params) => {
                             
                 
                 
+                onRowClick={handleRowClick}
             />
         );
     }

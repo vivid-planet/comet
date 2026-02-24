@@ -1,6 +1,6 @@
 {
     "name": "@comet/brevo-api",
-    "version": "8.14.0",
+    "version": "8.17.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet/",
@@ -21,7 +21,7 @@
         "generate-schema": "ts-node generate-schema.ts",
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
         "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
@@ -35,14 +35,12 @@
         "@nestjs/axios": "^4.0.1",
         "@nestjs/cache-manager": "^3.0.1",
         "@nestjs/jwt": "^11.0.1",
-        "axios": "^1.13.2",
+        "axios": "^1.13.5",
         "cache-manager": "^7.2.5",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.3",
         "commander": "^14.0.2",
-        "nest-commander": "^3.20.1",
-        "reflect-metadata": "^0.2.2",
-        "rxjs": "^7.8.2"
+        "nest-commander": "^3.20.1"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
@@ -62,7 +60,7 @@
         "@types/node-fetch": "^2.6.13",
         "@types/uuid": "^8.3.4",
         "chokidar-cli": "^2.1.0",
-        "eslint": "^9.39.1",
+        "eslint": "^9.39.2",
         "express": "^5.2.1",
         "graphql": "^16.11.0",
         "graphql-scalars": "1.24.2",
@@ -70,7 +68,9 @@
         "jest-junit": "^15.0.0",
         "lodash.isequal": "^4.5.0",
         "prettier": "^3.4.2",
+        "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
+        "rxjs": "^7.8.2",
         "ts-jest": "^29.0.5",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",

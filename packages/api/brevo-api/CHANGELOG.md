@@ -1,5 +1,36 @@
 # @comet/brevo-api
 
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Update axios to 1.13.5 to fix CVE-2026-25639 (DoS via **proto** key in mergeConfig)
+- Updated dependencies [91e9a8f]
+    - @comet/cms-api@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- @comet/cms-api@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- @comet/cms-api@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- 317ca97: Fix email campaigns getting stuck in broken state when scheduled in the past
+    - Replace `@MinDate(new Date())` with `@MinDate(() => new Date())` to evaluate validation at runtime instead of class definition time
+    - Check actual campaign status from Brevo before blocking updates to past-scheduled campaigns
+    - Only block updates if campaign has actually been sent (not just scheduled in the past)
+    - Automatically sync local campaign state with Brevo's actual state
+    - @comet/cms-api@8.15.0
+
 ## 8.14.0
 
 ### Patch Changes

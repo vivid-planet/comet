@@ -14,13 +14,13 @@ import { renderStaticSelectCell } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 const productsFragment = gql`
     fragment SelectProductsGridFuture on Product {
@@ -71,7 +71,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
         () => [
             {
                 field: "title",
-                headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
+                headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
                 flex: 1,
                 minWidth: 200,
                 maxWidth: 250,
@@ -101,7 +101,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
                 valueOptions: [
                     {
                         value: "cap",
-                        label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                        label: intl.formatMessage({ id: "product.type.greatCap", defaultMessage: "Great Cap" }),
                     },
                     {
                         value: "shirt",
