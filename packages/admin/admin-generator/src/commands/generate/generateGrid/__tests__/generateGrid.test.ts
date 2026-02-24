@@ -47,10 +47,21 @@ describe("generateGrid", () => {
                 birthDate: LocalDate
             }
 
+            enum BookStatus {
+                Published
+                Draft
+                Archived
+            }
+
+            type BookDetails {
+                status: BookStatus!
+            }
+
             type Book {
                 id: ID!
                 title: String!
                 author: Author!
+                details: BookDetails!
             }
 
             input BookFilter {
@@ -94,6 +105,10 @@ describe("generateGrid", () => {
             __typename: "Author";
             name: string;
             birthDate?: string;
+        };
+        details?: {
+            __typename: "BookDetails";
+            status: string;
         };
     };
 
@@ -392,7 +407,6 @@ describe("generateGrid", () => {
 
         expect(result.code).toMatchSnapshot();
     });
-
     it("should generate initialFilter with non-string values without wrapping them in quotes", () => {
         const config: GridConfig<Book> = {
             type: "grid",
@@ -431,7 +445,6 @@ describe("generateGrid", () => {
         expect(result.code).toMatch(/value: 42/);
         expect(result.code).not.toMatch(/value: "42"/);
     });
-
     it("should generate onRowClick prop when rowActionProp is true", () => {
         const config: GridConfig<Book> = {
             type: "grid",
@@ -455,12 +468,40 @@ describe("generateGrid", () => {
             config,
         );
 
-        expect(result.code).toMatchSnapshot();
         // Should contain the onRowClick prop type definition
         expect(result.code).toMatch(/onRowClick\?: DataGridProps\["onRowClick"\]/);
         // Should forward onRowClick to the DataGrid component
         expect(result.code).toMatch(/onRowClick={onRowClick}/);
         // Should NOT contain the handleRowClick function
         expect(result.code).not.toMatch(/const handleRowClick:/);
+    });
+    it("should generate a grid with nested staticSelect field", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            query: "books",
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+                {
+                    type: "staticSelect",
+                    name: "details.status",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatchSnapshot();
     });
 });
