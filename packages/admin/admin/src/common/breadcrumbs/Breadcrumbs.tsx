@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { ButtonBase, type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
+import { ButtonBase, type ComponentsOverrides, IconButton, Typography, useMediaQuery } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { Fragment, type ReactNode, useState } from "react";
 
@@ -232,7 +232,16 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                 )}
             </ToolbarContainer>
 
-            {isMobile && (isMenuOpen ? <ChevronUp onClick={toggleMenu} /> : <ChevronDown onClick={toggleMenu} />)}
+            {isMobile &&
+                (isMenuOpen ? (
+                    <IconButton onClick={toggleMenu}>
+                        <ChevronUp />
+                    </IconButton>
+                ) : (
+                    <IconButton onClick={toggleMenu}>
+                        <ChevronDown />
+                    </IconButton>
+                ))}
         </Root>
     );
 };
