@@ -111,22 +111,22 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 return NextResponse.redirect(`https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
                     status: 301,
                 });
-            } else {
-                const domainRedirects = await fetchDomainRedirectsForAllScopes();
+            }
 
-                const redirect = domainRedirects.find((redirect) => normalizeHost(redirect.source) === normalizeHost(host));
-                if (redirect) {
-                    const scopedSiteConfig = getSiteConfigs().find((config) => config.scope.domain === redirect.scope.domain);
+            const domainRedirects = await fetchDomainRedirectsForAllScopes();
 
-                    if (!scopedSiteConfig) {
-                        throw new Error(`Site config not found for domain: ${redirect.scope.domain}`);
-                    }
+            const redirect = domainRedirects.find((redirect) => normalizeHost(redirect.source) === normalizeHost(host));
+            if (redirect) {
+                const scopedSiteConfig = getSiteConfigs().find((config) => config.scope.domain === redirect.scope.domain);
 
-                    const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
+                if (!scopedSiteConfig) {
+                    throw new Error(`Site config not found for domain: ${redirect.scope.domain}`);
+                }
 
-                    if (destination) {
-                        return NextResponse.redirect(destination, { status: 301 });
-                    }
+                const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
+
+                if (destination) {
+                    return NextResponse.redirect(destination, { status: 301 });
                 }
             }
 
