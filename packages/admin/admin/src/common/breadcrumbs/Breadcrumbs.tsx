@@ -137,8 +137,6 @@ const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
 })(
     ({ theme }) => css`
         color: ${theme.palette.grey[900]};
-        padding-top: 12.5px;
-        padding-bottom: 12.5px;
     `,
 ) as typeof Typography;
 
@@ -159,7 +157,7 @@ const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
 })(
     ({ theme }) => css`
         width: 4px;
-        height: 22.5px;
+        height: 25px;
         border-left: 2px solid ${theme.palette.grey[100]};
         border-bottom: 2px solid ${theme.palette.grey[100]};
         align-self: flex-start;
