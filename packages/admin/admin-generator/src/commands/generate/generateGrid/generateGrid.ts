@@ -20,6 +20,7 @@ import {
     type GridConfig,
     type VirtualGridColumnConfig,
 } from "../generate-command";
+import { findIntrospectionFieldType } from "../generateForm/formField/findIntrospectionFieldType";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationType } from "../utils/findMutationType";
@@ -480,28 +481,8 @@ export function generateGrid<T extends { __typename?: string }>(
                 }`;
         } else if (type == "staticSelect") {
             valueFormatter = `(value, row) => row.${name}?.toString()`;
-            let resolvedEntity: IntrospectionObjectType = schemaEntity;
-            const nameParts = name.split(".");
-            for (let i = 0; i < nameParts.length - 1; i++) {
-                const intermediateField = resolvedEntity.fields.find((field) => field.name === nameParts[i]);
-                if (!intermediateField) throw new Error(`didn't find field ${nameParts[i]} in gql introspection type ${resolvedEntity.name}`);
-                const intermediateFieldType = intermediateField.type.kind === "NON_NULL" ? intermediateField.type.ofType : intermediateField.type;
-                if (intermediateFieldType.kind === "LIST") {
-                    throw new Error(`staticSelect does not support list fields in nested path`);
-                }
-                if (intermediateFieldType.kind !== "OBJECT") {
-                    throw new Error(`staticSelect nested path field ${nameParts[i]} must be an OBJECT type`);
-                }
-                const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === intermediateFieldType.name) as
-                    | IntrospectionObjectType
-                    | undefined;
-                if (!objectType) throw new Error(`Object type ${intermediateFieldType.name} not found for field ${nameParts[i]}`);
-                resolvedEntity = objectType;
-            }
-            const finalFieldName = nameParts[nameParts.length - 1];
-            const introspectionField = resolvedEntity.fields.find((field) => field.name === finalFieldName);
-            if (!introspectionField) throw new Error(`didn't find field ${finalFieldName} in gql introspection type ${resolvedEntity.name}`);
-            const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+            const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
+            if (!introspectionFieldType) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
 
             const enumType = gqlIntrospection.__schema.types.find(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
