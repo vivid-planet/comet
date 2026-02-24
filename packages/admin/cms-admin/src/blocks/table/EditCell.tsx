@@ -55,6 +55,7 @@ const EditCellHandle = styled("div")({
 
 const EditPopper = styled(Popper)(({ theme }) => ({
     zIndex: theme.zIndex.modal + 1,
+    maxWidth: 460,
 }));
 
 const EditorWrapper = styled(Box)(({ theme }) => ({
