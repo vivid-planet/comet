@@ -177,7 +177,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <ToolbarContainer>
+            <ToolbarContainer {...slotProps?.toolbarContainer}>
                 {items.map((item, index) => {
                     const isCurrentPage = index === items.length - 1;
                     const hasMultipleItems = items.length > 1;
@@ -201,7 +201,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                     }
 
                     return (
-                        <MenuContainer key={item.url}>
+                        <MenuContainer key={item.url} {...slotProps?.menuContainer}>
                             {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
                             <Item component="a" href={item.url} {...slotProps?.item}>
                                 {item.title}
@@ -214,8 +214,12 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                     <ExpandedMenu {...slotProps?.expandedMenu}>
                         {items.map((item, index) => {
                             return (
-                                <ExpandedMenuSubItemWrapper key={item.url} style={{ paddingLeft: `${index * 16}px` }}>
-                                    {index > 0 && <PageTreeVerticalLine />}
+                                <ExpandedMenuSubItemWrapper
+                                    key={item.url}
+                                    style={{ paddingLeft: `${index * 16}px` }}
+                                    {...slotProps?.expandedMenuSubItemWrapper}
+                                >
+                                    {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
                                     <ExpandedMenuItem {...slotProps?.expandedMenuItem} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
                                         {item.title}
                                     </ExpandedMenuItem>
