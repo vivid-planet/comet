@@ -44,7 +44,11 @@ Without enabling dataloader, relation fields resolved by generated resolvers can
 
 ### Admin packages are now ESM-only
 
-Make the following changes to your `admin/tsconfig.json`:
+The admin packages now ship ESM-only builds.
+This should not require any significant changes if you're already using Vite.
+Review the [Starter](https://github.com/vivid-planet/comet-starter/tree/main/admin) for an example of a Vite-based admin setup.
+
+The only required change is to update your TSConfig's `module` and `moduleResolution` options:
 
 ```diff title="admin/tsconfig.json"
 {
