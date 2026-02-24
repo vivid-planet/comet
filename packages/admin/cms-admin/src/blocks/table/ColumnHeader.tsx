@@ -116,11 +116,7 @@ export const ColumnHeader = ({
             return;
         }
 
-        const serializableData = {
-            ...columnInsertData,
-            cellValues: columnInsertData.cellValues.map((cellValue) => RichTextBlock.state2Output(cellValue)),
-        };
-        writeClipboardText(JSON.stringify(serializableData));
+        writeClipboardText(JSON.stringify(columnInsertData));
     };
 
     const pasteColumnFromClipboard = async () => {

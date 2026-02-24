@@ -86,7 +86,9 @@ export const getInsertDataFromRowById = (state: TableBlockState, rowId: string, 
     }
 
     const cellValuesInOrderOfColumns = state.columns.map((column) => {
-        return row.cellValues.find((cellValue) => cellValue.columnId === column.id)?.value ?? RichTextBlock.defaultValues();
+        return RichTextBlock.state2Output(
+            row.cellValues.find((cellValue) => cellValue.columnId === column.id)?.value ?? RichTextBlock.defaultValues(),
+        );
     });
 
     return {

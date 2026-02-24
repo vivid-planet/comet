@@ -93,11 +93,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
             return;
         }
 
-        const serializableData = {
-            ...rowInsertData,
-            cellValues: rowInsertData.cellValues.map((cellValue) => RichTextBlock.state2Output(cellValue)),
-        };
-        writeClipboardText(JSON.stringify(serializableData));
+        writeClipboardText(JSON.stringify(rowInsertData));
     };
 
     const showFailedToParseDataSnackbar = () => {
