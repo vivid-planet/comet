@@ -120,7 +120,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 const scopedSiteConfig = getSiteConfigs().find((config) => config.scope.domain === redirect.scope.domain);
 
                 if (!scopedSiteConfig) {
-                    throw new Error(`Site config not found for domain: ${redirect.scope.domain}`);
+                    throw new Error(`Got redirect to domain ${redirect.scope.domain}, but couldn't find corresponding site-config.`);
                 }
 
                 const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
