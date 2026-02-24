@@ -20,9 +20,9 @@ import {
     type GridConfig,
     type VirtualGridColumnConfig,
 } from "../generate-command";
-import { findIntrospectionFieldType } from "../generateForm/formField/findIntrospectionFieldType";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
+import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
 import { findMutationType } from "../utils/findMutationType";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
