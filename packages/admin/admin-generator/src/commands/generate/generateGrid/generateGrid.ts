@@ -719,7 +719,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         }
                       items: [${config.initialFilter.items
                           .map((item) => {
-                              return `{ field: "${item.field}", operator: "${item.operator}", value: "${item.value}" }`;
+                              return `{ field: "${item.field}", operator: "${item.operator}", value: ${JSON.stringify(item.value)} }`;
                           })
                           .join(",\n")} ],},`
                       : ""
