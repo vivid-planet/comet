@@ -8,8 +8,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../context/useBlockContext";
-import { type RichTextBlock } from "../createRichTextBlock";
+import { type RichTextBlock, type RichTextBlockState } from "../createRichTextBlock";
 import { type TableBlockState } from "../createTableBlock";
+import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import {
     columnInsertSchema,
     type ColumnSize,
@@ -122,30 +123,23 @@ export const ColumnHeader = ({
     const pasteColumnFromClipboard = async () => {
         const clipboardData = await getClipboardValueForSchema(columnInsertSchema);
         if (!clipboardData) {
-            snackbarApi.showSnackbar(
-                <Snackbar autoHideDuration={5000}>
-                    <Alert severity="error">
-                        <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
-                    </Alert>
-                </Snackbar>,
-            );
+            snackbarApi.showSnackbar(<FailedToPasteSnackbar />);
             return;
         }
 
-        const deserializedCellValues = await Promise.all(
-            clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)),
-        );
+        let cellValuesToInsert: RichTextBlockState[] = [];
+
+        try {
+            cellValuesToInsert = await Promise.all(clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)));
+        } catch (error) {
+            console.error(error);
+            snackbarApi.showSnackbar(<FailedToPasteSnackbar />);
+        }
 
         updateState((state) => {
             const newColumnId = uuid();
             addToRecentlyPastedIds(newColumnId);
-            return insertColumnDataAtIndex(
-                state,
-                { ...clipboardData, cellValues: deserializedCellValues },
-                columnIndex + 1,
-                RichTextBlock,
-                newColumnId,
-            );
+            return insertColumnDataAtIndex(state, { ...clipboardData, cellValues: cellValuesToInsert }, columnIndex + 1, RichTextBlock, newColumnId);
         });
     };
 

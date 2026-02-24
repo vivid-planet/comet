@@ -6,8 +6,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../context/useBlockContext";
-import { type RichTextBlock } from "../createRichTextBlock";
+import { type RichTextBlock, type RichTextBlockState } from "../createRichTextBlock";
 import { type TableBlockState } from "../createTableBlock";
+import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 import { deleteRowById, getInsertDataFromRowById, insertRowDataAtIndex, type RowInsertData, rowInsertSchema } from "./utils/row";
 
@@ -96,39 +97,28 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         writeClipboardText(JSON.stringify(rowInsertData));
     };
 
-    const showFailedToParseDataSnackbar = () => {
-        snackbarApi.showSnackbar(
-            <Snackbar autoHideDuration={5000}>
-                <Alert severity="error">
-                    <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
-                </Alert>
-            </Snackbar>,
-        );
-    };
-
     const pasteRowFromClipboard = async () => {
         const clipboardData = await getClipboardValueForSchema(rowInsertSchema);
 
         if (!clipboardData) {
-            showFailedToParseDataSnackbar();
+            snackbarApi.showSnackbar(<FailedToPasteSnackbar />);
             return;
         }
 
-        const deserializedCellValues = await Promise.all(
-            clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)),
-        );
+        let cellValuesToInsert: RichTextBlockState[] = [];
+
+        try {
+            cellValuesToInsert = await Promise.all(clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)));
+        } catch (error) {
+            console.error(error);
+            snackbarApi.showSnackbar(<FailedToPasteSnackbar />);
+        }
 
         updateState((state) => {
             const newRowId = uuid();
             addToRecentlyPastedIds(newRowId);
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
-            return insertRowDataAtIndex(
-                state,
-                { ...clipboardData, cellValues: deserializedCellValues },
-                currentRowIndex + 1,
-                RichTextBlock,
-                newRowId,
-            );
+            return insertRowDataAtIndex(state, { ...clipboardData, cellValues: cellValuesToInsert }, currentRowIndex + 1, RichTextBlock, newRowId);
         });
     };
 
