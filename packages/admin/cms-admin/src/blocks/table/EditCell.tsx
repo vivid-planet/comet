@@ -21,7 +21,14 @@ export const EditCell = ({ id, field, value }: GridRenderEditCellParams) => {
         <Root>
             <EditCellHandle ref={handleRef} />
             <EditPopper open={!!anchorEl} anchorEl={anchorEl} placement="bottom-start">
-                <EditorWrapper>
+                <EditorWrapper
+                    onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                            apiRef.current.stopCellEditMode({ id, field });
+                        }
+                        event.stopPropagation();
+                    }}
+                >
                     <RichTextBlock.AdminComponent
                         state={valueState}
                         updateState={(setStateAction) => {
