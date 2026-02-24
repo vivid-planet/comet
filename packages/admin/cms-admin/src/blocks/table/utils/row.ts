@@ -45,8 +45,8 @@ export const insertRowDataAtIndex = (
     });
 
     const newRow = getNewRow(
-        cellValuesToInsert.map((value, idx) => {
-            return { columnId: updatedColumns[idx].id, value };
+        cellValuesToInsert.map((value, index) => {
+            return { columnId: updatedColumns[index].id, value };
         }),
         newRowId,
     );
