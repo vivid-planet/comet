@@ -22,6 +22,7 @@ export interface JwtAuthServiceOptions {
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
     convertJwtToUser?: ConvertJwtToUser | Type<JwtToUserServiceInterface>;
+    loadUserFromUserService?: boolean;
 }
 
 export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }: JwtAuthServiceOptions): Type<AuthServiceInterface> {
@@ -58,6 +59,10 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 throw e;
             }
 
+            if (options.convertJwtToUser && options.loadUserFromUserService) {
+                throw new Error("Cannot use both `convertJwtToUser` and `loadUserFromUserService` options simultaneously");
+            }
+
             if (options.convertJwtToUser) {
                 if (isInjectableService(options.convertJwtToUser)) {
                     const service = this.moduleRef.get(options.convertJwtToUser, { strict: false });
@@ -68,6 +73,10 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
 
             if (typeof jwt.sub !== "string" || !jwt.sub) {
                 return { authenticationError: "No sub found in JWT. Please implement `convertJwtToUser`" };
+            }
+
+            if (options.loadUserFromUserService) {
+                return { userId: jwt.sub };
             }
 
             if (typeof jwt.name === "string" && typeof jwt.email === "string") {
