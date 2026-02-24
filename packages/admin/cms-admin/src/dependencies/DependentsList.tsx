@@ -20,7 +20,7 @@ import { useHistory } from "react-router";
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
-import * as sc from "./DependencyList.sc";
+import * as sc from "./DependentsList.sc";
 import { type DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
@@ -28,14 +28,12 @@ type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "roo
     graphqlObjectType: string;
 };
 
-type Dependency = Pick<GQLDependency, "targetGraphqlObjectType" | "targetId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
 type Dependent = Pick<GQLDependency, "rootGraphqlObjectType" | "rootId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
 
-interface Query {
+interface DependentsListQuery {
     item: {
         id: string;
-        dependencies?: { totalCount: number; nodes: Array<Dependency> };
-        dependents?: { totalCount: number; nodes: Array<Dependent> };
+        dependents: { totalCount: number; nodes: Array<Dependent> };
     };
 }
 
@@ -45,10 +43,10 @@ type QueryVariables = {
     forceRefresh?: boolean;
 };
 
-interface DependencyListGridToolbarProps extends GridToolbarProps {
-    refetch: QueryResult<Query, QueryVariables>["refetch"];
+interface DependentsListGridToolbarProps extends GridToolbarProps {
+    refetch: QueryResult<DependentsListQuery, QueryVariables>["refetch"];
 }
-function DependencyListGridToolbar({ refetch }: DependencyListGridToolbarProps) {
+function DependentsListGridToolbar({ refetch }: DependentsListGridToolbarProps) {
     const [isRefetching, setIsRefetching] = useState<boolean>(false);
 
     return (
@@ -74,12 +72,13 @@ function DependencyListGridToolbar({ refetch }: DependencyListGridToolbarProps) 
 }
 
 const pageSize = 10;
-interface DependencyListProps {
-    query: TypedDocumentNode<Query, QueryVariables>;
+
+export interface DependentsListProps {
+    query: TypedDocumentNode<DependentsListQuery, QueryVariables>;
     variables: Record<string, unknown>;
 }
 
-export const DependencyList = ({ query, variables }: DependencyListProps) => {
+export const DependentsList = ({ query, variables }: DependentsListProps) => {
     const intl = useIntl();
     const { entityDependencyMap } = useDependenciesConfig();
     const contentScope = useContentScope();
@@ -88,10 +87,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     const dataGridProps = {
         ...useDataGridRemote({
-            queryParamsPrefix: "dependencies",
+            queryParamsPrefix: "dependents",
             pageSize,
         }),
-        ...usePersistentColumnState("DependencyList"),
+        ...usePersistentColumnState("DependentsList"),
     };
 
     const columns: GridColDef<DependencyItem>[] = [
@@ -167,7 +166,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
         },
     ];
 
-    const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
+    const { data, loading, error, refetch } = useQuery<DependentsListQuery, QueryVariables>(query, {
         variables: {
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
@@ -177,19 +176,13 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     if (error) throw error;
 
-    if (!loading && ((data?.item.dependencies && data?.item.dependents) || (!data?.item.dependents && !data?.item.dependencies))) {
-        throw new Error("Either dependencies or dependents must be defined, but not both.");
-    }
-
-    const type: "dependencies" | "dependents" = data?.item.dependencies ? "dependencies" : "dependents";
-
-    const rowCount = useBufferedRowCount(data?.item[type]?.totalCount);
+    const rowCount = useBufferedRowCount(data?.item.dependents?.totalCount);
     const rows =
-        data?.item[type]?.nodes.map((node) => {
+        data?.item.dependents?.nodes.map((node) => {
             return {
                 ...node,
-                graphqlObjectType: type === "dependencies" ? (node as Dependency).targetGraphqlObjectType : (node as Dependent).rootGraphqlObjectType,
-                id: type === "dependencies" ? (node as Dependency).targetId : (node as Dependent).rootId,
+                graphqlObjectType: node.rootGraphqlObjectType,
+                id: node.rootId,
             };
         }) ?? [];
 
@@ -205,16 +198,19 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
                 }}
                 slots={{
-                    toolbar: DependencyListGridToolbar as GridSlotsComponent["toolbar"],
+                    toolbar: DependentsListGridToolbar as GridSlotsComponent["toolbar"],
                 }}
                 slotProps={{
-                    toolbar: { refetch } as DependencyListGridToolbarProps,
+                    toolbar: { refetch } as DependentsListGridToolbarProps,
                 }}
             />
-            <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
+            <Alert
+                title={<FormattedMessage id="comet.dependencies.dependents.info.title" defaultMessage="What are dependents?" />}
+                sx={{ marginTop: 4 }}
+            >
                 <FormattedMessage
-                    id="comet.dam.file.dependents.info.content"
-                    defaultMessage="Dependents are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
+                    id="comet.dependencies.dependents.info.content"
+                    defaultMessage="Dependents are all content items that reference or use this item — such as pages, snippets, or other content. Use this list to see where this item is used."
                 />
             </Alert>
         </>

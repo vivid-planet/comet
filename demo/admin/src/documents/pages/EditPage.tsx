@@ -9,7 +9,8 @@ import {
     ContentGenerationConfigProvider,
     ContentScopeIndicator,
     createUsePage,
-    DependencyList,
+    DependenciesList,
+    DependentsList,
     openSitePreviewWindow,
     PageName,
     useBlockContext,
@@ -261,7 +262,7 @@ export const EditPage = ({ id }: Props) => {
                                     </BlockAdminTabLabel>
                                 ),
                                 content: (
-                                    <DependencyList
+                                    <DependentsList
                                         query={pageTreeNodeDependentsQuery}
                                         variables={{
                                             id,
@@ -277,7 +278,7 @@ export const EditPage = ({ id }: Props) => {
                                     </BlockAdminTabLabel>
                                 ),
                                 content: (
-                                    <DependencyList
+                                    <DependenciesList
                                         query={pageTreeNodeDependenciesQuery}
                                         variables={{
                                             id: pageState.document.id,
