@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
+import { ButtonBase, type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { Fragment, type ReactNode, useState } from "react";
 
@@ -187,9 +187,11 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             <Fragment key={item.url}>
                                 {hasMultipleItems && isMobile && (
                                     <>
-                                        <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
-                                            {ellipsis}
-                                        </Ellipsis>
+                                        <ButtonBase>
+                                            <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
+                                                {ellipsis}
+                                            </Ellipsis>
+                                        </ButtonBase>
                                         <Separator {...slotProps?.separator} />
                                     </>
                                 )}
