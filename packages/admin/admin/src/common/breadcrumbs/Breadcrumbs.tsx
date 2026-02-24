@@ -16,7 +16,7 @@ type BreadcrumbsClassKey =
     | "expandedMenu"
     | "expandedMenuItem"
     | "pageTreeVerticalLine"
-    | "expandedMenuSubItemWrapper";
+    | "expandedMenuSubitemWrapper";
 
 export interface Breadcrumb {
     url: string;
@@ -34,7 +34,7 @@ interface BreadcrumbsProps
         expandedMenu: "div";
         expandedMenuItem: typeof Typography;
         pageTreeVerticalLine: "div";
-        expandedMenuSubItemWrapper: "div";
+        expandedMenuSubitemWrapper: "div";
     }> {
     items: Breadcrumb[];
     iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
@@ -140,9 +140,9 @@ const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     `,
 ) as typeof Typography;
 
-const ExpandedMenuSubItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
+const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
-    slotName: "expandedMenuSubItemWrapper",
+    slotName: "expandedMenuSubitemWrapper",
 })(css`
     display: flex;
     align-items: center;
@@ -221,16 +221,16 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                     <ExpandedMenu {...slotProps?.expandedMenu}>
                         {items.map((item, index) => {
                             return (
-                                <ExpandedMenuSubItemWrapper
+                                <ExpandedMenuSubitemWrapper
                                     key={item.url}
                                     style={{ paddingLeft: `${index * 16}px` }}
-                                    {...slotProps?.expandedMenuSubItemWrapper}
+                                    {...slotProps?.expandedMenuSubitemWrapper}
                                 >
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
                                     <ExpandedMenuItem {...slotProps?.expandedMenuItem} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
                                         {item.title}
                                     </ExpandedMenuItem>
-                                </ExpandedMenuSubItemWrapper>
+                                </ExpandedMenuSubitemWrapper>
                             );
                         })}
                     </ExpandedMenu>
