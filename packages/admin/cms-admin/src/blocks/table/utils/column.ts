@@ -1,17 +1,18 @@
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
+import { type TableBlockData } from "../../../blocks.generated";
 import { type RichTextBlock, type RichTextBlockState } from "../../createRichTextBlock";
-import { type TableBlockColumn, type TableBlockState } from "../../createTableBlock";
+import { type TableBlockState } from "../../createTableBlock";
 import { insertRowDataAtIndex, type RowInsertData } from "./row";
 import { rteSchema } from "./rteSchema";
 
-export const getNewColumn = (): TableBlockColumn => {
+export const getNewColumn = (): TableBlockData["columns"][number] => {
     return { id: uuid(), highlighted: false, size: "standard" };
 };
 
-export const columnSizeSchema = z.enum(["extraSmall", "small", "standard", "large", "extraLarge"]);
-export type ColumnSize = z.infer<typeof columnSizeSchema>;
+const columnSizeSchema = z.enum(["extraSmall", "small", "standard", "large", "extraLarge"]);
+type ColumnSize = z.infer<typeof columnSizeSchema>;
 
 export const columnInsertSchema = z.object({
     size: columnSizeSchema,

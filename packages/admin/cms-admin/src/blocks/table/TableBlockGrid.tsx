@@ -11,8 +11,9 @@ import {
 } from "@mui/x-data-grid-pro";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
+import { type TableBlockData } from "../../blocks.generated";
 import { type RichTextBlock } from "../createRichTextBlock";
-import { type ColumnSize, type TableBlockColumn, type TableBlockState } from "../createTableBlock";
+import { type TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
@@ -20,6 +21,9 @@ import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
 import { ensureMinimumTableState } from "./utils/ensureMinimumTableState";
 import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
+
+type ColumnSize = TableBlockData["columns"][number]["size"];
+type TableBlockColumn = TableBlockData["columns"][number];
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,

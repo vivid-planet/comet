@@ -7,13 +7,13 @@ import { type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { type TableBlockData } from "../../blocks.generated";
 import { useBlockContext } from "../context/useBlockContext";
 import { type RichTextBlock, type RichTextBlockState } from "../createRichTextBlock";
 import { type TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import {
     columnInsertSchema,
-    type ColumnSize,
     getDuplicatedColumnInsertData,
     getInsertDataFromColumnById,
     insertColumnDataAtIndex,
@@ -22,6 +22,8 @@ import {
     toggleColumnHighlight,
 } from "./utils/column";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
+
+type ColumnSize = TableBlockData["columns"][number]["size"];
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;

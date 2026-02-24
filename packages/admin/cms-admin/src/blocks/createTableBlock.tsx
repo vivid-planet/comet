@@ -17,14 +17,6 @@ export type TableBlockFactoryOptions = {
     richText: RichTextBlock;
 };
 
-export type ColumnSize = "extraSmall" | "small" | "standard" | "large" | "extraLarge";
-
-export interface TableBlockColumn {
-    id: string;
-    size: ColumnSize;
-    highlighted: boolean;
-}
-
 interface TableBlockCellValueState {
     columnId: string;
     value: RichTextBlockState;
@@ -37,7 +29,7 @@ export interface TableBlockRowState {
 }
 
 export interface TableBlockState {
-    columns: TableBlockColumn[];
+    columns: TableBlockData["columns"];
     rows: TableBlockRowState[];
 }
 
