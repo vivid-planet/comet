@@ -53,7 +53,7 @@ function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
     return arg && arg.type === "component";
 }
 
-export type StaticSelectValue = { value: string; label: string } | string;
+export type StaticSelectValue = { value: string; label: string | FormattedMessageElement } | string;
 type AsyncSelectFilter =
     | {
           /**
@@ -99,7 +99,7 @@ export type FormFieldConfig<T> = (
           disableSlider?: boolean;
           initialValue?: { min: number; max: number };
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean }
+    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean; checkboxLabel?: string | FormattedMessageElement }
     | ({ type: "date"; name: UsableFormFields<T>; initialValue?: string } & InputBaseFieldConfig)
     | ({ type: "dateTime"; name: UsableFormFields<T>; initialValue?: Date } & InputBaseFieldConfig)
     | ({
@@ -200,6 +200,11 @@ export type FormConfig<T extends { __typename?: string }> = {
      * @default true
      */
     navigateOnCreate?: boolean;
+    /**
+     * If true, the generated form will have an initialValues prop to set initial form values.
+     * @default false
+     */
+    initialValuesAsProp?: boolean;
 };
 export type InjectedFormVariables = {
     id?: string;
@@ -316,6 +321,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     scopeAsProp?: boolean;
     density?: "comfortable" | "compact" | "standard";
     crudContextMenu?: {
+        deleteType?: "delete" | "remove";
         deleteText?: string;
     };
 };

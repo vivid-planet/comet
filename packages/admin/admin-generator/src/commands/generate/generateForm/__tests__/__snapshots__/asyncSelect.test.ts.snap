@@ -134,6 +134,8 @@ type: GQLCategoryType;
 id?: string;
         }
 
+    
+
     export function ProductForm({onCreate, type, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -154,6 +156,7 @@ id?: string;
                 
             }
             : {
+                
                 
             }
         , [data]);
@@ -185,14 +188,16 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
@@ -328,6 +333,8 @@ foo: string;
 id?: string;
         }
 
+    
+
     export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -348,6 +355,7 @@ id?: string;
                 
             }
             : {
+                
                 
             }
         , [data]);
@@ -379,14 +387,16 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
@@ -522,6 +532,8 @@ foo: string;
 id?: string;
         }
 
+    
+
     export function ProductForm({onCreate, foo, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -542,6 +554,7 @@ id?: string;
                 
             }
             : {
+                
                 
             }
         , [data]);
@@ -573,14 +586,16 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
@@ -717,6 +732,8 @@ categoryType: GQLCategoryType;
 id?: string;
         }
 
+    
+
     export function ProductForm({onCreate, categoryType, id}: FormProps) {
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -737,6 +754,7 @@ id?: string;
                 
             }
             : {
+                
                 
             }
         , [data]);
@@ -768,14 +786,16 @@ id?: string;
                     variables: { id, input: updateInput },
                 });
                 
+                
             } else {
                 
                 const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                     mutation: createProductMutation,
                     variables: {
-                        
                         input: output },
                 });
+                
+                
                 const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {

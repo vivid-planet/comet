@@ -1,7 +1,7 @@
 import { MainContent } from "@comet/admin";
 import { useTheme } from "@mui/material";
 import { GlobalStyles } from "@mui/system";
-import { type Decorator } from "@storybook/react";
+import { type Decorator } from "@storybook/react-webpack5";
 
 import { previewGlobalStyles } from "./Layout.decorator.styles";
 

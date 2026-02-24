@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
 import { defineConfig, type Plugin } from "vite";
+import { compression } from "vite-plugin-compression2";
 import { createHtmlPlugin } from "vite-plugin-html";
 
 import { environment as envVarsToLoad } from "./src/environment";
@@ -20,6 +21,7 @@ const adminPackagesHotReloadPlugin: Plugin = {
         this.addWatchFile("../../packages/admin/admin-icons/src");
         this.addWatchFile("../../packages/admin/admin-rte/src");
         this.addWatchFile("../../packages/admin/cms-admin/src");
+        this.addWatchFile("../../packages/admin/brevo-admin/src");
     },
     async handleHotUpdate({ file, server }) {
         const isChangeInAdminPackage = adminPackagesPathRegex.test(file);
@@ -58,6 +60,7 @@ export default defineConfig(({ mode }) => {
                     ],
                 ],
             }),
+            compression(),
             createHtmlPlugin({
                 minify: true,
                 entry: resolve(__dirname, "src/loader.ts"),
@@ -110,6 +113,7 @@ export default defineConfig(({ mode }) => {
                 "@comet/admin-icons",
                 "@comet/admin-rte",
                 "@comet/cms-admin",
+                "@comet/brevo-admin",
             ],
         },
         resolve: {

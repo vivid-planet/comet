@@ -1,5 +1,53 @@
 # @comet/admin-generator
 
+## 8.17.1
+
+## 8.17.0
+
+### Minor Changes
+
+- cd854dc: Grid: Add automatic `onRowClick` navigation
+
+    Generated grids now automatically navigate to the edit page when a row is clicked, improving user experience.
+    - When `rowActionProp` is `false` (default): generates a `handleRowClick` handler using `useStackSwitchApi().activatePage("edit", id)`
+    - When `rowActionProp` is `true`: adds an `onRowClick` prop to allow parent components to implement needed action
+
+- 45163f1: Grid: Enable client side filter and sort when non paging api is used
+
+## 8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 82ff4c2: Form field boolean: use `label` as field label (before: checkbox label) and add new `checkboxLabel` option
+- 14f9ef0: Add support for `<FormattedMessage />` in staticSelect values label
+- 39a9bb0: Make paging conditional in grid generation: only add paging args (`offset`, `limit`) and paging return (`totalCount`, nested `nodes`) when the GQL schema query returns a paginated type
+- cc96333: Add support for custom error responses in update and create mutation and show it in form as submission error
+
+### Patch Changes
+
+- 33ac500: Use the GraphQL schema scope type in generated grids when scope comes from context.
+- 47ed8cf: Only emit grid sort variables and helpers when the schema supports sorting.
+
+## 8.14.0
+
+### Patch Changes
+
+- 540f8c8: Form: Use scope type from gql schema when using scope from context
+
+## 8.13.0
+
+### Minor Changes
+
+- 94abd9b: Add initialValuesAsProp config to generate a initialValues prop for the form that allows injecting dynamic initialValues
+
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
 ## 8.11.1
 
 ### Patch Changes
