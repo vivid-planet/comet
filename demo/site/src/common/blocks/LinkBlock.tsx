@@ -18,42 +18,42 @@ import { InternalLinkBlock } from "./InternalLinkBlock";
 interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {}
 
 export const LinkBlock = withPreview(
-    ({ data, children, className, ...anchorProps }: LinkBlockProps) => {
+    ({ data, children, ...anchorProps }: LinkBlockProps) => {
         const supportedBlocks: SupportedBlocks = {
-            internal: ({ children: blockChildren, className: blockClassName, ...props }) => (
-                <InternalLinkBlock data={props} className={blockClassName} {...anchorProps}>
-                    {blockChildren}
+            internal: ({ children, ...props }) => (
+                <InternalLinkBlock data={props} {...anchorProps}>
+                    {children}
                 </InternalLinkBlock>
             ),
-            external: ({ children: blockChildren, className: blockClassName, ...props }) => (
-                <ExternalLinkBlock data={props} className={blockClassName} {...anchorProps}>
-                    {blockChildren}
+            external: ({ children, ...props }) => (
+                <ExternalLinkBlock data={props} {...anchorProps}>
+                    {children}
                 </ExternalLinkBlock>
             ),
-            news: ({ children: blockChildren, className: blockClassName, ...props }) => (
-                <NewsLinkBlock data={props} className={blockClassName} {...anchorProps}>
-                    {blockChildren}
+            news: ({ children, ...props }) => (
+                <NewsLinkBlock data={props} {...anchorProps}>
+                    {children}
                 </NewsLinkBlock>
             ),
-            damFileDownload: ({ children: blockChildren, className: blockClassName, ...props }) => (
-                <DamFileDownloadLinkBlock data={props} className={blockClassName} {...anchorProps}>
-                    {blockChildren}
+            damFileDownload: ({ children, ...props }) => (
+                <DamFileDownloadLinkBlock data={props} {...anchorProps}>
+                    {children}
                 </DamFileDownloadLinkBlock>
             ),
-            email: ({ children: blockChildren, className: blockClassName, ...props }) => (
-                <EmailLinkBlock data={props} className={blockClassName} {...anchorProps}>
-                    {blockChildren}
+            email: ({ children, ...props }) => (
+                <EmailLinkBlock data={props} {...anchorProps}>
+                    {children}
                 </EmailLinkBlock>
             ),
-            phone: ({ children: blockChildren, className: blockClassName, ...props }) => (
-                <PhoneLinkBlock data={props} className={blockClassName} {...anchorProps}>
-                    {blockChildren}
+            phone: ({ children, ...props }) => (
+                <PhoneLinkBlock data={props} {...anchorProps}>
+                    {children}
                 </PhoneLinkBlock>
             ),
         };
 
         return (
-            <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
                 {children}
             </OneOfBlock>
         );
