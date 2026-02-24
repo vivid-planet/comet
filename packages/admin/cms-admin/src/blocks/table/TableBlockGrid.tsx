@@ -12,13 +12,13 @@ import {
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
 import { type TableBlockData } from "../../blocks.generated";
-import { type RichTextBlock } from "../createRichTextBlock";
 import { type TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
+import { useTableBlockContext } from "./TableBlockContext";
 import { ensureMinimumTableState } from "./utils/ensureMinimumTableState";
 import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
 
@@ -44,10 +44,10 @@ const flexForColumnSize: Record<ColumnSize, number> = {
 type Props = {
     state: TableBlockState;
     updateState: Dispatch<SetStateAction<TableBlockState>>;
-    RichTextBlock: RichTextBlock;
 };
 
-export const TableBlockGrid = ({ state, updateState, RichTextBlock }: Props) => {
+export const TableBlockGrid = ({ state, updateState }: Props) => {
+    const { RichTextBlock } = useTableBlockContext();
     const apiRef = useGridApiRef();
     const { recentlyPastedIds: recentlyPastedRowIds, addToRecentlyPastedIds: addToRecentlyPastedRowIds } = useRecentlyPastedIds();
     const { recentlyPastedIds: recentlyPastedColumnIds, addToRecentlyPastedIds: addToRecentlyPastedColumnIds } = useRecentlyPastedIds();
@@ -142,7 +142,6 @@ export const TableBlockGrid = ({ state, updateState, RichTextBlock }: Props) => 
                     updateState={updateState}
                     columnIndex={index}
                     addToRecentlyPastedIds={addToRecentlyPastedColumnIds}
-                    RichTextBlock={RichTextBlock}
                 />
             ),
             renderCell: ({ value, row, field: columnId }: GridRenderCellParams) => {
@@ -159,7 +158,7 @@ export const TableBlockGrid = ({ state, updateState, RichTextBlock }: Props) => 
                 );
             },
             renderEditCell: (params: GridRenderEditCellParams) => {
-                return <EditCell {...params} RichTextBlock={RichTextBlock} />;
+                return <EditCell {...params} />;
             },
         })),
         {
@@ -170,13 +169,7 @@ export const TableBlockGrid = ({ state, updateState, RichTextBlock }: Props) => 
             maxWidth: 36,
             disableReorder: true,
             renderCell: ({ row }) => (
-                <RowActionsCell
-                    row={row}
-                    updateState={updateState}
-                    state={state}
-                    addToRecentlyPastedIds={addToRecentlyPastedRowIds}
-                    RichTextBlock={RichTextBlock}
-                />
+                <RowActionsCell row={row} updateState={updateState} state={state} addToRecentlyPastedIds={addToRecentlyPastedRowIds} />
             ),
         },
     ];

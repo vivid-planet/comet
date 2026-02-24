@@ -9,9 +9,10 @@ import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
 import { useBlockContext } from "../context/useBlockContext";
-import { type RichTextBlock, type RichTextBlockState } from "../createRichTextBlock";
+import { type RichTextBlockState } from "../createRichTextBlock";
 import { type TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
+import { useTableBlockContext } from "./TableBlockContext";
 import {
     columnInsertSchema,
     getDuplicatedColumnInsertData,
@@ -32,7 +33,6 @@ type Props = GridColumnHeaderParams & {
     updateState: Dispatch<SetStateAction<TableBlockState>>;
     columnIndex: number;
     addToRecentlyPastedIds: (id: string) => void;
-    RichTextBlock: RichTextBlock;
 };
 
 const columnSizes: Record<ColumnSize, ReactNode> = {
@@ -43,19 +43,11 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
     extraLarge: <FormattedMessage id="comet.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
 };
 
-export const ColumnHeader = ({
-    columnSize,
-    highlighted,
-    state,
-    updateState,
-    columnIndex,
-    field: columnId,
-    addToRecentlyPastedIds,
-    RichTextBlock,
-}: Props) => {
+export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
     const blockContext = useBlockContext();
     const intl = useIntl();
+    const { RichTextBlock } = useTableBlockContext();
 
     const handleInsertColumnAtIndex = (newColumnIndex: number) => {
         updateState((state) => {

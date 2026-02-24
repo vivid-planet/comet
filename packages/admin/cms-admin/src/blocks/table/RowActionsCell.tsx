@@ -6,9 +6,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../context/useBlockContext";
-import { type RichTextBlock, type RichTextBlockState } from "../createRichTextBlock";
+import { type RichTextBlockState } from "../createRichTextBlock";
 import { type TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
+import { useTableBlockContext } from "./TableBlockContext";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 import {
     deleteRowById,
@@ -24,14 +25,14 @@ type Props = {
     updateState: Dispatch<SetStateAction<TableBlockState>>;
     state: TableBlockState;
     addToRecentlyPastedIds: (id: string) => void;
-    RichTextBlock: RichTextBlock;
 };
 
-export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds, RichTextBlock }: Props) => {
+export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
     const blockContext = useBlockContext();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
     const intl = useIntl();
+    const { RichTextBlock } = useTableBlockContext();
 
     const handleInsertNewRow = (where: "above" | "below") => {
         updateState((state) => {

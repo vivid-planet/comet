@@ -4,6 +4,7 @@ import { expect, vi } from "vitest";
 
 import { type TableBlockState } from "../../createTableBlock";
 import { MockRichTextBlock } from "../__mocks__/TableBlockData.mocks";
+import { TableBlockContextProvider } from "../TableBlockContext";
 import { TableBlockGrid } from "../TableBlockGrid";
 
 vi.mock("../../context/useBlockContext", () => ({
@@ -13,7 +14,11 @@ vi.mock("../../context/useBlockContext", () => ({
 export const renderTableBlock = (initialState: TableBlockState) => {
     const Component = () => {
         const [state, setState] = useState<TableBlockState>(initialState);
-        return <TableBlockGrid state={state} updateState={setState} RichTextBlock={MockRichTextBlock} />;
+        return (
+            <TableBlockContextProvider RichTextBlock={MockRichTextBlock}>
+                <TableBlockGrid state={state} updateState={setState} />
+            </TableBlockContextProvider>
+        );
     };
     return render(<Component />);
 };

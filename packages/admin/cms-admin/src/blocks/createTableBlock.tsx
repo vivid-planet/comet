@@ -10,6 +10,7 @@ import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlo
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { TableBlockContextProvider } from "./table/TableBlockContext";
 import { TableBlockGrid } from "./table/TableBlockGrid";
 import { BlockCategory, type BlockInterface, type BlockPreviewContext } from "./types";
 
@@ -135,22 +136,24 @@ export const createTableBlock = ({ richText: RichTextBlock }: TableBlockFactoryO
             };
 
             return (
-                <SelectPreviewComponent>
-                    <BlocksFinalForm<TableBlockState> onSubmit={updateState} initialValues={state}>
-                        <Dialog
-                            open={showDialog}
-                            maxWidth="xl"
-                            onClose={closeTableBlock}
-                            title={intl.formatMessage({ id: "comet.blocks.table.displayName", defaultMessage: "Table" })}
-                            PaperProps={{ sx: { height: "100%", maxHeight: 880 } }}
-                        >
-                            <TableBlockGrid state={state} updateState={updateState} RichTextBlock={RichTextBlock} />
-                            <DialogActions>
-                                <OkayButton onClick={closeTableBlock} />
-                            </DialogActions>
-                        </Dialog>
-                    </BlocksFinalForm>
-                </SelectPreviewComponent>
+                <TableBlockContextProvider RichTextBlock={RichTextBlock}>
+                    <SelectPreviewComponent>
+                        <BlocksFinalForm<TableBlockState> onSubmit={updateState} initialValues={state}>
+                            <Dialog
+                                open={showDialog}
+                                maxWidth="xl"
+                                onClose={closeTableBlock}
+                                title={intl.formatMessage({ id: "comet.blocks.table.displayName", defaultMessage: "Table" })}
+                                PaperProps={{ sx: { height: "100%", maxHeight: 880 } }}
+                            >
+                                <TableBlockGrid state={state} updateState={updateState} />
+                                <DialogActions>
+                                    <OkayButton onClick={closeTableBlock} />
+                                </DialogActions>
+                            </Dialog>
+                        </BlocksFinalForm>
+                    </SelectPreviewComponent>
+                </TableBlockContextProvider>
             );
         },
     };
