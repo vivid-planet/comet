@@ -334,16 +334,16 @@ filterable: false,
 sortable: false,
 valueFormatter: (value, row) => row.details.status?.toString(),
 valueOptions: [{
-                        value: "PUBLISHED",
-                        label: intl.formatMessage({ id: "book.details.status.pUBLISHED", defaultMessage: "Published" }),
+                        value: "Published",
+                        label: intl.formatMessage({ id: "book.details.status.published", defaultMessage: "Published" }),
                         
                     }, {
-                        value: "DRAFT",
-                        label: intl.formatMessage({ id: "book.details.status.dRAFT", defaultMessage: "Draft" }),
+                        value: "Draft",
+                        label: intl.formatMessage({ id: "book.details.status.draft", defaultMessage: "Draft" }),
                         
                     }, {
-                        value: "ARCHIVED",
-                        label: intl.formatMessage({ id: "book.details.status.aRCHIVED", defaultMessage: "Archived" }),
+                        value: "Archived",
+                        label: intl.formatMessage({ id: "book.details.status.archived", defaultMessage: "Archived" }),
                         
                     },],
 renderCell: renderStaticSelectCell,

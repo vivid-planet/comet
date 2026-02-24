@@ -48,9 +48,9 @@ describe("generateGrid", () => {
             }
 
             enum BookStatus {
-                PUBLISHED
-                DRAFT
-                ARCHIVED
+                Published
+                Draft
+                Archived
             }
 
             type BookDetails {
