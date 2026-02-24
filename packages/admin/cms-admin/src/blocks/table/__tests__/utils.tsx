@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { fireEvent, render, type RenderResult, waitFor, within } from "test-utils";
-import { expect } from "vitest";
+import { expect, vi } from "vitest";
 
-import { type TableBlockData } from "../../../blocks.generated";
+import { type TableBlockState } from "../../createTableBlock";
+import { MockRichTextBlock } from "../__mocks__/TableBlockData.mocks";
+import { TableBlockContextProvider } from "../TableBlockContext";
 import { TableBlockGrid } from "../TableBlockGrid";
 
-export const renderTableBlock = (initialState: TableBlockData) => {
+vi.mock("../../context/useBlockContext", () => ({
+    useBlockContext: () => ({}),
+}));
+
+export const renderTableBlock = (initialState: TableBlockState) => {
     const Component = () => {
-        const [state, setState] = useState<TableBlockData>(initialState);
-        return <TableBlockGrid state={state} updateState={setState} />;
+        const [state, setState] = useState<TableBlockState>(initialState);
+        return (
+            <TableBlockContextProvider RichTextBlock={MockRichTextBlock}>
+                <TableBlockGrid state={state} updateState={setState} />
+            </TableBlockContextProvider>
+        );
     };
     return render(<Component />);
 };

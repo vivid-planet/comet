@@ -1,13 +1,14 @@
-import { instanceToPlain, plainToInstance, Type } from "class-transformer";
+import { plainToInstance, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
 
 import { Block, BlockData, BlockDataInterface, BlockInput, BlockInputInterface, blockInputToData, createBlock } from "../block";
+import { ChildBlock } from "../decorators/child-block";
+import { ChildBlockInput } from "../decorators/child-block-input";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type CreateTableBlockOptions = {
-    // TODO: Allow configuring the RichText block here
+    richText: Block;
 };
 
 enum ColumnSize {
@@ -47,72 +48,58 @@ class TableBlockColumnInput extends BlockInput {
     }
 }
 
-class TableBlockRowColumnValueData extends BlockData {
-    @BlockField()
-    columnId: string;
+export function createTableBlock({ richText: RichTextBlock }: CreateTableBlockOptions, nameOrOptions: BlockFactoryNameOrOptions = "Table"): Block {
+    class TableBlockRowColumnValueData extends BlockData {
+        @BlockField()
+        columnId: string;
 
-    @BlockField({ type: "string" })
-    value: string;
-}
-
-class TableBlockRowColumnValueInput extends BlockInput {
-    @BlockField()
-    @IsString()
-    columnId: string;
-
-    @BlockField({ type: "string" })
-    @IsString()
-    value: string;
-
-    transformToBlockData(): TableBlockRowColumnValueData {
-        return blockInputToData(TableBlockRowColumnValueData, this);
+        @ChildBlock(RichTextBlock)
+        value: BlockDataInterface;
     }
-}
 
-class TableBlockRowData extends BlockData {
-    @BlockField()
-    id: string;
+    class TableBlockRowColumnValueInput extends BlockInput {
+        @BlockField()
+        @IsString()
+        columnId: string;
 
-    @BlockField()
-    highlighted: boolean;
+        @ChildBlockInput(RichTextBlock)
+        value: BlockInputInterface;
 
-    @BlockField(TableBlockRowColumnValueData)
-    @Type(() => TableBlockRowColumnValueData)
-    cellValues: TableBlockRowColumnValueData[] = [];
-}
-
-class TableBlockRowInput extends BlockInput {
-    @BlockField()
-    @IsString()
-    id: string;
-
-    @BlockField()
-    @IsBoolean()
-    highlighted: boolean;
-
-    @BlockField(TableBlockRowColumnValueInput)
-    @Type(() => TableBlockRowColumnValueInput)
-    cellValues: TableBlockRowColumnValueInput[] = [];
-
-    transformToBlockData(): TableBlockRowData {
-        return blockInputToData(TableBlockRowData, this);
+        transformToBlockData(): TableBlockRowColumnValueData {
+            return blockInputToData(TableBlockRowColumnValueData, this);
+        }
     }
-}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface TableBlockDataInterface extends BlockDataInterface {
-    // TODO: Add richText block here
-}
+    class TableBlockRowData extends BlockData {
+        @BlockField()
+        id: string;
 
-interface TableBlockInputInterface extends BlockInputInterface<BlockDataInterface, { columns: TableBlockColumnInput[]; rows: TableBlockRowInput[] }> {
-    columns: TableBlockColumnInput[];
-    rows: TableBlockRowInput[];
-}
+        @BlockField()
+        highlighted: boolean;
 
-export function createTableBlock(
-    options: CreateTableBlockOptions,
-    nameOrOptions: BlockFactoryNameOrOptions = "Table",
-): Block<TableBlockDataInterface, TableBlockInputInterface> {
+        @BlockField(TableBlockRowColumnValueData)
+        @Type(() => TableBlockRowColumnValueData)
+        cellValues: TableBlockRowColumnValueData[] = [];
+    }
+
+    class TableBlockRowInput extends BlockInput {
+        @BlockField()
+        @IsString()
+        id: string;
+
+        @BlockField()
+        @IsBoolean()
+        highlighted: boolean;
+
+        @BlockField(TableBlockRowColumnValueInput)
+        @Type(() => TableBlockRowColumnValueInput)
+        cellValues: TableBlockRowColumnValueInput[] = [];
+
+        transformToBlockData(): TableBlockRowData {
+            return blockInputToData(TableBlockRowData, this);
+        }
+    }
+
     class TableBlockData extends BlockData {
         @BlockField(TableBlockColumnData)
         @Type(() => TableBlockColumnData)
@@ -123,7 +110,7 @@ export function createTableBlock(
         rows: TableBlockRowData[] = [];
     }
 
-    class TableBlockInput implements TableBlockInputInterface {
+    class TableBlockInput extends BlockInput {
         @BlockField(TableBlockColumnInput)
         @IsArray()
         @Type(() => TableBlockColumnInput)
@@ -140,10 +127,6 @@ export function createTableBlock(
                 columns: this.columns.map((column) => column.transformToBlockData()),
                 rows: this.rows.map((row) => row.transformToBlockData()),
             });
-        }
-
-        toPlain(): ReturnType<TableBlockInputInterface["toPlain"]> {
-            return instanceToPlain(this) as ReturnType<TableBlockInputInterface["toPlain"]>;
         }
     }
 

@@ -8,12 +8,15 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { type TableBlockData } from "../../blocks.generated";
+import { useBlockContext } from "../context/useBlockContext";
+import { type RichTextBlockState } from "../createRichTextBlock";
+import { type TableBlockState } from "../createTableBlock";
+import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
+import { useTableBlockContext } from "./TableBlockContext";
 import {
     columnInsertSchema,
-    type ColumnSize,
     getDuplicatedColumnInsertData,
     getInsertDataFromColumnById,
-    getNewColumnInsertData,
     insertColumnDataAtIndex,
     removeColumnFromState,
     setColumnSize,
@@ -21,11 +24,13 @@ import {
 } from "./utils/column";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";
 
+type ColumnSize = TableBlockData["columns"][number]["size"];
+
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
     highlighted: boolean;
-    state: TableBlockData;
-    updateState: Dispatch<SetStateAction<TableBlockData>>;
+    state: TableBlockState;
+    updateState: Dispatch<SetStateAction<TableBlockState>>;
     columnIndex: number;
     addToRecentlyPastedIds: (id: string) => void;
 };
@@ -40,12 +45,18 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
 
 export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
     const snackbarApi = useSnackbarApi();
+    const blockContext = useBlockContext();
     const intl = useIntl();
+    const { RichTextBlock } = useTableBlockContext();
 
     const handleInsertColumnAtIndex = (newColumnIndex: number) => {
         updateState((state) => {
-            const newColumnInsertData = getNewColumnInsertData(state.rows.length);
-            return insertColumnDataAtIndex(state, newColumnInsertData, newColumnIndex);
+            const newColumnInsertData = {
+                size: "standard" as const,
+                highlighted: false,
+                cellValues: state.rows.map(() => RichTextBlock.defaultValues()),
+            };
+            return insertColumnDataAtIndex(state, newColumnInsertData, newColumnIndex, RichTextBlock);
         });
     };
 
@@ -69,7 +80,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
 
     const handleDuplicateColumn = () => {
         updateState((state) => {
-            const duplicatedColumnInsertData = getDuplicatedColumnInsertData(state, columnIndex);
+            const duplicatedColumnInsertData = getDuplicatedColumnInsertData(state, columnIndex, RichTextBlock);
             if (!duplicatedColumnInsertData) {
                 snackbarApi.showSnackbar(
                     <Snackbar autoHideDuration={5000}>
@@ -83,12 +94,12 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
 
             const newColumnId = uuid();
             addToRecentlyPastedIds(newColumnId);
-            return insertColumnDataAtIndex(state, duplicatedColumnInsertData, columnIndex + 1, newColumnId);
+            return insertColumnDataAtIndex(state, duplicatedColumnInsertData, columnIndex + 1, RichTextBlock, newColumnId);
         });
     };
 
     const handleCopyColumnToClipboard = () => {
-        const columnInsertData = getInsertDataFromColumnById(state, columnId);
+        const columnInsertData = getInsertDataFromColumnById(state, columnId, RichTextBlock);
         if (!columnInsertData) {
             snackbarApi.showSnackbar(
                 <Snackbar autoHideDuration={5000}>
@@ -106,20 +117,23 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
     const pasteColumnFromClipboard = async () => {
         const clipboardData = await getClipboardValueForSchema(columnInsertSchema);
         if (!clipboardData) {
-            snackbarApi.showSnackbar(
-                <Snackbar autoHideDuration={5000}>
-                    <Alert severity="error">
-                        <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
-                    </Alert>
-                </Snackbar>,
-            );
+            snackbarApi.showSnackbar(<FailedToPasteSnackbar />);
             return;
+        }
+
+        let cellValuesToInsert: RichTextBlockState[] = [];
+
+        try {
+            cellValuesToInsert = await Promise.all(clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)));
+        } catch (error) {
+            console.error(error);
+            snackbarApi.showSnackbar(<FailedToPasteSnackbar />);
         }
 
         updateState((state) => {
             const newColumnId = uuid();
             addToRecentlyPastedIds(newColumnId);
-            return insertColumnDataAtIndex(state, clipboardData, columnIndex + 1, newColumnId);
+            return insertColumnDataAtIndex(state, { ...clipboardData, cellValues: cellValuesToInsert }, columnIndex + 1, RichTextBlock, newColumnId);
         });
     };
 

@@ -18,12 +18,12 @@
     text-align: left;
     padding: 0;
 
-    &__text {
-        padding: var(--spacing-s200);
-        min-height: 48px;
-        box-sizing: border-box;
+    &__content {
         display: flex;
+        min-height: 48px;
         align-items: center;
+        padding: var(--spacing-s200);
+        box-sizing: border-box;
         color: var(--table-default-text);
     }
 

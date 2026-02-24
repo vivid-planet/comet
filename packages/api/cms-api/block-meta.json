@@ -1101,7 +1101,8 @@
                                     },
                                     {
                                         "name": "value",
-                                        "kind": "String",
+                                        "kind": "Block",
+                                        "block": "RichText",
                                         "nullable": false
                                     }
                                 ]
@@ -1172,7 +1173,8 @@
                                     },
                                     {
                                         "name": "value",
-                                        "kind": "String",
+                                        "kind": "Block",
+                                        "block": "RichText",
                                         "nullable": false
                                     }
                                 ]

@@ -3,7 +3,7 @@ import { type TableBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
 
-import { Typography } from "../components/Typography";
+import { RichTextBlock } from "./RichTextBlock";
 import styles from "./TableBlock.module.scss";
 
 export const TableBlock = ({ data }: PropsWithData<TableBlockData>) => {
@@ -20,9 +20,11 @@ export const TableBlock = ({ data }: PropsWithData<TableBlockData>) => {
 
                                     return (
                                         <td key={column.id} className={clsx([styles.cell, highlightCell && styles["cell--highlighted"]])}>
-                                            <Typography variant="paragraph300" className={styles["cell__text"]}>
-                                                {cellValue?.value}
-                                            </Typography>
+                                            {cellValue?.value && (
+                                                <div className={styles["cell__content"]}>
+                                                    <RichTextBlock data={cellValue?.value} disableLastBottomSpacing />
+                                                </div>
+                                            )}
                                         </td>
                                     );
                                 })}

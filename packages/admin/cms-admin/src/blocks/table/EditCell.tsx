@@ -1,10 +1,15 @@
-import { InputBase, type InputBaseProps, Paper, Popper } from "@mui/material";
+import { Box, Popper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type GridRenderEditCellParams, useGridApiContext } from "@mui/x-data-grid-pro";
 import { useCallback, useState } from "react";
 
-export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams) => {
-    const [valueState, setValueState] = useState(value);
+import { type RichTextBlockState } from "../createRichTextBlock";
+import { resolveNewState } from "../utils";
+import { useTableBlockContext } from "./TableBlockContext";
+
+export const EditCell = ({ id, field, value }: GridRenderEditCellParams) => {
+    const { RichTextBlock } = useTableBlockContext();
+    const [valueState, setValueState] = useState<RichTextBlockState>(value);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
     const apiRef = useGridApiContext();
 
@@ -12,39 +17,21 @@ export const EditCell = ({ id, field, value, colDef }: GridRenderEditCellParams)
         setAnchorEl(el);
     }, []);
 
-    const handleChange = useCallback<NonNullable<InputBaseProps["onChange"]>>(
-        (event) => {
-            const newValue = event.target.value;
-            setValueState(newValue);
-            apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs: 200 }, event);
-        },
-        [apiRef, field, id],
-    );
-
-    const handleKeyDown = useCallback<NonNullable<InputBaseProps["onKeyDown"]>>(
-        (event) => {
-            if (event.key === "Escape" || (event.key === "Enter" && !event.shiftKey && (event.ctrlKey || event.metaKey))) {
-                const params = apiRef.current.getCellParams(id, field);
-                apiRef.current.publishEvent("cellKeyDown", params, event);
-            }
-        },
-        [apiRef, id, field],
-    );
-
     return (
         <Root>
             <EditCellHandle ref={handleRef} />
             <EditPopper open={!!anchorEl} anchorEl={anchorEl} placement="bottom-start">
-                <EditPaper elevation={1}>
-                    <EditInput
-                        multiline
-                        value={valueState}
-                        columnWidth={colDef.computedWidth}
-                        onChange={handleChange}
-                        autoFocus
-                        onKeyDown={handleKeyDown}
+                <EditorWrapper>
+                    <RichTextBlock.AdminComponent
+                        state={valueState}
+                        updateState={(setStateAction) => {
+                            const newContent = resolveNewState({ prevState: valueState, setStateAction });
+
+                            setValueState(newContent);
+                            apiRef.current.setEditCellValue({ id, field, value: newContent, debounceMs: 200 });
+                        }}
                     />
-                </EditPaper>
+                </EditorWrapper>
             </EditPopper>
         </Root>
     );
@@ -60,21 +47,10 @@ const EditCellHandle = styled("div")({
 });
 
 const EditPopper = styled(Popper)(({ theme }) => ({
-    zIndex: theme.zIndex.modal + 1, // Make sure the edit-cell Popper is above the Dialog with DataGrid
+    zIndex: theme.zIndex.modal + 1,
 }));
 
-const EditPaper = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(1),
-}));
-
-const EditInput = styled(InputBase, { shouldForwardProp: (prop) => prop !== "columnWidth" })<{ columnWidth: number }>(({ theme, columnWidth }) => ({
-    width: "100%",
-    height: "100%",
-
-    textarea: {
-        resize: "both",
-        minHeight: `calc(55px - ${theme.spacing(2)})`,
-        minWidth: `calc(${columnWidth}px - ${theme.spacing(2)})`,
-        boxSizing: "border-box",
-    },
+const EditorWrapper = styled(Box)(({ theme }) => ({
+    position: "relative",
+    boxShadow: theme.shadows[1],
 }));

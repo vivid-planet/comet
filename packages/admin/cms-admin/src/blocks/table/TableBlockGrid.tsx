@@ -12,14 +12,18 @@ import {
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
 import { type TableBlockData } from "../../blocks.generated";
+import { type TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
-import { type ColumnSize } from "./utils/column";
-import { ensureMinimumTableData } from "./utils/tableData";
+import { useTableBlockContext } from "./TableBlockContext";
+import { ensureMinimumTableState } from "./utils/ensureMinimumTableState";
 import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
+
+type ColumnSize = TableBlockData["columns"][number]["size"];
+type TableBlockColumn = TableBlockData["columns"][number];
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,
@@ -38,22 +42,23 @@ const flexForColumnSize: Record<ColumnSize, number> = {
 };
 
 type Props = {
-    state: TableBlockData;
-    updateState: Dispatch<SetStateAction<TableBlockData>>;
+    state: TableBlockState;
+    updateState: Dispatch<SetStateAction<TableBlockState>>;
 };
 
 export const TableBlockGrid = ({ state, updateState }: Props) => {
+    const { RichTextBlock } = useTableBlockContext();
     const apiRef = useGridApiRef();
     const { recentlyPastedIds: recentlyPastedRowIds, addToRecentlyPastedIds: addToRecentlyPastedRowIds } = useRecentlyPastedIds();
     const { recentlyPastedIds: recentlyPastedColumnIds, addToRecentlyPastedIds: addToRecentlyPastedColumnIds } = useRecentlyPastedIds();
 
     useEffect(() => {
         if (state.columns.length === 0 || state.rows.length === 0) {
-            updateState(ensureMinimumTableData);
+            updateState((prevState) => ensureMinimumTableState(prevState, RichTextBlock));
         }
-    }, [state.columns.length, state.rows.length, updateState]);
+    }, [state.columns.length, state.rows.length, updateState, RichTextBlock]);
 
-    const setRowData: Dispatch<SetStateAction<TableBlockData["rows"]>> = (newRows) => {
+    const setRowData: Dispatch<SetStateAction<TableBlockState["rows"]>> = (newRows) => {
         updateState((state) => {
             return { ...state, rows: typeof newRows === "function" ? newRows(state.rows) : newRows };
         });
@@ -100,12 +105,12 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
 
             updateState((state) => {
-                const movingColumn = state.columns.find((column) => column.id === columnId);
+                const movingColumn = state.columns.find((column: TableBlockColumn) => column.id === columnId);
                 if (!movingColumn) {
                     return state;
                 }
 
-                const otherColumns = state.columns.filter((column) => column.id !== columnId);
+                const otherColumns = state.columns.filter((column: TableBlockColumn) => column.id !== columnId);
                 return {
                     ...state,
                     columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
@@ -122,7 +127,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             minWidth: 36,
             maxWidth: 36,
         },
-        ...state.columns.map(({ id: columnId, highlighted, size }, index) => ({
+        ...state.columns.map(({ id: columnId, highlighted, size }: TableBlockColumn, index: number) => ({
             field: columnId,
             editable: true,
             sortable: false,
@@ -152,7 +157,9 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                     />
                 );
             },
-            renderEditCell: (params: GridRenderEditCellParams) => <EditCell {...params} />,
+            renderEditCell: (params: GridRenderEditCellParams) => {
+                return <EditCell {...params} />;
+            },
         })),
         {
             field: "actions",

@@ -1,16 +1,19 @@
 import { alpha, styled } from "@mui/material/styles";
-import { type ReactNode } from "react";
+
+import { type RichTextBlockState } from "../createRichTextBlock";
 
 type Props = {
     highlighted: boolean;
     recentlyPasted: boolean;
-    value: ReactNode;
+    value: RichTextBlockState;
 };
 
 export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
+    const plainTextValue = value.editorState.getCurrentContent().getPlainText();
+
     return (
         <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
-            <TextValue $highlighted={highlighted}>{value}</TextValue>
+            <TextValue $highlighted={highlighted}>{plainTextValue}</TextValue>
         </CellValueContainer>
     );
 };

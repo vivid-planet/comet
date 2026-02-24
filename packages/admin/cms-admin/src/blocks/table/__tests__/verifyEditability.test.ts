@@ -1,14 +1,14 @@
 import { cleanup, within } from "test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { mockBlockDataObjects } from "../__mocks__/TableBlockData.mocks";
+import { mockStates } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfColumnAtIndex, clickButtonOfRowAtIndex, getCellsExcludingTheDragHandleAndActionsCells, renderTableBlock } from "./utils";
 
 afterEach(cleanup);
 
 describe("TableBlock: Verify the table is always editable, regardless of the number of rows or columns", () => {
     it("should have the ability to add new rows and columns when rendered with the initial data", async () => {
-        const rendered = renderTableBlock(mockBlockDataObjects.initial);
+        const rendered = renderTableBlock(mockStates.default);
 
         const rowOptionsButtons = rendered.queryAllByLabelText(/row options/i);
         const columnOptionsButtons = rendered.queryAllByLabelText(/column options/i);
@@ -18,7 +18,7 @@ describe("TableBlock: Verify the table is always editable, regardless of the num
     });
 
     it("should have the ability to add new rows and columns when rendered with the empty data", async () => {
-        const rendered = renderTableBlock(mockBlockDataObjects.empty);
+        const rendered = renderTableBlock(mockStates.empty);
 
         const rowOptionsButtons = rendered.queryAllByLabelText(/row options/i);
         const columnOptionsButtons = rendered.queryAllByLabelText(/column options/i);
@@ -28,7 +28,7 @@ describe("TableBlock: Verify the table is always editable, regardless of the num
     });
 
     it("should create an empty row when deleting the last row", async () => {
-        const initialBlockData = mockBlockDataObjects.twoColumnsAndTwoRows;
+        const initialBlockData = mockStates.twoColumnsAndTwoRows;
         const rendered = renderTableBlock(initialBlockData);
 
         initialBlockData.rows.forEach(() => {
@@ -47,7 +47,7 @@ describe("TableBlock: Verify the table is always editable, regardless of the num
     });
 
     it("should create an empty column when deleting the last column", async () => {
-        const initialBlockData = mockBlockDataObjects.twoColumnsAndTwoRows;
+        const initialBlockData = mockStates.twoColumnsAndTwoRows;
         const rendered = renderTableBlock(initialBlockData);
 
         initialBlockData.columns.forEach(() => {
