@@ -214,13 +214,9 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                     <ExpandedMenu {...slotProps?.expandedMenu}>
                         {items.map((item, index) => {
                             return (
-                                <ExpandedMenuSubItemWrapper style={{ paddingLeft: `${index * 16}px` }}>
+                                <ExpandedMenuSubItemWrapper key={item.url} style={{ paddingLeft: `${index * 16}px` }}>
                                     {index > 0 && <PageTreeVerticalLine />}
-                                    <ExpandedMenuItem
-                                        key={item.url}
-                                        {...slotProps?.expandedMenuItem}
-                                        fontWeight={index === items.length - 1 ? "bold" : "standard"}
-                                    >
+                                    <ExpandedMenuItem {...slotProps?.expandedMenuItem} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
                                         {item.title}
                                     </ExpandedMenuItem>
                                 </ExpandedMenuSubItemWrapper>
