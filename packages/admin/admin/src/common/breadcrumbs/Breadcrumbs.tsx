@@ -27,7 +27,7 @@ interface BreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         item: typeof Typography;
-        separator: typeof ChevronRight;
+        separator: "div";
         ellipsis: typeof Typography;
         menuContainer: "div";
         toolbarContainer: "div";
@@ -37,6 +37,7 @@ interface BreadcrumbsProps
         expandedMenuSubItemWrapper: "div";
     }> {
     items: Breadcrumb[];
+    iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
 }
 
 const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
@@ -72,7 +73,7 @@ const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     `,
 ) as typeof Typography;
 
-const Separator = createComponentSlot(ChevronRight)<BreadcrumbsClassKey>({
+const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "separator",
 })(css`
@@ -166,10 +167,16 @@ const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
 );
 
 export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
-    const { items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
+    const { iconMapping = {}, items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
     const ellipsis = ". . .";
+
+    const {
+        separator: separatorIcon = <ChevronRight />,
+        openMenu: openMenuIcon = <ChevronDown />,
+        closeMenu: closeMenuIcon = <ChevronUp />,
+    } = iconMapping;
 
     const toggleMenu = () => {
         setIsMenuOpen((prev) => !prev);
@@ -192,7 +199,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                                 {ellipsis}
                                             </Ellipsis>
                                         </ButtonBase>
-                                        <Separator {...slotProps?.separator} />
+                                        <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
                                     </>
                                 )}
                                 <Item key={item.url} {...slotProps?.item} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
@@ -208,7 +215,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             <Item component="a" href={item.url} {...slotProps?.item}>
                                 {item.title}
                             </Item>
-                            <Separator {...slotProps?.separator} />
+                            <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
                         </MenuContainer>
                     );
                 })}
@@ -234,13 +241,9 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
 
             {isMobile &&
                 (isMenuOpen ? (
-                    <IconButton onClick={toggleMenu}>
-                        <ChevronUp />
-                    </IconButton>
+                    <IconButton onClick={toggleMenu}>{closeMenuIcon}</IconButton>
                 ) : (
-                    <IconButton onClick={toggleMenu}>
-                        <ChevronDown />
-                    </IconButton>
+                    <IconButton onClick={toggleMenu}>{openMenuIcon}</IconButton>
                 ))}
         </Root>
     );
