@@ -3,12 +3,12 @@ import { type IntrospectionEnumType, type IntrospectionNamedTypeRef, type Intros
 import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
+import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
 import { type Imports } from "../utils/generateImportsCode";
 import { generateFormattedMessage } from "../utils/intl";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
-import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType";
 import { buildFormFieldOptions } from "./formField/options";
 import { type GenerateFieldsReturn } from "./generateFields";
 import { type Prop } from "./generateForm";

@@ -13,7 +13,7 @@ import {
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { LinkBlock } from "@src/common/blocks/link.block";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 @EntityInfo(PageTreeNodeDocumentEntityInfoService)
 @Entity()
@@ -27,7 +27,7 @@ export class Link extends BaseEntity implements DocumentInterface {
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @RootBlock(LinkBlock)
     @Property({ type: new RootBlockType(LinkBlock) })

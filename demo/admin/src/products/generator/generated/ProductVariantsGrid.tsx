@@ -23,18 +23,20 @@ import { dataGridDateColumn } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
 import { useDataGridExcelExport } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -110,6 +112,10 @@ export function ProductVariantsGrid({ product }: Props) {
             queryParamsPrefix: "product-variants",
         }),
         ...usePersistentColumnState("ProductVariantsGrid"),
+    };
+    const stackSwitchApi = useStackSwitchApi();
+    const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
+        stackSwitchApi.activatePage("edit", params.row.id);
     };
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = useMemo(
         () => [
@@ -197,6 +203,7 @@ export function ProductVariantsGrid({ product }: Props) {
             slotProps={{
                 toolbar: { exportApi } as ProductVariantsGridToolbarToolbarProps,
             }}
+            onRowClick={handleRowClick}
         />
     );
 }

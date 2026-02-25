@@ -1,5 +1,19 @@
 # @comet/site-nextjs
 
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Raise Next.js peer dependency minimum to 14.2.35 to fix CVE-2026-23864 (request deserialization DoS)
+    - @comet/site-react@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [35c338e]
+    - @comet/site-react@8.17.0
+
 ## 8.16.0
 
 ### Patch Changes

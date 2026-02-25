@@ -1,5 +1,13 @@
 # @comet/admin-icons
 
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Update fast-xml-parser to 5.3.6 to fix CVE-2026-26278 (entity expansion DoS)
+
+## 8.17.0
+
 ## 8.16.0
 
 ## 8.15.0

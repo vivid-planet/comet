@@ -13,6 +13,7 @@ junit.xml
 **/.idea
 
 *storybook.log
+
 .claude
 .context
 

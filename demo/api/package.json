@@ -24,7 +24,7 @@
         "lint": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:api-can-start",
         "lint:api-can-start": "MIKRO_ORM_NO_CONNECT=true dotenv -e ../../.env.secrets -e ../../.env.local -e ../../.env -e ../.env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts --help",
         "lint:ci": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:api-can-start && pnpm run lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:generated-files-not-modified": "git diff --exit-code HEAD -- schema.gql block-meta.json $(find src -type f -path '*/generated/*')",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
@@ -80,7 +80,6 @@
         "react-intl": "^7.1.11",
         "reflect-metadata": "^0.2.2",
         "response-time": "^2.3.4",
-        "rimraf": "^6.1.2",
         "rxjs": "^7.8.2",
         "slugify": "^1.6.6",
         "uuid": "^11.1.0"
