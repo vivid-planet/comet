@@ -24,7 +24,8 @@
         "lint:tsc": "tsc --project .",
         "preview": "pnpm run build && vite preview",
         "serve": "node server",
-        "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
+        "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite",
+        "start:trpc": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- tsx watch --include src src/trpc/server.ts"
     },
     "dependencies": {
         "@apollo/client": "^3.14.0",
@@ -42,13 +43,19 @@
         "@mui/x-data-grid-pro": "^7.29.12",
         "@mui/x-date-pickers": "^7.29.4",
         "@mui/x-license": "^7.29.1",
+        "@tanstack/react-query": "^5.0.0",
+        "@trpc/client": "^11.0.0",
+        "@trpc/react-query": "^11.0.0",
+        "@trpc/server": "^11.0.0",
         "change-case": "^5.4.4",
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
+        "drizzle-orm": "^0.40.0",
         "final-form": "^4.20.10",
         "graphql": "^16.0.0",
         "lodash.isequal": "^4.5.0",
         "p-debounce": "^4.0.0",
+        "postgres": "^3.4.0",
         "rdndmb-html5-to-touch": "^9.0.0",
         "react": "^18.3.1",
         "react-dnd": "^16.0.1",
@@ -59,7 +66,8 @@
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "use-debounce": "^10.0.6",
-        "uuid": "^11.1.0"
+        "uuid": "^11.1.0",
+        "zod": "^3.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.28.6",
@@ -92,6 +100,7 @@
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "rimraf": "^6.1.2",
+        "tsx": "^4.0.0",
         "typescript": "^5.9.3",
         "vite": "^7.2.6",
         "vite-plugin-html": "^3.2.2"

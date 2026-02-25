@@ -19,6 +19,7 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
@@ -39,6 +40,7 @@ import { NewsListBlock } from "./news/blocks/NewsListBlock";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
 import { pageTreeCategories } from "./pageTree/pageTreeCategories";
 import { RedirectDependency } from "./redirects/RedirectsDependency";
+import { queryClient, trpc, trpcClient } from "./trpc/client";
 
 const GlobalStyle = () => (
     <Global
@@ -65,129 +67,136 @@ LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
     return (
-        <CometConfigProvider
-            {...config}
-            graphQLApiUrl={`${config.apiUrl}/graphql`}
-            pageTree={{
-                categories: pageTreeCategories,
-                documentTypes: pageTreeDocumentTypes,
-                additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
-                scopeParts: ["domain", "language"],
-            }}
-            redirects={{
-                scopeParts: ["domain"],
-            }}
-            dam={{
-                ...config.dam,
-                scopeParts: ["domain"],
-                additionalToolbarItems: <ImportFromPicsum />,
-                importSources: {
-                    picsum: {
-                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
-                    },
-                },
-                contentGeneration: {
-                    generateAltText: true,
-                    generateImageTitle: true,
-                },
-            }}
-            dependencies={{
-                entityDependencyMap: {
-                    Page,
-                    Link,
-                    News: NewsDependency,
-                    Redirect: RedirectDependency,
-                    DamFile: createDamFileDependency(),
-                },
-            }}
-            siteConfigs={{
-                configs: config.siteConfigs,
-                resolveSiteConfigForScope: (configs, scope) => {
-                    const siteConfig = configs.find((config) => {
-                        return config.scope.domain === scope.domain;
-                    });
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+            <QueryClientProvider client={queryClient}>
+                <CometConfigProvider
+                    {...config}
+                    graphQLApiUrl={`${config.apiUrl}/graphql`}
+                    pageTree={{
+                        categories: pageTreeCategories,
+                        documentTypes: pageTreeDocumentTypes,
+                        additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
+                        scopeParts: ["domain", "language"],
+                    }}
+                    redirects={{
+                        scopeParts: ["domain"],
+                    }}
+                    dam={{
+                        ...config.dam,
+                        scopeParts: ["domain"],
+                        additionalToolbarItems: <ImportFromPicsum />,
+                        importSources: {
+                            picsum: {
+                                label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
+                            },
+                        },
+                        contentGeneration: {
+                            generateAltText: true,
+                            generateImageTitle: true,
+                        },
+                    }}
+                    dependencies={{
+                        entityDependencyMap: {
+                            Page,
+                            Link,
+                            News: NewsDependency,
+                            Redirect: RedirectDependency,
+                            DamFile: createDamFileDependency(),
+                        },
+                    }}
+                    siteConfigs={{
+                        configs: config.siteConfigs,
+                        resolveSiteConfigForScope: (configs, scope) => {
+                            const siteConfig = configs.find((config) => {
+                                return config.scope.domain === scope.domain;
+                            });
 
-                    if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
-                    return {
-                        url: siteConfig.url,
-                        preloginEnabled: siteConfig.preloginEnabled || false,
-                        blockPreviewBaseUrl:
-                            siteConfig.scope.domain === "secondary"
-                                ? `${siteConfig.url}/block-preview`
-                                : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
-                        sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
-                    };
-                },
-            }}
-            buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
-            contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
-            blocks={{
-                isBlockSupported: (block, scope) => {
-                    if (scope.domain === "main") {
-                        return true;
-                    } else {
-                        return block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name;
-                    }
-                },
-            }}
-        >
-            <BrevoConfigProvider
-                value={{
-                    scopeParts: ["domain", "language"],
-                    apiUrl: config.apiUrl,
-                    resolvePreviewUrlForScope: (scope: ContentScope) => {
-                        const siteConfig = config.siteConfigs.find((c) => c.scope.domain === scope.domain);
-                        if (!siteConfig) {
-                            throw new Error(`Could not find site config for domain ${scope.domain}`);
-                        }
-                        return `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}/brevo-email-campaign`;
-                    },
-                    allowAddingContactsWithoutDoi: config.brevo.allowAddingContactsWithoutDoi,
-                }}
-            >
-                <ApolloProvider client={apolloClient}>
-                    <IntlProvider locale="en" messages={getMessages("en")}>
-                        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-                            <MuiThemeProvider theme={theme}>
-                                <DndProvider options={HTML5toTouch}>
-                                    <SnackbarProvider>
-                                        <ErrorDialogHandler />
-                                        <CurrentUserProvider>
-                                            <RouterBrowserRouter>
-                                                <GlobalStyle />
-                                                <ContentScopeProvider>
-                                                    {({ match }) => (
-                                                        <Switch>
-                                                            <Route
-                                                                path={`${match.path}/preview`}
-                                                                render={(props) => (
-                                                                    <SitePreview
-                                                                        resolvePath={(path: string, scope) => {
-                                                                            return `/${scope.language}${path}`;
-                                                                        }}
-                                                                        {...props}
+                            if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                            return {
+                                url: siteConfig.url,
+                                preloginEnabled: siteConfig.preloginEnabled || false,
+                                blockPreviewBaseUrl:
+                                    siteConfig.scope.domain === "secondary"
+                                        ? `${siteConfig.url}/block-preview`
+                                        : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                                sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
+                            };
+                        },
+                    }}
+                    buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
+                    contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
+                    blocks={{
+                        isBlockSupported: (block, scope) => {
+                            if (scope.domain === "main") {
+                                return true;
+                            } else {
+                                return block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name;
+                            }
+                        },
+                    }}
+                >
+                    <BrevoConfigProvider
+                        value={{
+                            scopeParts: ["domain", "language"],
+                            apiUrl: config.apiUrl,
+                            resolvePreviewUrlForScope: (scope: ContentScope) => {
+                                const siteConfig = config.siteConfigs.find((c) => c.scope.domain === scope.domain);
+                                if (!siteConfig) {
+                                    throw new Error(`Could not find site config for domain ${scope.domain}`);
+                                }
+                                return `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}/brevo-email-campaign`;
+                            },
+                            allowAddingContactsWithoutDoi: config.brevo.allowAddingContactsWithoutDoi,
+                        }}
+                    >
+                        <ApolloProvider client={apolloClient}>
+                            <IntlProvider locale="en" messages={getMessages("en")}>
+                                <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+                                    <MuiThemeProvider theme={theme}>
+                                        <DndProvider options={HTML5toTouch}>
+                                            <SnackbarProvider>
+                                                <ErrorDialogHandler />
+                                                <CurrentUserProvider>
+                                                    <RouterBrowserRouter>
+                                                        <GlobalStyle />
+                                                        <ContentScopeProvider>
+                                                            {({ match }) => (
+                                                                <Switch>
+                                                                    <Route
+                                                                        path={`${match.path}/preview`}
+                                                                        render={(props) => (
+                                                                            <SitePreview
+                                                                                resolvePath={(path: string, scope) => {
+                                                                                    return `/${scope.language}${path}`;
+                                                                                }}
+                                                                                {...props}
+                                                                            />
+                                                                        )}
                                                                     />
-                                                                )}
-                                                            />
-                                                            <Route
-                                                                render={() => (
-                                                                    <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                        <AppMasterMenuRoutes />
-                                                                    </MasterLayout>
-                                                                )}
-                                                            />
-                                                        </Switch>
-                                                    )}
-                                                </ContentScopeProvider>
-                                            </RouterBrowserRouter>
-                                        </CurrentUserProvider>
-                                    </SnackbarProvider>
-                                </DndProvider>
-                            </MuiThemeProvider>
-                        </LocalizationProvider>
-                    </IntlProvider>
-                </ApolloProvider>
-            </BrevoConfigProvider>
-        </CometConfigProvider>
+                                                                    <Route
+                                                                        render={() => (
+                                                                            <MasterLayout
+                                                                                headerComponent={MasterHeader}
+                                                                                menuComponent={AppMasterMenu}
+                                                                            >
+                                                                                <AppMasterMenuRoutes />
+                                                                            </MasterLayout>
+                                                                        )}
+                                                                    />
+                                                                </Switch>
+                                                            )}
+                                                        </ContentScopeProvider>
+                                                    </RouterBrowserRouter>
+                                                </CurrentUserProvider>
+                                            </SnackbarProvider>
+                                        </DndProvider>
+                                    </MuiThemeProvider>
+                                </LocalizationProvider>
+                            </IntlProvider>
+                        </ApolloProvider>
+                    </BrevoConfigProvider>
+                </CometConfigProvider>
+            </QueryClientProvider>
+        </trpc.Provider>
     );
 }

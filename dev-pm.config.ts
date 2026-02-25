@@ -184,6 +184,15 @@ export default defineConfig({
             ],
         },
         {
+            name: "demo-admin-trpc",
+            script: "pnpm --filter comet-demo-admin run start:trpc",
+            group: ["demo-admin", "demo"],
+            waitOn: [
+                ...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin", "@comet/brevo-admin"),
+                "tcp:$API_PORT",
+            ],
+        },
+        {
             name: "demo-admin-codegen",
             script: "pnpm --filter comet-demo-admin run gql:watch",
             group: ["demo-admin", "demo"],

@@ -1,102 +1,78 @@
-import { useApolloClient, useQuery } from "@apollo/client";
-import { filterByFragment, FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
-import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { trpc } from "@src/trpc/client";
 import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    createProductCategoryMutation,
-    productCategoryFormFragment,
-    productCategoryQuery,
-    updateProductCategoryMutation,
-} from "./ProductCategoryForm.gql";
-import {
-    type GQLCreateProductCategoryMutation,
-    type GQLCreateProductCategoryMutationVariables,
-    type GQLProductCategoryFormHandmadeFragment,
-    type GQLProductCategoryQuery,
-    type GQLProductCategoryQueryVariables,
-    type GQLUpdateProductCategoryMutation,
-    type GQLUpdateProductCategoryMutationVariables,
-} from "./ProductCategoryForm.gql.generated";
+type FormValues = { title: string; slug: string };
 
-type FormValues = GQLProductCategoryFormHandmadeFragment;
 interface FormProps {
     id?: string;
 }
+
 export function ProductCategoryForm({ id }: FormProps) {
-    const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductCategoryQuery, GQLProductCategoryQueryVariables>(
-        productCategoryQuery,
-        id ? { variables: { id } } : { skip: true },
-    );
-    const initialValues = useMemo<Partial<FormValues>>(
-        () =>
-            data?.productCategory
-                ? {
-                      ...filterByFragment<GQLProductCategoryFormHandmadeFragment>(productCategoryFormFragment, data.productCategory),
-                  }
-                : {},
-        [data],
-    );
+    //const trpcUtils = trpc.useUtils();
+
+    const { data, error, isLoading /*, refetch*/ } = trpc.productCategories.getById.useQuery({ id: id ?? "" }, { enabled: !!id });
+    const createMutation = trpc.productCategories.create.useMutation();
+    const updateMutation = trpc.productCategories.update.useMutation();
+
+    const initialValues = useMemo<Partial<FormValues>>(() => (data ? { title: data.title, slug: data.slug } : {}), [data]);
+
+    /*
+    // TODO conflict handling
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
-            const updatedAt = await queryUpdatedAt(client, "productCategory", id);
-            return resolveHasSaveConflict(data?.productCategory.updatedAt, updatedAt);
+            if (!id) return false;
+            const serverData = await trpcUtils.productCategories.getById.fetch({ id });
+            return resolveHasSaveConflict(data?.updatedAt.toISOString(), serverData?.updatedAt.toISOString());
         },
         formApiRef,
         loadLatestVersion: async () => {
             await refetch();
         },
     });
+    */
+
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-        };
+        //if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         if (mode === "edit") {
             if (!id) throw new Error();
-            const { ...updateInput } = output;
-            await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
-                mutation: updateProductCategoryMutation,
-                variables: { id, input: updateInput },
-            });
+            await updateMutation.mutateAsync({ id, input: formValues });
         } else {
-            const { data: mutationResponse } = await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
-                mutation: createProductCategoryMutation,
-                variables: { input: output },
-            });
+            const created = await createMutation.mutateAsync(formValues);
             if (!event.navigatingBack) {
-                const id = mutationResponse?.createProductCategory.id;
-                if (id) {
+                const newId = created?.id;
+                if (newId) {
                     setTimeout(() => {
-                        stackSwitchApi.activatePage(`edit`, id);
+                        stackSwitchApi.activatePage(`edit`, newId);
                     });
                 }
             }
         }
     };
+
     if (error) throw error;
-    if (loading) {
+    if (isLoading) {
         return <Loading behavior="fillPageHeight" />;
     }
+
     return (
         <FinalForm<FormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
             initialValues={initialValues}
-            initialValuesEqual={isEqual} //required to compare block data correctly
+            initialValuesEqual={isEqual}
             subscription={{}}
         >
             {() => (
                 <>
-                    {saveConflict.dialogs}
+                    {/*saveConflict.dialogs*/}
                     <>
                         <TextField
                             required

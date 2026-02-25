@@ -1,4 +1,3 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
@@ -13,55 +12,11 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } from "@mui/x-data-grid-pro";
+import { trpc } from "@src/trpc/client";
 import { useMemo } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
-import {
-    type GQLDeleteProductCategoryMutation,
-    type GQLDeleteProductCategoryMutationVariables,
-    type GQLProductCategoriesGridHandmadeFragment,
-    type GQLProductCategoriesGridQuery,
-    type GQLProductCategoriesGridQueryVariables,
-    type GQLUpdateProductCategoryPositionMutation,
-    type GQLUpdateProductCategoryPositionMutationVariables,
-} from "./ProductCategoriesGrid.generated";
-
-const productCategoriesFragment = gql`
-    fragment ProductCategoriesGridHandmade on ProductCategory {
-        id
-        title
-        slug
-        position
-    }
-`;
-
-const productCategoriesQuery = gql`
-    query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
-        productCategories(offset: $offset, limit: $limit, sort: $sort) {
-            nodes {
-                ...ProductCategoriesGridHandmade
-            }
-            totalCount
-        }
-    }
-    ${productCategoriesFragment}
-`;
-
-const updateProductCategoryPositionMutation = gql`
-    mutation UpdateProductCategoryPosition($id: ID!, $input: ProductCategoryUpdateInput!) {
-        updateProductCategory(id: $id, input: $input) {
-            id
-            position
-            updatedAt
-        }
-    }
-`;
-
-const deleteProductCategoryMutation = gql`
-    mutation DeleteProductCategory($id: ID!) {
-        deleteProductCategory(id: $id)
-    }
-`;
+type ProductCategory = { id: string; title: string; slug: string; position: number };
 
 function ProductCategoriesGridToolbar() {
     return (
@@ -75,19 +30,18 @@ function ProductCategoriesGridToolbar() {
 }
 
 export function ProductCategoriesGrid() {
-    const client = useApolloClient();
     const intl = useIntl();
+    const trpcUtils = trpc.useUtils();
     const dataGridProps = { ...useDataGridRemote({ queryParamsPrefix: "productCategories" }), ...usePersistentColumnState("ProductCategoriesGrid") };
+    const updatePositionMutation = trpc.productCategories.updatePosition.useMutation();
+    const deleteMutation = trpc.productCategories.delete.useMutation();
 
     const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
-        await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
-            mutation: updateProductCategoryPositionMutation,
-            variables: { id, input: { position: targetIndex + 1 } },
-            awaitRefetchQueries: true,
-            refetchQueries: [productCategoriesQuery],
-        });
+        await updatePositionMutation.mutateAsync({ id, position: targetIndex + 1 });
+        await trpcUtils.productCategories.list.invalidate();
     };
-    const columns: GridColDef<GQLProductCategoriesGridHandmadeFragment>[] = useMemo(() => {
+
+    const columns: GridColDef<ProductCategory>[] = useMemo(() => {
         return [
             {
                 field: "title",
@@ -134,34 +88,21 @@ export function ProductCategoriesGrid() {
                             </IconButton>
                             <CrudContextMenu
                                 onDelete={async () => {
-                                    await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
-                                        mutation: deleteProductCategoryMutation,
-                                        variables: { id: params.row.id },
-                                    });
+                                    await deleteMutation.mutateAsync({ id: params.row.id });
+                                    await trpcUtils.productCategories.list.invalidate();
                                 }}
-                                refetchQueries={[productCategoriesQuery]}
                             />
                         </>
                     );
                 },
             },
         ];
-    }, [client, intl]);
+    }, [deleteMutation, intl, trpcUtils]);
 
-    const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
-        variables: {
-            offset: 0,
-            limit: 100,
-            sort: { field: "position", direction: "ASC" },
-        },
-    });
-    const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
+    const { data, isLoading, error } = trpc.productCategories.list.useQuery({ offset: 0, limit: 100, sort: { field: "position", direction: "ASC" } });
+    const rowCount = useBufferedRowCount(data?.totalCount);
     if (error) throw error;
-    const rows =
-        data?.productCategories.nodes.map((node) => ({
-            ...node,
-            __reorder__: node.title,
-        })) ?? [];
+    const rows = data?.nodes.map((node) => ({ ...node, __reorder__: node.title })) ?? [];
 
     return (
         <DataGridPro
@@ -170,7 +111,7 @@ export function ProductCategoriesGrid() {
             rows={rows}
             rowCount={rowCount}
             columns={columns}
-            loading={loading}
+            loading={isLoading}
             slots={{
                 toolbar: ProductCategoriesGridToolbar as GridSlotsComponent["toolbar"],
             }}
