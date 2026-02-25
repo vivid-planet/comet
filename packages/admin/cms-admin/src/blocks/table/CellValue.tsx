@@ -1,6 +1,5 @@
 import { RteReadOnly } from "@comet/admin-rte";
 import { alpha, styled } from "@mui/material/styles";
-import { useLayoutEffect, useRef, useState } from "react";
 
 import { type RichTextBlockState } from "../createRichTextBlock";
 
@@ -11,33 +10,12 @@ type Props = {
 };
 
 export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
-    const rteContentWrapperRef = useRef<HTMLDivElement>(null);
-    const rteContentRef = useRef<HTMLDivElement>(null);
-    const [valueOverflowsCell, setValueOverflowsCell] = useState(false);
-
-    useLayoutEffect(() => {
-        const minimumSpaceAroundCellContent = 10;
-        const rteContent = rteContentRef.current;
-        const rteContentWrapper = rteContentWrapperRef.current;
-
-        if (!rteContent || !rteContentWrapper) return;
-
-        const updateValueOverflowsCell = () => {
-            setValueOverflowsCell(rteContent.offsetHeight > rteContentWrapper.clientHeight - minimumSpaceAroundCellContent);
-        };
-
-        updateValueOverflowsCell();
-        const observer = new ResizeObserver(updateValueOverflowsCell);
-        observer.observe(rteContent);
-        return () => observer.disconnect();
-    }, [value.editorState]);
-
     return (
         <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
-            <RteContentWrapper ref={rteContentWrapperRef} $valueOverflowsCell={valueOverflowsCell}>
-                <div ref={rteContentRef}>
+            <RteContentWrapper>
+                <RteContent>
                     <RteReadOnly value={value.editorState} />
-                </div>
+                </RteContent>
             </RteContentWrapper>
         </CellValueContainer>
     );
@@ -66,17 +44,13 @@ const CellValueContainer = styled("div")<{ $highlighted: boolean; $recentlyPaste
     },
 }));
 
-const RteContentWrapper = styled("div")<{ $valueOverflowsCell: boolean }>(({ $valueOverflowsCell, theme }) => ({
+const RteContentWrapper = styled("div")(({ theme }) => ({
     overflow: "hidden",
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-
-    ...($valueOverflowsCell && {
-        justifyContent: "flex-start",
-        paddingTop: theme.spacing(1),
-    }),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
 
     ".CometAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
         marginTop: 0,
@@ -86,3 +60,8 @@ const RteContentWrapper = styled("div")<{ $valueOverflowsCell: boolean }>(({ $va
         marginBottom: 0,
     },
 }));
+
+const RteContent = styled("div")({
+    marginTop: "auto",
+    marginBottom: "auto",
+});
