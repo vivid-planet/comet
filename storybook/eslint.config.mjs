@@ -1,11 +1,9 @@
+import { defineConfig, globalIgnores } from "eslint";
 import eslintConfigReact from "@comet/eslint-config/future/react.js";
 import storybook from "eslint-plugin-storybook";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: ["src/*.generated.ts", "lib/**", "storybook-static/**"],
-    },
+export default defineConfig([
+    globalIgnores(["src/*.generated.ts", "lib/**", "storybook-static/**"]),
     ...eslintConfigReact,
     ...storybook.configs["flat/recommended"],
     {
@@ -20,6 +18,4 @@ const config = [
             "react/jsx-no-literals": "off",
         },
     },
-];
-
-export default config;
+]);
