@@ -1,4 +1,4 @@
-import { defineConfig, globalIgnores } from "eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigNestJs from "@comet/eslint-config/nestjs.js";
 
 export default defineConfig([

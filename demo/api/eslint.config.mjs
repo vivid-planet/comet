@@ -1,4 +1,4 @@
-import { defineConfig, globalIgnores } from "eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigNestJs from "@comet/eslint-config/future/nestjs.js";
 import storybook from "eslint-plugin-storybook";
 
