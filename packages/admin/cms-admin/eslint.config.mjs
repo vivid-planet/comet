@@ -11,6 +11,12 @@ const config = [
             "@comet/no-other-module-relative-import": "off",
         },
     },
+    {
+        files: ["**/*.test.ts", "**/*.test.tsx"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
+        },
+    },
 ];
 
 export default config;

@@ -1,5 +1,26 @@
 # @comet/cli
 
+## 8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 7740f1e: Support 1Password references in site configs
+
+    Allows referencing secrets stored in 1Password directly in the site config using the `{{ op://... }}` syntax. For example:
+
+    ```ts site-configs/your-site.ts
+    export default ((env) => {
+        return {
+            // ,,,
+            apiKey: `{{ op://example-project-prod/api-key/password }}`,
+        };
+    }) satisfies GetSiteConfig;
+    ```
+
+    They are then replaced with the actual values by `inject-site-configs`.
+
 ## 8.14.0
 
 ## 8.13.0

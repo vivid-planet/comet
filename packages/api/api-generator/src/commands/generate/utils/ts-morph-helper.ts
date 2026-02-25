@@ -14,7 +14,7 @@ function morphTsSource(metadata: EntityMetadata<any>) {
     return tsSource;
 }
 
-function morphTsClass(metadata: EntityMetadata<any>) {
+export function morphTsClass(metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     const tsClass = tsSource.getClass(metadata.className);
     if (!tsClass) throw new Error(`Class ${metadata.className} not found in ${metadata.path}`);
@@ -50,8 +50,12 @@ export function findImportPath(importName: string, targetDirectory: string, meta
 
                 if (importPath.startsWith("./") || importPath.startsWith("../")) {
                     const absolutePath = path.resolve(path.dirname(metadata.path), importPath);
+                    let relativePath = path.relative(targetDirectory, absolutePath);
+                    if (!relativePath.startsWith(".")) {
+                        relativePath = `./${relativePath}`;
+                    }
                     return {
-                        importPath: path.relative(targetDirectory, absolutePath),
+                        importPath: relativePath,
                         exportedDeclaration,
                     };
                 } else {

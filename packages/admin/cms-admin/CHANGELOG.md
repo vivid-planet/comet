@@ -1,5 +1,42 @@
 # @comet/cms-admin
 
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-date-time@8.16.0
+    - @comet/admin-rte@8.16.0
+    - @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 9333e9c: Readd "Start impersonation" button to UserGrid
+
+### Patch Changes
+
+- 2bbb9c1: Fix scope not switching when impersonating a user
+
+    Previously, the `ContentScopeProvider` blindly restored the scope from localStorage, which could redirect impersonated users to scopes they don't have access to.
+
+    Now, the stored scope is validated against the user's allowed scopes before being applied. If the stored scope is not allowed, it is cleared from localStorage and the default scope is used instead.
+
+    Additionally, the `NODE_ENV` guard on persisting the selected scope to localStorage is removed so scope persistence is also done locally again.
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-date-time@8.15.0
+    - @comet/admin-rte@8.15.0
+    - @comet/admin-icons@8.15.0
+
 ## 8.14.0
 
 ### Minor Changes
