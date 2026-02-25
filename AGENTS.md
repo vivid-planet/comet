@@ -1,5 +1,16 @@
 # Agent Instructions
 
+## Keeping This File Up to Date
+
+When making changes that affect project structure, commands, architecture, or conventions, update the relevant section of this file to reflect the new state. This includes:
+
+- Adding, removing, or renaming packages in the monorepo
+- Changing pnpm scripts, dev-pm commands, or build steps
+- Introducing new patterns, conventions, or code generation workflows
+- Modifying the demo application structure (e.g. new services, generated folders)
+- Updating linting, formatting, or changeset configuration
+- Changing how changesets or commit messages should be written
+
 ## Linting
 
 - When making changes in a package, run `pnpm run lint:eslint --fix` in that package folder to autoformat with ESLint before finalizing changes.
