@@ -5,6 +5,71 @@ sidebar_position: -9
 
 # Migrating from v8 to v9
 
+## API
+
+### Update `@EntityInfo` decorator usage
+
+The `@EntityInfo` decorator no longer accepts a TypeScript function or a service class. Migrate to the new object-based API using dot-notation field paths.
+
+#### Entities using an inline function:
+
+```diff
+- @EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
++ @EntityInfo<News>({ name: "title", secondaryInformation: "slug" })
+  @Entity()
+  export class News { ... }
+```
+
+If the entity has a visibility concept, move it into the `visible` field using a MikroORM `ObjectQuery`:
+
+```diff
+- @EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
++ @EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
+  @Entity()
+  export class News { ... }
+```
+
+Dot-notation is supported for nested relations and embeddables (ManyToOne/OneToOne only):
+
+```ts
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name", visible: { status: { $eq: ProductStatus.Published } } })
+```
+
+#### Documents using a service class (e.g. `PageTreeNodeDocumentEntityInfoService`):
+
+Remove `@EntityInfo(PageTreeNodeDocumentEntityInfoService)` from `Page`, `Link`, and any other `DocumentInterface` entities. Their entity info is now derived automatically from the `PageTreeNodeEntityInfo` SQL view — no decorator is needed.
+
+```diff
+- @EntityInfo(PageTreeNodeDocumentEntityInfoService)
+  @Entity()
+  @ObjectType({ implements: () => [DocumentInterface] })
+  export class Page { ... }
+```
+
+Remove `PageTreeNodeDocumentEntityInfoService` from all NestJS module providers as well.
+
+#### Entities with complex info logic (custom `EntityInfoServiceInterface` -> raw SQL string):
+
+For cases where the object syntax is insufficient, e.g. cases where you used a custom `EntityInfoService` before, you can pass a raw `SELECT` statement instead.
+The query must return the columns `name`, `secondaryInformation`, `visible`, `id`, and `entityName`:
+
+```ts
+@EntityInfo<DamFile>(`SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`)
+```
+
+Don't forget to remove all custom services that implemented `EntityInfoServiceInterface` as they are no longer needed:
+
+```diff
+- import { EntityInfoServiceInterface } from "@comet/cms-api";
+-
+- @Injectable()
+- export class MyEntityInfoService implements EntityInfoServiceInterface<MyEntity> {
+-     async getEntityInfo(entity: MyEntity) {
+-         return { name: entity.title, secondaryInformation: entity.slug };
+-     }
+- }
+```
+
 ## Admin
 
 ### Admin packages are now ESM-only

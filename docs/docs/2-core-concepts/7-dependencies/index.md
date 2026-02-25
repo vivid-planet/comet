@@ -102,56 +102,40 @@ Next, you probably want to display the dependencies or dependents (usages) of an
 The `@EntityInfo()` decorator allows you to configure which information about an entity should be displayed in the admin interface.
 You can provide a `name` and `secondaryInformation`.
 
-The decorator accepts two inputs:
+##### Object-based (recommended)
 
-##### `GetEntityInfo` method
-
-The simple way is to provide a function returning a `name` and (optional) `secondaryInformation` based on the entity instance.
+Pass an object with dot-notation field paths. Supports direct fields as well as ManyToOne/OneToOne relations and embeddables.
 
 ```ts
 // news.entity.ts
-@EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug" })
 ```
 
-##### `EntityInfoService`
-
-If you need to load additional information from a service or repository, you can implement an `EntityInfoService`.
-In this service, you can use Nest's dependency injection.
-
-The service must offer a `getEntityInfo()` method returning a `name` and (optional) `secondaryInformation`.
+Use the `visible` field (a MikroORM `ObjectQuery`) to control whether the entity is considered visible in dependency/warning lists:
 
 ```ts
-// file.entity.ts
-@EntityInfo<DamFile>(FilesEntityInfoService)
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
 ```
+
+Dot-notation resolves nested relations and embeddables:
 
 ```ts
-// files-entity-info.service.ts
-@Injectable()
-export class FilesEntityInfoService implements EntityInfoServiceInterface<FileInterface> {
-    constructor(
-        @Inject(forwardRef(() => FilesService))
-        private readonly filesService: FilesService,
-    ) {}
-
-    async getEntityInfo(file: FileInterface) {
-        return { name: file.name, secondaryInformation: await this.filesService.getDamPath(file) };
-    }
-}
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name" })
 ```
 
-###### Helper service for documents
+##### Raw SQL string
 
-For documents, you can simply use the `PageTreeNodeDocumentEntityInfoService`.
-It will return the `PageTreeNode` name and slug (as secondary information).
+For cases where the object syntax is insufficient (e.g. when entity info is computed from a dedicated SQL view), pass a raw `SELECT` statement.
+The query must return the columns `name`, `secondaryInformation`, `visible`, `id`, and `entityName`:
 
 ```ts
-// page.entity.ts
-@EntityInfo(PageTreeNodeDocumentEntityInfoService)
-export class Page extends BaseEntity implements DocumentInterface {
-    // ...
-}
+@EntityInfo<DamFile>(`SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`)
 ```
+
+##### Documents (Page, Link, etc.)
+
+Document entities do **not** need an `@EntityInfo()` decorator.
+Their entity info is derived automatically from the `PageTreeNodeEntityInfo` SQL view, which resolves the page tree name and path for you.
 
 #### 2. Admin: Implement the `DependencyInterface`
 
