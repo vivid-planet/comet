@@ -34,7 +34,7 @@ export const TextField = <TFieldValues extends FieldValues>({
                         {...inputProps}
                         {...field}
                         id={id}
-                        className={clsx(styles.input, fieldState.error && styles.inputError)}
+                        className={clsx(styles.input, fieldState.error && styles["input--error"])}
                     />
                 </FieldContainer>
             )}

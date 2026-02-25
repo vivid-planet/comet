@@ -11,8 +11,8 @@
     &::placeholder {
         color: var(--contact-form-text-placeholder);
     }
-}
 
-.inputError {
-    border-color: var(--contact-form-border-error);
+    &--error {
+        border-color: var(--contact-form-border-error);
+    }
 }
