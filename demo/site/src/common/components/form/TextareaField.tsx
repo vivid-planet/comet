@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { type TextareaHTMLAttributes } from "react";
+import { type TextareaHTMLAttributes, useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 
 import { Typography } from "../Typography";
@@ -18,6 +18,7 @@ export const TextareaField = <TFieldValues extends FieldValues>({
     label,
     ...inputProps
 }: TextareaFieldProps<TFieldValues>) => {
+    const id = useId();
     const required = !!rules?.required;
     return (
         <Controller
@@ -31,7 +32,7 @@ export const TextareaField = <TFieldValues extends FieldValues>({
                         variant="paragraph200"
                         {...inputProps}
                         {...field}
-                        id={name}
+                        id={id}
                         className={clsx(styles.textareaField, fieldState.error && styles.textareaFieldError)}
                     />
                 </FieldContainer>
