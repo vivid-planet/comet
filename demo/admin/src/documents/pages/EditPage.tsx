@@ -54,6 +54,25 @@ const pageTreeNodeDependentsQuery = gql`
     }
 `;
 
+const pageTreeNodeDependenciesQuery = gql`
+    query PageTreeNodeDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+        item: page(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                }
+                totalCount
+            }
+        }
+    }
+`;
+
 const usePage = createUsePage({
     rootBlocks: {
         content: PageContentBlock,
@@ -246,6 +265,22 @@ export const EditPage = ({ id }: Props) => {
                                         query={pageTreeNodeDependentsQuery}
                                         variables={{
                                             id,
+                                        }}
+                                    />
+                                ),
+                            },
+                            {
+                                key: "dependencies",
+                                label: (
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                        <FormattedMessage id="pages.pages.page.edit.dependencies" defaultMessage="Dependencies" />
+                                    </BlockAdminTabLabel>
+                                ),
+                                content: (
+                                    <DependencyList
+                                        query={pageTreeNodeDependenciesQuery}
+                                        variables={{
+                                            id: pageState.document.id,
                                         }}
                                     />
                                 ),

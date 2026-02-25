@@ -2,6 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -15,7 +16,6 @@ import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
 import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY, SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
-import { PageTreeNodeDocumentEntityInfoService } from "./page-tree-node-document-entity-info.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import { SitePreviewResolver } from "./site-preview.resolver";
@@ -54,6 +54,7 @@ export class PageTreeModule {
             PageTreeNodeUpdateInput,
         });
         const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
+        const PageTreeDependenciesResolver = DependenciesResolverFactory.create(PageTreeNode);
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,
@@ -81,6 +82,7 @@ export class PageTreeModule {
                 AttachedDocumentLoaderService,
                 PageTreeResolver,
                 PageTreeDependentsResolver,
+                PageTreeDependenciesResolver,
                 repositoryProvider,
                 pageTreeConfigProvider,
                 {
@@ -91,7 +93,6 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
-                PageTreeNodeDocumentEntityInfoService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,
                 InternalLinkBlockWarningsService,
