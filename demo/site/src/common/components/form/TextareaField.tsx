@@ -33,7 +33,7 @@ export const TextareaField = <TFieldValues extends FieldValues>({
                         {...inputProps}
                         {...field}
                         id={id}
-                        className={clsx(styles.textareaField, fieldState.error && styles.textareaFieldError)}
+                        className={clsx(styles.textarea, fieldState.error && styles["textarea--error"])}
                     />
                 </FieldContainer>
             )}

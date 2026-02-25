@@ -1,6 +1,6 @@
 @use "@src/styles/variables" as *;
 
-.textareaField {
+.textarea {
     padding: var(--spacing-s300);
     border-radius: 4px;
     border: 1px solid var(--contact-form-border-border);
@@ -14,8 +14,8 @@
     &::placeholder {
         color: var(--contact-form-text-placeholder);
     }
-}
 
-.textareaFieldError {
-    border-color: var(--contact-form-border-error);
+    &--error {
+        border-color: var(--contact-form-border-error);
+    }
 }
