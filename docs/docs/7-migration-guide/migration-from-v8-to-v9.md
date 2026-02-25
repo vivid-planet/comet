@@ -7,6 +7,39 @@ sidebar_position: -9
 
 ## API
 
+### API Generator: Remove the `targetDirectory` option
+
+The `targetDirectory` option of the `@CrudGenerator` decorator has been removed.
+Generated files are now always written to `${__dirname}/../generated/`, which was a commonly used default.
+
+```diff title="api/src/products/entities/product.entity.ts"
+@CrudGenerator({
+-   targetDirectory: `${__dirname}/../generated/`,
+    requiredPermission: ["products"],
+})
+export class Product extends BaseEntity {}
+```
+
+### Enable MikroORM dataloader for generated CRUD resolvers
+
+Generated list resolvers from `@comet/api-generator` no longer inspect GraphQL selection sets to build `populate` options.
+Relation loading is now expected to be handled by MikroORM's dataloader.
+
+Enable dataloader in your MikroORM config:
+
+```diff title="api/src/db/ormconfig.ts"
++ import { DataloaderType } from "@mikro-orm/core";
+
+  export const ormConfig = createOrmConfig(
+      defineConfig({
+          // ...
++         dataloader: DataloaderType.ALL,
+      }),
+ );
+```
+
+Without enabling dataloader, relation fields resolved by generated resolvers can lead to significantly more SQL queries.
+
 ### Update `@EntityInfo` decorator usage
 
 The `@EntityInfo` decorator no longer accepts a TypeScript function or a service class. Migrate to the new object-based API using dot-notation field paths.
@@ -277,13 +310,6 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
-## Api
-
-### Api Generator `targetDirectory` config removed
-
-The `targetDirectory` config of `@CrudGenerator` decorator is not needed anymore and must be removed. Generated files are now always written to `${__dirname}/../generated/`, which was a commonly used default.
-
-
 ## Site
 
 ### 🤖 Upgrade peer dependencies
@@ -467,25 +493,3 @@ export function createGraphQLFetch() {
     );
 }
 ```
-
-## API
-
-### Enable MikroORM dataloader for generated CRUD resolvers
-
-Generated list resolvers from `@comet/api-generator` no longer inspect GraphQL selection sets to build `populate` options.
-Relation loading is now expected to be handled by MikroORM's dataloader.
-
-Enable dataloader in your MikroORM config:
-
-```diff title="api/src/db/ormconfig.ts"
-+import { DataloaderType } from "@mikro-orm/core";
-+
- export const ormConfig = createOrmConfig(
-     defineConfig({
-         // ...
-+        dataloader: DataloaderType.ALL,
-     }),
- );
-```
-
-Without enabling dataloader, relation fields resolved by generated resolvers can lead to significantly more SQL queries.
