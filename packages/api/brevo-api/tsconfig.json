@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "declarationMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "incremental": true,
+        "lib": ["ES2020"],
+        "outDir": "./lib",
+        "removeComments": true,
+        "sourceMap": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
+        "target": "ES2015"
+    },
+    "exclude": ["node_modules", "lib"],
+    "extends": "../tsconfig.base.json",
+    "include": ["src/**/*"]
+}

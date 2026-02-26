@@ -7,17 +7,25 @@ import {
     GridCellContent,
     type GridColDef,
     type IFilterApi,
-    type ISelectionApi,
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
+    Tooltip,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
+import { Info as InfoIcon } from "@comet/admin-icons";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
+import {
+    DataGrid,
+    GridColumnHeaderTitle,
+    type GridRowClassNameParams,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
+    useGridApiRef,
+} from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
@@ -76,7 +84,6 @@ interface FolderDataGridProps extends DamConfig {
     id?: string;
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
-    selectionApi: ISelectionApi;
 }
 
 type FolderDataGridToolbarProps = {
@@ -135,7 +142,6 @@ const FolderDataGrid = ({
     id: currentFolderId,
     filterApi,
     breadcrumbs,
-    selectionApi,
     hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
@@ -547,6 +553,47 @@ const FolderDataGrid = ({
               ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
         {
+            field: "usages",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.usages",
+                defaultMessage: "Usages",
+            }),
+            headerAlign: "right",
+            align: "right",
+            minWidth: 100,
+            renderHeader: (props) => {
+                return (
+                    <>
+                        <GridColumnHeaderTitle
+                            label={intl.formatMessage({
+                                id: "comet.dam.file.usages",
+                                defaultMessage: "Usages",
+                            })}
+                            columnWidth={150}
+                        />
+                        <Tooltip
+                            title={
+                                <FormattedMessage
+                                    id="comet.dam.file.usages.tooltip"
+                                    defaultMessage="Cached for performance, can be slightly outdated"
+                                />
+                            }
+                        >
+                            <InfoIcon sx={{ marginLeft: 1 }} />
+                        </Tooltip>
+                    </>
+                );
+            },
+            renderCell: ({ row }) => {
+                if (isFile(row)) {
+                    return row.dependents.totalCount;
+                }
+            },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
             field: "createdAt",
             headerName: intl.formatMessage({
                 id: "comet.dam.file.creationDate",
@@ -627,7 +674,6 @@ const FolderDataGrid = ({
                             id: currentFolderId,
                             breadcrumbs,
                             filterApi,
-                            selectionApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
                         } as FolderDataGridToolbarProps,
@@ -644,8 +690,8 @@ const FolderDataGrid = ({
                 {({ selectedId, selectionMode }) => {
                     return (
                         <DialogContent>
-                            {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
-                            {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
+                            {selectionMode === "add" && <AddFolder parentId={selectedId} />}
+                            {selectionMode === "edit" && <EditFolder id={selectedId as string} />}
                         </DialogContent>
                     );
                 }}

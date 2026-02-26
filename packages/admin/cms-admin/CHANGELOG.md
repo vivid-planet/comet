@@ -1,5 +1,106 @@
 # @comet/cms-admin
 
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+    - @comet/admin@8.17.1
+    - @comet/admin-date-time@8.17.1
+    - @comet/admin-rte@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [45163f1]
+    - @comet/admin@8.17.0
+    - @comet/admin-date-time@8.17.0
+    - @comet/admin-rte@8.17.0
+    - @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-date-time@8.16.0
+    - @comet/admin-rte@8.16.0
+    - @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 9333e9c: Readd "Start impersonation" button to UserGrid
+
+### Patch Changes
+
+- 2bbb9c1: Fix scope not switching when impersonating a user
+
+    Previously, the `ContentScopeProvider` blindly restored the scope from localStorage, which could redirect impersonated users to scopes they don't have access to.
+
+    Now, the stored scope is validated against the user's allowed scopes before being applied. If the stored scope is not allowed, it is cleared from localStorage and the default scope is used instead.
+
+    Additionally, the `NODE_ENV` guard on persisting the selected scope to localStorage is removed so scope persistence is also done locally again.
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-date-time@8.15.0
+    - @comet/admin-rte@8.15.0
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- d0a7c96: Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-date-time@8.14.0
+    - @comet/admin-rte@8.14.0
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- 5cfa88d: Fix renaming of DAM folders
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-date-time@8.13.0
+    - @comet/admin-rte@8.13.0
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- 02c25c1: Fix preview url handling in `SvgImageBlock`
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-date-time@8.12.0
+    - @comet/admin-rte@8.12.0
+    - @comet/admin-icons@8.12.0
+
 ## 8.11.1
 
 ### Patch Changes
