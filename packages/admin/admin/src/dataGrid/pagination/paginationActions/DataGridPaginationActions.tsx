@@ -67,7 +67,7 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
                         defaultMessage="Page {page} of {pageCount}"
                         id="comet.dataGridPaginationActions.pageXOfY"
                         values={{
-                            page: page + 1,
+                            page: pageCount === 0 ? 0 : page + 1,
                             pageCount: pageCount,
                         }}
                     />

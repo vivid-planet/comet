@@ -1,10 +1,10 @@
-import { Alert, FinalForm, Future_DatePickerField } from "@comet/admin";
+import { Alert, DatePickerField, FinalForm } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-type Story = StoryObj<typeof Future_DatePickerField>;
-const config: Meta<typeof Future_DatePickerField> = {
-    component: Future_DatePickerField,
-    title: "@comet/admin/datePicker/Future_DatePickerField",
+type Story = StoryObj<typeof DatePickerField>;
+const config: Meta<typeof DatePickerField> = {
+    component: DatePickerField,
+    title: "@comet/admin/datePicker/DatePickerField",
 };
 export default config;
 
@@ -24,7 +24,7 @@ export const Default: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <Future_DatePickerField name="value" label="Date Picker" fullWidth variant="horizontal" />
+                            <DatePickerField name="value" label="Date Picker" fullWidth variant="horizontal" />
 
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
@@ -53,7 +53,7 @@ export const MinMaxDate: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <Future_DatePickerField
+                            <DatePickerField
                                 name="value"
                                 label="Date Picker with Min/Max Date"
                                 fullWidth

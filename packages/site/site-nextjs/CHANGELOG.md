@@ -1,5 +1,80 @@
 # @comet/site-nextjs
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 740dba8: Bump Next.js peer dependency to v16
+
+    Follow the official migration guides ([v15](https://nextjs.org/docs/app/guides/upgrading/version-15), [v16](https://nextjs.org/docs/app/guides/upgrading/version-16)) to upgrade.
+
+- 740dba8: Bump React peer dependency to v19
+
+    Follow the official [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [740dba8]
+    - @comet/site-react@9.0.0-beta.0
+
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Raise Next.js peer dependency minimum to 14.2.35 to fix CVE-2026-23864 (request deserialization DoS)
+    - @comet/site-react@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [35c338e]
+    - @comet/site-react@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- @comet/site-react@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- @comet/site-react@8.15.0
+
+## 8.14.0
+
+### Patch Changes
+
+- @comet/site-react@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- Updated dependencies [9f5c4e6]
+    - @comet/site-react@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- @comet/site-react@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [02d2ba8]
+    - @comet/site-react@8.11.1
+
+## 8.11.0
+
+### Patch Changes
+
+- @comet/site-react@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

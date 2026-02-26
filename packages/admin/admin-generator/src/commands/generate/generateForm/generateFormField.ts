@@ -4,6 +4,7 @@ import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { type Imports } from "../utils/generateImportsCode";
+import { generateFormattedMessage } from "../utils/intl";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
@@ -97,9 +98,11 @@ export function generateFormField({
             ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` +
-                      `"${formattedMessageRootId}.${name}.helperText" ` +
-                      `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={${generateFormattedMessage({
+                          config: config.helperText,
+                          id: `${formattedMessageRootId}.${name}.helperText`,
+                          type: "jsx",
+                      })}}`
                     : ""
             }
             ${validateCode}
@@ -131,23 +134,9 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `parseFloat($fieldName)`;
-        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `$fieldName ? ${assignment} : null`;
+        if (!required && !config.readOnly) {
+            formValueConfig.formValueToGqlInputCode = `$fieldName ?? null`;
         }
-        formValueConfig.formValueToGqlInputCode = `${assignment}`;
-
-        let initializationAssignment = `String(data.${dataRootName}.${nameWithPrefix})`;
-        if (!required) {
-            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
-        }
-        formValueConfig.omitFromFragmentType = true;
-        formValueConfig.typeCode = {
-            nullable: !required,
-            type: "string",
-        };
-        formValueConfig.initializationCode = `${initializationAssignment}`;
         if (config.initialValue !== undefined) {
             formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
@@ -181,8 +170,16 @@ export function generateFormField({
             formValueConfig.defaultInitializationCode = JSON.stringify(config.initialValue);
         }
     } else if (config.type == "boolean") {
+        const checkboxLabel = config.checkboxLabel
+            ? generateFormattedMessage({
+                  config: config.checkboxLabel,
+                  id: `${formattedMessageRootId}.${name}.checkboxLabel`,
+                  type: "jsx",
+              })
+            : "";
         code = `<CheckboxField
-                        label={${fieldLabel}}
+                        fieldLabel={${fieldLabel}}
+                        ${config.checkboxLabel ? `label={${checkboxLabel}}` : ""}
                         name="${nameWithPrefix}"
                         fullWidth
                         variant="horizontal"
@@ -199,11 +196,11 @@ export function generateFormField({
         formValueConfig.defaultInitializationCode = config.initialValue ? "true" : "false";
     } else if (config.type == "date") {
         imports.push({
-            name: "Future_DatePickerField",
+            name: "DatePickerField",
             importPath: "@comet/admin",
         });
         code = `
-            <Future_DatePickerField
+            <DatePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
@@ -229,7 +226,7 @@ export function generateFormField({
         }
     } else if (config.type == "dateTime") {
         imports.push({
-            name: "Future_DateTimePickerField as DateTimePickerField",
+            name: "DateTimePickerField",
             importPath: "@comet/admin",
         });
         code = `<DateTimePickerField
@@ -302,12 +299,28 @@ export function generateFormField({
 
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {
+                const messageId = `${formattedMessageRootId}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
+                const valueLabel = generateFormattedMessage({
+                    config: undefined,
+                    defaultMessage: camelCaseToHumanReadable(value),
+                    id: messageId,
+                    type: "jsx",
+                });
                 return {
                     value,
-                    label: camelCaseToHumanReadable(value),
+                    labelCode: valueLabel,
                 };
             } else {
-                return value;
+                const messageId = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                const valueLabel = generateFormattedMessage({
+                    config: value.label,
+                    id: messageId,
+                    type: "jsx",
+                });
+                return {
+                    value: value.value,
+                    labelCode: valueLabel,
+                };
             }
         });
 
@@ -345,9 +358,7 @@ export function generateFormField({
                   ${values
                       .map((value) => {
                           return `{
-                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
-                                    value.value.charAt(0).toLowerCase() + value.value.slice(1)
-                                }" defaultMessage="${value.label}" />,
+                                label: ${value.labelCode},
                                 value: "${value.value}",
                             }`;
                       })
@@ -376,11 +387,9 @@ export function generateFormField({
                                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                                 ${multiple ? "multiple" : ""}
                                 options={[${values.map((value) => {
-                                    const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
-
                                     return `{
                                         value: "${value.value}",
-                                        label: <FormattedMessage id="${id}" defaultMessage="${value.label}" />
+                                        label: ${value.labelCode}
                                     }`;
                                 })}]}
                             />`;

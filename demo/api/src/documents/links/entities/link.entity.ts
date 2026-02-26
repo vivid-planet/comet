@@ -1,10 +1,10 @@
 import {
     BlockDataInterface,
     DocumentInterface,
-    EntityInfo,
-    PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
+    RootBlock,
     RootBlockDataScalar,
+    RootBlockEntity,
     RootBlockType,
     ScopedEntity,
 } from "@comet/cms-api";
@@ -13,11 +13,11 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { LinkBlock } from "@src/common/blocks/link.block";
 import { v4 } from "uuid";
 
-@EntityInfo(PageTreeNodeDocumentEntityInfoService)
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],
 })
+@RootBlockEntity()
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
 export class Link extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
@@ -26,6 +26,7 @@ export class Link extends BaseEntity implements DocumentInterface {
     @Field(() => ID)
     id: string = v4();
 
+    @RootBlock(LinkBlock)
     @Property({ type: new RootBlockType(LinkBlock) })
     @Field(() => RootBlockDataScalar(LinkBlock))
     content: BlockDataInterface;

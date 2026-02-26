@@ -18,7 +18,7 @@ import {
 import { Box, MenuItem } from "@mui/material";
 import { isFQDN } from "class-validator";
 import isEqual from "lodash.isequal";
-import { useMemo } from "react";
+import { type JSX, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { createFinalFormBlock } from "../blocks/form/createFinalFormBlock";

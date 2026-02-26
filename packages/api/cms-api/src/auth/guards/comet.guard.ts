@@ -42,7 +42,7 @@ export class CometAuthGuard implements CanActivate {
         const result = await this.getAuthenticatedUserResult(request);
         if (!result) {
             this.logger.debug(`No AuthService could authenticate the user for ${context.getClass().name}::${context.getHandler().name}().`);
-            return false;
+            throw new UnauthorizedException("No AuthService could authenticate the user");
         }
         if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);
 

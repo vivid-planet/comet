@@ -1,5 +1,99 @@
 # @comet/eslint-config
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- db6b83a: Prevent lib imports from `@comet/` packages
+
+    Use `no-restricted-imports` to prevent importing private files from `@comet/*/lib`. For example, the following import would be forbidden:
+
+    ```ts
+    import { something } from "@comet/admin/lib/some/private/file";
+    ```
+
+- 740dba8: Bump Next.js peer dependency to v16
+
+    Follow the official migration guides ([v15](https://nextjs.org/docs/app/guides/upgrading/version-15), [v16](https://nextjs.org/docs/app/guides/upgrading/version-16)) to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [db6b83a]
+    - @comet/eslint-plugin@9.0.0-beta.0
+
+## 8.17.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- af265a8: Clarify `next/image` import restriction in `@comet/eslint-config/nextjs.js`
+
+### Patch Changes
+
+- 3d0af69: Fix extending Next.js' ESLint config in `@comet/eslint-config/nextjs.js`
+    - @comet/eslint-plugin@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 4b448f6: Format.JS: enforce literal default messages
+
+    Prevent function calls or variables in `defaultMessage` which are not supported in our internationalization workflow.
+
+- e5427a0: Future: Ban `node-cache` because it's unmaintained
+
+    Introduce a new rule in `future/nestjs` and `future/nextjs` that bans importing `node-cache` and recommends `cache-manager` / `@cacheable/node-cache` / `@nestjs/cache-manager` instead.
+
+    This rule is now in the future configs and will be enforced generally in v9.
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

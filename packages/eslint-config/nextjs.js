@@ -1,7 +1,19 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 import react from "eslint-plugin-react";
 import globals from "globals";
 import nextPlugin from "@next/eslint-plugin-next";
+
+export const restrictedImportPaths = [
+    {
+        name: "react",
+        importNames: ["default"],
+    },
+    {
+        name: "next/image",
+        importNames: ["default"],
+        message: "Don't use next/image. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
+    },
+];
 
 /** @type {import('eslint')} */
 const config = [
@@ -16,17 +28,8 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        {
-                            name: "react",
-                            importNames: ["default"],
-                        },
-                        {
-                            name: "next/image",
-                            importNames: ["default"],
-                            message: "Please use Image from @comet/site-nextjs instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },

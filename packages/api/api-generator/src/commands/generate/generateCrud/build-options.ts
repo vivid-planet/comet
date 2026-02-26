@@ -1,3 +1,5 @@
+import { dirname } from "node:path";
+
 import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature, SCOPED_ENTITY_METADATA_KEY } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/core";
 
@@ -115,6 +117,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
 
+    const hasDeletedAtProp = metadata.props.some((prop) => prop.name == "deletedAt");
+
     const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
 
     const positionGroupPropNames: string[] = hasPositionProp
@@ -130,9 +134,14 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
+    const hasPaging = generatorOptions.paging !== false;
+    const hasArgsClass = hasPaging || !!scopeProp || dedicatedResolverArgProps.length > 0;
+
     const blockProps = metadata.props.filter((prop) => {
         return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
     });
+
+    const targetDirectory = `${dirname(metadata.path).replace(/\/entities$/, "")}/generated`;
 
     return {
         crudSearchPropNames,
@@ -144,11 +153,15 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         hasSlugProp,
         hasPositionProp,
         positionGroupProps,
+        hasDeletedAtProp,
         scopeProp,
         skipScopeCheck,
         argsClassName,
         argsFileName,
+        hasPaging,
+        hasArgsClass,
         blockProps,
         dedicatedResolverArgProps,
+        targetDirectory,
     };
 }

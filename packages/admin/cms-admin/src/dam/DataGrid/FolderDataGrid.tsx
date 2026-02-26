@@ -7,7 +7,6 @@ import {
     GridCellContent,
     type GridColDef,
     type IFilterApi,
-    type ISelectionApi,
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
@@ -76,7 +75,6 @@ interface FolderDataGridProps extends DamConfig {
     id?: string;
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
-    selectionApi: ISelectionApi;
 }
 
 type FolderDataGridToolbarProps = {
@@ -135,7 +133,6 @@ const FolderDataGrid = ({
     id: currentFolderId,
     filterApi,
     breadcrumbs,
-    selectionApi,
     hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
@@ -627,7 +624,6 @@ const FolderDataGrid = ({
                             id: currentFolderId,
                             breadcrumbs,
                             filterApi,
-                            selectionApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
                         } as FolderDataGridToolbarProps,
@@ -644,8 +640,8 @@ const FolderDataGrid = ({
                 {({ selectedId, selectionMode }) => {
                     return (
                         <DialogContent>
-                            {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
-                            {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
+                            {selectionMode === "add" && <AddFolder parentId={selectedId} />}
+                            {selectionMode === "edit" && <EditFolder id={selectedId as string} />}
                         </DialogContent>
                     );
                 }}

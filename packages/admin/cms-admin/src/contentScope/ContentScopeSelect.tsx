@@ -131,9 +131,7 @@ export function ContentScopeSelect({
     }
 
     const handleChange = (selectedScope: ContentScope) => {
-        if (process.env.NODE_ENV !== "development") {
-            localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(selectedScope));
-        }
+        localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(selectedScope));
         onChange(selectedScope);
     };
 

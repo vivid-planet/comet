@@ -1,5 +1,117 @@
 # @comet/admin-color-picker
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+    - @comet/admin@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [45163f1]
+    - @comet/admin@8.17.0
+    - @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

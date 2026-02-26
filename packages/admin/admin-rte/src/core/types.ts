@@ -4,6 +4,7 @@ import {
     type ComponentType,
     type CSSProperties,
     type ForwardRefExoticComponent,
+    type JSX,
     type MouseEvent,
     type ReactNode,
     type RefAttributes,
@@ -52,7 +53,7 @@ export interface IControlProps {
     editorState: EditorState;
     setEditorState: (editorState: EditorState) => void;
     options: IRteOptions;
-    editorRef: RefObject<Editor>;
+    editorRef: RefObject<Editor | null>;
     disabled?: boolean;
 }
 

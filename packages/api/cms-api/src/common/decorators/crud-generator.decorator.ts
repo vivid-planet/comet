@@ -1,7 +1,17 @@
+import { type Type } from "@nestjs/common";
+
+import { type CurrentUser } from "../../user-permissions/dto/current-user";
 import { type Permission } from "../../user-permissions/user-permissions.types";
+import { type MutationError } from "../graphql/mutation-error";
+
+export interface CrudGeneratorHooksService {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    validateCreateInput?: (input: any, options: { currentUser: CurrentUser; scope: any; args: any }) => Promise<MutationError[]>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    validateUpdateInput?: (input: any, options: { currentUser: CurrentUser; scope: any; entity: any }) => Promise<MutationError[]>;
+}
 
 export interface CrudGeneratorOptions {
-    targetDirectory: string;
     requiredPermission: Permission | Permission[];
     create?: boolean;
     update?: boolean;
@@ -9,12 +19,13 @@ export interface CrudGeneratorOptions {
     list?: boolean;
     single?: boolean;
     position?: { groupByFields: string[] };
+    hooksService?: Type<CrudGeneratorHooksService>;
+    paging?: boolean;
 }
 
 export const CRUD_GENERATOR_METADATA_KEY = "data:crudGeneratorOptions";
 
 export function CrudGenerator({
-    targetDirectory,
     requiredPermission,
     create = true,
     update = true,
@@ -22,19 +33,20 @@ export function CrudGenerator({
     list = true,
     single = true,
     position,
+    hooksService,
+    paging = true,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(
             CRUD_GENERATOR_METADATA_KEY,
-            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position },
+            { requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService, paging },
             target,
         );
     };
 }
 
 export interface CrudSingleGeneratorOptions {
-    targetDirectory: string;
     requiredPermission: Permission | Permission[];
 }
 

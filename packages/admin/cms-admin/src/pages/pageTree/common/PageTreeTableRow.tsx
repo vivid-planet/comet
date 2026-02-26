@@ -20,7 +20,7 @@ interface Props extends TableRowProps {
     clickable?: boolean;
     disabled?: boolean;
     slideIn?: boolean;
-    rowRef?: RefObject<HTMLTableRowElement>;
+    rowRef?: RefObject<HTMLTableRowElement | null>;
 }
 
 export const PageTreeTableRow = ({ children, clickable, disabled, isSelected, isMouseHovered, slideIn, rowRef, ...restProps }: Props) => {

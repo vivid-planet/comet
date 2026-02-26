@@ -122,13 +122,13 @@ export {
     CrudField,
     CrudFieldOptions,
     CrudGenerator,
+    CrudGeneratorHooksService,
     CrudGeneratorOptions,
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
 } from "./common/decorators/crud-generator.decorator";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
-export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
 export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
@@ -149,6 +149,7 @@ export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { MutationError } from "./common/graphql/mutation-error";
 export { CdnGuard } from "./common/guards/cdn.guard";
 export { getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "./common/helper/crud-generator.helper";
 export { PartialType } from "./common/helper/partial-type.helper";
@@ -205,6 +206,7 @@ export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export { EntityInfo } from "./entity-info/entity-info.decorator";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";
@@ -253,7 +255,6 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
-export { PageTreeNodeDocumentEntityInfoService } from "./page-tree/page-tree-node-document-entity-info.service";
 export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-node-document-entity-scope.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
@@ -270,6 +271,7 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
+export { AffectedScope } from "./user-permissions/decorators/affected-scope.decorator";
 export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
 export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
@@ -280,6 +282,7 @@ export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
+export { registerAdditionalPermissions } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,

@@ -170,7 +170,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 minHeight: getDensityHeightValue(ownerState?.density),
             },
         }),
-
+        row: ({ ownerState }) => ({
+            cursor: ownerState?.onRowClick ? "pointer" : undefined,
+        }),
         iconSeparator: {
             backgroundColor: palette.grey[100],
             width: "2px",
@@ -290,7 +292,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             [`&& .${autocompleteClasses.inputRoot}`]: {
                 padding: 0,
-                height: "40px",
+                minHeight: "40px",
                 display: "flex",
                 alignItems: "center",
                 border: `1px solid ${palette.grey[100]}`,

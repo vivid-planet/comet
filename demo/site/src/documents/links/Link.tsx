@@ -3,6 +3,7 @@ import { type DamFileDownloadLinkBlockData, type ExternalLinkBlockData, type Int
 import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound, redirect } from "next/navigation";
+import { type JSX } from "react";
 
 import { type GQLLinkRedirectQuery, type GQLLinkRedirectQueryVariables } from "./Link.generated";
 

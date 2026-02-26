@@ -23,5 +23,8 @@ export function createConfig() {
         buildNumber: environmentVariables.BUILD_NUMBER,
         commitSha: environmentVariables.COMMIT_SHA,
         muiLicenseKey: environmentVariables.MUI_LICENSE_KEY,
+        brevo: {
+            allowAddingContactsWithoutDoi: environmentVariables.BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI === "true",
+        },
     };
 }

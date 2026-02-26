@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
+        serverComponentsExternalPackages: ["mjml", "react-intl", "@faire/mjml-react"],
     },
     poweredByHeader: false,
     // https://nextjs.org/docs/advanced-features/security-headers (Content-Security-Policy and CORS are set in middleware/cspHeaders.ts)
@@ -58,8 +59,8 @@ const nextConfig: NextConfig = {
             ],
         },
     ],
-    cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
-    cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
+    cacheHandler: process.env.VALKEY_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
+    cacheMaxMemorySize: process.env.VALKEY_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
     rewrites: async () => {
         return {
             afterFiles: [

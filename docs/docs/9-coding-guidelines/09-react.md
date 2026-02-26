@@ -7,15 +7,17 @@ sidebar_position: -5
 
 - Prefer Function Components over Class Components.
 - Create one file per "logical component." Multiple Function Components per file are allowed for structuring, styling, etc.
-- Always use JSX (use React.createElement only for app initialization).
-- Use `React.PropsWithChildren` instead of defining children manually.
+- Always use JSX (use React's `createElement` only for app initialization).
+- Use React's `PropsWithChildren` instead of defining children manually.
 - Inject dependencies to services/APIs via Context.
-- How to structure folders? "Move files around until it feels right"
-  Recommendation: Separate by modules instead of by type ([File Structure – React](https://legacy.reactjs.org/docs/faq-structure.html#grouping-by-features-or-routes)).
+- How to structure folders: "Move files around until it feels right."
+  Recommendation: separate by modules instead of by type ([File Structure – React](https://legacy.reactjs.org/docs/faq-structure.html#grouping-by-features-or-routes)).
 
 ## Naming
 
-- Use PascalCase for React components and camelCase for instances
+### Casing
+
+Use PascalCase for React components and camelCase for instances.
 
 :::warning Bad
 
@@ -35,12 +37,114 @@ const carItem = <CarCard />;
 
 :::
 
-- Use filename as component name
+### Naming components and their file
+
+A component and its file should have the same name.
+
+_The exception would be the rare case where a file exports multiple components._
+
+:::warning Bad
+
+```tsx title="src/components/Navigation.tsx"
+export const Footer = () => {
+    // ...
+};
+```
+
+:::
+
+:::tip Good
+
+```tsx title="src/components/Footer.tsx"
+export const Footer = () => {
+    // ...
+};
+```
+
+:::
+
+### File names
+
+Prefer meaningful file names over short, generic ones, even when the files are already in a descriptive folder.
+
+:::warning Bad
+
+```
+clients/Table.tsx
+clients/Table.sc.ts
+clients/Table.gql.ts
+```
+
+:::
+
+:::tip Good
+
+```
+clients/ClientsTable.tsx
+clients/ClientsTable.sc.ts
+clients/ClientsTable.gql.ts
+```
+
+:::
+
+### Prop naming
+
+- Name props in camelCase.
+- Do not name props after DOM attributes.
+
+:::warning Bad
+
+```ts
+type FooProps = {
+    phone_number: number;
+    UserName: string;
+};
+```
+
+```ts
+type BarProps = {
+    className?: "default" | "fancy";
+};
+```
+
+:::
+
+:::tip Good
+
+```ts
+type FooProps = {
+    phoneNumber: number;
+    userName: string;
+};
+```
+
+```ts
+type BarProps = {
+    variant?: "default" | "fancy";
+};
+```
+
+:::
+
+## Defining boolean props
+
+Boolean props should generally be optional and not have a default value, as they are falsy by default.
 
 :::warning Bad
 
 ```tsx
-import Footer from "./Nav";
+type FooProps = {
+    hidden: boolean;
+};
+```
+
+```tsx
+const Bar = ({ hidden = false }: BarProps) => {
+    if (hidden) {
+        // ...
+    }
+    // ...
+};
 ```
 
 :::
@@ -48,79 +152,23 @@ import Footer from "./Nav";
 :::tip Good
 
 ```tsx
-import Footer from "./Footer";
+type BazProps = {
+    hidden?: boolean;
+};
+
+const Baz = ({ hidden }: BazProps) => {
+    if (hidden) {
+        // ...
+    }
+    // ...
+};
 ```
 
 :::
 
-- Speaking component filename  
-  Include the component name in the filename.
+## Using boolean props
 
-:::warning Bad
-
-```tsx
-clients / Table.tsx;
-
-clients / Table.sc.ts;
-
-clients / Table.gql.ts;
-```
-
-:::
-
-:::tip Good
-
-```tsx
-clients / ClientsTable.tsx;
-
-clients / ClientsTable.sc.ts;
-
-clients / ClientsTable.gql.ts;
-```
-
-:::
-
-Do not use DOM props as component props unless they are intended for that purpose.
-
-:::warning Bad
-
-```tsx
-<MyComponent className="fancy" />
-```
-
-:::
-
-:::tip Good
-
-```tsx
-<MyComponent variant="fancy" />
-```
-
-:::
-
-- Always use camelCase for prop names.
-
-:::warning Bad
-
-```tsx
-<Foo UserName="hello" phone_number={12345678} />
-```
-
-:::
-
-:::tip Good
-
-```tsx
-<Foo userName="hello" phoneNumber={12345678} />
-```
-
-:::
-
-- Always name React.useState like this: const [variable, setVariable] = React.useState()
-
-## Conventions
-
-- If the property is true, then do not pass the value
+To set a prop to true, simply add the prop, without a value.
 
 :::warning Bad
 
@@ -138,16 +186,14 @@ Do not use DOM props as component props unless they are intended for that purpos
 
 :::
 
-- Boolean props should always be optional
+## React states
+
+Name the state value in camelCase, and the setter function as the value name prefixed with "set", also in camelCase.
 
 :::warning Bad
 
 ```tsx
-type Props = {
-    hidden: boolean;
-};
-
-<Foo hidden={false} />;
+const [UserName, setName] = useState();
 ```
 
 :::
@@ -155,18 +201,12 @@ type Props = {
 :::tip Good
 
 ```tsx
-type Props = {
-    visible?: boolean;
-};
-
-<Foo />;
+const [userName, setUserName] = useState();
 ```
 
 :::
 
-Use `parameter?: type` instead of `parameter: type | undefined`, otherwise `parameter = undefined` must be explicitly set.
-
-### Recommendations
+## Recommendations
 
 - If a component becomes too complex:
     - Move GraphQL and styled components into separate files with `.gql.ts` and `.sc.ts` extensions.  
@@ -174,8 +214,9 @@ Use `parameter?: type` instead of `parameter: type | undefined`, otherwise `para
       These files should be treated as **private** and must **not** be imported from other files.  
       :::
     - Split the component into smaller sub-components.
+- Use `parameter?: type` instead of `parameter: type | undefined`, otherwise `parameter = undefined` must be explicitly set.
 
-### Working with SVGs
+## Working with SVGs
 
 If possible, use SVGs inline with `<use>`.
 
@@ -230,13 +271,17 @@ import Icon from "../assets/icon.svg"
 
 **Background:** SVGs imported as modules end up in the JS bundle, which increases download and compile time. Additionally, when used as `<img>` tags, they cannot be manipulated (e.g., changing path color).
 
-### Common Bugs
+## Common Bugs
 
 :::info
 These are common pitfalls, not strict rules that must always be followed.
 :::
 
-- **Do not use array index as `key`** (Explanation: [Index as a key is considered an anti-pattern](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318))
+### Avoid array index as `key`
+
+Use a unique identifier as the key, such as the item's `id`.
+
+Explanation: [Index as a key is considered an anti-pattern](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318)
 
 :::warning Bad
 
@@ -258,116 +303,119 @@ These are common pitfalls, not strict rules that must always be followed.
 
 :::
 
-- **Use `&&` with `0` or `""`**
+### Conditional rendering
+
+Don't use the `&&` syntax when rendering, depending on a number. The value `0` will be rendered by React.
+
+Instead, compare the value to 0 or use the ternary operator (`? :`).
+
+See React docs: [Conditional Rendering](https://react.dev/learn/conditional-rendering#logical-and-operator-)
 
 :::warning Bad
 
 ```tsx
-export default function PostList({ posts }) {
-    return (
-        <div>
-            <ul>{posts.length && posts.map((post) => <PostItem key={post.id} post={post} />)}</ul>
-        </div>
-    );
-}
+export const PostDetails = ({ post }) => (
+    <>
+        <PostContent />
+        {post.comments.length && <PostComments comments={post.comments} />}
+    </>
+);
 ```
 
 :::
-
-- **Renders `0` instead of `null` for an empty list!**
 
 :::tip Good
 
 ```tsx
-export default function PostList({ posts }) {
-    return (
-        <div>
-            <ul>
-                {posts.length ? posts.map((post) => <PostItem key={post.id} post={post} />) : null}
-            </ul>
-        </div>
-    );
-}
+export const PostDetails = ({ post }) => (
+    <>
+        <PostContent />
+        {post.comments.length > 0 && <PostComments comments={post.comments} />}
+    </>
+);
+```
+
+```tsx
+export const PostDetails = ({ post }) => (
+    <>
+        <PostContent />
+        {post.comments.length ? <PostComments comments={post.comments} /> : null}
+    </>
+);
 ```
 
 :::
 
-### Common Anti-Patterns
+## Common Anti-Patterns
 
-Constant components or functions that have no dependencies are created on every render.
+Components or functions declared as constants inside a component are recreated on every render.
 :::warning Bad
 
 ```tsx
-const Foo: React:FC = (jobs) => {
-  const sortJobs = (a: Job, b: Job) => {
-    return a.createdAt - b.createdAt;
-  }
+const Foo = (jobs) => {
+    const sortJobs = (a: Job, b: Job) => {
+        return a.createdAt - b.createdAt;
+    };
 
-  const Wrapper = styled.div`...`;
+    const Wrapper = styled.div`...`;
 
-  return <Wrapper>...</Wrapper>;
-}
+    return <Wrapper>...</Wrapper>;
+};
 ```
 
 :::
 
-**Explanation**: Created on every render and can lead to performance issues. (See also [Hooks API Reference – React](https://legacy.reactjs.org/docs/hooks-reference.html#usecallback))
+**Explanation:** They are recreated on every render and can lead to performance issues. (See also [Hooks API Reference – React](https://legacy.reactjs.org/docs/hooks-reference.html#usecallback))
 
 :::tip Good
 
 ```tsx
 const sortJobs = (a: Job, b: Job) => {
-  return a.createdAt - b.createdAt;
-}
+    return a.createdAt - b.createdAt;
+};
 
 const Wrapper = styled.div`...`;
 
-const Foo: React:FC = (jobs) => {
-  return <Wrapper>...</Wrapper>;
-}
+const Foo = (jobs) => {
+    return <Wrapper>...</Wrapper>;
+};
 ```
 
 :::
 
-### GraphQL
+## GraphQL
 
-Use fragment to define required data of a component (see [Colocating Fragments](https://www.apollographql.com/docs/react/data/fragments#colocating-fragments))
+Use a fragment to define the required data of a component (see [Colocating Fragments](https://www.apollographql.com/docs/react/data/fragments#colocating-fragments))
 
 :::warning Bad
 
-```tsx
-// DisplayName.tsx
-
+```tsx title="DisplayName.tsx"
 function DisplayName({
-  user: { firstName, lastName }: GQLUserDetailQuery
-}): JSX.Element {
-  return <>{firstName} {lastName}</>
+    user: { firstName, lastName }: GQLUserDetailQuery,
+}) {
+    return <>{firstName} {lastName}</>
 }
+```
 
-
-
-// UserDetail.tsx
-
+```tsx title="UserDetail.tsx"
 const userDetailQuery = gql`
-  query UserDetail($id: ID!) {
-    user(id: $id) {
-      firstName
-      lastName
+    query UserDetail($id: ID!) {
+        user(id: $id) {
+            firstName
+            lastName
+        }
     }
-  }
-`
+`;
 
-function UserDetail({ id }: { id: string}): JSX.Element {
-  const user = useQuery(userDetailQuery);
-
-  ...
-
-  return (
-    <>
-      <DisplayName user={user} />
-      ...
-    </>
-  )
+function UserDetail({ id }: { id: string }) {
+    const user = useQuery(userDetailQuery);
+    // ...
+    return (
+        <>
+            <DisplayName user={user} />
+            {/* ... */}
+        </>
+    );
 }
 ```
 
@@ -375,47 +423,40 @@ function UserDetail({ id }: { id: string}): JSX.Element {
 
 :::tip Good
 
-```tsx
-// DisplayName.tsx
-
+```tsx title="DisplayName.tsx"
 export const displayNameFragment = gql`
-  fragment DisplayName on User {
-    firstName
-    lastName
-  }
+    fragment DisplayName on User {
+        firstName
+        lastName
+    }
 `;
 
 function DisplayName({
-  user: { firstName, lastName }: { user: GQLDisplayNameFragment }
+    user: { firstName, lastName }: { user: GQLDisplayNameFragment },
 }): JSX.Element {
-  return <>{firstName} {lastName}</>
+    return <>{firstName} {lastName}</>;
 }
+```
 
-
-
-// UserDetail.tsx
-
+```tsx title="UserDetail.tsx"
 const userDetailQuery = gql`
-  query UserDetail($id: ID!) {
-    user(id: $id) {
-      ...DisplayName
+    query UserDetail($id: ID!) {
+        user(id: $id) {
+            ...DisplayName
+        }
     }
-  }
+    ${displayNameFragment}
+`;
 
-  ${displayNameFragment}
-`
-
-function UserDetail({ id }: { id: string}): JSX.Element {
-  const user = useQuery(userDetailQuery);
-
-  ...
-
-  return (
-    <>
-      <DisplayName user={user} />
-      ...
-    </>
-  )
+function UserDetail({ id }: { id: string }) {
+    const user = useQuery(userDetailQuery);
+    // ...
+    return (
+        <>
+            <DisplayName user={user} />
+            {/* ... */}
+        </>
+    );
 }
 ```
 
@@ -424,7 +465,7 @@ function UserDetail({ id }: { id: string}): JSX.Element {
 **Explanation:** The child component should define for itself which fields of a GraphQL object it needs (and not rely on the parent component’s query!). This way,
 the child component is not directly affected by changes in the parent query, for example if a field is no longer queried.
 
-### Further reading / sources:
+## Further reading / sources:
 
 - [Hello World - React](https://legacy.reactjs.org/docs/hello-world.html)
 - [TypeScript and React](https://fettblog.eu/typescript-react/)
