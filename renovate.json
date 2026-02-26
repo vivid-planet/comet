@@ -1,5 +1,12 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["github>vivid-planet/comet//renovate/default"],
-    "postUpdateOptions": ["pnpmDedupe"]
+    "postUpdateOptions": ["pnpmDedupe"],
+    "packageRules": [
+        {
+            "matchPackageNames": ["/final-form/"],
+            "matchUpdateTypes": ["major"],
+            "enabled": false
+        }
+    ]
 }
