@@ -50,6 +50,11 @@
             "matchPackageNames": ["/final-form/", "/react-final-form/"]
         },
         {
+            "matchPackageNames": ["/final-form/", "/react-final-form/"],
+            "matchUpdateTypes": ["major"],
+            "enabled": false
+        },
+        {
             "groupName": "React Router",
             "matchPackageNames": ["/^react-router/"]
         },
