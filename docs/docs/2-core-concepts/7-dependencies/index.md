@@ -285,14 +285,13 @@ If you want to query the dependencies or dependents of an entity, use the factor
 export class NewsModule {}
 ```
 
-#### 5. Admin: Display dependencies with the `DependencyList` component
+#### 5. Admin: Display dependencies with `DependenciesList` or `DependentsList`
 
-You can use the `DependencyList` component provided by `@comet/cms-admin` to display dependencies or dependents.
-The DAM uses this component in its "Dependents" tab.
+Use `DependenciesList` to display what an entity depends on, or `DependentsList` to display what depends on an entity. Both components are provided by `@comet/cms-admin`. The DAM uses `DependentsList` in its "Dependents" tab.
 
-The component requires two props:
+Each component requires two props:
 
-- `query`: A GraphQL query. It must have a `dependencies` or `dependents` field resolver.
+- `query`: A GraphQL query. `DependenciesList` requires a `dependencies` field resolver; `DependentsList` requires a `dependents` field resolver.
 - `variables`: The variables for the query.
 
 <details>
@@ -300,9 +299,9 @@ The component requires two props:
 <summary>A usage could look like this</summary>
 
 ```tsx
-<DependencyList
+<DependentsList
     query={gql`
-        query DamFileDependencies(
+        query DamFileDependents(
             $id: ID!
             $offset: Int!
             $limit: Int!

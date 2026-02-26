@@ -105,6 +105,24 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 
 ## Admin
 
+### Replace `DependencyList` with `DependenciesList` or `DependentsList`
+
+The `DependencyList` component has been replaced by two focused components:
+
+- `DependenciesList` — displays what an entity depends on (query must return `item.dependencies`)
+- `DependentsList` — displays what depends on an entity (query must return `item.dependents`)
+
+```diff
+- import { DependencyList } from "@comet/cms-admin";
++ import { DependenciesList, DependentsList } from "@comet/cms-admin";
+
+- <DependencyList query={myDependentsQuery} variables={{ id }} />
++ <DependentsList query={myDependentsQuery} variables={{ id }} />
+
+- <DependencyList query={myDependenciesQuery} variables={{ id }} />
++ <DependenciesList query={myDependenciesQuery} variables={{ id }} />
+```
+
 ### Admin packages are now ESM-only
 
 Make the following changes to your `admin/tsconfig.json`:
