@@ -104,13 +104,21 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                     const destination = getRedirectTargetUrl(redirect.target.block, `https://${redirectSiteConfig.domains.main}`);
 
                     if (destination) {
+                        if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
+                            throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
+                        }
                         return NextResponse.redirect(destination, { status: 301 });
                     }
                 }
                 // Redirect to Main Host
-                return NextResponse.redirect(`https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
-                    status: 301,
-                });
+                const mainHost = normalizeHost(redirectSiteConfig.domains.main);
+                if (mainHost === normalizeHost(host)) {
+                    throw new Error(`Redirect loop detected: main host ${mainHost} equals current host`);
+                } else {
+                    return NextResponse.redirect(`https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`, {
+                        status: 301,
+                    });
+                }
             }
 
             const domainRedirects = await fetchDomainRedirectsForAllScopes();
@@ -126,6 +134,9 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
 
                 if (destination) {
+                    if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
+                        throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
+                    }
                     return NextResponse.redirect(destination, { status: 301 });
                 }
             }
