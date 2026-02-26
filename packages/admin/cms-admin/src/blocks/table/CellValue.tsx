@@ -1,3 +1,4 @@
+import { RteReadOnly } from "@comet/admin-rte";
 import { alpha, styled } from "@mui/material/styles";
 
 import { type RichTextBlockState } from "../createRichTextBlock";
@@ -9,11 +10,13 @@ type Props = {
 };
 
 export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
-    const plainTextValue = value.editorState.getCurrentContent().getPlainText();
-
     return (
         <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
-            <TextValue $highlighted={highlighted}>{plainTextValue}</TextValue>
+            <RteContentWrapper>
+                <RteContent>
+                    <RteReadOnly value={value.editorState} />
+                </RteContent>
+            </RteContentWrapper>
         </CellValueContainer>
     );
 };
@@ -41,9 +44,24 @@ const CellValueContainer = styled("div")<{ $highlighted: boolean; $recentlyPaste
     },
 }));
 
-const TextValue = styled("div")<{ $highlighted: boolean }>(({ $highlighted }) => ({
+const RteContentWrapper = styled("div")(({ theme }) => ({
     overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    fontWeight: $highlighted ? 700 : 400,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+
+    ".CometAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
+        marginTop: 0,
+    },
+
+    ".CometAdminRteBlockElement-root:last-child, .MuiTypography-root:last-child": {
+        marginBottom: 0,
+    },
 }));
+
+const RteContent = styled("div")({
+    marginTop: "auto",
+    marginBottom: "auto",
+});
