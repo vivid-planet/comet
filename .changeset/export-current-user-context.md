@@ -1,5 +1,5 @@
 ---
-"@comet/cms-admin": minor
+"@comet/cms-admin": patch
 ---
 
 Export `CurrentUserContext` from `@comet/cms-admin`
