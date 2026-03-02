@@ -21,8 +21,14 @@ export interface JwtAuthServiceOptions {
     jwksOptions?: JwksRsa.Options;
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
+    /**
+     * By default the JwtAuthService tries to create the User object solely based on the content of the JWT (using `sub` as id, `name` and `email`). Setting this option allows you to provide a custom function or service that converts the JWT into a User object. This is useful if the JWT does not contain all necessary information to create the User object or if you want to include additional logic during the conversion.
+     */
     convertJwtToUser?: ConvertJwtToUser | Type<JwtToUserServiceInterface>;
-    loadUserFromUserService?: boolean;
+    /**
+     * By default the JwtAuthService tries to create the User object solely based on the content of the JWT (using `sub` as id, `name` and `email`). Setting this flag to true will change this behavior and instead only extract the userId from the JWT and then invoke the UserService to fetch the full User object. This is useful if the UserService contains additional logic or data that should be included in the User object.
+     */
+    shouldInvokeUserService?: boolean;
 }
 
 export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }: JwtAuthServiceOptions): Type<AuthServiceInterface> {
@@ -59,8 +65,8 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 throw e;
             }
 
-            if (options.convertJwtToUser && options.loadUserFromUserService) {
-                throw new Error("Cannot use both `convertJwtToUser` and `loadUserFromUserService` options simultaneously");
+            if (options.convertJwtToUser && options.shouldInvokeUserService) {
+                throw new Error("Cannot use both `convertJwtToUser` and `shouldInvokeUserService` options simultaneously");
             }
 
             if (options.convertJwtToUser) {
@@ -75,7 +81,7 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 return { authenticationError: "No sub found in JWT. Please implement `convertJwtToUser`" };
             }
 
-            if (options.loadUserFromUserService) {
+            if (options.shouldInvokeUserService) {
                 return { userId: jwt.sub };
             }
 

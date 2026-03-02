@@ -76,7 +76,7 @@ describe("createJwtAuthService", () => {
     it("verifies token and returns userId", async () => {
         const service = instantianteService({
             verifyOptions: { secret: "secret" },
-            loadUserFromUserService: true,
+            shouldInvokeUserService: true,
         });
         expect(await service.authenticateUser(mockRequest(`Bearer ${token}`))).toStrictEqual({
             userId: "1234567890",
