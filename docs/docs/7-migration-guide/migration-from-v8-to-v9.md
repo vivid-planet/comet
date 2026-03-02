@@ -125,7 +125,11 @@ The `DependencyList` component has been replaced by two focused components:
 
 ### Admin packages are now ESM-only
 
-Make the following changes to your `admin/tsconfig.json`:
+The admin packages now ship ESM-only builds.
+This should not require any significant changes if you're already using Vite.
+Review the [Starter](https://github.com/vivid-planet/comet-starter/tree/main/admin) for an example of a Vite-based admin setup.
+
+The only required change is to update your TSConfig's `module` and `moduleResolution` options:
 
 ```diff title="admin/tsconfig.json"
 {
@@ -137,6 +141,12 @@ Make the following changes to your `admin/tsconfig.json`:
     }
 }
 ```
+
+:::info Why do we need this change?
+
+This is necessary to support importing from Admin packages (e.g, `import { GridCellContent } from "@comet/admin"`) in the Admin Generator configuration files.
+
+:::
 
 ### Upgrade to React 19
 
