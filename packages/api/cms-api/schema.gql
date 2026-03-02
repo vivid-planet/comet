@@ -73,6 +73,11 @@ type CurrentUser {
   allowedContentScopes: [ContentScopeWithLabel!]!
 }
 
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
+}
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -285,11 +290,6 @@ enum WarningStatus {
   open
   resolved
   ignored
-}
-
-type EntityInfo {
-  name: String!
-  secondaryInformation: String
 }
 
 type PaginatedWarnings {

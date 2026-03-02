@@ -40,7 +40,88 @@ Enable dataloader in your MikroORM config:
 
 Without enabling dataloader, relation fields resolved by generated resolvers can lead to significantly more SQL queries.
 
+### Update `@EntityInfo` decorator usage
+
+The `@EntityInfo` decorator no longer accepts a TypeScript function or a service class. Migrate to the new object-based API using dot-notation field paths.
+
+#### Entities using an inline function:
+
+```diff
+- @EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
++ @EntityInfo<News>({ name: "title", secondaryInformation: "slug" })
+  @Entity()
+  export class News { ... }
+```
+
+If the entity has a visibility concept, move it into the `visible` field using a MikroORM `ObjectQuery`:
+
+```diff
+- @EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
++ @EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
+  @Entity()
+  export class News { ... }
+```
+
+Dot-notation is supported for nested relations and embeddables (ManyToOne/OneToOne only):
+
+```ts
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name", visible: { status: { $eq: ProductStatus.Published } } })
+```
+
+#### Documents using a service class (e.g. `PageTreeNodeDocumentEntityInfoService`):
+
+Remove `@EntityInfo(PageTreeNodeDocumentEntityInfoService)` from `Page`, `Link`, and any other `DocumentInterface` entities. Their entity info is now derived automatically from the `PageTreeNodeEntityInfo` SQL view — no decorator is needed.
+
+```diff
+- @EntityInfo(PageTreeNodeDocumentEntityInfoService)
+  @Entity()
+  @ObjectType({ implements: () => [DocumentInterface] })
+  export class Page { ... }
+```
+
+Remove `PageTreeNodeDocumentEntityInfoService` from all NestJS module providers as well.
+
+#### Entities with complex info logic (custom `EntityInfoServiceInterface` -> raw SQL string):
+
+For cases where the object syntax is insufficient, e.g. cases where you used a custom `EntityInfoService` before, you can pass a raw `SELECT` statement instead.
+The query must return the columns `name`, `secondaryInformation`, `visible`, `id`, and `entityName`:
+
+```ts
+@EntityInfo<DamFile>(`SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`)
+```
+
+Don't forget to remove all custom services that implemented `EntityInfoServiceInterface` as they are no longer needed:
+
+```diff
+- import { EntityInfoServiceInterface } from "@comet/cms-api";
+-
+- @Injectable()
+- export class MyEntityInfoService implements EntityInfoServiceInterface<MyEntity> {
+-     async getEntityInfo(entity: MyEntity) {
+-         return { name: entity.title, secondaryInformation: entity.slug };
+-     }
+- }
+```
+
 ## Admin
+
+### Replace `DependencyList` with `DependenciesList` or `DependentsList`
+
+The `DependencyList` component has been replaced by two focused components:
+
+- `DependenciesList` — displays what an entity depends on (query must return `item.dependencies`)
+- `DependentsList` — displays what depends on an entity (query must return `item.dependents`)
+
+```diff
+- import { DependencyList } from "@comet/cms-admin";
++ import { DependenciesList, DependentsList } from "@comet/cms-admin";
+
+- <DependencyList query={myDependentsQuery} variables={{ id }} />
++ <DependentsList query={myDependentsQuery} variables={{ id }} />
+
+- <DependencyList query={myDependenciesQuery} variables={{ id }} />
++ <DependenciesList query={myDependenciesQuery} variables={{ id }} />
+```
 
 ### Admin packages are now ESM-only
 
@@ -66,6 +147,53 @@ The only required change is to update your TSConfig's `module` and `moduleResolu
 This is necessary to support importing from Admin packages (e.g, `import { GridCellContent } from "@comet/admin"`) in the Admin Generator configuration files.
 
 :::
+
+### Upgrade to React 19
+
+Update `react` and `react-dom` to version 19:
+
+```diff title="admin/package.json"
+{
+    "dependencies": {
+-       "react": "^18.3.1",
+-       "react-dom": "^18.3.1",
++       "react": "^19.2.0",
++       "react-dom": "^19.2.0",
+    },
+    "devDependencies": {
+-       "@types/react": "^18.3.23",
+-       "@types/react-dom": "^18.3.7",
++       "@types/react": "^19.2.14",
++       "@types/react-dom": "^19.2.3",
+    }
+}
+```
+
+Ensure that other packages that depend on React are also updated to versions compatible with React 19.
+For `react-final-form`, add the following `overrides` to your `package.json`:
+
+```diff title="admin/package.json"
+{
++   "overrides": {
++        "react-final-form": {
++            "react": "^19.2.4"
++        },
++        "react-final-form-arrays": {
++            "react": "^19.2.4"
++        }
++    },
+}
+```
+
+:::info Why do we need these overrides?
+
+The latest Final Form version does include support for React 19.
+However, it was rewritten to TypeScript using AI, which introduced some incompatibilities.
+Since the project isn't actively maintained anymore and we're planning to switch to react-hook-form, we decided to not upgrade and override the supported React version instead.
+
+:::
+
+Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
 
 ### Tooltip-related Changes
 

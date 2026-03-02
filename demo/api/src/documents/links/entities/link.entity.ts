@@ -1,8 +1,6 @@
 import {
     BlockDataInterface,
     DocumentInterface,
-    EntityInfo,
-    PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
     RootBlock,
     RootBlockDataScalar,
@@ -15,7 +13,6 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { LinkBlock } from "@src/common/blocks/link.block";
 import { v4 } from "uuid";
 
-@EntityInfo(PageTreeNodeDocumentEntityInfoService)
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],

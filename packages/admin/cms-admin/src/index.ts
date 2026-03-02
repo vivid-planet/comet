@@ -153,7 +153,8 @@ export {
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
 export { createDependencyMethods } from "./dependencies/createDependencyMethods";
 export { createDocumentDependencyMethods } from "./dependencies/createDocumentDependencyMethods";
-export { DependencyList } from "./dependencies/DependencyList";
+export { DependenciesList, type DependenciesListProps } from "./dependencies/DependenciesList";
+export { DependentsList, type DependentsListProps } from "./dependencies/DependentsList";
 export type { DependencyInterface } from "./dependencies/types";
 export {
     type ContentGenerationConfig,
