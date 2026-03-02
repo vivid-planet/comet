@@ -138,6 +138,53 @@ Make the following changes to your `admin/tsconfig.json`:
 }
 ```
 
+### Upgrade to React 19
+
+Update `react` and `react-dom` to version 19:
+
+```diff title="admin/package.json"
+{
+    "dependencies": {
+-       "react": "^18.3.1",
+-       "react-dom": "^18.3.1",
++       "react": "^19.2.0",
++       "react-dom": "^19.2.0",
+    },
+    "devDependencies": {
+-       "@types/react": "^18.3.23",
+-       "@types/react-dom": "^18.3.7",
++       "@types/react": "^19.2.14",
++       "@types/react-dom": "^19.2.3",
+    }
+}
+```
+
+Ensure that other packages that depend on React are also updated to versions compatible with React 19.
+For `react-final-form`, add the following `overrides` to your `package.json`:
+
+```diff title="admin/package.json"
+{
++   "overrides": {
++        "react-final-form": {
++            "react": "^19.2.4"
++        },
++        "react-final-form-arrays": {
++            "react": "^19.2.4"
++        }
++    },
+}
+```
+
+:::info Why do we need these overrides?
+
+The latest Final Form version does include support for React 19.
+However, it was rewritten to TypeScript using AI, which introduced some incompatibilities.
+Since the project isn't actively maintained anymore and we're planning to switch to react-hook-form, we decided to not upgrade and override the supported React version instead.
+
+:::
+
+Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
+
 ### Tooltip-related Changes
 
 #### 🤖 Replace the `variant` prop with `color` in `Tooltip`
