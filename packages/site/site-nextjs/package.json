@@ -20,8 +20,6 @@
         "./css": "./lib/style.css",
         "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
-    "module": "./lib/index.js",
-    "types": "lib/index.d.ts",
     "files": [
         "lib/*"
     ],
@@ -41,13 +39,18 @@
     },
     "dependencies": {
         "@comet/site-react": "workspace:*",
+        "clsx": "^2.1.1",
         "jose": "^5.10.0",
-        "server-only": "^0.0.1"
+        "lodash.isequal": "^4.5.0",
+        "scroll-into-view-if-needed": "^2.2.31",
+        "server-only": "^0.0.1",
+        "usehooks-ts": "^3.1.1"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@types/jest": "^29.5.14",
+        "@types/lodash.isequal": "^4.5.8",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^4.7.0",
