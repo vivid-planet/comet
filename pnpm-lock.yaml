@@ -2412,12 +2412,24 @@ importers:
       '@comet/site-react':
         specifier: workspace:*
         version: link:../site-react
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       jose:
         specifier: ^5.10.0
         version: 5.10.0
+      lodash.isequal:
+        specifier: ^4.5.0
+        version: 4.5.0
+      scroll-into-view-if-needed:
+        specifier: ^2.2.31
+        version: 2.2.31
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
+      usehooks-ts:
+        specifier: ^3.1.1
+        version: 3.1.1(react@19.2.4)
     devDependencies:
       '@comet/cli':
         specifier: workspace:*
@@ -2428,6 +2440,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
+      '@types/lodash.isequal':
+        specifier: ^4.5.8
+        version: 4.5.8
       '@types/react':
         specifier: ^19.2.10
         version: 19.2.10
