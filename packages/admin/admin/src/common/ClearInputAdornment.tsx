@@ -3,7 +3,6 @@ import {
     ButtonBase,
     type ComponentsOverrides,
     css,
-    Grow,
     InputAdornment,
     type InputAdornmentClassKey,
     type InputAdornmentProps,
@@ -24,7 +23,6 @@ export interface ClearInputAdornmentProps
         }> {
     icon?: ReactNode;
     onClick: () => void;
-    hasClearableContent: boolean;
 }
 
 type OwnerState = Pick<ClearInputAdornmentProps, "position">;
@@ -33,7 +31,6 @@ export type ClearInputAdornmentClassKey = InputAdornmentClassKey | "buttonBase";
 
 export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
     const {
-        hasClearableContent,
         onClick,
         position,
         icon = <Clear fontSize="inherit" />,
@@ -45,18 +42,12 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
         position,
     };
 
-    if (!hasClearableContent) {
-        return null;
-    }
-
     return (
-        <Grow in={hasClearableContent}>
-            <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
-                <Button onClick={onClick} focusRipple {...slotProps?.buttonBase}>
-                    {icon}
-                </Button>
-            </Root>
-        </Grow>
+        <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <Button onClick={onClick} focusRipple {...slotProps?.buttonBase}>
+                {icon}
+            </Button>
+        </Root>
     );
 };
 

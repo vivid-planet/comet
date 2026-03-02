@@ -100,7 +100,7 @@ export const FinalFormAutocomplete = <
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
                             {loadingError && <Error color="error" />}
                             {params.InputProps.endAdornment}
                         </InputAdornment>
