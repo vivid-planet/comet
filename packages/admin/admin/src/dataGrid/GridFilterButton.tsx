@@ -1,6 +1,6 @@
 import { Filter } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
-import { gridFilterModelSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid";
+import { gridFilterModelSelector, GridPreferencePanelsValue, useGridApiContext, useGridSelector } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -12,7 +12,12 @@ export function GridFilterButton(props: ButtonProps) {
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterCount = filterModel.items.length;
     const handleFilterClick = useCallback(() => {
-        apiRef.current.showFilterPanel();
+        const { open, openedPanelValue } = apiRef.current.state.preferencePanel;
+        if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
+            apiRef.current.hideFilterPanel();
+        } else {
+            apiRef.current.showFilterPanel();
+        }
     }, [apiRef]);
 
     return (
