@@ -1,4 +1,4 @@
-import { AnyEntity, Connection, EntityManager, EntityMetadata } from "@mikro-orm/postgresql";
+import { AnyEntity, EntityManager, EntityMetadata } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
@@ -7,15 +7,12 @@ import { EntityInfoObject } from "./entity-info.object";
 
 @Injectable()
 export class EntityInfoService {
-    private connection: Connection;
     private readonly logger = new Logger(EntityInfoService.name);
 
     constructor(
         private readonly discoverService: DiscoverService,
         private entityManager: EntityManager,
-    ) {
-        this.connection = entityManager.getConnection();
-    }
+    ) {}
 
     /**
      * Resolves a field path (e.g., "title" or "manufacturer.name") to a SQL expression.
@@ -134,25 +131,19 @@ export class EntityInfoService {
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
         console.time("creating EntityInfo view");
-        await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
-        await this.connection.execute(`CREATE VIEW "EntityInfo" AS ${viewSql}`);
+        await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "EntityInfo"`);
+        await this.entityManager.getConnection().execute(`CREATE VIEW "EntityInfo" AS ${viewSql}`);
         console.timeEnd("creating EntityInfo view");
     }
 
     async dropEntityInfoView() {
-        await this.connection.execute(`DROP VIEW IF EXISTS "EntityInfo"`);
+        await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "EntityInfo"`);
     }
 
     async getEntityInfo(entityName: string, id: string): Promise<EntityInfoObject | undefined> {
-        const qb = this.entityManager
-            .getKnex("read")
-            .select<EntityInfoObject>(["name", "secondaryInformation"])
-            .from("EntityInfo")
-            .where({ id, entityName });
+        const entityInfo = await this.entityManager.findOne(EntityInfoObject, { id, entityName });
 
-        const entityInfo = await qb.first();
-
-        if (entityInfo === undefined) {
+        if (!entityInfo) {
             this.logger.warn(
                 `Warning: No entity info found for ${entityName}#${id}. Is the @EntityInfo() decorator missing on the ${entityName} class?`,
             );
