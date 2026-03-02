@@ -1,5 +1,15 @@
 # @comet/admin
 
+## 9.0.0-beta.1
+
+### Minor Changes
+
+- 8e3a074: New helper: downloadFile, to be used instead of file-saver dependency
+
+### Patch Changes
+
+- @comet/admin-icons@9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes
