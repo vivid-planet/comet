@@ -61,6 +61,12 @@ The only required change is to update your TSConfig's `module` and `moduleResolu
 }
 ```
 
+:::info Why do we need this change?
+
+This is necessary to support importing from Admin packages (e.g, `import { GridCellContent } from "@comet/admin"`) in the Admin Generator configuration files.
+
+:::
+
 ### Tooltip-related Changes
 
 #### 🤖 Replace the `variant` prop with `color` in `Tooltip`
