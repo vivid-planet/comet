@@ -203,6 +203,7 @@ export { DependenciesService } from "./dependencies/dependencies.service";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
 export { BaseDependencyInterface } from "./dependencies/dto/base-dependency.interface";
 export { Dependency } from "./dependencies/dto/dependency";
+export { DependencySort, DependencySortField } from "./dependencies/dto/dependency-sort";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
