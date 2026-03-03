@@ -197,17 +197,7 @@ Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25
 
 ### Tooltip-related Changes
 
-#### 🤖 Replace the `variant` prop with `color` in `Tooltip`
-
-:::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade@latest v9/admin/after-install/tooltip-replace-variant-prop.ts
-    ```
-
-:::
-
-<details>
+#### Replace the `variant` prop with `color` in `Tooltip`
 
 The `variant` prop has been renamed to color and the options `neutral` and `primary` have been removed.
 Change the usage of `variant` to `color` and remove or replace the values `neutral` and `primary`.
@@ -232,8 +222,6 @@ Example:
      <Info />
  </Tooltip>
 ```
-
-</details>
 
 #### Replace `createHttpClient` with native fetch
 
@@ -387,37 +375,9 @@ DateTimePicker:
 
 ## Site
 
-### 🤖 Upgrade peer dependencies
+### Upgrade peer dependencies
 
-The following upgrade script will update peer dependency versions and make some minor changes in the code.
-
-:::note Execute the following upgrade script:
-
-```sh
-npx @comet/upgrade@latest v9/site/before-install
-```
-
-:::
-
-<details>
-
-<summary>Updates handled by this batch upgrade script</summary>
-
-#### ✅ Next.js
-
-Upgrade all your dependencies to support Next.js v15
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by
-
-```sh
-npx @comet/upgrade@latest v9/site/before-install/update-next-dependencies.ts
-```
-
-:::
+Upgrade all your dependencies to support Next.js v15.
 
 ```diff title=site/package.json
 {
@@ -439,10 +399,6 @@ npx @comet/upgrade@latest v9/site/before-install/update-next-dependencies.ts
     }
 }
 ```
-
-</details>
-
-</details>
 
 ### Add `next-env.d.ts` to `.gitignore`
 
