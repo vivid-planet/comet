@@ -8,6 +8,7 @@ import {
     type GridColDef,
     type IFilterApi,
     PrettyBytes,
+    SortDirection,
     ToolbarActions,
     ToolbarItem,
     Tooltip,
@@ -24,6 +25,7 @@ import {
     type GridRowClassNameParams,
     type GridRowSelectionModel,
     type GridSlotsComponent,
+    type GridSortModel,
     useGridApiRef,
 } from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
@@ -407,6 +409,39 @@ const FolderDataGrid = ({
         return "";
     };
 
+    const FIELD_TO_SORT_COLUMN: Record<string, string> = {
+        name: "name",
+        createdAt: "createdAt",
+        updatedAt: "updatedAt",
+        info: "size",
+    };
+    const SORT_COLUMN_TO_FIELD: Record<string, string> = {
+        name: "name",
+        createdAt: "createdAt",
+        updatedAt: "updatedAt",
+        size: "info",
+    };
+
+    const currentSort = filterApi.current.sort;
+    const sortedField = currentSort ? SORT_COLUMN_TO_FIELD[currentSort.columnName] : undefined;
+    const sortModel: GridSortModel =
+        currentSort && sortedField ? [{ field: sortedField, sort: currentSort.direction === SortDirection.ASC ? "asc" : "desc" }] : [];
+
+    const handleSortModelChange = (newSortModel: GridSortModel) => {
+        if (newSortModel.length === 0) {
+            filterApi.formApi.change("sort", { columnName: "name", direction: SortDirection.ASC });
+            return;
+        }
+        const { field, sort } = newSortModel[0];
+        const columnName = FIELD_TO_SORT_COLUMN[field];
+        if (columnName && sort) {
+            filterApi.formApi.change("sort", {
+                columnName,
+                direction: sort === "asc" ? SortDirection.ASC : SortDirection.DESC,
+            });
+        }
+    };
+
     const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
         {
             field: "name",
@@ -438,8 +473,6 @@ const FolderDataGrid = ({
                     />
                 );
             },
-            sortable: false,
-            hideSortIcons: true,
             disableColumnMenu: true,
         },
         {
@@ -505,8 +538,6 @@ const FolderDataGrid = ({
                     );
                 }
             },
-            sortable: false,
-            hideSortIcons: true,
             disableColumnMenu: true,
         },
         ...(enableLicenseFeature
@@ -603,8 +634,6 @@ const FolderDataGrid = ({
             align: "left",
             minWidth: 180,
             valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-            sortable: false,
-            hideSortIcons: true,
             disableColumnMenu: true,
         },
         {
@@ -617,8 +646,6 @@ const FolderDataGrid = ({
             align: "left",
             minWidth: 180,
             valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-            sortable: false,
-            hideSortIcons: true,
             disableColumnMenu: true,
         },
         {
@@ -659,6 +686,8 @@ const FolderDataGrid = ({
                     pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
+                    sortModel={sortModel}
+                    onSortModelChange={handleSortModelChange}
                     checkboxSelection={!hideMultiselect}
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
