@@ -1,3 +1,5 @@
+/// <reference types="grecaptcha" />
+
 export async function getRecaptchaToken(action: "form_submit", recaptchaKey: string): Promise<string> {
     if (!recaptchaKey) {
         return Promise.reject("Missing reCAPTCHA key");
