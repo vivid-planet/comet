@@ -19,5 +19,6 @@ junit.xml
 
 # Agent files
 .agents/skills/
+.agents/skills.json
 .cursor/skills/
 .claude/skills/

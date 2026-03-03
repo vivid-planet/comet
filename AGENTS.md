@@ -2,33 +2,80 @@
 
 ## Linting
 
-- When making changes in a package, run `pnpm run lint:eslint --fix` in that package folder to autoformat with ESLint before finalizing changes.
+Run the appropriate checks after every change and fix all reported errors.
+
+### In a package (`packages/*`) or demo service (`demo/*`)
+
+Run from the package or service folder, or from the repo root using the `--filter` flag:
+
+```bash
+# Auto-fix ESLint issues (also applies prettier formatting via eslint-plugin-prettier)
+pnpm run lint:eslint --fix
+# or from repo root:
+pnpm --filter <package-name> run lint:eslint --fix
+
+# Fix remaining prettier errors (if any still reported after lint:eslint --fix)
+pnpm exec prettier --write .
+# or from repo root:
+pnpm --filter <package-name> exec prettier --write .
+
+# Verify all checks pass: prettier, eslint, tsc
+pnpm run lint
+# or from repo root:
+pnpm --filter <package-name> run lint
+```
+
+`tsc` errors must be fixed manually. There is no standalone prettier format script — prettier formatting is applied via `lint:eslint --fix`.
+
+### In `docs/`
+
+Run from the `docs/` folder:
+
+```bash
+# Auto-fix ESLint issues
+pnpm run lint:eslint --fix
+
+# Verify all checks pass: prettier, eslint, cspell
+pnpm run lint
+```
+
+For cspell errors: add unknown words to `.cspellignore` at the repo root.
+
+### For `.changeset/*.md` files
+
+Run from the repo root:
+
+```bash
+pnpm cspell .changeset/*.md
+```
+
+Add unknown words to `.cspellignore` at the repo root.
 
 ## Demo application
 
 - Start the full demo (admin, API, site):
-  ```bash
-  pnpm exec dev-pm start @demo
-  ```
-  or
-  ```bash
-  pnpm run dev:demo
-  ```
+    ```bash
+    pnpm exec dev-pm start @demo
+    ```
+    or
+    ```bash
+    pnpm run dev:demo
+    ```
 - Start individual demo services:
-  ```bash
-  pnpm exec dev-pm start @demo-api @demo-admin @demo-site
-  ```
+    ```bash
+    pnpm exec dev-pm start @demo-api @demo-admin @demo-site
+    ```
 
 ## Rebuilding packages
 
 - Build all Comet packages:
-  ```bash
-  pnpm run build:packages
-  ```
+    ```bash
+    pnpm run build:packages
+    ```
 - Build only the packages you changed (repeat the filter as needed):
-  ```bash
-  pnpm --recursive --filter '<package-name>' run build
-  ```
+    ```bash
+    pnpm --recursive --filter '<package-name>' run build
+    ```
 
 ## Changesets and changelog
 
@@ -45,6 +92,7 @@ To create a changeset file in `.changeset/` directory:
 3. Write a clear description following the guidelines in CONTRIBUTING.md
 
 Example:
+
 ```markdown
 ---
 "@comet/package-name": patch
@@ -52,7 +100,6 @@ Example:
 
 Fix description here
 ```
-
 
 ## Commit messages
 

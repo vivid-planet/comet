@@ -65,3 +65,6 @@ formatjs
 autoplay
 authproxy
 xact
+cspellignore
+frontmatter
+uploadpack

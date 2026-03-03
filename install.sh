@@ -26,3 +26,6 @@ pnpm run create-site-configs-env
 
 pnpm run setup:download-oauth2-proxy
 pnpm run setup:download-mitmproxy
+
+# Install local project-skills/ and remote agent skills
+pnpm run install-agent-skills
