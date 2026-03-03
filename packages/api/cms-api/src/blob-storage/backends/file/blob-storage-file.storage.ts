@@ -92,18 +92,13 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     }
 
     async listFiles(folderName: string): Promise<string[]> {
+        if (!(await this.folderExists(folderName))) {
+            return [];
+        }
+
         const basePath = path.resolve(this.path);
         const dirPath = path.join(basePath, folderName);
-
-        let entries: fs.Dirent[];
-        try {
-            entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
-        } catch (error) {
-            if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-                return [];
-            }
-            throw error;
-        }
+        const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
 
         return entries.filter((entry) => entry.isFile() && !entry.name.endsWith(`-${this.headersFile}`)).map((entry) => entry.name);
     }
