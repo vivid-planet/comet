@@ -12,14 +12,6 @@ export type CreateFileOptions = {
     contentType: string;
 };
 
-export type BlobStorageFileEntry = {
-    name: string;
-    stream: Readable;
-    size: number;
-    contentType: string;
-    etag?: string;
-};
-
 export interface BlobStorageBackendInterface {
     folderExists(folderName: string): Promise<boolean>;
     createFolder(folderName: string): Promise<void>;
@@ -30,6 +22,6 @@ export interface BlobStorageBackendInterface {
     getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable>;
     getFileMetaData(folderName: string, fileName: string): Promise<StorageMetaData>;
     removeFile(folderName: string, fileName: string): Promise<void>;
-    listFiles(folderName: string): Promise<Readable>;
+    listFiles(folderName: string): Promise<string[]>;
     getBackendFilePathPrefix(): string;
 }

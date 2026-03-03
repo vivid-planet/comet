@@ -2,7 +2,7 @@ import * as AWS from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { type SdkError } from "@aws-sdk/types";
 import { createReadStream } from "fs";
-import { PassThrough, Readable } from "stream";
+import { Readable } from "stream";
 
 import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
 import { type BlobStorageS3Config } from "./blob-storage-s3.config";
@@ -131,13 +131,8 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         return Readable.from(response.Body as Readable | NodeJS.ReadableStream);
     }
 
-    async listFiles(folderName: string): Promise<Readable> {
-        const stream = new PassThrough({ objectMode: true });
-        this.populateListFilesStream(folderName, stream).catch((error) => stream.destroy(error));
-        return stream;
-    }
-
-    private async populateListFilesStream(folderName: string, stream: PassThrough): Promise<void> {
+    async listFiles(folderName: string): Promise<string[]> {
+        const fileNames: string[] = [];
         let continuationToken: string | undefined;
 
         do {
@@ -152,22 +147,14 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
             for (const object of response.Contents ?? []) {
                 if (object.Key) {
                     const name = this.config.bucket ? object.Key.replace(`${folderName}/`, "") : object.Key;
-                    const getResponse = await this.client.send(new AWS.GetObjectCommand(this.getCommandInput(folderName, name)));
-
-                    stream.push({
-                        name,
-                        stream: Readable.from(getResponse.Body as Readable | NodeJS.ReadableStream),
-                        size: getResponse.ContentLength ?? 0,
-                        contentType: getResponse.ContentType ?? "application/octet-stream",
-                        etag: getResponse.ETag,
-                    });
+                    fileNames.push(name);
                 }
             }
 
             continuationToken = response.NextContinuationToken;
         } while (continuationToken);
 
-        stream.end();
+        return fileNames;
     }
 
     async removeFile(folderName: string, fileName: string): Promise<void> {

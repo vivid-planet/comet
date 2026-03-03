@@ -1,6 +1,6 @@
 import { type BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
 import { Logger } from "@nestjs/common";
-import { PassThrough, Readable } from "stream";
+import { Readable } from "stream";
 
 import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
 import { type BlobStorageAzureConfig } from "./blob-storage-azure.config";
@@ -85,29 +85,15 @@ export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
         return Readable.from(response.readableStreamBody!); // is defined in node.js but not for browsers
     }
 
-    async listFiles(folderName: string): Promise<Readable> {
-        const stream = new PassThrough({ objectMode: true });
-        this.populateListFilesStream(folderName, stream).catch((error) => stream.destroy(error));
-        return stream;
-    }
-
-    private async populateListFilesStream(folderName: string, stream: PassThrough): Promise<void> {
+    async listFiles(folderName: string): Promise<string[]> {
         const containerClient = this.client.getContainerClient(folderName);
+        const fileNames: string[] = [];
 
         for await (const blob of containerClient.listBlobsFlat()) {
-            const response = await containerClient.getBlobClient(blob.name).download();
-            if (!response.readableStreamBody) {
-                continue;
-            }
-            stream.push({
-                name: blob.name,
-                stream: Readable.from(response.readableStreamBody),
-                size: blob.properties.contentLength ?? 0,
-                contentType: blob.properties.contentType ?? "application/octet-stream",
-                etag: blob.properties.etag,
-            });
+            fileNames.push(blob.name);
         }
-        stream.end();
+
+        return fileNames;
     }
 
     async removeFile(folderName: string, fileName: string): Promise<void> {

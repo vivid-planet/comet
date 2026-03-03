@@ -3,7 +3,6 @@ import * as os from "os";
 import * as path from "path";
 import { Readable } from "stream";
 
-import type { BlobStorageFileEntry } from "../blob-storage-backend.interface";
 import { BlobStorageFileStorage } from "./blob-storage-file.storage";
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
@@ -11,15 +10,6 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
         const chunks: Buffer[] = [];
         stream.on("data", (chunk) => chunks.push(chunk));
         stream.on("end", () => resolve(Buffer.concat(chunks)));
-        stream.on("error", reject);
-    });
-}
-
-function collectStream<T>(stream: Readable): Promise<T[]> {
-    return new Promise((resolve, reject) => {
-        const items: T[] = [];
-        stream.on("data", (item) => items.push(item));
-        stream.on("end", () => resolve(items));
         stream.on("error", reject);
     });
 }
@@ -159,49 +149,26 @@ describe("BlobStorageFileStorage", () => {
     });
 
     describe("listFiles", () => {
-        it("should yield nothing for a non-existent folder", async () => {
-            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("does-not-exist"));
-            expect(entries).toEqual([]);
+        it("should return an empty array for a non-existent folder", async () => {
+            const files = await storage.listFiles("does-not-exist");
+            expect(files).toEqual([]);
         });
 
-        it("should yield nothing for an empty folder", async () => {
+        it("should return an empty array for an empty folder", async () => {
             await storage.createFolder("empty");
-            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("empty"));
-            expect(entries).toEqual([]);
+            const files = await storage.listFiles("empty");
+            expect(files).toEqual([]);
         });
 
-        it("should yield file entries without including sidecar headers files", async () => {
+        it("should return file names without including sidecar headers files", async () => {
             await storage.createFolder("listing");
             await storage.createFile("listing", "a.txt", Buffer.from("aaa"), { contentType: "text/plain", size: 3 });
             await storage.createFile("listing", "b.txt", Buffer.from("bb"), { contentType: "text/html", size: 2 });
 
-            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("listing"));
-            entries.sort((a, b) => a.name.localeCompare(b.name));
+            const files = await storage.listFiles("listing");
+            files.sort();
 
-            expect(entries).toHaveLength(2);
-
-            expect(entries[0].name).toBe("a.txt");
-            expect(entries[0].size).toBe(3);
-            expect(entries[0].contentType).toBe("text/plain");
-            expect((await streamToBuffer(entries[0].stream)).toString()).toBe("aaa");
-
-            expect(entries[1].name).toBe("b.txt");
-            expect(entries[1].size).toBe(2);
-            expect(entries[1].contentType).toBe("text/html");
-            expect((await streamToBuffer(entries[1].stream)).toString()).toBe("bb");
-        });
-
-        it("should yield the file entry with default contentType when the sidecar headers file is missing", async () => {
-            await storage.createFolder("listing");
-            // Write a file directly without its sidecar headers file (e.g. uploaded by another service)
-            await fs.promises.writeFile(path.join(tmpDir, "listing/orphan.txt"), "orphan");
-
-            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("listing"));
-            expect(entries).toHaveLength(1);
-            expect(entries[0].name).toBe("orphan.txt");
-            expect(entries[0].size).toBe(6);
-            expect(entries[0].contentType).toBe("application/octet-stream");
-            expect((await streamToBuffer(entries[0].stream)).toString()).toBe("orphan");
+            expect(files).toEqual(["a.txt", "b.txt"]);
         });
 
         it("should not include subdirectories in the listing", async () => {
@@ -209,9 +176,8 @@ describe("BlobStorageFileStorage", () => {
             await storage.createFile("parent", "file.txt", Buffer.from("f"), { contentType: "text/plain", size: 1 });
             await storage.createFolder("parent/child");
 
-            const entries = await collectStream<BlobStorageFileEntry>(await storage.listFiles("parent"));
-            expect(entries).toHaveLength(1);
-            expect(entries[0].name).toBe("file.txt");
+            const files = await storage.listFiles("parent");
+            expect(files).toEqual(["file.txt"]);
         });
     });
 

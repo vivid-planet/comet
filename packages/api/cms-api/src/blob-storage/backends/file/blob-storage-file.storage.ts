@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { PassThrough, type Readable, Stream } from "stream";
+import { type Readable, Stream } from "stream";
 
 import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
 import { type BlobStorageFileConfig } from "./blob-storage-file.config";
@@ -91,13 +91,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         });
     }
 
-    async listFiles(folderName: string): Promise<Readable> {
-        const stream = new PassThrough({ objectMode: true });
-        this.populateListFilesStream(folderName, stream).catch((error) => stream.destroy(error));
-        return stream;
-    }
-
-    private async populateListFilesStream(folderName: string, stream: PassThrough): Promise<void> {
+    async listFiles(folderName: string): Promise<string[]> {
         const basePath = path.resolve(this.path);
         const dirPath = path.join(basePath, folderName);
 
@@ -105,43 +99,13 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         try {
             entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
         } catch (error) {
-            // The directory may not exist yet (e.g., no files have been uploaded for this folder).
-            // In that case, readdir throws ENOENT, and we treat it as an empty listing.
             if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-                stream.end();
-                return;
+                return [];
             }
-            stream.destroy(error as Error);
-            return;
+            throw error;
         }
 
-        for (const entry of entries) {
-            if (!entry.isFile() || entry.name.endsWith(`-${this.headersFile}`)) {
-                continue;
-            }
-
-            const filePath = path.join(dirPath, entry.name);
-            const headersPath = `${filePath}-${this.headersFile}`;
-
-            const stat = await fs.promises.stat(filePath);
-            let contentType = "application/octet-stream";
-            try {
-                const rawHeaders = await fs.promises.readFile(headersPath, { encoding: "utf-8" });
-                contentType = JSON.parse(rawHeaders)["content-type"] ?? contentType;
-            } catch (error) {
-                if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-                    throw error;
-                }
-            }
-            stream.push({
-                name: entry.name,
-                stream: fs.createReadStream(filePath),
-                size: stat.size,
-                contentType,
-            });
-        }
-
-        stream.end();
+        return entries.filter((entry) => entry.isFile() && !entry.name.endsWith(`-${this.headersFile}`)).map((entry) => entry.name);
     }
 
     async removeFile(folderName: string, fileName: string): Promise<void> {
