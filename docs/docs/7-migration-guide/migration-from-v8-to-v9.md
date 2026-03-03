@@ -195,9 +195,7 @@ Since the project isn't actively maintained anymore and we're planning to switch
 
 Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
 
-### Tooltip-related Changes
-
-#### Replace the `variant` prop with `color` in `Tooltip`
+### Replace the `variant` prop with `color` in `Tooltip`
 
 The `variant` prop has been renamed to color and the options `neutral` and `primary` have been removed.
 Change the usage of `variant` to `color` and remove or replace the values `neutral` and `primary`.
@@ -223,7 +221,7 @@ Example:
  </Tooltip>
 ```
 
-#### Replace `createHttpClient` with native fetch
+### Replace `createHttpClient` with native fetch
 
 The `createHttpClient` function has been removed. Use native fetch instead.
 
