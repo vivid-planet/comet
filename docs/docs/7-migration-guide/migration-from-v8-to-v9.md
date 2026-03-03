@@ -377,17 +377,17 @@ DateTimePicker:
 
 ### Upgrade peer dependencies
 
-Upgrade all your dependencies to support Next.js v15.
+Upgrade all your dependencies to support Next.js v16.
 
 ```diff title=site/package.json
 {
     "dependencies": {
 -       "@next/bundle-analyzer": "^14.2.30",
-+       "@next/bundle-analyzer": "^15.5.4",
++       "@next/bundle-analyzer": "^16.1.6",
 -       "next": "^14.2.30",
 -       "react": "^18.3.1",
 -       "react-dom": "^18.3.1",
-+       "next": "^15.5.4",
++       "next": "^16.1.6",
 +       "react": "^19.2.0",
 +       "react-dom": "^19.2.0",
     },
