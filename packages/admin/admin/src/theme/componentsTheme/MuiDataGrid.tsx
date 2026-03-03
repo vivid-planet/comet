@@ -56,17 +56,17 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             return getDensityHeightValue("standard");
         },
         slots: {
-            baseCheckbox: Checkbox,
+            baseCheckbox: Checkbox as any,
             quickFilterIcon: Search,
             quickFilterClearIcon: Clear,
-            filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
+            filterPanelDeleteIcon: ((props: SvgIconProps) => <Delete {...props} fontSize="medium" />) as any,
             baseTextField: TextField,
-            baseSelect: Select,
+            baseSelect: Select as any,
             booleanCellTrueIcon: Check,
             booleanCellFalseIcon: Close,
             columnSortedAscendingIcon: ArrowUp,
             columnSortedDescendingIcon: ArrowDown,
-            columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
+            columnMenuIcon: ((props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />) as any,
             panel: DataGridPanel,
             pagination: DataGridPagination,
             columnsManagement: DataGridColumnsManagement,
@@ -320,7 +320,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             padding: spacing(2),
             borderTop: `1px solid ${palette.divider}`,
         },
-        // @ts-expect-error This key exists but is missing in the types.
         toolbarQuickFilter: {
             paddingBottom: 0,
             width: 120,

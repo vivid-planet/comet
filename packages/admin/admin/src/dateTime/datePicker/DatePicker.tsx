@@ -13,7 +13,7 @@ import { getDateValue, getIsoDateString, isValidDate } from "../utils";
 export type DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type DatePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiDatePicker<Date, true>;
+    root: typeof MuiDatePicker;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -41,7 +41,7 @@ export type DatePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDatePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
+} & Omit<MuiDatePickerProps, "value" | "onChange" | "slotProps">;
 
 /**
  * The DatePicker component allows users to select a date from a calendar interface. It provides a text field
@@ -95,7 +95,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
             slotProps={{
                 ...slotProps?.root?.slotProps,
                 textField: (ownerState) => {
-                    const textFieldProps = {
+                    const textFieldProps: Record<string, any> = {
                         ...slotProps?.root?.slotProps?.textField,
                         ownerState,
                     };
@@ -139,7 +139,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiDatePicker<Date, true>)<DatePickerClassKey>({
+const Root = createComponentSlot(MuiDatePicker)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "root",
 })(css`

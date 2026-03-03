@@ -18,8 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
+import { DataGrid, type GridSlotsComponent, type GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

@@ -21,7 +21,7 @@ export type DateRange = {
 export type DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type DateRangePickerProps = ThemedComponentBaseProps<{
-    root: ComponentType<MuiDateRangePickerProps<Date, true>>;
+    root: ComponentType<MuiDateRangePickerProps>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -49,7 +49,7 @@ export type DateRangePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDateRangePickerProps<Date, true>, "value" | "onChange">;
+} & Omit<MuiDateRangePickerProps, "value" | "onChange">;
 
 const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | null] => {
     return [getDateValue(value?.start), getDateValue(value?.end)];
@@ -112,7 +112,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                 slotProps={{
                     ...slotProps?.root?.slotProps,
                     textField: (ownerState) => {
-                        const textFieldProps = {
+                        const textFieldProps: Record<string, any> = {
                             ...slotProps?.root?.slotProps?.textField,
                             ownerState,
                         };
@@ -160,7 +160,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
 const LazyRoot = lazy(async () => {
     const module = await import("@mui/x-date-pickers-pro");
 
-    const Root = createComponentSlot(module.DateRangePicker<Date, true>)<DateRangePickerClassKey>({
+    const Root = createComponentSlot(module.DateRangePicker)<DateRangePickerClassKey>({
         componentName: "DateRangePicker",
         slotName: "root",
     })(css`
@@ -174,9 +174,7 @@ const LazyRoot = lazy(async () => {
     `);
 
     return {
-        default: (props: MuiDateRangePickerProps<Date, true>) => (
-            <Root {...props} slots={{ field: module.SingleInputDateRangeField, ...props.slots }} />
-        ),
+        default: (props: MuiDateRangePickerProps) => <Root {...props} />,
     };
 });
 

@@ -17,7 +17,7 @@ import { isValidDate } from "../utils";
 export type DateTimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type DateTimePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiDateTimePicker<Date, true>;
+    root: typeof MuiDateTimePicker;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -45,7 +45,7 @@ export type DateTimePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDateTimePickerProps<Date, true>, "value" | "onChange">;
+} & Omit<MuiDateTimePickerProps, "value" | "onChange">;
 
 /**
  * The DateTimePicker component allows users to select both a date and time from a combined picker interface.
@@ -97,7 +97,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
             slotProps={{
                 ...slotProps?.root?.slotProps,
                 textField: (ownerState) => {
-                    const textFieldProps = {
+                    const textFieldProps: Record<string, any> = {
                         ...slotProps?.root?.slotProps?.textField,
                         ownerState,
                     };
@@ -141,7 +141,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiDateTimePicker<Date, true>)<DateTimePickerClassKey>({
+const Root = createComponentSlot(MuiDateTimePicker)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "root",
 })(css`

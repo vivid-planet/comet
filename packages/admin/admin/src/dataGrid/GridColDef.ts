@@ -1,12 +1,12 @@
 import {
     type GridActionsColDef as MuiGridActionsColDef,
     type GridFilterItem,
+    type GridPinnedColumnFields,
     type GridSingleSelectColDef as MuiGridSingleSelectColDef,
     type GridValidRowModel,
     type GridValueOptionsParams,
 } from "@mui/x-data-grid";
-import { type GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
-import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
+import { type GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/internals";
 import { type ReactNode } from "react";
 
 import { type GqlFilter } from "./muiGridFilterToGql";
@@ -35,7 +35,7 @@ type GridColDefExtension<R extends GridValidRowModel = any> = {
     /**
      * Requires DataGridPro or DataGridPremium.
      */
-    pinned?: keyof GridPinnedColumns;
+    pinned?: keyof GridPinnedColumnFields;
     /**
      * Callback to convert a filter item to a GQL filter.
      */

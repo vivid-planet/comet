@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
@@ -101,7 +100,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     },
 
     replaceDependenciesInOutput: (output, replacements) => {
-        const clonedOutput: SvgImageBlockInput = deepClone(output);
+        const clonedOutput: SvgImageBlockInput = structuredClone(output);
         const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
 
         if (replacement) {
