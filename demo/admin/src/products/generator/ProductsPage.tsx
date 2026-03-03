@@ -63,6 +63,9 @@ export function ProductsPage() {
                                 </IconButton>
                             )}
                             actionsColumnWidth={116}
+                            onRowClick={(params) => {
+                                productsStackSwitchApi.activatePage("edit", params.row.id);
+                            }}
                         />
                     </StackMainContent>
                 </StackPage>

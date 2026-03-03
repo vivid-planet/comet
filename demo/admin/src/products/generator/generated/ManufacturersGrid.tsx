@@ -21,17 +21,19 @@ import { GridColDef } from "@comet/admin";
 import { dataGridIdColumn } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { Tooltip } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
+import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
@@ -98,6 +100,10 @@ export function ManufacturersGrid() {
             queryParamsPrefix: "manufacturers",
         }),
         ...usePersistentColumnState("ManufacturersGrid"),
+    };
+    const stackSwitchApi = useStackSwitchApi();
+    const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
+        stackSwitchApi.activatePage("edit", params.row.id);
     };
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = useMemo(
         () => [
@@ -347,6 +353,7 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={handleRowClick}
         />
     );
 }

@@ -2,7 +2,7 @@ import { type BlockDataInterface, DamImageBlock, type ImporterPipe } from "@come
 import { type Connection, type EntityManager, type FilterQuery, type IDatabaseDriver, type Reference } from "@mikro-orm/core";
 import { type LoggerService } from "@nestjs/common";
 import { Transform, type TransformCallback } from "stream";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { Product } from "./entities/product.entity";
 import { type ProductCategory } from "./entities/product-category.entity";
@@ -74,7 +74,7 @@ class ProductPersist extends Transform {
                 await this.em.nativeUpdate(Product.name, { id: record.id }, { ...productData, category, id: data.id, updatedAt: new Date() });
             } else {
                 // in case the id is not provided
-                data.id = data?.id || v4();
+                data.id = data?.id || uuid();
                 await this.logger.log(
                     `${updateQuery ? `No record for query ${JSON.stringify(updateQuery)} found` : "No query provided"}, inserting with id ${
                         data.id
@@ -101,7 +101,7 @@ class ProductPersist extends Transform {
 
             if (colorsArray.length > 0) {
                 const productColors = colorsArray.map((color) => ({
-                    id: v4(),
+                    id: uuid(),
                     name: color.name,
                     hexCode: color.hex,
                     product: data.id,

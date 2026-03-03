@@ -24,6 +24,7 @@ import {
 } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
+import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
 import { findMutationType } from "../utils/findMutationType";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
@@ -255,11 +256,11 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
         { name: "StackLink", importPath: "@comet/admin" },
+        { name: "useStackSwitchApi", importPath: "@comet/admin" },
         { name: "FillSpace", importPath: "@comet/admin" },
         { name: "Tooltip", importPath: "@comet/admin" },
         { name: "useBufferedRowCount", importPath: "@comet/admin" },
         { name: "useDataGridExcelExport", importPath: "@comet/admin" },
-        { name: "useDataGridRemote", importPath: "@comet/admin" },
         { name: "usePersistentColumnState", importPath: "@comet/admin" },
         { name: "BlockPreviewContent", importPath: "@comet/cms-admin" },
         { name: "Alert", importPath: "@mui/material" },
@@ -313,6 +314,12 @@ export function generateGrid<T extends { __typename?: string }>(
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
     const hasPaging = queryHasPaging(gridQueryType, gqlIntrospection);
+
+    if (hasPaging) {
+        imports.push({ name: "useDataGridRemote", importPath: "@comet/admin" });
+    } else {
+        imports.push({ name: "useDataGridUrlState", importPath: "@comet/admin" });
+    }
 
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
@@ -511,9 +518,8 @@ export function generateGrid<T extends { __typename?: string }>(
                 }`;
         } else if (type == "staticSelect") {
             valueFormatter = `(value, row) => row.${name}?.toString()`;
-            const introspectionField = schemaEntity.fields.find((field) => field.name === name);
-            if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-            const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+            const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
+            if (!introspectionFieldType) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
 
             const enumType = gqlIntrospection.__schema.types.find(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
@@ -671,6 +677,11 @@ export function generateGrid<T extends { __typename?: string }>(
             optional: true,
             defaultValue: defaultActionsColumnWidth,
         });
+        props.push({
+            name: "onRowClick",
+            type: `${muiXGridVariant.gridComponent}Props["onRowClick"]`,
+            optional: true,
+        });
     }
 
     if (config.selectionProps) {
@@ -708,7 +719,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         }
                       items: [${config.initialFilter.items
                           .map((item) => {
-                              return `{ field: "${item.field}", operator: "${item.operator}", value: "${item.value}" }`;
+                              return `{ field: "${item.field}", operator: "${item.operator}", value: ${JSON.stringify(item.value)} }`;
                           })
                           .join(",\n")} ],},`
                       : ""
@@ -812,7 +823,7 @@ export function generateGrid<T extends { __typename?: string }>(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}) {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        const dataGridProps = { ...${hasPaging ? "useDataGridRemote" : "useDataGridUrlState"}(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
             config.selectionProps === "multiSelect"
                 ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
                 : config.selectionProps === "singleSelect"
@@ -821,8 +832,17 @@ export function generateGrid<T extends { __typename?: string }>(
         } };
         ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
+        ${showEditInActionsColumn ? `const stackSwitchApi = useStackSwitchApi();` : ""}
 
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
+
+        ${
+            showEditInActionsColumn
+                ? `const handleRowClick: ${muiXGridVariant.gridComponent}Props["onRowClick"] = (params) => {
+            stackSwitchApi.activatePage("edit", params.row.id);
+        };`
+                : ""
+        }
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = useMemo(()=>[
             ${gridColumnFields
@@ -846,6 +866,30 @@ export function generateGrid<T extends { __typename?: string }>(
                             minWidth = column.minWidth;
                             tooltipColumnWidth = column.minWidth;
                         }
+                    }
+
+                    let isColumnFilterable = !hasPaging
+                        ? true // local (client side) sorting is always possible (no api support needed)
+                        : filterFields.includes(column.name) || !!column.filterOperators;
+                    if (allowRowReordering) {
+                        //disable filter if rowReordering is enabled
+                        isColumnFilterable = false;
+                    }
+                    if (column.type == "block" && !hasPaging) {
+                        //blocks can't be sorted (client side)
+                        isColumnFilterable = false;
+                    }
+
+                    let isColumnSortable = !hasPaging
+                        ? true // local (client side) sorting is always possible (no api support needed)
+                        : sortFields.includes(column.name) || !!column.sortBy;
+                    if (allowRowReordering) {
+                        //disable sort if rowReordering is enabled
+                        isColumnSortable = false;
+                    }
+                    if (column.type == "block" && !hasPaging) {
+                        //blocks can't be sorted (client side)
+                        isColumnSortable = false;
                     }
 
                     const columnDefinition: TsCodeRecordToStringObject = {
@@ -882,8 +926,8 @@ export function generateGrid<T extends { __typename?: string }>(
                                       type: "intlCall",
                                   }),
                         type: column.gridType ? `"${column.gridType}"` : undefined,
-                        filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
-                        sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
+                        filterable: isColumnFilterable ? undefined : `false`,
+                        sortable: isColumnSortable ? undefined : `false`,
                         valueGetter: column.valueGetter,
                         valueFormatter: column.valueFormatter,
                         valueOptions: column.valueOptions,
@@ -1058,6 +1102,7 @@ export function generateGrid<T extends { __typename?: string }>(
                         : ""
                 }
                 ${config.density ? `density="${config.density}"` : ""}
+                ${showEditInActionsColumn ? `onRowClick={handleRowClick}` : forwardRowAction ? `onRowClick={onRowClick}` : ""}
             />
         );
     }

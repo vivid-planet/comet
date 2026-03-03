@@ -1,6 +1,6 @@
 {
     "name": "@comet/brevo-api",
-    "version": "8.15.0",
+    "version": "8.17.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet/",
@@ -21,7 +21,7 @@
         "generate-schema": "ts-node generate-schema.ts",
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
         "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
@@ -35,7 +35,7 @@
         "@nestjs/axios": "^4.0.1",
         "@nestjs/cache-manager": "^3.0.1",
         "@nestjs/jwt": "^11.0.1",
-        "axios": "^1.13.2",
+        "axios": "^1.13.5",
         "cache-manager": "^7.2.5",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.3",

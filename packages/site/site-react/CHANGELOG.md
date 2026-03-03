@@ -1,5 +1,25 @@
 # @comet/site-react
 
+## 8.17.1
+
+## 8.17.0
+
+### Minor Changes
+
+- 35c338e: Add HTML anchor props pass-through to `ExternalLinkBlock`, `PhoneLinkBlock`, and `EmailLinkBlock`
+
+    These link block components now accept and pass through standard HTML anchor element attributes (such as `id`, `className`, `style`, `target`, `rel`, `aria-*`, `data-*`, `onClick`, etc.) to the rendered `<a>` element.
+
+    **Example**:
+
+    ```tsx
+    <ExternalLinkBlock data={linkData} className="custom-link" aria-label="Opens external site" data-tracking="external-click">
+        <span>External Link</span>
+    </ExternalLinkBlock>
+    ```
+
+## 8.16.0
+
 ## 8.15.0
 
 ## 8.14.0
