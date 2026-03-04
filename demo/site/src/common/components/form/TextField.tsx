@@ -27,7 +27,7 @@ export const TextField = <TFieldValues extends FieldValues>({
             control={control}
             rules={rules}
             render={({ field, fieldState }) => (
-                <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={name}>
+                <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={id}>
                     <Typography
                         as="input"
                         variant="paragraph200"
