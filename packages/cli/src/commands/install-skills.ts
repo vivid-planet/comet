@@ -25,7 +25,7 @@ function parseRepoArg(repoArg: string): { url: string; ref: string | undefined }
 function cloneSkillsFolder(url: string, ref: string | undefined, cloneDir: string): void {
     try {
         execSync(`git clone --filter=blob:none --sparse --depth 1 "${url}" "${cloneDir}"`, { stdio: "pipe" });
-        execSync(`git -C "${cloneDir}" sparse-checkout set skills`, { stdio: "pipe" });
+        execSync(`git -C "${cloneDir}" sparse-checkout set package-skills`, { stdio: "pipe" });
         if (ref !== undefined) {
             execSync(`git -C "${cloneDir}" fetch --depth 1 origin "${ref}"`, { stdio: "pipe" });
             execSync(`git -C "${cloneDir}" checkout FETCH_HEAD`, { stdio: "pipe" });
@@ -141,7 +141,7 @@ export const installSkillsCommand = new Command("install-skills")
 
             cloneSkillsFolder(url, ref, cloneDir);
 
-            const remoteSkillsDir = path.join(cloneDir, "skills");
+            const remoteSkillsDir = path.join(cloneDir, "package-skills");
             const skillNames = findSkills(remoteSkillsDir);
             const skillEntries = skillNames.map((name) => ({
                 name,
@@ -176,7 +176,7 @@ export const installSkillsCommand = new Command("install-skills")
 
         // 6. Install remote skills (filtered)
         for (const repo of remoteRepos) {
-            const remoteSkillsDir = path.join(repo.cloneDir, "skills");
+            const remoteSkillsDir = path.join(repo.cloneDir, "package-skills");
             const installedSkills: string[] = [];
 
             try {

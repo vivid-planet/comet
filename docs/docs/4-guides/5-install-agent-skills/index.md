@@ -93,11 +93,11 @@ Each argument is a git URL with an optional `#<ref>` suffix:
 | `https://github.com/org/repo#v2.0.0` | Clones and checks out the `v2.0.0` tag |
 | `https://github.com/org/repo#<sha>` | Checks out a specific commit (requires `uploadpack.allowReachableSHA1InWant` on the server) |
 
-The command performs a shallow sparse clone (`--depth 1 --sparse`) and only fetches the `skills/` folder from the remote repository, so it is fast even for large repositories.
+The command performs a shallow sparse clone (`--depth 1 --sparse`) and only fetches the `package-skills/` folder from the remote repository, so it is fast even for large repositories.
 
 ## How skills are detected
 
-A subfolder inside a `skills/` directory is treated as a skill if and only if it contains a `SKILL.md` file at its root.
+A subfolder inside a `package-skills/` directory is treated as a skill if and only if it contains a `SKILL.md` file at its root.
 Any subdirectory without `SKILL.md` is ignored.
 
 ## Defining a local skill
@@ -136,10 +136,10 @@ After running `comet install-skills`, Claude Code will find the skill at `.claud
 
 ## Defining a remote skill
 
-Structure the repository so that skills live under a top-level `skills/` directory, each with its own `SKILL.md`:
+Structure the repository so that skills live under a top-level `package-skills/` directory, each with its own `SKILL.md`:
 
 ```
-skills/
+package-skills/
   my-remote-skill/
     SKILL.md
     helper-prompt.md   ← optional supporting files
@@ -151,7 +151,7 @@ Remote skills support the same `skillGroup` frontmatter as local skills.
 
 When `comet install-skills https://github.com/org/skills-repo` is run, the command:
 
-1. Sparse-clones only the `skills/` folder from the repository.
+1. Sparse-clones only the `package-skills/` folder from the repository.
 2. Copies each discovered skill into `.agents/skills/<name>/`.
 3. Creates a symlink `.claude/skills/<name>` → `../../.agents/skills/<name>`.
 4. Records the source in `.agents/skills.json`.
