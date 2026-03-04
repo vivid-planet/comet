@@ -105,13 +105,15 @@ export const installSkillsCommand = new Command("install-skills")
         fs.mkdirSync(agentsSkillsDir, { recursive: true });
 
         // 1. Collect local skills with groups
-        const localSkillsDir = path.join(cwd, "project-skills");
-        const localSkillNames = findSkills(localSkillsDir);
-        const localSkillEntries = localSkillNames.map((name) => ({
-            name,
-            group: getSkillGroup(path.join(localSkillsDir, name)),
-            source: "local" as const,
-        }));
+        const localSourceDirs = ["project-skills", "package-skills"];
+        const localSkillEntries = localSourceDirs.flatMap((sourceDir) => {
+            const dir = path.join(cwd, sourceDir);
+            return findSkills(dir).map((name) => ({
+                name,
+                group: getSkillGroup(path.join(dir, name)),
+                sourceDir,
+            }));
+        });
 
         // 2. Clone remote repos upfront and collect remote skills with groups
         const remoteRepos: Array<{
@@ -169,10 +171,10 @@ export const installSkillsCommand = new Command("install-skills")
         let linkedLocal = 0;
         for (const entry of localSkillEntries) {
             if (entry.group !== undefined && !selectedGroups.includes(entry.group)) continue;
-            createSymlink(`../../project-skills/${entry.name}`, path.join(claudeSkillsDir, entry.name));
+            createSymlink(`../../${entry.sourceDir}/${entry.name}`, path.join(claudeSkillsDir, entry.name));
             linkedLocal++;
         }
-        console.log(`Linked ${linkedLocal} local skill(s) from project-skills/.`);
+        console.log(`Linked ${linkedLocal} local skill(s) from project-skills/ and package-skills/.`);
 
         // 6. Install remote skills (filtered)
         for (const repo of remoteRepos) {

@@ -7,7 +7,7 @@ Skills are reusable instruction sets that Claude Code loads when working in your
 
 Skills come from two sources:
 
-- **Local skills** — committed in `project-skills/` and always re-linked on every run.
+- **Local skills** — committed in `project-skills/` or `package-skills/` and always re-linked on every run.
 - **Remote skills** — fetched from external git repositories and stored in `.agents/skills/`.
 
 Both types are symlinked into `.claude/skills/`, which is where Claude Code discovers them.
@@ -18,6 +18,10 @@ Both types are symlinked into `.claude/skills/`, which is where Claude Code disc
 <repo-root>/
   project-skills/          ← committed; local skills live here
     my-skill/
+      SKILL.md
+      ...
+  package-skills/          ← committed; local skills also live here
+    my-other-skill/
       SKILL.md
       ...
   .agents/
@@ -102,7 +106,7 @@ Any subdirectory without `SKILL.md` is ignored.
 
 ## Defining a local skill
 
-Create a folder inside `project-skills/` and add a `SKILL.md` file:
+Create a folder inside `project-skills/` or `package-skills/` and add a `SKILL.md` file:
 
 ```
 project-skills/
