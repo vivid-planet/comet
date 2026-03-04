@@ -31,19 +31,45 @@ This repository includes a demo application which is showcasing the libraries.
 
 **Api:**
 Demo backend API (NestJS, PostgreSQL)
-- Start using `pnpm run dev-pm @demo-api`
+- Start using `pnpm run dev:demo:api`
 - access at: http://localhost:4000/
 
 **Admin:**
 Demo admin app (Vite, React, Apollo)
-- Start using `pnpm run dev-pm @demo-admin`
+- Start using `pnpm run dev:demo:admin`
 - access at: http://localhost:8000/
 - Usually Login as "Admin" in the IDP Login Page
 
 **Site:**
 Demo frontend site (Next.js)
-- Start using `pnpm run dev-pm @demo-site`
+- Start using `pnpm run dev:demo:site`
 - access at: http://localhost:3000/
+
+**All demo services:**
+- Start all at once using `pnpm run dev:demo`
+
+### Starting the demo site from a fresh clone
+
+Docker is required. Follow these steps:
+
+1. Install dependencies: `NODE_USE_ENV_PROXY=1 ./install.sh`
+2. Build the site-nextjs package (required before the site can start):
+   `pnpm --recursive --filter '@comet/site-nextjs' run build`
+3. Start the full demo (includes Docker services, API, and site):
+   `pnpm run dev:demo`
+4. Wait for all services to be ready. Check status with:
+   `npx dev-pm status`
+   The `demo-site` entry should show `Running` status. This may take 1–2 minutes.
+5. Access the site at http://localhost:3000 (redirects to http://localhost:3000/en)
+
+**Note:** On a fresh database with no CMS content, the homepage will show a "Page not found" message with the Comet logo header. Content must be created through the admin interface (http://localhost:8000) to populate pages.
+
+### Taking screenshots of the demo site
+
+Once the demo site is running, use Playwright browser tools to take screenshots:
+
+1. Navigate to the site: `playwright-browser_navigate` to `http://localhost:3000`
+2. Take a screenshot: `playwright-browser_take_screenshot`
 
 ## Packages
 
