@@ -1,41 +1,42 @@
-import { type InputHTMLAttributes, type ReactNode } from "react";
+import clsx from "clsx";
+import { type InputHTMLAttributes, useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
-import { FormattedMessage } from "react-intl";
+
+import { Typography } from "../Typography";
+import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
+import styles from "./TextField.module.scss";
 
 type TextFieldProps<TFieldValues extends FieldValues> = Omit<InputHTMLAttributes<HTMLInputElement>, "name"> &
-    Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
-        label: ReactNode;
-        helperText?: ReactNode;
-    };
+    Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
+    FieldContainerFieldProps;
 
 export const TextField = <TFieldValues extends FieldValues>({
-    label,
     helperText,
     name,
     control,
     rules,
+    label,
     ...inputProps
 }: TextFieldProps<TFieldValues>) => {
+    const id = useId();
     const required = !!rules?.required;
+
     return (
         <Controller
             name={name}
             control={control}
             rules={rules}
             render={({ field, fieldState }) => (
-                <div>
-                    <label>
-                        {label}
-                        {!required && (
-                            <span>
-                                <FormattedMessage id="inputField.optional" defaultMessage="(optional)" />
-                            </span>
-                        )}
-                    </label>
-                    <input required={required} {...inputProps} {...field} />
-                    {helperText && <div>{helperText}</div>}
-                    {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
-                </div>
+                <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={id}>
+                    <Typography
+                        as="input"
+                        variant="paragraph200"
+                        {...inputProps}
+                        {...field}
+                        id={id}
+                        className={clsx(styles.input, fieldState.error && styles["input--error"])}
+                    />
+                </FieldContainer>
             )}
         />
     );
