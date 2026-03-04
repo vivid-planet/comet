@@ -66,10 +66,10 @@ Docker is required. Follow these steps:
 
 ### Taking screenshots of the demo site
 
-Once the demo site is running, use Playwright browser tools to take screenshots:
+Once the demo site is running, use Playwright browser tools to navigate and capture screenshots:
 
-1. Navigate to the site: `playwright-browser_navigate` to `http://localhost:3000`
-2. Take a screenshot: `playwright-browser_take_screenshot`
+1. Navigate to the site URL (http://localhost:3000) using the `playwright-browser_navigate` tool
+2. Capture a screenshot using the `playwright-browser_take_screenshot` tool
 
 ## Packages
 
