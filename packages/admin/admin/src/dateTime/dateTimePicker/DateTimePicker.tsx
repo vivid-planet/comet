@@ -42,6 +42,8 @@ export type Future_DateTimePickerProps = ThemedComponentBaseProps<{
      *
      * - `openPicker`: Icon to display in the adornment that opens the picker (default: Calendar icon)
      */
+    onBlur?: () => void;
+    onFocus?: () => void;
     iconMapping?: {
         openPicker?: ReactNode;
     };
@@ -64,6 +66,8 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
         disabled,
         value = null,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -105,6 +109,8 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,

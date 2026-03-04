@@ -33,6 +33,8 @@ export type Future_TimePickerProps = ThemedComponentBaseProps<{
      * @param time - The new time value in 24-hour format (HH:mm), or `undefined` if cleared.
      */
     onChange?: (time: string | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -79,6 +81,8 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
         disabled,
         value: stringValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -121,6 +125,8 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,

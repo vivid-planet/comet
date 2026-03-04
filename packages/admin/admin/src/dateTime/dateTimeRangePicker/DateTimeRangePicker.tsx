@@ -41,6 +41,8 @@ export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
      * @param date - The new date-time range value, or `undefined` if cleared.
      */
     onChange?: (date: DateTimeRange | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -68,6 +70,8 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
         disabled,
         value: valueObject,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -121,6 +125,8 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
                         return {
                             fullWidth,
                             required,
+                            onBlur,
+                            onFocus,
                             ...textFieldProps,
                             InputProps: {
                                 ...textFieldProps?.InputProps,

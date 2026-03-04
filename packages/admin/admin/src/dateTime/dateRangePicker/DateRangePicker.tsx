@@ -41,6 +41,8 @@ export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
      * @param date - The new date range value, or `undefined` if cleared.
      */
     onChange?: (date: DateRange | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -72,6 +74,8 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
         disabled,
         value: stringDateRangeValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -120,6 +124,8 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
                         return {
                             fullWidth,
                             required,
+                            onBlur,
+                            onFocus,
                             ...textFieldProps,
                             InputProps: {
                                 ...textFieldProps?.InputProps,

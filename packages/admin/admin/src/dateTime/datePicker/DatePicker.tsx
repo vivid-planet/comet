@@ -33,6 +33,8 @@ export type Future_DatePickerProps = ThemedComponentBaseProps<{
      * @param date - The new date value in ISO 8601 format (YYYY-MM-DD), or `undefined` if cleared.
      */
     onChange?: (date: string | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -60,6 +62,8 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
         disabled,
         value: stringValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -103,6 +107,8 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,
