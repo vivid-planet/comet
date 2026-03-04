@@ -4,6 +4,7 @@ import { Command } from "commander";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as readline from "readline";
 
 interface SkillsJsonEntry {
     url: string;
@@ -47,6 +48,38 @@ function findSkills(dir: string): string[] {
         .map((e) => e.name);
 }
 
+function getSkillGroup(skillDir: string): string | undefined {
+    const skillMdPath = path.join(skillDir, "SKILL.md");
+    if (!fs.existsSync(skillMdPath)) return undefined;
+    const content = fs.readFileSync(skillMdPath, "utf-8");
+    const match = content.match(/^---\s*\n([\s\S]*?)\n---/);
+    if (!match) return undefined;
+    const groupMatch = match[1].match(/^skillGroup:\s*(.+)$/m);
+    return groupMatch ? groupMatch[1].trim() : undefined;
+}
+
+async function promptForGroups(groups: string[]): Promise<string[]> {
+    if (groups.length === 0) return [];
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    return new Promise((resolve) => {
+        console.log("\nAvailable skill groups (default group is always installed):");
+        groups.forEach((g, i) => console.log(`  ${i + 1}. ${g}`));
+        rl.question("\nSelect groups to install (comma-separated numbers, or 'all'): ", (answer) => {
+            rl.close();
+            if (answer.trim().toLowerCase() === "all") {
+                resolve(groups);
+                return;
+            }
+            const selected = answer
+                .split(",")
+                .map((s) => parseInt(s.trim(), 10) - 1)
+                .filter((i) => i >= 0 && i < groups.length)
+                .map((i) => groups[i]);
+            resolve(selected);
+        });
+    });
+}
+
 function createSymlink(target: string, symlinkPath: string): void {
     try {
         fs.lstatSync(symlinkPath);
@@ -60,7 +93,9 @@ function createSymlink(target: string, symlinkPath: string): void {
 export const installSkillsCommand = new Command("install-skills")
     .description("Install Claude Code skills from git repositories and link local project-skills/")
     .argument("[repos...]", "Remote git repo URLs (optionally with #<ref> suffix)")
-    .action((repos: string[]) => {
+    .option("-g, --group <name>", "install skills from this group (can be repeated)", (val, prev: string[]) => [...prev, val], [] as string[])
+    .option("--default", "install only default group skills (no interactivity)")
+    .action(async (repos: string[], options: { group: string[]; default: boolean }) => {
         const cwd = process.cwd();
         const claudeSkillsDir = path.join(cwd, ".claude", "skills");
         const agentsSkillsDir = path.join(cwd, ".agents", "skills");
@@ -69,15 +104,25 @@ export const installSkillsCommand = new Command("install-skills")
         fs.mkdirSync(claudeSkillsDir, { recursive: true });
         fs.mkdirSync(agentsSkillsDir, { recursive: true });
 
-        // 1. Link local project-skills/
+        // 1. Collect local skills with groups
         const localSkillsDir = path.join(cwd, "project-skills");
-        const localSkills = findSkills(localSkillsDir);
-        for (const skill of localSkills) {
-            createSymlink(`../../project-skills/${skill}`, path.join(claudeSkillsDir, skill));
-        }
-        console.log(`Linked ${localSkills.length} local skill(s) from project-skills/.`);
+        const localSkillNames = findSkills(localSkillsDir);
+        const localSkillEntries = localSkillNames.map((name) => ({
+            name,
+            group: getSkillGroup(path.join(localSkillsDir, name)),
+            source: "local" as const,
+        }));
 
-        // 2. Load existing skills.json
+        // 2. Clone remote repos upfront and collect remote skills with groups
+        const remoteRepos: Array<{
+            url: string;
+            ref: string | undefined;
+            tmpDir: string;
+            cloneDir: string;
+            skillEntries: Array<{ name: string; group: string | undefined }>;
+        }> = [];
+
+        // Load existing skills.json
         let skillsJson: SkillsJson = { installedSkills: [] };
         if (fs.existsSync(skillsJsonPath)) {
             try {
@@ -87,45 +132,82 @@ export const installSkillsCommand = new Command("install-skills")
             }
         }
 
-        // 3. Install remote repos
         for (const repoArg of repos) {
             const { url, ref } = parseRepoArg(repoArg);
-            console.log(`Installing skills from ${url}${ref ? `#${ref}` : ""}...`);
+            console.log(`Cloning skills from ${url}${ref ? `#${ref}` : ""}...`);
 
             const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "comet-skills-"));
             const cloneDir = path.join(tmpDir, "repo");
 
+            cloneSkillsFolder(url, ref, cloneDir);
+
+            const remoteSkillsDir = path.join(cloneDir, "skills");
+            const skillNames = findSkills(remoteSkillsDir);
+            const skillEntries = skillNames.map((name) => ({
+                name,
+                group: getSkillGroup(path.join(remoteSkillsDir, name)),
+            }));
+
+            remoteRepos.push({ url, ref, tmpDir, cloneDir, skillEntries });
+        }
+
+        // 3. Collect all unique non-default groups
+        const allEntries = [...localSkillEntries.map((e) => e.group), ...remoteRepos.flatMap((r) => r.skillEntries.map((e) => e.group))];
+        const allNonDefaultGroups = Array.from(new Set(allEntries.filter((g): g is string => g !== undefined)));
+
+        // 4. Determine selected groups
+        let selectedGroups: string[];
+        if (options.default) {
+            selectedGroups = [];
+        } else if (options.group.length > 0) {
+            selectedGroups = options.group;
+        } else {
+            selectedGroups = await promptForGroups(allNonDefaultGroups);
+        }
+
+        // 5. Install local skills (filtered)
+        let linkedLocal = 0;
+        for (const entry of localSkillEntries) {
+            if (entry.group !== undefined && !selectedGroups.includes(entry.group)) continue;
+            createSymlink(`../../project-skills/${entry.name}`, path.join(claudeSkillsDir, entry.name));
+            linkedLocal++;
+        }
+        console.log(`Linked ${linkedLocal} local skill(s) from project-skills/.`);
+
+        // 6. Install remote skills (filtered)
+        for (const repo of remoteRepos) {
+            const remoteSkillsDir = path.join(repo.cloneDir, "skills");
+            const installedSkills: string[] = [];
+
             try {
-                cloneSkillsFolder(url, ref, cloneDir);
+                for (const entry of repo.skillEntries) {
+                    if (entry.group !== undefined && !selectedGroups.includes(entry.group)) continue;
 
-                const remoteSkillsDir = path.join(cloneDir, "skills");
-                const skills = findSkills(remoteSkillsDir);
-
-                for (const skill of skills) {
-                    const dest = path.join(agentsSkillsDir, skill);
+                    const dest = path.join(agentsSkillsDir, entry.name);
                     if (fs.existsSync(dest)) {
                         fs.rmSync(dest, { recursive: true, force: true });
                     }
-                    fs.cpSync(path.join(remoteSkillsDir, skill), dest, { recursive: true });
-                    createSymlink(`../../.agents/skills/${skill}`, path.join(claudeSkillsDir, skill));
+                    fs.cpSync(path.join(remoteSkillsDir, entry.name), dest, { recursive: true });
+                    createSymlink(`../../.agents/skills/${entry.name}`, path.join(claudeSkillsDir, entry.name));
+                    installedSkills.push(entry.name);
                 }
 
                 // Upsert entry in skills.json
-                const existingIndex = skillsJson.installedSkills.findIndex((e) => e.url === url);
-                const entry: SkillsJsonEntry = { url, ref, skills };
+                const existingIndex = skillsJson.installedSkills.findIndex((e) => e.url === repo.url);
+                const jsonEntry: SkillsJsonEntry = { url: repo.url, ref: repo.ref, skills: installedSkills };
                 if (existingIndex === -1) {
-                    skillsJson.installedSkills.push(entry);
+                    skillsJson.installedSkills.push(jsonEntry);
                 } else {
-                    skillsJson.installedSkills[existingIndex] = entry;
+                    skillsJson.installedSkills[existingIndex] = jsonEntry;
                 }
 
-                console.log(`Installed ${skills.length} skill(s) from ${url}: ${skills.join(", ") || "(none)"}`);
+                console.log(`Installed ${installedSkills.length} skill(s) from ${repo.url}: ${installedSkills.join(", ") || "(none)"}`);
             } finally {
-                fs.rmSync(tmpDir, { recursive: true, force: true });
+                fs.rmSync(repo.tmpDir, { recursive: true, force: true });
             }
         }
 
-        // 4. Save skills.json
+        // 7. Save skills.json
         if (repos.length > 0) {
             fs.writeFileSync(skillsJsonPath, `${JSON.stringify(skillsJson, null, 2)}\n`, "utf-8");
         }

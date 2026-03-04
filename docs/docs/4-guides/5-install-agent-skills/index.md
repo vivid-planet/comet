@@ -57,6 +57,31 @@ comet install-skills https://github.com/org/repo1 https://github.com/org/repo2#m
 
 The command **always** re-links every skill found in `project-skills/`, even when no remote repo arguments are passed.
 
+### Skill groups
+
+Skills can be tagged with a `skillGroup` in their `SKILL.md` frontmatter.
+Skills without a `skillGroup` belong to the implicit **default group** and are always installed.
+Skills in a named group are optional — the command will prompt you to choose which groups to install:
+
+```
+Available skill groups (default group is always installed):
+  1. analytics
+  2. testing
+
+Select groups to install (comma-separated numbers, or 'all'):
+```
+
+Use CLI flags to skip the prompt:
+
+```bash
+# Install only default group skills (no prompt)
+comet install-skills --default https://github.com/org/repo
+
+# Install specific group(s) (no prompt)
+comet install-skills --group analytics https://github.com/org/repo
+comet install-skills --group analytics --group testing https://github.com/org/repo
+```
+
 ### Remote repo argument format
 
 Each argument is a git URL with an optional `#<ref>` suffix:
@@ -95,6 +120,18 @@ Use this skill when the user asks to create a changeset.
 3. Add the YAML frontmatter and a short description of the change.
 ```
 
+To make a skill optional (only installed when its group is selected), add a `skillGroup` field to the frontmatter:
+
+```markdown title="project-skills/analytics-dashboard/SKILL.md"
+---
+skillGroup: analytics
+---
+
+# Analytics Dashboard
+
+Use this skill when working on the analytics dashboard.
+```
+
 After running `comet install-skills`, Claude Code will find the skill at `.claude/skills/create-changeset`.
 
 ## Defining a remote skill
@@ -106,7 +143,11 @@ skills/
   my-remote-skill/
     SKILL.md
     helper-prompt.md   ← optional supporting files
+  analytics-skill/
+    SKILL.md           ← may contain skillGroup frontmatter
 ```
+
+Remote skills support the same `skillGroup` frontmatter as local skills.
 
 When `comet install-skills https://github.com/org/skills-repo` is run, the command:
 
