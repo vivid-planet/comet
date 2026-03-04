@@ -3,6 +3,7 @@ import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
+import { navigationCallToActionButtonListFragment } from "@src/layout/header/NavigationCallToActionButtonList.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -29,7 +30,7 @@ export default async function Layout({ children, params: { domain, language } }:
 
     const graphQLFetch = createGraphQLFetch();
 
-    const { footer, header, topMenu } = await graphQLFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
+    const { footer, header, topMenu, navigationCallToActionButtonList } = await graphQLFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
         gql`
             query Layout($domain: String!, $language: String!) {
                 footer: footer(scope: { domain: $domain, language: $language }) {
@@ -41,11 +42,15 @@ export default async function Layout({ children, params: { domain, language } }:
                 topMenu(scope: { domain: $domain, language: $language }) {
                     ...TopMenuPageTreeNode
                 }
+                navigationCallToActionButtonList: navigationCallToActionButtonList(scope: { domain: $domain, language: $language }) {
+                    ...NavigationCallToActionButtonList
+                }
             }
 
             ${footerFragment}
             ${headerFragment}
             ${topMenuPageTreeNodeFragment}
+            ${navigationCallToActionButtonListFragment}
         `,
         { domain, language },
     );
@@ -65,7 +70,7 @@ export default async function Layout({ children, params: { domain, language } }:
     return (
         <IntlProvider locale={language} messages={messages}>
             <TopNavigation data={topMenu} />
-            <Header header={header} />
+            <Header header={header} navigationCallToActionButtonList={navigationCallToActionButtonList} />
             {children}
             {footer && <Footer footer={footer} />}
         </IntlProvider>

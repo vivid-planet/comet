@@ -30,6 +30,7 @@ import { Page } from "@src/documents/pages/Page";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { EditNavigationCallToActionButtonListPage } from "@src/navigation-call-to-action-button-lists/EditNavigationCallToActionButtonListPage";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
@@ -189,6 +190,15 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                     route: {
                         path: "/project-snips/footer",
                         component: EditFooterPage,
+                    },
+                    requiredPermission: "pageTree",
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.project-snips.navigationCallToActionButtonList" defaultMessage="Navigation Buttons" />,
+                    route: {
+                        path: "/project-snips/navigation-call-to-action-button-list",
+                        component: EditNavigationCallToActionButtonListPage,
                     },
                     requiredPermission: "pageTree",
                 },

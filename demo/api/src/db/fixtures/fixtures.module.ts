@@ -50,6 +50,7 @@ import { StandaloneHeadingBlockFixtureService } from "./generators/blocks/text-a
 import { TextImageBlockFixtureService } from "./generators/blocks/text-and-content/text-image-block-fixture.service";
 import { DocumentGeneratorService } from "./generators/document-generator.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
+import { NavigationCallToActionButtonListFixtureService } from "./generators/navigation-call-to-action-button-list-fixture.service";
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
@@ -118,6 +119,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         VideoFixtureService,
         VimeoVideoBlockFixtureService,
         YouTubeVideoBlockFixtureService,
+        NavigationCallToActionButtonListFixtureService,
         NewsFixtureService,
         ProductListBlockFixtureService,
     ],

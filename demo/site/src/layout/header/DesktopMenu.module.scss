@@ -98,6 +98,12 @@
     }
 }
 
+.menuButtonsWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-s200);
+}
+
 .menuPageLink {
     text-decoration: none;
     display: inline-block;

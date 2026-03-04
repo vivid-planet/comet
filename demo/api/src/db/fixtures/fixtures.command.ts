@@ -25,6 +25,7 @@ import slugify from "slugify";
 import { DocumentGeneratorService } from "./generators/document-generator.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
+import { NavigationCallToActionButtonListFixtureService } from "./generators/navigation-call-to-action-button-list-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
 import { NewsFixtureService } from "./generators/news-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
@@ -61,6 +62,7 @@ export class FixturesCommand extends CommandRunner {
         private readonly productsFixtureService: ProductsFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
+        private readonly navigationCallToActionButtonListFixtureService: NavigationCallToActionButtonListFixtureService,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
         private readonly pageTreeService: PageTreeService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
@@ -123,6 +125,9 @@ export class FixturesCommand extends CommandRunner {
             blockCategory: "textAndContent",
             parentId: blockCategoriesPage.id,
         });
+
+        this.logger.log("Generate NavigationCallToActionButtonList...");
+        await this.navigationCallToActionButtonListFixtureService.generateNavigationCallToActionButtonList(scope);
 
         this.logger.log("Generate Many Images Test Page...");
         await this.manyImagesTestPageFixtureService.execute();
