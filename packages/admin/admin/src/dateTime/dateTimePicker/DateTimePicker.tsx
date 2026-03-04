@@ -6,6 +6,7 @@ import {
     pickersInputBaseClasses,
 } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -75,6 +76,7 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
         name: "CometAdminFutureDateTimePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
 
     const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
 
@@ -121,6 +123,16 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
                                         inputIsReadOnly={readOnly}
                                         onClick={() => setOpen(true)}
                                         {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.dateTimePicker.openPicker",
+                                                    defaultMessage: "Open date time picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
                                     >
                                         {openPickerIcon}
                                     </OpenPickerAdornment>

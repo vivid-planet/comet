@@ -2,6 +2,7 @@ import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { type DateTimeRangePickerProps as MuiDateTimeRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -78,6 +79,8 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
         props: inProps,
         name: "CometAdminDateTimeRangePicker",
     });
+    const intl = useIntl();
+
     const [open, setOpen] = useState(false);
     const arrayValue: [Date | null, Date | null] = valueObject ? [valueObject.start, valueObject.end] : [null, null];
 
@@ -137,6 +140,16 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
                                             inputIsReadOnly={readOnly}
                                             onClick={() => setOpen(true)}
                                             {...slotProps?.openPickerAdornment}
+                                            slotProps={{
+                                                ...slotProps?.openPickerAdornment?.slotProps,
+                                                openPickerButton: {
+                                                    "aria-label": intl.formatMessage({
+                                                        id: "comet.dateTimeRangePicker.openPicker",
+                                                        defaultMessage: "Open date time range picker",
+                                                    }),
+                                                    ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                                },
+                                            }}
                                         >
                                             {openPickerIcon}
                                         </OpenPickerAdornment>

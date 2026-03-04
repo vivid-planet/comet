@@ -3,6 +3,7 @@ import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeP
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -90,6 +91,7 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
         name: "CometAdminFutureTimePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
     const dateValue = getDateFromTimeString(stringValue);
 
     const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
@@ -137,6 +139,16 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
                                         inputIsReadOnly={readOnly}
                                         onClick={() => setOpen(true)}
                                         {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.timePicker.openPicker",
+                                                    defaultMessage: "Open time picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
                                     >
                                         {openPickerIcon}
                                     </OpenPickerAdornment>
