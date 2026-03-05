@@ -3,7 +3,7 @@ import { type Connection, type EntityManager, type IDatabaseDriver, Reference } 
 import { type LoggerService } from "@nestjs/common";
 import slugify from "slugify";
 import { Transform, type TransformCallback } from "stream";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./entities/product-category.entity";
 import { type ProductImporterInput } from "./product-importer.input";
@@ -45,7 +45,7 @@ export class ProductPrePersist extends Transform {
             const slug = slugify(`${data.category}`, { lower: true });
 
             const categoryData = {
-                id: v4(),
+                id: uuid(),
                 title: data.category,
                 slug,
                 position: 1,

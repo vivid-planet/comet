@@ -9,7 +9,7 @@ import {
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { gridPageCountSelector, gridPaginationSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid-pro";
+import { gridPageCountSelector, gridPaginationSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid";
 import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

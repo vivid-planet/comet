@@ -1,5 +1,6 @@
 # @comet/brevo-admin
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Minor Changes
@@ -20,6 +21,20 @@
     - @comet/admin-icons@9.0.0-beta.0
     - @comet/admin@9.0.0-beta.0
     - @comet/cms-admin@9.0.0-beta.0
+=======
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [64b70bc]
+- Updated dependencies [ed029fb]
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/cms-admin@8.18.0
+    - @comet/admin@8.18.0
+    - @comet/admin-date-time@8.18.0
+    - @comet/admin-icons@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

@@ -4,16 +4,15 @@ import { type InternalLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
-import { type PropsWithChildren } from "react";
+import { type AnchorHTMLAttributes, type PropsWithChildren } from "react";
 
-interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
-    title?: string;
-    className?: string;
-}
+interface InternalLinkBlockProps
+    extends PropsWithChildren<PropsWithData<InternalLinkBlockData>>,
+        Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {}
 
-export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title, className }: InternalLinkBlockProps) {
+export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, ...anchorProps }: InternalLinkBlockProps) {
     if (!targetPage) {
-        return <span className={className}>{children}</span>;
+        return <span className={anchorProps.className}>{children}</span>;
     }
 
     if (targetPage.scope == null) {
@@ -24,12 +23,11 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
 
     return (
         <Link
+            {...anchorProps}
             href={createSitePath({
                 scope: targetPage.scope as GQLPageTreeNodeScope,
                 path: pathWithAnchor,
             })}
-            title={title}
-            className={className}
         >
             {children}
         </Link>
