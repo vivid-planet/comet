@@ -5,7 +5,57 @@ sidebar_position: -9
 
 # Migrating from v8 to v9
 
+## Root
+
+### Update Comet dependencies
+
+Update the `@comet/*` dependencies in the root `package.json` to version `9.0.0`:
+
+```diff title="package.json"
+{
+    "devDependencies": {
+-       "@comet/cli": "^8.0.0",
++       "@comet/cli": "9.0.0",
+    }
+}
+```
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
+
 ## API
+
+### Update Comet dependencies
+
+Update all `@comet/*` dependencies in `api/package.json` to version `9.0.0`:
+
+```diff title="api/package.json"
+{
+    "dependencies": {
+-       "@comet/cms-api": "^8.0.0",
++       "@comet/cms-api": "9.0.0",
+-       "@comet/mail-react": "^8.0.0",
++       "@comet/mail-react": "9.0.0",
+    },
+    "devDependencies": {
+-       "@comet/api-generator": "^8.0.0",
++       "@comet/api-generator": "9.0.0",
+-       "@comet/eslint-config": "^8.0.0",
++       "@comet/eslint-config": "9.0.0",
+    }
+}
+```
+
+Update any other `@comet/*` packages your project uses (e.g., `@comet/brevo-api`) to `9.0.0` as well.
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
 
 ### API Generator: Remove the `targetDirectory` option
 
@@ -104,6 +154,47 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 ```
 
 ## Admin
+
+### Update Comet dependencies
+
+Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0`:
+
+```diff title="admin/package.json"
+{
+    "dependencies": {
+-       "@comet/admin": "^8.0.0",
++       "@comet/admin": "9.0.0",
+-       "@comet/admin-date-time": "^8.0.0",
++       "@comet/admin-date-time": "9.0.0",
+-       "@comet/admin-icons": "^8.0.0",
++       "@comet/admin-icons": "9.0.0",
+-       "@comet/cms-admin": "^8.0.0",
++       "@comet/cms-admin": "9.0.0",
+-       "rdndmb-html5-to-touch": "^8.1.2",
++       "rdndmb-html5-to-touch": "^9.0.0",
+-       "react-dnd-multi-backend": "^8.1.2",
++       "react-dnd-multi-backend": "^9.0.0",
+-       "react-intl": "^6.8.9",
++       "react-intl": "^7.1.9",
+    },
+    "devDependencies": {
+-       "@comet/admin-generator": "^8.0.0",
++       "@comet/admin-generator": "9.0.0",
+-       "@comet/cli": "^8.0.0",
++       "@comet/cli": "9.0.0",
+-       "@comet/eslint-config": "^8.0.0",
++       "@comet/eslint-config": "9.0.0",
+    }
+}
+```
+
+Update any other `@comet/*` packages your project uses (e.g., `@comet/admin-color-picker`, `@comet/admin-rte`, `@comet/brevo-admin`) to `9.0.0` as well.
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
 
 ### Replace `DependencyList` with `DependenciesList` or `DependentsList`
 
@@ -373,6 +464,33 @@ DateTimePicker:
 
 ## Site
 
+### Update Comet dependencies
+
+Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0`:
+
+```diff title="site/package.json"
+{
+    "dependencies": {
+-       "@comet/site-nextjs": "^8.0.0",
++       "@comet/site-nextjs": "9.0.0",
+-       "react-intl": "^6.8.9",
++       "react-intl": "^7.1.9",
+    },
+    "devDependencies": {
+-       "@comet/cli": "^8.0.0",
++       "@comet/cli": "9.0.0",
+-       "@comet/eslint-config": "^8.0.0",
++       "@comet/eslint-config": "9.0.0",
+    }
+}
+```
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
+
 ### Upgrade peer dependencies
 
 Upgrade all your dependencies to support Next.js v16.
@@ -396,6 +514,13 @@ Upgrade all your dependencies to support Next.js v16.
 +       "@types/react-dom": "^19.2.0",
     }
 }
+```
+
+After updating the dependencies, remove `node_modules/` and `package-lock.json` (or your lock file) before reinstalling to avoid peer dependency conflicts:
+
+```sh
+rm -rf site/node_modules site/package-lock.json
+npm install
 ```
 
 ### Add `next-env.d.ts` to `.gitignore`
