@@ -1996,6 +1996,7 @@ input RedirectFilter {
   generationType: StringFilter
   or: [RedirectFilter!]
   source: StringFilter
+  sourceType: RedirectSourceTypeEnumFilter
   target: StringFilter
   updatedAt: DateTimeFilter
 }
@@ -2033,7 +2034,14 @@ enum RedirectSortField {
   updatedAt
 }
 
+input RedirectSourceTypeEnumFilter {
+  equal: RedirectSourceTypeValues
+  isAnyOf: [RedirectSourceTypeValues!]
+  notEqual: RedirectSourceTypeValues
+}
+
 enum RedirectSourceTypeValues {
+  domain
   path
 }
 

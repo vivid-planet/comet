@@ -547,6 +547,10 @@ If you're using Knip, you may need to add `proxy.ts` as entry point:
 
 :::
 
+### Domain Redirects
+
+Domain redirects can now be set in the admin. It is necessary to update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects. See example in the demo here: https://github.com/vivid-planet/comet/blob/main/demo/site/src/middleware/redirectToMainHost.ts
+
 ### Add `cache: "force-cache"` to GraphQL fetch
 
 Next.js no longer caches `fetch` requests by default.

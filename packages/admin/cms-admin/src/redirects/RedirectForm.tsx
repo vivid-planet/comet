@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Alert,
     Field,
     FillSpace,
     FinalForm,
@@ -14,14 +15,14 @@ import {
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
-import { MenuItem } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
+import { isFQDN } from "class-validator";
 import isEqual from "lodash.isequal";
 import { type JSX, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { createFinalFormBlock } from "../blocks/form/createFinalFormBlock";
 import { type BlockInterface, type BlockState } from "../blocks/types";
-import { isValidUrl } from "../blocks/validators/isValidUrl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { type GQLRedirectSourceTypeValues } from "../graphql.generated";
 import { type GQLRedirectSourceAvailableQuery, type GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
@@ -97,6 +98,13 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                 defaultMessage: "Path",
             }),
         },
+        {
+            value: "domain",
+            label: intl.formatMessage({
+                id: "comet.pages.redirects.redirect.source.type.domain",
+                defaultMessage: "Domain",
+            }),
+        },
     ];
 
     const [submit] = useSubmitMutation(mode, id, linkBlock, scope);
@@ -149,10 +157,10 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     };
 
     const validateDomain = (value: string) => {
-        if (!isValidUrl(value)) {
+        if (!isFQDN(value)) {
             return intl.formatMessage({
                 id: "comet.pages.redirects.validate.domain.error",
-                defaultMessage: "Needs to start with http:// or https://",
+                defaultMessage: "Needs to be a valid domain (e.g. example.com)",
             });
         }
     };
@@ -209,6 +217,16 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                                 </FinalFormSelect>
                             )}
                         </Field>
+                        {values.sourceType === "domain" && (
+                            <Box sx={{ marginBottom: 4 }}>
+                                <Alert severity="warning">
+                                    <FormattedMessage
+                                        id="comet.pages.redirects.redirect.source.type.domain.warning"
+                                        defaultMessage="This only works if the domain is configured correctly."
+                                    />
+                                </Alert>
+                            </Box>
+                        )}
                         <Field
                             label={intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" })}
                             name="source"
@@ -219,7 +237,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             validate={validateSource as any}
                             fullWidth
-                            placeholder="/example-path"
+                            placeholder={values.sourceType === "domain" ? "example.com" : "/example-path"}
                             disableContentTranslation
                         />
                         <Field
