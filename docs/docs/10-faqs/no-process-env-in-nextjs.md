@@ -1,9 +1,12 @@
 ---
-title: Why can't I use process.env in the Next.js site?
+title: Environment variables in the site
 ---
 
 In COMET DXP, the Next.js site application is built once during CI and the resulting build artifact is reused across multiple environments (e.g., staging and production).
-This has two important implications:
+This means environment variables that are evaluated at build time will have the same values in all environments.
+
+Using `process.env` on the server side (e.g., in Server Components, Route Handlers, or middleware) is fine, since those values are read at runtime.
+However, the following patterns are **not supported**:
 
 ## `process.env.NEXT_PUBLIC_*` variables are not supported
 
