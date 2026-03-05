@@ -1,7 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigNextJs from "@comet/eslint-config/future/nextjs.js";
 
-const docsLink = "https://docs.comet-dxp.com/docs/faqs/no-process-env-in-nextjs";
+const docsLink = "https://docs.comet-dxp.com/docs/faqs/environment-variables-in-site";
 
 export default defineConfig([
     globalIgnores([
