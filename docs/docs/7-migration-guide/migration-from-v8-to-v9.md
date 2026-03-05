@@ -26,6 +26,12 @@ Then, install the updated dependencies:
 npm install
 ```
 
+### Verify lint passes
+
+```sh
+npm run lint:root
+```
+
 ## API
 
 ### Update Comet dependencies
@@ -151,6 +157,13 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 -         return { name: entity.title, secondaryInformation: entity.slug };
 -     }
 - }
+```
+
+### Verify lint passes
+
+```sh
+cd api
+npm run lint
 ```
 
 ## Admin
@@ -451,6 +464,13 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
+### Verify lint passes
+
+```sh
+cd admin
+npm run lint
+```
+
 ## Site
 
 ### Update Comet and peer dependencies
@@ -618,4 +638,11 @@ export function createGraphQLFetch() {
         `${process.env.API_URL_INTERNAL}/graphql`,
     );
 }
+```
+
+### Verify lint passes
+
+```sh
+cd site
+npm run lint
 ```
