@@ -31,18 +31,18 @@ This repository includes a demo application which is showcasing the libraries.
 
 **Api:**
 Demo backend API (NestJS, PostgreSQL)
-- Start using `pnpm run dev-pm @demo-api`
+- Start using `pnpm exec dev-pm @demo-api`
 - access at: http://localhost:4000/
 
 **Admin:**
 Demo admin app (Vite, React, Apollo)
-- Start using `pnpm run dev-pm @demo-admin`
+- Start using `pnpm exec dev-pm @demo-admin`
 - access at: http://localhost:8000/
 - Usually Login as "Admin" in the IDP Login Page
 
 **Site:**
 Demo frontend site (Next.js)
-- Start using `pnpm run dev-pm @demo-site`
+- Start using `pnpm exec dev-pm @demo-site`
 - access at: http://localhost:3000/
 
 ## Packages
