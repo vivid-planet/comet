@@ -2,6 +2,7 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type ContactFormBlockData } from "@src/blocks.generated";
 import { getRecaptchaToken } from "@src/util/getRecaptchaToken";
+import { useNextPublic } from "@src/util/NextPublicProvider";
 import { useParams } from "next/navigation";
 import Script from "next/script";
 import { useForm } from "react-hook-form";
@@ -35,7 +36,7 @@ export const ContactFormBlock = withPreview(
         const params = useParams<{ visibility: string; domain: string; language: string }>();
         const language = params.language;
 
-        const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
+        const recaptchaKey = useNextPublic("RECAPTCHA_KEY");
 
         const {
             control,
