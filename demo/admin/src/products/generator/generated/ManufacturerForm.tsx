@@ -33,11 +33,23 @@ import { updateManufacturerMutation } from "./ManufacturerForm.gql";
 import { GQLUpdateManufacturerMutation } from "./ManufacturerForm.gql.generated";
 import { GQLUpdateManufacturerMutationVariables } from "./ManufacturerForm.gql.generated";
 import isEqual from "lodash.isequal";
-type FormValues = Omit<GQLManufacturerFormFragment, "address"> & {
+export type FormValues = Omit<GQLManufacturerFormFragment, "address"> & {
     address: GQLManufacturerFormFragment["address"] & {
         alternativeAddressEnabled: boolean;
     };
 };
+function formValuesToOutput({ address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues) {
+    return {
+        ...formValuesRest,
+        address: {
+            ...formValuesAddressRest,
+            alternativeAddress:
+                alternativeAddressEnabled && formValuesAddressRest.alternativeAddress
+                    ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ?? null }
+                    : null,
+        },
+    };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -73,28 +85,14 @@ export function ManufacturerForm({ onCreate, id }: FormProps) {
             await refetch();
         },
     });
-    const handleSubmit = async (
-        { address: { alternativeAddressEnabled, ...formValuesAddressRest }, ...formValuesRest }: FormValues,
-        form: FormApi<FormValues>,
-        event: FinalFormSubmitEvent,
-    ) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
-            ...formValuesRest,
-            address: {
-                ...formValuesAddressRest,
-                alternativeAddress:
-                    alternativeAddressEnabled && formValuesAddressRest.alternativeAddress
-                        ? { ...formValuesAddressRest.alternativeAddress, streetNumber: formValuesAddressRest.alternativeAddress.streetNumber ?? null }
-                        : null,
-            },
-        };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id) throw new Error();
-            const { ...updateInput } = output;
             await client.mutate<GQLUpdateManufacturerMutation, GQLUpdateManufacturerMutationVariables>({
                 mutation: updateManufacturerMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({

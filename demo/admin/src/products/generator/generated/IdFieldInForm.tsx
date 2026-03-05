@@ -40,9 +40,12 @@ import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
 };
-type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
+export type FormValues = Omit<GQLIdFieldInFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
+function formValuesToOutput({ id, ...formValuesRest }: FormValues) {
+    return { ...formValuesRest, image: rootBlocks.image.state2Output(formValuesRest.image) };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -90,12 +93,12 @@ export function IdFieldInForm({ onCreate, id, type, slug }: FormProps) {
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
-            const { id, ...updateInput } = output;
+            if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({

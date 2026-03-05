@@ -39,10 +39,13 @@ const rootBlocks = {
     image: DamImageBlock,
     content: NewsContentBlock,
 };
-type FormValues = Omit<GQLNewsFormFragment, "image" | "content"> & {
+export type FormValues = Omit<GQLNewsFormFragment, "image" | "content"> & {
     image: BlockState<typeof rootBlocks.image>;
     content: BlockState<typeof rootBlocks.content>;
 };
+function formValuesToOutput(formValues: FormValues) {
+    return { ...formValues, image: rootBlocks.image.state2Output(formValues.image), content: rootBlocks.content.state2Output(formValues.content) };
+}
 interface FormProps {
     onCreate?: (id: string) => void;
     id?: string;
@@ -80,17 +83,12 @@ export function NewsForm({ onCreate, id }: FormProps) {
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
-            ...formValues,
-            image: rootBlocks.image.state2Output(formValues.image),
-            content: rootBlocks.content.state2Output(formValues.content),
-        };
+        const output = formValuesToOutput(formValues);
         if (mode === "edit") {
             if (!id) throw new Error();
-            const { ...updateInput } = output;
             await client.mutate<GQLUpdateNewsMutation, GQLUpdateNewsMutationVariables>({
                 mutation: updateNewsMutation,
-                variables: { id, input: updateInput },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
