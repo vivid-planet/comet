@@ -6,7 +6,7 @@ title: Installing agent skills
 
 The `npx @comet/cli install-agent-skills` command installs [agent skills](https://agentskills.io/) into your project — structured, reusable instructions for AI coding agents (such as Claude Code or GitHub Copilot). Skills are placed into `.agents/skills/` and `.claude/skills/`, where agents pick them up automatically.
 
-## Quick Start
+## Quick start
 
 Add an `agent-skills.json` file at the project root containing the external repos to fetch skills from:
 
@@ -40,7 +40,7 @@ and run this script in `install.sh`:
   # ...
 ```
 
-## What Is a Skill?
+## What is a skill?
 
 A skill is a **folder** containing at minimum a `SKILL.md` file. The folder name is the skill name. For example:
 
@@ -52,7 +52,7 @@ project-skills/
 
 The `SKILL.md` file contains markdown-formatted instructions that the agent follows when the skill is active. This follows the [Agent Skills specification](https://agentskills.io/specification).
 
-## Adding Project-Specific Skills
+## Adding project-specific skills
 
 Place skill folders inside `project-skills/` at your repo root. These have the highest priority and override any same-named skills from external repos.
 
@@ -70,7 +70,7 @@ npx @comet/cli install-agent-skills --config agent-skills.json
 
 Local skills are **symlinked**, so edits to `project-skills/` are reflected immediately without re-running the command.
 
-## External Repos
+## External repos
 
 Skills from external git repositories are listed in `agent-skills.json`:
 
@@ -90,7 +90,7 @@ npx @comet/cli install-agent-skills --repo git@github.com:org/shared-skills.git#
 
 Both `--config` and `--repo` can be combined. Config repos are processed first; `--repo` flags are appended after.
 
-## Priority Order
+## Priority order
 
 When the same skill name exists in multiple sources, the higher-priority source wins:
 
@@ -112,7 +112,7 @@ Installing 2 skill(s) from external git@github.com:comet-dxp/comet.git (package-
   Copied: api-conventions
 ```
 
-## Target Directories
+## Target directories
 
 Skills are installed into:
 
@@ -139,7 +139,7 @@ Preview what would be installed without making changes:
 npx @comet/cli install-agent-skills --config agent-skills.json --dry-run
 ```
 
-## For Library Maintainers: Providing Skills to Consumers
+## For library maintainers: Providing skills to consumers
 
 If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `--repo` or `agent-skills.json`.
 
