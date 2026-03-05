@@ -1,6 +1,6 @@
-import { type ComponentsOverrides, Paper, type PaperProps } from "@mui/material";
+import { type ComponentsOverrides, type PaperProps } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type GridDensity, useGridApiContext } from "@mui/x-data-grid";
+import { type GridDensity, Toolbar, useGridApiContext } from "@mui/x-data-grid";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 
@@ -24,7 +24,7 @@ export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
     return <Root ownerState={ownerState} elevation={elevation} {...restProps} />;
 };
 
-const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
+const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
     classesResolver(ownerState) {
@@ -32,7 +32,6 @@ const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
     },
 })(
     ({ ownerState, theme }) => css`
-        position: relative;
         z-index: 1;
         display: flex;
         align-items: center;

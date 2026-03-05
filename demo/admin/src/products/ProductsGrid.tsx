@@ -389,6 +389,7 @@ export function ProductsGrid() {
             onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
+            showToolbar
         />
     );
 }
