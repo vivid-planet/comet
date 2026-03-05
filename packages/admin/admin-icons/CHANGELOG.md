@@ -1,5 +1,6 @@
 # @comet/admin-icons
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -9,6 +10,9 @@
 ### Minor Changes
 
 - f066335: Add support for React 19
+=======
+## 8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

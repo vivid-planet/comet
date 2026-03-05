@@ -1,5 +1,6 @@
 # @comet/admin-date-time
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -56,6 +57,16 @@
 - Updated dependencies [631540c]
     - @comet/admin-icons@9.0.0-beta.0
     - @comet/admin@9.0.0-beta.0
+=======
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/admin@8.18.0
+    - @comet/admin-icons@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

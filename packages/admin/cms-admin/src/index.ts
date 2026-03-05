@@ -198,6 +198,7 @@ export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
 export {
+    CurrentUserContext,
     type CurrentUserInterface,
     CurrentUserProvider,
     type Permission,

@@ -1,5 +1,6 @@
 # @comet/admin
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -83,6 +84,15 @@
 - Updated dependencies [f066335]
 - Updated dependencies [5f1566a]
     - @comet/admin-icons@9.0.0-beta.0
+=======
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

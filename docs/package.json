@@ -15,7 +15,7 @@
         "generate-component-docs:static-storybook": "ts-node --project tsconfig.ts-node.json src/utils/generateComponentDocs.ts",
         "lint": "run-p lint:prettier lint:eslint lint:spelling",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:spelling": "pnpm cspell docs/**",
         "serve": "docusaurus serve",

@@ -2,7 +2,7 @@ import { Block, BlockDataInterface, DocumentInterface, RootBlock, RootBlockDataS
 import { Collection, Embedded, Entity, Enum, ManyToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { TargetGroupInterface } from "../../target-group/entity/target-group-entity.factory";
 import { EmailCampaignScopeInterface } from "../../types";
@@ -42,7 +42,7 @@ export function createEmailCampaignEntity({
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
-        id: string = v4();
+        id: string = uuid();
 
         @Property({
             columnType: "timestamp with time zone",
