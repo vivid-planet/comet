@@ -1,5 +1,7 @@
 # @comet/admin-icons
 
+## 8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

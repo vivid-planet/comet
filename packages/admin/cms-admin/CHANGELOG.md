@@ -1,5 +1,24 @@
 # @comet/cms-admin
 
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Re-add "Usages" column to the DAM `FolderDataGrid`, displaying the number of dependents for each file
+
+### Patch Changes
+
+- ed029fb: Export `CurrentUserContext` from `@comet/cms-admin`
+
+    `CurrentUserContext` is now exported so that consumers can directly access the React context. This is needed for use cases such as providing a custom implementation of the context (e.g. in tests or in applications that manage their own user context) and for components that need to consume the context directly rather than through the `useCurrentUser` hook.
+
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/admin@8.18.0
+    - @comet/admin-date-time@8.18.0
+    - @comet/admin-rte@8.18.0
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes
