@@ -80,15 +80,6 @@ Add unknown words to `.cspellignore` at the repo root.
 
 This repository includes a demo application which is showcasing the libraries.
 
-- Start the full demo (admin, API, site):
-    ```bash
-    pnpm exec dev-pm start @demo
-    ```
-    or
-    ```bash
-    pnpm run dev:demo
-    ```
-
 **Api:**
 Demo backend API (NestJS, PostgreSQL)
 
@@ -107,17 +98,6 @@ Demo frontend site (Next.js)
 
 - Start using `pnpm exec dev-pm @demo-site`
 - access at: http://localhost:3000/
-
-## Rebuilding packages
-
-- Build all Comet packages:
-    ```bash
-    pnpm run build:packages
-    ```
-- Build only the packages you changed (repeat the filter as needed):
-    ```bash
-    pnpm --recursive --filter '<package-name>' run build
-    ```
 
 ## Packages
 
