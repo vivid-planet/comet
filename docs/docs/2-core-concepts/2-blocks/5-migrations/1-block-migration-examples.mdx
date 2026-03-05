@@ -1,0 +1,56 @@
+---
+title: Block Migration Examples
+---
+
+The following examples can be used as a starting point for a variety of block migrations that commonly occur.
+
+## Adding a string field
+
+In this example, we add a new, required string field `newValue` to the block's API.
+
+:::info
+Even though it seems like a migration is not required in this case, `newValue` is typed as a non-optional string in the generated BlockData interface.
+Therefore, a migration is recommended to ensure that the field is set to an empty string.
+:::
+
+```ts title="example.block.ts"
+class ExampleBlockData extends BlockData {
+    // addition-start
+    @BlockField()
+    newValue: string;
+    // addition-end
+    // ...
+}
+
+class ExampleBlockInput extends BlockInput {
+    // addition-start
+    @BlockField()
+    @IsString()
+    newValue: string;
+    // addition-end
+    // ...
+}
+```
+
+```ts title="1-add-new-value.migration.ts"
+import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+
+interface From {
+    // ...
+}
+
+interface To extends From {
+    newValue: string;
+}
+
+export class AddNewValueMigration
+    extends BlockMigration<(from: From) => To>
+    implements BlockMigrationInterface
+{
+    public readonly toVersion = 1;
+
+    protected migrate(from: From): To {
+        return { ...from, newValue: "" };
+    }
+}
+```
