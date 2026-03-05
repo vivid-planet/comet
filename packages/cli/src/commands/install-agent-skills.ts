@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { Command } from "commander";
 import * as fs from "fs";
 import * as os from "os";
@@ -14,7 +14,6 @@ export interface SkillSource {
 
 export interface InstallOptions {
     dryRun: boolean;
-    force: boolean;
 }
 
 function parseRepoUrl(rawUrl: string): { repoUrl: string; ref: string | undefined } {
@@ -30,20 +29,20 @@ function cloneRepo(rawUrl: string): string {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "comet-agent-skills-"));
 
     // Use sparse checkout to fetch only the package-skills/ folder
-    execSync(`git init ${tmpDir}`, { stdio: "pipe" });
-    execSync(`git -C ${tmpDir} remote add origin -- ${repoUrl}`, { stdio: "pipe" });
-    execSync(`git -C ${tmpDir} config core.sparseCheckout true`, { stdio: "pipe" });
+    execFileSync("git", ["init", tmpDir], { stdio: "pipe" });
+    execFileSync("git", ["-C", tmpDir, "remote", "add", "origin", "--", repoUrl], { stdio: "pipe" });
+    execFileSync("git", ["-C", tmpDir, "config", "core.sparseCheckout", "true"], { stdio: "pipe" });
     fs.writeFileSync(path.join(tmpDir, ".git", "info", "sparse-checkout"), "package-skills/\n");
 
     const fetchRef = ref ?? "HEAD";
     try {
         console.log(`Fetching ${repoUrl} ref "${fetchRef}" (sparse, package-skills/ only)...`);
-        execSync(`git -C ${tmpDir} fetch --depth 1 origin ${fetchRef}`, { stdio: "pipe" });
-        execSync(`git -C ${tmpDir} checkout FETCH_HEAD`, { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "fetch", "--depth", "1", "origin", fetchRef], { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "checkout", "FETCH_HEAD"], { stdio: "pipe" });
     } catch {
         console.log(`Shallow fetch failed for ref "${fetchRef}"; falling back to full fetch...`);
-        execSync(`git -C ${tmpDir} fetch origin ${fetchRef}`, { stdio: "pipe" });
-        execSync(`git -C ${tmpDir} checkout FETCH_HEAD`, { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "fetch", "origin", fetchRef], { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "checkout", "FETCH_HEAD"], { stdio: "pipe" });
     }
 
     return tmpDir;
@@ -66,7 +65,7 @@ function listSkillFolders(directory: string): string[] {
         .sort();
 }
 
-export function installSkills(sources: SkillSource[], targetDirs: string[], { dryRun, force }: InstallOptions): void {
+export function installSkills(sources: SkillSource[], targetDirs: string[], { dryRun }: InstallOptions): void {
     const installed = new Set<string>();
 
     for (const { label, directory, symlink } of sources) {
@@ -85,10 +84,6 @@ export function installSkills(sources: SkillSource[], targetDirs: string[], { dr
             for (const targetDir of targetDirs) {
                 const destPath = path.join(targetDir, folder);
                 const exists = pathExists(destPath);
-                if (exists && !force) {
-                    console.warn(`  SKIP: "${folder}" already exists in ${targetDir} (use --force to overwrite)`);
-                    continue;
-                }
                 if (dryRun) {
                     console.log(`  [dry-run] Would ${symlink ? "symlink" : "copy"}: ${srcPath} -> ${destPath}`);
                 } else {
@@ -131,9 +126,8 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
         [] as string[],
     )
     .option("--dry-run", "Show which symlinks/copies would be created without making changes", false)
-    .option("--force", "Overwrite existing files or symlinks in the target directories", false)
-    .action(async (options: { config?: string; repo: string[]; dryRun: boolean; force: boolean }) => {
-        const { config: configPath, repo: repoFlags, dryRun, force } = options;
+    .action(async (options: { config?: string; repo: string[]; dryRun: boolean }) => {
+        const { config: configPath, repo: repoFlags, dryRun } = options;
 
         const configRepos: string[] = [];
         if (configPath) {
@@ -149,12 +143,9 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
         const cwd = process.cwd();
         const targetDirs = [path.join(cwd, ".agents", "skills"), path.join(cwd, ".claude", "skills")];
 
-        if (!dryRun) {
-            // Clear and recreate target directories (clean install)
-            for (const dir of targetDirs) {
-                fs.rmSync(dir, { recursive: true, force: true });
-                fs.mkdirSync(dir, { recursive: true });
-            }
+        // Ensure target directories exist (without clearing existing contents)
+        for (const dir of targetDirs) {
+            fs.mkdirSync(dir, { recursive: true });
         }
 
         // Priority order: project-skills > package-skills > external repos (in arg order)
@@ -174,7 +165,7 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
                     symlink: false,
                 });
             }
-            installSkills(sources, targetDirs, { dryRun, force });
+            installSkills(sources, targetDirs, { dryRun });
         } finally {
             for (const tmpDir of tempDirs) {
                 fs.rmSync(tmpDir, { recursive: true, force: true });

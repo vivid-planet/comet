@@ -74,7 +74,6 @@ The command is also run automatically as part of `install.sh`.
 | `--config <path>` | Load external repos from a JSON config file |
 | `--repo <url>` | Add an external repo (repeatable; combined with `--config` repos, processed after them) |
 | `--dry-run` | Print what would be installed without making any changes |
-| `--force` | Overwrite existing files or symlinks in the target directories |
 
 ### Examples
 
@@ -88,12 +87,6 @@ Install with an additional ad-hoc external repo:
 
 ```sh
 pnpm exec comet install-agent-skills --config agent-skills.json --repo git@github.com:org/extra-skills.git#main
-```
-
-Force a clean reinstall (e.g. after adding a new skill):
-
-```sh
-pnpm exec comet install-agent-skills --force
 ```
 
 ## Adding Skills to a Project
@@ -131,7 +124,7 @@ The command installs skills into two directories:
 | `.agents/skills/` | Cloud agents (e.g. GitHub Copilot Workspace) |
 | `.claude/skills/` | Local IDE agents (e.g. Claude Code) |
 
-Both directories are fully cleared and rebuilt on every run, ensuring a clean and reproducible state.
+Existing skills in these directories are overwritten when a skill with the same name is installed. Skills not managed by the command are left untouched.
 
 ## Conflict Resolution
 

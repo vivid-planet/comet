@@ -9,10 +9,9 @@ The command must:
 - Support installing additional skills from external SSH git repos (only their `package-skills/` folder), specified via `--repo` flags or a JSON config file (`--config`)
 - Apply conflict resolution: local skills win over external; first external repo wins over later ones
 - Report conflicts visibly
-- Be idempotent (clean install on every run)
+- Overwrite individual skills if they already exist in the target directories
 - Create symlinks (not copies) for local sources; copy files for external repos (cloned into tmp)
 - Support `--dry-run` to preview symlinks without making changes
-- Support `--force` to overwrite existing files or symlinks in the target directories
 
 ## Files to Create / Modify
 
@@ -38,7 +37,7 @@ Create `package-skills/.gitkeep` and `project-skills/.gitkeep` at the repo root 
 
 ```typescript
 /* eslint-disable no-console */
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { Command } from "commander";
 import * as fs from "fs";
 import * as os from "os";
@@ -53,7 +52,6 @@ export interface SkillSource {
 
 export interface InstallOptions {
     dryRun: boolean;
-    force: boolean;
 }
 
 function parseRepoUrl(rawUrl: string): { repoUrl: string; ref: string | undefined } {
@@ -69,20 +67,20 @@ function cloneRepo(rawUrl: string): string {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "comet-agent-skills-"));
 
     // Use sparse checkout to fetch only the package-skills/ folder
-    execSync(`git init ${tmpDir}`, { stdio: "pipe" });
-    execSync(`git -C ${tmpDir} remote add origin -- ${repoUrl}`, { stdio: "pipe" });
-    execSync(`git -C ${tmpDir} config core.sparseCheckout true`, { stdio: "pipe" });
+    execFileSync("git", ["init", tmpDir], { stdio: "pipe" });
+    execFileSync("git", ["-C", tmpDir, "remote", "add", "origin", "--", repoUrl], { stdio: "pipe" });
+    execFileSync("git", ["-C", tmpDir, "config", "core.sparseCheckout", "true"], { stdio: "pipe" });
     fs.writeFileSync(path.join(tmpDir, ".git", "info", "sparse-checkout"), "package-skills/\n");
 
     const fetchRef = ref ?? "HEAD";
     try {
         console.log(`Fetching ${repoUrl} ref "${fetchRef}" (sparse, package-skills/ only)...`);
-        execSync(`git -C ${tmpDir} fetch --depth 1 origin ${fetchRef}`, { stdio: "pipe" });
-        execSync(`git -C ${tmpDir} checkout FETCH_HEAD`, { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "fetch", "--depth", "1", "origin", fetchRef], { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "checkout", "FETCH_HEAD"], { stdio: "pipe" });
     } catch {
         console.log(`Shallow fetch failed for ref "${fetchRef}"; falling back to full fetch...`);
-        execSync(`git -C ${tmpDir} fetch origin ${fetchRef}`, { stdio: "pipe" });
-        execSync(`git -C ${tmpDir} checkout FETCH_HEAD`, { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "fetch", "origin", fetchRef], { stdio: "pipe" });
+        execFileSync("git", ["-C", tmpDir, "checkout", "FETCH_HEAD"], { stdio: "pipe" });
     }
 
     return tmpDir;
@@ -105,7 +103,7 @@ function listSkillFolders(directory: string): string[] {
         .sort();
 }
 
-export function installSkills(sources: SkillSource[], targetDirs: string[], { dryRun, force }: InstallOptions): void {
+export function installSkills(sources: SkillSource[], targetDirs: string[], { dryRun }: InstallOptions): void {
     const installed = new Set<string>();
 
     for (const { label, directory, symlink } of sources) {
@@ -124,10 +122,6 @@ export function installSkills(sources: SkillSource[], targetDirs: string[], { dr
             for (const targetDir of targetDirs) {
                 const destPath = path.join(targetDir, folder);
                 const exists = pathExists(destPath);
-                if (exists && !force) {
-                    console.warn(`  SKIP: "${folder}" already exists in ${targetDir} (use --force to overwrite)`);
-                    continue;
-                }
                 if (dryRun) {
                     console.log(`  [dry-run] Would ${symlink ? "symlink" : "copy"}: ${srcPath} -> ${destPath}`);
                 } else {
@@ -170,9 +164,8 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
         [] as string[],
     )
     .option("--dry-run", "Show which symlinks/copies would be created without making changes", false)
-    .option("--force", "Overwrite existing files or symlinks in the target directories", false)
-    .action(async (options: { config?: string; repo: string[]; dryRun: boolean; force: boolean }) => {
-        const { config: configPath, repo: repoFlags, dryRun, force } = options;
+    .action(async (options: { config?: string; repo: string[]; dryRun: boolean }) => {
+        const { config: configPath, repo: repoFlags, dryRun } = options;
 
         const configRepos: string[] = [];
         if (configPath) {
@@ -188,12 +181,9 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
         const cwd = process.cwd();
         const targetDirs = [path.join(cwd, ".agents", "skills"), path.join(cwd, ".claude", "skills")];
 
-        if (!dryRun) {
-            // Clear and recreate target directories (clean install)
-            for (const dir of targetDirs) {
-                fs.rmSync(dir, { recursive: true, force: true });
-                fs.mkdirSync(dir, { recursive: true });
-            }
+        // Ensure target directories exist (without clearing existing contents)
+        for (const dir of targetDirs) {
+            fs.mkdirSync(dir, { recursive: true });
         }
 
         // Priority order: project-skills > package-skills > external repos (in arg order)
@@ -213,7 +203,7 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
                     symlink: false,
                 });
             }
-            installSkills(sources, targetDirs, { dryRun, force });
+            installSkills(sources, targetDirs, { dryRun });
         } finally {
             for (const tmpDir of tempDirs) {
                 fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -284,11 +274,11 @@ Installs agent skill files from local `project-skills/` and `package-skills/` di
 - **Priority order**: `project-skills` > `package-skills` > external repos — project-specific overrides framework defaults
 - **Symlinks for local sources**: Local `project-skills/` and `package-skills/` skill folders are symlinked so edits are reflected immediately without re-running the command
 - **Copies for external repos**: Skill folders from cloned repos are copied recursively (the tmp clone is deleted after the run, so symlinks would dangle)
-- **Clean install**: Target dirs are cleared on each run for idempotency (skipped in `--dry-run` mode)
+- **Incremental install**: Target dirs are not cleared; individual skills are overwritten if they already exist
 - **`--config <path>`**: Loads a JSON file with a `repos` array; repos from config are processed before `--repo` flags
 - **`--repo <url>`**: Repeatable flag for ad-hoc repo overrides on top of the config file; supports `url#ref` syntax
 - **`--dry-run`**: Prints what would be symlinked/copied without touching the filesystem
-- **`--force`**: Removes an existing file/symlink at the destination before writing; without it, existing entries are skipped with a warning
+- **Always overwrite**: Existing entries at the destination are always removed before writing; combined with the clean install behavior, this ensures a fully reproducible state
 - **Sparse checkout**: Uses `core.sparseCheckout` with `package-skills/` path to fetch only that directory from external repos
 - **Shallow fetch fallback**: Tries `--depth 1` first (works for branches/tags), falls back to full fetch for commit hashes
 - **Folder-based skills**: Each skill is a directory (per the [Agent Skills specification](https://agentskills.io/specification)) containing at minimum a `SKILL.md` file; the command operates on directories, not individual files
@@ -303,6 +293,5 @@ Installs agent skill files from local `project-skills/` and `package-skills/` di
 4. Add a test skill folder `package-skills/test-skill/` with a `SKILL.md` file and verify a symlink to the folder appears in `.agents/skills/` and `.claude/skills/`
 5. Test conflict: same folder name in both `project-skills/` and `package-skills/` → should log a CONFLICT warning and only install from `project-skills/`
 6. Test `--dry-run`: no files/symlinks should be created, output should list what would happen
-7. Test `--force`: run twice; second run should overwrite without warnings
-8. Test `--config agent-skills.json`: repos listed in the config file should be fetched (only their `package-skills/` folder)
+7. Test `--config agent-skills.json`: repos listed in the config file should be fetched (only their `package-skills/` folder)
 9. Test `--repo git@github.com:org/repo.git#main`: only `package-skills/` of that repo should be fetched

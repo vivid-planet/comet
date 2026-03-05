@@ -7,7 +7,7 @@ import { type InstallOptions, installSkills, type SkillSource } from "./install-
 
 vi.mock("fs");
 
-const defaultOptions: InstallOptions = { dryRun: false, force: true };
+const defaultOptions: InstallOptions = { dryRun: false };
 const targetDirs = [".agents/skills", ".claude/skills"];
 
 /**
@@ -124,7 +124,7 @@ describe("installSkills – dry-run mode", () => {
         mockFilesystem({ "/local/package-skills": ["my-skill"] });
 
         const sources: SkillSource[] = [{ label: "local package-skills/", directory: "/local/package-skills", symlink: true }];
-        installSkills(sources, targetDirs, { dryRun: true, force: false });
+        installSkills(sources, targetDirs, { dryRun: true });
 
         expect(fs.symlinkSync).not.toHaveBeenCalled();
         expect(fs.cpSync).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe("installSkills – dry-run mode", () => {
         mockFilesystem({ "/local/package-skills": ["my-skill"] });
 
         const sources: SkillSource[] = [{ label: "local package-skills/", directory: "/local/package-skills", symlink: true }];
-        installSkills(sources, targetDirs, { dryRun: true, force: false });
+        installSkills(sources, targetDirs, { dryRun: true });
 
         expect(console.log).toHaveBeenCalledWith(expect.stringContaining("[dry-run]"));
         expect(console.log).toHaveBeenCalledWith(expect.stringContaining("symlink"));
@@ -145,30 +145,19 @@ describe("installSkills – dry-run mode", () => {
         mockFilesystem({ "/remote/package-skills": ["remote-skill"] });
 
         const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/package-skills", symlink: false }];
-        installSkills(sources, targetDirs, { dryRun: true, force: false });
+        installSkills(sources, targetDirs, { dryRun: true });
 
         expect(console.log).toHaveBeenCalledWith(expect.stringContaining("[dry-run]"));
         expect(console.log).toHaveBeenCalledWith(expect.stringContaining("copy"));
     });
 });
 
-describe("installSkills – force mode", () => {
-    it("skips existing destinations and logs a SKIP warning when force is false", () => {
+describe("installSkills – overwrites existing destinations", () => {
+    it("removes existing destination before writing", () => {
         mockFilesystem({ "/local/package-skills": ["my-skill"] }, [".agents/skills/my-skill", ".claude/skills/my-skill"]);
 
         const sources: SkillSource[] = [{ label: "local package-skills/", directory: "/local/package-skills", symlink: true }];
-        installSkills(sources, targetDirs, { dryRun: false, force: false });
-
-        expect(fs.symlinkSync).not.toHaveBeenCalled();
-        expect(fs.rmSync).not.toHaveBeenCalled();
-        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('SKIP: "my-skill"'));
-    });
-
-    it("removes existing destination before writing when force is true", () => {
-        mockFilesystem({ "/local/package-skills": ["my-skill"] }, [".agents/skills/my-skill", ".claude/skills/my-skill"]);
-
-        const sources: SkillSource[] = [{ label: "local package-skills/", directory: "/local/package-skills", symlink: true }];
-        installSkills(sources, targetDirs, { dryRun: false, force: true });
+        installSkills(sources, targetDirs, defaultOptions);
 
         expect(fs.rmSync).toHaveBeenCalledWith(".agents/skills/my-skill", { recursive: true, force: true });
         expect(fs.rmSync).toHaveBeenCalledWith(".claude/skills/my-skill", { recursive: true, force: true });
