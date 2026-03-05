@@ -16,9 +16,8 @@ This means staging and production would share the same values, which is incorrec
 
 **Use site configs or a custom provider instead.**
 COMET provides a site config mechanism that allows you to pass environment-specific configuration at runtime.
-See [Site Configs](../3-features-modules/site-configs.md) for details.
 
-## `process.env.*` in `next.config.mjs` is not supported
+## `process.env.*` in the Next.js config file is not supported
 
 The Next.js configuration file (`next.config.mjs`) is evaluated at build time.
 Any `process.env.*` access in this file reads values from the CI build environment, not from the target deployment environment.
