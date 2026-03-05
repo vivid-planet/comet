@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Video } from "@comet/admin-icons";
 import { Box } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
@@ -102,7 +101,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     },
 
     replaceDependenciesInOutput: (output, replacements) => {
-        const clonedOutput: DamVideoBlockInput = deepClone(output);
+        const clonedOutput: DamVideoBlockInput = structuredClone(output);
         const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
 
         if (replacement) {

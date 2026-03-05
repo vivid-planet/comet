@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Crop } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -135,7 +134,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     },
 
     replaceDependenciesInOutput: (output, replacements) => {
-        const clonedOutput: PixelImageBlockInput = deepClone(output);
+        const clonedOutput: PixelImageBlockInput = structuredClone(output);
         const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
 
         if (replacement) {

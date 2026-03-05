@@ -21,7 +21,7 @@ export type DateTimeRange = {
 export type DateTimeRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
-    root: ComponentType<MuiDateTimeRangePickerProps<Date, true>>;
+    root: ComponentType<MuiDateTimeRangePickerProps>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -49,7 +49,7 @@ export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDateTimeRangePickerProps<Date, true>, "value" | "onChange">;
+} & Omit<MuiDateTimeRangePickerProps, "value" | "onChange">;
 
 /**
  * The DateTimeRangePicker component allows users to select a date-time range from a combined picker interface.
@@ -113,7 +113,7 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
                 slotProps={{
                     ...slotProps?.root?.slotProps,
                     textField: (ownerState) => {
-                        const textFieldProps = {
+                        const textFieldProps: Record<string, any> = {
                             ...slotProps?.root?.slotProps?.textField,
                             ownerState,
                         };
@@ -161,7 +161,7 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
 const LazyRoot = lazy(async () => {
     const module = await import("@mui/x-date-pickers-pro");
 
-    const Root = createComponentSlot(module.DateTimeRangePicker<Date, true>)<DateTimeRangePickerClassKey>({
+    const Root = createComponentSlot(module.DateTimeRangePicker)<DateTimeRangePickerClassKey>({
         componentName: "DateTimeRangePicker",
         slotName: "root",
     })(css`
@@ -175,7 +175,7 @@ const LazyRoot = lazy(async () => {
     `);
 
     return {
-        default: (props: MuiDateTimeRangePickerProps<Date, true>) => <Root {...props} />,
+        default: (props: MuiDateTimeRangePickerProps) => <Root {...props} />,
     };
 });
 

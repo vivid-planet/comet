@@ -15,9 +15,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
-import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
+import { DataGrid, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

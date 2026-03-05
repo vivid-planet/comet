@@ -25,7 +25,6 @@ import {
     useGridRootProps,
     useGridSelector,
 } from "@mui/x-data-grid";
-import { type DataGridProcessedProps } from "@mui/x-data-grid/internals";
 import { type ReactNode, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -36,6 +35,7 @@ import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 const panelTypeTitle: Record<GridPreferencePanelsValue, ReactNode> = {
     [GridPreferencePanelsValue.filters]: <FormattedMessage id="dataGrid.panel.filters" defaultMessage="Filters" />,
     [GridPreferencePanelsValue.columns]: <FormattedMessage id="dataGrid.panel.columns" defaultMessage="Columns" />,
+    [GridPreferencePanelsValue.aiAssistant]: null,
 };
 
 export type DataGridPanelClassKey =
@@ -224,7 +224,7 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     }
 
     return (
-        <DesktopGridPanel ownerState={rootProps} open={open} {...slotProps?.desktopGridPanel}>
+        <DesktopGridPanel ownerState={rootProps as any} open={open} {...slotProps?.desktopGridPanel}>
             {children}
             <DesktopPanelFooterDivider {...slotProps?.desktopPanelFooterDivider} />
             <DesktopPanelFooter {...slotProps?.desktopPanelFooter}>
@@ -251,7 +251,7 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     );
 };
 
-const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey, DataGridProcessedProps>({
+const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey>({
     componentName: "DataGridPanel",
     slotName: "desktopGridPanel",
 })(css`

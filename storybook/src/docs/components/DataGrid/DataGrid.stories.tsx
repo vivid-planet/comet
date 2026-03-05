@@ -575,7 +575,7 @@ export const GridColumnTypes = {
 
 export const _CrudMoreActionsMenu = {
     render: () => {
-        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({ type: "include", ids: new Set() });
         const dataGridProps = useDataGridRemote();
 
         function DemoToolBar() {
@@ -583,7 +583,7 @@ export const _CrudMoreActionsMenu = {
                 <DataGridToolbar>
                     <FillSpace />
                     <CrudMoreActionsMenu
-                        selectionSize={selectionModel.length}
+                        selectionSize={selectionModel.ids.size}
                         overallActions={[
                             {
                                 label: "Export to excel",

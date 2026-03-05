@@ -45,12 +45,10 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                 if (!column.disableExport) {
                     let value = row[column.field];
                     if (column.valueGetter) {
-                        // @ts-expect-error `valueGetter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
-                        value = column.valueGetter(value, row) ?? "";
+                        value = (column.valueGetter as any)(value, row, column, undefined) ?? "";
                     }
                     if (column.valueFormatter) {
-                        // @ts-expect-error `valueFormatter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
-                        value = column.valueFormatter(value, row) ?? "";
+                        value = (column.valueFormatter as any)(value, row, column, undefined) ?? "";
                     }
 
                     if (

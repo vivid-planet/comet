@@ -8,7 +8,7 @@ import {
     type Theme,
     useThemeProps,
 } from "@mui/material";
-import { type GridStateColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
+import { type GridStateColDef } from "@mui/x-data-grid/internals";
 import { GridPinnedColumnPosition, useGridApiContext } from "@mui/x-data-grid-pro";
 import { type ChangeEvent, type FunctionComponent } from "react";
 

@@ -1,10 +1,12 @@
+import { type GridRenderCellParams } from "@mui/x-data-grid";
+
 import { type GridColDef } from "./GridColDef";
 
-export const renderStaticSelectCell: GridColDef["renderCell"] = ({ value, colDef }) => {
+export const renderStaticSelectCell = ({ value, colDef }: GridRenderCellParams) => {
     // TODO: find a better solution than as cast
     const gridColDef = colDef as GridColDef;
     if (Array.isArray(gridColDef.valueOptions)) {
-        const renderCellValue = gridColDef.valueOptions.find((option) => {
+        const renderCellValue = gridColDef.valueOptions.find((option: any) => {
             return typeof option === "object" && option.value === value ? value.toString() : "";
         });
 

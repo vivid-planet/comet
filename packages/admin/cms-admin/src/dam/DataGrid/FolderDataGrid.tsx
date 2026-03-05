@@ -360,7 +360,7 @@ const FolderDataGrid = ({
     const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
         const newMap: DamItemSelectionMap = new Map();
 
-        newSelectionModel.forEach((selectedId) => {
+        newSelectionModel.ids.forEach((selectedId) => {
             const typedId = selectedId as string;
 
             if (damSelectionActionsApi.selectionMap.has(typedId)) {
@@ -610,7 +610,7 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+                    rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{

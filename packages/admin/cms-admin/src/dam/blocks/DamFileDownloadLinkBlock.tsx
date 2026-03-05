@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
 import { Divider, MenuItem } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
@@ -86,7 +85,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
     },
 
     replaceDependenciesInOutput: (output, replacements) => {
-        const clonedOutput: DamFileDownloadLinkBlockInput = deepClone(output);
+        const clonedOutput: DamFileDownloadLinkBlockInput = structuredClone(output);
         const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.fileId);
 
         if (replacement) {
