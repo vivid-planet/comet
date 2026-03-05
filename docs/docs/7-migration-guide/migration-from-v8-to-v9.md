@@ -155,9 +155,9 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 
 ## Admin
 
-### Update Comet dependencies
+### Update Comet and peer dependencies
 
-Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0`:
+Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` and update peer dependencies:
 
 ```diff title="admin/package.json"
 {
@@ -172,6 +172,10 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0`:
 +       "@comet/cms-admin": "9.0.0",
 -       "rdndmb-html5-to-touch": "^8.1.2",
 +       "rdndmb-html5-to-touch": "^9.0.0",
+-       "react": "^18.3.1",
+-       "react-dom": "^18.3.1",
++       "react": "^19.2.0",
++       "react-dom": "^19.2.0",
 -       "react-dnd-multi-backend": "^8.1.2",
 +       "react-dnd-multi-backend": "^9.0.0",
 -       "react-intl": "^6.8.9",
@@ -184,11 +188,39 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0`:
 +       "@comet/cli": "9.0.0",
 -       "@comet/eslint-config": "^8.0.0",
 +       "@comet/eslint-config": "9.0.0",
+-       "@types/react": "^18.3.23",
+-       "@types/react-dom": "^18.3.7",
++       "@types/react": "^19.2.14",
++       "@types/react-dom": "^19.2.3",
     }
 }
 ```
 
 Update any other `@comet/*` packages your project uses (e.g., `@comet/admin-color-picker`, `@comet/admin-rte`, `@comet/brevo-admin`) to `9.0.0` as well.
+Ensure that all other dependencies are compatible with React 19.
+
+For `react-final-form`, add the following `overrides` to your `package.json`:
+
+```diff title="admin/package.json"
+{
++   "overrides": {
++        "react-final-form": {
++            "react": "^19.2.4"
++        },
++        "react-final-form-arrays": {
++            "react": "^19.2.4"
++        }
++    },
+}
+```
+
+:::info Why do we need these overrides?
+
+The latest Final Form version does include support for React 19.
+However, it was rewritten to TypeScript using AI, which introduced some incompatibilities.
+Since the project isn't actively maintained anymore and we're planning to switch to react-hook-form, we decided to not upgrade and override the supported React version instead.
+
+:::
 
 Then, install the updated dependencies:
 
@@ -240,49 +272,6 @@ This is necessary to support importing from Admin packages (e.g, `import { GridC
 :::
 
 ### Upgrade to React 19
-
-Update `react` and `react-dom` to version 19:
-
-```diff title="admin/package.json"
-{
-    "dependencies": {
--       "react": "^18.3.1",
--       "react-dom": "^18.3.1",
-+       "react": "^19.2.0",
-+       "react-dom": "^19.2.0",
-    },
-    "devDependencies": {
--       "@types/react": "^18.3.23",
--       "@types/react-dom": "^18.3.7",
-+       "@types/react": "^19.2.14",
-+       "@types/react-dom": "^19.2.3",
-    }
-}
-```
-
-Ensure that other packages that depend on React are also updated to versions compatible with React 19.
-For `react-final-form`, add the following `overrides` to your `package.json`:
-
-```diff title="admin/package.json"
-{
-+   "overrides": {
-+        "react-final-form": {
-+            "react": "^19.2.4"
-+        },
-+        "react-final-form-arrays": {
-+            "react": "^19.2.4"
-+        }
-+    },
-}
-```
-
-:::info Why do we need these overrides?
-
-The latest Final Form version does include support for React 19.
-However, it was rewritten to TypeScript using AI, which introduced some incompatibilities.
-Since the project isn't actively maintained anymore and we're planning to switch to react-hook-form, we decided to not upgrade and override the supported React version instead.
-
-:::
 
 Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
 
@@ -464,15 +453,23 @@ DateTimePicker:
 
 ## Site
 
-### Update Comet dependencies
+### Update Comet and peer dependencies
 
-Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0`:
+Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0` and update peer dependencies:
 
 ```diff title="site/package.json"
 {
     "dependencies": {
 -       "@comet/site-nextjs": "^8.0.0",
 +       "@comet/site-nextjs": "9.0.0",
+-       "@next/bundle-analyzer": "^14.2.30",
++       "@next/bundle-analyzer": "^16.1.6",
+-       "next": "^14.2.30",
++       "next": "^16.1.6",
+-       "react": "^18.3.1",
+-       "react-dom": "^18.3.1",
++       "react": "^19.2.0",
++       "react-dom": "^19.2.0",
 -       "react-intl": "^6.8.9",
 +       "react-intl": "^7.1.9",
     },
@@ -481,33 +478,6 @@ Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0`:
 +       "@comet/cli": "9.0.0",
 -       "@comet/eslint-config": "^8.0.0",
 +       "@comet/eslint-config": "9.0.0",
-    }
-}
-```
-
-Then, install the updated dependencies:
-
-```sh
-npm install
-```
-
-### Upgrade peer dependencies
-
-Upgrade all your dependencies to support Next.js v16.
-
-```diff title=site/package.json
-{
-    "dependencies": {
--       "@next/bundle-analyzer": "^14.2.30",
-+       "@next/bundle-analyzer": "^16.1.6",
--       "next": "^14.2.30",
--       "react": "^18.3.1",
--       "react-dom": "^18.3.1",
-+       "next": "^16.1.6",
-+       "react": "^19.2.0",
-+       "react-dom": "^19.2.0",
-    },
-    "devDependencies": {
 -       "@types/react": "^18.3.23",
 -       "@types/react-dom": "^18.3.7",
 +       "@types/react": "^19.2.0",
@@ -515,6 +485,8 @@ Upgrade all your dependencies to support Next.js v16.
     }
 }
 ```
+
+Ensure that all other dependencies are compatible with React 19 and Next.js 16.
 
 After updating the dependencies, remove `node_modules/` and `package-lock.json` (or your lock file) before reinstalling to avoid peer dependency conflicts:
 
