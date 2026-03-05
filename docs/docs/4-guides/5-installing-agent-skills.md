@@ -42,7 +42,7 @@ and run this script in `install.sh`:
 
 ## What is a skill?
 
-A skill is a **folder** containing at minimum a `SKILL.md` file. The folder name is the skill name. For example:
+A skill is a folder containing at minimum a `SKILL.md` file. The folder name is the skill name. For example:
 
 ```
 project-skills/
@@ -72,7 +72,7 @@ Local skills are **symlinked**, so edits to `project-skills/` are reflected imme
 
 ## External repos
 
-Skills from external git repositories are listed in `agent-skills.json`:
+You can install skills from external git repositories. This allows you to consume skills provided by libraries. The source repos are listed in `agent-skills.json`:
 
 ```json
 {
