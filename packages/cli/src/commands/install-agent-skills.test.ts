@@ -44,7 +44,7 @@ afterEach(() => {
 });
 
 describe("installSkills – symlink vs copy", () => {
-    it("symlinks local skill folders into each target dir", () => {
+    it("symlinks skill folders into target folder if symlink: true", () => {
         mockFilesystem({ "/local/package-skills": ["my-skill"] });
 
         const sources: SkillSource[] = [{ label: "local package-skills/", directory: "/local/package-skills", symlink: true }];
@@ -56,7 +56,7 @@ describe("installSkills – symlink vs copy", () => {
         expect(fs.cpSync).not.toHaveBeenCalled();
     });
 
-    it("copies external skill folders into each target dir", () => {
+    it("copies skill folders into target folder if symlink: false", () => {
         mockFilesystem({ "/remote/package-skills": ["remote-skill"] });
 
         const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/package-skills", symlink: false }];

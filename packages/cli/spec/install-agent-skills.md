@@ -278,7 +278,7 @@ Installs agent skill files from local `project-skills/` and `package-skills/` di
 - **`--config <path>`**: Loads a JSON file with a `repos` array; repos from config are processed before `--repo` flags
 - **`--repo <url>`**: Repeatable flag for ad-hoc repo overrides on top of the config file; supports `url#ref` syntax
 - **`--dry-run`**: Prints what would be symlinked/copied without touching the filesystem
-- **Always overwrite**: Existing entries at the destination are always removed before writing; combined with the clean install behavior, this ensures a fully reproducible state
+- **Always overwrite**: Existing entries at the destination are always removed before writing
 - **Sparse checkout**: Uses `core.sparseCheckout` with `package-skills/` path to fetch only that directory from external repos
 - **Shallow fetch fallback**: Tries `--depth 1` first (works for branches/tags), falls back to full fetch for commit hashes
 - **Folder-based skills**: Each skill is a directory (per the [Agent Skills specification](https://agentskills.io/specification)) containing at minimum a `SKILL.md` file; the command operates on directories, not individual files
@@ -294,4 +294,4 @@ Installs agent skill files from local `project-skills/` and `package-skills/` di
 5. Test conflict: same folder name in both `project-skills/` and `package-skills/` → should log a CONFLICT warning and only install from `project-skills/`
 6. Test `--dry-run`: no files/symlinks should be created, output should list what would happen
 7. Test `--config agent-skills.json`: repos listed in the config file should be fetched (only their `package-skills/` folder)
-9. Test `--repo git@github.com:org/repo.git#main`: only `package-skills/` of that repo should be fetched
+8. Test `--repo git@github.com:org/repo.git#main`: only `package-skills/` of that repo should be fetched
