@@ -1,5 +1,12 @@
 # @comet/admin-generator
 
+## 8.18.0
+
+### Patch Changes
+
+- b35454a: Fix `asyncSelect` form field generation and `staticSelect` grid column generation for nested fields from 1:1 relations (e.g., `"product.category"`)
+- 69324f9: Grid: Fix emitting string literals for non-string `initialFilter` values
+
 ## 8.17.1
 
 ## 8.17.0

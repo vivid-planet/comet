@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes
