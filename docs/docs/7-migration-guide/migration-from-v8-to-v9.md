@@ -5,7 +5,63 @@ sidebar_position: -9
 
 # Migrating from v8 to v9
 
+## Root
+
+### Update Comet dependencies
+
+Update the `@comet/*` dependencies in the root `package.json` to version `9.0.0`:
+
+```diff title="package.json"
+{
+    "devDependencies": {
+-       "@comet/cli": "^8.0.0",
++       "@comet/cli": "9.0.0",
+    }
+}
+```
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
+
+### Verify lint passes
+
+```sh
+npm run lint:root
+```
+
 ## API
+
+### Update Comet dependencies
+
+Update all `@comet/*` dependencies in `api/package.json` to version `9.0.0`:
+
+```diff title="api/package.json"
+{
+    "dependencies": {
+-       "@comet/cms-api": "^8.0.0",
++       "@comet/cms-api": "9.0.0",
+-       "@comet/mail-react": "^8.0.0",
++       "@comet/mail-react": "9.0.0",
+    },
+    "devDependencies": {
+-       "@comet/api-generator": "^8.0.0",
++       "@comet/api-generator": "9.0.0",
+-       "@comet/eslint-config": "^8.0.0",
++       "@comet/eslint-config": "9.0.0",
+    }
+}
+```
+
+Update any other `@comet/*` packages your project uses (e.g., `@comet/brevo-api`) to `9.0.0` as well.
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
 
 ### API Generator: Remove the `targetDirectory` option
 
@@ -103,7 +159,87 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 - }
 ```
 
+### Verify lint passes
+
+```sh
+cd api
+npm run lint
+```
+
 ## Admin
+
+### Update Comet and peer dependencies
+
+Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` and update peer dependencies:
+
+```diff title="admin/package.json"
+{
+    "dependencies": {
+-       "@comet/admin": "^8.0.0",
++       "@comet/admin": "9.0.0",
+-       "@comet/admin-date-time": "^8.0.0",
++       "@comet/admin-date-time": "9.0.0",
+-       "@comet/admin-icons": "^8.0.0",
++       "@comet/admin-icons": "9.0.0",
+-       "@comet/cms-admin": "^8.0.0",
++       "@comet/cms-admin": "9.0.0",
+-       "rdndmb-html5-to-touch": "^8.1.2",
++       "rdndmb-html5-to-touch": "^9.0.0",
+-       "react": "^18.3.1",
+-       "react-dom": "^18.3.1",
++       "react": "^19.2.0",
++       "react-dom": "^19.2.0",
+-       "react-dnd-multi-backend": "^8.1.2",
++       "react-dnd-multi-backend": "^9.0.0",
+-       "react-intl": "^6.8.9",
++       "react-intl": "^7.1.9",
+    },
+    "devDependencies": {
+-       "@comet/admin-generator": "^8.0.0",
++       "@comet/admin-generator": "9.0.0",
+-       "@comet/cli": "^8.0.0",
++       "@comet/cli": "9.0.0",
+-       "@comet/eslint-config": "^8.0.0",
++       "@comet/eslint-config": "9.0.0",
+-       "@types/react": "^18.3.23",
+-       "@types/react-dom": "^18.3.7",
++       "@types/react": "^19.2.14",
++       "@types/react-dom": "^19.2.3",
+    }
+}
+```
+
+Update any other `@comet/*` packages your project uses (e.g., `@comet/admin-color-picker`, `@comet/admin-rte`, `@comet/brevo-admin`) to `9.0.0` as well.
+Ensure that all other dependencies are compatible with React 19.
+
+For `react-final-form`, add the following `overrides` to your `package.json`:
+
+```diff title="admin/package.json"
+{
++   "overrides": {
++        "react-final-form": {
++            "react": "^19.2.4"
++        },
++        "react-final-form-arrays": {
++            "react": "^19.2.4"
++        }
++    },
+}
+```
+
+:::info Why do we need these overrides?
+
+The latest Final Form version does include support for React 19.
+However, it was rewritten to TypeScript using AI, which introduced some incompatibilities.
+Since the project isn't actively maintained anymore and we're planning to switch to react-hook-form, we decided to not upgrade and override the supported React version instead.
+
+:::
+
+Then, install the updated dependencies:
+
+```sh
+npm install
+```
 
 ### Replace `DependencyList` with `DependenciesList` or `DependentsList`
 
@@ -150,64 +286,9 @@ This is necessary to support importing from Admin packages (e.g, `import { GridC
 
 ### Upgrade to React 19
 
-Update `react` and `react-dom` to version 19:
-
-```diff title="admin/package.json"
-{
-    "dependencies": {
--       "react": "^18.3.1",
--       "react-dom": "^18.3.1",
-+       "react": "^19.2.0",
-+       "react-dom": "^19.2.0",
-    },
-    "devDependencies": {
--       "@types/react": "^18.3.23",
--       "@types/react-dom": "^18.3.7",
-+       "@types/react": "^19.2.14",
-+       "@types/react-dom": "^19.2.3",
-    }
-}
-```
-
-Ensure that other packages that depend on React are also updated to versions compatible with React 19.
-For `react-final-form`, add the following `overrides` to your `package.json`:
-
-```diff title="admin/package.json"
-{
-+   "overrides": {
-+        "react-final-form": {
-+            "react": "^19.2.4"
-+        },
-+        "react-final-form-arrays": {
-+            "react": "^19.2.4"
-+        }
-+    },
-}
-```
-
-:::info Why do we need these overrides?
-
-The latest Final Form version does include support for React 19.
-However, it was rewritten to TypeScript using AI, which introduced some incompatibilities.
-Since the project isn't actively maintained anymore and we're planning to switch to react-hook-form, we decided to not upgrade and override the supported React version instead.
-
-:::
-
 Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
 
-### Tooltip-related Changes
-
-#### 🤖 Replace the `variant` prop with `color` in `Tooltip`
-
-:::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade@latest v9/admin/after-install/tooltip-replace-variant-prop.ts
-    ```
-
-:::
-
-<details>
+### Replace the `variant` prop with `color` in `Tooltip`
 
 The `variant` prop has been renamed to color and the options `neutral` and `primary` have been removed.
 Change the usage of `variant` to `color` and remove or replace the values `neutral` and `primary`.
@@ -233,9 +314,7 @@ Example:
  </Tooltip>
 ```
 
-</details>
-
-#### Replace `createHttpClient` with native fetch
+### Replace `createHttpClient` with native fetch
 
 The `createHttpClient` function has been removed. Use native fetch instead.
 
@@ -385,53 +464,40 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
+### Verify lint passes
+
+```sh
+cd admin
+npm run lint
+```
+
 ## Site
 
-### 🤖 Upgrade peer dependencies
+### Update Comet and peer dependencies
 
-The following upgrade script will update peer dependency versions and make some minor changes in the code.
+Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0` and update peer dependencies:
 
-:::note Execute the following upgrade script:
-
-```sh
-npx @comet/upgrade@latest v9/site/before-install
-```
-
-:::
-
-<details>
-
-<summary>Updates handled by this batch upgrade script</summary>
-
-#### ✅ Next.js
-
-Upgrade all your dependencies to support Next.js v15
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by
-
-```sh
-npx @comet/upgrade@latest v9/site/before-install/update-next-dependencies.ts
-```
-
-:::
-
-```diff title=site/package.json
+```diff title="site/package.json"
 {
     "dependencies": {
+-       "@comet/site-nextjs": "^8.0.0",
++       "@comet/site-nextjs": "9.0.0",
 -       "@next/bundle-analyzer": "^14.2.30",
-+       "@next/bundle-analyzer": "^15.5.4",
++       "@next/bundle-analyzer": "^16.1.6",
 -       "next": "^14.2.30",
++       "next": "^16.1.6",
 -       "react": "^18.3.1",
 -       "react-dom": "^18.3.1",
-+       "next": "^15.5.4",
 +       "react": "^19.2.0",
 +       "react-dom": "^19.2.0",
+-       "react-intl": "^6.8.9",
++       "react-intl": "^7.1.9",
     },
     "devDependencies": {
+-       "@comet/cli": "^8.0.0",
++       "@comet/cli": "9.0.0",
+-       "@comet/eslint-config": "^8.0.0",
++       "@comet/eslint-config": "9.0.0",
 -       "@types/react": "^18.3.23",
 -       "@types/react-dom": "^18.3.7",
 +       "@types/react": "^19.2.0",
@@ -440,9 +506,14 @@ npx @comet/upgrade@latest v9/site/before-install/update-next-dependencies.ts
 }
 ```
 
-</details>
+Ensure that all other dependencies are compatible with React 19 and Next.js 16.
 
-</details>
+After updating the dependencies, remove `node_modules/` and `package-lock.json` (or your lock file) before reinstalling to avoid peer dependency conflicts:
+
+```sh
+rm -rf site/node_modules site/package-lock.json
+npm install
+```
 
 ### Add `next-env.d.ts` to `.gitignore`
 
@@ -567,4 +638,11 @@ export function createGraphQLFetch() {
         `${process.env.API_URL_INTERNAL}/graphql`,
     );
 }
+```
+
+### Verify lint passes
+
+```sh
+cd site
+npm run lint
 ```
