@@ -1,7 +1,8 @@
 import { gql } from "@comet/site-nextjs";
-import { type GQLRedirectScopeInput } from "@src/graphql.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData } from "@src/blocks.generated";
+import { type GQLPageTreeNodeScope, type GQLRedirectScopeInput } from "@src/graphql.generated";
 import type { PublicSiteConfig } from "@src/site-configs";
-import { getRedirectTargetUrl } from "@src/util/getRedirectTargetUrl";
+import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
 import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
@@ -101,7 +102,35 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 const redirect = domainRedirects.find((redirect) => normalizeHost(redirect.source) === normalizeHost(host));
 
                 if (redirect) {
-                    const destination = getRedirectTargetUrl(redirect.target.block, `https://${redirectSiteConfig.domains.main}`);
+                    const block = redirect.target.block;
+                    let destination: string | undefined;
+                    if (block) {
+                        switch (block.type) {
+                            case "internal": {
+                                const internalLink = block.props as InternalLinkBlockData;
+                                if (internalLink.targetPage) {
+                                    destination = `https://${redirectSiteConfig.domains.main}${createSitePath({
+                                        path: internalLink.targetPage.path,
+                                        scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
+                                    })}`;
+                                }
+                                break;
+                            }
+                            case "external":
+                                destination = (block.props as ExternalLinkBlockData).targetUrl;
+                                break;
+                            case "news": {
+                                const newsLink = block.props as NewsLinkBlockData;
+                                if (newsLink.news) {
+                                    destination = createSitePath({
+                                        path: `/news/${newsLink.news.slug}`,
+                                        scope: newsLink.news.scope,
+                                    });
+                                }
+                                break;
+                            }
+                        }
+                    }
 
                     if (destination) {
                         if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
@@ -131,7 +160,35 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                     throw new Error(`Got redirect to domain ${redirect.scope.domain}, but couldn't find corresponding site-config.`);
                 }
 
-                const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
+                const block = redirect.target.block;
+                let destination: string | undefined;
+                if (block) {
+                    switch (block.type) {
+                        case "internal": {
+                            const internalLink = block.props as InternalLinkBlockData;
+                            if (internalLink.targetPage) {
+                                destination = `https://${scopedSiteConfig.domains.main}${createSitePath({
+                                    path: internalLink.targetPage.path,
+                                    scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
+                                })}`;
+                            }
+                            break;
+                        }
+                        case "external":
+                            destination = (block.props as ExternalLinkBlockData).targetUrl;
+                            break;
+                        case "news": {
+                            const newsLink = block.props as NewsLinkBlockData;
+                            if (newsLink.news) {
+                                destination = createSitePath({
+                                    path: `/news/${newsLink.news.slug}`,
+                                    scope: newsLink.news.scope,
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
 
                 if (destination) {
                     if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
