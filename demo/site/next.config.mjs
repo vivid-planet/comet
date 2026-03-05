@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import cometConfig from "./src/comet-config.json" with { type: "json" };
 
 const withBundleAnalyzer = nextBundleAnalyzer({
+    // eslint-disable-next-line no-restricted-syntax -- ANALYZE is a build-time-only dev tool flag, not environment-specific
     enabled: process.env.ANALYZE === "true",
 });
 
@@ -16,9 +17,11 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 const nextConfig = {
     images: cometConfig.images,
     typescript: {
+        // eslint-disable-next-line no-restricted-syntax -- NODE_ENV is set by Next.js itself, not environment-specific
         ignoreBuildErrors: process.env.NODE_ENV === "production",
     },
     eslint: {
+        // eslint-disable-next-line no-restricted-syntax -- NODE_ENV is set by Next.js itself, not environment-specific
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
     },
     experimental: {
@@ -66,7 +69,9 @@ const nextConfig = {
             ],
         },
     ],
+    // eslint-disable-next-line no-restricted-syntax -- VALKEY_ENABLED is a server-start-time flag for cache handler setup
     cacheHandler: process.env.VALKEY_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
+    // eslint-disable-next-line no-restricted-syntax -- VALKEY_ENABLED is a server-start-time flag for cache handler setup
     cacheMaxMemorySize: process.env.VALKEY_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
     rewrites: () => {
         return {
@@ -83,7 +88,7 @@ const nextConfig = {
         if (!isServer) {
             config.module.rules.push({
                 test: /\.[jt]sx?$/,
-                include: [dirname(fileURLToPath(import.meta.url)) + "/src"],
+                include: [`${dirname(fileURLToPath(import.meta.url))}/src`],
                 use: [
                     {
                         loader: "@comet/site-nextjs/webpackPersistedQueriesLoader",
