@@ -19,8 +19,8 @@ COMET provides a site config mechanism that allows you to pass environment-speci
 
 ## `process.env.*` in the Next.js config file is not supported
 
-The Next.js configuration file (`next.config.mjs`) is evaluated at build time.
-Any `process.env.*` access in this file reads values from the CI build environment, not from the target deployment environment.
+The Next.js configuration file is evaluated at build time.
+Any `process.env.*` access that is evaluated during the build reads values from the CI build environment, not from the target deployment environment.
 This means configuration that varies between environments (e.g., API URLs, feature flags) cannot be reliably set via `process.env` in the Next.js config.
 
 **Move environment-specific configuration to site configs or runtime configuration.**
