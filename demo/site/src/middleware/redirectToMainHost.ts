@@ -1,5 +1,5 @@
 import { gql } from "@comet/site-nextjs";
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData } from "@src/blocks.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScope, type GQLRedirectScopeInput } from "@src/graphql.generated";
 import type { PublicSiteConfig } from "@src/site-configs";
 import { createSitePath } from "@src/util/createSitePath";
@@ -83,6 +83,37 @@ const matchesHostWithPattern = (siteConfig: PublicSiteConfig, host: string) => {
     return new RegExp(siteConfig.domains.pattern).test(host);
 };
 
+function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], targetBaseUrl: string): string | undefined {
+    if (!block) {
+        return undefined;
+    }
+    switch (block.type) {
+        case "internal": {
+            const internalLink = block.props as InternalLinkBlockData;
+            if (internalLink.targetPage) {
+                return `${targetBaseUrl}${createSitePath({
+                    path: internalLink.targetPage.path,
+                    scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
+                })}`;
+            }
+            break;
+        }
+        case "external":
+            return (block.props as ExternalLinkBlockData).targetUrl;
+        case "news": {
+            const newsLink = block.props as NewsLinkBlockData;
+            if (newsLink.news) {
+                return createSitePath({
+                    path: `/news/${newsLink.news.slug}`,
+                    scope: newsLink.news.scope,
+                });
+            }
+            break;
+        }
+    }
+    return undefined;
+}
+
 export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
         const headers = request.headers;
@@ -102,36 +133,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 const redirect = domainRedirects.find((redirect) => normalizeHost(redirect.source) === normalizeHost(host));
 
                 if (redirect) {
-                    const block = redirect.target.block;
-                    let destination: string | undefined;
-                    if (block) {
-                        switch (block.type) {
-                            case "internal": {
-                                const internalLink = block.props as InternalLinkBlockData;
-                                if (internalLink.targetPage) {
-                                    destination = `https://${redirectSiteConfig.domains.main}${createSitePath({
-                                        path: internalLink.targetPage.path,
-                                        scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
-                                    })}`;
-                                }
-                                break;
-                            }
-                            case "external":
-                                destination = (block.props as ExternalLinkBlockData).targetUrl;
-                                break;
-                            case "news": {
-                                const newsLink = block.props as NewsLinkBlockData;
-                                if (newsLink.news) {
-                                    destination = createSitePath({
-                                        path: `/news/${newsLink.news.slug}`,
-                                        scope: newsLink.news.scope,
-                                    });
-                                }
-                                break;
-                            }
-                        }
-                    }
-
+                    const destination = getRedirectTargetUrl(redirect.target.block, `https://${redirectSiteConfig.domains.main}`);
                     if (destination) {
                         if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
                             throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
@@ -160,35 +162,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                     throw new Error(`Got redirect to domain ${redirect.scope.domain}, but couldn't find corresponding site-config.`);
                 }
 
-                const block = redirect.target.block;
-                let destination: string | undefined;
-                if (block) {
-                    switch (block.type) {
-                        case "internal": {
-                            const internalLink = block.props as InternalLinkBlockData;
-                            if (internalLink.targetPage) {
-                                destination = `https://${scopedSiteConfig.domains.main}${createSitePath({
-                                    path: internalLink.targetPage.path,
-                                    scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
-                                })}`;
-                            }
-                            break;
-                        }
-                        case "external":
-                            destination = (block.props as ExternalLinkBlockData).targetUrl;
-                            break;
-                        case "news": {
-                            const newsLink = block.props as NewsLinkBlockData;
-                            if (newsLink.news) {
-                                destination = createSitePath({
-                                    path: `/news/${newsLink.news.slug}`,
-                                    scope: newsLink.news.scope,
-                                });
-                            }
-                            break;
-                        }
-                    }
-                }
+                const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
 
                 if (destination) {
                     if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
