@@ -1,0 +1,6 @@
+{
+    "repos": [
+        "git@github.com:thomasdax98/skill-demo-1.git#copilot/add-nacho-package-skill",
+        "git@github.com:thomasdax98/skill-demo-2.git"
+    ]
+}
