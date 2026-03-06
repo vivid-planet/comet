@@ -1,4 +1,4 @@
-import { createRecaptchaClient } from "./createRecaptchaClient";
+import { recaptchaClient, recaptchaResourceName } from "./createRecaptchaClient";
 
 interface Props {
     token: string;
@@ -7,7 +7,6 @@ interface Props {
 }
 
 export const assessRecaptchaToken = async ({ token, action, recaptchaKey }: Props): Promise<boolean> => {
-    const { recaptchaClient, recaptchaResourceName } = createRecaptchaClient();
     const [assessment] = await recaptchaClient.createAssessment({
         assessment: {
             event: {
