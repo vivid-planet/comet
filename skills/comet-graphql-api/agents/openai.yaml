@@ -1,0 +1,4 @@
+interface:
+  display_name: "Comet GraphQL API Creator"
+  short_description: "Generate or update a GraphQL CRUD API for a given entity (resolver, DTOs, filter, sort, args, paginated response, module registration)."
+  default_prompt: "Use $comet-create-graphql-api to generate a GraphQL API for the entity."
