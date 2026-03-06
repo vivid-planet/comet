@@ -111,7 +111,6 @@ Ask the user before creating a migration if they haven't mentioned it. Explain t
 - Adding an **optional/nullable** field (`@IsUndefinable()` + `@BlockField({ nullable: true })`).
 - Adding a new supported block to a `BlocksBlock` or `OneOfBlock`.
 - Adding new enum values (existing data unaffected).
-- Removing enum values only if no persisted data uses them.
 
 When in doubt, create a migration — it is always the safer choice. See [migration.md](migration.md) for the full decision matrix, class template, and annotated examples.
 
