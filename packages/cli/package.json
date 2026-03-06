@@ -37,7 +37,7 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
-        "@types/node": "^24.10.9",
+        "@types/node": "^24.10.15",
         "eslint": "^9.39.2",
         "npm-run-all2": "^8.0.4",
         "rimraf": "^6.1.2",
