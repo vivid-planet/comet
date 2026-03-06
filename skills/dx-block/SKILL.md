@@ -134,7 +134,6 @@ File: `{block-name}.block.ts` (kebab-case). Place in the blocks directory found 
 - `BlockData` uses `@BlockField()` for fields, `@ChildBlock(X)` for child blocks.
 - `BlockInput` uses validators + `@ChildBlockInput(X)` for child blocks; implement `transformToBlockData()` with `inputToData`.
 - Export with `createBlock(BlockData, BlockInput, "BlockName")`.
-- All string fields should be optional/nullable for savability — use `@IsUndefinable()` (from `@comet/cms-api`, not `@IsOptional()`) + `@BlockField({ nullable: true })`.
 - Enums require `@BlockField({ type: "enum", enum: MyEnum })` — never use `type: "enum"` for numeric options.
 - For list blocks: create the item block first, then `createListBlock({ block: ItemBlock }, "MyList")`.
 
