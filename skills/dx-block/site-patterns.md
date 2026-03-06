@@ -50,7 +50,7 @@ export const MyBlock = withPreview(
 
 ## DamImageBlock Site Wrapper
 
-The site layer does **not** use `DamImageBlock` from `@comet/cms-api`. It uses the site-specific wrapper, typically at `@src/common/blocks/DamImageBlock`:
+The site layer does **not** use `DamImageBlock` from a `@comet` package. It uses the site-specific wrapper, typically at `@src/common/blocks/DamImageBlock`:
 
 ```tsx
 // Wrong: import from cms-api
