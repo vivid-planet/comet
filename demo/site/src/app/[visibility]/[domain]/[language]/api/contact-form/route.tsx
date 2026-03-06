@@ -29,14 +29,9 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    if (!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
-        return NextResponse.json({ error: "ReCAPTCHA site key is not set" }, { status: 500 });
-    }
-
     const recaptchaTokenValid = await assessRecaptchaToken({
         token: validationResult.data.reCaptchaToken,
         action: "form_submit",
-        recaptchaKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     });
 
     if (!recaptchaTokenValid) {
