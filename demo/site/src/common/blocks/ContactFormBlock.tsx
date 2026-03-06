@@ -36,7 +36,7 @@ export const ContactFormBlock = withPreview(
         const params = useParams<{ visibility: string; domain: string; language: string }>();
         const language = params.language;
 
-        const recaptchaKey = useNextPublic("RECAPTCHA_KEY");
+        const recaptchaKey = useNextPublic("RECAPTCHA_SITE_KEY");
 
         const {
             control,
