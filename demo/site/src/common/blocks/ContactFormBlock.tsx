@@ -58,8 +58,19 @@ export const ContactFormBlock = withPreview(
         const onSubmit = async (formValues: ContactFormValues) => {
             let reCaptchaToken: string;
 
+            if (!recaptchaKey) {
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactFormBlock.missingRecaptchaKey",
+                        defaultMessage: "ReCAPTCHA key is missing.",
+                    }),
+                });
+                return;
+            }
+
             try {
-                reCaptchaToken = await getRecaptchaToken("form_submit", recaptchaKey || "");
+                reCaptchaToken = await getRecaptchaToken("form_submit", recaptchaKey);
             } catch (error) {
                 console.error(error);
                 setError("root.serverError", {
