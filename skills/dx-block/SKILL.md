@@ -54,16 +54,16 @@ Extract from the user's request:
     - **String** — plain text (`title`, `label`).
     - **Number** — numeric with min/max (`overlay`).
     - **Boolean** — toggle/switch (`showOverlay`).
-    - **Numeric select** — fixed numeric options. Use `@IsInt()` + `@BlockField()` in the API (not `type: "enum"`); use `createCompositeBlockSelectField` with number options in Admin. See [select.md](select.md).
-    - **Enum/select** — fixed string values (`variant`, `alignment`). See [select.md](select.md).
-    - **RichText** — formatted text. Choose shared `RichTextBlock` or a scoped inline one. See [rich-text.md](rich-text.md).
-    - **Image** — choose `DamImageBlock`, `PixelImageBlock`, `SvgImageBlock`, or a project-specific `MediaBlock`. See [image.md](image.md).
+    - **Numeric select** — fixed numeric options. Use `@IsInt()` + `@BlockField()` in the API (not `type: "enum"`); use `createCompositeBlockSelectField` with number options in Admin. See [select.md](references/select.md).
+    - **Enum/select** — fixed string values (`variant`, `alignment`). See [select.md](references/select.md).
+    - **RichText** — formatted text. Choose shared `RichTextBlock` or a scoped inline one. See [rich-text.md](references/rich-text.md).
+    - **Image** — choose `DamImageBlock`, `PixelImageBlock`, `SvgImageBlock`, or a project-specific `MediaBlock`. See [image.md](references/image.md).
     - **Child block** — any other existing block used as a property.
-    - **List** — multiple instances of a child block; requires a list block + item block pair. See [block-types.md](block-types.md).
+    - **List** — multiple instances of a child block; requires a list block + item block pair. See [block-types.md](references/block-types.md).
 3. **Registration target** — where the block is added. Default: `PageContentBlock` (and `ContentGroupBlock` if it exists). Ask if unclear.
 4. **Ambiguities** — if "image" is mentioned without specifics, or a referenced block may not exist, ask before proceeding.
 
-For block type decision guidance, see [block-types.md](block-types.md).
+For block type decision guidance, see [block-types.md](references/block-types.md).
 
 ---
 
@@ -112,15 +112,15 @@ Ask the user before creating a migration if they haven't mentioned it. Explain t
 - Adding a new supported block to a `BlocksBlock` or `OneOfBlock`.
 - Adding new enum values (existing data unaffected).
 
-When in doubt, create a migration — it is always the safer choice. See [migration.md](migration.md) for the full decision matrix, class template, and annotated examples.
+When in doubt, create a migration — it is always the safer choice. See [migration.md](references/migration.md) for the full decision matrix, class template, and annotated examples.
 
 ### Apply changes in order
 
 1. **API block** — update `BlockData` and `BlockInput` classes, decorators, validators.
-2. **Migration** — create and register if needed. Update `createBlock` third argument to the options object. See [migration.md](migration.md).
+2. **Migration** — create and register if needed. Update `createBlock` third argument to the options object. See [migration.md](references/migration.md).
 3. **Admin block** — update the `blocks` object: add/remove entries, labels, options.
 4. **Site block** (if exists) — update destructured fields and rendered output.
-5. **Block fixture** (if exists) — update `generateBlockInput()` to match changes. See [fixtures.md](fixtures.md).
+5. **Block fixture** (if exists) — update `generateBlockInput()` to match changes. See [fixtures.md](references/fixtures.md).
 6. **Verify consistency** — confirm every property key name matches across all three layers.
 
 ---
@@ -137,7 +137,7 @@ File: `{block-name}.block.ts` (kebab-case). Place in the blocks directory found 
 - Enums require `@BlockField({ type: "enum", enum: MyEnum })` — never use `type: "enum"` for numeric options.
 - For list blocks: create the item block first, then `createListBlock({ block: ItemBlock }, "MyList")`.
 
-For field decorators, validator reference, savability rules, and complete examples, see [api-patterns.md](api-patterns.md).
+For field decorators, validator reference, savability rules, and complete examples, see [api-patterns.md](references/api-patterns.md).
 
 ---
 
@@ -157,7 +157,7 @@ File: `{BlockName}Block.tsx` (PascalCase). Place in the blocks directory found i
 - **`label` vs `title`:** when the helper has a `label`, omit `title` on the block entry. When it has no `label`, provide `title` on the entry. They are mutually exclusive.
 - For list blocks: use `createListBlock` from `@comet/cms-admin` with `name`, `displayName`, `block`, `itemName`, `itemsName`.
 
-For the full helper API, `BlockCategory` enum, and complete examples, see [admin-patterns.md](admin-patterns.md).
+For the full helper API, `BlockCategory` enum, and complete examples, see [admin-patterns.md](references/admin-patterns.md).
 
 ---
 
@@ -170,11 +170,11 @@ File: `{BlockName}Block.tsx` (PascalCase). Place in the blocks directory found i
 - Wrap with `withPreview(Component, { label: "BlockName" })`.
 - Type props as `PropsWithData<{BlockName}BlockData>` — import from `@src/blocks.generated`.
 - Use `hasRichTextBlockContent` guard before rendering RichText. Never wrap `RichTextBlock` in a `Typography` component.
-- `DamImageBlock` is **not** exported from `@comet/site-nextjs` — use the project-specific wrapper. See [image.md](image.md).
-- Always validate `aspectRatio` against `allowedImageAspectRatios` in the API config. See [image.md](image.md).
+- `DamImageBlock` is **not** exported from `@comet/site-nextjs` — use the project-specific wrapper. See [image.md](references/image.md).
+- Always validate `aspectRatio` against `allowedImageAspectRatios` in the API config. See [image.md](references/image.md).
 - The `supportedBlocks` object (for `BlocksBlock`/`PageContent` site wrapper) must be defined at module level, not inside the component.
 
-For `withPreview`, `OneOfBlock`/`OptionalBlock`, and complete site examples, see [site-patterns.md](site-patterns.md).
+For `withPreview`, `OneOfBlock`/`OptionalBlock`, and complete site examples, see [site-patterns.md](references/site-patterns.md).
 
 ---
 
@@ -192,7 +192,7 @@ myBlock: MyBlock,
 myBlock: (props) => <MyBlock data={props} />,
 ```
 
-For the target hierarchy, multiple targets, and edge cases, see [registration.md](registration.md).
+For the target hierarchy, multiple targets, and edge cases, see [registration.md](references/registration.md).
 
 ---
 
@@ -205,7 +205,7 @@ Create a fixture service that generates realistic seed data for the new block.
 3. **Register in `fixtures.module.ts`** as a provider.
 4. **For nested list blocks:** create the list item fixture service first, then the parent composite fixture which injects and calls it.
 
-For faker guidelines, patterns by block type, and full examples, see [fixtures.md](fixtures.md).
+For faker guidelines, patterns by block type, and full examples, see [fixtures.md](references/fixtures.md).
 
 ---
 
@@ -235,18 +235,18 @@ The `name` parameter in `createBlock`, `createCompositeBlock`, `createListBlock`
 
 ## Cross-references
 
-| Topic                                               | File                                           |
-| --------------------------------------------------- | ---------------------------------------------- |
-| Block type overview and decision guide              | [block-types.md](block-types.md)               |
-| API decorator patterns, validators, savability      | [api-patterns.md](api-patterns.md)             |
-| Admin helpers, `BlockCategory`, `hiddenInSubroute`  | [admin-patterns.md](admin-patterns.md)         |
-| Site `withPreview`, rendering patterns              | [site-patterns.md](site-patterns.md)           |
-| Registration targets, keys, edge cases              | [registration.md](registration.md)             |
-| RichText configuration, scoped vs shared            | [rich-text.md](rich-text.md)                   |
-| Enum/select patterns, numeric options, multi-select | [select.md](select.md)                         |
-| Image block selection and site wrappers             | [image.md](image.md)                           |
-| Migration decision matrix, class template, examples | [migration.md](migration.md)                   |
-| Block fixture patterns and faker guidelines         | [fixtures.md](fixtures.md)                     |
-| Block loaders for server-side data fetching         | [block-loader.md](block-loader.md)             |
-| Custom block fields for entity selection            | [custom-block-field.md](custom-block-field.md) |
-| Response template for creation/editing output       | [response-summary.md](response-summary.md)     |
+| Topic                                               | File                                                      |
+| --------------------------------------------------- | --------------------------------------------------------- |
+| Block type overview and decision guide              | [block-types.md](references/block-types.md)               |
+| API decorator patterns, validators, savability      | [api-patterns.md](references/api-patterns.md)             |
+| Admin helpers, `BlockCategory`, `hiddenInSubroute`  | [admin-patterns.md](references/admin-patterns.md)         |
+| Site `withPreview`, rendering patterns              | [site-patterns.md](references/site-patterns.md)           |
+| Registration targets, keys, edge cases              | [registration.md](references/registration.md)             |
+| RichText configuration, scoped vs shared            | [rich-text.md](references/rich-text.md)                   |
+| Enum/select patterns, numeric options, multi-select | [select.md](references/select.md)                         |
+| Image block selection and site wrappers             | [image.md](references/image.md)                           |
+| Migration decision matrix, class template, examples | [migration.md](references/migration.md)                   |
+| Block fixture patterns and faker guidelines         | [fixtures.md](references/fixtures.md)                     |
+| Block loaders for server-side data fetching         | [block-loader.md](references/block-loader.md)             |
+| Custom block fields for entity selection            | [custom-block-field.md](references/custom-block-field.md) |
+| Response template for creation/editing output       | [response-summary.md](references/response-summary.md)     |

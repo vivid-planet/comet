@@ -429,7 +429,7 @@ async generateBlockInput(
 
 | Topic                                                | File                               |
 | ---------------------------------------------------- | ---------------------------------- |
-| Block creation workflow and registration             | [SKILL.md](SKILL.md)               |
+| Block creation workflow and registration             | [SKILL.md](../SKILL.md)            |
 | API block patterns, decorators, field rules          | [api-patterns.md](api-patterns.md) |
 | Enum/select patterns and enum imports                | [select.md](select.md)             |
 | RichText block structure (relevant to Draft.js data) | [rich-text.md](rich-text.md)       |

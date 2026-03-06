@@ -590,8 +590,8 @@ export const ArticleBlock = createBlock(ArticleBlockData, ArticleBlockInput, {
 
 ## Cross-references
 
-| Topic                                                         | File                                                                       |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Editing workflow (when to check for migration need)           | [SKILL.md — Editing an existing block](SKILL.md#editing-an-existing-block) |
-| Enum field patterns (relevant to enum-related migrations)     | [select.md](select.md)                                                     |
-| RichText structure (relevant to string → RichText migrations) | [rich-text.md](rich-text.md)                                               |
+| Topic                                                         | File                                                                          |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Editing workflow (when to check for migration need)           | [SKILL.md — Editing an existing block](../SKILL.md#editing-an-existing-block) |
+| Enum field patterns (relevant to enum-related migrations)     | [select.md](select.md)                                                        |
+| RichText structure (relevant to string → RichText migrations) | [rich-text.md](rich-text.md)                                                  |
