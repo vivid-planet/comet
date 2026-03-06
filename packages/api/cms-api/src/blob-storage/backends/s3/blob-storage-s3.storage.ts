@@ -131,6 +131,32 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         return Readable.from(response.Body as Readable | NodeJS.ReadableStream);
     }
 
+    async listFiles(folderName: string): Promise<string[]> {
+        const fileNames: string[] = [];
+        let continuationToken: string | undefined;
+
+        do {
+            const response = await this.client.send(
+                new AWS.ListObjectsV2Command({
+                    Bucket: this.config.bucket ?? folderName,
+                    Prefix: this.config.bucket ? `${folderName}/` : undefined,
+                    ContinuationToken: continuationToken,
+                }),
+            );
+
+            for (const object of response.Contents ?? []) {
+                if (object.Key) {
+                    const name = this.config.bucket ? object.Key.replace(`${folderName}/`, "") : object.Key;
+                    fileNames.push(name);
+                }
+            }
+
+            continuationToken = response.NextContinuationToken;
+        } while (continuationToken);
+
+        return fileNames;
+    }
+
     async removeFile(folderName: string, fileName: string): Promise<void> {
         await this.client.send(new AWS.DeleteObjectCommand(this.getCommandInput(folderName, fileName)));
     }
