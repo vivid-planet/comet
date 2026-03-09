@@ -119,15 +119,9 @@ function loadConfig(configPath: string): AgentSkillsConfig {
 export const installAgentSkillsCommand = new Command("install-agent-skills")
     .description("Install agent skills from local directories and optional external git repos")
     .option("--config <path>", "Path to a JSON config file specifying repos to install skills from", "agent-skills.json")
-    .option(
-        "--repo <url>",
-        "SSH git repo URL to install package-skills from (e.g. git@github.com:org/repo.git#main); repeatable",
-        (val: string, acc: string[]) => [...acc, val],
-        [] as string[],
-    )
     .option("--dry-run", "Show which symlinks/copies would be created without making changes", false)
-    .action(async (options: { config: string; repo: string[]; dryRun: boolean }) => {
-        const { config: configPath, repo: repoFlags, dryRun } = options;
+    .action(async (options: { config: string; dryRun: boolean }) => {
+        const { config: configPath, dryRun } = options;
 
         const configRepos: string[] = [];
         const resolvedConfig = path.resolve(configPath);
@@ -138,7 +132,7 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
             }
         }
 
-        const repos = [...configRepos, ...repoFlags];
+        const repos = [...configRepos];
         console.log(`=== Installing agent skills${dryRun ? " (dry run)" : ""} ===`);
 
         const cwd = process.cwd();

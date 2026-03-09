@@ -82,23 +82,15 @@ You can install skills from external git repositories. This allows you to consum
 
 Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `package-skills/` folder is fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills are **copied** into the target directories.
 
-You can also pass repos ad-hoc without a config file:
-
-```sh
-npx @comet/cli install-agent-skills --repo git@github.com:org/shared-skills.git#main
-```
-
-Both `--config` and `--repo` can be combined. Config repos are processed first; `--repo` flags are appended after.
-
 ## Priority order
 
 When the same skill name exists in multiple sources, the higher-priority source wins:
 
-| Priority | Source         | Location                                       | Install method |
-| -------- | -------------- | ---------------------------------------------- | -------------- |
-| 1        | Project skills | `project-skills/` at repo root                 | Symlink        |
-| 2        | Package skills | `package-skills/` at repo root                 | Symlink        |
-| 3        | External repos | Configured via `agent-skills.json` or `--repo` | Copy           |
+| Priority | Source         | Location                                  | Install method |
+| -------- | -------------- | ----------------------------------------- | -------------- |
+| 1        | Project skills | `project-skills/` at repo root            | Symlink        |
+| 2        | Package skills | `package-skills/` at repo root            | Symlink        |
+| 3        | External repos | Configured via `agent-skills.json`        | Copy           |
 
 A `CONFLICT` warning is printed for each skipped skill. No error is thrown — the command completes successfully.
 
@@ -127,11 +119,10 @@ These directories should not be committed to your repository as they are created
 
 ## Options
 
-| Option            | Description                                                                             |
-| ----------------- | --------------------------------------------------------------------------------------- |
+| Option            | Description                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------- |
 | `--config <path>` | Path to a JSON config file specifying repos to install skills from (default: `agent-skills.json`) |
-| `--repo <url>`    | Add an external repo (repeatable; combined with `--config` repos, processed after them) |
-| `--dry-run`       | Print what would be installed without making any changes                                |
+| `--dry-run`       | Print what would be installed without making any changes                                 |
 
 Preview what would be installed without making changes:
 
@@ -141,7 +132,7 @@ npx @comet/cli install-agent-skills --dry-run
 
 ## For library maintainers: Providing skills to consumers
 
-If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `--repo` or `agent-skills.json`.
+If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `agent-skills.json`.
 
 Place skill folders inside a `package-skills/` directory at your repo root:
 
