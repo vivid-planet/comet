@@ -227,12 +227,6 @@ The `name` parameter in `createBlock`, `createCompositeBlock`, `createListBlock`
 
 ---
 
-## Code generation
-
-**Never run build, compile, or code-generation commands** (`npm run build`, `npm run generate-block-types`, `api-generator`, etc.). Admin and Site blocks import data types from `@src/blocks.generated`, which regenerates automatically while the dev server is running. Import errors from `@src/blocks.generated` resolve on their own — ignore them.
-
----
-
 ## Cross-references
 
 | Topic                                               | File                                                      |
