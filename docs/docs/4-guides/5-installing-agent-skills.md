@@ -21,7 +21,7 @@ Add an `install-agent-skills` script to your root `package.json`:
 ```json
 {
     "scripts": {
-        "install-agent-skills": "comet install-agent-skills --config agent-skills.json"
+        "install-agent-skills": "comet install-agent-skills"
     }
 }
 ```
@@ -65,7 +65,7 @@ project-skills/
 Then run the `install-agent-skills` command to symlink them into the target directories:
 
 ```sh
-npx @comet/cli install-agent-skills --config agent-skills.json
+npx @comet/cli install-agent-skills
 ```
 
 Local skills are **symlinked**, so edits to `project-skills/` are reflected immediately without re-running the command.
@@ -129,14 +129,14 @@ These directories should not be committed to your repository as they are created
 
 | Option            | Description                                                                             |
 | ----------------- | --------------------------------------------------------------------------------------- |
-| `--config <path>` | Load external repos from a JSON config file                                             |
+| `--config <path>` | Path to a JSON config file specifying repos to install skills from (default: `agent-skills.json`) |
 | `--repo <url>`    | Add an external repo (repeatable; combined with `--config` repos, processed after them) |
 | `--dry-run`       | Print what would be installed without making any changes                                |
 
 Preview what would be installed without making changes:
 
 ```sh
-npx @comet/cli install-agent-skills --config agent-skills.json --dry-run
+npx @comet/cli install-agent-skills --dry-run
 ```
 
 ## For library maintainers: Providing skills to consumers
