@@ -35,7 +35,7 @@ and run this script in `install.sh`:
 + npm run install-agent-skills
 
   # create site-config-envs
-  pnpm run create-site-configs-env
+  npm run create-site-configs-env
 
   # ...
 ```
