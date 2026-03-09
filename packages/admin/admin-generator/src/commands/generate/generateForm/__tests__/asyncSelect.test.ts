@@ -477,4 +477,89 @@ describe("AsyncSelect filter", () => {
             expect(formOutput.code).toMatchSnapshot();
         });
     });
+
+    it("uses custom queryName when provided", async () => {
+        const schema = buildSchema(`
+            type Query {
+                people(search: String): PeopleConnection!
+            }
+
+            type PeopleConnection {
+                nodes: [Person!]!
+            }
+
+            type Visit {
+                id: ID!
+                host: Person!
+                guest: Person!
+            }
+            type Person {
+                id: ID!
+                name: String!
+            }
+
+            type Mutation {
+                createVisit(input: VisitInput!): Visit!
+                updateVisit(id: ID!, input: VisitInput!): Visit!
+            }
+
+            input VisitInput {
+                host: ID
+                guest: ID
+            }
+        `);
+        type GQLPerson = {
+            __typename?: "Person";
+            id: string;
+            name: string;
+        };
+        type GQLVisit = {
+            __typename?: "Visit";
+            id: string;
+            host: GQLPerson;
+            guest: GQLPerson;
+        };
+
+        const introspection = introspectionFromSchema(schema);
+
+        const hostFieldConfig: FormFieldConfig<GQLVisit> = {
+            type: "asyncSelect",
+            rootQuery: "people",
+            queryName: "HostSelect",
+            name: "host",
+        };
+        const guestFieldConfig: FormFieldConfig<GQLVisit> = {
+            type: "asyncSelect",
+            rootQuery: "people",
+            queryName: "GuestSelect",
+            name: "guest",
+        };
+        const formConfig: FormConfig<GQLVisit> = {
+            type: "form",
+            gqlType: "Visit",
+            fields: [hostFieldConfig, guestFieldConfig],
+        };
+
+        const hostOutput = generateFormField({
+            gqlIntrospection: introspection,
+            baseOutputFilename: "VisitForm",
+            formFragmentName: "VisitFormFragment",
+            config: hostFieldConfig,
+            formConfig,
+            gqlType: "Visit",
+        });
+        const guestOutput = generateFormField({
+            gqlIntrospection: introspection,
+            baseOutputFilename: "VisitForm",
+            formFragmentName: "VisitFormFragment",
+            config: guestFieldConfig,
+            formConfig,
+            gqlType: "Visit",
+        });
+
+        expect(hostOutput.code).toContain("HostSelect");
+        expect(hostOutput.code).not.toContain("PeopleSelect");
+        expect(guestOutput.code).toContain("GuestSelect");
+        expect(guestOutput.code).not.toContain("PeopleSelect");
+    });
 });

@@ -189,7 +189,7 @@ export function generateAsyncSelect({
     }
 
     const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
-    const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
+    const queryName = config.queryName ?? `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
     const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
 
     let formFragmentFields: string[];
