@@ -137,8 +137,9 @@ describe("installSkills – dry-run mode", () => {
         const sources: SkillSource[] = [{ label: "local package-skills/", directory: "/local/package-skills", symlink: true }];
         installSkills(sources, targetDirs, { dryRun: true });
 
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("[dry-run]"));
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("symlink"));
+        expect(console.log).toHaveBeenCalledWith(
+            expect.stringContaining(`[dry-run] Would symlink: ${path.resolve("/local/package-skills/my-skill")}`),
+        );
     });
 
     it("logs what would be copied for external sources", () => {
@@ -147,8 +148,9 @@ describe("installSkills – dry-run mode", () => {
         const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/package-skills", symlink: false }];
         installSkills(sources, targetDirs, { dryRun: true });
 
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("[dry-run]"));
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("copy"));
+        expect(console.log).toHaveBeenCalledWith(
+            expect.stringContaining(`[dry-run] Would copy: ${path.resolve("/remote/package-skills/remote-skill")}`),
+        );
     });
 });
 
