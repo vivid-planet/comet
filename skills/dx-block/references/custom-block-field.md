@@ -159,16 +159,6 @@ export const ProductPickerBlock = createCompositeBlock(
 
 **`AsyncAutocompleteField`** — Async entity search field with type-ahead. Import from `@comet/admin`.
 
-| Prop             | Type                                | Required | Description                                           |
-| ---------------- | ----------------------------------- | -------- | ----------------------------------------------------- |
-| `name`           | `string`                            | Yes      | Form field name (must match `BlocksFinalForm` shape). |
-| `loadOptions`    | `(search?: string) => Promise<T[]>` | Yes      | Async function that returns matching entities.        |
-| `getOptionLabel` | `(option: T) => string`             | Yes      | Display label for each option.                        |
-| `getOptionValue` | `(option: T) => any`                | No       | Value to store (defaults to entire object).           |
-| `label`          | `ReactNode`                         | No       | Field label. Use `FormattedMessage`.                  |
-| `fullWidth`      | `boolean`                           | No       | Span full width.                                      |
-| `multiple`       | `boolean`                           | No       | Allow selecting multiple entities.                    |
-
 **`useContentScope`** — Hook from `@comet/cms-admin` that provides the current content scope (domain, language). Use it when the entity query requires scope filtering.
 
 ```tsx
