@@ -21,7 +21,7 @@ Add an `install-agent-skills` script to your root `package.json`:
 ```json
 {
     "scripts": {
-        "install-agent-skills": "comet install-agent-skills"
+        "install-agent-skills": "npx @comet/cli install-agent-skills"
     }
 }
 ```
