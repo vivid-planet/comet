@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.19.0
+
+### Patch Changes
+
+- 0eb28a7: Skip block index view creation when no root block entities are found instead of failing with a SQL syntax error
+
 ## 8.18.0
 
 ### Minor Changes
