@@ -80,6 +80,11 @@ export class DependenciesService {
             indexSelects.push(select);
         }
 
+        if (indexSelects.length === 0) {
+            this.logger.log("Skipping block_index_dependencies materialized view creation: no root block entities found");
+            return;
+        }
+
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
         console.time("creating block dependency materialized view");
@@ -116,6 +121,11 @@ export class DependenciesService {
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj`;
 
             indexSelects.push(select);
+        }
+
+        if (indexSelects.length === 0) {
+            this.logger.log("Skipping block_index view creation: no root block entities found");
+            return;
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
