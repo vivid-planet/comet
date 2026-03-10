@@ -189,6 +189,13 @@ export function generateAsyncSelect({
     }
 
     const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
+    if (config.queryName !== undefined) {
+        if (config.queryName.length === 0 || !/^[_A-Za-z][_0-9A-Za-z]*$/.test(config.queryName)) {
+            throw new Error(
+                `Field ${String(config.name)}: "queryName" must be a valid GraphQL operation name (non-empty, starting with a letter or underscore, containing only letters, digits, or underscores), got "${config.queryName}".`,
+            );
+        }
+    }
     const queryName = config.queryName ?? `${name[0].toUpperCase() + name.substring(1)}Select`;
     const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
 

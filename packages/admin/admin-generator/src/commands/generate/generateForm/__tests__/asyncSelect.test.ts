@@ -632,4 +632,77 @@ describe("AsyncSelect filter", () => {
         expect(hostOutput.code).toContain("VisitHostSelect");
         expect(hostOutput.code).not.toContain("query HostSelect");
     });
+
+    it("throws error for empty queryName", () => {
+        const schema = buildSchema(`
+            type Query {
+                people: PeopleConnection!
+            }
+            type PeopleConnection { nodes: [Person!]! }
+            type Visit { id: ID! host: Person! }
+            type Person { id: ID! name: String! }
+            type Mutation {
+                createVisit(input: VisitInput!): Visit!
+                updateVisit(id: ID!, input: VisitInput!): Visit!
+            }
+            input VisitInput { host: ID }
+        `);
+        type GQLPerson = { __typename?: "Person"; id: string; name: string };
+        type GQLVisit = { __typename?: "Visit"; id: string; host: GQLPerson };
+        const introspection = introspectionFromSchema(schema);
+        const fieldConfig: FormFieldConfig<GQLVisit> = {
+            type: "asyncSelect",
+            rootQuery: "people",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryName: "" as any,
+            name: "host",
+        };
+        const formConfig: FormConfig<GQLVisit> = { type: "form", gqlType: "Visit", fields: [fieldConfig] };
+        expect(() =>
+            generateFormField({
+                gqlIntrospection: introspection,
+                baseOutputFilename: "VisitForm",
+                formFragmentName: "VisitFormFragment",
+                config: fieldConfig,
+                formConfig,
+                gqlType: "Visit",
+            }),
+        ).toThrow(/queryName/);
+    });
+
+    it("throws error for queryName with invalid characters", () => {
+        const schema = buildSchema(`
+            type Query {
+                people: PeopleConnection!
+            }
+            type PeopleConnection { nodes: [Person!]! }
+            type Visit { id: ID! host: Person! }
+            type Person { id: ID! name: String! }
+            type Mutation {
+                createVisit(input: VisitInput!): Visit!
+                updateVisit(id: ID!, input: VisitInput!): Visit!
+            }
+            input VisitInput { host: ID }
+        `);
+        type GQLPerson = { __typename?: "Person"; id: string; name: string };
+        type GQLVisit = { __typename?: "Visit"; id: string; host: GQLPerson };
+        const introspection = introspectionFromSchema(schema);
+        const fieldConfig: FormFieldConfig<GQLVisit> = {
+            type: "asyncSelect",
+            rootQuery: "people",
+            queryName: "Invalid Name!",
+            name: "host",
+        };
+        const formConfig: FormConfig<GQLVisit> = { type: "form", gqlType: "Visit", fields: [fieldConfig] };
+        expect(() =>
+            generateFormField({
+                gqlIntrospection: introspection,
+                baseOutputFilename: "VisitForm",
+                formFragmentName: "VisitFormFragment",
+                config: fieldConfig,
+                formConfig,
+                gqlType: "Visit",
+            }),
+        ).toThrow(/queryName/);
+    });
 });
