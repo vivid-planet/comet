@@ -35,19 +35,19 @@ import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { validateProductSlug } from "../validateProductSlug";
 import { Future_DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
-import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
-import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { GQLCategorySelectQuery } from "./ProductForm.generated";
+import { GQLCategorySelectQueryVariables } from "./ProductForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
-import { GQLProductTagsSelectQuery } from "./ProductForm.generated";
-import { GQLProductTagsSelectQueryVariables } from "./ProductForm.generated";
+import { GQLTagsSelectQuery } from "./ProductForm.generated";
+import { GQLTagsSelectQueryVariables } from "./ProductForm.generated";
 import { FinalFormSwitch } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
 import { FieldSet } from "@comet/admin";
 import { FormSpy } from "react-final-form";
 import { Location as LocationIcon } from "@comet/admin-icons";
-import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
-import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
+import { GQLManufacturerSelectQuery } from "./ProductForm.generated";
+import { GQLManufacturerSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
@@ -360,9 +360,9 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 name="category"
                                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                                 loadOptions={async (search?: string) => {
-                                    const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                                         query: gql`
-                                            query ProductCategoriesSelect($search: String) {
+                                            query CategorySelect($search: String) {
                                                 productCategories(search: $search) {
                                                     nodes {
                                                         id
@@ -387,9 +387,9 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 name="tags"
                                 label={<FormattedMessage id="product.tags" defaultMessage="Tags" />}
                                 loadOptions={async (search?: string) => {
-                                    const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
+                                    const { data } = await client.query<GQLTagsSelectQuery, GQLTagsSelectQueryVariables>({
                                         query: gql`
-                                            query ProductTagsSelect($search: String) {
+                                            query TagsSelect($search: String) {
                                                 productTags(search: $search) {
                                                     nodes {
                                                         id
@@ -476,9 +476,9 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                     </InputAdornment>
                                 }
                                 loadOptions={async (search?: string) => {
-                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                    const { data } = await client.query<GQLManufacturerSelectQuery, GQLManufacturerSelectQueryVariables>({
                                         query: gql`
-                                            query ManufacturersSelect($search: String, $filter: ManufacturerFilter) {
+                                            query ManufacturerSelect($search: String, $filter: ManufacturerFilter) {
                                                 manufacturers(search: $search, filter: $filter) {
                                                     nodes {
                                                         id
