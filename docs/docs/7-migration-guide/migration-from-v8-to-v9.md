@@ -605,25 +605,6 @@ Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/versio
 mv site/src/middleware.ts site/src/proxy.ts
 ```
 
-:::note
-
-If you're using Knip, you may need to add `proxy.ts` as entry point:
-
-```diff title="site/knip.json"
-{
-    "$schema": "https://unpkg.com/knip@5/schema.json",
-    "entry": [
-        "./src/app/**",
-        "./cache-handler.ts",
-        "./tracing.ts",
-+       "./src/proxy.ts"
-    ],
-    "project": ["./src/**/*.{ts,tsx}"]
-}
-```
-
-:::
-
 ### Add `cache: "force-cache"` to GraphQL fetch
 
 Next.js no longer caches `fetch` requests by default.
