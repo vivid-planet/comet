@@ -32,6 +32,8 @@ npm install
 npm run lint:root
 ```
 
+Repeat this step, fixing all lint errors, until the lint passes.
+
 ## API
 
 ### Update Comet dependencies
@@ -165,6 +167,8 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 cd api
 npm run lint
 ```
+
+Repeat this step, fixing all lint errors, until the lint passes.
 
 ## Admin
 
@@ -471,6 +475,8 @@ cd admin
 npm run lint
 ```
 
+Repeat this step, fixing all lint errors, until the lint passes.
+
 ## Site
 
 ### Update Comet and peer dependencies
@@ -646,3 +652,5 @@ export function createGraphQLFetch() {
 cd site
 npm run lint
 ```
+
+Repeat this step, fixing all lint errors, until the lint passes.
