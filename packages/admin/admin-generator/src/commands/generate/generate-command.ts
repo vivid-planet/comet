@@ -115,8 +115,8 @@ export type FormFieldConfig<T> = (
           rootQuery: string;
           /**
            * Override the generated GraphQL query name.
-           * Defaults to the rootQuery name with an uppercased first letter and "Select" appended (e.g. "people" -> "PeopleSelect").
-           * Useful when multiple fields share the same rootQuery, which would otherwise generate duplicate query names.
+           * Defaults to the field name with an uppercased first letter and "Select" appended (e.g. field "host" → "HostSelect").
+           * Useful when the auto-generated name (based on the field name) is not descriptive enough.
            */
           queryName?: string;
           labelField?: string;
@@ -137,8 +137,8 @@ export type FormFieldConfig<T> = (
           rootQuery: string;
           /**
            * Override the generated GraphQL query name.
-           * Defaults to the rootQuery name with an uppercased first letter and "Select" appended (e.g. "people" -> "PeopleSelect").
-           * Useful when multiple fields share the same rootQuery, which would otherwise generate duplicate query names.
+           * Defaults to the field name with an uppercased first letter and "Select" appended (e.g. field "productCategory" → "ProductCategorySelect").
+           * Useful when the auto-generated name (based on the field name) is not descriptive enough.
            */
           queryName?: string;
           labelField?: string;

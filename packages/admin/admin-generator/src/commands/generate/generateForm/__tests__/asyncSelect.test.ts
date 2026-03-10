@@ -478,6 +478,90 @@ describe("AsyncSelect filter", () => {
         });
     });
 
+    it("uses field name for query name by default (multiple fields with same rootQuery)", async () => {
+        const schema = buildSchema(`
+            type Query {
+                people(search: String): PeopleConnection!
+            }
+
+            type PeopleConnection {
+                nodes: [Person!]!
+            }
+
+            type Visit {
+                id: ID!
+                host: Person!
+                guest: Person!
+            }
+            type Person {
+                id: ID!
+                name: String!
+            }
+
+            type Mutation {
+                createVisit(input: VisitInput!): Visit!
+                updateVisit(id: ID!, input: VisitInput!): Visit!
+            }
+
+            input VisitInput {
+                host: ID
+                guest: ID
+            }
+        `);
+        type GQLPerson = {
+            __typename?: "Person";
+            id: string;
+            name: string;
+        };
+        type GQLVisit = {
+            __typename?: "Visit";
+            id: string;
+            host: GQLPerson;
+            guest: GQLPerson;
+        };
+
+        const introspection = introspectionFromSchema(schema);
+
+        const hostFieldConfig: FormFieldConfig<GQLVisit> = {
+            type: "asyncSelect",
+            rootQuery: "people",
+            name: "host",
+        };
+        const guestFieldConfig: FormFieldConfig<GQLVisit> = {
+            type: "asyncSelect",
+            rootQuery: "people",
+            name: "guest",
+        };
+        const formConfig: FormConfig<GQLVisit> = {
+            type: "form",
+            gqlType: "Visit",
+            fields: [hostFieldConfig, guestFieldConfig],
+        };
+
+        const hostOutput = generateFormField({
+            gqlIntrospection: introspection,
+            baseOutputFilename: "VisitForm",
+            formFragmentName: "VisitFormFragment",
+            config: hostFieldConfig,
+            formConfig,
+            gqlType: "Visit",
+        });
+        const guestOutput = generateFormField({
+            gqlIntrospection: introspection,
+            baseOutputFilename: "VisitForm",
+            formFragmentName: "VisitFormFragment",
+            config: guestFieldConfig,
+            formConfig,
+            gqlType: "Visit",
+        });
+
+        // Each field gets a unique query name derived from the field name, not rootQuery
+        expect(hostOutput.code).toContain("HostSelect");
+        expect(hostOutput.code).not.toContain("PeopleSelect");
+        expect(guestOutput.code).toContain("GuestSelect");
+        expect(guestOutput.code).not.toContain("PeopleSelect");
+    });
+
     it("uses custom queryName when provided", async () => {
         const schema = buildSchema(`
             type Query {
@@ -525,19 +609,14 @@ describe("AsyncSelect filter", () => {
         const hostFieldConfig: FormFieldConfig<GQLVisit> = {
             type: "asyncSelect",
             rootQuery: "people",
-            queryName: "HostSelect",
+            queryName: "VisitHostSelect",
             name: "host",
         };
-        const guestFieldConfig: FormFieldConfig<GQLVisit> = {
-            type: "asyncSelect",
-            rootQuery: "people",
-            queryName: "GuestSelect",
-            name: "guest",
-        };
+
         const formConfig: FormConfig<GQLVisit> = {
             type: "form",
             gqlType: "Visit",
-            fields: [hostFieldConfig, guestFieldConfig],
+            fields: [hostFieldConfig],
         };
 
         const hostOutput = generateFormField({
@@ -548,18 +627,9 @@ describe("AsyncSelect filter", () => {
             formConfig,
             gqlType: "Visit",
         });
-        const guestOutput = generateFormField({
-            gqlIntrospection: introspection,
-            baseOutputFilename: "VisitForm",
-            formFragmentName: "VisitFormFragment",
-            config: guestFieldConfig,
-            formConfig,
-            gqlType: "Visit",
-        });
 
-        expect(hostOutput.code).toContain("HostSelect");
-        expect(hostOutput.code).not.toContain("PeopleSelect");
-        expect(guestOutput.code).toContain("GuestSelect");
-        expect(guestOutput.code).not.toContain("PeopleSelect");
+        // Custom queryName overrides the default field-name-based name
+        expect(hostOutput.code).toContain("VisitHostSelect");
+        expect(hostOutput.code).not.toContain("query HostSelect");
     });
 });
