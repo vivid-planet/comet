@@ -290,7 +290,19 @@ This is necessary to support importing from Admin packages (e.g, `import { GridC
 
 ### Upgrade to React 19
 
-Follow the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
+Execute the following codemods:
+
+```sh
+cd admin
+
+npx codemod@latest react/19/migration-recipe
+```
+
+```sh
+npx types-react-codemod@latest preset-19 ./src
+```
+
+See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) for more information.
 
 ### Replace the `variant` prop with `color` in `Tooltip`
 
@@ -574,10 +586,21 @@ Disable Turbopack until this is resolved:
 }
 ```
 
-### Fix TypeScript errors caused by React 19 upgrade
+### Upgrade to React 19
 
-Fix all type errors caused by upgrading to React 19.
-Review the [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide#typescript-changes) for more information.
+Execute the following codemods:
+
+```sh
+cd site
+
+npx codemod@latest react/19/migration-recipe
+```
+
+```sh
+npx types-react-codemod@latest preset-19 ./src
+```
+
+See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) for more information.
 
 ### Change to Next.js Async Request APIs
 
