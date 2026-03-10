@@ -78,26 +78,17 @@ The public site does **not** send the header. All API requests return only publi
 
 ### Site Preview
 
-The site preview mode selectively includes invisible content so that editors can preview unpublished pages and hidden blocks. The admin generates a signed JWT containing preview parameters, which the site converts into the appropriate header values:
+The site preview mode allows editors to see content that is not yet live. The admin generates a signed JWT containing preview parameters, which the site converts into the appropriate header values.
+
+**Unpublished pages are always included in preview mode.** Whenever preview data is present (i.e., the site is in draft/preview mode), `Pages:Unpublished` is sent unconditionally. This ensures editors can always navigate to and preview unpublished pages without any extra configuration.
+
+The **visibility toggle** ("Show only visible") in the `SitePreview` component controls **only block visibility**. When the toggle is off (showing all content), `Blocks:Invisible` is added to the header so that hidden blocks are also rendered in the preview. When the toggle is on, only visible blocks are shown — but unpublished pages remain accessible.
 
 ```typescript
-// Simplified — the site layer handles this automatically
-const headers: Record<string, string> = {};
-const entries: string[] = [];
-
-if (previewData.includeInvisiblePages) {
-    entries.push("Pages:Unpublished");
-}
-if (previewData.includeInvisibleBlocks) {
-    entries.push("Blocks:Invisible");
-}
-
-if (entries.length > 0) {
-    headers["x-include-invisible-content"] = entries.join(",");
-}
+// From @comet/site-react — convertPreviewDataToHeaders
+const includeInvisiblePages = !!previewData; // Always true when in preview mode
+const includeInvisibleBlocks = previewData && previewData.includeInvisible; // Controlled by the toggle
 ```
-
-The `SitePreview` component in the admin provides a **visibility toggle** that controls whether the preview shows only published/visible content or includes unpublished pages and invisible blocks.
 
 ## Using the Header in Custom Resolvers
 
@@ -144,8 +135,9 @@ The `BlocksTransformerService` reads the header and passes `includeInvisibleCont
 
 ## Summary
 
-| Consumer     | Header sent                                              | Pages returned            | Blocks returned     |
-| ------------ | -------------------------------------------------------- | ------------------------- | ------------------- |
-| Public site  | _(none)_                                                 | Published only            | Visible only        |
-| Site preview | `Pages:Unpublished,Blocks:Invisible` (depending on toggle) | Published + Unpublished   | Visible + Invisible |
-| Admin        | `Pages:Unpublished,Pages:Archived,Blocks:Invisible`     | All (Published, Unpublished, Archived) | All (Visible + Invisible) |
+| Consumer                        | Header sent                                          | Pages returned                         | Blocks returned     |
+| ------------------------------- | ---------------------------------------------------- | -------------------------------------- | ------------------- |
+| Public site                     | _(none)_                                             | Published only                         | Visible only        |
+| Site preview (toggle on)        | `Pages:Unpublished`                                  | Published + Unpublished                | Visible only        |
+| Site preview (toggle off)       | `Pages:Unpublished,Blocks:Invisible`                 | Published + Unpublished                | Visible + Invisible |
+| Admin                           | `Pages:Unpublished,Pages:Archived,Blocks:Invisible`  | All (Published, Unpublished, Archived) | All (Visible + Invisible) |
