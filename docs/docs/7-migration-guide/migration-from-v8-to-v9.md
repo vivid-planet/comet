@@ -542,6 +542,8 @@ This is necessary for the lint to work during CI.
 }
 ```
 
+Now, execute `npx next typegen` once to generate the necessary types.
+
 ### Remove `eslint` from the Next.js config file
 
 ```diff title="site/next.config.(js|mjs|ts)"
@@ -581,8 +583,10 @@ Review the [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-
 
 Multiple Next.js APIs (e.g., `headers()`) are now asynchronous.
 Update your usages to support the asynchronous APIs.
-You can use the new props helper types.
+Use the new props helper types.
 Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-16#async-request-apis-breaking-change) for more information.
+
+#### Examples
 
 ```diff title="site/src/app/[visibility]/[domain]/[language]/[[...path]]/page.tsx"
 - type PageProps = {
@@ -597,6 +601,34 @@ Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/versio
 +   setVisibilityParam(visibility as VisibilityParam);
 +   const scope = { domain, language };
 }
+```
+
+```diff title="site/src/app/[visibility]/[domain]/[language]/[[...path]]/page.tsx"
+- async function fetchPageTreeNode(params: { path: string[]; domain: string; language: string }) {
++ async function fetchPageTreeNode(params: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">["params"]) {
+-     const siteConfig = getSiteConfigForDomain(params.domain);
++     const { domain, language, path: pathParam } = await params;
++     const siteConfig = getSiteConfigForDomain(domain);
+
+-     const path = `/${(params.path ?? []).join("/")}`;
+-     const { scope } = { scope: { domain: params.domain, language: params.language } };
++     const path = `/${(pathParam ?? []).join("/")}`;
++     const { scope } = { scope: { domain, language } };
+```
+
+```diff title="site/src/app/[visibility]/[domain]/[language]/layout.tsx"
+- interface LayoutProps {
+-     params: { domain: string; language: string };
+- }
+
+- export default async function Layout({ children, params: { domain, language } }: PropsWithChildren<LayoutProps>) {
++ export default async function Layout({ children, params }: LayoutProps<"/[visibility]/[domain]/[language]">) {
++   const { domain, language: languageParam } = await params;
+    const siteConfig = getSiteConfigForDomain(domain);
++   let language = languageParam;
+    if (!siteConfig.scope.languages.includes(language)) {
+        language = "en";
+    }
 ```
 
 ### Rename `middleware.ts` to `proxy.ts`
