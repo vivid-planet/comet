@@ -1,0 +1,151 @@
+---
+title: Content Visibility
+---
+
+COMET DXP has a built-in content visibility system that controls which content is served to different consumers. Pages in the page tree have a **visibility state**, and individual blocks inside documents can be toggled **visible or invisible**. The API uses the `x-include-invisible-content` HTTP header to decide what content to include in responses.
+
+## Page Tree Node Visibility
+
+Every page tree node has a visibility state, which is one of:
+
+| State           | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| **Published**   | The page is live and visible to site visitors.                              |
+| **Unpublished** | The page is not yet ready for visitors. Only visible in the admin and preview. |
+| **Archived**    | The page has been retired. Only visible in the admin and preview.           |
+
+New pages default to **Unpublished**. Editors can change the visibility state in the admin UI through the page tree context menu.
+
+:::info
+
+The home page cannot be set to Unpublished or Archived.
+
+:::
+
+## Block Visibility
+
+Blocks created with `createBlocksBlock` (the standard list-of-blocks factory) support a per-block **visible** toggle. When a block is marked invisible, it is hidden from site visitors but still visible to editors in the admin UI.
+
+This lets editors prepare content ahead of time or temporarily hide a block without deleting it.
+
+The "Show only visible blocks" toggle in the [block preview menu bar](/docs/features-modules/preview#menuBarButtons) lets editors switch between viewing all blocks and viewing only visible blocks.
+
+## The `x-include-invisible-content` Header
+
+The `x-include-invisible-content` HTTP header tells the API which invisible content to include in its response. It accepts a comma-separated list of entries:
+
+| Entry               | Effect                                                      |
+| ------------------- | ----------------------------------------------------------- |
+| `Pages:Unpublished` | Include page tree nodes with visibility state "Unpublished" |
+| `Pages:Archived`    | Include page tree nodes with visibility state "Archived"    |
+| `Blocks:Invisible`  | Include blocks that are marked as invisible                 |
+
+**Example:**
+
+```
+x-include-invisible-content: Pages:Unpublished,Pages:Archived,Blocks:Invisible
+```
+
+When the header is **absent**, only published pages and visible blocks are returned — this is the default behavior for the public site.
+
+:::warning
+
+Legacy values (`Unpublished`, `Archived` without the `Pages:` prefix) are still supported but deprecated. They will log a warning and should be migrated to the new format.
+
+:::
+
+### Authentication Requirement
+
+When the `x-include-invisible-content` header is present, the API **requires authentication** — even on endpoints that would normally be public (decorated with `@DisableCometGuards()`). This ensures that invisible content is never accidentally exposed to unauthenticated users.
+
+## How Each Layer Uses the Header
+
+### Admin
+
+The admin UI **always** sends the full header on every request so that editors can see all content regardless of its visibility state:
+
+```typescript
+const headers = {
+    "x-include-invisible-content": "Pages:Unpublished,Pages:Archived,Blocks:Invisible",
+};
+```
+
+This is configured automatically by the built-in Apollo link (`includeInvisibleContentContext`) and the HTTP client.
+
+### Site (Public)
+
+The public site does **not** send the header. All API requests return only published pages and visible blocks — no additional configuration is needed.
+
+### Site Preview
+
+The site preview mode selectively includes invisible content so that editors can preview unpublished pages and hidden blocks. The admin generates a signed JWT containing preview parameters, which the site converts into the appropriate header values:
+
+```typescript
+// Simplified — the site layer handles this automatically
+const headers: Record<string, string> = {};
+const entries: string[] = [];
+
+if (previewData.includeInvisiblePages) {
+    entries.push("Pages:Unpublished");
+}
+if (previewData.includeInvisibleBlocks) {
+    entries.push("Blocks:Invisible");
+}
+
+if (entries.length > 0) {
+    headers["x-include-invisible-content"] = entries.join(",");
+}
+```
+
+The `SitePreview` component in the admin provides a **visibility toggle** that controls whether the preview shows only published/visible content or includes unpublished pages and invisible blocks.
+
+## Using the Header in Custom Resolvers
+
+If you write custom GraphQL resolvers that query the page tree, use the `@RequestContext()` decorator to respect the header:
+
+```typescript title="my-custom.resolver.ts"
+import { RequestContext, RequestContextInterface } from "@comet/cms-api";
+import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+
+@Resolver(() => MyEntity)
+export class MyCustomResolver {
+    constructor(private readonly pageTreeService: PageTreeService) {}
+
+    @Query(() => MyEntity)
+    async myEntity(
+        @Args("pageTreeNodeId") pageTreeNodeId: string,
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
+    ): Promise<MyEntity> {
+        const node = await this.pageTreeService
+            .createReadApi({
+                visibility: [
+                    PageTreeNodeVisibility.Published,
+                    ...(includeInvisiblePages ?? []),
+                ],
+            })
+            .getNodeOrFail(pageTreeNodeId);
+
+        // ... use the node
+    }
+}
+```
+
+This ensures your resolver returns only published pages for site visitors while showing all pages to authenticated admin users.
+
+## How Block Visibility Works Internally
+
+Block factories like `createBlocksBlock`, `createListBlock`, and `createOneOfBlock` check the `includeInvisibleContent` flag in the block context during transformation:
+
+- **`createBlocksBlock`**: Each block in the list has a `visible` property. When `includeInvisibleContent` is `false`, invisible blocks return empty props, effectively hiding their content.
+- **`createOneOfBlock`**: Inactive (non-selected) attached blocks are only included when `includeInvisibleContent` is `true`.
+- **`createListBlock`** and **`createOptionalBlock`**: Follow the same pattern, filtering invisible items from the output.
+
+The `BlocksTransformerService` reads the header and passes `includeInvisibleContent` through the `BlockContext` to all block transformations automatically.
+
+## Summary
+
+| Consumer     | Header sent                                              | Pages returned            | Blocks returned     |
+| ------------ | -------------------------------------------------------- | ------------------------- | ------------------- |
+| Public site  | _(none)_                                                 | Published only            | Visible only        |
+| Site preview | `Pages:Unpublished,Blocks:Invisible` (depending on toggle) | Published + Unpublished   | Visible + Invisible |
+| Admin        | `Pages:Unpublished,Pages:Archived,Blocks:Invisible`     | All (Published, Unpublished, Archived) | All (Visible + Invisible) |
