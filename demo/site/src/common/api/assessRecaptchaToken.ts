@@ -1,4 +1,4 @@
-import { recaptchaClient, recaptchaResourceName } from "./createRecaptchaClient";
+import { recaptchaClient, recaptchaResourceName } from "./recaptchaClient";
 
 interface Props {
     token: string;
