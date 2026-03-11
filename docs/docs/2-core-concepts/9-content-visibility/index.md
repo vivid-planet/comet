@@ -97,9 +97,9 @@ export class NewsResolver {
 
     @Query(() => [News])
     async newsList(
-        @RequestContext() { includeInvisibleBlocks }: RequestContextInterface,
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
     ): Promise<News[]> {
-        if (includeInvisibleBlocks) {
+        if (includeInvisiblePages) {
             return this.newsRepository.findAll();
         }
 
