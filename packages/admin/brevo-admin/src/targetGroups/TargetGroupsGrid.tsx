@@ -275,6 +275,7 @@ export function TargetGroupsGrid({
                 slots={{
                     toolbar: TargetGroupsGridToolbar,
                 }}
+                showToolbar
             />
             <EditDialog disableCloseAfterSave componentsProps={{ dialog: { maxWidth: "sm" } }}>
                 <DialogContent>

@@ -236,6 +236,7 @@ export function WarningsGrid() {
                 slots={{
                     toolbar: WarningsGridToolbar,
                 }}
+                showToolbar
             />
         </MainContent>
     );

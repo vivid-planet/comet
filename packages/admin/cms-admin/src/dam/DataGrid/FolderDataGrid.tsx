@@ -628,6 +628,7 @@ const FolderDataGrid = ({
                             additionalToolbarItems: props.additionalToolbarItems,
                         } as FolderDataGridToolbarProps,
                     }}
+                    showToolbar
                 />
             </sc.FolderOuterHoverHighlight>
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />

@@ -145,6 +145,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                     toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}
                                                 initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                                                showToolbar
                                             />
                                         );
                                     }}

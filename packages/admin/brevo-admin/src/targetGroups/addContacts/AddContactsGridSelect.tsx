@@ -269,6 +269,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                         targetGroupId: id,
                     } as AddContactsGridSelectToolbarProps,
                 }}
+                showToolbar
             />
             <FinalForm<FormProps> mode="edit" onSubmit={submit}>
                 {({ handleSubmit, submitting }) => {
@@ -300,6 +301,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                                                 }}
                                                 checkboxSelection
                                                 keepNonExistentRowsSelected
+                                                showToolbar
                                             />
                                         )}
                                     </Field>

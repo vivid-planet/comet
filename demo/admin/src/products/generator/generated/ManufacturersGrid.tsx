@@ -354,6 +354,6 @@ export function ManufacturersGrid() {
                 toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
             onRowClick={handleRowClick}
-        />
+            showToolbar />
     );
 }

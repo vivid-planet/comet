@@ -210,6 +210,7 @@ export function BrevoTestContactsGrid({
                         totalCount,
                     } as BrevoTestContactsGridToolbarProps,
                 }}
+                showToolbar
             />
         </MainContent>
     );

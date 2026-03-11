@@ -198,6 +198,7 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 slotProps={{
                     toolbar: { refetch } as DependentsListGridToolbarProps,
                 }}
+                showToolbar
             />
             <Alert
                 title={<FormattedMessage id="comet.dependencies.dependents.info.title" defaultMessage="What are dependents?" />}

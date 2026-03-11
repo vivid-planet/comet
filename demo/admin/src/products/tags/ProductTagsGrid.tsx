@@ -124,6 +124,7 @@ export function ProductTagsGrid() {
             slots={{
                 toolbar: ProductTagsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            showToolbar
         />
     );
 }

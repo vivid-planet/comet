@@ -261,6 +261,7 @@ export function EmailCampaignsGrid({
                 slots={{
                     toolbar: EmailCampaignsGridToolbar,
                 }}
+                showToolbar
             />
         </MainContent>
     );

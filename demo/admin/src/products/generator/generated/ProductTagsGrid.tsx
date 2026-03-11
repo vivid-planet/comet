@@ -138,6 +138,6 @@ export function ProductTagsGrid() {
                 toolbar: ProductTagsGridToolbar as GridSlotsComponent["toolbar"],
             }}
             onRowClick={handleRowClick}
-        />
+            showToolbar />
     );
 }

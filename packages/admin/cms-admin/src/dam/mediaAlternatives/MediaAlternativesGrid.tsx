@@ -202,6 +202,7 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
                 slotProps={{
                     toolbar: { handleAdd: () => editDialogApi.openAddDialog(file.id) } as MediaAlternativesGridToolbarProps,
                 }}
+                showToolbar
             />
             <EditDialog>
                 {selection.id && selection.mode ? (

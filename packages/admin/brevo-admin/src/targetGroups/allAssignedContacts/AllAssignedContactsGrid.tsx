@@ -108,6 +108,7 @@ export function AllAssignedContactsGrid({ id, scope, brevoId }: AllAssignedConta
             slots={{
                 toolbar: AssignedContactsGridToolbar,
             }}
+            showToolbar
         />
     );
 }

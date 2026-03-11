@@ -124,6 +124,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
             slots={{
                 toolbar: ProductVariantsGridToolbar,
             }}
+            showToolbar
         />
     );
 }

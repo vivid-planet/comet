@@ -232,6 +232,7 @@ export function BrevoContactsGrid({
                         scope,
                     } as BrevoContactsGridToolbarProps,
                 }}
+                showToolbar
             />
         </MainContent>
     );

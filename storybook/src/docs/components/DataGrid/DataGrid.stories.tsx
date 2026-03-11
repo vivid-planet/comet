@@ -309,6 +309,7 @@ export const _GridFilterButton = {
                     slots={{
                         toolbar: DemoToolbar,
                     }}
+                    showToolbar
                 />
             </Box>
         );
@@ -499,6 +500,7 @@ export const UseDataGridExcelExport = {
                     slots={{
                         toolbar: DemoToolbar,
                     }}
+                    showToolbar
                 />
             </Box>
         );
@@ -575,7 +577,10 @@ export const GridColumnTypes = {
 
 export const _CrudMoreActionsMenu = {
     render: () => {
-        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+            type: "include",
+            ids: new Set([]),
+        });
         const dataGridProps = useDataGridRemote();
 
         function DemoToolBar() {
@@ -628,6 +633,7 @@ export const _CrudMoreActionsMenu = {
                     slots={{
                         toolbar: DemoToolBar,
                     }}
+                    showToolbar
                 />
             </Box>
         );

@@ -125,7 +125,10 @@ export function ProductsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const theme = useTheme();
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+        type: "include",
+        ids: new Set([]),
+    });
 
     const columns = useMemo((): GridColDef<GQLProductsListManualFragment>[] => {
         return [
@@ -389,6 +392,7 @@ export function ProductsGrid() {
             onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
+            showToolbar
         />
     );
 }

@@ -96,6 +96,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                 slotProps={{
                     toolbar: toolbarSlotProps,
                 }}
+                showToolbar
             />
             <SaveBoundary
                 onAfterSave={() => {
