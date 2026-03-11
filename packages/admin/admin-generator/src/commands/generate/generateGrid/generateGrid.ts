@@ -1105,6 +1105,7 @@ export function generateGrid<T extends { __typename?: string }>(
                 }
                 ${config.density ? `density="${config.density}"` : ""}
                 ${showEditInActionsColumn ? `onRowClick={handleRowClick}` : forwardRowAction ? `onRowClick={onRowClick}` : ""}
+                showToolbar
             />
         );
     }

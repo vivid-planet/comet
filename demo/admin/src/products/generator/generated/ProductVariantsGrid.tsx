@@ -204,6 +204,7 @@ export function ProductVariantsGrid({ product }: Props) {
                 toolbar: { exportApi } as ProductVariantsGridToolbarToolbarProps,
             }}
             onRowClick={handleRowClick}
-            showToolbar />
+            showToolbar
+        />
     );
 }

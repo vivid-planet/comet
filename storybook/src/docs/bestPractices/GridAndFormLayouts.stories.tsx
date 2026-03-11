@@ -816,7 +816,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                     <FillSpace />
                     <CrudMoreActionsMenu
                         slotProps={{ button: { responsive: true } }}
-                        selectionSize={selectionModel.length}
+                        selectionSize={selectionModel.ids.size}
                         overallActions={[
                             {
                                 label: "Log all items to the console",
@@ -908,13 +908,13 @@ export const GridWithSelectionInDialog = {
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
-                    {selectionModel.length > 0 ? (
+                    {selectionModel.ids.size > 0 ? (
                         <>
                             <Typography variant="h4" gutterBottom>
                                 Selected items
                             </Typography>
 
-                            {selectionModel.map((id) => {
+                            {Array.from(selectionModel.ids).map((id) => {
                                 const row = rows.find((row) => row.id === id);
 
                                 return (

@@ -197,6 +197,7 @@ export function NewsGrid() {
                 toolbar: NewsGridToolbar as GridSlotsComponent["toolbar"],
             }}
             onRowClick={handleRowClick}
-            showToolbar />
+            showToolbar
+        />
     );
 }

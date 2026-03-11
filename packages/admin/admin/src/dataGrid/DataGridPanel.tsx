@@ -36,6 +36,7 @@ import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 const panelTypeTitle: Record<GridPreferencePanelsValue, ReactNode> = {
     [GridPreferencePanelsValue.filters]: <FormattedMessage id="dataGrid.panel.filters" defaultMessage="Filters" />,
     [GridPreferencePanelsValue.columns]: <FormattedMessage id="dataGrid.panel.columns" defaultMessage="Columns" />,
+    [GridPreferencePanelsValue.aiAssistant]: <FormattedMessage id="dataGrid.panel.aiAssistant" defaultMessage="AI Assistant" />,
 };
 
 export type DataGridPanelClassKey =

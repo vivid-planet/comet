@@ -31,15 +31,15 @@ export const createCometTheme = (
 
     const cometThemeOptionsBeforeAddingComponents = {
         spacing: passedSpacingOptions,
-        palette: paletteOptions,
+        palette: {
+            ...paletteOptions,
+            DataGrid: {
+                bg: "rgb(255, 255, 255)",
+            },
+        },
         typography: typographyOptions,
         shape: {
             borderRadius: 2,
-        },
-        mixins: {
-            MuiDataGrid: {
-                containerBackground: "rgb(255, 255, 255)",
-            },
         },
         shadows,
         zIndex: passedZIndexOptions,

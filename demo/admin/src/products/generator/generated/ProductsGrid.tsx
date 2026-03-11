@@ -397,6 +397,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
             onRowClick={onRowClick}
-            showToolbar />
+            showToolbar
+        />
     );
 }

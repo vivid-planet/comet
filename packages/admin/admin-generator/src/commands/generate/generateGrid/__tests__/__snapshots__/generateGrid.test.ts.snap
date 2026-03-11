@@ -191,6 +191,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -388,6 +389,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -583,6 +585,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -780,6 +783,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -976,6 +980,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={onRowClick}
+                showToolbar
             />
         );
     }
@@ -1209,6 +1214,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -1446,6 +1452,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -1643,6 +1650,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }

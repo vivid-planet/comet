@@ -588,7 +588,7 @@ export const _CrudMoreActionsMenu = {
                 <DataGridToolbar>
                     <FillSpace />
                     <CrudMoreActionsMenu
-                        selectionSize={selectionModel.length}
+                        selectionSize={selectionModel.ids.size}
                         overallActions={[
                             {
                                 label: "Export to excel",

@@ -21,10 +21,14 @@ const AssignedContactsGridToolbar = () => {
                 <FormattedMessage id="cometBrevoModule.targetGroup.allAssignedContacts.title" defaultMessage="All assigned contacts" />
             </ToolbarTitleItem>
             <GridToolbarQuickFilter
-                placeholder={intl.formatMessage({
-                    id: "cometBrevoModule.targetGroup.assignedContacts.searchEmail",
-                    defaultMessage: "Search email address",
-                })}
+                slotProps={{
+                    root: {
+                        placeholder: intl.formatMessage({
+                            id: "cometBrevoModule.targetGroup.assignedContacts.searchEmail",
+                            defaultMessage: "Search email address",
+                        }),
+                    },
+                }}
             />
         </DataGridToolbar>
     );

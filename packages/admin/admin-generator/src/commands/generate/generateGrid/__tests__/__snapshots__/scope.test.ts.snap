@@ -176,6 +176,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -357,6 +358,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
