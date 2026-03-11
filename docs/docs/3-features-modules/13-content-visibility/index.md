@@ -24,7 +24,7 @@ The home page cannot be set to Unpublished or Archived.
 
 ## Block Visibility
 
-Blocks created with `createBlocksBlock` (the standard list-of-blocks factory) support a per-block **visible** toggle. When a block is marked invisible, it is hidden from site visitors but still visible to editors in the admin UI.
+Several block factories — including `createBlocksBlock`, `createListBlock`, `createOneOfBlock`, and `createOptionalBlock` — support a per-block **visible** toggle. When a block is marked invisible, it is hidden from site visitors but still visible to editors in the admin UI.
 
 This lets editors prepare content ahead of time or temporarily hide a block without deleting it.
 
@@ -47,12 +47,6 @@ x-include-invisible-content: Pages:Unpublished,Pages:Archived,Blocks:Invisible
 ```
 
 When the header is **absent**, only published pages and visible blocks are returned — this is the default behavior for the public site.
-
-:::warning
-
-Legacy values (`Unpublished`, `Archived` without the `Pages:` prefix) are still supported but deprecated. They will log a warning and should be migrated to the new format.
-
-:::
 
 ### Authentication Requirement
 
@@ -92,36 +86,29 @@ const includeInvisibleBlocks = previewData && previewData.includeInvisible; // C
 
 ## Using the Header in Custom Resolvers
 
-If you write custom GraphQL resolvers that query the page tree, use the `@RequestContext()` decorator to respect the header:
+If you write custom GraphQL resolvers that have their own visibility logic, use the `@RequestContext()` decorator to respect the header. For example, a news resolver with a `visible` boolean column:
 
-```typescript title="my-custom.resolver.ts"
+```typescript title="news.resolver.ts"
 import { RequestContext, RequestContextInterface } from "@comet/cms-api";
-import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 
-@Resolver(() => MyEntity)
-export class MyCustomResolver {
-    constructor(private readonly pageTreeService: PageTreeService) {}
+@Resolver(() => News)
+export class NewsResolver {
+    constructor(private readonly newsRepository: EntityRepository<News>) {}
 
-    @Query(() => MyEntity)
-    async myEntity(
-        @Args("pageTreeNodeId") pageTreeNodeId: string,
-        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
-    ): Promise<MyEntity> {
-        const node = await this.pageTreeService
-            .createReadApi({
-                visibility: [
-                    PageTreeNodeVisibility.Published,
-                    ...(includeInvisiblePages ?? []),
-                ],
-            })
-            .getNodeOrFail(pageTreeNodeId);
+    @Query(() => [News])
+    async newsList(
+        @RequestContext() { includeInvisibleBlocks }: RequestContextInterface,
+    ): Promise<News[]> {
+        if (includeInvisibleBlocks) {
+            return this.newsRepository.findAll();
+        }
 
-        // ... use the node
+        return this.newsRepository.find({ visible: true });
     }
 }
 ```
 
-This ensures your resolver returns only published pages for site visitors while showing all pages to authenticated admin users.
+This ensures site visitors only see visible news items while authenticated admin users can access all items regardless of their visibility state.
 
 ## How Block Visibility Works Internally
 
