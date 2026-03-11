@@ -68,6 +68,7 @@ type CurrentUser {
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
   authenticatedUser: UserPermissionsUser
+  accountUrl: String
   permissionsForScope(scope: JSONObject!): [String!]!
   allowedContentScopes: [ContentScopeWithLabel!]!
 }

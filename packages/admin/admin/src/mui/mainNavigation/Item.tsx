@@ -9,9 +9,16 @@ import {
 } from "@mui/material";
 import { type ReactElement, type ReactNode } from "react";
 
+import { Tooltip as CommonTooltip } from "../../common/Tooltip";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useMainNavigation } from "./Context";
 import { Icon, type MainNavigationItemClassKey, type OwnerState, Root, Text } from "./Item.styles";
+
+const Tooltip = createComponentSlot(CommonTooltip)<MainNavigationItemClassKey>({
+    componentName: "MainNavigationItem",
+    slotName: "tooltip",
+})();
 
 export type MainNavigationItemLevel = 1 | 2 | 3;
 
@@ -20,6 +27,7 @@ export interface MainNavigationItemProps
             root: typeof ListItemButton;
             icon: typeof ListItemIcon;
             text: typeof ListItemText;
+            tooltip: typeof CommonTooltip;
         }>,
         ListItemButtonProps {
     level?: MainNavigationItemLevel;
@@ -63,16 +71,28 @@ export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
         variant: drawerVariant,
     };
 
+    const showTooltip = !isMenuOpen && !hasSubitems && level === 1;
+
     return (
-        <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            {showIcon && (
-                <Icon ownerState={ownerState} {...slotProps?.icon}>
-                    {icon}
-                </Icon>
-            )}
-            <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />
-            {!!secondaryAction && secondaryAction}
-        </Root>
+        <Tooltip
+            variant="light"
+            placement="right"
+            disableHoverListener={!showTooltip}
+            disableFocusListener={!showTooltip}
+            disableTouchListener={!showTooltip}
+            title={primary}
+            {...slotProps?.tooltip}
+        >
+            <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps}>
+                {showIcon && (
+                    <Icon ownerState={ownerState} {...slotProps?.icon}>
+                        {icon}
+                    </Icon>
+                )}
+                <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />
+                {!!secondaryAction && secondaryAction}
+            </Root>
+        </Tooltip>
     );
 };
 

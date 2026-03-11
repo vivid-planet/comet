@@ -267,6 +267,7 @@ const FilesInfoText = createComponentSlot(FormHelperText)<FileSelectClassKey>({
     slotName: "filesInfoText",
 })(css`
     margin: 0;
+    display: none;
 `);
 
 declare module "@mui/material/styles" {

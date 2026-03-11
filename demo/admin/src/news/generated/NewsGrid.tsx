@@ -20,21 +20,23 @@ import { GridColDef } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
-import { muiGridSortToGql } from "@comet/admin";
 import { StackLink } from "@comet/admin";
+import { useStackSwitchApi } from "@comet/admin";
 import { FillSpace } from "@comet/admin";
 import { useBufferedRowCount } from "@comet/admin";
-import { useDataGridRemote } from "@comet/admin";
 import { usePersistentColumnState } from "@comet/admin";
 import { BlockPreviewContent } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useMemo } from "react";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { DamImageBlock } from "@comet/cms-admin";
+import { useDataGridRemote } from "@comet/admin";
 import { useContentScope } from "@comet/cms-admin";
+import { muiGridSortToGql } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Edit as EditIcon } from "@comet/admin-icons";
 const newsFragment = gql`
@@ -48,8 +50,8 @@ const newsFragment = gql`
     }
 `;
 const newsQuery = gql`
-    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
-        newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
+    query NewsGrid($scope: NewsContentScopeInput!, $offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter) {
+        newsList(scope: $scope, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...NewsGrid
             }
@@ -80,6 +82,10 @@ export function NewsGrid() {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
+    const stackSwitchApi = useStackSwitchApi();
+    const handleRowClick: DataGridProProps["onRowClick"] = (params) => {
+        stackSwitchApi.activatePage("edit", params.row.id);
+    };
     const columns: GridColDef<GQLNewsGridFragment>[] = useMemo(
         () => [
             { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
@@ -172,9 +178,9 @@ export function NewsGrid() {
             scope,
             filter: gqlFilter,
             search: gqlSearch,
+            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
         },
     });
     const rowCount = useBufferedRowCount(data?.newsList.totalCount);
@@ -190,6 +196,7 @@ export function NewsGrid() {
             slots={{
                 toolbar: NewsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            onRowClick={handleRowClick}
         />
     );
 }

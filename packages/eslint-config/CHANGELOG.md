@@ -1,5 +1,64 @@
 # @comet/eslint-config
 
+## 8.19.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.18.0
+
+## 8.17.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- af265a8: Clarify `next/image` import restriction in `@comet/eslint-config/nextjs.js`
+
+### Patch Changes
+
+- 3d0af69: Fix extending Next.js' ESLint config in `@comet/eslint-config/nextjs.js`
+    - @comet/eslint-plugin@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.12.0
+
 ## 8.11.1
 
 ### Patch Changes

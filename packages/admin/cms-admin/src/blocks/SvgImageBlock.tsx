@@ -5,7 +5,6 @@ import { FormattedMessage } from "react-intl";
 
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
-import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -16,13 +15,9 @@ import { BlockCategory, type BlockDependency, type BlockInterface } from "./type
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
-function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl, damBasePath }: { apiUrl: string; damBasePath: string }): string {
+function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl }: { apiUrl: string }): string {
     if (!damFile) return "";
-    return new URL(
-        `${apiUrl}/${damBasePath}/files/preview/$fileId/$fileName`
-            .replace("$fileId", damFile.id)
-            .replace("$fileName", damFile.name.substr(0, damFile.name.lastIndexOf("."))),
-    ).toString();
+    return `${apiUrl}${damFile.fileUrl}`;
 }
 
 export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState, SvgImageBlockInput> = {
@@ -36,11 +31,18 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewContext) => ({
-        ...state,
-        urlTemplate: createPreviewUrl(state, { apiUrl: previewContext.apiUrl, damBasePath: previewContext.damBasePath }),
-        adminMeta: { route: previewContext.parentUrl },
-    }),
+    createPreviewState: (state, previewContext) => {
+        return {
+            ...state,
+            damFile: state.damFile
+                ? {
+                      ...state.damFile,
+                      fileUrl: createPreviewUrl(state, { apiUrl: previewContext.apiUrl }),
+                  }
+                : undefined,
+            adminMeta: { route: previewContext.parentUrl },
+        };
+    },
 
     state2Output: (v) => {
         if (!v.damFile) {
@@ -113,10 +115,9 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     AdminComponent: ({ state, updateState }) => {
         const { apiUrl } = useCometConfig();
-        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-        const previewUrl = createPreviewUrl(state, { apiUrl, damBasePath });
+        const previewUrl = createPreviewUrl(state, { apiUrl });
 
         return (
             <SelectPreviewComponent>
@@ -145,7 +146,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         return [
             {
                 type: "image",
-                content: { src: createPreviewUrl(state, { apiUrl: context.apiUrl, damBasePath: context.damBasePath }), width: 320, height: 320 },
+                content: { src: createPreviewUrl(state, { apiUrl: context.apiUrl }), width: 320, height: 320 },
             },
             { type: "text", content: state.damFile.name },
         ];

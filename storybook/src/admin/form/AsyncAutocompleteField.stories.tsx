@@ -1,15 +1,17 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Alert, AsyncAutocompleteField, FinalForm } from "@comet/admin";
+import { Alert, AsyncAutocompleteField, FinalForm, SaveButton, TextField } from "@comet/admin";
 import { WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {
     component: AsyncAutocompleteField,
     title: "@comet/admin/form/AsyncAutocompleteField",
+    decorators: [storyRouterDecorator()],
 };
 export default config;
 
@@ -97,6 +99,68 @@ export const WithObjectOptions: Story = {
     },
 };
 
+export const Required: Story = {
+    render: () => {
+        interface FormValues {
+            department: {
+                label: string;
+                value: string;
+            };
+            anotherField: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{
+                    anotherField: "",
+                }}
+                mode="edit"
+                onSubmit={(values) => {
+                    window.alert(`Form submitted with Values: ${JSON.stringify(values)}`);
+                }}
+                subscription={{ values: true, dirty: true }}
+            >
+                {({ values, dirty }) => {
+                    return (
+                        <>
+                            <TextField name="anotherField" label="Anotherfield" variant="horizontal" />
+                            <AsyncAutocompleteField
+                                required
+                                clearable
+                                loadOptions={async (search?: string) => {
+                                    // Simulate network delay
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+
+                                    if (!search) {
+                                        return allOptions;
+                                    }
+
+                                    const searchLower = search.toLowerCase();
+                                    return allOptions.filter(
+                                        (option) =>
+                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
+                                    );
+                                }}
+                                name="department"
+                                label="Department"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    return option.label;
+                                }}
+                            />
+                            <SaveButton type="submit" disabled={!dirty} />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
 export const MultipleSelect: Story = {
     render: () => {
         interface FormValues {
@@ -144,6 +208,72 @@ export const MultipleSelect: Story = {
                                 }}
                             />
 
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const MultipleWithRequired: Story = {
+    render: () => {
+        interface FormValues {
+            anotherField: string;
+            departments: {
+                label: string;
+                value: string;
+            }[];
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{
+                    departments: [],
+                }}
+                mode="edit"
+                onSubmit={(values) => {
+                    window.alert(`Form submitted with Values: ${JSON.stringify(values)}`);
+                }}
+                subscription={{ values: true, dirty: true }}
+            >
+                {({ values, dirty }) => {
+                    return (
+                        <>
+                            <TextField name="anotherField" label="Anotherfield" variant="horizontal" />
+
+                            <AsyncAutocompleteField
+                                multiple
+                                clearable
+                                loadOptions={async (search?: string) => {
+                                    // Simulate network delay
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+
+                                    if (!search) {
+                                        return allOptions;
+                                    }
+
+                                    const searchLower = search.toLowerCase();
+                                    return allOptions.filter(
+                                        (option) =>
+                                            option.label.toLowerCase().includes(searchLower) || option.value.toLowerCase().includes(searchLower),
+                                    );
+                                }}
+                                name="departments"
+                                label="Department"
+                                fullWidth
+                                required
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    return option.label;
+                                }}
+                            />
+
+                            <SaveButton type="submit" disabled={!dirty}>
+                                Submit
+                            </SaveButton>
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>

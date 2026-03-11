@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 const express = require("express");
-const compression = require("compression");
 const helmet = require("helmet");
 const fs = require("fs");
 const { createProxyMiddleware } = require("http-proxy-middleware");
+const expressStaticGzip = require("express-static-gzip");
 
 const app = express();
-const port = process.env.APP_PORT ?? 3000;
+const port = process.env.ADMIN_PORT ?? 3000;
 const host = process.env.SERVER_HOST ?? "localhost";
 
 let indexFile = fs.readFileSync("./build/index.html", "utf8");
@@ -15,8 +15,6 @@ let indexFile = fs.readFileSync("./build/index.html", "utf8");
 indexFile = indexFile.replace(/\$([A-Z_]+)/g, (match, p1) => {
     return process.env[p1] || "";
 });
-
-app.use(compression());
 
 app.disable("x-powered-by"); // Disable the X-Powered-By header as it is not needed and can be used to infer the server technology
 
@@ -69,10 +67,12 @@ const proxyMiddleware = createProxyMiddleware({
 app.use("/dam", proxyMiddleware);
 
 app.use(
-    express.static("./build", {
+    expressStaticGzip("./build", {
+        enableBrotli: true,
+        orderPreference: ["br", "gz"],
         index: false, // Don't send index.html for requests to "/" as it will be handled by the fallback route (with replaced environment variables)
-        setHeaders: (res, path, stat) => {
-            if (path.endsWith(".js")) {
+        setHeaders: (res, filePath, stat) => {
+            if ([".js", ".js.br", ".js.gz", ".css", ".css.br", ".css.gz"].some((fileExtension) => filePath.endsWith(fileExtension))) {
                 // The js file is static and the index.html uses a parameter as cache buster
                 // implemented as suggested by https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#caching_static_assets
                 res.setHeader("cache-control", "private, max-age=31536000, immutable");
@@ -85,7 +85,7 @@ app.use(
 );
 
 // As a fallback, route everything to index.html
-app.get("*", (req, res) => {
+app.get("/{*splat}", (req, res) => {
     // Don't cache the index.html at all to make sure applications updates are applied
     // implemented as suggested by https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#preventing_storing
     res.setHeader("cache-control", "no-store");

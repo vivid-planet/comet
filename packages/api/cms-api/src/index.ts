@@ -123,6 +123,7 @@ export {
     CrudField,
     CrudFieldOptions,
     CrudGenerator,
+    CrudGeneratorHooksService,
     CrudGeneratorOptions,
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
@@ -150,6 +151,7 @@ export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { MutationError } from "./common/graphql/mutation-error";
 export { CdnGuard } from "./common/guards/cdn.guard";
 export { getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "./common/helper/crud-generator.helper";
 export { PartialType } from "./common/helper/partial-type.helper";
@@ -271,6 +273,7 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
+export { AffectedScope } from "./user-permissions/decorators/affected-scope.decorator";
 export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
 export { SCOPED_ENTITY_METADATA_KEY, ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
@@ -281,6 +284,7 @@ export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export { type ContentScopeWithLabel } from "./user-permissions/user-permissions.types";
+export { registerAdditionalPermissions } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,

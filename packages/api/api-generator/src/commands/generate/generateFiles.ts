@@ -1,5 +1,6 @@
 import console from "node:console";
 import { realpathSync } from "node:fs";
+import { readFile, writeFile } from "node:fs/promises";
 
 import {
     CRUD_GENERATOR_METADATA_KEY,
@@ -10,14 +11,11 @@ import {
 import { CLIHelper } from "@mikro-orm/cli";
 import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
-import { exec as execCallback } from "child_process";
-import { promisify } from "util";
+import { format, resolveConfig } from "prettier";
 
 import { generateCrud } from "./generateCrud/generate-crud";
 import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
-
-const exec = promisify(execCallback);
 /**
  * Generate mode for the generator.
  *
@@ -75,8 +73,14 @@ export const generateFiles = async (
             }
         }
         if (writtenFiles.length > 0) {
-            console.log("Formatting generated files...");
-            await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+            console.log(`Formatting ${writtenFiles.length} generated files...`);
+            await Promise.all(
+                writtenFiles.map(async (filepath) => {
+                    const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
+                    const formatted = await format(content, { ...options, filepath });
+                    await writeFile(filepath, formatted);
+                }),
+            );
         }
     }
 };
