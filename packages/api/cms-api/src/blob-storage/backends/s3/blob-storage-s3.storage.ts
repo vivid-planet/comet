@@ -145,7 +145,8 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
             );
 
             for (const object of response.Contents ?? []) {
-                if (object.Key) {
+                // S3 can return the folder itself as an object with key "folderName/" — skip it
+                if (object.Key && object.Key !== `${folderName}/`) {
                     const name = this.config.bucket ? object.Key.replace(`${folderName}/`, "") : object.Key;
                     fileNames.push(name);
                 }
