@@ -1,19 +1,19 @@
-import { type ComponentsOverrides, Paper, type PaperProps } from "@mui/material";
+import { type ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type GridDensity, useGridApiContext } from "@mui/x-data-grid";
+import { type GridDensity, Toolbar, type ToolbarProps, useGridApiContext } from "@mui/x-data-grid";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 
 export type DataGridToolbarClassKey = "root" | GridDensity;
 
-export type DataGridToolbarProps = PaperProps;
+export type DataGridToolbarProps = ToolbarProps;
 
 type OwnerState = {
     density: GridDensity;
 };
 
 export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
-    const { elevation = 1, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+    const props = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
     const apiRef = useGridApiContext();
     const gridDensity = apiRef.current.state.density;
 
@@ -21,10 +21,10 @@ export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
         density: gridDensity,
     };
 
-    return <Root ownerState={ownerState} elevation={elevation} {...restProps} />;
+    return <Root ownerState={ownerState} {...props} />;
 };
 
-const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
+const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
     classesResolver(ownerState) {
