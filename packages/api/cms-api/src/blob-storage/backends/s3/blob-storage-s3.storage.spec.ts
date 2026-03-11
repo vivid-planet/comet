@@ -193,6 +193,15 @@ describe("BlobStorageS3Storage", () => {
             expect(calls[1].args[0].input.ContinuationToken).toBe("token-abc");
         });
 
+        it("should skip the S3 folder marker object", async () => {
+            s3Mock.on(ListObjectsV2Command).resolves({
+                Contents: [{ Key: "listing/" }, { Key: "listing/a.txt" }, { Key: "listing/b.txt" }],
+            });
+
+            const files = await storage.listFiles("listing");
+            expect(files).toEqual(["a.txt", "b.txt"]);
+        });
+
         it("should skip objects without a Key", async () => {
             s3Mock.on(ListObjectsV2Command).resolves({
                 Contents: [{ Key: "folder/valid.txt" }, {}, { Key: "folder/also-valid.txt" }],
