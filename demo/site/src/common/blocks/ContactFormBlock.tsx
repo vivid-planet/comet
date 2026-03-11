@@ -74,7 +74,7 @@ export const ContactFormBlock = withPreview(
         });
 
         const onSubmit = async (formValues: ContactFormValues) => {
-            let reCaptchaToken: string;
+            let recaptchaToken: string;
 
             if (!recaptchaKey) {
                 setError("root.serverError", {
@@ -88,7 +88,7 @@ export const ContactFormBlock = withPreview(
             }
 
             try {
-                reCaptchaToken = await getRecaptchaToken("form_submit", recaptchaKey);
+                recaptchaToken = await getRecaptchaToken("form_submit", recaptchaKey);
             } catch (error) {
                 console.error(error);
                 setError("root.serverError", {
@@ -107,7 +107,7 @@ export const ContactFormBlock = withPreview(
                     headers: {
                         "content-type": "application/json",
                     },
-                    body: JSON.stringify({ ...formValues, reCaptchaToken }),
+                    body: JSON.stringify({ ...formValues, recaptchaToken }),
                 });
 
                 if (!response.ok) {

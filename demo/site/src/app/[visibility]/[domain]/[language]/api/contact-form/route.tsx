@@ -10,7 +10,7 @@ const queryValidationSchema = z.object({
     subject: z.string(),
     message: z.string(),
     privacyConsent: z.boolean(),
-    reCaptchaToken: z.string(),
+    recaptchaToken: z.string(),
 });
 
 export async function POST(request: NextRequest) {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     const recaptchaTokenValid = await assessRecaptchaToken({
-        token: validationResult.data.reCaptchaToken,
+        token: validationResult.data.recaptchaToken,
         action: "form_submit",
     });
 
