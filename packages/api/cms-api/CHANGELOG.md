@@ -1,5 +1,31 @@
 # @comet/cms-api
 
+## 8.19.0
+
+### Patch Changes
+
+- 0eb28a7: Skip block index view creation when no root block entities are found instead of failing with a SQL syntax error
+
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Deduplicate block index refreshes using PostgreSQL advisory locks
+
+    Replace the race-condition-prone `pg_stat_activity` check in `DependenciesService.refreshViews()` with `pg_try_advisory_xact_lock`, ensuring only one refresh runs at a time. This fixes the issue where many parallel requests (e.g., from the DAM Usages column) could trigger multiple concurrent `REFRESH MATERIALIZED VIEW` operations, overloading the database.
+
+- ef98821: Add option `shouldInvokeUserService` to `createJwtAuthService`
+
+    Sometimes it is preferred to load the user from the `UserService` instead of using the data from the ID-Token (e.g. because the `UserService` provides additional data). This options allows to force this behavior.
+
+### Patch Changes
+
+- e9c54bc: Fix `DamFolder.mpath` column type
+
+    Change the column type from `"uuid array"` to `"uuid[]"` to match PostgreSQL's canonical array type notation, preventing a redundant `alter column ... type uuid array` statement from being generated for every new migration.
+
+- b3bfe86: Update `@aws-sdk/` dependencies to fix CVE-2026-25896
+
 ## 8.17.1
 
 ### Patch Changes

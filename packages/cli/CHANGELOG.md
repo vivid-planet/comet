@@ -1,5 +1,15 @@
 # @comet/cli
 
+## 8.19.0
+
+### Minor Changes
+
+- 539d53f: Add `install-agent-skills` command
+
+    see https://docs.comet-dxp.com/docs/guides/installing-agent-skills for more info
+
+## 8.18.0
+
 ## 8.17.1
 
 ## 8.17.0

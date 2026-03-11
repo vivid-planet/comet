@@ -2,7 +2,7 @@ import { DocumentInterface, IsUndefinable } from "@comet/cms-api";
 import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { EmailCampaignScopeInterface } from "../../types";
 
@@ -31,7 +31,7 @@ export function createBrevoEmailImportLogEntity({ Scope }: { Scope: Type<EmailCa
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
-        id: string = v4();
+        id: string = uuid();
 
         @Property({ columnType: "text" })
         @Field()
@@ -61,7 +61,7 @@ export function createBrevoEmailImportLogEntity({ Scope }: { Scope: Type<EmailCa
         @Property({ columnType: "uuid" })
         @IsUndefinable()
         @Field(() => ID)
-        importId?: string = v4();
+        importId?: string = uuid();
 
         @Property({ columnType: "text" })
         @Field(() => ContactSource)

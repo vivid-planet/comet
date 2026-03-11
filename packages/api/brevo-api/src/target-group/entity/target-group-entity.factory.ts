@@ -2,7 +2,7 @@ import { DocumentInterface } from "@comet/cms-api";
 import { Collection, Embedded, Entity, ManyToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { EmailCampaignInterface } from "../../email-campaign/entities/email-campaign-entity.factory";
 import { BrevoContactFilterAttributesInterface, EmailCampaignScopeInterface } from "../../types";
@@ -40,7 +40,7 @@ export function createTargetGroupEntity({
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
-        id: string = v4();
+        id: string = uuid();
 
         @Property({ columnType: "timestamp with time zone" })
         @Field()

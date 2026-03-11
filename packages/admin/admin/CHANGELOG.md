@@ -1,5 +1,27 @@
 # @comet/admin
 
+## 8.19.0
+
+### Minor Changes
+
+- fff2cc2: Add support for `onBlur` and `onFocus` props to `DatePicker`, `DateRangePicker`, `DateTimePicker`, `DateTimeRangePicker` and `TimePicker`
+
+    Errors and warnings are now correctly shown after validation in `DatePickerField`, `DateRangePickerField`, `DateTimePickerField`, `DateTimeRangePickerField` and `TimePickerField`.
+
+- fff2cc2: Add aria-labels to the open picker buttons of date/time picker components
+
+### Patch Changes
+
+- @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes
