@@ -1,7 +1,10 @@
 import { Environment, GetSiteConfig } from "./site-configs";
 
+const host = process.env.SERVER_HOST ?? "localhost";
+const port = parseInt(process.env.SITE_PORT || "3000", 10);
+
 const envToDomainMap: Record<Environment, string> = {
-    local: "localhost:3001",
+    local: `${host}:${port+1}`,
 };
 
 export default ((env) => {
