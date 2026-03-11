@@ -6,7 +6,7 @@ interface Props {
     minimalRiskAnalysisScore?: number;
 }
 
-export const assessRecaptchaToken = async ({ token, action, minimalRiskAnalysisScore = 0.6 }: Props): Promise<boolean> => {
+export const assessRecaptchaToken = async ({ token, action, minimalRiskAnalysisScore = 0.5 }: Props): Promise<boolean> => {
     const [assessment] = await recaptchaClient.createAssessment({
         assessment: {
             event: {
