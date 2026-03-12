@@ -10,6 +10,8 @@ Use `@IsUndefinable()` to allow a field to be `undefined` while still validating
 
 This is more specific than the `@IsOptional()` decorator from `class-validator`, which allows both `undefined` and `null`.
 
+A typical use case is a small inline form that only updates a subset of an entity's fields (e.g., only the name). Fields not present in the form are omitted from the request body entirely (`undefined`) and should be left unchanged on the server.
+
 ```ts
 import { IsUndefinable } from "@comet/cms-api";
 import { IsString } from "class-validator";
@@ -18,6 +20,10 @@ class UpdateProductInput {
     @IsUndefinable()
     @IsString()
     name?: string;
+
+    @IsUndefinable()
+    @IsString()
+    description?: string;
 }
 ```
 
@@ -27,6 +33,8 @@ Use `@IsNullable()` to allow a field to be `null` while still validating it when
 
 This is more specific than the `@IsOptional()` decorator, which also allows `undefined`.
 
+A typical use case is resetting or clearing an optional value (e.g., removing a product's assigned category).
+
 ```ts
 import { IsNullable } from "@comet/cms-api";
 import { IsString } from "class-validator";
@@ -34,7 +42,7 @@ import { IsString } from "class-validator";
 class UpdateProductInput {
     @IsNullable()
     @IsString()
-    name: string | null;
+    category: string | null;
 }
 ```
 
