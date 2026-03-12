@@ -691,7 +691,8 @@
                                 "mediaGallery": "MediaGallery",
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "table": "Table"
                             },
                             "nullable": false
                         }
@@ -735,7 +736,8 @@
                                 "mediaGallery": "MediaGallery",
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "table": "Table"
                             },
                             "nullable": false
                         }
@@ -2211,6 +2213,7 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
+                                "table": "Table",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex"
                             },
@@ -2276,6 +2279,7 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
+                                "table": "Table",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex"
                             },
@@ -3350,6 +3354,153 @@
                 "name": "damFileId",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "Table",
+        "fields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "RichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "RichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },
