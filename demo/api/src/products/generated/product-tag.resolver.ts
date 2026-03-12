@@ -62,10 +62,11 @@ export class ProductTagResolver {
                 await Promise.all(
                     productsWithStatusInput.map(async (productsWithStatusInput) => {
                         const { product: productInput, ...assignInput } = productsWithStatusInput;
-                        return this.entityManager.assign(new ProductToTag(), {
+                        const productsWithStatus = this.entityManager.assign(new ProductToTag(), {
                             ...assignInput,
                             product: Reference.create(await this.entityManager.findOneOrFail(Product, productInput)),
                         });
+                        return productsWithStatus;
                     }),
                 ),
             );
@@ -98,10 +99,11 @@ export class ProductTagResolver {
                 await Promise.all(
                     productsWithStatusInput.map(async (productsWithStatusInput) => {
                         const { product: productInput, ...assignInput } = productsWithStatusInput;
-                        return this.entityManager.assign(new ProductToTag(), {
+                        const productsWithStatus = this.entityManager.assign(new ProductToTag(), {
                             ...assignInput,
                             product: Reference.create(await this.entityManager.findOneOrFail(Product, productInput)),
                         });
+                        return productsWithStatus;
                     }),
                 ),
             );

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { readFile, writeFile } from "node:fs/promises";
+
 import { type ApolloClient } from "@apollo/client";
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
@@ -14,16 +16,15 @@ import {
     type GridSortDirection,
     type GridValidRowModel,
 } from "@mui/x-data-grid";
-import { exec as execCallback } from "child_process";
 import { Command } from "commander";
 import { type FieldValidator, type FormApi } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { format, resolveConfig } from "prettier";
 import type { ComponentType, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
-import { promisify } from "util";
 
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
@@ -31,8 +32,6 @@ import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
-
-const exec = promisify(execCallback);
 
 export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
 
@@ -53,7 +52,7 @@ function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
     return arg && arg.type === "component";
 }
 
-export type StaticSelectValue = { value: string; label: string } | string;
+export type StaticSelectValue = { value: string; label: string | FormattedMessageElement } | string;
 type AsyncSelectFilter =
     | {
           /**
@@ -99,7 +98,7 @@ export type FormFieldConfig<T> = (
           disableSlider?: boolean;
           initialValue?: { min: number; max: number };
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean }
+    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean; checkboxLabel?: string | FormattedMessageElement }
     | ({ type: "date"; name: UsableFormFields<T>; initialValue?: string } & InputBaseFieldConfig)
     | ({ type: "dateTime"; name: UsableFormFields<T>; initialValue?: Date } & InputBaseFieldConfig)
     | ({
@@ -200,6 +199,11 @@ export type FormConfig<T extends { __typename?: string }> = {
      * @default true
      */
     navigateOnCreate?: boolean;
+    /**
+     * If true, the generated form will have an initialValues prop to set initial form values.
+     * @default false
+     */
+    initialValuesAsProp?: boolean;
 };
 export type InjectedFormVariables = {
     id?: string;
@@ -316,6 +320,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     scopeAsProp?: boolean;
     density?: "comfortable" | "compact" | "standard";
     crudContextMenu?: {
+        deleteType?: "delete" | "remove";
         deleteText?: string;
     };
 };
@@ -388,8 +393,14 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         console.log("");
     }
     if (writtenFiles.length > 0) {
-        console.log("Formatting generated files...");
-        await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+        console.log(`Formatting ${writtenFiles.length} generated files...`);
+        await Promise.all(
+            writtenFiles.map(async (filepath) => {
+                const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
+                const formatted = await format(content, { ...options, filepath });
+                await writeFile(filepath, formatted);
+            }),
+        );
     }
 }
 

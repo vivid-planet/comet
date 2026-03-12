@@ -1,5 +1,116 @@
 # @comet/cms-api
 
+## 8.19.0
+
+### Patch Changes
+
+- 0eb28a7: Skip block index view creation when no root block entities are found instead of failing with a SQL syntax error
+
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Deduplicate block index refreshes using PostgreSQL advisory locks
+
+    Replace the race-condition-prone `pg_stat_activity` check in `DependenciesService.refreshViews()` with `pg_try_advisory_xact_lock`, ensuring only one refresh runs at a time. This fixes the issue where many parallel requests (e.g., from the DAM Usages column) could trigger multiple concurrent `REFRESH MATERIALIZED VIEW` operations, overloading the database.
+
+- ef98821: Add option `shouldInvokeUserService` to `createJwtAuthService`
+
+    Sometimes it is preferred to load the user from the `UserService` instead of using the data from the ID-Token (e.g. because the `UserService` provides additional data). This options allows to force this behavior.
+
+### Patch Changes
+
+- e9c54bc: Fix `DamFolder.mpath` column type
+
+    Change the column type from `"uuid array"` to `"uuid[]"` to match PostgreSQL's canonical array type notation, preventing a redundant `alter column ... type uuid array` statement from being generated for every new migration.
+
+- b3bfe86: Update `@aws-sdk/` dependencies to fix CVE-2026-25896
+
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Update fast-xml-parser to 5.3.6 to fix CVE-2026-26278 (entity expansion DoS)
+
+## 8.17.0
+
+## 8.16.0
+
+## 8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- 736e4ae: Add `@AffectedScope` decorator
+
+    See https://docs.comet-dxp.com/docs/core-concepts/content-scope/evaluate-content-scopes#operations-that-require-a-content-scope-independently-of-a-specific-entity
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+- 05638ed: `MailerService.sendMail()` now automatically creates a plaintext version from the HTML content
+
+    When the params passed to `sendMail()` do not include a `text` property but do include a `html` property, a plaintext version will be automatically generated based on the HTML content.
+
+## 8.12.0
+
+### Minor Changes
+
+- 488da0b: Add `registerAdditionalPermissions` helper
+
+    The helper can be used register additional permissions into the permission enum used for the GraphQL schema.
+    Only use this if you're building a library that requires additional permissions.
+    For application-level permissions, use the `AppPermission` option in the module registration methods.
+
+- 2930556: Send 401 instead 403 when CometAuthGuard cannot authenticate user
+
+    Restores the behavior of Comet v7.
+
+    Before (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "Forbidden resource",
+          "extensions": {
+            "code": "FORBIDDEN",
+            "originalError": {
+              "message": "Forbidden resource",
+              "error": "Forbidden",
+              "statusCode": 403
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+    After (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "No AuthService could authenticate the user",
+          "extensions": {
+            "code": "UNAUTHENTICATED",
+            "originalError": {
+              "message": "No AuthService could authenticate the user",
+              "error": "Unauthorized",
+              "statusCode": 401
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
 ## 8.11.1
 
 ## 8.11.0

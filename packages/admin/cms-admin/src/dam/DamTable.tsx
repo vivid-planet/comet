@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import {
-    EditDialogApiContext,
     type IFilterApi,
     type ISortInformation,
     SortDirection,
@@ -9,7 +8,6 @@ import {
     StackPage,
     StackSwitch,
     Toolbar,
-    useEditDialog,
     useStackApi,
     useStoredState,
     useTableQueryFilter,
@@ -48,7 +46,6 @@ interface FolderProps extends DamConfig {
 const Folder = ({ id, filterApi, renderWithFullHeightMainContent, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
-    const [, , editDialogApi, selectionApi] = useEditDialog();
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -61,18 +58,14 @@ const Folder = ({ id, filterApi, renderWithFullHeightMainContent, ...props }: Fo
         skip: selectedFolderId === undefined,
     });
 
-    const folderDataGridNode = (
-        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
-    );
+    const folderDataGridNode = <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} filterApi={filterApi} {...props} />;
 
     return (
         <CurrentDamFolderProvider folderId={id}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
-                    <EditDialogApiContext.Provider value={editDialogApi}>
-                        <Toolbar scopeIndicator={props.contentScopeIndicator} />
-                        {renderWithFullHeightMainContent ? <StackMainContent fullHeight>{folderDataGridNode}</StackMainContent> : folderDataGridNode}
-                    </EditDialogApiContext.Provider>
+                    <Toolbar scopeIndicator={props.contentScopeIndicator} />
+                    {renderWithFullHeightMainContent ? <StackMainContent fullHeight>{folderDataGridNode}</StackMainContent> : folderDataGridNode}
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
                     {(selectedId: string) => {

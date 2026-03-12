@@ -45,3 +45,24 @@ exports[`generateFormField - staticSelect > should generate simple staticSelect 
                             }
             ]}/>"
 `;
+
+exports[`generateFormField - staticSelect > should generate staticSelect with nested field 1`] = `
+"<RadioGroupField
+             required
+              variant="horizontal"
+             fullWidth
+             name="product.type"
+             label={<FormattedMessage id="productHighlight.product.type" defaultMessage="Product Type" />}
+             options={[
+                  {
+                                label: <FormattedMessage id="productHighlight.product.type.cap" defaultMessage="Cap" />,
+                                value: "cap",
+                            },{
+                                label: <FormattedMessage id="productHighlight.product.type.shirt" defaultMessage="Shirt" />,
+                                value: "shirt",
+                            },{
+                                label: <FormattedMessage id="productHighlight.product.type.tie" defaultMessage="Tie" />,
+                                value: "tie",
+                            }
+            ]}/>"
+`;

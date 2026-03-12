@@ -1,23 +1,18 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigNestJs from "@comet/eslint-config/future/nestjs.js";
 import storybook from "eslint-plugin-storybook";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
-    },
+export default defineConfig([
+    globalIgnores([
+        "src/db/migrations/**",
+        "dist/**",
+        "src/**/*.generated.ts",
+        "src/**/generated/**",
+        "block-meta.json",
+        "lang/**",
+        "lang-compiled/**",
+        "lang-extracted/**",
+    ]),
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],
-    {
-        files: ["**/*.stories.{ts,tsx}"],
-        languageOptions: {
-            parserOptions: {
-                projectService: false,
-                project: "./.storybook/tsconfig.json",
-                tsconfigRootDir: import.meta.dirname,
-            },
-        },
-    },
-];
-
-export default config;
+]);

@@ -1,5 +1,101 @@
 # @comet/admin
 
+## 8.19.0
+
+### Minor Changes
+
+- fff2cc2: Add support for `onBlur` and `onFocus` props to `DatePicker`, `DateRangePicker`, `DateTimePicker`, `DateTimeRangePicker` and `TimePicker`
+
+    Errors and warnings are now correctly shown after validation in `DatePickerField`, `DateRangePickerField`, `DateTimePickerField`, `DateTimeRangePickerField` and `TimePickerField`.
+
+- fff2cc2: Add aria-labels to the open picker buttons of date/time picker components
+
+### Patch Changes
+
+- @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+
+## 8.17.0
+
+### Minor Changes
+
+- 45163f1: Add DataGrid helper `useDataGridUrlState` that can be used like `useDataGridRemote` to store state as location params but for client side (non paginated) filter/sort
+
+### Patch Changes
+
+- @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Minor Changes
+
+- 472b496: useDataGridRemote: store sort/filter/paging state additionally to query-param in local state and fall back to it if the query-param is lost
+
+    Avoids losing grid state, for instance, when opening an EditDialog that creates its own sub-route.
+
+### Patch Changes
+
+- @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 39a9bb0: Add support for non-paginated apis in useDataGridExcelExport
+- 5b52998: Add tooltip for childless items in closed `MainNavigation`
+
+### Patch Changes
+
+- cc96333: Fix FinalForm to forward submissionErrors (return from submit handler) correctly
+- 180d1e3: Fix required validation for `AsyncAutocompleteField` with multiple select
+- f7b9de9: Fix DataGrid singleSelect filter height to prevent autocomplete values from being truncated
+- 0c2435a: Hide `filesInfoText` from FileSelect
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- f31b52e: Add FinalFormDebug component to display React Final Form state for debugging purposes
+- d0a7c96: Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
+
+### Patch Changes
+
+- 5075f7a: Render `ToolbarBackButton` as a link for improved accessibility
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- dbf8774: Don't open the mobile `MainNavigation` when resizing the window to a smaller width
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
+### Patch Changes
+
+- @comet/admin-icons@8.12.0
+
 ## 8.11.1
 
 ### Patch Changes

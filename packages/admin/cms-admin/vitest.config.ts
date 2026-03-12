@@ -5,6 +5,10 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     test: {
         environment: "jsdom",
+        setupFiles: ["./vitest.setup.ts"],
         reporters: ["default", "junit"],
+        outputFile: {
+            junit: "./junit.xml",
+        },
     },
 });
