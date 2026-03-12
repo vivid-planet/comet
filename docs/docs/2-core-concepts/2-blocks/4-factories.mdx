@@ -799,6 +799,82 @@ export function SpaceBlock({ data: { spacing } }: PropsWithData<SpaceBlockData>)
 }
 ```
 
+## TableBlock
+
+The TableBlock factory creates a block for editable tables with rich text cell content. It requires a `RichTextBlock` to be provided.
+
+### API
+
+Use the `createTableBlock` factory:
+
+```ts title="table.block.ts"
+import { createTableBlock } from "@comet/cms-api";
+
+import { RichTextBlock } from "./rich-text.block";
+
+export const TableBlock = createTableBlock({ richText: RichTextBlock });
+```
+
+### Admin
+
+Use the `createTableBlock` factory:
+
+```tsx title="TableBlock.tsx"
+import { createTableBlock } from "@comet/cms-admin";
+
+import { RichTextBlock } from "./RichTextBlock";
+
+export const TableBlock = createTableBlock({ richText: RichTextBlock });
+```
+
+### Site
+
+Manually render the table, use `RichTextBlock` for the cell content.
+
+Both rows and columns have a `highlighted` flag that can be toggled in the admin, typically used to designate a header row or column.
+Apply a distinct style when either the row or the column is highlighted.
+
+```tsx title="TableBlock.tsx"
+import { PropsWithData } from "@comet/site-nextjs";
+import { TableBlockData } from "@src/blocks.generated";
+
+import clsx from "clsx";
+
+import { RichTextBlock } from "./RichTextBlock";
+import styles from "./TableBlock.module.css";
+
+export function TableBlock({ data }: PropsWithData<TableBlockData>) {
+    return (
+        <table>
+            <tbody>
+                {data.rows.map((row) => (
+                    <tr key={row.id}>
+                        {data.columns.map((column) => {
+                            const cellValue = row.cellValues.find(
+                                (cellValue) => cellValue.columnId === column.id,
+                            );
+                            const isHighlighted = row.highlighted || column.highlighted;
+
+                            return (
+                                <td
+                                    key={column.id}
+                                    className={clsx(
+                                        styles.cell,
+                                        isHighlighted && styles["cell--highlighted"],
+                                    )}
+                                >
+                                    {cellValue?.value && <RichTextBlock data={cellValue.value} />}
+                                </td>
+                            );
+                        })}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+}
+```
+
 ## TextImageBlock
 
 The TextImageBlock factory can be used to combine a text and an image block.
