@@ -23,7 +23,7 @@
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
-        "lint:fix:eslint": "eslint --fix --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
+        "lint:fix:eslint": "pnpm run lint:eslint --fix",
         "lint:fix:prettier": "pnpm exec prettier --write './**/*.{js,json,md,yml,yaml}'",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
