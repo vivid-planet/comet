@@ -5,6 +5,7 @@ import { findQueryTypeOrThrow } from "../../utils/findQueryType";
 import { generateGqlOperation } from "../../utils/generateGqlOperation";
 import { type Imports } from "../../utils/generateImportsCode";
 import { isFieldOptional } from "../../utils/isFieldOptional";
+import { isValidGraphQLOperationName } from "../../utils/isValidGraphQLOperationName";
 import { buildFormFieldOptions } from "../formField/options";
 import { findFieldByName, type GenerateFieldsReturn } from "../generateFields";
 import { type Prop } from "../generateForm";
@@ -190,7 +191,7 @@ export function generateAsyncSelect({
 
     const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
     if (config.queryName !== undefined) {
-        if (config.queryName.length === 0 || !/^[_A-Za-z][_0-9A-Za-z]*$/.test(config.queryName)) {
+        if (!isValidGraphQLOperationName(config.queryName)) {
             throw new Error(
                 `Field ${String(config.name)}: "queryName" must be a valid GraphQL operation name (non-empty, starting with a letter or underscore, containing only letters, digits, or underscores), got "${config.queryName}".`,
             );
