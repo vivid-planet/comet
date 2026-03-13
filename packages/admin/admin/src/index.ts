@@ -149,8 +149,6 @@ export { CheckboxField, type CheckboxFieldProps } from "./form/fields/CheckboxFi
 export { CheckboxListField, type CheckboxListFieldProps } from "./form/fields/CheckboxListField";
 export { NumberField, type NumberFieldProps } from "./form/fields/NumberField";
 export { RadioGroupField, type RadioGroupFieldProps } from "./form/fields/RadioGroupField";
-export { RHFNumberField } from "./form/fields/RHFNumberField";
-export { RHFTextField } from "./form/fields/RHFTextField";
 export { SearchField, type SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, type SelectFieldOption, type SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, type SwitchFieldProps } from "./form/fields/SwitchField";
@@ -181,6 +179,8 @@ export { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from
 export { FormSection, type FormSectionClassKey, type FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, type FinalFormRadioProps } from "./form/Radio";
+export { RHFNumberField } from "./form/react-hook-form/fields/RHFNumberField";
+export { RHFTextField } from "./form/react-hook-form/fields/RHFTextField";
 export { FinalFormSwitch, type FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
 export { FullPageAlert, type FullPageAlertClassKey, type FullPageAlertProps } from "./fullPageAlert/FullPageAlert";

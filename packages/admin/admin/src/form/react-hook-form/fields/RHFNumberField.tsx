@@ -10,8 +10,8 @@ import {
 } from "react-hook-form";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment } from "../../common/ClearInputAdornment";
-import { FieldContainer, type FieldContainerProps } from "../FieldContainer";
+import { ClearInputAdornment } from "../../../common/ClearInputAdornment";
+import { FieldContainer, type FieldContainerProps } from "../../FieldContainer";
 
 // A number with integer and decimal parts used to extract locale-specific formatting symbols
 const LOCALE_FORMAT_SAMPLE_NUMBER = 1111.111;
