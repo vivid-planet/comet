@@ -28,15 +28,15 @@ function cloneRepo(rawUrl: string): string {
     const { repoUrl, ref } = parseRepoUrl(rawUrl);
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "comet-agent-skills-"));
 
-    // Use sparse checkout to fetch only the package-skills/ folder
+    // Use sparse checkout to fetch only the skills/ and package-skills/ folders
     execFileSync("git", ["init", tmpDir], { stdio: "pipe" });
     execFileSync("git", ["-C", tmpDir, "remote", "add", "origin", "--", repoUrl], { stdio: "pipe" });
     execFileSync("git", ["-C", tmpDir, "config", "core.sparseCheckout", "true"], { stdio: "pipe" });
-    fs.writeFileSync(path.join(tmpDir, ".git", "info", "sparse-checkout"), "package-skills/\n");
+    fs.writeFileSync(path.join(tmpDir, ".git", "info", "sparse-checkout"), "skills/\npackage-skills/\n");
 
     const fetchRef = ref ?? "HEAD";
     try {
-        console.log(`Fetching ${repoUrl} ref "${fetchRef}" (sparse, package-skills/ only)...`);
+        console.log(`Fetching ${repoUrl} ref "${fetchRef}" (sparse, skills/ and package-skills/ only)...`);
         execFileSync("git", ["-C", tmpDir, "fetch", "--depth", "1", "origin", fetchRef], { stdio: "pipe" });
         execFileSync("git", ["-C", tmpDir, "checkout", "FETCH_HEAD"], { stdio: "pipe" });
     } catch {
@@ -143,10 +143,11 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
             fs.mkdirSync(dir, { recursive: true });
         }
 
-        // Priority order: project-skills > package-skills > external repos (in arg order)
+        // Priority order: skills/ > project-skills/ (deprecated) > package-skills/ (deprecated) > external repos (in arg order)
         const sources: SkillSource[] = [
-            { label: "local project-skills/", directory: path.join(cwd, "project-skills"), symlink: true },
-            { label: "local package-skills/", directory: path.join(cwd, "package-skills"), symlink: true },
+            { label: "local skills/", directory: path.join(cwd, "skills"), symlink: true },
+            { label: "local project-skills/ (deprecated)", directory: path.join(cwd, "project-skills"), symlink: true },
+            { label: "local package-skills/ (deprecated)", directory: path.join(cwd, "package-skills"), symlink: true },
         ];
 
         const tempDirs: string[] = [];
@@ -155,7 +156,12 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
                 const cloneDir = cloneRepo(rawUrl);
                 tempDirs.push(cloneDir);
                 sources.push({
-                    label: `external ${rawUrl} (package-skills/)`,
+                    label: `external ${rawUrl} (skills/)`,
+                    directory: path.join(cloneDir, "skills"),
+                    symlink: false,
+                });
+                sources.push({
+                    label: `external ${rawUrl} (package-skills/, deprecated)`,
                     directory: path.join(cloneDir, "package-skills"),
                     symlink: false,
                 });

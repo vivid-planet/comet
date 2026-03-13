@@ -229,3 +229,74 @@ describe("installSkills – conflict: remote vs remote", () => {
         expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("external repo2"));
     });
 });
+
+describe("installSkills – conflict: local skills/ vs local project-skills/", () => {
+    it("skills/ wins over project-skills/: symlinks skills/ skill, skips project-skills/ skill with a CONFLICT warning", () => {
+        mockFilesystem({
+            "/local/skills": ["shared-skill"],
+            "/local/project-skills": ["shared-skill"],
+        });
+
+        const sources: SkillSource[] = [
+            { label: "local skills/", directory: "/local/skills", symlink: true },
+            { label: "local project-skills/ (deprecated)", directory: "/local/project-skills", symlink: true },
+        ];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.symlinkSync).toHaveBeenCalledTimes(2);
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/shared-skill"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/local/project-skills/shared-skill"), expect.any(String));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared-skill"'));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("local project-skills/ (deprecated)"));
+    });
+});
+
+describe("installSkills – conflict: local skills/ vs local package-skills/", () => {
+    it("skills/ wins over package-skills/: symlinks skills/ skill, skips package-skills/ skill with a CONFLICT warning", () => {
+        mockFilesystem({
+            "/local/skills": ["shared-skill"],
+            "/local/package-skills": ["shared-skill"],
+        });
+
+        const sources: SkillSource[] = [
+            { label: "local skills/", directory: "/local/skills", symlink: true },
+            { label: "local package-skills/ (deprecated)", directory: "/local/package-skills", symlink: true },
+        ];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.symlinkSync).toHaveBeenCalledTimes(2);
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/shared-skill"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/local/package-skills/shared-skill"), expect.any(String));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared-skill"'));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("local package-skills/ (deprecated)"));
+    });
+});
+
+describe("installSkills – conflict: external skills/ vs external package-skills/ from same repo", () => {
+    it("external skills/ wins over external package-skills/ from same repo: copies skills/ skill, skips package-skills/ skill with a CONFLICT warning", () => {
+        mockFilesystem({
+            "/tmp/cloned-repo/skills": ["shared-skill"],
+            "/tmp/cloned-repo/package-skills": ["shared-skill"],
+        });
+
+        const sources: SkillSource[] = [
+            { label: "external git@github.com:org/repo.git (skills/)", directory: "/tmp/cloned-repo/skills", symlink: false },
+            {
+                label: "external git@github.com:org/repo.git (package-skills/, deprecated)",
+                directory: "/tmp/cloned-repo/package-skills",
+                symlink: false,
+            },
+        ];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.cpSync).toHaveBeenCalledTimes(2);
+        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/tmp/cloned-repo/skills/shared-skill"), expect.any(String), { recursive: true });
+        expect(fs.cpSync).not.toHaveBeenCalledWith(
+            path.resolve("/tmp/cloned-repo/package-skills/shared-skill"),
+            expect.any(String),
+            expect.any(Object),
+        );
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared-skill"'));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("external git@github.com:org/repo.git (package-skills/, deprecated)"));
+    });
+});
