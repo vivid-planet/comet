@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { type InstallOptions, installSkills, type SkillSource } from "./install-agent-skills";
+import { type InstallOptions, installSkills, isInternalSkill, type SkillSource } from "./install-agent-skills";
 
 vi.mock("fs");
 
@@ -15,7 +15,7 @@ const targetDirs = [".agents/skills", ".claude/skills"];
  * containing the listed skill folder names. Destination paths do not exist
  * unless listed under a target dir key.
  */
-function mockFilesystem(skillMap: Record<string, string[]>, existingDests: string[] = []): void {
+function mockFilesystem(skillMap: Record<string, string[]>, existingDests: string[] = [], skillMdContents: Record<string, string> = {}): void {
     vi.mocked(fs.existsSync).mockImplementation((p) => String(p) in skillMap);
     vi.mocked(fs.readdirSync as (path: fs.PathLike) => string[]).mockImplementation((p) => skillMap[String(p)] ?? []);
     vi.mocked(fs.statSync).mockImplementation((p) => {
@@ -28,12 +28,20 @@ function mockFilesystem(skillMap: Record<string, string[]>, existingDests: strin
         if (existingDests.includes(String(p))) return {} as fs.Stats;
         throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
     });
+    vi.mocked(fs.readFileSync as (path: fs.PathLike | number, options: BufferEncoding) => string).mockImplementation((p) => {
+        const content = skillMdContents[String(p)];
+        if (content !== undefined) return content;
+        throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
+    });
 }
 
 beforeEach(() => {
     vi.mocked(fs.symlinkSync).mockImplementation(() => undefined);
     vi.mocked(fs.cpSync).mockImplementation(() => undefined);
     vi.mocked(fs.rmSync).mockImplementation(() => undefined);
+    vi.mocked(fs.readFileSync as (path: fs.PathLike | number, options: BufferEncoding) => string).mockImplementation(() => {
+        throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
+    });
     vi.spyOn(console, "log").mockImplementation(() => undefined);
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
@@ -298,5 +306,89 @@ describe("installSkills – conflict: external skills/ vs external package-skill
         );
         expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared-skill"'));
         expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("external git@github.com:org/repo.git (package-skills/, deprecated)"));
+    });
+});
+
+describe("isInternalSkill", () => {
+    it("returns true when metadata.internal is true", () => {
+        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# My Skill" });
+        expect(isInternalSkill("/skills/my-skill")).toBe(true);
+    });
+
+    it("returns false when metadata.internal is false", () => {
+        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\nmetadata:\n  internal: false\n---\n# My Skill" });
+        expect(isInternalSkill("/skills/my-skill")).toBe(false);
+    });
+
+    it("returns false when frontmatter has no metadata field", () => {
+        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\ntitle: My Skill\n---\n# My Skill" });
+        expect(isInternalSkill("/skills/my-skill")).toBe(false);
+    });
+
+    it("returns false when SKILL.md has no frontmatter", () => {
+        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "# My Skill\nJust plain markdown, no frontmatter." });
+        expect(isInternalSkill("/skills/my-skill")).toBe(false);
+    });
+
+    it("returns false when SKILL.md does not exist", () => {
+        mockFilesystem({}, [], {});
+        expect(isInternalSkill("/skills/my-skill")).toBe(false);
+    });
+
+    it("returns false when SKILL.md frontmatter contains malformed YAML", () => {
+        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\n: invalid: yaml: [\n---\n# My Skill" });
+        expect(isInternalSkill("/skills/my-skill")).toBe(false);
+    });
+});
+
+describe("installSkills – filterInternal", () => {
+    it("excludes internal skills when filterInternal: true, installs only non-internal skills", () => {
+        mockFilesystem({ "/remote/skills": ["public-skill", "internal-skill"] }, [], {
+            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
+        });
+
+        const sources: SkillSource[] = [{ label: "external repo (skills/)", directory: "/remote/skills", symlink: false, filterInternal: true }];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.cpSync).toHaveBeenCalledTimes(2);
+        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote/skills/public-skill"), expect.any(String), { recursive: true });
+        expect(fs.cpSync).not.toHaveBeenCalledWith(path.resolve("/remote/skills/internal-skill"), expect.any(String), expect.any(Object));
+    });
+
+    it("installs all skills including internal ones when filterInternal is omitted", () => {
+        mockFilesystem({ "/local/skills": ["public-skill", "internal-skill"] }, [], {
+            "/local/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
+        });
+
+        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.symlinkSync).toHaveBeenCalledTimes(4);
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/public-skill"), expect.any(String));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/internal-skill"), expect.any(String));
+    });
+
+    it("logs 'No skills found' when filterInternal: true and all skills are internal", () => {
+        mockFilesystem({ "/remote/skills": ["internal-skill"] }, [], {
+            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
+        });
+
+        const sources: SkillSource[] = [{ label: "external repo (skills/)", directory: "/remote/skills", symlink: false, filterInternal: true }];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.cpSync).not.toHaveBeenCalled();
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No skills found"));
+    });
+
+    it("excludes internal skills from dry-run output when filterInternal: true", () => {
+        mockFilesystem({ "/remote/skills": ["public-skill", "internal-skill"] }, [], {
+            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
+        });
+
+        const sources: SkillSource[] = [{ label: "external repo (skills/)", directory: "/remote/skills", symlink: false, filterInternal: true }];
+        installSkills(sources, targetDirs, { dryRun: true });
+
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("public-skill"));
+        expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining("internal-skill"));
     });
 });

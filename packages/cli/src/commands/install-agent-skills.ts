@@ -2,6 +2,7 @@
 import { execFileSync } from "child_process";
 import { Command } from "commander";
 import * as fs from "fs";
+import * as yaml from "js-yaml";
 import * as os from "os";
 import * as path from "path";
 
@@ -10,6 +11,8 @@ export interface SkillSource {
     directory: string;
     /** If true, create symlinks; if false, copy files (used for tmp clone dirs) */
     symlink: boolean;
+    /** If true, skills with metadata.internal: true in their SKILL.md are excluded */
+    filterInternal?: boolean;
 }
 
 export interface InstallOptions {
@@ -57,19 +60,46 @@ function pathExists(p: string): boolean {
     }
 }
 
-function listSkillFolders(directory: string): string[] {
+interface SkillFrontmatter {
+    metadata?: {
+        internal?: boolean;
+    };
+}
+
+export function isInternalSkill(skillFolderPath: string): boolean {
+    const skillMdPath = path.join(skillFolderPath, "SKILL.md");
+    let skillMdContent: string;
+    try {
+        skillMdContent = fs.readFileSync(skillMdPath, "utf-8");
+    } catch {
+        return false;
+    }
+
+    const frontmatterMatch = skillMdContent.match(/^---\n([\s\S]*?)\n---/);
+    if (!frontmatterMatch) return false;
+
+    try {
+        const parsed = yaml.load(frontmatterMatch[1]) as SkillFrontmatter | undefined;
+        return parsed?.metadata?.internal === true;
+    } catch {
+        return false;
+    }
+}
+
+function listSkillFolders(directory: string, filterInternal = false): string[] {
     if (!fs.existsSync(directory)) return [];
     return fs
         .readdirSync(directory)
         .filter((f) => fs.statSync(path.join(directory, f)).isDirectory())
+        .filter((folder) => !filterInternal || !isInternalSkill(path.join(directory, folder)))
         .sort();
 }
 
 export function installSkills(sources: SkillSource[], targetDirs: string[], { dryRun }: InstallOptions): void {
     const installed = new Set<string>();
 
-    for (const { label, directory, symlink } of sources) {
-        const folders = listSkillFolders(directory);
+    for (const { label, directory, symlink, filterInternal } of sources) {
+        const folders = listSkillFolders(directory, filterInternal);
         if (folders.length === 0) {
             console.log(`No skills found in ${label}`);
             continue;
@@ -159,6 +189,7 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
                     label: `external ${rawUrl} (skills/)`,
                     directory: path.join(cloneDir, "skills"),
                     symlink: false,
+                    filterInternal: true,
                 });
                 sources.push({
                     label: `external ${rawUrl} (package-skills/, deprecated)`,
