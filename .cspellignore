@@ -53,6 +53,7 @@ retryable
 mjml
 autonumber
 colorpicker
+cspellignore
 datetimerangepickerfield
 datetimerangepicker
 inlinealert
@@ -62,6 +63,7 @@ mailpit
 axllent
 timestamptz
 formatjs
+frontmatter
 autoplay
 authproxy
 xact
