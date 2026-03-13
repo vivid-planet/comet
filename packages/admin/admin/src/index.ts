@@ -149,6 +149,8 @@ export { CheckboxField, type CheckboxFieldProps } from "./form/fields/CheckboxFi
 export { CheckboxListField, type CheckboxListFieldProps } from "./form/fields/CheckboxListField";
 export { NumberField, type NumberFieldProps } from "./form/fields/NumberField";
 export { RadioGroupField, type RadioGroupFieldProps } from "./form/fields/RadioGroupField";
+export { RHFNumberField } from "./form/fields/RHFNumberField";
+export { RHFTextField } from "./form/fields/RHFTextField";
 export { SearchField, type SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, type SelectFieldOption, type SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, type SwitchFieldProps } from "./form/fields/SwitchField";

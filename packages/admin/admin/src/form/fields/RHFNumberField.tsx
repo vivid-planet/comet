@@ -1,4 +1,3 @@
-import { ClearInputAdornment, FieldContainer, type FieldContainerProps } from "@comet/admin";
 import { InputBase, type InputBaseProps } from "@mui/material";
 import { type ChangeEvent, type FocusEvent, useCallback, useEffect, useState } from "react";
 import {
@@ -10,6 +9,9 @@ import {
     type UseControllerProps,
 } from "react-hook-form";
 import { useIntl } from "react-intl";
+
+import { ClearInputAdornment } from "../../common/ClearInputAdornment";
+import { FieldContainer, type FieldContainerProps } from "../FieldContainer";
 
 // A number with integer and decimal parts used to extract locale-specific formatting symbols
 const LOCALE_FORMAT_SAMPLE_NUMBER = 1111.111;
