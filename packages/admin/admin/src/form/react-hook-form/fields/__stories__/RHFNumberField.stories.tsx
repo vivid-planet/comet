@@ -102,15 +102,8 @@ export const WithValidation: Story = {
                 defaultValues: { value: null },
             });
             return (
-                <form onSubmit={handleSubmit(() => undefined)}>
-                    <RHFNumberField
-                        name="value"
-                        control={control}
-                        label="Required Number"
-                        fullWidth
-                        variant="horizontal"
-                        rules={{ required: true }}
-                    />
+                <form onSubmit={handleSubmit(() => undefined)} noValidate>
+                    <RHFNumberField required name="value" control={control} label="Required Number" fullWidth variant="horizontal" />
                     <button type="submit">Submit</button>
                 </form>
             );

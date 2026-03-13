@@ -118,7 +118,10 @@ type RHFNumberFieldProps<
     TName extends FieldPathByValue<TFieldValues, number | null>,
     TTransformedValues,
 > = UseControllerProps<TFieldValues, TName, TTransformedValues> &
-    Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText"> & { clearable?: boolean; decimals?: number } & InputBaseProps;
+    Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & {
+        clearable?: boolean;
+        decimals?: number;
+    } & InputBaseProps;
 
 export function RHFNumberField<TFieldValues extends FieldValues, TName extends FieldPathByValue<TFieldValues, number | null>, TTransformedValues>({
     name,
@@ -134,6 +137,7 @@ export function RHFNumberField<TFieldValues extends FieldValues, TName extends F
     variant,
     fullWidth,
     helperText,
+    required,
     ...restProps
 }: RHFNumberFieldProps<TFieldValues, TName, TTransformedValues>) {
     const intl = useIntl();
@@ -141,7 +145,7 @@ export function RHFNumberField<TFieldValues extends FieldValues, TName extends F
     return (
         <Controller
             name={name}
-            rules={rules}
+            rules={required ? { required: true, ...rules } : rules}
             shouldUnregister={shouldUnregister}
             defaultValue={defaultValue}
             control={control}
@@ -159,7 +163,7 @@ export function RHFNumberField<TFieldValues extends FieldValues, TName extends F
                     }
                 }
                 return (
-                    <FieldContainer label={label} variant={variant} fullWidth={fullWidth} helperText={helperText} error={error}>
+                    <FieldContainer label={label} variant={variant} fullWidth={fullWidth} helperText={helperText} required={required} error={error}>
                         <RHFNumberFieldInner {...restProps} field={field} clearable={clearable} decimals={decimals} />
                     </FieldContainer>
                 );

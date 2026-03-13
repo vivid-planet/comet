@@ -10,7 +10,7 @@ type RHFTextFieldProps<
     TName extends FieldPathByValue<TFieldValues, string | null>,
     TTransformedValues,
 > = UseControllerProps<TFieldValues, TName, TTransformedValues> &
-    Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText"> & { clearable?: boolean } & InputBaseProps;
+    Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & { clearable?: boolean } & InputBaseProps;
 
 export function RHFTextField<TFieldValues extends FieldValues, TName extends FieldPathByValue<TFieldValues, string | null>, TTransformedValues>({
     name,
@@ -24,14 +24,16 @@ export function RHFTextField<TFieldValues extends FieldValues, TName extends Fie
     variant,
     fullWidth,
     helperText,
+    required,
     clearable,
+    endAdornment,
     ...restProps
 }: RHFTextFieldProps<TFieldValues, TName, TTransformedValues>) {
     const intl = useIntl();
     return (
         <Controller
             name={name}
-            rules={rules}
+            rules={required ? { required: true, ...rules } : rules}
             shouldUnregister={shouldUnregister}
             defaultValue={defaultValue}
             control={control}
@@ -49,7 +51,7 @@ export function RHFTextField<TFieldValues extends FieldValues, TName extends Fie
                     }
                 }
                 return (
-                    <FieldContainer label={label} variant={variant} fullWidth={fullWidth} helperText={helperText} error={error}>
+                    <FieldContainer label={label} variant={variant} fullWidth={fullWidth} helperText={helperText} required={required} error={error}>
                         <InputBase
                             {...restProps}
                             name={field.name}
@@ -66,12 +68,17 @@ export function RHFTextField<TFieldValues extends FieldValues, TName extends Fie
                             inputRef={field.ref}
                             disabled={field.disabled}
                             endAdornment={
-                                clearable && (
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={field.value !== null && field.value !== ""}
-                                        onClick={() => field.onChange(null)}
-                                    />
+                                (endAdornment || clearable) && (
+                                    <>
+                                        {clearable && (
+                                            <ClearInputAdornment
+                                                position="end"
+                                                hasClearableContent={field.value !== null && field.value !== ""}
+                                                onClick={() => field.onChange(null)}
+                                            />
+                                        )}
+                                        {endAdornment}
+                                    </>
                                 )
                             }
                         />
