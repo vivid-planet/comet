@@ -30,6 +30,13 @@ export type OwnerState = {
 const getSharedStyles = (theme: Theme, headerHeight: number) => css`
     background-color: ${theme.palette.common.white};
     overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     height: calc(100% - ${headerHeight}px);
     top: ${headerHeight}px;
 
@@ -55,8 +62,6 @@ export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MainNavigationClas
 
         .${drawerClasses.paper} {
             ${getSharedStyles(theme, ownerState.headerHeight)}
-            overflow-y: auto;
-            scrollbar-gutter: stable;
             ${ownerState.open
                 ? getOpenedAnimation(theme, "temporary", ownerState.drawerWidth)
                 : getClosedAnimation(theme, "temporary", ownerState.drawerWidth)}
@@ -88,11 +93,7 @@ export const PermanentDrawer = createComponentSlot(MuiDrawer)<MainNavigationClas
             ${getSharedStyles(theme, ownerState.headerHeight)}
             height: calc(100% - ${ownerState.headerHeight}px);
             ${ownerState.open
-                ? css`
-                      ${getOpenedAnimation(theme, "permanent", ownerState.drawerWidth)}
-                      overflow-y: auto;
-                      scrollbar-gutter: stable;
-                  `
+                ? getOpenedAnimation(theme, "permanent", ownerState.drawerWidth)
                 : getClosedAnimation(theme, "permanent", ownerState.drawerWidthCollapsed)}
         }
 
