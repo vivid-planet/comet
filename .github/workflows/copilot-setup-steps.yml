@@ -65,94 +65,130 @@ jobs:
                   registry-url: "https://registry.npmjs.org"
                   cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
-            # Cache all package build outputs in a single cache entry
-            # Uses restore-keys for partial matching when only some packages change
-            - name: Cache package builds
+            # Cache build outputs per package (before pnpm install to avoid hashing node_modules)
+            # Hash patterns target source and config files, explicitly excluding lib/ build output
+            - name: Cache @comet/cli build
+              id: cache-cli
               uses: actions/cache@v4
               with:
-                  path: |
-                      packages/*/lib
-                      packages/*/*/lib
-                      .package-build-hashes
-                  # Note: hash patterns (src, bin, icons, package.json, tsconfig) must stay in sync
-                  # with the per-package definitions in the "Determine packages to build" step below
-                  key: ${{ runner.os }}-pkg-builds-${{ hashFiles('packages/**/src/**', 'packages/**/bin/**', 'packages/**/icons/**', 'packages/**/package.json', 'packages/**/tsconfig*.json', 'pnpm-lock.yaml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pkg-builds-
+                  path: packages/cli/lib
+                  key: ${{ runner.os }}-build-cli-${{ hashFiles('packages/cli/src/**', 'packages/cli/bin/**', 'packages/cli/package.json', 'packages/cli/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-            # Determine which packages need building by comparing per-package source hashes
-            - name: Determine packages to build
-              id: check-builds
-              run: |
-                  # Package definitions: name|directory|extra-hash-dirs (space-separated, beyond src/)
-                  PACKAGES="
-                  cli|packages/cli|bin
-                  eslint-plugin|packages/eslint-plugin|
-                  admin|packages/admin/admin|
-                  admin-color-picker|packages/admin/admin-color-picker|
-                  admin-date-time|packages/admin/admin-date-time|
-                  admin-generator|packages/admin/admin-generator|bin
-                  admin-icons|packages/admin/admin-icons|icons
-                  admin-rte|packages/admin/admin-rte|
-                  brevo-admin|packages/admin/brevo-admin|
-                  cms-admin|packages/admin/cms-admin|
-                  api-generator|packages/api/api-generator|bin
-                  brevo-api|packages/api/brevo-api|
-                  cms-api|packages/api/cms-api|
-                  mail-react|packages/mail-react|
-                  site-nextjs|packages/site/site-nextjs|
-                  site-react|packages/site/site-react|
-                  "
+            - name: Cache @comet/eslint-plugin build
+              id: cache-eslint-plugin
+              uses: actions/cache@v4
+              with:
+                  path: packages/eslint-plugin/lib
+                  key: ${{ runner.os }}-build-eslint-plugin-${{ hashFiles('packages/eslint-plugin/src/**', 'packages/eslint-plugin/package.json', 'packages/eslint-plugin/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-                  EARLY_PACKAGES="cli eslint-plugin"
-                  EARLY_FILTERS=""
-                  MAIN_FILTERS=""
-                  mkdir -p .package-build-hashes
+            - name: Cache @comet/admin build
+              id: cache-admin
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin/lib
+                  key: ${{ runner.os }}-build-admin-${{ hashFiles('packages/admin/admin/src/**', 'packages/admin/admin/package.json', 'packages/admin/admin/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-                  while IFS='|' read -r name dir extra_dirs; do
-                      name=$(echo "$name" | xargs)
-                      dir=$(echo "$dir" | xargs)
-                      extra_dirs=$(echo "$extra_dirs" | xargs)
-                      [ -z "$name" ] && continue
+            - name: Cache @comet/admin-color-picker build
+              id: cache-admin-color-picker
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin-color-picker/lib
+                  key: ${{ runner.os }}-build-admin-color-picker-${{ hashFiles('packages/admin/admin-color-picker/src/**', 'packages/admin/admin-color-picker/package.json', 'packages/admin/admin-color-picker/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-                      # Compute hash of source + config files + lockfile
-                      CURRENT_HASH=$(
-                          {
-                              find "$dir/src" -type f 2>/dev/null | sort | xargs -r sha256sum 2>/dev/null
-                              for ed in $extra_dirs; do
-                                  find "$dir/$ed" -type f 2>/dev/null | sort | xargs -r sha256sum 2>/dev/null
-                              done
-                              sha256sum "$dir/package.json" 2>/dev/null
-                              for f in "$dir"/tsconfig*.json; do [ -f "$f" ] && sha256sum "$f"; done
-                              sha256sum pnpm-lock.yaml 2>/dev/null
-                          } | sha256sum | cut -d' ' -f1
-                      )
+            - name: Cache @comet/admin-date-time build
+              id: cache-admin-date-time
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin-date-time/lib
+                  key: ${{ runner.os }}-build-admin-date-time-${{ hashFiles('packages/admin/admin-date-time/src/**', 'packages/admin/admin-date-time/package.json', 'packages/admin/admin-date-time/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-                      STORED_HASH=""
-                      [ -f ".package-build-hashes/$name" ] && STORED_HASH=$(cat ".package-build-hashes/$name")
+            - name: Cache @comet/admin-generator build
+              id: cache-admin-generator
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin-generator/lib
+                  key: ${{ runner.os }}-build-admin-generator-${{ hashFiles('packages/admin/admin-generator/src/**', 'packages/admin/admin-generator/bin/**', 'packages/admin/admin-generator/package.json', 'packages/admin/admin-generator/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-                      # Also check lib/ exists as safety net for partial cache restores
-                      if [ "$CURRENT_HASH" != "$STORED_HASH" ] || [ ! -d "$dir/lib" ]; then
-                          echo "Package @comet/$name needs rebuild"
-                          echo "$CURRENT_HASH" > ".package-build-hashes/$name"
-                          if echo "$EARLY_PACKAGES" | grep -qw "$name"; then
-                              EARLY_FILTERS="$EARLY_FILTERS --filter @comet/$name"
-                          else
-                              MAIN_FILTERS="$MAIN_FILTERS --filter @comet/$name"
-                          fi
-                      else
-                          echo "Package @comet/$name is up to date"
-                      fi
-                  done <<< "$PACKAGES"
+            - name: Cache @comet/admin-icons build
+              id: cache-admin-icons
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin-icons/lib
+                  key: ${{ runner.os }}-build-admin-icons-${{ hashFiles('packages/admin/admin-icons/src/**', 'packages/admin/admin-icons/icons/**', 'packages/admin/admin-icons/package.json', 'packages/admin/admin-icons/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-                  echo "early-filters=$EARLY_FILTERS" >> "$GITHUB_OUTPUT"
-                  echo "main-filters=$MAIN_FILTERS" >> "$GITHUB_OUTPUT"
+            - name: Cache @comet/admin-rte build
+              id: cache-admin-rte
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin-rte/lib
+                  key: ${{ runner.os }}-build-admin-rte-${{ hashFiles('packages/admin/admin-rte/src/**', 'packages/admin/admin-rte/package.json', 'packages/admin/admin-rte/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/brevo-admin build
+              id: cache-brevo-admin
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/brevo-admin/lib
+                  key: ${{ runner.os }}-build-brevo-admin-${{ hashFiles('packages/admin/brevo-admin/src/**', 'packages/admin/brevo-admin/package.json', 'packages/admin/brevo-admin/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/cms-admin build
+              id: cache-cms-admin
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/cms-admin/lib
+                  key: ${{ runner.os }}-build-cms-admin-${{ hashFiles('packages/admin/cms-admin/src/**', 'packages/admin/cms-admin/package.json', 'packages/admin/cms-admin/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/api-generator build
+              id: cache-api-generator
+              uses: actions/cache@v4
+              with:
+                  path: packages/api/api-generator/lib
+                  key: ${{ runner.os }}-build-api-generator-${{ hashFiles('packages/api/api-generator/src/**', 'packages/api/api-generator/bin/**', 'packages/api/api-generator/package.json', 'packages/api/api-generator/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/brevo-api build
+              id: cache-brevo-api
+              uses: actions/cache@v4
+              with:
+                  path: packages/api/brevo-api/lib
+                  key: ${{ runner.os }}-build-brevo-api-${{ hashFiles('packages/api/brevo-api/src/**', 'packages/api/brevo-api/package.json', 'packages/api/brevo-api/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/cms-api build
+              id: cache-cms-api
+              uses: actions/cache@v4
+              with:
+                  path: packages/api/cms-api/lib
+                  key: ${{ runner.os }}-build-cms-api-${{ hashFiles('packages/api/cms-api/src/**', 'packages/api/cms-api/package.json', 'packages/api/cms-api/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/mail-react build
+              id: cache-mail-react
+              uses: actions/cache@v4
+              with:
+                  path: packages/mail-react/lib
+                  key: ${{ runner.os }}-build-mail-react-${{ hashFiles('packages/mail-react/src/**', 'packages/mail-react/package.json', 'packages/mail-react/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/site-nextjs build
+              id: cache-site-nextjs
+              uses: actions/cache@v4
+              with:
+                  path: packages/site/site-nextjs/lib
+                  key: ${{ runner.os }}-build-site-nextjs-${{ hashFiles('packages/site/site-nextjs/src/**', 'packages/site/site-nextjs/package.json', 'packages/site/site-nextjs/tsconfig*.json', 'pnpm-lock.yaml') }}
+
+            - name: Cache @comet/site-react build
+              id: cache-site-react
+              uses: actions/cache@v4
+              with:
+                  path: packages/site/site-react/lib
+                  key: ${{ runner.os }}-build-site-react-${{ hashFiles('packages/site/site-react/src/**', 'packages/site/site-react/package.json', 'packages/site/site-react/tsconfig*.json', 'pnpm-lock.yaml') }}
 
             - run: pnpm install --frozen-lockfile
 
             - name: Build @comet/cli and @comet/eslint-plugin (if not cached)
-              if: steps.check-builds.outputs.early-filters != ''
-              run: pnpm ${{ steps.check-builds.outputs.early-filters }} run build
+              run: |
+                  FILTERS=""
+                  [ "${{ steps.cache-cli.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/cli"
+                  [ "${{ steps.cache-eslint-plugin.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/eslint-plugin"
+                  if [ -n "$FILTERS" ]; then
+                      pnpm $FILTERS run build
+                  fi
 
             - run: CI=false pnpm run copy-project-files
 
@@ -164,5 +200,22 @@ jobs:
             - run: pnpm run setup:download-mitmproxy
 
             - name: Build packages (only uncached)
-              if: steps.check-builds.outputs.main-filters != ''
-              run: pnpm --recursive ${{ steps.check-builds.outputs.main-filters }} run build
+              run: |
+                  FILTERS=""
+                  [ "${{ steps.cache-admin.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin"
+                  [ "${{ steps.cache-admin-color-picker.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-color-picker"
+                  [ "${{ steps.cache-admin-date-time.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-date-time"
+                  [ "${{ steps.cache-admin-generator.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-generator"
+                  [ "${{ steps.cache-admin-icons.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-icons"
+                  [ "${{ steps.cache-admin-rte.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-rte"
+                  [ "${{ steps.cache-brevo-admin.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/brevo-admin"
+                  [ "${{ steps.cache-cms-admin.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/cms-admin"
+                  [ "${{ steps.cache-api-generator.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/api-generator"
+                  [ "${{ steps.cache-brevo-api.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/brevo-api"
+                  [ "${{ steps.cache-cms-api.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/cms-api"
+                  [ "${{ steps.cache-mail-react.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/mail-react"
+                  [ "${{ steps.cache-site-nextjs.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/site-nextjs"
+                  [ "${{ steps.cache-site-react.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/site-react"
+                  if [ -n "$FILTERS" ]; then
+                      pnpm --recursive $FILTERS run build
+                  fi
