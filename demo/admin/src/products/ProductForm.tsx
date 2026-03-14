@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { filterByFragment, Loading, RHFTextField, Savable } from "@comet/admin";
+import { filterByFragment, Loading, RHFForm, RHFTextField } from "@comet/admin";
 import {
     type BlockState,
     DamImageBlock,
@@ -9,7 +9,7 @@ import {
     useSaveConflict,
 } from "@comet/cms-admin";
 import { type GQLProductMutationErrorCode, type GQLProductType } from "@src/graphql.generated";
-import { type ReactNode, useCallback, useEffect, useRef } from "react";
+import { type ReactNode, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
@@ -66,7 +66,19 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const { control, handleSubmit, reset, formState, setError } = useForm<FormValues>({
+    const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
+    const formValues: FormValues | undefined = filteredData
+        ? {
+              ...filteredData,
+              image: rootBlocks.image.input2State(filteredData.image),
+              manufacturerCountry: filteredData.manufacturer
+                  ? { id: filteredData.manufacturer.addressAsEmbeddable.country, label: filteredData.manufacturer.addressAsEmbeddable.country }
+                  : undefined,
+              lastCheckedAt: filteredData.lastCheckedAt ? new Date(filteredData.lastCheckedAt) : null,
+          }
+        : undefined;
+
+    const form = useForm<FormValues>({
         defaultValues: {
             title: null,
             slug: null,
@@ -76,44 +88,25 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
             image: rootBlocks.image.defaultValues(),
             dimensions: width !== undefined ? { width } : undefined,
         },
+        values: formValues,
+        resetOptions: {
+            keepDirtyValues: true,
+        },
     });
-
-    useEffect(() => {
-        const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
-        if (filteredData) {
-            reset(
-                {
-                    ...filteredData,
-                    image: rootBlocks.image.input2State(filteredData.image),
-                    manufacturerCountry: filteredData.manufacturer
-                        ? {
-                              id: filteredData.manufacturer?.addressAsEmbeddable.country,
-                              label: filteredData.manufacturer?.addressAsEmbeddable.country,
-                          }
-                        : undefined,
-                    lastCheckedAt: filteredData.lastCheckedAt ? new Date(filteredData.lastCheckedAt) : null,
-                },
-                { keepDirtyValues: true },
-            );
-        }
-    }, [data, reset]);
-
-    const isDirtyRef = useRef(false);
-    isDirtyRef.current = formState.isDirty;
-    const hasChanges = useCallback(() => isDirtyRef.current, []);
+    const { control, setError } = form;
 
     const saveConflict = useSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "product", id);
             return resolveHasSaveConflict(data?.product.updatedAt, updatedAt);
         },
-        hasChanges,
+        hasChanges: () => form.formState.isDirty,
         loadLatestVersion: async () => {
             await refetch();
         },
         onDiscardButtonPressed: async () => {
+            form.reset();
             await refetch();
-            reset();
         },
     });
 
@@ -172,24 +165,6 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         [client, id, mode, onCreate, saveConflict, setError],
     );
 
-    const doSave = useCallback(
-        (): Promise<boolean> =>
-            new Promise<boolean>((resolve) => {
-                handleSubmit(
-                    async (values) => {
-                        try {
-                            await onSubmit(values);
-                            resolve(true);
-                        } catch {
-                            resolve(false);
-                        }
-                    },
-                    () => resolve(false),
-                )();
-            }),
-        [handleSubmit, onSubmit],
-    );
-
     if (error) throw error;
 
     if (loading) {
@@ -197,8 +172,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
     }
 
     return (
-        <>
-            <Savable hasChanges={formState.isDirty} doSave={doSave} doReset={reset} />
+        <RHFForm onSubmit={onSubmit} {...form}>
             {saveConflict.dialogs}
             <RHFTextField required fullWidth control={control} name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
             <RHFTextField required fullWidth control={control} name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
@@ -367,6 +341,6 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                 fullWidth
             />
             */}
-        </>
+        </RHFForm>
     );
 }

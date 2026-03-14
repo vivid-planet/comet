@@ -1,8 +1,8 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
-import { RHFTextField, Savable, SaveBoundary, SaveBoundarySaveButton, SnackbarProvider } from "@comet/admin";
+import { RHFForm, RHFTextField, SaveBoundary, SaveBoundarySaveButton, SnackbarProvider } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useSaveConflict } from "@comet/cms-admin";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
@@ -129,37 +129,26 @@ function ProductForm({ id, onCreate }: ProductFormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
 
-    const { control, handleSubmit, reset, formState } = useForm<FormValues>({
+    const { data } = client.readQuery({ query: productQuery, variables: id ? { id } : undefined }) ?? {};
+
+    const formValues: FormValues | undefined = data?.product
+        ? {
+              title: data.product.title,
+              slug: data.product.slug,
+          }
+        : undefined;
+
+    const form = useForm<FormValues>({
         defaultValues: {
             title: null,
             slug: null,
         },
+        values: formValues,
+        resetOptions: {
+            keepDirtyValues: true,
+        },
     });
-
-    useEffect(() => {
-        if (!id) return;
-
-        client
-            .query({
-                query: productQuery,
-                variables: { id },
-            })
-            .then(({ data }) => {
-                if (data?.product) {
-                    reset(
-                        {
-                            title: data.product.title,
-                            slug: data.product.slug,
-                        },
-                        { keepDirtyValues: true },
-                    );
-                }
-            });
-    }, [id, client, reset]);
-
-    const isDirtyRef = useRef(false);
-    isDirtyRef.current = formState.isDirty;
-    const hasChanges = useCallback(() => isDirtyRef.current, []);
+    const { control } = form;
 
     const saveConflict = useSaveConflict({
         checkConflict: async () => {
@@ -167,15 +156,15 @@ function ProductForm({ id, onCreate }: ProductFormProps) {
             const updatedAt = await queryUpdatedAt(client, "product", id);
             return resolveHasSaveConflict(mockedProduct.updatedAt, updatedAt);
         },
-        hasChanges,
+        hasChanges: () => form.formState.isDirty,
         loadLatestVersion: async () => {
             if (!id) return;
             await client.query({ query: productQuery, variables: { id }, fetchPolicy: "network-only" });
         },
         onDiscardButtonPressed: async () => {
+            form.reset();
             if (!id) return;
             await client.query({ query: productQuery, variables: { id }, fetchPolicy: "network-only" });
-            reset();
         },
     });
 
@@ -205,27 +194,8 @@ function ProductForm({ id, onCreate }: ProductFormProps) {
         [client, id, mode, onCreate, saveConflict],
     );
 
-    const doSave = useCallback(
-        (): Promise<boolean> =>
-            new Promise<boolean>((resolve) => {
-                handleSubmit(
-                    async (values) => {
-                        try {
-                            await onSubmit(values);
-                            resolve(true);
-                        } catch {
-                            resolve(false);
-                        }
-                    },
-                    () => resolve(false),
-                )();
-            }),
-        [handleSubmit, onSubmit],
-    );
-
     return (
-        <>
-            <Savable hasChanges={formState.isDirty} doSave={doSave} doReset={reset} />
+        <RHFForm onSubmit={onSubmit} {...form}>
             {saveConflict.dialogs}
             <RHFTextField required fullWidth control={control} name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
             <RHFTextField required fullWidth control={control} name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
@@ -246,8 +216,23 @@ function ProductForm({ id, onCreate }: ProductFormProps) {
             <FileUploadField name="datasheets" ... />
             <DateTimeField name="lastCheckedAt" ... />
             */}
-        </>
+        </RHFForm>
     );
+}
+
+function StoryWithApollo({ id, onCreate }: ProductFormProps) {
+    const client = useApolloClient();
+
+    if (id) {
+        // Preload data into Apollo cache
+        client.writeQuery({
+            query: productQuery,
+            variables: { id },
+            data: { product: mockedProduct },
+        });
+    }
+
+    return <ProductForm id={id} onCreate={onCreate} />;
 }
 
 export const EditProductForm = {
@@ -257,7 +242,7 @@ export const EditProductForm = {
                 <SnackbarProvider>
                     <SaveBoundary>
                         <SaveBoundarySaveButton />
-                        <ProductForm id="1" />
+                        <StoryWithApollo id="1" />
                     </SaveBoundary>
                 </SnackbarProvider>
             </MockedProvider>
@@ -272,7 +257,7 @@ export const AddProductForm = {
                 <SnackbarProvider>
                     <SaveBoundary>
                         <SaveBoundarySaveButton />
-                        <ProductForm onCreate={(id) => window.alert(`Created product with id: ${id}`)} />
+                        <StoryWithApollo onCreate={(id) => window.alert(`Created product with id: ${id}`)} />
                     </SaveBoundary>
                 </SnackbarProvider>
             </MockedProvider>
