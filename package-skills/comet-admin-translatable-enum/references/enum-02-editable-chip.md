@@ -29,8 +29,8 @@ export const {camelCaseName}For{EntityName}Query = gql`
 `;
 
 export const update{EntityName}{EnumName}Mutation = gql`
-    mutation Update{EntityName}{EnumName}($id: ID!, ${enumFieldName}: {EnumName}!) {
-        {updateMutation}(id: $id, input: { {enumFieldName}: ${enumFieldName} }) {
+    mutation Update{EntityName}{EnumName}($id: ID!, {$enumFieldName}: {EnumName}!) {
+        {updateMutation}(id: $id, input: { {enumFieldName}: {$enumFieldName} }) {
             id
             {enumFieldName}
         }
