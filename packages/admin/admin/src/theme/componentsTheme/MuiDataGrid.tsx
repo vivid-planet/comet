@@ -76,6 +76,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: "info",
                 ...component?.defaultProps?.slotProps?.baseButton,
             },
+            basePopper: {
+                placement: "bottom-start",
+                ...component?.defaultProps?.slotProps?.basePopper,
+            },
         },
         localeText: {
             ...component?.defaultProps?.localeText,
