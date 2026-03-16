@@ -4,6 +4,7 @@ import {
     buttonBaseClasses,
     Checkbox,
     checkboxClasses,
+    formControlClasses,
     iconButtonClasses,
     inputBaseClasses,
     inputLabelClasses,
@@ -217,6 +218,42 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
             },
+
+            // filterFormLogicOperatorInput wrapper
+            [`.${formControlClasses.root}:nth-child(2)`]: {
+                width: filterOperatorInputWidth,
+                marginRight: 0,
+                marginTop: "auto",
+
+                [breakpoints.up("md")]: {
+                    width: 80,
+                },
+            },
+
+            // filterFormColumnInput wrapper
+            [`.${formControlClasses.root}:nth-child(3)`]: {
+                width: `calc(100% - ${filtersLeftSectionWidth}px)`,
+                paddingLeft: spacing(2),
+                boxSizing: "border-box",
+
+                [breakpoints.up("md")]: {
+                    width: 199,
+                    paddingLeft: 0,
+                },
+            },
+
+            // filterFormOperatorInput wrapper
+            [`.${formControlClasses.root}:nth-child(4)`]: {
+                marginTop: spacing(3),
+                flexBasis: filtersLeftSectionWidth,
+                flexGrow: 1,
+
+                [breakpoints.up("md")]: {
+                    marginTop: 0,
+                    width: 110,
+                    flexBasis: "unset",
+                },
+            },
         },
         filterFormDeleteIcon: {
             width: filterDeleteIconSize,
@@ -234,36 +271,11 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 height: "100%",
             },
         },
-        filterFormLogicOperatorInput: {
-            width: filterOperatorInputWidth,
-            marginRight: 0,
-
-            [breakpoints.up("md")]: {
-                width: 80,
-                marginTop: "auto",
-            },
-        },
         filterFormColumnInput: {
-            width: `calc(100% - ${filtersLeftSectionWidth}px)`,
-            paddingLeft: spacing(2),
-            boxSizing: "border-box",
-
-            [breakpoints.up("md")]: {
-                width: 199,
-                paddingLeft: 0,
-            },
+            width: "100%",
         },
         filterFormOperatorInput: {
-            marginTop: spacing(3),
-            flexBasis: filterOperatorInputWidth,
-            flexGrow: 1,
-
-            [breakpoints.up("md")]: {
-                marginTop: 0,
-                width: 110,
-                flexBasis: "unset",
-                flexGrow: 0,
-            },
+            width: "100%",
         },
         filterFormValueInput: {
             width: `calc(100% - ${filtersLeftSectionWidth}px)`,
