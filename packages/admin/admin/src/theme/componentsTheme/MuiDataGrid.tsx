@@ -10,6 +10,7 @@ import {
     nativeSelectClasses,
     type SvgIconProps,
     tablePaginationClasses,
+    TextField,
     textFieldClasses,
     toolbarClasses,
 } from "@mui/material";
@@ -55,6 +56,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         slots: {
             baseCheckbox: Checkbox as any,
+            baseTextField: TextField as any,
             filterPanelDeleteIcon: ((props: SvgIconProps) => <Delete {...props} fontSize="medium" />) as any,
             booleanCellTrueIcon: Check as any,
             booleanCellFalseIcon: Close as any,
