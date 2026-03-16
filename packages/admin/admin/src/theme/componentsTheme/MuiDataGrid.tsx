@@ -224,7 +224,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             // filterFormLogicOperatorInput wrapper
-            [`.${formControlClasses.root}:nth-child(2)`]: {
+            [`.${formControlClasses.root}:nth-of-type(2)`]: {
                 width: filterOperatorInputWidth,
                 marginRight: 0,
                 marginTop: "auto",
@@ -235,7 +235,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             // filterFormColumnInput wrapper
-            [`.${formControlClasses.root}:nth-child(3)`]: {
+            [`.${formControlClasses.root}:nth-of-type(3)`]: {
                 width: `calc(100% - ${filtersLeftSectionWidth}px)`,
                 paddingLeft: spacing(2),
                 boxSizing: "border-box",
@@ -247,7 +247,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             // filterFormOperatorInput wrapper
-            [`.${formControlClasses.root}:nth-child(4)`]: {
+            [`.${formControlClasses.root}:nth-of-type(4)`]: {
                 marginTop: spacing(3),
                 flexBasis: filtersLeftSectionWidth,
                 flexGrow: 1,
