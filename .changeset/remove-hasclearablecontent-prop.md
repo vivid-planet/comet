@@ -1,6 +1,7 @@
 ---
 "@comet/admin": major
 "@comet/admin-color-picker": major
+"@comet/admin-date-time": major
 "@comet/cms-admin": major
 ---
 
