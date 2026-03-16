@@ -2,6 +2,7 @@ import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps, pickersInputBaseClasses } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -33,6 +34,8 @@ export type Future_DatePickerProps = ThemedComponentBaseProps<{
      * @param date - The new date value in ISO 8601 format (YYYY-MM-DD), or `undefined` if cleared.
      */
     onChange?: (date: string | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -60,6 +63,8 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
         disabled,
         value: stringValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -67,6 +72,7 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
         name: "CometAdminFutureDatePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
     const dateValue = getDateValue(stringValue);
 
     const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
@@ -103,6 +109,8 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,
@@ -113,6 +121,16 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
                                         inputIsReadOnly={readOnly}
                                         onClick={() => setOpen(true)}
                                         {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.datePicker.openPicker",
+                                                    defaultMessage: "Open date picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
                                     >
                                         {openPickerIcon}
                                     </OpenPickerAdornment>
