@@ -93,7 +93,7 @@ const addFilterText = <FormattedMessage id="dataGrid.panel.addFilter" defaultMes
 let lastAddedFilterItemId = 0;
 
 export const DataGridPanel = (inProps: DataGridPanelProps) => {
-    const { children, open, slotProps, iconMapping = {} } = useThemeProps({ props: inProps, name: "CometAdminDataGridPanel" });
+    const { children, open, slotProps, iconMapping = {}, onClose, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridPanel" });
     const apiRef = useGridApiContext();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
@@ -154,12 +154,8 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     }, [apiRef, initialColumnVisibilityModel]);
 
     const closeDialog = useCallback(() => {
-        if (openedPanelValue === GridPreferencePanelsValue.filters) {
-            apiRef.current.hideFilterPanel();
-        } else {
-            apiRef.current.hidePreferences();
-        }
-    }, [apiRef, openedPanelValue]);
+        onClose?.();
+    }, [onClose]);
 
     const theme = useTheme();
     const renderFullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -225,7 +221,7 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     }
 
     return (
-        <DesktopGridPanel ownerState={rootProps} open={open} {...slotProps?.desktopGridPanel}>
+        <DesktopGridPanel ownerState={rootProps} open={open} onClose={onClose} {...slotProps?.desktopGridPanel} {...restProps}>
             {children}
             <DesktopPanelFooterDivider {...slotProps?.desktopPanelFooterDivider} />
             <DesktopPanelFooter {...slotProps?.desktopPanelFooter}>
