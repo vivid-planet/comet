@@ -84,9 +84,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
     },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
-        root: {
-            backgroundColor: "white",
-        },
         panelHeader: {
             padding: `4px 4px ${spacing(1)} 4px`,
             borderBottom: `1px solid ${palette.divider}`,
