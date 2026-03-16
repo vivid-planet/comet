@@ -285,6 +285,7 @@ const DesktopPanelFooter = createComponentSlot("div")<DataGridPanelClassKey>({
         display: flex;
         justify-content: space-between;
         padding: ${theme.spacing(4)};
+        gap: ${theme.spacing(3)};
     `,
 );
 
