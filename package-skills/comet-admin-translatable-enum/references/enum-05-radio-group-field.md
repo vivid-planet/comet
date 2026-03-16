@@ -15,8 +15,6 @@ All options visible at once. Best for few options (<=4).
 
 ## Template
 
-Use `RadioGroupFieldProps` from `@comet/admin`, omitting `options`:
-
 ```tsx
 import { RadioGroupField, type RadioGroupFieldProps } from "@comet/admin";
 import { {camelCaseName}FormattedMessageMap } from "{enumImportPath}";
