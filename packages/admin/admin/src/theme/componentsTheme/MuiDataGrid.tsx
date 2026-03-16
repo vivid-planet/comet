@@ -179,13 +179,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         panelContent: {
             padding: spacing(4),
         },
-        paper: {
-            border: `1px solid ${palette.grey[100]}`,
-            boxShadow: shadows[4],
-            borderRadius: 4,
-            maxHeight: "none",
-            flexDirection: "column",
-        },
         filterForm: {
             flexDirection: "row",
             flexWrap: "wrap",

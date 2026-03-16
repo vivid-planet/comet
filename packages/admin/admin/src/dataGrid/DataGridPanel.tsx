@@ -251,15 +251,26 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
 const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey, DataGridProcessedProps>({
     componentName: "DataGridPanel",
     slotName: "desktopGridPanel",
-})(css`
-    .MuiDataGrid-panelHeader,
-    .MuiDataGrid-columnsManagementHeader,
-    .MuiDataGrid-panelFooter,
-    .MuiDataGrid-columnsManagementFooter {
-        // Hide MUIs header and footer so we can add our own with a better structure for styling
-        display: none;
-    }
-`);
+})(
+    ({ theme }) => css`
+        .MuiDataGrid-panelHeader,
+        .MuiDataGrid-columnsManagementHeader,
+        .MuiDataGrid-panelFooter,
+        .MuiDataGrid-columnsManagementFooter {
+            // Hide MUIs header and footer so we can add our own with a better structure for styling
+            display: none;
+        }
+
+        .MuiDataGrid-paper {
+            border: 1px solid ${theme.palette.grey[100]};
+            box-shadow: ${theme.shadows[4]};
+            border-radius: 4px;
+            max-height: none;
+            flex-direction: column;
+            padding: 0;
+        }
+    `,
+);
 
 const DesktopPanelFooterDivider = createComponentSlot(Divider)<DataGridPanelClassKey>({
     componentName: "DataGridPanel",
