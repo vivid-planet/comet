@@ -13,6 +13,7 @@ import { CheckboxField } from "../components/form/CheckboxField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
+import { Typography } from "../components/Typography";
 
 const subjectOptions = [
     { value: "Option 1", label: "Option 1" },
@@ -205,6 +206,16 @@ export const ContactFormBlock = withPreview(
                         <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
                     </Button>
                     {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
+                    <Typography variant="paragraph200" bottomSpacing>
+                        <FormattedMessage
+                            id="contactForm.recaptchaDisclaimer"
+                            defaultMessage="This site is protected by reCAPTCHA and the Google <privacyLink>Privacy Policy</privacyLink> and <termsLink>Terms of Service</termsLink> apply."
+                            values={{
+                                privacyLink: (chunks) => <a href="https://policies.google.com/privacy">{chunks}</a>,
+                                termsLink: (chunks) => <a href="https://policies.google.com/terms">{chunks}</a>,
+                            }}
+                        />
+                    </Typography>
                 </form>
             </>
         );
