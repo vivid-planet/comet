@@ -8,11 +8,10 @@ import {
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
-    Select,
     svgIconClasses,
     type SvgIconProps,
     tablePaginationClasses,
-    TextField,
+    textFieldClasses,
     toolbarClasses,
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
@@ -60,8 +59,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             quickFilterIcon: Search as any,
             quickFilterClearIcon: Clear as any,
             filterPanelDeleteIcon: ((props: SvgIconProps) => <Delete {...props} fontSize="medium" />) as any,
-            baseTextField: TextField as any,
-            baseSelect: Select as any,
             booleanCellTrueIcon: Check as any,
             booleanCellFalseIcon: Close as any,
             columnSortedAscendingIcon: ArrowUp as any,
@@ -178,6 +175,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         panelContent: {
             padding: spacing(4),
+            gap: 0,
         },
         filterForm: {
             flexDirection: "row",
@@ -242,6 +240,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             [breakpoints.up("md")]: {
                 width: 80,
+                marginTop: "auto",
             },
         },
         filterFormColumnInput: {
@@ -262,6 +261,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [breakpoints.up("md")]: {
                 marginTop: 0,
                 width: 110,
+                flexBasis: "unset",
+                flexGrow: 0,
             },
         },
         filterFormValueInput: {
@@ -303,7 +304,28 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             [`& .${inputBaseClasses.root}`]: {
-                marginTop: 0,
+                minHeight: "40px",
+                display: "flex",
+                alignItems: "center",
+                border: `1px solid ${palette.grey[100]}`,
+
+                [`& > .${inputBaseClasses.input}`]: {
+                    padding: `calc(${spacing(2)} - 1px)`,
+                    display: "flex",
+                    alignItems: "center",
+                },
+
+                [`& > .MuiOutlinedInput-notchedOutline`]: {
+                    display: "none",
+                },
+
+                "&.Mui-focused": {
+                    border: `1px solid ${palette.primary.main}`,
+                },
+            },
+
+            [`& .${textFieldClasses.root}`]: {
+                width: "100%",
             },
         },
         panelFooter: {
