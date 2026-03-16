@@ -5,7 +5,6 @@ import { getRecaptchaToken } from "@src/util/getRecaptchaToken";
 import { useNextPublic } from "@src/util/NextPublicProvider";
 import { useParams } from "next/navigation";
 import Script from "next/script";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -38,23 +37,6 @@ export const ContactFormBlock = withPreview(
         const language = params.language;
 
         const recaptchaKey = useNextPublic("RECAPTCHA_SITE_KEY");
-
-        // Force hard reload on navigation to ensure the reCAPTCHA script is properly removed.
-        useEffect(() => {
-            const originalPushState = window.history.pushState.bind(window.history);
-
-            window.history.pushState = (data: unknown, unused: string, url?: string | URL | null) => {
-                if (url != null) {
-                    window.location.href = url.toString();
-                } else {
-                    originalPushState(data, unused, url);
-                }
-            };
-
-            return () => {
-                window.history.pushState = originalPushState;
-            };
-        }, []);
 
         const {
             control,
