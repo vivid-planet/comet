@@ -227,7 +227,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                     {...slotProps?.expandedMenuSubitemWrapper}
                                 >
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
-                                    <ExpandedMenuItem {...slotProps?.expandedMenuItem} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
+                                    <ExpandedMenuItem {...slotProps?.expandedMenuItem} fontWeight={index === items.length - 1 ? "bold" : undefined}>
                                         {item.title}
                                     </ExpandedMenuItem>
                                 </ExpandedMenuSubitemWrapper>
