@@ -4,12 +4,13 @@ import {
     FillSpace,
     GridColumnsButton,
     GridFilterButton,
+    GridToolbarQuickFilter,
     StackLink,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
-import { DataGrid as DataGridCommunity, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid as DataGridCommunity } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

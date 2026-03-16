@@ -9,6 +9,7 @@ import {
     FullHeightContent,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     HelpDialogButton,
     Loading,
     RouterTab,
@@ -30,7 +31,7 @@ import {
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { Box, DialogContent, IconButton, Typography } from "@mui/material";
-import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 

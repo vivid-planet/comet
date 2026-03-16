@@ -14,6 +14,7 @@ import {
     type GridColDef,
     GridColumnsButton,
     GridFilterButton,
+    GridToolbarQuickFilter,
     messages,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -32,7 +33,6 @@ import {
     GridFilterInputSingleSelect,
     type GridRowSelectionModel,
     type GridSlotsComponent,
-    GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import { ProductCategoryFilterOperators } from "@src/products/ProductCategoryFilter";
 import { useMemo, useState } from "react";

@@ -5,6 +5,7 @@ import {
     FillSpace,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -14,7 +15,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { FormattedMessage } from "react-intl";
 
 import {

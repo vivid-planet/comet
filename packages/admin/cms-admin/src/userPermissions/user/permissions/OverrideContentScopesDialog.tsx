@@ -1,5 +1,15 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, DataGridToolbar, Field, FillSpace, FinalForm, FinalFormSwitch, type GridColDef, SaveButton } from "@comet/admin";
+import {
+    CancelButton,
+    DataGridToolbar,
+    Field,
+    FillSpace,
+    FinalForm,
+    FinalFormSwitch,
+    type GridColDef,
+    GridToolbarQuickFilter,
+    SaveButton,
+} from "@comet/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
@@ -8,7 +18,7 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
 import { type ContentScope } from "../../../contentScope/Provider";

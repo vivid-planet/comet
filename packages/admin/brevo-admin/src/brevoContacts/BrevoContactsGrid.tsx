@@ -4,6 +4,7 @@ import {
     CrudMoreActionsMenu,
     DataGridToolbar,
     type GridColDef,
+    GridToolbarQuickFilter,
     MainContent,
     messages,
     RowActionsItem,
@@ -17,7 +18,7 @@ import {
 import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { type ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
@@ -76,14 +77,10 @@ function BrevoContactsGridToolbar({ intl, scope }: BrevoContactsGridToolbarProps
             <DataGridToolbar>
                 <FormattedMessage id="cometBrevoModule.brevoContact.title" defaultMessage="Contacts" />
                 <GridToolbarQuickFilter
-                    slotProps={{
-                        root: {
-                            placeholder: intl.formatMessage({
-                                id: "cometBrevoModule.brevoContact.searchEmail",
-                                defaultMessage: "Search email address",
-                            }),
-                        },
-                    }}
+                    placeholder={intl.formatMessage({
+                        id: "cometBrevoModule.brevoContact.searchEmail",
+                        defaultMessage: "Search email address",
+                    })}
                 />
                 <ToolbarFillSpace />
                 <CrudMoreActionsMenu overallActions={[moreActionsMenuItem]} />

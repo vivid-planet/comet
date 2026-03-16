@@ -5,6 +5,7 @@ import {
     FillSpace,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
@@ -15,7 +16,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

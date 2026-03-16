@@ -1,7 +1,6 @@
-import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
+import { ArrowDown, ArrowUp, Check, Close, Delete, MoreVertical } from "@comet/admin-icons";
 import {
     autocompleteClasses,
-    buttonBaseClasses,
     Checkbox,
     checkboxClasses,
     formControlClasses,
@@ -9,7 +8,6 @@ import {
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
-    svgIconClasses,
     type SvgIconProps,
     tablePaginationClasses,
     textFieldClasses,
@@ -57,8 +55,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         slots: {
             baseCheckbox: Checkbox as any,
-            quickFilterIcon: Search as any,
-            quickFilterClearIcon: Clear as any,
             filterPanelDeleteIcon: ((props: SvgIconProps) => <Delete {...props} fontSize="medium" />) as any,
             booleanCellTrueIcon: Check as any,
             booleanCellFalseIcon: Close as any,
@@ -347,49 +343,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         panelFooter: {
             padding: spacing(2),
             borderTop: `1px solid ${palette.divider}`,
-        },
-        toolbarQuickFilter: {
-            paddingBottom: 0,
-            width: 120,
-
-            [breakpoints.up("sm")]: {
-                width: 150,
-            },
-
-            [breakpoints.up("md")]: {
-                width: "auto",
-            },
-
-            [`& .${svgIconClasses.root}`]: {
-                fontSize: 16,
-            },
-
-            [`& .${buttonBaseClasses.root}`]: {
-                alignSelf: "stretch",
-                color: palette.grey[200],
-                paddingLeft: 10,
-                paddingRight: 10,
-                fontSize: 12,
-                marginRight: spacing(-2),
-                borderRadius: 0,
-
-                [`& .${svgIconClasses.root}`]: {
-                    fontSize: "inherit",
-                },
-            },
-
-            [`& .${inputBaseClasses.input}`]: {
-                marginLeft: 0,
-            },
-
-            [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
-                paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
-                textOverflow: "ellipsis",
-            },
-
-            [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
-                display: "none", // Prevents the disabled clear-button from overlaying the input value
-            },
         },
     }),
 });

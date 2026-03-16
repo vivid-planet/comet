@@ -281,7 +281,7 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "GridSlotsComponent", importPath: muiXGridVariant.package },
         { name: "GridToolbarProps", importPath: muiXGridVariant.package },
         { name: "GridColumnHeaderTitle", importPath: muiXGridVariant.package },
-        { name: "GridToolbarQuickFilter", importPath: muiXGridVariant.package },
+        { name: "GridToolbarQuickFilter", importPath: "@comet/admin" },
         { name: "GridRowOrderChangeParams", importPath: muiXGridVariant.package },
         { name: "useMemo", importPath: "react" },
     ];

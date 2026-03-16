@@ -6,6 +6,7 @@ import {
     downloadFile,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -20,7 +21,7 @@ import {
 import { Add as AddIcon, Download, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { type DocumentNode } from "graphql";
 import { type ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

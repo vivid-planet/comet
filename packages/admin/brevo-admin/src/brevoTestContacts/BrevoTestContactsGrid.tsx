@@ -4,6 +4,7 @@ import {
     Button,
     DataGridToolbar,
     type GridColDef,
+    GridToolbarQuickFilter,
     MainContent,
     messages,
     RowActionsItem,
@@ -19,7 +20,7 @@ import {
 import { Add, Delete, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { Box, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { type ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
@@ -65,14 +66,10 @@ function BrevoTestContactsGridToolbar({ intl, totalCount }: BrevoTestContactsGri
                 <FormattedMessage id="cometBrevoModule.brevoTestContact.title" defaultMessage="Test contacts" />
             </ToolbarTitleItem>
             <GridToolbarQuickFilter
-                slotProps={{
-                    root: {
-                        placeholder: intl.formatMessage({
-                            id: "cometBrevoModule.brevoTestContact.searchEmail",
-                            defaultMessage: "Search email address",
-                        }),
-                    },
-                }}
+                placeholder={intl.formatMessage({
+                    id: "cometBrevoModule.brevoTestContact.searchEmail",
+                    defaultMessage: "Search email address",
+                })}
             />
             <ToolbarFillSpace />
             <Tooltip title={disableButton ? tooltipMessage : ""}>

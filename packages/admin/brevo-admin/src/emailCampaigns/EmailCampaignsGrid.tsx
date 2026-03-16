@@ -5,6 +5,7 @@ import {
     DataGridToolbar,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -20,7 +21,7 @@ import {
 import { Add as AddIcon, Edit, Statistics, Visible } from "@comet/admin-icons";
 import { type BlockInterface, type ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { isBefore } from "date-fns";
 import { type ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

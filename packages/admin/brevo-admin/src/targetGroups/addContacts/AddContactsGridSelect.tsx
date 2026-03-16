@@ -8,6 +8,7 @@ import {
     Field,
     FinalForm,
     type GridColDef,
+    GridToolbarQuickFilter,
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
@@ -19,7 +20,7 @@ import { Add, Close, Remove, Save } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { DialogActions, DialogTitle, IconButton, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MemoryRouter } from "react-router";
@@ -70,14 +71,10 @@ const AssignedContactsGridToolbar = ({ onOpenDialog, scope, targetGroupId, sendD
                     <FormattedMessage id="cometBrevoModule.targetGroup.manuallyAssignedContacts.title" defaultMessage="Manually assigned contacts" />
                 </ToolbarTitleItem>
                 <GridToolbarQuickFilter
-                    slotProps={{
-                        root: {
-                            placeholder: intl.formatMessage({
-                                id: "cometBrevoModule.targetGroup.assignedContacts.searchEmail",
-                                defaultMessage: "Search email address",
-                            }),
-                        },
-                    }}
+                    placeholder={intl.formatMessage({
+                        id: "cometBrevoModule.targetGroup.assignedContacts.searchEmail",
+                        defaultMessage: "Search email address",
+                    })}
                 />
                 <ToolbarFillSpace />
                 <CrudMoreActionsMenu overallActions={[moreActionsMenuItem]} />
@@ -100,14 +97,10 @@ const AssignableContactsGridToolbar = () => {
             </ToolbarTitleItem>
             <ToolbarItem>
                 <GridToolbarQuickFilter
-                    slotProps={{
-                        root: {
-                            placeholder: intl.formatMessage({
-                                id: "cometBrevoModule.targetGroup.assignableContacts.searchEmail",
-                                defaultMessage: "Search email address",
-                            }),
-                        },
-                    }}
+                    placeholder={intl.formatMessage({
+                        id: "cometBrevoModule.targetGroup.assignableContacts.searchEmail",
+                        defaultMessage: "Search email address",
+                    })}
                 />
             </ToolbarItem>
         </DataGridToolbar>
