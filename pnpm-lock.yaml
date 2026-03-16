@@ -2244,6 +2244,9 @@ importers:
       commander:
         specifier: ^9.5.0
         version: 9.5.0
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.1
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -2254,6 +2257,9 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/node':
         specifier: ^24.10.9
         version: 24.11.0
@@ -8897,6 +8903,9 @@ packages:
 
   '@types/js-yaml@4.0.5':
     resolution: {integrity: sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==}
+
+  '@types/js-yaml@4.0.9':
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -22551,7 +22560,7 @@ snapshots:
     dependencies:
       '@graphql-tools/url-loader': 8.0.24(@types/node@24.11.0)(graphql@16.11.0)
       '@graphql-tools/utils': 10.11.0(graphql@16.11.0)
-      '@types/js-yaml': 4.0.5
+      '@types/js-yaml': 4.0.9
       '@whatwg-node/fetch': 0.10.3
       chalk: 4.1.2
       debug: 4.4.3
@@ -26446,6 +26455,8 @@ snapshots:
   '@types/js-cookie@3.0.6': {}
 
   '@types/js-yaml@4.0.5': {}
+
+  '@types/js-yaml@4.0.9': {}
 
   '@types/json-schema@7.0.15': {}
 
