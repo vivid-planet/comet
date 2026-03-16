@@ -12,7 +12,7 @@ Add an `agent-skills.json` file at the project root containing the external repo
 
 ```json
 {
-    "repos": ["git@github.com:comet-dxp/comet.git"]
+    "repos": ["git@github.com:vivid-planet/comet.git"]
 }
 ```
 
@@ -76,7 +76,7 @@ You can install skills from external git repositories. This allows you to consum
 
 ```json
 {
-    "repos": ["git@github.com:comet-dxp/comet.git", "git@github.com:org/other-skills.git#main"]
+    "repos": ["git@github.com:vivid-planet/comet.git", "git@github.com:org/other-skills.git#main"]
 }
 ```
 
@@ -99,8 +99,8 @@ Example output:
 ```
 Installing 1 skill(s) from local project-skills/...
   Symlinked: code-style
-Installing 2 skill(s) from external git@github.com:comet-dxp/comet.git (package-skills/)...
-  CONFLICT: "code-style" from external git@github.com:comet-dxp/comet.git (package-skills/) skipped (already installed from a higher-priority source)
+Installing 2 skill(s) from external git@github.com:vivid-planet/comet.git (package-skills/)...
+  CONFLICT: "code-style" from external git@github.com:vivid-planet/comet.git (package-skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
 ```
 
