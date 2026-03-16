@@ -16,7 +16,8 @@ type BreadcrumbsClassKey =
     | "expandedMenu"
     | "expandedMenuItem"
     | "pageTreeVerticalLine"
-    | "expandedMenuSubitemWrapper";
+    | "expandedMenuSubitemWrapper"
+    | "mobileOpenMenuButton";
 
 export interface Breadcrumb {
     url: string;
@@ -35,6 +36,7 @@ interface BreadcrumbsProps
         expandedMenuItem: typeof Typography;
         pageTreeVerticalLine: "div";
         expandedMenuSubitemWrapper: "div";
+        mobileOpenMenuButton: typeof IconButton;
     }> {
     items: Breadcrumb[];
     iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
@@ -151,6 +153,11 @@ const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKe
     align-self: flex-start;
 `);
 
+const MobileOpenMenuButton = createComponentSlot(IconButton)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "mobileOpenMenuButton",
+})(css``);
+
 const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "pageTreeVerticalLine",
@@ -237,12 +244,11 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                 )}
             </ToolbarContainer>
 
-            {isMobile &&
-                (isMenuOpen ? (
-                    <IconButton onClick={toggleMenu}>{closeMenuIcon}</IconButton>
-                ) : (
-                    <IconButton onClick={toggleMenu}>{openMenuIcon}</IconButton>
-                ))}
+            {isMobile && (
+                <MobileOpenMenuButton onClick={toggleMenu} {...slotProps?.mobileOpenMenuButton}>
+                    {isMenuOpen ? closeMenuIcon : openMenuIcon}
+                </MobileOpenMenuButton>
+            )}
         </Root>
     );
 };
