@@ -12,7 +12,7 @@ Add an `agent-skills.json` file at the project root containing the external repo
 
 ```json
 {
-    "repos": ["git@github.com:comet-dxp/comet.git"]
+    "repos": ["git@github.com:vivid-planet/comet.git"]
 }
 ```
 
@@ -72,7 +72,7 @@ You can install skills from external git repositories. This allows you to consum
 
 ```json
 {
-    "repos": ["git@github.com:comet-dxp/comet.git", "git@github.com:org/other-skills.git#main"]
+    "repos": ["git@github.com:vivid-planet/comet.git", "git@github.com:org/other-skills.git#main"]
 }
 ```
 
@@ -91,8 +91,8 @@ Example output:
 ```
 Installing 1 skill(s) from local skills/...
   Symlinked: code-style
-Installing 2 skill(s) from external git@github.com:comet-dxp/comet.git (skills/)...
-  CONFLICT: "code-style" from external git@github.com:comet-dxp/comet.git (skills/) skipped (already installed from a higher-priority source)
+Installing 2 skill(s) from external git@github.com:vivid-planet/comet.git (skills/)...
+  CONFLICT: "code-style" from external git@github.com:vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
 ```
 
@@ -111,10 +111,10 @@ These directories should not be committed to your repository as they are created
 
 ## Options
 
-| Option            | Description                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------- |
+| Option            | Description                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
 | `--config <path>` | Path to a JSON config file specifying repos to install skills from (default: `agent-skills.json`) |
-| `--dry-run`       | Print what would be installed without making any changes                                 |
+| `--dry-run`       | Print what would be installed without making any changes                                          |
 
 Preview what would be installed without making changes:
 
