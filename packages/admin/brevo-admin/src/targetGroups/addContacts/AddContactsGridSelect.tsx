@@ -283,7 +283,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                                     </IconButton>
                                 </DialogTitle>
                                 <Box>
-                                    <Field name="brevoContactIds" fullWidth>
+                                    <Field<number[]> name="brevoContactIds" fullWidth>
                                         {(props) => (
                                             <DataGrid
                                                 {...dataGridAssignableContactsProps}
@@ -295,9 +295,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                                                 slots={{
                                                     toolbar: AssignableContactsGridToolbar,
                                                 }}
-                                                rowSelectionModel={props.value}
+                                                rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
                                                 onRowSelectionModelChange={(newSelectionModel) => {
-                                                    props.input.onChange(newSelectionModel);
+                                                    props.input.onChange(Array.from(newSelectionModel.ids));
                                                 }}
                                                 disableRowSelectionExcludeModel
                                                 checkboxSelection
