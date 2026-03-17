@@ -33,6 +33,7 @@
         "dev:oauth2-proxy": "dotenv -- ./node_modules/.bin/oauth2-proxy",
         "dev:demo-api-mitmproxy": "dotenv -- sh -c './node_modules/.bin/mitmweb --mode reverse:http://localhost:$API_PORT --listen-port $API_MITMPROXY_PORT --web-host localhost --web-port $MITMPROXY_WEB_INTERFACE_PORT --no-web-open-browser --set web_password=$MITMPROXY_WEB_PASSWORD'",
         "dev:oidc-provider": "dotenv -- dev-oidc-provider",
+        "dev:docker-compose": "dotenv -e .env.secrets -e .env.local -e .env -- docker compose",
         "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore '**/*.{test,spec}.{ts,tsx}' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
         "lint:ci": "pnpm lint:root && pnpm --recursive run lint:ci && pnpm lint:knip",
