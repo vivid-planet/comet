@@ -99,6 +99,53 @@ Demo frontend site (Next.js)
 - Start using `pnpm exec dev-pm @demo-site`
 - access at: http://localhost:3000/
 
+### Starting the full demo (Cloud / Fresh Clone)
+
+When Docker is available, follow these steps to start the complete demo application:
+
+1. Install dependencies and build packages:
+    ```bash
+    NODE_USE_ENV_PROXY=1 ./install.sh
+    pnpm run build:packages
+    ```
+
+2. Start Docker containers (PostgreSQL, ImgProxy, Mailhog, Jaeger, Valkey):
+    ```bash
+    docker compose up -d
+    ```
+
+3. Fix uploads directory permissions (needed in fresh environments):
+    ```bash
+    sudo chown -R $(id -u):$(id -g) demo/uploads/
+    mkdir -p demo/uploads/comet-demo-files
+    ```
+
+4. Start all demo services:
+    ```bash
+    pnpm exec dev-pm start @demo
+    ```
+
+5. Wait for services to be ready. Check status with:
+    ```bash
+    pnpm exec dev-pm status
+    ```
+    All demo services should show `Running`. This typically takes ~2 minutes.
+    If `demo-api` shows `Backoff`, Docker containers may not have been ready — restart it with `pnpm exec dev-pm restart demo-api`.
+
+6. Load fixture data (required for the site to display content):
+    ```bash
+    cd demo/api && pnpm run fixtures
+    ```
+
+### Taking screenshots of the demo
+
+After starting the full demo (see above), the following pages are available:
+
+- **Site home:** http://localhost:3000/en
+- **Admin home (logged in):** Navigate to http://localhost:8000/ which redirects to the IDP login page. Select "Admin" from the dropdown and click "Sign-in". This redirects to the admin dashboard at http://localhost:8000/main/en/dashboard.
+
+Use a browser (or Playwright) to capture screenshots of these pages.
+
 ## Packages
 
 ### Admin (`packages/admin/`)
