@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 8.20.0
+
+### Patch Changes
+
+- 412ed19: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+- Updated dependencies [caceff8]
+    - @comet/admin-icons@8.20.0
+
 ## 8.19.0
 
 ### Minor Changes

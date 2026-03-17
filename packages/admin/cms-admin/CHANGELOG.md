@@ -1,5 +1,40 @@
 # @comet/cms-admin
 
+## 8.20.0
+
+### Minor Changes
+
+- ed00704: Add `TableBlock` using the `createTableBlock()` factory
+
+    The passed in `richText` block is used to edit the cell content.
+
+    **Admin:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-admin";
+    import { RichTextBlock } from "./RichTextBlock";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+    **API:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-api";
+    import { RichTextBlock } from "./rich-text.block";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+### Patch Changes
+
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+    - @comet/admin-date-time@8.20.0
+    - @comet/admin-rte@8.20.0
+
 ## 8.19.0
 
 ### Patch Changes

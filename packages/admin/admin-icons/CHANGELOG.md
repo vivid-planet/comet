@@ -1,5 +1,11 @@
 # @comet/admin-icons
 
+## 8.20.0
+
+### Patch Changes
+
+- caceff8: Remove deprecated `xlinkHref` prop from `CometColor` icon component
+
 ## 8.19.0
 
 ## 8.18.0
