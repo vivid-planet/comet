@@ -22,6 +22,12 @@ The home page cannot be set to Unpublished or Archived.
 
 :::
 
+:::note
+
+In the admin, page tree visibility filtering is performed **client-side**. Since the admin always sends the full `x-include-invisible-content` header, the API always returns all pages regardless of their visibility state. Archived pages are hidden from the page tree by default and can be shown using the "Archived items" toggle. The filtering is applied via the `filter` parameter of the `usePageTree` hook.
+
+:::
+
 ## Block Visibility
 
 Several block factories — including `createBlocksBlock`, `createListBlock`, `createOneOfBlock`, and `createOptionalBlock` — support a per-block **visible** toggle. When a block is marked invisible, it is hidden from site visitors but still visible to editors in the admin UI.
