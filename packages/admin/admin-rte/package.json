@@ -1,10 +1,6 @@
 {
     "name": "@comet/admin-rte",
-<<<<<<< HEAD
     "version": "9.0.0-beta.0",
-=======
-    "version": "8.20.0",
->>>>>>> main
     "description": "Comet Admin Rich Text Editor component",
     "repository": {
         "directory": "packages/admin/admin-rte",

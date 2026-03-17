@@ -1,10 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-<<<<<<< HEAD
     "version": "9.0.0-beta.0",
-=======
-    "version": "8.20.0",
->>>>>>> main
     "description": "Comet Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
