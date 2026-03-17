@@ -131,7 +131,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 disabled={disabled}
                             />
                             {values.overrideContentScopes && (
-                                <Field name="contentScopes" fullWidth>
+                                <Field<string[]> name="contentScopes" fullWidth>
                                     {(props) => {
                                         return (
                                             <DataGrid
@@ -147,7 +147,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection={!disabled}
-                                                rowSelectionModel={props.input.value}
+                                                rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
                                                 onRowSelectionModelChange={(selectionModel) => {
                                                     props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                                                 }}

@@ -88,7 +88,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                 contentScopes: userContentScopes.map((cs) => JSON.stringify(cs)),
             }}
         >
-            <Field name="contentScopes" fullWidth>
+            <Field<string[]> name="contentScopes" fullWidth>
                 {(props) => {
                     return (
                         <DataGrid
@@ -105,7 +105,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                                 return !userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                             }}
                             checkboxSelection
-                            rowSelectionModel={props.input.value}
+                            rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
                             onRowSelectionModelChange={(selectionModel) => {
                                 props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                             }}
