@@ -91,10 +91,9 @@ export default async function Page({ params }: PageProps<"/[visibility]/[domain]
                         break;
                     }
                 }
-            }
-
-            if (destination) {
-                redirect(destination);
+                if (destination) {
+                    redirect(destination);
+                }
             }
         }
         notFound();

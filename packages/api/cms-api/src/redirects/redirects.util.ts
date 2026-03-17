@@ -1,10 +1,14 @@
 import { type BooleanFilter } from "../common/filter/boolean.filter";
 import { type DateTimeFilter } from "../common/filter/date-time.filter";
+import { type EnumFilterInterface } from "../common/filter/enum.filter.factory";
 import { type StringFilter } from "../common/filter/string.filter";
 import { type RedirectFilter } from "./dto/redirects.filter";
 import { type RedirectInterface } from "./entities/redirect-entity.factory";
 
-export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt" | "activatedAt"> & {
+export type FilterableRedirect = Pick<
+    RedirectInterface,
+    "generationType" | "source" | "sourceType" | "active" | "createdAt" | "updatedAt" | "activatedAt"
+> & {
     target?: string;
 };
 
@@ -37,6 +41,11 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     if (filter.active) {
         matches = booleanMatchesFilter(redirect.active, filter.active);
     }
+
+    if (filter.sourceType) {
+        matches = enumMatchesFilter(redirect.sourceType, filter.sourceType);
+    }
+
     if (filter.createdAt) {
         matches = dateTimeMatchesFilter(redirect.createdAt, filter.createdAt);
     }
@@ -118,6 +127,17 @@ function dateTimeMatchesFilter(date: Date | undefined, filter: DateTimeFilter): 
     } else if (filter.notEqual && date.getTime() !== filter.notEqual.getTime()) {
         return true;
     } else if (filter.isNotEmpty) {
+        return true;
+    }
+    return false;
+}
+
+function enumMatchesFilter<TEnum>(value: TEnum, filter: EnumFilterInterface<TEnum>): boolean {
+    if (filter.equal !== undefined && value === filter.equal) {
+        return true;
+    } else if (filter.notEqual !== undefined && value !== filter.notEqual) {
+        return true;
+    } else if (filter.isAnyOf && filter.isAnyOf.includes(value)) {
         return true;
     }
     return false;
