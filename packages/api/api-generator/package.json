@@ -1,6 +1,10 @@
 {
     "name": "@comet/api-generator",
+<<<<<<< HEAD
     "version": "9.0.0-beta.0",
+=======
+    "version": "8.20.0",
+>>>>>>> main
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
@@ -24,7 +28,7 @@
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "NODE_OPTIONS=--experimental-vm-modules pnpm exec jest",

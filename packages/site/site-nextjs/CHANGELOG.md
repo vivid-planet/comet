@@ -1,5 +1,6 @@
 # @comet/site-nextjs
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -16,6 +17,26 @@
 
 - Updated dependencies [740dba8]
     - @comet/site-react@9.0.0-beta.0
+=======
+## 8.20.0
+
+### Patch Changes
+
+- @comet/site-react@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- @comet/site-react@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [2a9e770]
+    - @comet/site-react@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

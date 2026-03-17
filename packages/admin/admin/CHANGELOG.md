@@ -1,5 +1,6 @@
 # @comet/admin
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -83,6 +84,37 @@
 - Updated dependencies [f066335]
 - Updated dependencies [5f1566a]
     - @comet/admin-icons@9.0.0-beta.0
+=======
+## 8.20.0
+
+### Patch Changes
+
+- 412ed19: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+- Updated dependencies [caceff8]
+    - @comet/admin-icons@8.20.0
+
+## 8.19.0
+
+### Minor Changes
+
+- fff2cc2: Add support for `onBlur` and `onFocus` props to `DatePicker`, `DateRangePicker`, `DateTimePicker`, `DateTimeRangePicker` and `TimePicker`
+
+    Errors and warnings are now correctly shown after validation in `DatePickerField`, `DateRangePickerField`, `DateTimePickerField`, `DateTimeRangePickerField` and `TimePickerField`.
+
+- fff2cc2: Add aria-labels to the open picker buttons of date/time picker components
+
+### Patch Changes
+
+- @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

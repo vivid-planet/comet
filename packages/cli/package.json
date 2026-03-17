@@ -1,6 +1,10 @@
 {
     "name": "@comet/cli",
+<<<<<<< HEAD
     "version": "9.0.0-beta.0",
+=======
+    "version": "8.20.0",
+>>>>>>> main
     "description": "A collection of CLI tools for Comet projects",
     "repository": {
         "directory": "packages/cli",
@@ -24,7 +28,7 @@
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "vitest --run",
@@ -32,11 +36,13 @@
     },
     "dependencies": {
         "commander": "^9.5.0",
+        "js-yaml": "^4.1.0",
         "prettier": "^3.6.2",
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
+        "@types/js-yaml": "^4.0.9",
         "@types/node": "^24.10.9",
         "eslint": "^9.39.2",
         "npm-run-all2": "^8.0.4",

@@ -1,10 +1,32 @@
 # @comet/site-react
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Minor Changes
 
 - 740dba8: Add support for React 19
+=======
+## 8.20.0
+
+## 8.19.0
+
+## 8.18.0
+
+### Minor Changes
+
+- 2a9e770: Add HTML anchor props pass-through to `DamFileDownloadLinkBlock`
+
+    These link block component now accept and pass through standard HTML anchor element attributes (such as `id`, `className`, `style`, `target`, `rel`, `aria-*`, `data-*`, `onClick`, etc.) to the rendered `<a>` element.
+
+    **Example**:
+
+    ```tsx
+    <DamFileDownloadLinkBlock data={linkData} className="custom-link">
+        <span>Download file</span>
+    </DamFileDownloadLinkBlock>
+    ```
+>>>>>>> main
 
 ## 8.17.1
 

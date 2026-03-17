@@ -1,5 +1,6 @@
 # @comet/eslint-config
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -20,6 +21,25 @@
 
 - Updated dependencies [db6b83a]
     - @comet/eslint-plugin@9.0.0-beta.0
+=======
+## 8.20.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 

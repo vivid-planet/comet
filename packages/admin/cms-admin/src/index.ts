@@ -20,6 +20,7 @@ export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
 export { createRichTextBlock, isRichTextEmpty, isRichTextEqual } from "./blocks/createRichTextBlock";
 export { createSeoBlock } from "./blocks/createSeoBlock";
+export { createTableBlock, type TableBlockFactoryOptions } from "./blocks/createTableBlock";
 export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock";
 export { createTextImageBlock } from "./blocks/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
@@ -198,6 +199,7 @@ export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
 export {
+    CurrentUserContext,
     type CurrentUserInterface,
     CurrentUserProvider,
     type Permission,

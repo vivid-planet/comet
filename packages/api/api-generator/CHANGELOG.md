@@ -1,5 +1,6 @@
 # @comet/api-generator
 
+<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -17,6 +18,32 @@
 ### Patch Changes
 
 - @comet/cms-api@9.0.0-beta.0
+=======
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [ed00704]
+    - @comet/cms-api@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- 4bb3d09: Fix Prettier formatting in monorepo setups by using the Prettier API directly instead of the CLI
+- Updated dependencies [0eb28a7]
+    - @comet/cms-api@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [64b70bc]
+- Updated dependencies [e9c54bc]
+- Updated dependencies [ef98821]
+- Updated dependencies [b3bfe86]
+    - @comet/cms-api@8.18.0
+>>>>>>> main
 
 ## 8.17.1
 
