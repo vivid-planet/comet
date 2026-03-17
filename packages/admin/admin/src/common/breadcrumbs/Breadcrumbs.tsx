@@ -150,7 +150,6 @@ const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
         right: 0;
         top: 100%;
         background-color: ${theme.palette.background.paper};
-        box-shadow: ${theme.shadows[2]};
         padding-top: ${theme.spacing(4)};
         padding-bottom: ${theme.spacing(4)};
         z-index: 1;
