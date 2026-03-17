@@ -70,6 +70,7 @@ export const _DataGridToolbar = {
                 slots={{
                     toolbar: Toolbar,
                 }}
+                showToolbar
             />
         );
     },
