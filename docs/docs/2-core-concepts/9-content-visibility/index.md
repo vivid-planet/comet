@@ -110,6 +110,12 @@ export class NewsResolver {
 
 This ensures site visitors only see visible news items while authenticated admin users can access all items regardless of their visibility state.
 
+:::note
+
+In the admin, block visibility filtering is performed **client-side**. Since the admin always sends the full `x-include-invisible-content` header, the API always returns all blocks regardless of their visibility state. The "Show only visible blocks" toggle in the block preview controls a `showVisibleOnly` flag in the preview context, which block factories (`createBlocksBlock`, `createListBlock`, `createColumnsBlock`) use to filter blocks in `createPreviewState()` before rendering.
+
+:::
+
 ## How Block Visibility Works Internally
 
 Block factories like `createBlocksBlock`, `createListBlock`, and `createOneOfBlock` check the `includeInvisibleContent` flag in the block context during transformation:
