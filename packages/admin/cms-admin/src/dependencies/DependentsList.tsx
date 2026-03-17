@@ -18,7 +18,7 @@ import {
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
 import { Chip, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
-import { useState } from "react";
+import { isValidElement, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
@@ -81,6 +81,15 @@ function DependentsListGridToolbar({ refetch }: DependentsListGridToolbarProps) 
     );
 }
 
+function getDisplayNameString(displayName: ReactNode, fallback: string): string {
+    if (typeof displayName === "string") return displayName;
+    if (isValidElement(displayName)) {
+        const { defaultMessage } = displayName.props as { defaultMessage?: string };
+        if (typeof defaultMessage === "string") return defaultMessage;
+    }
+    return fallback;
+}
+
 const pageSize = 10;
 
 export interface DependentsListProps {
@@ -128,12 +137,18 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
             type: "singleSelect",
             valueOptions: Object.entries(entityDependencyMap).map(([value, dep]) => ({
                 value,
-                label: dep.displayName as string,
+                label: getDisplayNameString(dep.displayName, value),
             })),
             sortBy: "graphqlObjectType",
             toGqlFilter: (filterItem) => {
                 if (!filterItem.value) return {};
-                return { rootGraphqlObjectType: filterItem.value };
+                if (filterItem.operator === "isAnyOf") {
+                    return { rootGraphqlObjectType: { isAnyOf: filterItem.value } };
+                }
+                if (filterItem.operator === "not") {
+                    return { rootGraphqlObjectType: { notEqual: filterItem.value } };
+                }
+                return { rootGraphqlObjectType: { equal: filterItem.value } };
             },
             renderCell: ({ row }) => <Chip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
         },

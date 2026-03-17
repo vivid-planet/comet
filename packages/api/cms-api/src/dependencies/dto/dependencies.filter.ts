@@ -8,10 +8,11 @@ import { IsUndefinable } from "../../common/validators/is-undefinable";
 
 @InputType()
 export class DependencyFilter {
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    targetGraphqlObjectType?: string;
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => StringFilter)
+    @IsOptional()
+    targetGraphqlObjectType?: StringFilter;
 
     @Field({ nullable: true })
     @IsString()
@@ -56,10 +57,11 @@ export class DependencyFilter {
 
 @InputType()
 export class DependentFilter {
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    rootGraphqlObjectType?: string;
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => StringFilter)
+    @IsOptional()
+    rootGraphqlObjectType?: StringFilter;
 
     @Field({ nullable: true })
     @IsString()

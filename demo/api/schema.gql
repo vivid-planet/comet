@@ -547,7 +547,7 @@ input DependencyFilter {
   or: [DependencyFilter!]
   rootColumnName: String
   secondaryInformation: StringFilter
-  targetGraphqlObjectType: String
+  targetGraphqlObjectType: StringFilter
   targetId: String
   visible: BooleanFilter
 }
@@ -569,7 +569,7 @@ input DependentFilter {
   name: StringFilter
   or: [DependentFilter!]
   rootColumnName: String
-  rootGraphqlObjectType: String
+  rootGraphqlObjectType: StringFilter
   rootId: String
   secondaryInformation: StringFilter
   visible: BooleanFilter

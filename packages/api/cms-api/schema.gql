@@ -336,7 +336,7 @@ interface DocumentInterface {
 }
 
 input DependentFilter {
-  rootGraphqlObjectType: String
+  rootGraphqlObjectType: StringFilter
   rootId: String
   rootColumnName: String
   name: StringFilter
@@ -403,7 +403,7 @@ enum RedirectGenerationType {
 }
 
 input DependencyFilter {
-  targetGraphqlObjectType: String
+  targetGraphqlObjectType: StringFilter
   targetId: String
   rootColumnName: String
   name: StringFilter

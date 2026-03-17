@@ -309,10 +309,10 @@ export class DependenciesService {
         if (!filter) return;
 
         if ("rootGraphqlObjectType" in filter && filter.rootGraphqlObjectType) {
-            qb.andWhere({ "idx.rootGraphqlObjectType": filter.rootGraphqlObjectType });
+            this.applyStringFilterToKnex(qb, '"idx"."rootGraphqlObjectType"', filter.rootGraphqlObjectType);
         }
         if ("targetGraphqlObjectType" in filter && filter.targetGraphqlObjectType) {
-            qb.andWhere({ "idx.targetGraphqlObjectType": filter.targetGraphqlObjectType });
+            this.applyStringFilterToKnex(qb, '"idx"."targetGraphqlObjectType"', filter.targetGraphqlObjectType);
         }
         if (filter.rootColumnName) {
             qb.andWhere({ "idx.rootColumnName": filter.rootColumnName });
