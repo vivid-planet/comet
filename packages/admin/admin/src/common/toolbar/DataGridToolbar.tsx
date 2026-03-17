@@ -36,6 +36,7 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
         z-index: 1;
         display: flex;
         align-items: center;
+        min-height: auto;
         gap: ${theme.spacing(2)};
         padding: ${theme.spacing(2)};
 
