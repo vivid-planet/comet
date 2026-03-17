@@ -1,6 +1,5 @@
 # @comet/cms-admin
 
-<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -28,7 +27,7 @@
     - @comet/admin-icons@9.0.0-beta.0
     - @comet/admin-rte@9.0.0-beta.0
     - @comet/admin@9.0.0-beta.0
-=======
+
 ## 8.20.0
 
 ### Minor Changes
@@ -93,7 +92,6 @@
     - @comet/admin-date-time@8.18.0
     - @comet/admin-rte@8.18.0
     - @comet/admin-icons@8.18.0
->>>>>>> main
 
 ## 8.17.1
 

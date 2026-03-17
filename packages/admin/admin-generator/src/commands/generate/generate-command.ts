@@ -22,12 +22,8 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-<<<<<<< HEAD
-import type { ComponentType, JSX, ReactElement } from "react";
-=======
 import { format, resolveConfig } from "prettier";
-import type { ComponentType, ReactElement } from "react";
->>>>>>> main
+import type { ComponentType, JSX, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
 
 import { parseConfig } from "./config/parseConfig";

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { AnyEntity, Connection, EntityManager, Knex, QueryOrder } from "@mikro-orm/postgresql";
-=======
 import { AnyEntity, Connection, EntityManager, Knex } from "@mikro-orm/postgresql";
->>>>>>> main
 import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
@@ -171,18 +167,7 @@ export class DependenciesService {
      * @returns A promise that resolves when the refresh completes (or immediately if skipped or backgrounded)
      */
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
-<<<<<<< HEAD
-        const refresh = async (options?: { concurrently: boolean }) => {
-            const id = uuid();
-            // Before forking the entity manager, race conditions occurred frequently
-            // when executing the refresh asynchronous
-            const forkedEntityManager = this.entityManager.fork();
-            console.time(`refresh materialized block dependency ${id}`);
-            const blockIndexRefresh = this.entityManager.create(BlockIndexRefresh, { startedAt: new Date() });
-            await forkedEntityManager.persistAndFlush(blockIndexRefresh);
-=======
         const knex = this.entityManager.getKnex("write");
->>>>>>> main
 
         const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
             await knex.transaction(async (trx) => {
@@ -225,11 +210,6 @@ export class DependenciesService {
         };
 
         if (options?.force) {
-<<<<<<< HEAD
-            // force refresh -> refresh sync
-            await abortActiveRefreshes(activeRefreshes);
-            await this.entityManager.qb(BlockIndexRefresh).truncate();
-=======
             // Force refresh: cancel any currently running refresh query so we can start clean.
             // We look up active backends running the REFRESH MATERIALIZED VIEW statement and
             // send pg_cancel_backend to each. After cancellation, we still need to acquire the
@@ -269,7 +249,6 @@ export class DependenciesService {
 
         if (!lastRefresh) {
             // No prior refresh exists — first-time initialization, must refresh synchronously
->>>>>>> main
             await refresh();
             return;
         }
@@ -280,36 +259,8 @@ export class DependenciesService {
         if (finishedAt > subMinutes(now, 5)) {
             // Fresh enough (< 5 minutes) — skip refresh entirely
             return;
-<<<<<<< HEAD
-        }
-
-        const lastRefreshes = await this.entityManager.find(
-            BlockIndexRefresh,
-            {},
-            { orderBy: [{ finishedAt: QueryOrder.DESC_NULLS_FIRST }, { startedAt: QueryOrder.DESC }], limit: 1 },
-        );
-        const lastRefresh = lastRefreshes[0];
-
-        if (lastRefreshes.length === 0) {
-            // first refresh -> refresh sync
-            await refresh();
-            return;
-        }
-
-        if (!refreshIsActive && lastRefresh.finishedAt === null) {
-            // faulty DB state -> truncate table
-            await this.entityManager.qb(BlockIndexRefresh).truncate();
-        }
-
-        if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
-            // newer than 5 minutes -> don't refresh
-            return;
-        } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
-            // newer than 15 minutes -> refresh async
-=======
         } else if (finishedAt > subMinutes(now, 15)) {
             // Moderately stale (5–15 minutes) — refresh concurrently in the background
->>>>>>> main
             const refreshPromise = refresh({ concurrently: true });
             if (options?.awaitRefresh) {
                 // Caller wants to wait for the refresh to complete, even if it's concurrent. Only used by CLI command.

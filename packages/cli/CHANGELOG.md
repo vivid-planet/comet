@@ -1,8 +1,7 @@
 # @comet/cli
 
-<<<<<<< HEAD
 ## 9.0.0-beta.0
-=======
+
 ## 8.20.0
 
 ### Minor Changes
@@ -22,7 +21,6 @@
     see https://docs.comet-dxp.com/docs/guides/installing-agent-skills for more info
 
 ## 8.18.0
->>>>>>> main
 
 ## 8.17.1
 

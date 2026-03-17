@@ -39,18 +39,12 @@ export function createBrevoContactImportResolver({
             @Args() { fileId, targetGroupIds, scope, sendDoubleOptIn }: BrevoContactImportArgs,
             @GetCurrentUser() user: CurrentUser,
         ): Promise<CsvImportInformation> {
-<<<<<<< HEAD
-            const importId: string = v4();
+            const importId: string = uuid();
             const fileUpload = await this.fileUploadRepository.findOne(fileId);
 
             if (!fileUpload) {
                 throw new Error("File not found");
             }
-=======
-            let storageFile: NodeJS.ReadableStream | null = null;
-            let objectName = null;
-            const importId: string = uuid();
->>>>>>> main
 
             try {
                 const fileContent = await this.fileUploadsService.getFileContent(fileUpload);

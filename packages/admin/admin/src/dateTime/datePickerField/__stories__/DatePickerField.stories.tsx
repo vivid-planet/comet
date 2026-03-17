@@ -4,16 +4,9 @@ import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
 import { DatePickerField } from "../DatePickerField";
 
-<<<<<<< HEAD
 type Story = StoryObj<typeof DatePickerField>;
 const config: Meta<typeof DatePickerField> = {
     component: DatePickerField,
-=======
-type Story = StoryObj<typeof Future_DatePickerField>;
-
-const config: Meta<typeof Future_DatePickerField> = {
-    component: Future_DatePickerField,
->>>>>>> main
     title: "components/dateTime/DatePickerField",
 };
 

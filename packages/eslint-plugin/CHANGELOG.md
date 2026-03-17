@@ -1,6 +1,5 @@
 # @comet/eslint-plugin
 
-<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -12,13 +11,12 @@
     ```ts
     import { something } from "@comet/admin/lib/some/private/file";
     ```
-=======
+
 ## 8.20.0
 
 ## 8.19.0
 
 ## 8.18.0
->>>>>>> main
 
 ## 8.17.1
 

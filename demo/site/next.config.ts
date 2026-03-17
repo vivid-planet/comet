@@ -16,13 +16,6 @@ const nextConfig: NextConfig = {
         // eslint-disable-next-line no-restricted-syntax -- NODE_ENV is set by Next.js itself, not environment-specific
         ignoreBuildErrors: process.env.NODE_ENV === "production",
     },
-<<<<<<< HEAD:demo/site/next.config.ts
-=======
-    eslint: {
-        // eslint-disable-next-line no-restricted-syntax -- NODE_ENV is set by Next.js itself, not environment-specific
-        ignoreDuringBuilds: process.env.NODE_ENV === "production",
-    },
->>>>>>> main:demo/site/next.config.mjs
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
         serverComponentsExternalPackages: ["mjml", "react-intl", "@faire/mjml-react"],

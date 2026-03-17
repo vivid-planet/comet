@@ -1,12 +1,11 @@
 # @comet/site-react
 
-<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Minor Changes
 
 - 740dba8: Add support for React 19
-=======
+
 ## 8.20.0
 
 ## 8.19.0
@@ -26,7 +25,6 @@
         <span>Download file</span>
     </DamFileDownloadLinkBlock>
     ```
->>>>>>> main
 
 ## 8.17.1
 

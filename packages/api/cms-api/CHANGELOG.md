@@ -1,8 +1,7 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 9.0.0-beta.0
-=======
+
 ## 8.20.0
 
 ### Minor Changes
@@ -54,7 +53,6 @@
     Change the column type from `"uuid array"` to `"uuid[]"` to match PostgreSQL's canonical array type notation, preventing a redundant `alter column ... type uuid array` statement from being generated for every new migration.
 
 - b3bfe86: Update `@aws-sdk/` dependencies to fix CVE-2026-25896
->>>>>>> main
 
 ## 8.17.1
 

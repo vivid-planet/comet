@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-import { type DataGridProps, type GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
-import { type DataGridProProps, type GridPinnedColumnFields } from "@mui/x-data-grid-pro";
-import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
-=======
 import { type DataGridProps, type GridColumnVisibilityModel, type GridPinnedColumnFields, useGridApiRef } from "@mui/x-data-grid";
-import type { DataGridProProps } from "@mui/x-data-grid-pro";
-import { type MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
->>>>>>> main
+import { type DataGridProProps } from "@mui/x-data-grid-pro";
+import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouteMatch } from "react-router";
 
 import { useStoredState } from "../hooks/useStoredState";

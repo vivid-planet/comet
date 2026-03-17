@@ -1,6 +1,5 @@
 # @comet/api-generator
 
-<<<<<<< HEAD
 ## 9.0.0-beta.0
 
 ### Major Changes
@@ -18,7 +17,7 @@
 ### Patch Changes
 
 - @comet/cms-api@9.0.0-beta.0
-=======
+
 ## 8.20.0
 
 ### Patch Changes
@@ -43,7 +42,6 @@
 - Updated dependencies [ef98821]
 - Updated dependencies [b3bfe86]
     - @comet/cms-api@8.18.0
->>>>>>> main
 
 ## 8.17.1
 

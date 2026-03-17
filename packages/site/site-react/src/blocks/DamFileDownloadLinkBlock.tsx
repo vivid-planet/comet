@@ -1,10 +1,6 @@
 "use client";
 
-<<<<<<< HEAD
-import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
-=======
 import { type AnchorHTMLAttributes, cloneElement, type ReactElement } from "react";
->>>>>>> main
 
 import { type DamFileDownloadLinkBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -29,15 +25,11 @@ export const DamFileDownloadLinkBlock = withPreview(
         const target = openFileType === "NewTab" ? "_blank" : anchorProps.target;
 
         if (legacyBehavior) {
-<<<<<<< HEAD
-            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+            return cloneElement(children as ReactElement<AnchorHTMLAttributes<HTMLAnchorElement>>, {
+                ...anchorProps,
                 href,
                 target,
-                title,
             });
-=======
-            return cloneElement(children, { ...anchorProps, href, target });
->>>>>>> main
         }
 
         return (
