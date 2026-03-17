@@ -80,6 +80,8 @@ const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
     slotName: "separator",
 })(css`
     margin: 0 5px;
+    display: flex;
+    align-items: flex-end;
 `);
 
 const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
@@ -99,7 +101,10 @@ const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
         display: none;
 
         ${theme.breakpoints.up("sm")} {
-            display: block;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
         }
     `,
 );
