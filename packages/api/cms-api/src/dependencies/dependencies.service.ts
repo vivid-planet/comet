@@ -221,17 +221,21 @@ export class DependenciesService {
 
     async getDependents(
         target: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: DependentFilter & {
+        passedFilter?: DependentFilter & {
             rootEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
         options?: { forceRefresh: boolean; sort?: DependencySort[] },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
+        const { rootEntityName, ...filter } = passedFilter ?? {};
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
-        const qb = this.getBaseQueryBuilder({ targetEntityName: entityName, targetId: target.id }, paginationArgs).join("EntityInfo", (join) => {
+        const qb = this.getBaseQueryBuilder(
+            { targetEntityName: entityName, targetId: target.id, rootEntityName: rootEntityName },
+            paginationArgs,
+        ).join("EntityInfo", (join) => {
             join.on("idx.rootEntityName", "EntityInfo.entityName").andOn(
                 "EntityInfo.id",
                 this.entityManager.getKnex("read").raw('"idx"."rootId"::text'),
@@ -251,22 +255,26 @@ export class DependenciesService {
 
     async getDependencies(
         root: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: DependencyFilter & {
+        passedFilter?: DependencyFilter & {
             targetEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
         options?: { forceRefresh: boolean; sort?: DependencySort[] },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
+        const { targetEntityName, ...filter } = passedFilter ?? {};
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
-        const qb = this.getBaseQueryBuilder({ rootEntityName: entityName, rootId: root.id }, paginationArgs).join("EntityInfo", (join) => {
-            join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
-                "EntityInfo.id",
-                this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
-            );
-        });
+        const qb = this.getBaseQueryBuilder({ rootEntityName: entityName, rootId: root.id, targetEntityName: targetEntityName }, paginationArgs).join(
+            "EntityInfo",
+            (join) => {
+                join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
+                    "EntityInfo.id",
+                    this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
+                );
+            },
+        );
 
         this.applyFilter(qb, filter);
         this.applySort(qb, options?.sort, "dependencies");
@@ -311,8 +319,14 @@ export class DependenciesService {
         if ("rootGraphqlObjectType" in filter && filter.rootGraphqlObjectType) {
             this.applyStringFilterToKnex(qb, '"idx"."rootGraphqlObjectType"', filter.rootGraphqlObjectType);
         }
+        if ("rootId" in filter && filter.rootId) {
+            qb.andWhere({ "idx.rootId": filter.rootId });
+        }
         if ("targetGraphqlObjectType" in filter && filter.targetGraphqlObjectType) {
             this.applyStringFilterToKnex(qb, '"idx"."targetGraphqlObjectType"', filter.targetGraphqlObjectType);
+        }
+        if ("targetId" in filter && filter.targetId) {
+            qb.andWhere({ "idx.targetId": filter.targetId });
         }
         if (filter.rootColumnName) {
             qb.andWhere({ "idx.rootColumnName": filter.rootColumnName });
