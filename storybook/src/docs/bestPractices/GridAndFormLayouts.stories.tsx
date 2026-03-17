@@ -864,6 +864,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                         checkboxSelection
                         rowSelectionModel={selectionModel}
                         onRowSelectionModelChange={setSelectionModel}
+                        disableRowSelectionExcludeModel
                         showToolbar
                     />
                 </StackMainContent>
@@ -940,6 +941,7 @@ export const GridWithSelectionInDialog = {
                         checkboxSelection
                         rowSelectionModel={selectionModel}
                         onRowSelectionModelChange={setSelectionModel}
+                        disableRowSelectionExcludeModel
                         showToolbar
                     />
                 </EditDialog>

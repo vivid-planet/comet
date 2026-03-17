@@ -612,6 +612,7 @@ const FolderDataGrid = ({
                     checkboxSelection={!hideMultiselect}
                     rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
+                    disableRowSelectionExcludeModel
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
                         contextMenu: !hideContextMenu,

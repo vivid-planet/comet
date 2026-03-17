@@ -299,6 +299,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                                                 onRowSelectionModelChange={(newSelectionModel) => {
                                                     props.input.onChange(newSelectionModel);
                                                 }}
+                                                disableRowSelectionExcludeModel
                                                 checkboxSelection
                                                 keepNonExistentRowsSelected
                                                 showToolbar

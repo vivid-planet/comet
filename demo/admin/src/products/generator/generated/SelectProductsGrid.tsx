@@ -66,6 +66,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
         onRowSelectionModelChange,
         checkboxSelection: true,
         keepNonExistentRowsSelected: true,
+        disableRowSelectionExcludeModel: true,
     };
     const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = useMemo(
         () => [

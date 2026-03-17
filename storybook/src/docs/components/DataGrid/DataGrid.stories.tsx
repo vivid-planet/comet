@@ -630,6 +630,7 @@ export const _CrudMoreActionsMenu = {
                         setSelectionModel(newSelectionModel);
                     }}
                     rowSelectionModel={selectionModel}
+                    disableRowSelectionExcludeModel
                     slots={{
                         toolbar: DemoToolBar,
                     }}

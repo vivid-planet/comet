@@ -151,6 +151,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 onRowSelectionModelChange={(selectionModel) => {
                                                     props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                                                 }}
+                                                disableRowSelectionExcludeModel
                                                 slots={{
                                                     toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}

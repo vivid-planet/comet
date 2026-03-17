@@ -827,9 +827,9 @@ export function generateGrid<T extends { __typename?: string }>(
         const intl = useIntl();
         const dataGridProps = { ...${hasPaging ? "useDataGridRemote" : "useDataGridUrlState"}(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
             config.selectionProps === "multiSelect"
-                ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+                ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true, disableRowSelectionExcludeModel: true`
                 : config.selectionProps === "singleSelect"
-                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
+                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false, disableRowSelectionExcludeModel: true`
                   : ``
         } };
         ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}

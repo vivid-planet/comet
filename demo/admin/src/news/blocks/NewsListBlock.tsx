@@ -70,6 +70,7 @@ export const NewsListBlock: BlockInterface<NewsListBlockData, State, NewsListBlo
                     onRowSelectionModelChange={(newSelection) => {
                         updateState({ ids: Array.from(newSelection.ids) as string[] });
                     }}
+                    disableRowSelectionExcludeModel
                 />
             </Box>
         );

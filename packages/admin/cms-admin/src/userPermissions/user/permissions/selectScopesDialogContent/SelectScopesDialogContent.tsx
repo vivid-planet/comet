@@ -109,6 +109,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                             onRowSelectionModelChange={(selectionModel) => {
                                 props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                             }}
+                            disableRowSelectionExcludeModel
                             slots={{
                                 toolbar: SelectScopesDialogContentGridToolbar,
                             }}
