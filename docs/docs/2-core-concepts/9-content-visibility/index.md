@@ -22,11 +22,6 @@ The home page cannot be set to Unpublished or Archived.
 
 :::
 
-:::note
-
-In the admin, page tree visibility filtering is performed **client-side**. Since the admin always sends the full `x-include-invisible-content` header, the API always returns all pages regardless of their visibility state. Archived pages are hidden from the page tree by default and can be shown using the "Archived items" toggle. The filtering is applied via the `filter` parameter of the `usePageTree` hook.
-
-:::
 
 ## Block Visibility
 
@@ -72,6 +67,12 @@ const headers = {
 
 This is configured automatically by the built-in Apollo link (`includeInvisibleContentContext`) and the HTTP client.
 
+:::note
+
+Since the API always returns all content to the admin, visibility filtering is performed **client-side**. Archived pages are hidden from the page tree by default and can be shown using the "Archived items" toggle. Similarly, the "Show only visible blocks" toggle in the block preview controls whether invisible blocks are displayed.
+
+:::
+
 ### Site (Public)
 
 The public site does **not** send the header. All API requests return only published pages and visible blocks — no additional configuration is needed.
@@ -116,11 +117,6 @@ export class NewsResolver {
 
 This ensures site visitors only see visible news items while authenticated admin users can access all items regardless of their visibility state.
 
-:::note
-
-In the admin, block visibility filtering is performed **client-side**. Since the admin always sends the full `x-include-invisible-content` header, the API always returns all blocks regardless of their visibility state. The "Show only visible blocks" toggle in the block preview controls a `showVisibleOnly` flag in the preview context, which block factories (`createBlocksBlock`, `createListBlock`, `createColumnsBlock`) use to filter blocks in `createPreviewState()` before rendering.
-
-:::
 
 ## How Block Visibility Works Internally
 
