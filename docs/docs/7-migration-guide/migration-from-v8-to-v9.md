@@ -70,6 +70,24 @@ The `createHttpClient` function has been removed. Use native fetch instead.
 
 Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
 
+### Remove `hasClearableContent` prop from `ClearInputAdornment`
+
+The `hasClearableContent` prop has been removed from `ClearInputAdornment`. The component now always renders when included in the component tree.
+
+Callers should conditionally render the component instead of passing the `hasClearableContent` prop.
+
+**Before:**
+
+```tsx
+<ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
+```
+
+**After:**
+
+```tsx
+{value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+```
+
 ### Replacement of `@comet/admin-date-time`
 
 Most components of `@comet/admin-date-time` are now deprecated and are being replaced by new components in `@comet/admin`.
