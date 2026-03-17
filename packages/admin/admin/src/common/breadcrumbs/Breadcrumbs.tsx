@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { ButtonBase, type ComponentsOverrides, IconButton, Typography, useMediaQuery } from "@mui/material";
-import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { alpha, css, type Theme, useThemeProps } from "@mui/material/styles";
 import { Fragment, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -9,12 +9,15 @@ import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBase
 type BreadcrumbsClassKey =
     | "root"
     | "item"
+    | "activeItem"
     | "separator"
     | "ellipsis"
     | "menuContainer"
     | "toolbarContainer"
     | "expandedMenu"
     | "expandedMenuItem"
+    | "expandedMenuActiveItem"
+    | "expandedMenuActiveItemWrapper"
     | "pageTreeVerticalLine"
     | "expandedMenuSubitemWrapper"
     | "mobileOpenMenuButton";
@@ -28,12 +31,15 @@ interface BreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         item: typeof Typography;
+        activeItem: typeof Typography;
         separator: "div";
         ellipsis: typeof Typography;
         menuContainer: "div";
         toolbarContainer: "div";
         expandedMenu: "div";
         expandedMenuItem: typeof Typography;
+        expandedMenuActiveItem: typeof Typography;
+        expandedMenuActiveItemWrapper: "div";
         pageTreeVerticalLine: "div";
         expandedMenuSubitemWrapper: "div";
         mobileOpenMenuButton: typeof IconButton;
@@ -72,6 +78,18 @@ const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
             overflow: hidden;
             text-overflow: ellipsis;
         }
+    `,
+) as typeof Typography;
+
+const ActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "activeItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     `,
 ) as typeof Typography;
 
@@ -133,7 +151,8 @@ const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
         top: 100%;
         background-color: ${theme.palette.background.paper};
         box-shadow: ${theme.shadows[2]};
-        padding: ${theme.spacing(4)};
+        padding-top: ${theme.spacing(4)};
+        padding-bottom: ${theme.spacing(4)};
         z-index: 1;
     `,
 );
@@ -147,16 +166,43 @@ const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     `,
 ) as typeof Typography;
 
+const ExpandedMenuActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuActiveItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+    `,
+) as typeof Typography;
+
+const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuActiveItemWrapper",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: 45px;
+        align-self: flex-start;
+        padding-right: ${theme.spacing(4)};
+        background-color: ${alpha(theme.palette.primary.main, 0.1)};
+    `,
+);
+
 const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "expandedMenuSubitemWrapper",
-})(css`
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    height: 45px;
-    align-self: flex-start;
-`);
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: 45px;
+        align-self: flex-start;
+        padding-right: ${theme.spacing(4)};
+    `,
+);
 
 const MobileOpenMenuButton = createComponentSlot(IconButton)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -212,9 +258,9 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                         <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
                                     </>
                                 )}
-                                <Item key={item.url} {...slotProps?.item} fontWeight={index === items.length - 1 ? "bold" : "standard"}>
+                                <ActiveItem key={item.url} {...slotProps?.activeItem} fontWeight="bold">
                                     {item.title}
-                                </Item>
+                                </ActiveItem>
                             </Fragment>
                         );
                     }
@@ -232,17 +278,20 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                 {isMenuOpen && (
                     <ExpandedMenu {...slotProps?.expandedMenu}>
                         {items.map((item, index) => {
+                            const isActive = index === items.length - 1;
+                            const Wrapper = isActive ? ExpandedMenuActiveItemWrapper : ExpandedMenuSubitemWrapper;
+                            const wrapperSlotProps = isActive ? slotProps?.expandedMenuActiveItemWrapper : slotProps?.expandedMenuSubitemWrapper;
                             return (
-                                <ExpandedMenuSubitemWrapper
-                                    key={item.url}
-                                    style={{ paddingLeft: `${index * 16}px` }}
-                                    {...slotProps?.expandedMenuSubitemWrapper}
-                                >
+                                <Wrapper key={item.url} style={{ paddingLeft: `calc(${index * 16}px + 32px)` }} {...wrapperSlotProps}>
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
-                                    <ExpandedMenuItem {...slotProps?.expandedMenuItem} fontWeight={index === items.length - 1 ? "bold" : undefined}>
-                                        {item.title}
-                                    </ExpandedMenuItem>
-                                </ExpandedMenuSubitemWrapper>
+                                    {isActive ? (
+                                        <ExpandedMenuActiveItem {...slotProps?.expandedMenuActiveItem} fontWeight="bold">
+                                            {item.title}
+                                        </ExpandedMenuActiveItem>
+                                    ) : (
+                                        <ExpandedMenuItem {...slotProps?.expandedMenuItem}>{item.title}</ExpandedMenuItem>
+                                    )}
+                                </Wrapper>
                             );
                         })}
                     </ExpandedMenu>
