@@ -2,8 +2,10 @@ import { type ApolloClient, gql } from "@apollo/client";
 import pDebounce from "p-debounce";
 import { FormattedMessage } from "react-intl";
 
+import { type GQLCheckProductSlugQuery, type GQLCheckProductSlugQueryVariables } from "./validateProductSlug.generated";
+
 async function validateProductSlugImpl({ value, client, id }: { value: string; client: ApolloClient<object>; id?: string }) {
-    const slugQuery = await client.query({
+    const slugQuery = await client.query<GQLCheckProductSlugQuery, GQLCheckProductSlugQueryVariables>({
         query: gql`
             query CheckProductSlug($slug: String!) {
                 productBySlug(slug: $slug) {
