@@ -338,7 +338,7 @@ export class DependenciesService {
             this.applyStringFilterToKnex(qb, '"EntityInfo"."secondaryInformation"', filter.secondaryInformation);
         }
         if (filter.visible) {
-            if (filter.visible.equal !== undefined) {
+            if (filter.visible.equal !== undefined && filter.visible.equal !== null) {
                 qb.andWhere(this.entityManager.getKnex("read").raw('"idx"."visible" = ?', [filter.visible.equal]));
             }
         }
