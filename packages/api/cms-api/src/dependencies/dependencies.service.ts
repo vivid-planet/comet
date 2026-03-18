@@ -342,14 +342,14 @@ export class DependenciesService {
                 qb.andWhere(this.entityManager.getKnex("read").raw('"idx"."visible" = ?', [filter.visible.equal]));
             }
         }
-        if (filter.and) {
+        if (filter.and?.length) {
             for (const subFilter of filter.and) {
                 qb.andWhere((sub) => {
                     this.applyFilter(sub, subFilter);
                 });
             }
         }
-        if (filter.or) {
+        if (filter.or?.length) {
             const orFilters = filter.or;
             qb.andWhere((outer) => {
                 for (const subFilter of orFilters) {
