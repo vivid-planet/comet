@@ -6,6 +6,7 @@ import {
     pickersInputBaseClasses,
 } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -42,6 +43,8 @@ export type Future_DateTimePickerProps = ThemedComponentBaseProps<{
      *
      * - `openPicker`: Icon to display in the adornment that opens the picker (default: Calendar icon)
      */
+    onBlur?: () => void;
+    onFocus?: () => void;
     iconMapping?: {
         openPicker?: ReactNode;
     };
@@ -64,6 +67,8 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
         disabled,
         value = null,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -71,6 +76,7 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
         name: "CometAdminFutureDateTimePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
 
     const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
 
@@ -105,6 +111,8 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,
@@ -115,6 +123,16 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
                                         inputIsReadOnly={readOnly}
                                         onClick={() => setOpen(true)}
                                         {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.dateTimePicker.openPicker",
+                                                    defaultMessage: "Open date time picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
                                     >
                                         {openPickerIcon}
                                     </OpenPickerAdornment>

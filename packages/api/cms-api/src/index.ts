@@ -88,6 +88,7 @@ export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/facto
 export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
 export { createSeoBlock, type SeoBlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
 export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
+export { createTableBlock } from "./blocks/factories/createTableBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";

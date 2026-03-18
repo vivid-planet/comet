@@ -167,3 +167,52 @@ export const Disabled: Story = {
         );
     },
 };
+
+/**
+ * Before implementing custom validation, try to disable certain values using the props provided by MUI's DateRangePicker, such as `shouldDisableDate`, `disableFuture`, `disablePast`.
+ *
+ * Use this when:
+ * - You need to validate the date range against a custom rule, which cannot be achieved using the props provided by MUI's DateRangePicker
+ * - You want to provide a custom error message
+ * - You want to validate the date range asynchronously
+ */
+export const CustomValidation: Story = {
+    render: () => {
+        interface FormValues {
+            value: { start: string | null; end: string | null };
+        }
+
+        const validateMaxThirtyDayRange = async (value: { start: string | null; end: string | null } | undefined) => {
+            if (!value?.start || !value?.end) return undefined;
+            const startDate = new Date(value.start);
+            const endDate = new Date(value.end);
+            const differenceInDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+            return differenceInDays <= 30 ? undefined : "Please select a range no longer than 30 days";
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {() => (
+                    <>
+                        <Future_DateRangePickerField
+                            name="value"
+                            label="Date Range Picker"
+                            helperText="The selected range must not exceed 30 days"
+                            fullWidth
+                            variant="horizontal"
+                            validate={validateMaxThirtyDayRange}
+                        />
+
+                        <FinalFormDebug />
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};
