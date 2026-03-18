@@ -57,7 +57,7 @@ describe("GenerateCrudInputRelationsString", () => {
         await orm.close();
     });
     it("n:1 input dto should contain relation id as ID or string", async () => {
-        const out = await generateCrudInput({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
         const formattedOut = await formatSource(out[0].content);
         const source = parseSource(formattedOut);
 

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { readFile, writeFile } from "node:fs/promises";
+
 import { type ApolloClient } from "@apollo/client";
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
@@ -14,16 +16,15 @@ import {
     type GridSortDirection,
     type GridValidRowModel,
 } from "@mui/x-data-grid";
-import { exec as execCallback } from "child_process";
 import { Command } from "commander";
 import { type FieldValidator, type FormApi } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import type { ComponentType, ReactElement } from "react";
+import { format, resolveConfig } from "prettier";
+import type { ComponentType, JSX, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
-import { promisify } from "util";
 
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
@@ -31,8 +32,6 @@ import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
-
-const exec = promisify(execCallback);
 
 export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
 
@@ -355,7 +354,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = await parseConfig(file);
+        const config = await parseConfig(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
@@ -394,8 +393,14 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         console.log("");
     }
     if (writtenFiles.length > 0) {
-        console.log("Formatting generated files...");
-        await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+        console.log(`Formatting ${writtenFiles.length} generated files...`);
+        await Promise.all(
+            writtenFiles.map(async (filepath) => {
+                const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
+                const formatted = await format(content, { ...options, filepath });
+                await writeFile(filepath, formatted);
+            }),
+        );
     }
 }
 

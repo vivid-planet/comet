@@ -199,7 +199,7 @@ export default defineConfig({
         //group demo api
         {
             name: "demo-docker",
-            script: "docker compose up",
+            script: "pnpm run dev:docker-compose up",
             group: ["demo-api", "demo"],
         },
         {

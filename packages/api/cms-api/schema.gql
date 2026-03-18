@@ -73,6 +73,11 @@ type CurrentUser {
   allowedContentScopes: [ContentScopeWithLabel!]!
 }
 
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
+}
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -287,11 +292,6 @@ enum WarningStatus {
   ignored
 }
 
-type EntityInfo {
-  name: String!
-  secondaryInformation: String
-}
-
 type PaginatedWarnings {
   nodes: [Warning!]!
   totalCount: Int!
@@ -357,6 +357,7 @@ type Redirect {
 
 enum RedirectSourceTypeValues {
   path
+  domain
 }
 
 enum RedirectGenerationType {
@@ -514,6 +515,7 @@ input RedirectFilter {
   source: StringFilter
   target: StringFilter
   active: BooleanFilter
+  sourceType: RedirectSourceTypeEnumFilter
   activatedAt: DateTimeFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -535,6 +537,12 @@ input StringFilter {
 
 input BooleanFilter {
   equal: Boolean
+}
+
+input RedirectSourceTypeEnumFilter {
+  isAnyOf: [RedirectSourceTypeValues!]
+  equal: RedirectSourceTypeValues
+  notEqual: RedirectSourceTypeValues
 }
 
 input DateTimeFilter {

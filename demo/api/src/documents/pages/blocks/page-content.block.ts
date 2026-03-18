@@ -7,6 +7,7 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-c
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
 import { StandaloneRichTextBlock } from "@src/common/blocks/standalone-rich-text.block";
+import { TableBlock } from "@src/common/blocks/table.block";
 import { TextImageBlock } from "@src/common/blocks/text-image.block";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/billboard-teaser.block";
 import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
@@ -45,6 +46,7 @@ const supportedBlocks = {
     layout: LayoutBlock,
     textImage: TextImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    table: TableBlock,
     productList: ProductListBlock,
     pageTreeIndex: PageTreeIndexBlock,
 };

@@ -65,7 +65,7 @@ describe("nested two level", () => {
     //Foo -> Bar -> Baz
     //foo.bars[].bazs[]
     it("input dto should reference the correct import", async () => {
-        const out = await generateCrudInput({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
         const fooInputDto = out.find((f) => f.name == "dto/foo.input.ts");
         if (!fooInputDto) throw new Error();
 
@@ -80,7 +80,8 @@ describe("nested two level", () => {
                 assignEntityCode: `const foo = this.entityManager.create(Foo, {`,
             },
             orm.em.getMetadata().get("Foo"),
-            { targetDirectory: __dirname, requiredPermission: testPermission },
+            { requiredPermission: testPermission },
+            __dirname,
         );
         expect(imports.map((i) => i.name)).toEqual(["Bar", "Baz"]);
         expect(code).toMatchSnapshot();
@@ -93,7 +94,8 @@ describe("nested two level", () => {
                 assignEntityCode: `foo.assign({`,
             },
             orm.em.getMetadata().get("Foo"),
-            { targetDirectory: __dirname, requiredPermission: testPermission },
+            { requiredPermission: testPermission },
+            __dirname,
         );
         expect(imports.map((i) => i.name)).toEqual(["Bar", "Baz"]);
         expect(code).toMatchSnapshot();

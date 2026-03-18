@@ -6,6 +6,7 @@ import {
     pickersInputBaseClasses,
 } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -14,9 +15,9 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { isValidDate } from "../utils";
 
-export type Future_DateTimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
+export type DateTimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
-export type Future_DateTimePickerProps = ThemedComponentBaseProps<{
+export type DateTimePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDateTimePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
@@ -42,6 +43,8 @@ export type Future_DateTimePickerProps = ThemedComponentBaseProps<{
      *
      * - `openPicker`: Icon to display in the adornment that opens the picker (default: Calendar icon)
      */
+    onBlur?: () => void;
+    onFocus?: () => void;
     iconMapping?: {
         openPicker?: ReactNode;
     };
@@ -55,7 +58,7 @@ export type Future_DateTimePickerProps = ThemedComponentBaseProps<{
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-datetimepicker--docs)
  * - [MUI X DateTimePicker Documentation](https://mui.com/x/react-date-pickers/date-time-picker/)
  */
-export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
+export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,
@@ -64,13 +67,16 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
         disabled,
         value = null,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFutureDateTimePicker",
+        name: "CometAdminDateTimePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
 
     const { openPicker: openPickerIcon = <Calendar color="inherit" /> } = iconMapping;
 
@@ -105,6 +111,8 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,
@@ -115,6 +123,16 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
                                         inputIsReadOnly={readOnly}
                                         onClick={() => setOpen(true)}
                                         {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.dateTimePicker.openPicker",
+                                                    defaultMessage: "Open date time picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
                                     >
                                         {openPickerIcon}
                                     </OpenPickerAdornment>
@@ -141,8 +159,8 @@ export const Future_DateTimePicker = (inProps: Future_DateTimePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiDateTimePicker<Date, true>)<Future_DateTimePickerClassKey>({
-    componentName: "Future_DateTimePicker",
+const Root = createComponentSlot(MuiDateTimePicker<Date, true>)<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
     slotName: "root",
 })(css`
     .${inputLabelClasses.root} {
@@ -154,24 +172,24 @@ const Root = createComponentSlot(MuiDateTimePicker<Date, true>)<Future_DateTimeP
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DateTimePickerClassKey>({
-    componentName: "Future_DateTimePicker",
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFutureDateTimePicker: Future_DateTimePickerProps;
+        CometAdminDateTimePicker: DateTimePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFutureDateTimePicker: Future_DateTimePickerClassKey;
+        CometAdminDateTimePicker: DateTimePickerClassKey;
     }
 
     interface Components {
-        CometAdminFutureDateTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureDateTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureDateTimePicker"];
+        CometAdminDateTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDateTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateTimePicker"];
         };
     }
 }

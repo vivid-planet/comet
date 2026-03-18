@@ -10,7 +10,7 @@ export interface IPagingApi<T> {
     current: T;
     currentPage?: number;
     changePage: (variables: T, page?: number, changePageOptions?: IChangePageOptions) => void;
-    attachTableRef: (ref: RefObject<HTMLDivElement | undefined>) => void;
+    attachTableRef: (ref: RefObject<HTMLDivElement | undefined | null>) => void;
 }
 
 /**
@@ -36,7 +36,7 @@ export function useTableQueryPaging<T>(
         persistedStateId: options.persistedStateId ? `${options.persistedStateId}_pagingVariables` : undefined,
     });
 
-    let tableRef: RefObject<HTMLDivElement | undefined> | undefined;
+    let tableRef: RefObject<HTMLDivElement | undefined | null> | undefined;
     function attachTableRef(ref: any) {
         tableRef = ref;
     }

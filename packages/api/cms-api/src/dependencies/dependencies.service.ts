@@ -3,9 +3,8 @@ import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfoService } from "../common/entityInfo/entity-info.service";
+import { EntityInfoService } from "../entity-info/entity-info.service";
 import { DiscoverService } from "./discover.service";
-import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
@@ -33,8 +32,17 @@ export class DependenciesService {
     }
 
     async createViews(): Promise<void> {
-        await this.createDependenciesView();
+        await this.dropViews();
+
         await this.createBlockIndexView();
+        await this.entityInfoService.createEntityInfoView();
+        await this.createDependenciesView();
+    }
+
+    async dropViews(): Promise<void> {
+        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "block_index_dependencies"`);
+        await this.connection.execute(`DROP VIEW IF EXISTS "block_index"`);
+        await this.entityInfoService.dropEntityInfoView();
     }
 
     private async createDependenciesView(): Promise<void> {
@@ -58,26 +66,35 @@ export class DependenciesService {
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            "${metadata.tableName}"."${primary}"  "rootId",
-                            '${metadata.name}'                    "rootEntityName",
-                            '${graphqlObjectType}'                "rootGraphqlObjectType",
-                            '${metadata.tableName}'               "rootTableName",
-                            '${column}'                           "rootColumnName",
-                            '${primary}'                          "rootPrimaryKey",
-                            indexObj->>'blockname'                "blockname",
-                            indexObj->>'jsonPath'                 "jsonPath",
-                            (indexObj->>'visible')::boolean       "visible",
-                            targetTableData->>'entityName'        "targetEntityName",
-                            targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
-                            targetTableData->>'tableName'         "targetTableName",
-                            targetTableData->>'primary'           "targetPrimaryKey",
-                            dependenciesObj->>'id' "targetId"
-                        FROM "${metadata.tableName}",
-                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
-                            json_array_elements(indexObj->'dependencies') dependenciesObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
+                            "${metadata.tableName}"."${primary}"                                "rootId",
+                            '${metadata.name}'                                                  "rootEntityName",
+                            '${graphqlObjectType}'                                              "rootGraphqlObjectType",
+                            '${metadata.tableName}'                                             "rootTableName",
+                            '${column}'                                                         "rootColumnName",
+                            '${primary}'                                                        "rootPrimaryKey",
+                            indexObj->>'blockname'                                              "blockname",
+                            indexObj->>'jsonPath'                                               "jsonPath",
+                            indexObj->>'visible'                                                "blockVisible",
+                            COALESCE(ei."visible", true)                                        "entityVisible",
+                            ((indexObj->>'visible')::boolean AND COALESCE(ei."visible", true))  "visible",
+                            targetTableData->>'entityName'                                      "targetEntityName",
+                            targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
+                            targetTableData->>'tableName'                                       "targetTableName",
+                            targetTableData->>'primary'                                         "targetPrimaryKey",
+                            dependenciesObj->>'id'                                              "targetId"
+                        FROM "${metadata.tableName}"
+                        CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
+                        CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
+                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
+                        LEFT JOIN "EntityInfo" as ei ON ei."id" = "${metadata.tableName}"."${primary}"::text
+                            AND ei."entityName" = '${metadata.name}'`;
 
             indexSelects.push(select);
+        }
+
+        if (indexSelects.length === 0) {
+            this.logger.log("Skipping block_index_dependencies materialized view creation: no root block entities found");
+            return;
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
@@ -116,6 +133,11 @@ export class DependenciesService {
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj`;
 
             indexSelects.push(select);
+        }
+
+        if (indexSelects.length === 0) {
+            this.logger.log("Skipping block_index view creation: no root block entities found");
+            return;
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
@@ -269,27 +291,19 @@ export class DependenciesService {
                 targetId: target.id,
             },
             paginationArgs,
-        );
+        ).join("EntityInfo", (join) => {
+            join.on("idx.rootEntityName", "EntityInfo.entityName").andOn(
+                "EntityInfo.id",
+                this.entityManager.getKnex("read").raw('"idx"."rootId"::text'),
+            );
+        });
 
-        const results: BaseDependencyInterface[] = await qb;
-        const ret: Dependency[] = [];
+        const results: Dependency[] = await qb;
 
-        for (const result of results) {
-            const repository = this.entityManager.getRepository(result.rootEntityName);
-            const instance = await repository.findOne({ [result.rootPrimaryKey]: result.rootId });
-
-            let dependency: Dependency = result;
-            if (instance) {
-                const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-                dependency = { ...dependency, ...entityInfo };
-            }
-            ret.push(dependency);
-        }
-
-        const countResult = await this.withCount(qb).select("targetId").groupBy(["targetId", "targetEntityName"]);
+        const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("targetId").groupBy(["targetId", "targetEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(ret, Number(totalCount));
+        return new PaginatedDependencies(results, Number(totalCount));
     }
 
     async getDependencies(
@@ -311,27 +325,19 @@ export class DependenciesService {
                 rootId: root.id,
             },
             paginationArgs,
-        );
+        ).join("EntityInfo", (join) => {
+            join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
+                "EntityInfo.id",
+                this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
+            );
+        });
 
-        const results: BaseDependencyInterface[] = await qb;
-        const ret: Dependency[] = [];
-
-        for (const result of results) {
-            const repository = this.entityManager.getRepository(result.targetEntityName);
-            const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
-
-            let dependency: Dependency = result;
-            if (instance) {
-                const entityInfo = await this.entityInfoService.getEntityInfo(instance);
-                dependency = { ...dependency, ...entityInfo };
-            }
-            ret.push(dependency);
-        }
+        const results: Dependency[] = await qb;
 
         const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(ret, Number(totalCount));
+        return new PaginatedDependencies(results, Number(totalCount));
     }
 
     private getQueryBuilderWithFilters(

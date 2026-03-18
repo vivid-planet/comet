@@ -12,7 +12,6 @@ export interface CrudGeneratorHooksService {
 }
 
 export interface CrudGeneratorOptions {
-    targetDirectory: string;
     requiredPermission: Permission | Permission[];
     create?: boolean;
     update?: boolean;
@@ -27,7 +26,6 @@ export interface CrudGeneratorOptions {
 export const CRUD_GENERATOR_METADATA_KEY = "data:crudGeneratorOptions";
 
 export function CrudGenerator({
-    targetDirectory,
     requiredPermission,
     create = true,
     update = true,
@@ -42,14 +40,13 @@ export function CrudGenerator({
     return function (target: Function) {
         Reflect.defineMetadata(
             CRUD_GENERATOR_METADATA_KEY,
-            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService, paging },
+            { requiredPermission, create, update, delete: deleteMutation, list, single, position, hooksService, paging },
             target,
         );
     };
 }
 
 export interface CrudSingleGeneratorOptions {
-    targetDirectory: string;
     requiredPermission: Permission | Permission[];
 }
 
