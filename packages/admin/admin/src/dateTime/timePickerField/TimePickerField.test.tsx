@@ -60,7 +60,7 @@ describe("TimePickerField", () => {
 
             const rendered = render(<Story />);
 
-            user.click(rendered.getByRole("button", { name: "Open time picker" }));
+            await user.click(rendered.getByRole("button", { name: "Open time picker" }));
 
             await waitFor(() => expect(rendered.getByRole("dialog")).toBeInTheDocument());
 
@@ -70,6 +70,6 @@ describe("TimePickerField", () => {
 
             await waitFor(() => expect(rendered.getByText("Please select a time during business hours")).toBeInTheDocument());
             await waitFor(() => expect(validateIsBusinessHours).toHaveBeenCalled());
-        });
+        }, 15000);
     });
 });

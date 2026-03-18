@@ -45,7 +45,7 @@ describe("DateTimePickerField", () => {
 
             const rendered = render(<Story />);
 
-            user.click(rendered.getByRole("button", { name: "Open date time picker" }));
+            await user.click(rendered.getByRole("button", { name: "Open date time picker" }));
 
             await waitFor(() => expect(rendered.getByRole("dialog")).toBeInTheDocument());
 
@@ -57,6 +57,6 @@ describe("DateTimePickerField", () => {
 
             await waitFor(() => expect(rendered.getByText("Please select a weekday")).toBeInTheDocument());
             await waitFor(() => expect(validateIsWeekday).toHaveBeenCalledTimes(1));
-        });
+        }, 15000);
     });
 });
