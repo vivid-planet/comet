@@ -8,7 +8,26 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+    check-if-prerelease-mode:
+        name: Check if in Prerelease Mode
+        runs-on: ubuntu-latest
+        outputs:
+            in-prerelease-mode: ${{ steps.check-if-prerelease-mode.outputs.in-prerelease-mode }}
+        steps:
+            - name: Checkout Repo
+              uses: actions/checkout@v5
+
+            - id: check-if-prerelease-mode
+              name: Check if in Prerelease Mode
+              run: |
+                  if [ -f ".changeset/pre.json" ]; then
+                      echo "in-prerelease-mode=true" >> $GITHUB_OUTPUT
+                  else
+                      echo "in-prerelease-mode=false" >> $GITHUB_OUTPUT
+                  fi
     release:
+        needs: check-if-prerelease-mode
+        if: needs.check-if-prerelease-mode.outputs.in-prerelease-mode == 'false'
         name: Release
         runs-on: ubuntu-latest
         concurrency:
