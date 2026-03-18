@@ -1,5 +1,33 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- ee24125: Remove `createHttpClient` function
+
+    Use native fetch instead.
+
+- 5f1566a: Make packages ESM-only
+- 790e8d0: Remove the `filesInfoText` slot from `FileSelect`
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [3fda20b]
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-date-time@9.0.0-beta.0
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin-rte@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
 ## 8.20.0
 
 ### Minor Changes

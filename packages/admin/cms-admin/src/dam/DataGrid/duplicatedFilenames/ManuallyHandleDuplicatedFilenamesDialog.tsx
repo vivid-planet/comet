@@ -14,7 +14,7 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Fragment, type VoidFunctionComponent } from "react";
+import { Fragment, type FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type FilenameData } from "./ManualDuplicatedFilenamesHandler";
@@ -37,7 +37,7 @@ interface DuplicateFilenameDialogProps {
     onReplace: () => void;
 }
 
-export const ManuallyHandleDuplicatedFilenamesDialog: VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
+export const ManuallyHandleDuplicatedFilenamesDialog: FunctionComponent<DuplicateFilenameDialogProps> = ({
     open,
     filenameData,
     onSkip,

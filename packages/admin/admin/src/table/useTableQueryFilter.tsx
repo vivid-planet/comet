@@ -26,7 +26,7 @@ export function useTableQueryFilter<FilterValues>(
     const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, {
         persistedStateId: options.persistedStateId ? `${options.persistedStateId}_filter` : undefined,
     });
-    const ref = useRef<FormApi<FilterValues>>();
+    const ref = useRef<FormApi<FilterValues>>(undefined);
     if (!ref.current) {
         ref.current = createForm({
             initialValues: filters,

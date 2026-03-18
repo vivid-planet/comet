@@ -26,10 +26,10 @@ type HandleClose = (event: SnackbarCloseEvent, reason: SnackbarCloseReason, onCl
 
 export const SnackbarProvider = ({ children }: { children?: ReactNode }) => {
     const [open, setOpen] = useState<boolean>(false);
-    const [snackbar, setSnackbar] = useState<ReactElement>();
+    const [snackbar, setSnackbar] = useState<ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>>();
     const [key, setKey] = useState(uuid());
 
-    const updateSnackbar = (newSnackbar: ReactElement) => {
+    const updateSnackbar = (newSnackbar: ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>) => {
         setKey(uuid());
         setSnackbar(newSnackbar);
         if (newSnackbar !== undefined) {

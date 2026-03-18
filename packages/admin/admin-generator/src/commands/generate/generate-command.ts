@@ -23,7 +23,7 @@ import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 import { format, resolveConfig } from "prettier";
-import type { ComponentType, ReactElement } from "react";
+import type { ComponentType, JSX, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
 
 import { parseConfig } from "./config/parseConfig";
@@ -354,7 +354,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = await parseConfig(file);
+        const config = await parseConfig(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });

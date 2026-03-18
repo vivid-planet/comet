@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "8.20.0",
+    "version": "9.0.0-beta.0",
     "description": "Comet CMS Admin package",
     "repository": {
         "directory": "packages/admin/cms-admin",
@@ -8,11 +8,15 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        }
+    },
     "files": [
-        "lib/*"
+        "lib"
     ],
     "scripts": {
         "build": "pnpm run clean && run-p gql:types generate-block-types && run-p build:babel build:types",
@@ -39,12 +43,9 @@
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/admin-rte": "workspace:*",
-        "axios": "^0.30.2",
         "change-case": "^4.1.2",
         "class-validator": "^0.14.3",
-        "cssstyle": "^5.3.7",
         "date-fns": "^4.1.0",
-        "file-saver": "^2.0.5",
         "final-form-arrays": "^3.1.0",
         "final-form-set-field-touched": "^1.0.1",
         "js-cookie": "^3.0.5",
@@ -88,9 +89,7 @@
         "@testing-library/dom": "^10.4.1",
         "@testing-library/react": "^16.3.2",
         "@testing-library/user-event": "^14.6.1",
-        "@types/cssstyle": "^2.2.4",
         "@types/draft-js": "^0.11.20",
-        "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-touched": "^1.0.3",
         "@types/history": "^4.7.11",
         "@types/js-cookie": "^3.0.6",
@@ -98,8 +97,8 @@
         "@types/lodash.isequal": "^4.5.8",
         "@types/mime-db": "^1.43.6",
         "@types/node": "^24.10.9",
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
         "@types/react-window": "^1.8.8",
@@ -112,10 +111,10 @@
         "jsdom": "^28.0.0",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
+        "react": "^19.2.4",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",
-        "react-dom": "^18.3.1",
+        "react-dom": "^19.2.4",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "react-router": "^5.3.4",
@@ -133,10 +132,10 @@
         "@mui/x-data-grid-pro": "^7.0.0",
         "final-form": "^4.0.0",
         "graphql": "^15.0.0 || ^16.0.0",
-        "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-dnd": "^16.0.0",
         "react-dnd-html5-backend": "^16.0.0",
-        "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0",
+        "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-final-form": "^6.0.0",
         "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0",
         "react-router": "^5.0.0",

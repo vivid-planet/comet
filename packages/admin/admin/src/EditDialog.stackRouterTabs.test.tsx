@@ -31,7 +31,7 @@ import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {
-        dialogApiRef: RefObject<IEditDialogApi>;
+        dialogApiRef: RefObject<IEditDialogApi | null>;
     };
 
     const AddProductDialog = ({ dialogApiRef }: DialogProps) => {

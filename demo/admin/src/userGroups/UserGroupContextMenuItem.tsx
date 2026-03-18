@@ -2,7 +2,7 @@ import { CancelButton, Dialog, OkayButton, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { DialogActions, DialogContent, ListItemIcon, MenuItem } from "@mui/material";
 import { type GQLUserGroup } from "@src/graphql.generated";
-import { useState } from "react";
+import { type JSX, useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 

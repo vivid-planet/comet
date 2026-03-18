@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "8.20.0",
+    "version": "9.0.0-beta.0",
     "description": "Comet Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
@@ -8,9 +8,13 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        }
+    },
     "files": [
         "lib"
     ],
@@ -41,15 +45,15 @@
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.3.7",
-        "@types/react": "^18.3.27",
+        "@types/react": "^19.2.10",
         "@types/react-date-range": "^1.4.10",
-        "@types/react-dom": "^18.3.7",
+        "@types/react-dom": "^19.2.3",
         "eslint": "^9.39.2",
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
@@ -57,8 +61,8 @@
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
     },

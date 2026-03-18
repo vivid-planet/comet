@@ -3,6 +3,7 @@ import {
     Alert,
     DataGridToolbar,
     FillSpace,
+    GridCellContent,
     type GridColDef,
     messages,
     Tooltip,
@@ -11,7 +12,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -20,7 +21,6 @@ import { useHistory } from "react-router";
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
-import * as sc from "./DependencyList.sc";
 import { type DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
@@ -29,13 +29,11 @@ type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "roo
 };
 
 type Dependency = Pick<GQLDependency, "targetGraphqlObjectType" | "targetId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
-type Dependent = Pick<GQLDependency, "rootGraphqlObjectType" | "rootId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
 
-interface Query {
+interface DependenciesListQuery {
     item: {
         id: string;
-        dependencies?: { totalCount: number; nodes: Array<Dependency> };
-        dependents?: { totalCount: number; nodes: Array<Dependent> };
+        dependencies: { totalCount: number; nodes: Array<Dependency> };
     };
 }
 
@@ -45,10 +43,10 @@ type QueryVariables = {
     forceRefresh?: boolean;
 };
 
-interface DependencyListGridToolbarProps extends GridToolbarProps {
-    refetch: QueryResult<Query, QueryVariables>["refetch"];
+interface DependenciesListGridToolbarProps extends GridToolbarProps {
+    refetch: QueryResult<DependenciesListQuery, QueryVariables>["refetch"];
 }
-function DependencyListGridToolbar({ refetch }: DependencyListGridToolbarProps) {
+function DependenciesListGridToolbar({ refetch }: DependenciesListGridToolbarProps) {
     const [isRefetching, setIsRefetching] = useState<boolean>(false);
 
     return (
@@ -74,12 +72,13 @@ function DependencyListGridToolbar({ refetch }: DependencyListGridToolbarProps) 
 }
 
 const pageSize = 10;
-interface DependencyListProps {
-    query: TypedDocumentNode<Query, QueryVariables>;
+
+export interface DependenciesListProps {
+    query: TypedDocumentNode<DependenciesListQuery, QueryVariables>;
     variables: Record<string, unknown>;
 }
 
-export const DependencyList = ({ query, variables }: DependencyListProps) => {
+export const DependenciesList = ({ query, variables }: DependenciesListProps) => {
     const intl = useIntl();
     const { entityDependencyMap } = useDependenciesConfig();
     const contentScope = useContentScope();
@@ -91,7 +90,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             queryParamsPrefix: "dependencies",
             pageSize,
         }),
-        ...usePersistentColumnState("DependencyList"),
+        ...usePersistentColumnState("DependenciesList"),
     };
 
     const columns: GridColDef<DependencyItem>[] = [
@@ -100,20 +99,15 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.nameAndInfo", defaultMessage: "Name/Info" }),
             sortable: false,
             flex: 1,
-            renderCell: ({ row }) => {
-                return (
-                    <sc.NameInfoWrapper>
-                        <sc.NameInfoTypography color="text.primary">{row.name ?? <FormattedMessage {...messages.unknown} />}</sc.NameInfoTypography>
-                        <sc.NameInfoTypography color="text.secondary">{row.secondaryInformation}</sc.NameInfoTypography>
-                    </sc.NameInfoWrapper>
-                );
-            },
+            renderCell: ({ row }) => (
+                <GridCellContent primaryText={row.name ?? <FormattedMessage {...messages.unknown} />} secondaryText={row.secondaryInformation} />
+            ),
         },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
             sortable: false,
-            renderCell: ({ row }) => <sc.StyledChip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
+            renderCell: ({ row }) => <Chip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
         },
         {
             field: "actions",
@@ -167,7 +161,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
         },
     ];
 
-    const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
+    const { data, loading, error, refetch } = useQuery<DependenciesListQuery, QueryVariables>(query, {
         variables: {
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
@@ -177,19 +171,13 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     if (error) throw error;
 
-    if (!loading && ((data?.item.dependencies && data?.item.dependents) || (!data?.item.dependents && !data?.item.dependencies))) {
-        throw new Error("Either dependencies or dependents must be defined, but not both.");
-    }
-
-    const type: "dependencies" | "dependents" = data?.item.dependencies ? "dependencies" : "dependents";
-
-    const rowCount = useBufferedRowCount(data?.item[type]?.totalCount);
+    const rowCount = useBufferedRowCount(data?.item.dependencies?.totalCount);
     const rows =
-        data?.item[type]?.nodes.map((node) => {
+        data?.item.dependencies?.nodes.map((node) => {
             return {
                 ...node,
-                graphqlObjectType: type === "dependencies" ? (node as Dependency).targetGraphqlObjectType : (node as Dependent).rootGraphqlObjectType,
-                id: type === "dependencies" ? (node as Dependency).targetId : (node as Dependent).rootId,
+                graphqlObjectType: node.targetGraphqlObjectType,
+                id: node.targetId,
             };
         }) ?? [];
 
@@ -205,16 +193,19 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
                 }}
                 slots={{
-                    toolbar: DependencyListGridToolbar as GridSlotsComponent["toolbar"],
+                    toolbar: DependenciesListGridToolbar as GridSlotsComponent["toolbar"],
                 }}
                 slotProps={{
-                    toolbar: { refetch } as DependencyListGridToolbarProps,
+                    toolbar: { refetch } as DependenciesListGridToolbarProps,
                 }}
             />
-            <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
+            <Alert
+                title={<FormattedMessage id="comet.dependencies.dependencies.info.title" defaultMessage="What are dependencies?" />}
+                sx={{ marginTop: 4 }}
+            >
                 <FormattedMessage
-                    id="comet.dam.file.dependents.info.content"
-                    defaultMessage="Dependents are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
+                    id="comet.dependencies.dependencies.info.content"
+                    defaultMessage="Dependencies are all items that this content references or uses — such as linked pages, embedded files, or other content. Use this list to review what this item depends on."
                 />
             </Alert>
         </>

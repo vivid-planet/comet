@@ -9,7 +9,8 @@ import {
     ContentGenerationConfigProvider,
     ContentScopeIndicator,
     createUsePage,
-    DependencyList,
+    DependenciesList,
+    DependentsList,
     openSitePreviewWindow,
     PageName,
     useBlockContext,
@@ -43,6 +44,25 @@ const pageTreeNodeDependentsQuery = gql`
                 nodes {
                     rootGraphqlObjectType
                     rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                }
+                totalCount
+            }
+        }
+    }
+`;
+
+const pageTreeNodeDependenciesQuery = gql`
+    query PageTreeNodeDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+        item: page(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
                     rootColumnName
                     jsonPath
                     name
@@ -242,10 +262,26 @@ export const EditPage = ({ id }: Props) => {
                                     </BlockAdminTabLabel>
                                 ),
                                 content: (
-                                    <DependencyList
+                                    <DependentsList
                                         query={pageTreeNodeDependentsQuery}
                                         variables={{
                                             id,
+                                        }}
+                                    />
+                                ),
+                            },
+                            {
+                                key: "dependencies",
+                                label: (
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                        <FormattedMessage id="pages.pages.page.edit.dependencies" defaultMessage="Dependencies" />
+                                    </BlockAdminTabLabel>
+                                ),
+                                content: (
+                                    <DependenciesList
+                                        query={pageTreeNodeDependenciesQuery}
+                                        variables={{
+                                            id: pageState.document.id,
                                         }}
                                     />
                                 ),

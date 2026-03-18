@@ -35,7 +35,7 @@ export function getSiteConfigs() {
 
 // Used for getting SiteConfig in server-components where params is not available (e.g. sitemap, not-found - see https://github.com/vercel/next.js/discussions/43179)
 export async function getSiteConfig() {
-    const host = getHostByHeaders(headers());
+    const host = getHostByHeaders(await headers());
     const siteConfig = await getSiteConfigForHost(host);
     if (!siteConfig) throw new Error(`SiteConfig not found for host ${host}`);
     return siteConfig;
