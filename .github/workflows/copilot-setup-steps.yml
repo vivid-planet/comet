@@ -192,6 +192,8 @@ jobs:
 
             - run: CI=false pnpm run copy-project-files
 
+            - run: pnpm run install-agent-skills
+
             - name: create site-config-envs
               run: pnpm run create-site-configs-env
 
