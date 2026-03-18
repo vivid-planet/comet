@@ -107,7 +107,7 @@
         "draft-js": "^0.11.7",
         "eslint": "^9.39.2",
         "final-form": "^4.20.10",
-        "graphql": "^16.0.0",
+        "graphql": "^16.13.1",
         "history": "^4.10.1",
         "jsdom": "^28.0.0",
         "npm-run-all2": "^8.0.4",
