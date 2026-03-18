@@ -1957,7 +1957,7 @@ type Query {
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]! = [{direction: ASC, field: position}]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProducts!
   redirect(id: ID!): Redirect!
-  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
+  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceType!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   sitePreviewJwt(includeInvisible: Boolean!, path: String!, scope: JSONObject!): String!
@@ -1983,7 +1983,7 @@ type Redirect {
   id: ID!
   scope: RedirectScope!
   source: String!
-  sourceType: RedirectSourceTypeValues!
+  sourceType: RedirectSourceType!
   target: JSONObject!
   updatedAt: DateTime!
 }
@@ -2011,7 +2011,7 @@ input RedirectInput {
   comment: String
   generationType: RedirectGenerationType!
   source: String!
-  sourceType: RedirectSourceTypeValues!
+  sourceType: RedirectSourceType!
   target: JSONObject!
 }
 
@@ -2034,15 +2034,15 @@ enum RedirectSortField {
   updatedAt
 }
 
-input RedirectSourceTypeEnumFilter {
-  equal: RedirectSourceTypeValues
-  isAnyOf: [RedirectSourceTypeValues!]
-  notEqual: RedirectSourceTypeValues
-}
-
-enum RedirectSourceTypeValues {
+enum RedirectSourceType {
   domain
   path
+}
+
+input RedirectSourceTypeEnumFilter {
+  equal: RedirectSourceType
+  isAnyOf: [RedirectSourceType!]
+  notEqual: RedirectSourceType
 }
 
 input RedirectUpdateActivenessInput {
