@@ -10,6 +10,16 @@
 
 - f066335: Add support for React 19
 
+## 8.20.0
+
+### Patch Changes
+
+- caceff8: Remove deprecated `xlinkHref` prop from `CometColor` icon component
+
+## 8.19.0
+
+## 8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

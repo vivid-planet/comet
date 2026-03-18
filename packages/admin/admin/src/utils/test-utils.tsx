@@ -1,6 +1,9 @@
 // Inspired by https://testing-library.com/docs/react-testing-library/setup/#custom-render
 import { createTheme } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { render, type RenderOptions, type RenderResult } from "@testing-library/react";
+import { enUS } from "date-fns/locale";
 import { type ReactElement, type ReactNode } from "react";
 import { IntlProvider } from "react-intl";
 
@@ -13,9 +16,11 @@ const theme = createTheme();
 function DefaultWrapper({ children }: { children?: ReactNode }) {
     return (
         <IntlProvider locale="en" messages={messages}>
-            <MuiThemeProvider theme={theme}>
-                <RouterMemoryRouter>{children}</RouterMemoryRouter>
-            </MuiThemeProvider>
+            <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+                <MuiThemeProvider theme={theme}>
+                    <RouterMemoryRouter>{children}</RouterMemoryRouter>
+                </MuiThemeProvider>
+            </LocalizationProvider>
         </IntlProvider>
     );
 }

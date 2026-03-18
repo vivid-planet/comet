@@ -3,7 +3,7 @@ import { ArrayType, BaseEntity, Entity, OptionalProps, PrimaryKey, Property } fr
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { SentMessageInfo } from "nodemailer";
 import { Options as MailOptions } from "nodemailer/lib/mailer";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { MailerLogStatus } from "./mailer-log-status.enum";
 
@@ -14,7 +14,7 @@ export class MailerLog<AdditionalData> extends BaseEntity {
 
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
-    id: string = v4();
+    id: string = uuid();
 
     @Enum({ items: () => MailerLogStatus })
     @Field(() => MailerLogStatus)

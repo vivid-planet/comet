@@ -4,7 +4,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, Mutation, Resolver } from "@nestjs/graphql";
 import { Readable } from "stream";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { BrevoModuleConfig } from "../config/brevo-module.config";
 import { BREVO_MODULE_CONFIG } from "../config/brevo-module.constants";
@@ -39,7 +39,7 @@ export function createBrevoContactImportResolver({
             @Args() { fileId, targetGroupIds, scope, sendDoubleOptIn }: BrevoContactImportArgs,
             @GetCurrentUser() user: CurrentUser,
         ): Promise<CsvImportInformation> {
-            const importId: string = v4();
+            const importId: string = uuid();
             const fileUpload = await this.fileUploadRepository.findOne(fileId);
 
             if (!fileUpload) {
