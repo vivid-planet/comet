@@ -228,7 +228,7 @@ It is important that the SVG file contains an `id`, which is then referenced via
 
 ```tsx
 <svg>
-    <use xlinkHref="/icon.svg#custom-id"></use>
+    <use href="/icon.svg#custom-id"></use>
 </svg>
 ```
 

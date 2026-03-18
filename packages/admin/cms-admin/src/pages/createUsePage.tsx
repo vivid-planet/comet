@@ -5,6 +5,7 @@ import {
     type ComponentProps,
     createElement,
     type Dispatch,
+    type JSX,
     type ReactNode,
     type SetStateAction,
     useCallback,

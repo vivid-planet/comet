@@ -38,29 +38,29 @@ export async function setSitePreviewParams(payload: SitePreviewParams) {
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("1 day")
         .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
-    cookies().set("__comet_site_preview", jwt, { httpOnly: true, sameSite: "lax" });
-    draftMode().enable();
+    (await cookies()).set("__comet_site_preview", jwt, { httpOnly: true, sameSite: "lax" });
+    (await draftMode()).enable();
 }
 
 /**
  * Helper for SitePreview
- * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
+ * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from proxy.ts (see https://github.com/vercel/next.js/issues/52080)
  * @return If SitePreview is active the current preview settings
  */
 export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<PreviewParams | null> {
-    // Do not call headers() (and hence force dynamic rendering) when called from different places than middleware or API routes
+    // Do not call headers() (and hence force dynamic rendering) when called from different places than proxy or API routes
     if (options.skipDraftModeCheck) {
-        const headers = getHeaders();
+        const headers = await getHeaders();
         if (headers.has("x-block-preview")) {
             return verifyJwt<PreviewParams>(headers.get("x-block-preview") || "");
         }
     }
 
     if (!options.skipDraftModeCheck) {
-        if (!draftMode().isEnabled) return null;
+        if (!(await draftMode()).isEnabled) return null;
     }
 
-    const cookie = cookies().get("__comet_site_preview");
+    const cookie = (await cookies()).get("__comet_site_preview");
     if (cookie) {
         return verifyJwt<PreviewParams>(cookie.value);
     }

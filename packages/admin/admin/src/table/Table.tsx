@@ -171,7 +171,7 @@ function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRo
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export class Table<TRow extends IRow> extends Component<ITableProps<TRow>> {
-    private domRef: RefObject<HTMLTableElement>;
+    private domRef: RefObject<HTMLTableElement | null>;
     constructor(props: ITableProps<TRow>) {
         super(props);
         this.domRef = createRef<HTMLTableElement>();

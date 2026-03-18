@@ -43,10 +43,7 @@ describe("GenerateCrudResolveField", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityProduct"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityProduct"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
             if (!file) throw new Error("File not found");

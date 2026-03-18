@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-nextjs",
-    "version": "8.17.1",
+    "version": "9.0.0-beta.0",
     "description": "Comet Site Next.js package",
     "repository": {
         "type": "git",
@@ -45,17 +45,17 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^4.7.0",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.2",
         "jsdom": "^28.0.0",
-        "next": "^14.2.35",
+        "next": "^16.0.3",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
         "rimraf": "^6.1.2",
         "rollup": "^4.44.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
@@ -66,9 +66,9 @@
         "vitest": "^4.0.16"
     },
     "peerDependencies": {
-        "next": "^14.2.35",
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0"
+        "next": "^16.0.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
     },
     "engines": {
         "node": ">=18.0.0"

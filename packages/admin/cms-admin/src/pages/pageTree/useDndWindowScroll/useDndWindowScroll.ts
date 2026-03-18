@@ -7,12 +7,12 @@ import useAnimationFrame from "./useAnimationFrame";
 
 interface UseSmoothScrollApi {
     onScroll: (props: ListOnScrollProps) => void;
-    outerRef: RefObject<HTMLElement>;
+    outerRef: RefObject<HTMLElement | null>;
 }
 
 export function useDndWindowScroll(): UseSmoothScrollApi {
     const domRef = useRef<HTMLElement>(null); // Dom-el to the virtual-list-element
-    const scrollPosition = useRef<ListOnScrollProps>(); // Scroll-position of the virtual-list-element
+    const scrollPosition = useRef<ListOnScrollProps>(undefined); // Scroll-position of the virtual-list-element
     const ddm = useDragDropManager();
 
     // Manipulating the dom directly with dom-api

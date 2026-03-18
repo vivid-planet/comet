@@ -25,7 +25,11 @@ export const DamFileDownloadLinkBlock = withPreview(
         const target = openFileType === "NewTab" ? "_blank" : anchorProps.target;
 
         if (legacyBehavior) {
-            return cloneElement(children, { ...anchorProps, href, target });
+            return cloneElement(children as ReactElement<AnchorHTMLAttributes<HTMLAnchorElement>>, {
+                ...anchorProps,
+                href,
+                target,
+            });
         }
 
         return (

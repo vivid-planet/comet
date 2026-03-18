@@ -1,5 +1,119 @@
 # @comet/admin
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+- 3fda20b: Remove the "Future" prefix from date/time components as they are now considered stable
+
+    **If already in use, update the imports of these components and their types:**
+
+    DatePicker:
+    - `Future_DatePicker` -> `DatePicker`
+    - `Future_DatePickerProps` -> `DatePickerProps`
+    - `Future_DatePickerClassKey` -> `DatePickerClassKey`
+    - `Future_DatePickerField` -> `DatePickerField`
+    - `Future_DatePickerFieldProps` -> `DatePickerFieldProps`
+
+    DateRangePicker:
+    - `Future_DateRangePicker` -> `DateRangePicker`
+    - `Future_DateRangePickerProps` -> `DateRangePickerProps`
+    - `Future_DateRangePickerClassKey` -> `DateRangePickerClassKey`
+    - `Future_DateRangePickerField` -> `DateRangePickerField`
+    - `Future_DateRangePickerFieldProps` -> `DateRangePickerFieldProps`
+
+    TimePicker:
+    - `Future_TimePicker` -> `TimePicker`
+    - `Future_TimePickerProps` -> `TimePickerProps`
+    - `Future_TimePickerClassKey` -> `TimePickerClassKey`
+    - `Future_TimePickerField` -> `TimePickerField`
+    - `Future_TimePickerFieldProps` -> `TimePickerFieldProps`
+
+    DateTimePicker:
+    - `Future_DateTimePicker` -> `DateTimePicker`
+    - `Future_DateTimePickerProps` -> `DateTimePickerProps`
+    - `Future_DateTimePickerClassKey` -> `DateTimePickerClassKey`
+    - `Future_DateTimePickerField` -> `DateTimePickerField`
+    - `Future_DateTimePickerFieldProps` -> `DateTimePickerFieldProps`
+
+    **If your theme is using `defaultProps` or `styleOverrides` for any of these components, update their component-keys:**
+    - `CometAdminFutureDatePicker` -> `CometAdminDatePicker`
+    - `CometAdminFutureDateRangePicker` -> `CometAdminDateRangePicker`
+    - `CometAdminFutureTimePicker` -> `CometAdminTimePicker`
+    - `CometAdminFutureDateTimePicker` -> `CometAdminDateTimePicker`
+
+    **If you are using class-names to access these components' slots, update them:**
+    - `CometAdminFuture_DatePicker-*` -> `CometAdminDatePicker-*`
+    - `CometAdminFuture_DateRangePicker-*` -> `CometAdminDateRangePicker-*`
+    - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
+    - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
+
+- fd5c36f: Remove `clearable` prop from `Autocomplete`, `FinalFormInput`, `FinalFormNumberInput` and `FinalFormSearchTextField`
+
+    Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
+
+- 631540c: Rename `variant` prop of `Tooltip` to `color` and remove the `neutral` and `primary` options
+
+    ```diff
+     <Tooltip
+         title="Title"
+    -    variant="light"
+    +    color="light"
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+    ```diff
+     <Tooltip
+         title="Title"
+    -    variant="neutral"
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+    - @comet/admin-icons@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- 412ed19: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+- Updated dependencies [caceff8]
+    - @comet/admin-icons@8.20.0
+
+## 8.19.0
+
+### Minor Changes
+
+- fff2cc2: Add support for `onBlur` and `onFocus` props to `DatePicker`, `DateRangePicker`, `DateTimePicker`, `DateTimeRangePicker` and `TimePicker`
+
+    Errors and warnings are now correctly shown after validation in `DatePickerField`, `DateRangePickerField`, `DateTimePickerField`, `DateTimeRangePickerField` and `TimePickerField`.
+
+- fff2cc2: Add aria-labels to the open picker buttons of date/time picker components
+
+### Patch Changes
+
+- @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

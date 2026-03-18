@@ -37,7 +37,7 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
     const { open, toggleOpen, setOpen, setDrawerVariant, drawerVariant } = useMainNavigation();
     const initialRender = useRef(true);
     const { headerHeight } = useContext(MasterLayoutContext);
-    const lastPermanentOpenState = useRef<boolean>();
+    const lastPermanentOpenState = useRef<boolean>(undefined);
 
     // useEffect needed to avoid a React error stating that a bad setState call was made.
     useEffect(() => {

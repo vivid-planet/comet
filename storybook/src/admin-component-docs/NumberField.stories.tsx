@@ -18,9 +18,6 @@ const meta: Meta<typeof NumberField> = {
         },
     },
     argTypes: {
-        clearable: {
-            control: "boolean",
-        },
         decimals: {
             control: "number",
         },
