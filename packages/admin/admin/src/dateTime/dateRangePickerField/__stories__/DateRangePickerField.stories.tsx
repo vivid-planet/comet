@@ -200,7 +200,7 @@ export const CustomValidation: Story = {
             >
                 {() => (
                     <>
-                        <Future_DateRangePickerField
+                        <DateRangePickerField
                             name="value"
                             label="Date Range Picker"
                             helperText="The selected range must not exceed 30 days"

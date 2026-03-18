@@ -3,7 +3,7 @@ import { cleanup, render, waitFor, within } from "test-utils";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { FinalForm } from "../../FinalForm";
-import { Future_TimePickerField } from "./TimePickerField";
+import { TimePickerField } from "./TimePickerField";
 
 describe("TimePickerField", () => {
     describe("validation", () => {
@@ -45,7 +45,7 @@ describe("TimePickerField", () => {
                         subscription={{ values: true }}
                     >
                         {() => (
-                            <Future_TimePickerField
+                            <TimePickerField
                                 name="value"
                                 label="Time Picker"
                                 helperText="Only business hours are valid"

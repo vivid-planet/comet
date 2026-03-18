@@ -202,7 +202,7 @@ export const CustomValidation: Story = {
             >
                 {() => (
                     <>
-                        <Future_TimePickerField
+                        <TimePickerField
                             name="value"
                             label="Time Picker"
                             helperText="Lunch break (12:00-13:00) is not allowed"

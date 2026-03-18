@@ -3,7 +3,7 @@ import { cleanup, render, waitFor, within } from "test-utils";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { FinalForm } from "../../FinalForm";
-import { Future_DateTimePickerField } from "./DateTimePickerField";
+import { DateTimePickerField } from "./DateTimePickerField";
 
 describe("DateTimePickerField", () => {
     describe("validation", () => {
@@ -30,7 +30,7 @@ describe("DateTimePickerField", () => {
                         subscription={{ values: true }}
                     >
                         {() => (
-                            <Future_DateTimePickerField
+                            <DateTimePickerField
                                 name="value"
                                 label="Date Time Picker"
                                 helperText="Only weekdays are valid"

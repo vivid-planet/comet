@@ -199,7 +199,7 @@ export const CustomValidation: Story = {
             >
                 {() => (
                     <>
-                        <Future_DateTimePickerField
+                        <DateTimePickerField
                             name="value"
                             label="Date Time Picker"
                             helperText="Only weekdays are valid"
