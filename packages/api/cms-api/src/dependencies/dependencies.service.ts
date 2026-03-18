@@ -363,25 +363,25 @@ export class DependenciesService {
     private applyStringFilterToKnex(qb: Knex.QueryBuilder, column: string, filter: StringFilter): void {
         const knex = this.entityManager.getKnex("read");
 
-        if (filter.contains !== undefined) {
+        if (filter.contains !== undefined && filter.contains !== null) {
             qb.andWhere(knex.raw(`${column} ILIKE ?`, [`%${filter.contains}%`]));
         }
-        if (filter.notContains !== undefined) {
+        if (filter.notContains !== undefined && filter.notContains !== null) {
             qb.andWhere(knex.raw(`${column} NOT ILIKE ?`, [`%${filter.notContains}%`]));
         }
-        if (filter.startsWith !== undefined) {
+        if (filter.startsWith !== undefined && filter.startsWith !== null) {
             qb.andWhere(knex.raw(`${column} ILIKE ?`, [`${filter.startsWith}%`]));
         }
-        if (filter.endsWith !== undefined) {
+        if (filter.endsWith !== undefined && filter.endsWith !== null) {
             qb.andWhere(knex.raw(`${column} ILIKE ?`, [`%${filter.endsWith}`]));
         }
-        if (filter.equal !== undefined) {
+        if (filter.equal !== undefined && filter.equal !== null) {
             qb.andWhere(knex.raw(`${column} = ?`, [filter.equal]));
         }
-        if (filter.notEqual !== undefined) {
+        if (filter.notEqual !== undefined && filter.notEqual !== null) {
             qb.andWhere(knex.raw(`${column} != ?`, [filter.notEqual]));
         }
-        if (filter.isAnyOf !== undefined && filter.isAnyOf.length > 0) {
+        if (filter.isAnyOf !== undefined && filter.isAnyOf !== null && filter.isAnyOf.length > 0) {
             qb.andWhere(knex.raw(`${column} IN (${filter.isAnyOf.map(() => "?").join(", ")})`, filter.isAnyOf));
         }
         if (filter.isEmpty) {
