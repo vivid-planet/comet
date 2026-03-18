@@ -1,9 +1,9 @@
-name: Release
+name: Release (v8)
 
 on:
     push:
         branches:
-            - main
+            - v8.x.x
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -12,7 +12,7 @@ jobs:
         name: Release
         runs-on: ubuntu-latest
         concurrency:
-            group: release
+            group: release-v8
             cancel-in-progress: true
         steps:
             - name: Checkout Repo
@@ -43,7 +43,8 @@ jobs:
               uses: dotansimha/changesets-action@v1.5.2
               with:
                   version: pnpm run version
-                  publish: pnpm run publish
+                  publish: pnpm run publish --tag=stable-v8
+                  title: "Version Packages (v8)"
                   createGithubReleases: aggregate
                   githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
                   githubTagName: "v${{ env.PUBLISHED_VERSION }}"
