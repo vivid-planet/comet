@@ -11,7 +11,7 @@ interface IProps {
     setEditorState: (editorState: EditorState) => void;
     supportedThings: SupportedThings[];
     blocktypeMap: IBlocktypeMap;
-    editorRef: RefObject<Editor>;
+    editorRef: RefObject<Editor | null>;
     standardBlockType: DraftBlockType;
 }
 

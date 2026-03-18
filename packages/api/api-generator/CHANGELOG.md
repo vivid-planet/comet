@@ -1,5 +1,23 @@
 # @comet/api-generator
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 18748d1: Stop generating GraphQL selection-set based `populate` handling in generated CRUD list resolvers.
+
+    MikroORM dataloader must now be enabled in API projects (for example with `dataloader: DataloaderType.ALL` in your MikroORM config) to efficiently resolve relation fields.
+
+- 10dda8c: Remove `targetDirectory` config from `@CrudGenerator` decorator and always generate files to `${__dirname}/../generated/`
+
+### Minor Changes
+
+- 623111e: Support re-using an enum (for filters) in multiple models by using a shared generated filter type
+
+### Patch Changes
+
+- @comet/cms-api@9.0.0-beta.0
+
 ## 8.20.0
 
 ### Patch Changes

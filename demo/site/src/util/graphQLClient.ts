@@ -38,6 +38,7 @@ export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {
             // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled
             // see cache-handler.ts for maximum cache duration (24 hours)
             createFetchWithDefaults(createFetchWithDefaultNextRevalidate(passedFetch || fetch, 7.5 * 60), {
+                cache: "force-cache",
                 headers: {
                     authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
                     ...convertPreviewDataToHeaders(previewData),

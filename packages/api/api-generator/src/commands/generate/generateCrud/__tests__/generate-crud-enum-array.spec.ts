@@ -35,7 +35,7 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.input.ts");
         if (!file) throw new Error("File not found");
@@ -68,22 +68,16 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
         if (!file) throw new Error("File not found");
         const source = parseSource(file.content);
         const classes = source.getClasses();
-        expect(classes.length).toBe(2);
+        expect(classes.length).toBe(1);
 
         {
             const cls = classes[0];
-            const structure = cls.getStructure();
-            expect(structure.name).toBe("TestEnumEnumsFilter");
-        }
-
-        {
-            const cls = classes[1];
             const structure = cls.getStructure();
             expect(structure.name).toBe("TestEntityFilter");
             expect(structure.properties?.length).toBe(4);

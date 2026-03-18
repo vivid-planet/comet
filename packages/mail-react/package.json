@@ -1,6 +1,6 @@
 {
     "name": "@comet/mail-react",
-    "version": "8.20.0",
+    "version": "9.0.0-beta.0",
     "description": "Utilities for building HTML emails with React",
     "license": "BSD-2-Clause",
     "type": "module",
@@ -31,17 +31,19 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@types/react": "^18.3.27",
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.2",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
     "peerDependencies": {
-        "react": "^18.0.0"
+        "react": "^18.0.0 || ^19.0.0"
     },
     "engines": {
         "node": ">=22.0.0"

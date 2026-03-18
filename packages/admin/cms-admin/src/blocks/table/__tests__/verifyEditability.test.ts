@@ -1,5 +1,9 @@
 import { cleanup, within } from "test-utils";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("../../context/useBlockContext", () => ({
+    useBlockContext: () => ({}),
+}));
 
 import { mockStates } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfColumnAtIndex, clickButtonOfRowAtIndex, getCellsExcludingTheDragHandleAndActionsCells, renderTableBlock } from "./utils";

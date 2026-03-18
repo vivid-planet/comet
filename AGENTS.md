@@ -10,14 +10,14 @@
 
 When running in the cloud/web environment and repo is cloned from scratch, if required you can:
 
-1. Install dependencies
+1. Install dependencies (**only** run if not yet done by eg. pipeline setup, check if `node_modules` exists)
     - `NODE_USE_ENV_PROXY=1 ./install.sh`
-2. Run build for packages you are working on
+2. Run build for packages you are working on (**only** run if build file doesn't exist yet, check if `lib` exists in package)
     - `pnpm --recursive --filter '<package-name>' run build`
 
 **If Docker is available:**
 
-- You can start the full demo application using dev-pm and access it at localhost
+- You can start the full demo application using dev-pm and access it at localhost. Do **not** use docker compose directly, always use dev-pm and start `demo-docker`.
 
 **If Docker is not available:**
 
@@ -83,21 +83,34 @@ This repository includes a demo application which is showcasing the libraries.
 **Api:**
 Demo backend API (NestJS, PostgreSQL)
 
-- Start using `pnpm exec dev-pm @demo-api`
+- Start using `pnpm exec dev-pm start @demo-api`
 - access at: http://localhost:4000/
 
 **Admin:**
 Demo admin app (Vite, React, Apollo)
 
-- Start using `pnpm exec dev-pm @demo-admin`
+- Start using `pnpm exec dev-pm start @demo-admin`
 - access at: http://localhost:8000/
 - Usually Login as "Admin" in the IDP Login Page
 
 **Site:**
 Demo frontend site (Next.js)
 
-- Start using `pnpm exec dev-pm @demo-site`
+- Start using `pnpm exec dev-pm start @demo-site`
 - access at: http://localhost:3000/
+
+
+### dev-pm
+
+Use dev-pm for managing demo processes:
+- command: `pnpm exec -- dev-pm`
+- config: `dev-pm.config.ts`
+
+Common commands:
+- start script/service: `pnpm exec -- dev-pm start scriptName`
+- start group `pnpm exec -- dev-pm start @group`
+- view status `pnpm exec -- dev-pm status`
+- view logs `pnpm exec -- dev-pm logs --lines 100 scriptName`
 
 ## Packages
 

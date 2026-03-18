@@ -81,6 +81,12 @@
         "pnpm": "10.17.0"
     },
     "pnpm": {
+        "peerDependencyRules": {
+            "allowedVersions": {
+                "react-final-form>react": "19",
+                "react-final-form-arrays>react": "19"
+            }
+        },
         "overrides": {
             "@apollo/server-plugin-landing-page-graphql-playground>@apollo/server": "^5.1.0"
         }

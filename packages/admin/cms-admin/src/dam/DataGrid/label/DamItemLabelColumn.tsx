@@ -73,7 +73,7 @@ export const DamItemLabelColumn = ({
     scrollIntoView = false,
 }: DamItemLabelColumnProps) => {
     const damConfig = useDamConfig();
-    const columnRef = useRef<HTMLDivElement>();
+    const columnRef = useRef<HTMLDivElement>(undefined);
 
     useEffect(() => {
         if (scrollIntoView) {

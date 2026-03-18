@@ -2,6 +2,7 @@ import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
+import { buildOptions } from "../generateCrud/build-options";
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { type GeneratedFile } from "../utils/write-generated-files";
 
@@ -13,6 +14,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
+    const { targetDirectory } = buildOptions(metadata, generatorOptions);
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         const generatedFiles: GeneratedFile[] = [];
@@ -25,7 +27,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const serviceOut = `import { ObjectQuery } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
-    import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+    import { ${metadata.className} } from "${path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     
     @Injectable()
     export class ${classNamePlural}Service {    
@@ -38,12 +40,10 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     
-    import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+    import { ${metadata.className} } from "${path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
         scopeProp && scopeProp.targetMeta
-            ? `import { ${scopeProp.targetMeta.className} } from "${path
-                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
-                  .replace(/\.ts$/, "")}";`
+            ? `import { ${scopeProp.targetMeta.className} } from "${path.relative(targetDirectory, scopeProp.targetMeta.path).replace(/\.ts$/, "")}";`
             : ""
     }
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
