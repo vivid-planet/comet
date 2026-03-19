@@ -102,6 +102,9 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
 
     useEffect(() => {
         const handleMoveColumn: GridEventListener<"columnHeaderDragEnd"> = ({ field: columnId }) => {
+            if (!apiRef.current) {
+                return;
+            }
             const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
 
             updateState((state) => {
@@ -118,7 +121,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             });
         };
 
-        return apiRef.current.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
+        return apiRef.current?.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
     }, [apiRef, updateState]);
 
     const dataGridColumns: GridColDef[] = [
@@ -198,7 +201,8 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                 right: ["actions"],
             }}
             slots={{
-                rowReorderIcon: DragIndicator,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                rowReorderIcon: DragIndicator as any,
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {
