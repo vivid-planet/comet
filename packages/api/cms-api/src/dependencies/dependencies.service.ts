@@ -3,10 +3,12 @@ import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
+import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
+import { DependencySort, DependencySortField } from "./dto/dependency-sort";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 
 interface PGStatActivity {
@@ -274,22 +276,19 @@ export class DependenciesService {
 
     async getDependents(
         target: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: DependentFilter & {
+        passedFilter?: DependentFilter & {
             rootEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean },
+        options?: { forceRefresh: boolean; sort?: DependencySort[] },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
+        const { rootEntityName, ...filter } = passedFilter ?? {};
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
-        const qb = this.getQueryBuilderWithFilters(
-            {
-                ...filter,
-                targetEntityName: entityName,
-                targetId: target.id,
-            },
+        const qb = this.getBaseQueryBuilder(
+            { targetEntityName: entityName, targetId: target.id, rootEntityName: rootEntityName },
             paginationArgs,
         ).join("EntityInfo", (join) => {
             join.on("idx.rootEntityName", "EntityInfo.entityName").andOn(
@@ -297,6 +296,9 @@ export class DependenciesService {
                 this.entityManager.getKnex("read").raw('"idx"."rootId"::text'),
             );
         });
+
+        this.applyFilter(qb, filter);
+        this.applySort(qb, options?.sort, "dependents");
 
         const results: Dependency[] = await qb;
 
@@ -308,29 +310,29 @@ export class DependenciesService {
 
     async getDependencies(
         root: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: DependencyFilter & {
+        passedFilter?: DependencyFilter & {
             targetEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean },
+        options?: { forceRefresh: boolean; sort?: DependencySort[] },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
+        const { targetEntityName, ...filter } = passedFilter ?? {};
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
-        const qb = this.getQueryBuilderWithFilters(
-            {
-                ...filter,
-                rootEntityName: entityName,
-                rootId: root.id,
+        const qb = this.getBaseQueryBuilder({ rootEntityName: entityName, rootId: root.id, targetEntityName: targetEntityName }, paginationArgs).join(
+            "EntityInfo",
+            (join) => {
+                join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
+                    "EntityInfo.id",
+                    this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
+                );
             },
-            paginationArgs,
-        ).join("EntityInfo", (join) => {
-            join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
-                "EntityInfo.id",
-                this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
-            );
-        });
+        );
+
+        this.applyFilter(qb, filter);
+        this.applySort(qb, options?.sort, "dependencies");
 
         const results: Dependency[] = await qb;
 
@@ -340,12 +342,8 @@ export class DependenciesService {
         return new PaginatedDependencies(results, Number(totalCount));
     }
 
-    private getQueryBuilderWithFilters(
-        filter: DependentFilter &
-            DependencyFilter & {
-                targetEntityName?: string;
-                rootEntityName?: string;
-            },
+    private getBaseQueryBuilder(
+        internalFilter: { targetEntityName?: string; rootEntityName?: string; targetId?: string; rootId?: string },
         paginationArgs?: { offset: number; limit: number },
     ) {
         const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" });
@@ -354,34 +352,125 @@ export class DependenciesService {
             qb.offset(paginationArgs.offset).limit(paginationArgs.limit);
         }
 
-        if (filter.targetEntityName) {
-            qb.andWhere({ targetEntityName: filter.targetEntityName });
+        if (internalFilter.targetEntityName) {
+            qb.andWhere({ targetEntityName: internalFilter.targetEntityName });
         }
-        if (filter?.targetGraphqlObjectType) {
-            qb.andWhere({ targetGraphqlObjectType: filter.targetGraphqlObjectType });
+        if (internalFilter.targetId) {
+            qb.andWhere({ targetId: internalFilter.targetId });
         }
-        if (filter.targetId) {
-            qb.andWhere({ targetId: filter.targetId });
+        if (internalFilter.rootEntityName) {
+            qb.andWhere({ rootEntityName: internalFilter.rootEntityName });
         }
-
-        if (filter.rootEntityName) {
-            qb.andWhere({ rootEntityName: filter.rootEntityName });
-        }
-        if (filter.rootGraphqlObjectType) {
-            qb.andWhere({ rootGraphqlObjectType: filter.rootGraphqlObjectType });
-        }
-        if (filter.rootId) {
-            qb.andWhere({ rootId: filter.rootId });
-        }
-
-        if (filter?.rootColumnName) {
-            qb.andWhere({ rootColumnName: filter.rootColumnName });
+        if (internalFilter.rootId) {
+            qb.andWhere({ rootId: internalFilter.rootId });
         }
 
         return qb;
     }
 
+    private applyFilter(qb: Knex.QueryBuilder, filter?: DependencyFilter | DependentFilter): void {
+        if (!filter) return;
+
+        if ("rootGraphqlObjectType" in filter && filter.rootGraphqlObjectType) {
+            this.applyStringFilterToKnex(qb, '"idx"."rootGraphqlObjectType"', filter.rootGraphqlObjectType);
+        }
+        if ("rootId" in filter && filter.rootId) {
+            qb.andWhere({ "idx.rootId": filter.rootId });
+        }
+        if ("targetGraphqlObjectType" in filter && filter.targetGraphqlObjectType) {
+            this.applyStringFilterToKnex(qb, '"idx"."targetGraphqlObjectType"', filter.targetGraphqlObjectType);
+        }
+        if ("targetId" in filter && filter.targetId) {
+            qb.andWhere({ "idx.targetId": filter.targetId });
+        }
+        if (filter.rootColumnName) {
+            qb.andWhere({ "idx.rootColumnName": filter.rootColumnName });
+        }
+        if (filter.name) {
+            this.applyStringFilterToKnex(qb, '"EntityInfo"."name"', filter.name);
+        }
+        if (filter.secondaryInformation) {
+            this.applyStringFilterToKnex(qb, '"EntityInfo"."secondaryInformation"', filter.secondaryInformation);
+        }
+        if (filter.visible) {
+            if (filter.visible.equal !== undefined && filter.visible.equal !== null) {
+                qb.andWhere(this.entityManager.getKnex("read").raw('"idx"."visible" = ?', [filter.visible.equal]));
+            }
+        }
+        if (filter.and?.length) {
+            for (const subFilter of filter.and) {
+                qb.andWhere((sub) => {
+                    this.applyFilter(sub, subFilter);
+                });
+            }
+        }
+        if (filter.or?.length) {
+            const orFilters = filter.or;
+            qb.andWhere((outer) => {
+                for (const subFilter of orFilters) {
+                    outer.orWhere((sub) => {
+                        this.applyFilter(sub, subFilter);
+                    });
+                }
+            });
+        }
+    }
+    private applyStringFilterToKnex(qb: Knex.QueryBuilder, column: string, filter: StringFilter): void {
+        const knex = this.entityManager.getKnex("read");
+
+        if (filter.contains !== undefined && filter.contains !== null) {
+            qb.andWhere(knex.raw(`${column} ILIKE ?`, [`%${filter.contains}%`]));
+        }
+        if (filter.notContains !== undefined && filter.notContains !== null) {
+            qb.andWhere(knex.raw(`${column} NOT ILIKE ?`, [`%${filter.notContains}%`]));
+        }
+        if (filter.startsWith !== undefined && filter.startsWith !== null) {
+            qb.andWhere(knex.raw(`${column} ILIKE ?`, [`${filter.startsWith}%`]));
+        }
+        if (filter.endsWith !== undefined && filter.endsWith !== null) {
+            qb.andWhere(knex.raw(`${column} ILIKE ?`, [`%${filter.endsWith}`]));
+        }
+        if (filter.equal !== undefined && filter.equal !== null) {
+            qb.andWhere(knex.raw(`${column} = ?`, [filter.equal]));
+        }
+        if (filter.notEqual !== undefined && filter.notEqual !== null) {
+            qb.andWhere(knex.raw(`${column} != ?`, [filter.notEqual]));
+        }
+        if (filter.isAnyOf !== undefined && filter.isAnyOf !== null && filter.isAnyOf.length > 0) {
+            qb.andWhere(knex.raw(`${column} IN (${filter.isAnyOf.map(() => "?").join(", ")})`, filter.isAnyOf));
+        }
+        if (filter.isEmpty) {
+            qb.andWhere(knex.raw(`(${column} IS NULL OR ${column} = '')`));
+        }
+        if (filter.isNotEmpty) {
+            qb.andWhere(knex.raw(`(${column} IS NOT NULL AND ${column} != '')`));
+        }
+    }
+
+    private applySort(qb: Knex.QueryBuilder, sort: DependencySort[] | undefined, context: "dependencies" | "dependents"): void {
+        if (!sort || sort.length === 0) return;
+
+        for (const sortEntry of sort) {
+            let column: string;
+            switch (sortEntry.field) {
+                case DependencySortField.name:
+                    column = '"EntityInfo"."name"';
+                    break;
+                case DependencySortField.secondaryInformation:
+                    column = '"EntityInfo"."secondaryInformation"';
+                    break;
+                case DependencySortField.graphqlObjectType:
+                    column = context === "dependencies" ? '"idx"."targetGraphqlObjectType"' : '"idx"."rootGraphqlObjectType"';
+                    break;
+                case DependencySortField.visible:
+                    column = '"idx"."visible"';
+                    break;
+            }
+            qb.orderByRaw(`${column} ${sortEntry.direction}`);
+        }
+    }
+
     private withCount(qb: Knex.QueryBuilder) {
-        return qb.offset(0).clearSelect().count();
+        return qb.offset(0).clearSelect().clearOrder().count();
     }
 }

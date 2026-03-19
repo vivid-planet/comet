@@ -3,9 +3,13 @@ import {
     Alert,
     DataGridToolbar,
     FillSpace,
+    type GqlFilter,
     GridCellContent,
     type GridColDef,
+    GridFilterButton,
     messages,
+    muiGridFilterToGql,
+    muiGridSortToGql,
     Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
@@ -14,7 +18,7 @@ import {
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
 import { Chip, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
-import { useState } from "react";
+import { isValidElement, type ReactNode, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
@@ -23,12 +27,15 @@ import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
 import { type DependencyInterface } from "./types";
 
-type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
+type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "visible" | "rootColumnName" | "jsonPath"> & {
     id: string;
     graphqlObjectType: string;
 };
 
-type Dependency = Pick<GQLDependency, "targetGraphqlObjectType" | "targetId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
+type Dependency = Pick<
+    GQLDependency,
+    "targetGraphqlObjectType" | "targetId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation" | "visible"
+>;
 
 interface DependenciesListQuery {
     item: {
@@ -41,6 +48,8 @@ type QueryVariables = {
     offset: number;
     limit: number;
     forceRefresh?: boolean;
+    filter?: GqlFilter;
+    sort?: Array<{ field: string; direction: "ASC" | "DESC" }>;
 };
 
 interface DependenciesListGridToolbarProps extends GridToolbarProps {
@@ -51,6 +60,7 @@ function DependenciesListGridToolbar({ refetch }: DependenciesListGridToolbarPro
 
     return (
         <DataGridToolbar>
+            <GridFilterButton />
             <FillSpace />
             <Tooltip title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
                 <IconButton
@@ -71,6 +81,15 @@ function DependenciesListGridToolbar({ refetch }: DependenciesListGridToolbarPro
     );
 }
 
+function getDisplayNameString(displayName: ReactNode, fallback: string): string {
+    if (typeof displayName === "string") return displayName;
+    if (isValidElement(displayName)) {
+        const { defaultMessage } = displayName.props as { defaultMessage?: string };
+        if (typeof defaultMessage === "string") return defaultMessage;
+    }
+    return fallback;
+}
+
 const pageSize = 10;
 
 export interface DependenciesListProps {
@@ -89,82 +108,126 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
         ...useDataGridRemote({
             queryParamsPrefix: "dependencies",
             pageSize,
+            initialFilter: {
+                items: [{ field: "visible", operator: "is", value: "true" }],
+            },
         }),
         ...usePersistentColumnState("DependenciesList"),
     };
 
-    const columns: GridColDef<DependencyItem>[] = [
-        {
-            field: "nameInfo",
-            headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.nameAndInfo", defaultMessage: "Name/Info" }),
-            sortable: false,
-            flex: 1,
-            renderCell: ({ row }) => (
-                <GridCellContent primaryText={row.name ?? <FormattedMessage {...messages.unknown} />} secondaryText={row.secondaryInformation} />
-            ),
-        },
-        {
-            field: "type",
-            headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
-            sortable: false,
-            renderCell: ({ row }) => <Chip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
-        },
-        {
-            field: "actions",
-            type: "actions",
-            headerName: "",
-            sortable: false,
-            renderCell: ({ row }) => {
-                const dependencyObject = entityDependencyMap[row.graphqlObjectType] as DependencyInterface | undefined;
-
-                if (dependencyObject === undefined) {
-                    if (process.env.NODE_ENV === "development") {
-                        console.warn(
-                            `Cannot load URL because no implementation of DependencyInterface for ${row.graphqlObjectType} was provided via the DependenciesConfig`,
-                        );
-                    }
-                    return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
-                }
-
-                const loadUrl = async () => {
-                    const path = await dependencyObject.resolvePath({
-                        rootColumnName: row.rootColumnName,
-                        jsonPath: row.jsonPath,
-                        apolloClient,
-                        id: row.id,
-                    });
-                    return contentScope.match.url + path;
-                };
-
-                return (
-                    <div style={{ display: "flex" }}>
-                        <IconButton
-                            onClick={async () => {
-                                const url = await loadUrl();
-                                window.open(url, "_blank");
-                            }}
-                        >
-                            <OpenNewTab />
-                        </IconButton>
-                        <IconButton
-                            onClick={async () => {
-                                const url = await loadUrl();
-
-                                history.push(url);
-                            }}
-                        >
-                            <ArrowRight />
-                        </IconButton>
-                    </div>
-                );
+    const columns: GridColDef<DependencyItem>[] = useMemo(
+        () => [
+            {
+                field: "name",
+                headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.nameAndInfo", defaultMessage: "Name/Info" }),
+                flex: 1,
+                sortBy: "name",
+                renderCell: ({ row }) => (
+                    <GridCellContent primaryText={row.name ?? <FormattedMessage {...messages.unknown} />} secondaryText={row.secondaryInformation} />
+                ),
             },
-        },
-    ];
+            {
+                field: "secondaryInformation",
+                headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.secondaryInformation", defaultMessage: "Secondary information" }),
+                sortBy: "secondaryInformation",
+                visible: false,
+            },
+            {
+                field: "type",
+                headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
+                type: "singleSelect",
+                valueOptions: Object.entries(entityDependencyMap).map(([value, dep]) => ({
+                    value,
+                    label: getDisplayNameString(dep.displayName, value),
+                })),
+                sortBy: "graphqlObjectType",
+                toGqlFilter: (filterItem) => {
+                    if (!filterItem.value) return {};
+                    if (filterItem.operator === "isAnyOf") {
+                        return { targetGraphqlObjectType: { isAnyOf: filterItem.value } };
+                    }
+                    if (filterItem.operator === "not") {
+                        return { targetGraphqlObjectType: { notEqual: filterItem.value } };
+                    }
+                    return { targetGraphqlObjectType: { equal: filterItem.value } };
+                },
+                renderCell: ({ row }) => <Chip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
+            },
+            {
+                field: "visible",
+                headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.visible", defaultMessage: "Visible" }),
+                type: "boolean",
+                visible: false,
+                sortBy: "visible",
+                toGqlFilter: (filterItem) => {
+                    if (filterItem.value === undefined || filterItem.value === "") return {};
+                    return { visible: { equal: filterItem.value === "true" || filterItem.value === true } } as unknown as GqlFilter;
+                },
+            },
+            {
+                field: "actions",
+                type: "actions",
+                headerName: "",
+                filterable: false,
+                sortable: false,
+                renderCell: ({ row }) => {
+                    const dependencyObject = entityDependencyMap[row.graphqlObjectType] as DependencyInterface | undefined;
+
+                    if (dependencyObject === undefined) {
+                        if (process.env.NODE_ENV === "development") {
+                            console.warn(
+                                `Cannot load URL because no implementation of DependencyInterface for ${row.graphqlObjectType} was provided via the DependenciesConfig`,
+                            );
+                        }
+                        return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
+                    }
+
+                    const loadUrl = async () => {
+                        const path = await dependencyObject.resolvePath({
+                            rootColumnName: row.rootColumnName,
+                            jsonPath: row.jsonPath,
+                            apolloClient,
+                            id: row.id,
+                        });
+                        return contentScope.match.url + path;
+                    };
+
+                    return (
+                        <div style={{ display: "flex" }}>
+                            <IconButton
+                                onClick={async () => {
+                                    const url = await loadUrl();
+                                    window.open(url, "_blank");
+                                }}
+                            >
+                                <OpenNewTab />
+                            </IconButton>
+                            <IconButton
+                                onClick={async () => {
+                                    const url = await loadUrl();
+
+                                    history.push(url);
+                                }}
+                            >
+                                <ArrowRight />
+                            </IconButton>
+                        </div>
+                    );
+                },
+            },
+        ],
+        [intl, entityDependencyMap, apolloClient, contentScope, history],
+    );
+
+    const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    const sort = muiGridSortToGql(dataGridProps.sortModel, columns);
 
     const { data, loading, error, refetch } = useQuery<DependenciesListQuery, QueryVariables>(query, {
         variables: {
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
+            filter: gqlFilter,
+            sort,
             ...variables,
         },
     });
