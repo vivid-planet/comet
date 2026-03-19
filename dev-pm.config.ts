@@ -223,7 +223,6 @@ export default defineConfig({
         {
             name: "demo-api-storybook",
             script: "pnpm --filter comet-demo-api run storybook",
-            group: ["demo-api", "demo"],
         },
 
         // group demo login
