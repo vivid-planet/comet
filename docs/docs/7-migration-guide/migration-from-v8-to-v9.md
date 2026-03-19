@@ -211,8 +211,8 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` an
 +       "react-intl": "^7.1.9",
 -       "@mui/x-data-grid": "^7.29.12",
 -       "@mui/x-data-grid-pro": "^7.29.12",
-+       "@mui/x-data-grid": "^8.27.4",
-+       "@mui/x-data-grid-pro": "^8.27.4",
++       "@mui/x-data-grid": "^8.27.5",
++       "@mui/x-data-grid-pro": "^8.27.5",
     },
     "devDependencies": {
 -       "@comet/admin-generator": "^8.0.0",
