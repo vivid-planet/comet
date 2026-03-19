@@ -210,7 +210,7 @@ export default defineConfig({
         //group demo api
         {
             name: "demo-docker",
-            script: "pnpm run dev:docker-compose up",
+            script: "set -a; . .env; . .env.local; set +a; docker compose up",
             group: ["demo-api", "demo"],
         },
         {
