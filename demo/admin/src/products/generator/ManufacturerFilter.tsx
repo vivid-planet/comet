@@ -3,7 +3,7 @@ import { ClearInputAdornment } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import Autocomplete from "@mui/material/Autocomplete";
 import { type GridFilterInputValueProps, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid-pro";
-import { useCallback, useState } from "react";
+import { type ChangeEvent, useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
@@ -72,10 +72,9 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
                 <rootProps.slots.baseTextField
                     {...params}
                     autoComplete="off"
-                    variant="standard"
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
-                    value={search ? search : null}
-                    onChange={(event) => {
+                    value={search}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         setSearch(event.target.value);
                     }}
                     label={apiRef.current.getLocaleText("filterPanelInputLabel")}

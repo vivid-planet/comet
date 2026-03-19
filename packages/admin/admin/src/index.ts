@@ -84,6 +84,7 @@ export {
     dataGridOneToManyColumn,
 } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
+export { GridToolbarQuickFilter } from "./dataGrid/GridToolbarQuickFilter";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";

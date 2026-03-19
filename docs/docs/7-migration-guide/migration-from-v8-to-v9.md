@@ -209,6 +209,10 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` an
 +       "react-dnd-multi-backend": "^9.0.0",
 -       "react-intl": "^6.8.9",
 +       "react-intl": "^7.1.9",
+-       "@mui/x-data-grid": "^7.29.12",
+-       "@mui/x-data-grid-pro": "^7.29.12",
++       "@mui/x-data-grid": "^8.27.5",
++       "@mui/x-data-grid-pro": "^8.27.5",
     },
     "devDependencies": {
 -       "@comet/admin-generator": "^8.0.0",
@@ -315,6 +319,95 @@ npx types-react-codemod@latest preset-19 ./src
 ```
 
 See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) for more information.
+
+### Upgrade MUI X Data Grid to v8
+
+The MUI X Data Grid peer dependency has been bumped to v8.
+Review the [migration guide](https://mui.com/x/migration/migration-data-grid-v7/) for more information.
+
+#### Run codemods
+
+```sh
+cd admin
+
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe src
+```
+
+#### Import `GridToolbarQuickFilter` from `@comet/admin`
+
+`GridToolbarQuickFilter` must now be imported from `@comet/admin`:
+
+```diff
+-import { GridToolbarQuickFilter } from "@mui/x-data-grid";
++import { GridToolbarQuickFilter } from "@comet/admin";
+```
+
+```diff
+-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
++import { GridToolbarQuickFilter } from "@comet/admin";
+```
+
+```diff
+-import { GridToolbarQuickFilter } from "@mui/x-data-grid-premium";
++import { GridToolbarQuickFilter } from "@comet/admin";
+```
+
+:::info
+
+An ESLint rule enforces this import. Running `npm run lint` will flag any remaining usages.
+
+:::
+
+#### Update row selection model usage
+
+The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`:
+
+```diff
+-const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
++const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
++    type: "include",
++    ids: new Set([]),
++});
+```
+
+Update all code that reads from the selection model:
+
+```diff
+-selectionModel.length
++selectionModel.ids.size
+
+-selectionModel.includes(row.id)
++selectionModel.ids.has(row.id)
+
+-for (const id of selectionModel) {
++for (const id of Array.from(selectionModel.ids)) {
+```
+
+When passing `rowSelectionModel` as a prop, convert to the new format:
+
+```diff
+-rowSelectionModel={state.ids}
++rowSelectionModel={{ type: "include", ids: new Set(state.ids) }}
+```
+
+When reading from `onRowSelectionModelChange`, convert back from `Set` to array if needed:
+
+```diff
+onRowSelectionModelChange={(newSelection) => {
+-    updateState({ ids: newSelection as string[] });
++    updateState({ ids: Array.from(newSelection.ids) as string[] });
+}}
+```
+
+Add `disableRowSelectionExcludeModel` to opt out of the new exclude selection model:
+
+```diff
+  <DataGridPro
+      checkboxSelection
+      keepNonExistentRowsSelected
++     disableRowSelectionExcludeModel
+  />
+```
 
 ### Replace the `variant` prop with `color` in `Tooltip`
 

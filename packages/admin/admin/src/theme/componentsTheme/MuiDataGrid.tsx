@@ -1,18 +1,17 @@
-import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
+import { ArrowDown, ArrowUp, Check, Close, Delete, MoreVertical } from "@comet/admin-icons";
 import {
     autocompleteClasses,
-    buttonBaseClasses,
     Checkbox,
     checkboxClasses,
+    formControlClasses,
     iconButtonClasses,
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
-    Select,
-    svgIconClasses,
     type SvgIconProps,
     tablePaginationClasses,
     TextField,
+    textFieldClasses,
     toolbarClasses,
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
@@ -56,17 +55,14 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             return getDensityHeightValue("standard");
         },
         slots: {
-            baseCheckbox: Checkbox,
-            quickFilterIcon: Search,
-            quickFilterClearIcon: Clear,
-            filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
-            baseTextField: TextField,
-            baseSelect: Select,
-            booleanCellTrueIcon: Check,
-            booleanCellFalseIcon: Close,
-            columnSortedAscendingIcon: ArrowUp,
-            columnSortedDescendingIcon: ArrowDown,
-            columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
+            baseCheckbox: Checkbox as any,
+            baseTextField: TextField as any,
+            filterPanelDeleteIcon: ((props: SvgIconProps) => <Delete {...props} fontSize="medium" />) as any,
+            booleanCellTrueIcon: Check as any,
+            booleanCellFalseIcon: Close as any,
+            columnSortedAscendingIcon: ArrowUp as any,
+            columnSortedDescendingIcon: ArrowDown as any,
+            columnMenuIcon: ((props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />) as any,
             panel: DataGridPanel,
             pagination: DataGridPagination,
             columnsManagement: DataGridColumnsManagement,
@@ -78,15 +74,16 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: "info",
                 ...component?.defaultProps?.slotProps?.baseButton,
             },
+            basePopper: {
+                placement: "bottom-start",
+                ...component?.defaultProps?.slotProps?.basePopper,
+            },
         },
         localeText: {
             ...component?.defaultProps?.localeText,
         },
     },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
-        root: {
-            backgroundColor: "white",
-        },
         panelHeader: {
             padding: `4px 4px ${spacing(1)} 4px`,
             borderBottom: `1px solid ${palette.divider}`,
@@ -181,13 +178,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         panelContent: {
             padding: spacing(4),
-        },
-        paper: {
-            border: `1px solid ${palette.grey[100]}`,
-            boxShadow: shadows[4],
-            borderRadius: 4,
-            maxHeight: "none",
-            flexDirection: "column",
+            gap: 0,
         },
         filterForm: {
             flexDirection: "row",
@@ -229,6 +220,42 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
             },
+
+            // filterFormLogicOperatorInput wrapper
+            [`.${formControlClasses.root}:nth-of-type(2)`]: {
+                width: filterOperatorInputWidth,
+                marginRight: 0,
+                marginTop: "auto",
+
+                [breakpoints.up("md")]: {
+                    width: 80,
+                },
+            },
+
+            // filterFormColumnInput wrapper
+            [`.${formControlClasses.root}:nth-of-type(3)`]: {
+                width: `calc(100% - ${filtersLeftSectionWidth}px)`,
+                paddingLeft: spacing(2),
+                boxSizing: "border-box",
+
+                [breakpoints.up("md")]: {
+                    width: 199,
+                    paddingLeft: 0,
+                },
+            },
+
+            // filterFormOperatorInput wrapper
+            [`.${formControlClasses.root}:nth-of-type(4)`]: {
+                marginTop: spacing(3),
+                flexBasis: filtersLeftSectionWidth,
+                flexGrow: 1,
+
+                [breakpoints.up("md")]: {
+                    marginTop: 0,
+                    width: 110,
+                    flexBasis: "unset",
+                },
+            },
         },
         filterFormDeleteIcon: {
             width: filterDeleteIconSize,
@@ -246,33 +273,11 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 height: "100%",
             },
         },
-        filterFormLogicOperatorInput: {
-            width: filterOperatorInputWidth,
-            marginRight: 0,
-
-            [breakpoints.up("md")]: {
-                width: 80,
-            },
-        },
         filterFormColumnInput: {
-            width: `calc(100% - ${filtersLeftSectionWidth}px)`,
-            paddingLeft: spacing(2),
-            boxSizing: "border-box",
-
-            [breakpoints.up("md")]: {
-                width: 199,
-                paddingLeft: 0,
-            },
+            width: "100%",
         },
         filterFormOperatorInput: {
-            marginTop: spacing(3),
-            flexBasis: filterOperatorInputWidth,
-            flexGrow: 1,
-
-            [breakpoints.up("md")]: {
-                marginTop: 0,
-                width: 110,
-            },
+            width: "100%",
         },
         filterFormValueInput: {
             width: `calc(100% - ${filtersLeftSectionWidth}px)`,
@@ -313,56 +318,33 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             [`& .${inputBaseClasses.root}`]: {
-                marginTop: 0,
+                minHeight: "40px",
+                display: "flex",
+                alignItems: "center",
+                border: `1px solid ${palette.grey[100]}`,
+
+                [`& > .${inputBaseClasses.input}`]: {
+                    padding: `calc(${spacing(2)} - 1px)`,
+                    display: "flex",
+                    alignItems: "center",
+                },
+
+                [`& > .MuiOutlinedInput-notchedOutline`]: {
+                    display: "none",
+                },
+
+                "&.Mui-focused": {
+                    border: `1px solid ${palette.primary.main}`,
+                },
+            },
+
+            [`& .${textFieldClasses.root}`]: {
+                width: "100%",
             },
         },
         panelFooter: {
             padding: spacing(2),
             borderTop: `1px solid ${palette.divider}`,
-        },
-        // @ts-expect-error This key exists but is missing in the types.
-        toolbarQuickFilter: {
-            paddingBottom: 0,
-            width: 120,
-
-            [breakpoints.up("sm")]: {
-                width: 150,
-            },
-
-            [breakpoints.up("md")]: {
-                width: "auto",
-            },
-
-            [`& .${svgIconClasses.root}`]: {
-                fontSize: 16,
-            },
-
-            [`& .${buttonBaseClasses.root}`]: {
-                alignSelf: "stretch",
-                color: palette.grey[200],
-                paddingLeft: 10,
-                paddingRight: 10,
-                fontSize: 12,
-                marginRight: spacing(-2),
-                borderRadius: 0,
-
-                [`& .${svgIconClasses.root}`]: {
-                    fontSize: "inherit",
-                },
-            },
-
-            [`& .${inputBaseClasses.input}`]: {
-                marginLeft: 0,
-            },
-
-            [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
-                paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
-                textOverflow: "ellipsis",
-            },
-
-            [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
-                display: "none", // Prevents the disabled clear-button from overlaying the input value
-            },
         },
     }),
 });

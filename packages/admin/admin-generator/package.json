@@ -41,7 +41,7 @@
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "@mui/material": "^7.3.7",
-        "@mui/x-data-grid": "^7.29.8",
+        "@mui/x-data-grid": "^8.27.5",
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
         "glob": "^11.1.0",
