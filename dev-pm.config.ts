@@ -226,16 +226,15 @@ export default defineConfig({
             group: ["demo-api", "demo"],
         },
 
-        // group demo login
         {
             name: "demo-oidc-provider",
             script: "pnpm run dev:oidc-provider",
-            group: ["demo-login", "demo"],
+            group: ["demo-admin", "demo"],
         },
         {
             name: "demo-oauth2-proxy",
             script: "pnpm run dev:oauth2-proxy",
-            group: ["demo-login", "demo"],
+            group: ["demo-admin", "demo"],
             waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
         },
 
