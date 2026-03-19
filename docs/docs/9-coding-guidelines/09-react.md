@@ -13,6 +13,10 @@ sidebar_position: -5
 - How to structure folders: "Move files around until it feels right."
   Recommendation: separate by modules instead of by type ([File Structure – React](https://legacy.reactjs.org/docs/faq-structure.html#grouping-by-features-or-routes)).
 
+## Reusable, Controllable Components
+
+Reusable components should generally be controllable. Expose props (e.g., `value`, `open`) and change handlers (e.g., `onChange`, `onOpenChange`) so consumers can manage state externally. For application-specific components where reuse is not a concern, managing state internally is perfectly fine.
+
 ## Naming
 
 ### Casing
