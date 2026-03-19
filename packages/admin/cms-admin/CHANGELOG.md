@@ -1,5 +1,25 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.1
+
+### Major Changes
+
+- 85b09a2: Replace `DependencyList` with `DependenciesList` and `DependentsList`
+
+    **Breaking change:** `DependencyList` has been removed. Use `DependenciesList` for queries returning `item.dependencies` and `DependentsList` for queries returning `item.dependents`.
+
+- 171c335: Redirects: add `domain` source type
+
+    To fully support domain redirects, additional handling is required in the site middleware.
+
+### Patch Changes
+
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-date-time@9.0.0-beta.1
+    - @comet/admin-rte@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes
