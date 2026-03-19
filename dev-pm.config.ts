@@ -210,7 +210,7 @@ export default defineConfig({
         //group demo api
         {
             name: "demo-docker",
-            script: "set -a; [ -f .env ] && . .env; [ -f .env.local ] && . .env.local; [ -f .env.secrets ] && . .env.secrets; set +a; docker compose up",
+            script: "set -a; . .env; . .env.local; [ -f .env.secrets ] && . .env.secrets; set +a; docker compose up",
             group: ["demo-api", "demo"],
         },
         {
