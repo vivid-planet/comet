@@ -160,12 +160,13 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
                                     <>
                                         {textFieldProps?.InputProps?.endAdornment}
                                         <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                        <ClearInputAdornment
-                                            position="end"
-                                            hasClearableContent={arrayValue.some((date) => date !== null) && !required && !disabled && !readOnly}
-                                            onClick={() => onChange?.(undefined)}
-                                            {...slotProps?.clearInputAdornment}
-                                        />
+                                        {arrayValue.some((date) => date !== null) && !required && !disabled && !readOnly && (
+                                            <ClearInputAdornment
+                                                position="end"
+                                                onClick={() => onChange?.(undefined)}
+                                                {...slotProps?.clearInputAdornment}
+                                            />
+                                        )}
                                     </>
                                 ),
                             },

@@ -143,12 +143,13 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                                 <>
                                     {textFieldProps?.InputProps?.endAdornment}
                                     <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={value !== null && !required && !disabled && !readOnly}
-                                        onClick={() => onChange?.(undefined)}
-                                        {...slotProps?.clearInputAdornment}
-                                    />
+                                    {value !== null && !required && !disabled && !readOnly && (
+                                        <ClearInputAdornment
+                                            position="end"
+                                            onClick={() => onChange?.(undefined)}
+                                            {...slotProps?.clearInputAdornment}
+                                        />
+                                    )}
                                 </>
                             ),
                         },
