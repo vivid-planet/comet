@@ -1,12 +1,12 @@
 import {
     type GridActionsColDef as MuiGridActionsColDef,
     type GridFilterItem,
+    type GridPinnedColumns,
     type GridSingleSelectColDef as MuiGridSingleSelectColDef,
     type GridValidRowModel,
     type GridValueOptionsParams,
 } from "@mui/x-data-grid";
 import { type GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/internals";
-import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
 import { type ReactNode } from "react";
 
 import { type GqlFilter } from "./muiGridFilterToGql";

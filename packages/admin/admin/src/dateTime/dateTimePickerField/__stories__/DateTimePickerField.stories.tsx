@@ -167,3 +167,51 @@ export const Disabled: Story = {
         );
     },
 };
+
+/**
+ * Before implementing custom validation, try to disable certain values using the props provided by MUI's DateTimePicker, such as `shouldDisableDate`, `shouldDisableTime`, `disableFuture`, `disablePast`.
+ *
+ * Use this when:
+ * - You need to validate the date against a custom rule, which cannot be achieved using the props provided by MUI's DateTimePicker
+ * - You want to provide a custom error message
+ * - You want to validate the date asynchronously
+ */
+export const CustomValidation: Story = {
+    render: () => {
+        interface FormValues {
+            value: Date | undefined;
+        }
+
+        const validateIsWeekday = async (value: Date | undefined) => {
+            if (!value) return undefined;
+            const day = value.getDay();
+            const isWeekday = day !== 0 && day !== 6;
+            return isWeekday ? undefined : "Please select a weekday";
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {() => (
+                    <>
+                        <DateTimePickerField
+                            name="value"
+                            label="Date Time Picker"
+                            helperText="Only weekdays are valid"
+                            fullWidth
+                            variant="horizontal"
+                            validate={validateIsWeekday}
+                        />
+
+                        <FinalFormDebug />
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};

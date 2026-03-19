@@ -25,6 +25,7 @@ import { TeaserBlockFixtureService } from "./blocks/teaser/teaser-block-fixture.
 import { KeyFactsBlockFixtureService } from "./blocks/text-and-content/key-facts-block-fixture.service";
 import { ProductListBlockFixtureService } from "./blocks/text-and-content/product-list-block.fixture";
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
+import { TableBlockFixtureService } from "./blocks/text-and-content/table-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
 
 export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent";
@@ -53,6 +54,7 @@ export class PageContentBlockFixtureService {
         private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
         private readonly productListBlockFixtureService: ProductListBlockFixtureService,
         private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
+        private readonly tableBlockFixtureService: TableBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -82,6 +84,7 @@ export class PageContentBlockFixtureService {
             richtext: ["textAndContent", this.standaloneRichTextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
             productList: ["textAndContent", this.productListBlockFixtureService],
+            table: ["textAndContent", this.tableBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)

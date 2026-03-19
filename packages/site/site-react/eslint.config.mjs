@@ -1,10 +1,8 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigReact from "@comet/eslint-config/future/react.js";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: ["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"],
-    },
+export default defineConfig([
+    globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"]),
     ...eslintConfigReact,
     {
         rules: {
@@ -22,6 +20,4 @@ const config = [
             ],
         },
     },
-];
-
-export default config;
+]);

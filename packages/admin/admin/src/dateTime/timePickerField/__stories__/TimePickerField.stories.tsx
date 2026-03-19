@@ -167,3 +167,54 @@ export const Disabled: Story = {
         );
     },
 };
+
+/**
+ * Before implementing custom validation, try to disable certain values using the props provided by MUI's TimePicker, such as `shouldDisableTime`, `minTime`, `maxTime`.
+ *
+ * Use this when:
+ * - You need to validate the time against a custom rule, which cannot be achieved using the props provided by MUI's TimePicker
+ * - You want to provide a custom error message
+ * - You want to validate the time asynchronously
+ */
+export const CustomValidation: Story = {
+    render: () => {
+        interface FormValues {
+            value: string;
+        }
+
+        const validateIsNotLunchBreak = async (value: string | undefined) => {
+            if (!value) return undefined;
+            const [hours, minutes] = value.split(":").map(Number);
+            const totalMinutes = hours * 60 + minutes;
+            const lunchStartMinutes = 12 * 60;
+            const lunchEndMinutes = 13 * 60;
+            const isDuringLunchBreak = totalMinutes >= lunchStartMinutes && totalMinutes < lunchEndMinutes;
+            return isDuringLunchBreak ? "Please select a time outside of lunch break (12:00-13:00)" : undefined;
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {() => (
+                    <>
+                        <TimePickerField
+                            name="value"
+                            label="Time Picker"
+                            helperText="Lunch break (12:00-13:00) is not allowed"
+                            fullWidth
+                            variant="horizontal"
+                            validate={validateIsNotLunchBreak}
+                        />
+
+                        <FinalFormDebug />
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};
