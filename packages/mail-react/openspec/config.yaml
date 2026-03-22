@@ -38,4 +38,8 @@ rules:
             bug fix, visual change), include a task to create a changeset file in the
             monorepo root (.changeset/ at the git root, two levels up from this package).
             No changeset is needed for internal-only changes (refactors, non-exported utils).
-            See CONTRIBUTING.md in the repo root for changeset writing guidelines.
+            The changeset must describe the change from the consumer's perspective — what
+            is new or different in the API they use — not what was built or restructured
+            internally. If a component already existed as a re-export, adding props to it
+            is not "adding a component", it is "adding props to <Component>".
+            See CONTRIBUTING.md in the repo root for changeset formatting guidelines.
