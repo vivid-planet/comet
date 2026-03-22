@@ -4,8 +4,8 @@ export { OneOfBlock } from "./blocks/factories/OneOfBlock.js";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock.js";
 export type { SupportedBlocks } from "./blocks/factories/types.js";
 export type { PropsWithData } from "./blocks/helpers/PropsWithData.js";
-export type { MjmlSectionProps } from "./components/MjmlSection.js";
-export { MjmlSection } from "./components/MjmlSection.js";
+export type { MjmlSectionProps } from "./components/section/MjmlSection.js";
+export { MjmlSection } from "./components/section/MjmlSection.js";
 export { css } from "./utils/css.js";
 export {
     Mjml,

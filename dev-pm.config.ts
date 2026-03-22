@@ -279,5 +279,10 @@ export default defineConfig({
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
         },
+        {
+            name: "storybook-mail-react",
+            script: "pnpm --filter @comet/mail-react run storybook",
+            group: ["storybook"],
+        },
     ],
 });
