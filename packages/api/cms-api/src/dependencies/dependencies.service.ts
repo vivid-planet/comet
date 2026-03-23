@@ -1,15 +1,17 @@
-import { AnyEntity, Connection, EntityManager, Knex, QueryOrder } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, EntityManager, type FindOptions, type ObjectQuery, QueryOrder } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
+import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "../common/filter/mikro-orm";
 import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
-import { DependencySort, DependencySortField } from "./dto/dependency-sort";
+import { DependencySort } from "./dto/dependency-sort";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
+import { BlockIndexDependencyObject } from "./entities/block-index-dependency.object";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
 interface PGStatActivity {
@@ -75,19 +77,25 @@ export class DependenciesService {
                             indexObj->>'blockname'                                              "blockname",
                             indexObj->>'jsonPath'                                               "jsonPath",
                             indexObj->>'visible'                                                "blockVisible",
-                            COALESCE(ei."visible", true)                                        "entityVisible",
-                            ((indexObj->>'visible')::boolean AND COALESCE(ei."visible", true))  "visible",
+                            COALESCE(ei_root."visible", true)                                   "entityVisible",
+                            ((indexObj->>'visible')::boolean AND COALESCE(ei_root."visible", true))  "visible",
                             targetTableData->>'entityName'                                      "targetEntityName",
                             targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
                             targetTableData->>'tableName'                                       "targetTableName",
                             targetTableData->>'primary'                                         "targetPrimaryKey",
-                            dependenciesObj->>'id'                                              "targetId"
+                            dependenciesObj->>'id'                                              "targetId",
+                            ei_root."name"                                                      "rootName",
+                            ei_root."secondaryInformation"                                      "rootSecondaryInformation",
+                            ei_target."name"                                                    "targetName",
+                            ei_target."secondaryInformation"                                    "targetSecondaryInformation"
                         FROM "${metadata.tableName}"
                         CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
                         CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
                         CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
-                        LEFT JOIN "EntityInfo" as ei ON ei."id" = "${metadata.tableName}"."${primary}"::text
-                            AND ei."entityName" = '${metadata.name}'`;
+                        LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = "${metadata.tableName}"."${primary}"::text
+                            AND ei_root."entityName" = '${metadata.name}'
+                        LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = dependenciesObj->>'id'
+                            AND ei_target."entityName" = dependenciesObj->>'targetEntityName'`;
 
             indexSelects.push(select);
         }
@@ -232,25 +240,20 @@ export class DependenciesService {
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
-        const qb = this.getBaseQueryBuilder(
-            { targetEntityName: entityName, targetId: target.id, rootEntityName: rootEntityName },
-            paginationArgs,
-        ).join("EntityInfo", (join) => {
-            join.on("idx.rootEntityName", "EntityInfo.entityName").andOn(
-                "EntityInfo.id",
-                this.entityManager.getKnex("read").raw('"idx"."rootId"::text'),
-            );
-        });
+        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependents")) as ObjectQuery<BlockIndexDependencyObject>;
+        where.targetEntityName = entityName;
+        where.targetId = target.id;
+        if (rootEntityName) where.rootEntityName = rootEntityName;
 
-        this.applyFilter(qb, filter);
-        this.applySort(qb, options?.sort, "dependents");
+        const options_: FindOptions<BlockIndexDependencyObject> = { offset: paginationArgs?.offset, limit: paginationArgs?.limit };
+        if (options?.sort) {
+            options_.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependents"));
+        }
 
-        const results: Dependency[] = await qb;
+        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, options_);
 
-        const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("targetId").groupBy(["targetId", "targetEntityName"]);
-        const totalCount = countResult[0]?.count ?? 0;
-
-        return new PaginatedDependencies(results, Number(totalCount));
+        const results = entities.map((entity) => this.mapToResult(entity, "dependents"));
+        return new PaginatedDependencies(results, totalCount);
     }
 
     async getDependencies(
@@ -266,156 +269,73 @@ export class DependenciesService {
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
-        const qb = this.getBaseQueryBuilder({ rootEntityName: entityName, rootId: root.id, targetEntityName: targetEntityName }, paginationArgs).join(
-            "EntityInfo",
-            (join) => {
-                join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
-                    "EntityInfo.id",
-                    this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
-                );
-            },
-        );
+        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependencies")) as ObjectQuery<BlockIndexDependencyObject>;
+        where.rootEntityName = entityName;
+        where.rootId = root.id;
+        if (targetEntityName) where.targetEntityName = targetEntityName;
 
-        this.applyFilter(qb, filter);
-        this.applySort(qb, options?.sort, "dependencies");
+        const options_: FindOptions<BlockIndexDependencyObject> = { offset: paginationArgs?.offset, limit: paginationArgs?.limit };
+        if (options?.sort) {
+            options_.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependencies"));
+        }
 
-        const results: Dependency[] = await qb;
+        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, options_);
 
-        const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
-        const totalCount = countResult[0]?.count ?? 0;
-
-        return new PaginatedDependencies(results, Number(totalCount));
+        const results = entities.map((entity) => this.mapToResult(entity, "dependencies"));
+        return new PaginatedDependencies(results, totalCount);
     }
 
-    private getBaseQueryBuilder(
-        internalFilter: { targetEntityName?: string; rootEntityName?: string; targetId?: string; rootId?: string },
-        paginationArgs?: { offset: number; limit: number },
-    ) {
-        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private remapFilter(filter: Record<string, any>, context: "dependencies" | "dependents"): Record<string, any> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const remapped: Record<string, any> = {};
 
-        if (paginationArgs?.offset !== undefined && paginationArgs?.limit !== undefined) {
-            qb.offset(paginationArgs.offset).limit(paginationArgs.limit);
-        }
+        for (const [key, value] of Object.entries(filter)) {
+            if (value === undefined) continue;
 
-        if (internalFilter.targetEntityName) {
-            qb.andWhere({ targetEntityName: internalFilter.targetEntityName });
-        }
-        if (internalFilter.targetId) {
-            qb.andWhere({ targetId: internalFilter.targetId });
-        }
-        if (internalFilter.rootEntityName) {
-            qb.andWhere({ rootEntityName: internalFilter.rootEntityName });
-        }
-        if (internalFilter.rootId) {
-            qb.andWhere({ rootId: internalFilter.rootId });
-        }
+            if (key === "and" || key === "or") {
+                remapped[key] = (value as Record<string, unknown>[]).map((f) => this.remapFilter(f, context));
+                continue;
+            }
 
-        return qb;
-    }
+            const mappedKey = this.remapColumnName(key, context);
 
-    private applyFilter(qb: Knex.QueryBuilder, filter?: DependencyFilter | DependentFilter): void {
-        if (!filter) return;
-
-        if ("rootGraphqlObjectType" in filter && filter.rootGraphqlObjectType) {
-            this.applyStringFilterToKnex(qb, '"idx"."rootGraphqlObjectType"', filter.rootGraphqlObjectType);
-        }
-        if ("rootId" in filter && filter.rootId) {
-            qb.andWhere({ "idx.rootId": filter.rootId });
-        }
-        if ("targetGraphqlObjectType" in filter && filter.targetGraphqlObjectType) {
-            this.applyStringFilterToKnex(qb, '"idx"."targetGraphqlObjectType"', filter.targetGraphqlObjectType);
-        }
-        if ("targetId" in filter && filter.targetId) {
-            qb.andWhere({ "idx.targetId": filter.targetId });
-        }
-        if (filter.rootColumnName) {
-            qb.andWhere({ "idx.rootColumnName": filter.rootColumnName });
-        }
-        if (filter.name) {
-            this.applyStringFilterToKnex(qb, '"EntityInfo"."name"', filter.name);
-        }
-        if (filter.secondaryInformation) {
-            this.applyStringFilterToKnex(qb, '"EntityInfo"."secondaryInformation"', filter.secondaryInformation);
-        }
-        if (filter.visible) {
-            if (filter.visible.equal !== undefined && filter.visible.equal !== null) {
-                qb.andWhere(this.entityManager.getKnex("read").raw('"idx"."visible" = ?', [filter.visible.equal]));
+            // Convert plain string values to StringFilter so filtersToMikroOrmQuery can handle them
+            if (typeof value === "string") {
+                const stringFilter = new StringFilter();
+                stringFilter.equal = value;
+                remapped[mappedKey] = stringFilter;
+            } else {
+                remapped[mappedKey] = value;
             }
         }
-        if (filter.and?.length) {
-            for (const subFilter of filter.and) {
-                qb.andWhere((sub) => {
-                    this.applyFilter(sub, subFilter);
-                });
-            }
-        }
-        if (filter.or?.length) {
-            const orFilters = filter.or;
-            qb.andWhere((outer) => {
-                for (const subFilter of orFilters) {
-                    outer.orWhere((sub) => {
-                        this.applyFilter(sub, subFilter);
-                    });
-                }
-            });
-        }
-    }
-    private applyStringFilterToKnex(qb: Knex.QueryBuilder, column: string, filter: StringFilter): void {
-        const knex = this.entityManager.getKnex("read");
 
-        if (filter.contains !== undefined && filter.contains !== null) {
-            qb.andWhere(knex.raw(`${column} ILIKE ?`, [`%${filter.contains}%`]));
-        }
-        if (filter.notContains !== undefined && filter.notContains !== null) {
-            qb.andWhere(knex.raw(`${column} NOT ILIKE ?`, [`%${filter.notContains}%`]));
-        }
-        if (filter.startsWith !== undefined && filter.startsWith !== null) {
-            qb.andWhere(knex.raw(`${column} ILIKE ?`, [`${filter.startsWith}%`]));
-        }
-        if (filter.endsWith !== undefined && filter.endsWith !== null) {
-            qb.andWhere(knex.raw(`${column} ILIKE ?`, [`%${filter.endsWith}`]));
-        }
-        if (filter.equal !== undefined && filter.equal !== null) {
-            qb.andWhere(knex.raw(`${column} = ?`, [filter.equal]));
-        }
-        if (filter.notEqual !== undefined && filter.notEqual !== null) {
-            qb.andWhere(knex.raw(`${column} != ?`, [filter.notEqual]));
-        }
-        if (filter.isAnyOf !== undefined && filter.isAnyOf !== null && filter.isAnyOf.length > 0) {
-            qb.andWhere(knex.raw(`${column} IN (${filter.isAnyOf.map(() => "?").join(", ")})`, filter.isAnyOf));
-        }
-        if (filter.isEmpty) {
-            qb.andWhere(knex.raw(`(${column} IS NULL OR ${column} = '')`));
-        }
-        if (filter.isNotEmpty) {
-            qb.andWhere(knex.raw(`(${column} IS NOT NULL AND ${column} != '')`));
+        return remapped;
+    }
+
+    private remapColumnName(key: string, context: "dependencies" | "dependents"): string {
+        const prefix = context === "dependents" ? "root" : "target";
+        switch (key) {
+            case "name":
+                return `${prefix}Name`;
+            case "secondaryInformation":
+                return `${prefix}SecondaryInformation`;
+            case "graphqlObjectType":
+                return `${prefix}GraphqlObjectType`;
+            default:
+                return key;
         }
     }
 
-    private applySort(qb: Knex.QueryBuilder, sort: DependencySort[] | undefined, context: "dependencies" | "dependents"): void {
-        if (!sort || sort.length === 0) return;
-
-        for (const sortEntry of sort) {
-            let column: string;
-            switch (sortEntry.field) {
-                case DependencySortField.name:
-                    column = '"EntityInfo"."name"';
-                    break;
-                case DependencySortField.secondaryInformation:
-                    column = '"EntityInfo"."secondaryInformation"';
-                    break;
-                case DependencySortField.graphqlObjectType:
-                    column = context === "dependencies" ? '"idx"."targetGraphqlObjectType"' : '"idx"."rootGraphqlObjectType"';
-                    break;
-                case DependencySortField.visible:
-                    column = '"idx"."visible"';
-                    break;
-            }
-            qb.orderByRaw(`${column} ${sortEntry.direction}`);
-        }
+    private remapSort(sort: DependencySort[], context: "dependencies" | "dependents") {
+        return sort.map(({ field, direction }) => ({ field: this.remapColumnName(field, context), direction }));
     }
 
-    private withCount(qb: Knex.QueryBuilder) {
-        return qb.offset(0).clearSelect().clearOrder().count();
+    private mapToResult(entity: BlockIndexDependencyObject, context: "dependencies" | "dependents"): Dependency {
+        const result = new Dependency();
+        Object.assign(result, entity);
+        result.name = context === "dependents" ? entity.rootName : entity.targetName;
+        result.secondaryInformation = context === "dependents" ? entity.rootSecondaryInformation : entity.targetSecondaryInformation;
+        return result;
     }
 }

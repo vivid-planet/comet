@@ -13,3 +13,4 @@ This enables efficient SQL-level filtering and sorting of dependencies and warni
 - `EntityInfoServiceInterface` has been removed from exports
 - `PageTreeNodeDocumentEntityInfoService` has been removed; `@EntityInfo` on `Page`, `Link`, and similar document entities is no longer needed
 - `block_index_dependencies` view exposes two new columns `blockVisible` and `entityVisible`; `visible` is now their logical AND (previously only reflected block-level visibility)
+- `block_index_dependencies` view now includes `rootName`, `rootSecondaryInformation`, `targetName`, and `targetSecondaryInformation` columns from `EntityInfo`, removing the need for a runtime JOIN when querying dependencies/dependents
