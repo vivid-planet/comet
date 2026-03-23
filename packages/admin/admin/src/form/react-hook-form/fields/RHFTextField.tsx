@@ -12,6 +12,9 @@ type RHFTextFieldProps<
 > = UseControllerProps<TFieldValues, TName, TTransformedValues> &
     Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & { clearable?: boolean } & InputBaseProps;
 
+/**
+ * @experimental
+ */
 export function RHFTextField<TFieldValues extends FieldValues, TName extends FieldPathByValue<TFieldValues, string | null>, TTransformedValues>({
     name,
     rules,

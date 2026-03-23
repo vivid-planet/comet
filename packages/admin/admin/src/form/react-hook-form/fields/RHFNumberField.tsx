@@ -123,6 +123,9 @@ type RHFNumberFieldProps<
         decimals?: number;
     } & InputBaseProps;
 
+/**
+ * @experimental
+ */
 export function RHFNumberField<TFieldValues extends FieldValues, TName extends FieldPathByValue<TFieldValues, number | null>, TTransformedValues>({
     name,
     rules,

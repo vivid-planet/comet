@@ -51,6 +51,11 @@ export type RHFFormProps<TFieldValues extends FieldValues = FieldValues, TContex
     onSubmit: SubmitHandler<TFieldValues>;
 };
 
+/**
+ * Wrapper for <form> that integrates Savable API for react-hook-form
+ *
+ * @experimental
+ */
 export function RHFForm<TFieldValues extends FieldValues = FieldValues, TContext = any, TTransformedValues = TFieldValues>({
     children,
     onSubmit,
