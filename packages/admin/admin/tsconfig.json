@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
         "baseUrl": "src",
-        "module": "ESNext",
-        "moduleResolution": "bundler",
         "outDir": "lib",
         "paths": {
             "test-utils": ["./utils/test-utils"]
