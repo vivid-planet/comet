@@ -1,5 +1,14 @@
 # @comet/cms-api
 
+## 8.20.1
+
+### Patch Changes
+
+- 78597e3: Fix `AzureOpenAiContentGenerationService` for newer GPT models
+
+    We still used the deprecated `max_tokens` that isn't supported anymore by newer models.
+    Replaced it with the newer `max_completion_tokens`.
+
 ## 8.20.0
 
 ### Minor Changes
