@@ -30,7 +30,7 @@ import { type DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "visible" | "rootColumnName" | "jsonPath"> & {
     id: string;
-    graphqlObjectType: string;
+    rootGraphqlObjectType: string;
 };
 
 type Dependent = Pick<
@@ -125,25 +125,14 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 visible: false,
             },
             {
-                field: "type",
+                field: "rootGraphqlObjectType",
                 headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
                 type: "singleSelect",
                 valueOptions: Object.entries(entityDependencyMap).map(([value, dep]) => ({
                     value,
                     label: getDisplayNameString(dep.displayName, intl, value),
                 })),
-                sortBy: "graphqlObjectType",
-                toGqlFilter: (filterItem) => {
-                    if (!filterItem.value) return {};
-                    if (filterItem.operator === "isAnyOf") {
-                        return { rootGraphqlObjectType: { isAnyOf: filterItem.value } };
-                    }
-                    if (filterItem.operator === "not") {
-                        return { rootGraphqlObjectType: { notEqual: filterItem.value } };
-                    }
-                    return { rootGraphqlObjectType: { equal: filterItem.value } };
-                },
-                renderCell: ({ row }) => <Chip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
+                renderCell: ({ row }) => <Chip label={entityDependencyMap[row.rootGraphqlObjectType]?.displayName ?? row.rootGraphqlObjectType} />,
             },
             {
                 field: "visible",
@@ -151,10 +140,6 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 type: "boolean",
                 visible: false,
                 sortBy: "visible",
-                toGqlFilter: (filterItem) => {
-                    if (filterItem.value === undefined || filterItem.value === "") return {};
-                    return { visible: { equal: filterItem.value === "true" || filterItem.value === true } };
-                },
             },
             {
                 field: "actions",
@@ -163,12 +148,12 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 filterable: false,
                 sortable: false,
                 renderCell: ({ row }) => {
-                    const dependencyObject = entityDependencyMap[row.graphqlObjectType] as DependencyInterface | undefined;
+                    const dependencyObject = entityDependencyMap[row.rootGraphqlObjectType] as DependencyInterface | undefined;
 
                     if (dependencyObject === undefined) {
                         if (process.env.NODE_ENV === "development") {
                             console.warn(
-                                `Cannot load URL because no implementation of DependencyInterface for ${row.graphqlObjectType} was provided via the DependenciesConfig`,
+                                `Cannot load URL because no implementation of DependencyInterface for ${row.rootGraphqlObjectType} was provided via the DependenciesConfig`,
                             );
                         }
                         return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
@@ -231,7 +216,7 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
         data?.item.dependents?.nodes.map((node) => {
             return {
                 ...node,
-                graphqlObjectType: node.rootGraphqlObjectType,
+                rootGraphqlObjectType: node.rootGraphqlObjectType,
                 id: node.rootId,
             };
         }) ?? [];
