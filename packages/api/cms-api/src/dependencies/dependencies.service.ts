@@ -229,14 +229,16 @@ export class DependenciesService {
 
     async getDependents(
         target: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        passedFilter?: DependentFilter & {
-            rootEntityName?: string;
+        options?: {
+            filter?: DependentFilter & { rootEntityName?: string };
+            offset?: number;
+            limit?: number;
+            forceRefresh?: boolean;
+            sort?: DependencySort[];
         },
-        paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean; sort?: DependencySort[] },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
-        const { rootEntityName, ...filter } = passedFilter ?? {};
+        const { rootEntityName, ...filter } = options?.filter ?? {};
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
@@ -245,12 +247,12 @@ export class DependenciesService {
         where.targetId = target.id;
         if (rootEntityName) where.rootEntityName = rootEntityName;
 
-        const options_: FindOptions<BlockIndexDependencyObject> = { offset: paginationArgs?.offset, limit: paginationArgs?.limit };
+        const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
         if (options?.sort) {
-            options_.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependents"));
+            findOptions.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependents"));
         }
 
-        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, options_);
+        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, findOptions);
 
         const results = entities.map((entity) => this.mapToResult(entity, "dependents"));
         return new PaginatedDependencies(results, totalCount);
@@ -258,14 +260,16 @@ export class DependenciesService {
 
     async getDependencies(
         root: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        passedFilter?: DependencyFilter & {
-            targetEntityName?: string;
+        options?: {
+            filter?: DependencyFilter & { targetEntityName?: string };
+            offset?: number;
+            limit?: number;
+            forceRefresh?: boolean;
+            sort?: DependencySort[];
         },
-        paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean; sort?: DependencySort[] },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
-        const { targetEntityName, ...filter } = passedFilter ?? {};
+        const { targetEntityName, ...filter } = options?.filter ?? {};
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
@@ -274,12 +278,12 @@ export class DependenciesService {
         where.rootId = root.id;
         if (targetEntityName) where.targetEntityName = targetEntityName;
 
-        const options_: FindOptions<BlockIndexDependencyObject> = { offset: paginationArgs?.offset, limit: paginationArgs?.limit };
+        const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
         if (options?.sort) {
-            options_.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependencies"));
+            findOptions.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependencies"));
         }
 
-        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, options_);
+        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, findOptions);
 
         const results = entities.map((entity) => this.mapToResult(entity, "dependencies"));
         return new PaginatedDependencies(results, totalCount);

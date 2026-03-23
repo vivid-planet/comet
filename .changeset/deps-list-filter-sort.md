@@ -12,6 +12,16 @@ Users can now filter dependencies/dependents by name, type, secondary informatio
 
 **`@comet/cms-api`:** `DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` changed from `string` to `StringFilter`. Update any code passing a plain string to use `{ equal: "..." }` instead.
 
+**`@comet/cms-api`:** `DependenciesService.getDependents()` and `getDependencies()` consolidated the `filter`, `paginationArgs`, and `options` parameters into a single `options` object. If you call these methods directly, merge the arguments:
+
+```ts
+// Before
+service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+// After
+service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+```
+
 **`@comet/cms-admin`:** The GQL queries passed to `DependenciesList` and `DependentsList` must now accept `$filter` and `$sort` variables and forward them to the `dependencies`/`dependents` field. Update your queries as follows:
 
 ```graphql

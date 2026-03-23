@@ -19,7 +19,7 @@ export class DependentsResolverFactory {
                 @Parent() node: AnyEntity<{ id: string }>,
                 @Args() { filter, sort, offset, limit, forceRefresh }: DependentsArgs,
             ): Promise<PaginatedDependencies> {
-                return this.dependenciesService.getDependents(node, filter, { offset, limit }, { forceRefresh, sort });
+                return this.dependenciesService.getDependents(node, { filter, offset, limit, forceRefresh, sort });
             }
         }
 
