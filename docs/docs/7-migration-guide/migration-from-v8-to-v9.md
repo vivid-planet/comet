@@ -213,6 +213,12 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` an
 -       "@mui/x-data-grid-pro": "^7.29.12",
 +       "@mui/x-data-grid": "^8.27.5",
 +       "@mui/x-data-grid-pro": "^8.27.5",
+-       "@mui/x-date-pickers": "^7.29.4",
+-       "@mui/x-date-pickers-pro": "^7.29.4",
+-       "@mui/x-license": "^7.29.1",
++       "@mui/x-date-pickers": "^8.27.2",
++       "@mui/x-date-pickers-pro": "^8.27.2",
++       "@mui/x-license": "^8.26.0",
     },
     "devDependencies": {
 -       "@comet/admin-generator": "^8.0.0",
@@ -407,6 +413,18 @@ Add `disableRowSelectionExcludeModel` to opt out of the new exclude selection mo
       keepNonExistentRowsSelected
 +     disableRowSelectionExcludeModel
   />
+```
+
+### Upgrade MUI X Date Pickers to v8
+
+The MUI X Date Pickers peer dependency has been bumped to v8.
+Review the [migration guide](https://mui.com/x/migration/migration-pickers-v7/) for more information.
+
+#### Update the `AdapterDateFns` import
+
+```diff title="src/App.tsx"
+-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
++import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 ```
 
 ### Replace the `variant` prop with `color` in `Tooltip`
