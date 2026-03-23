@@ -1,5 +1,12 @@
 # @comet/api-generator
 
+## 8.20.1
+
+### Patch Changes
+
+- Updated dependencies [78597e3]
+    - @comet/cms-api@8.20.1
+
 ## 8.20.0
 
 ### Patch Changes
