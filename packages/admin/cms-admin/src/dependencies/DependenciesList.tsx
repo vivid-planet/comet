@@ -153,7 +153,7 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
                 sortBy: "visible",
                 toGqlFilter: (filterItem) => {
                     if (filterItem.value === undefined || filterItem.value === "") return {};
-                    return { visible: { equal: filterItem.value === "true" || filterItem.value === true } } as unknown as GqlFilter;
+                    return { visible: { equal: filterItem.value === "true" || filterItem.value === true } };
                 },
             },
             {
