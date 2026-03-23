@@ -1,7 +1,7 @@
 import { AffectedEntity, extractGraphqlFields, PaginatedResponseFactory, RequiredPermission, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions, wrap } from "@mikro-orm/postgresql";
-import { Type } from "@nestjs/common";
+import { Logger, Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Info, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { TargetGroupInterface } from "src/target-group/entity/target-group-entity.factory";
@@ -40,6 +40,8 @@ export function createEmailCampaignsResolver({
     @Resolver(() => BrevoEmailCampaign)
     @RequiredPermission(["brevoNewsletter"])
     class EmailCampaignsResolver {
+        private readonly logger = new Logger(EmailCampaignsResolver.name);
+
         constructor(
             private readonly campaignsService: EmailCampaignsService,
             private readonly brevoApiCampaignsService: BrevoApiCampaignsService,
@@ -194,22 +196,24 @@ export function createEmailCampaignsResolver({
         async sendBrevoEmailCampaignNow(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const campaign = await this.repository.findOneOrFail(id);
 
-            const campaignSent = await this.campaignsService.sendEmailCampaignNow(campaign);
+            wrap(campaign).assign({
+                scheduledAt: new Date(),
+                sendingState: SendingState.SCHEDULED,
+            });
+            await this.entityManager.flush();
 
-            if (campaignSent) {
-                const campaign = await this.repository.findOneOrFail(id);
+            this.campaignsService.sendEmailCampaignNow(campaign).catch(async (error) => {
+                this.logger.error(`Failed to send email campaign ${id}`, error);
+                try {
+                    const failedCampaign = await this.repository.findOneOrFail(id);
+                    wrap(failedCampaign).assign({ sendingState: SendingState.FAILED });
+                    await this.entityManager.flush();
+                } catch (updateError) {
+                    this.logger.error(`Failed to update sending state to FAILED for campaign ${id}`, updateError);
+                }
+            });
 
-                wrap(campaign).assign({
-                    scheduledAt: new Date(),
-                    sendingState: SendingState.SCHEDULED,
-                });
-
-                await this.entityManager.flush();
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         @Mutation(() => Boolean)
