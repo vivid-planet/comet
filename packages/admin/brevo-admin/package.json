@@ -21,7 +21,7 @@
         "build": "pnpm run clean && run-p gql:types generate-block-types && run-p build:babel build:types",
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
-        "clean": "rimraf lib 'src/**/*.generated.ts'",
+        "clean": "rm -rf lib && find src -name '*.generated.ts' -delete",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
         "gql:types": "graphql-codegen",

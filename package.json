@@ -71,7 +71,6 @@
         "npm-run-all2": "^8.0.4",
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
-        "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
     "packageManager": "pnpm@10.17.0",

@@ -22,7 +22,7 @@
         "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
+        "clean": "rm -rf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
@@ -55,7 +55,6 @@
         "prettier": "^3.6.2",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
-        "rimraf": "^6.1.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3"
     },

@@ -15,7 +15,7 @@
     ],
     "scripts": {
         "build": "pnpm run clean && pnpm run generate-block-types && tsc",
-        "clean": "rimraf lib 'src/**/*.generated.ts'",
+        "clean": "rm -rf lib && find src -name '*.generated.ts' -delete",
         "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
@@ -39,7 +39,6 @@
         "prettier": "^3.6.2",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
-        "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
     "peerDependencies": {

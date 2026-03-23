@@ -7,7 +7,7 @@
     "license": "BSD-2-Clause",
     "scripts": {
         "build": "pnpm run clean && tsc",
-        "clean": "rimraf lib",
+        "clean": "rm -rf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",

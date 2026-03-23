@@ -5,7 +5,7 @@
     "description": "Comet Admin Demo Application",
     "type": "commonjs",
     "scripts": {
-        "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",
+        "admin-generator": "find src -type d -name generated -prune -exec rm -rf {} + && comet-admin-generator generate",
         "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "generate-block-types": "comet generate-block-types --inputs",
@@ -91,7 +91,6 @@
         "eslint": "^9.39.2",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
         "vite": "^7.2.6",
         "vite-plugin-compression2": "^2.3.1",

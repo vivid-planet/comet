@@ -20,7 +20,7 @@
     ],
     "scripts": {
         "build": "pnpm run clean && tsc -p tsconfig.build.json",
-        "clean": "rimraf lib",
+        "clean": "rm -rf lib",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
@@ -55,7 +55,6 @@
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "reflect-metadata": "^0.2.2",
-        "rimraf": "^6.1.2",
         "ts-jest": "^29.4.6",
         "uuid": "^11.1.0"
     },

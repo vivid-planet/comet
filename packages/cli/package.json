@@ -20,7 +20,7 @@
     ],
     "scripts": {
         "build": "pnpm run clean && tsc",
-        "clean": "rimraf lib",
+        "clean": "rm -rf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
@@ -42,7 +42,6 @@
         "@types/node": "^24.10.9",
         "eslint": "^9.39.2",
         "npm-run-all2": "^8.0.4",
-        "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
         "vitest": "^4.0.16"
     },

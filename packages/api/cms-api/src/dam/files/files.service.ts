@@ -3,11 +3,10 @@ import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } f
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
-import { createReadStream } from "fs";
+import { createReadStream, unlinkSync } from "fs";
 import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
-import * as rimraf from "rimraf";
 import sharp from "sharp";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
@@ -278,9 +277,9 @@ export class FilesService {
 
             result = await this.save(fileToReplace);
 
-            rimraf.sync(uploadedFile.path);
+            unlinkSync(uploadedFile.path);
         } catch (e) {
-            rimraf.sync(uploadedFile.path);
+            unlinkSync(uploadedFile.path);
             throw e;
         }
 
@@ -397,9 +396,9 @@ export class FilesService {
                     return entityManager.flush();
                 });
             }
-            rimraf.sync(file.path);
+            unlinkSync(file.path);
         } catch (e) {
-            rimraf.sync(file.path);
+            unlinkSync(file.path);
             throw e;
         }
 

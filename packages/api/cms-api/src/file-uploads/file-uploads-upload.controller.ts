@@ -1,6 +1,6 @@
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Body, Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { rimraf } from "rimraf";
+import { unlink } from "fs/promises";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { FileUploadInput } from "../file-utils/file-upload.input";
@@ -33,7 +33,7 @@ export function createFileUploadsUploadController(options: { public: boolean }):
             await this.entityManager.flush();
 
             try {
-                await rimraf(file.path);
+                await unlink(file.path);
             } catch (error) {
                 console.error("An error occurred when removing the file: ", error);
             }

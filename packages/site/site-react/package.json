@@ -27,7 +27,7 @@
     ],
     "scripts": {
         "build": "pnpm run clean && pnpm run generate-block-types && vite build",
-        "clean": "rimraf lib 'src/**/*.generated.ts'",
+        "clean": "rm -rf lib && find src -name '*.generated.ts' -delete",
         "dev": "pnpm run clean && pnpm generate-block-types && vite build --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
@@ -59,7 +59,6 @@
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react": "^19.2.4",
-        "rimraf": "^6.1.2",
         "rollup": "^4.44.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass": "^1.89.2",

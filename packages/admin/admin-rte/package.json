@@ -22,7 +22,7 @@
         "build": "pnpm run clean && run-p build:babel build:types",
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
+        "clean": "rm -rf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
@@ -62,7 +62,6 @@
         "react-dom": "^19.2.4",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
-        "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
         "vitest": "^4.0.16"
     },
