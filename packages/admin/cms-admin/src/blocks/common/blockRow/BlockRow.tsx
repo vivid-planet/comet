@@ -1,7 +1,7 @@
 import { messages } from "@comet/admin";
 import { Copy, Delete, Drag, MoreVertical, Paste, Warning } from "@comet/admin-icons";
 import { Checkbox, Divider, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { type ChangeEvent, type MouseEventHandler, type ReactNode, useRef, useState } from "react";
+import { type ChangeEvent, type JSX, type MouseEventHandler, type ReactNode, useRef, useState } from "react";
 import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 

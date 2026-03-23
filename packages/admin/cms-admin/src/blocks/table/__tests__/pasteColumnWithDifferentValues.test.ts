@@ -1,6 +1,10 @@
 import { userEvent } from "@testing-library/user-event";
 import { cleanup, waitFor } from "test-utils";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("../../context/useBlockContext", () => ({
+    useBlockContext: () => ({}),
+}));
 
 import { createRteInput, mockStates } from "../__mocks__/TableBlockData.mocks";
 import { clickButtonOfColumnAtIndex, getCellValuesPerColumn, renderTableBlock } from "./utils";

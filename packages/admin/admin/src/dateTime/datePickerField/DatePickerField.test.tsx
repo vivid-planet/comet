@@ -3,7 +3,7 @@ import { cleanup, render, waitFor, within } from "test-utils";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { FinalForm } from "../../FinalForm";
-import { Future_DatePickerField } from "./DatePickerField";
+import { DatePickerField } from "./DatePickerField";
 
 describe("DatePickerField", () => {
     describe("validation", () => {
@@ -30,7 +30,7 @@ describe("DatePickerField", () => {
                         subscription={{ values: true }}
                     >
                         {() => (
-                            <Future_DatePickerField
+                            <DatePickerField
                                 name="value"
                                 label="Date Picker"
                                 helperText="Only weekdays are valid"
@@ -45,7 +45,7 @@ describe("DatePickerField", () => {
 
             const rendered = render(<Story />);
 
-            user.click(rendered.getByRole("button", { name: "Open date picker" }));
+            await user.click(rendered.getByRole("button", { name: "Open date picker" }));
 
             await waitFor(() => expect(rendered.getByRole("dialog")).toBeInTheDocument());
 
@@ -57,6 +57,6 @@ describe("DatePickerField", () => {
 
             await waitFor(() => expect(rendered.getByText("Please select a weekday")).toBeInTheDocument());
             await waitFor(() => expect(validateIsWeekday).toHaveBeenCalledTimes(1));
-        });
+        }, 15000);
     });
 });

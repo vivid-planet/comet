@@ -5,7 +5,7 @@ import { FinalFormDatePicker, type FinalFormDatePickerProps } from "./FinalFormD
 export type DateFieldProps = FieldProps<Date, HTMLInputElement> & FinalFormDatePickerProps;
 
 /**
- * @deprecated `DateField` from `@comet/admin-date-time` will be replaced by `DatePickerField` (currently `Future_DatePickerField`) from `@comet/admin` in a future major release.
+ * @deprecated Use `DatePickerField` from `@comet/admin` instead.
  */
 export const DateField = ({ ...restProps }: DateFieldProps) => {
     return <Field component={FinalFormDatePicker} {...restProps} />;

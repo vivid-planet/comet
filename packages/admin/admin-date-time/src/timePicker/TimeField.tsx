@@ -5,7 +5,7 @@ import { FinalFormTimePicker, type FinalFormTimePickerProps } from "./FinalFormT
 export type TimeFieldProps = FieldProps<string, HTMLInputElement> & FinalFormTimePickerProps;
 
 /**
- * @deprecated `TimeField` from `@comet/admin-date-time` will be replaced by `TimePickerField` (currently `Future_TimePickerField`) from `@comet/admin` in a future major release.
+ * @deprecated Use `TimePickerField` from `@comet/admin` instead.
  */
 export const TimeField = ({ ...restProps }: TimeFieldProps) => {
     return <Field component={FinalFormTimePicker} {...restProps} />;

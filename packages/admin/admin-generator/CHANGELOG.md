@@ -1,5 +1,43 @@
 # @comet/admin-generator
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 0ec748a: Convert to ESM
+
+    To upgrade, make the following changes to your `tsconfig.json`:
+
+    ```diff
+    {
+        "compilerOptions": {
+    -       "module": "ESNext",
+    -       "moduleResolution": "Node",
+    +       "module": "preserve",
+    +       "moduleResolution": "bundler"
+        }
+    }
+    ```
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [ee24125]
+- Updated dependencies [5f1566a]
+- Updated dependencies [790e8d0]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+    - @comet/cms-admin@9.0.0-beta.0
+
+## 8.20.0
+
 ## 8.19.0
 
 ### Patch Changes

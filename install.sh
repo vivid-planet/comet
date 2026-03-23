@@ -4,6 +4,11 @@
 # jump into project dir
 cd $(dirname $0)
 
+# create .env.local
+if [[ ! -f .env.local ]]; then
+    echo "# override for local env" >.env.local
+fi
+
 # use correct node version and install dependencies
 nvm install
 nvm use

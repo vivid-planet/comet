@@ -33,7 +33,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { validateProductSlug } from "../validateProductSlug";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
@@ -50,7 +50,7 @@ import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
-import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
+import { DateTimePickerField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormDetailsFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -243,7 +243,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 }}
                             />
 
-                            <Future_DatePickerField
+                            <DatePickerField
                                 readOnly
                                 disabled
                                 endAdornment={
@@ -503,7 +503,7 @@ export function ProductForm({ initialValues: passedInitialValues, onCreate, manu
                                 variant="horizontal"
                             />
 
-                            <Future_DatePickerField
+                            <DatePickerField
                                 variant="horizontal"
                                 fullWidth
                                 name="availableSince"

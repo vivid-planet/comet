@@ -1,7 +1,7 @@
 "use client";
 import { type PropsWithData } from "@comet/site-nextjs";
 import { type NewsLinkBlockData } from "@src/blocks.generated";
-import { type PropsWithChildren } from "react";
+import { type JSX, type PropsWithChildren } from "react";
 
 import { type LoadedData } from "./NewsDetailBlock.loader";
 

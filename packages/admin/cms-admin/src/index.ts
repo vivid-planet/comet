@@ -154,7 +154,8 @@ export {
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
 export { createDependencyMethods } from "./dependencies/createDependencyMethods";
 export { createDocumentDependencyMethods } from "./dependencies/createDocumentDependencyMethods";
-export { DependencyList } from "./dependencies/DependencyList";
+export { DependenciesList, type DependenciesListProps } from "./dependencies/DependenciesList";
+export { DependentsList, type DependentsListProps } from "./dependencies/DependentsList";
 export type { DependencyInterface } from "./dependencies/types";
 export {
     type ContentGenerationConfig,
@@ -177,7 +178,6 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
-export { createHttpClient } from "./http/createHttpClient";
 export { createEditPageNode } from "./pages/createEditPageNode";
 export { createUsePage } from "./pages/createUsePage";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
@@ -215,9 +215,6 @@ export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
+import packageJson from "../package.json";
 
-// import can not be used here as this file is outside of rootDir
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const version: string = require("../package.json").version;
-
-export { version };
+export const version = packageJson.version;

@@ -33,7 +33,7 @@ describe("GenerateCrud without find condition", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {

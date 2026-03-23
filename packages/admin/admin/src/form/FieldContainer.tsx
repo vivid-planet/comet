@@ -215,6 +215,8 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
         css`
             @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
                 flex-grow: 1;
+                /* Overrides the flex default (min-width: auto), which would prevent the item from shrinking below its content width and cause layout overflow. */
+                min-width: 0;
             }
         `}
 
