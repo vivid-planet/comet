@@ -5,8 +5,8 @@
     "description": "Comet API Demo Application",
     "type": "commonjs",
     "scripts": {
-        "api-generator": "find src -type d -name generated -prune -exec rm -rf {} + && comet-api-generator generate",
-        "api-generator:watch": "find src -type d -name generated -prune -exec rm -rf {} + && comet-api-generator generate --watch",
+        "api-generator": "rm -rf src/**/generated && comet-api-generator generate",
+        "api-generator:watch": "rm -rf src/**/generated && comet-api-generator generate --watch",
         "build": "pnpm clean && pnpm run intl:compile && pnpm api-generator && nest build",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "clean": "rm -rf dist",

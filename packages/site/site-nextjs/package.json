@@ -27,7 +27,7 @@
     ],
     "scripts": {
         "build": "pnpm run clean && pnpm run generate-block-types && vite build",
-        "clean": "rm -rf lib && find src -name '*.generated.ts' -delete",
+        "clean": "rm -rf lib src/**/*.generated.ts",
         "dev": "pnpm run clean && pnpm run generate-block-types && vite build --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm run generate-block-types\"",
