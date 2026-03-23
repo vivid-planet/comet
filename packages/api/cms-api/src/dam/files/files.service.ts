@@ -3,7 +3,7 @@ import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } f
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
-import { createReadStream, unlinkSync } from "fs";
+import { createReadStream, rmSync } from "fs";
 import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
@@ -277,9 +277,9 @@ export class FilesService {
 
             result = await this.save(fileToReplace);
 
-            unlinkSync(uploadedFile.path);
+            rmSync(uploadedFile.path, { force: true });
         } catch (e) {
-            unlinkSync(uploadedFile.path);
+            rmSync(uploadedFile.path, { force: true });
             throw e;
         }
 
@@ -396,9 +396,9 @@ export class FilesService {
                     return entityManager.flush();
                 });
             }
-            unlinkSync(file.path);
+            rmSync(file.path, { force: true });
         } catch (e) {
-            unlinkSync(file.path);
+            rmSync(file.path, { force: true });
             throw e;
         }
 
