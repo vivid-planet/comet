@@ -468,6 +468,6 @@ the child component is not directly affected by changes in the parent query, for
 
 ## Further reading / sources:
 
-- [React](https://react.dev/)
+- [React documentation](https://react.dev/)
 - [Hello World - React](https://legacy.reactjs.org/docs/hello-world.html)
 - [TypeScript and React](https://fettblog.eu/typescript-react/)
