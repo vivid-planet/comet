@@ -31,7 +31,14 @@ function SavableRHF({ onSubmit }: { onSubmit: SubmitHandler<any> }) {
 
     return (
         // hasChanges drives React state rerenders in SaveBoundary; checkForChanges is a synchronous callback for the router prompt
-        <Savable hasChanges={isDirty} checkForChanges={() => formContext.formState.isDirty} doSave={doSave} doReset={doReset} />
+        <Savable
+            hasChanges={isDirty}
+            checkForChanges={() => {
+                return isDirty;
+            }}
+            doSave={doSave}
+            doReset={doReset}
+        />
     );
 }
 
