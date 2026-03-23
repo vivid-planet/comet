@@ -18,13 +18,14 @@ import {
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
 import { Chip, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
-import { isValidElement, type ReactNode, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
+import { getDisplayNameString } from "./getDisplayNameString";
 import { type DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "visible" | "rootColumnName" | "jsonPath"> & {
@@ -81,15 +82,6 @@ function DependenciesListGridToolbar({ refetch }: DependenciesListGridToolbarPro
     );
 }
 
-function getDisplayNameString(displayName: ReactNode, fallback: string): string {
-    if (typeof displayName === "string") return displayName;
-    if (isValidElement(displayName)) {
-        const { defaultMessage } = displayName.props as { defaultMessage?: string };
-        if (typeof defaultMessage === "string") return defaultMessage;
-    }
-    return fallback;
-}
-
 const pageSize = 10;
 
 export interface DependenciesListProps {
@@ -138,7 +130,7 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
                 type: "singleSelect",
                 valueOptions: Object.entries(entityDependencyMap).map(([value, dep]) => ({
                     value,
-                    label: getDisplayNameString(dep.displayName, value),
+                    label: getDisplayNameString(dep.displayName, intl, value),
                 })),
                 sortBy: "graphqlObjectType",
                 toGqlFilter: (filterItem) => {
