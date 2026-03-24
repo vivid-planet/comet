@@ -18,7 +18,7 @@ This package uses [OpenSpec](https://github.com/Fission-AI/OpenSpec) for spec-dr
 - Use `/opsx:apply` to apply the change, then commit the result
 - Use `/opsx:archive` to archive the change and merge delta specs into the main specs, then commit
 
-Minor fixes may skip this workflow.
+Minor fixes may skip this workflow if they do not create a gap between `openspec/specs/` and the code (e.g. changing a TSDoc comment).
 
 ## Suggested review workflow
 
