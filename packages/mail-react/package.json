@@ -23,7 +23,8 @@
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc"
+        "lint:tsc": "tsc",
+        "openspec:install-skills": "openspec init --tools github-copilot,cursor,claude"
     },
     "dependencies": {
         "@faire/mjml-react": "^3.5.3"
@@ -31,6 +32,7 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+        "@fission-ai/openspec": "^1.2.0",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
         "chokidar-cli": "^3.0.0",

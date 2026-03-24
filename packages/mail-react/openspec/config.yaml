@@ -1,0 +1,41 @@
+schema: spec-driven
+
+context: |
+    Package: @comet/mail-react
+    Stack: TypeScript, React, MJML (via @faire/mjml-react)
+    Type: Library (published to npm)
+
+    Goal: Single-package solution for building HTML emails with React and MJML.
+    Projects install only this package (plus react) — no direct `@faire/mjml-react`.
+
+    Current surface:
+    - Re-exports all @faire/mjml-react components (prop types renamed to drop `I` prefix)
+    - Custom components wrap/extend @faire/mjml-react — additive only, no breaking changes
+    - When a custom component replaces a re-export, only the custom version is exported
+      (consumers never import @faire/mjml-react directly; the base must not be exposed)
+    - Block factories (BlocksBlock, ListBlock, OneOfBlock, OptionalBlock) for rendering
+      Comet CMS block data in mail templates
+    - css() tagged template literal for IDE syntax highlighting
+
+    Future direction:
+    - Storybook stories for every custom component, documented with TSDocs
+    - Some components may gain Html variants (for use inside MJML ending tags),
+      with their own API independent from the Mjml version
+
+    Conventions:
+    - No `as` type assertions — use type guards
+    - ESM-only (type: module), .js extensions in imports
+    - Part of the vivid-planet/comet monorepo (packages/mail-react)
+
+rules:
+    proposal:
+        - Changes must not break existing @faire/mjml-react component API compatibility
+    design:
+        - Prefer wrapping @faire/mjml-react components over reimplementing
+    tasks:
+        - >-
+            When a change affects library usage (new export, changed component API,
+            bug fix, visual change), include a task to create a changeset file in the
+            monorepo root (.changeset/ at the git root, two levels up from this package).
+            No changeset is needed for internal-only changes (refactors, non-exported utils).
+            See CONTRIBUTING.md in the repo root for changeset writing guidelines.

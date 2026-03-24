@@ -1,3 +1,11 @@
 lib/
 block-meta.json
 src/blocks.generated.ts
+
+# Skills/commands installed by OpenSpec
+.claude/commands/
+.claude/skills/
+.cursor/commands/
+.cursor/skills/
+.github/prompts/
+.github/skills/
