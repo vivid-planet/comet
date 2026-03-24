@@ -2,9 +2,9 @@ import type { Decorator } from "@storybook/react-vite";
 import mjml2html from "mjml-browser";
 import { MjmlMailRoot, renderToMjml } from "../src/index.ts";
 
-export const MailRendererDecorator: Decorator = (Story) => {
+export const MailRendererDecorator: Decorator = (Story, context) => {
     const mjmlString = renderToMjml(
-        <MjmlMailRoot>
+        <MjmlMailRoot theme={context.parameters.theme}>
             <Story />
         </MjmlMailRoot>,
     );
