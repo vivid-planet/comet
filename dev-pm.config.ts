@@ -135,7 +135,7 @@ export default defineConfig({
             group: ["mail-react"],
         },
         {
-            name: "storybook-mail-react",
+            name: "mail-react-storybook",
             script: "pnpm --filter @comet/mail-react run storybook",
             group: ["mail-react"],
         },
