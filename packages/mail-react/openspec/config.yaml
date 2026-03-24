@@ -18,7 +18,6 @@ context: |
     - css() tagged template literal for IDE syntax highlighting
 
     Future direction:
-    - Storybook stories for every custom component, documented with TSDocs
     - Some components may gain Html variants (for use inside MJML ending tags),
       with their own API independent from the Mjml version
 
@@ -26,6 +25,11 @@ context: |
     - No `as` type assertions — use type guards
     - ESM-only (type: module), .js extensions in imports
     - Part of the vivid-planet/comet monorepo (packages/mail-react)
+    - Custom components live in `src/components/<concern>/` directories
+      (e.g. `src/components/section/MjmlSection.tsx`)
+    - Every custom component has a Storybook story in
+      `src/components/<concern>/__stories__/<Component>.stories.tsx`
+    - Exported components and props have TSDoc comments
 
 rules:
     proposal:
@@ -43,3 +47,7 @@ rules:
             internally. If a component already existed as a re-export, adding props to it
             is not "adding a component", it is "adding props to <Component>".
             See CONTRIBUTING.md in the repo root for changeset formatting guidelines.
+        - >-
+            When a change adds or modifies a custom component, include tasks to:
+            (1) add or update the Storybook story in the component's __stories__/ directory,
+            and (2) add or update TSDoc comments on the component and its exported props.
