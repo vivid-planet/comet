@@ -6,7 +6,7 @@ context: |
     Type: Library (published to npm)
 
     Goal: Single-package solution for building HTML emails with React and MJML.
-    Projects install only this package (plus react) — no direct `react` or `@faire/mjml-react`.
+    Projects install only this package (plus react) — no direct `@faire/mjml-react`.
 
     Current surface:
     - Re-exports all @faire/mjml-react components (prop types renamed to drop `I` prefix)
