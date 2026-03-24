@@ -1,5 +1,6 @@
 import coreConfig, { restrictedImportPatterns } from "./core.js";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import nextPlugin from "@next/eslint-plugin-next";
 
@@ -47,6 +48,7 @@ const config = [
         },
         plugins: {
             react: react,
+            "react-hooks": reactHooks,
         },
         settings: {
             react: {
@@ -61,6 +63,8 @@ const config = [
             "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
             "react/react-in-jsx-scope": "off",
             "@next/next/no-img-element": "off",
+            "react-hooks/rules-of-hooks": "error",
+            "react-hooks/exhaustive-deps": "error",
         },
     },
 ];
