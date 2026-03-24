@@ -56,6 +56,8 @@ const config = [
             },
         },
         rules: {
+            ...react.configs.recommended.rules,
+            ...reactHooks.configs.recommended.rules,
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": "error",
             "react/prop-types": "off",
@@ -63,8 +65,6 @@ const config = [
             "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
             "react/react-in-jsx-scope": "off",
             "@next/next/no-img-element": "off",
-            "react-hooks/rules-of-hooks": "error",
-            "react-hooks/exhaustive-deps": "error",
         },
     },
 ];
