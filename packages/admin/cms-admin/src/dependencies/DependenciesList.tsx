@@ -128,6 +128,7 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
                 field: "targetGraphqlObjectType",
                 headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
                 type: "singleSelect",
+                sortBy: "graphqlObjectType",
                 valueOptions: Object.entries(entityDependencyMap).map(([value, dep]) => ({
                     value,
                     label: getDisplayNameString(dep.displayName, intl, value),
@@ -218,7 +219,6 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
         data?.item.dependencies?.nodes.map((node) => {
             return {
                 ...node,
-                targetGraphqlObjectType: node.targetGraphqlObjectType,
                 id: node.targetId,
             };
         }) ?? [];
