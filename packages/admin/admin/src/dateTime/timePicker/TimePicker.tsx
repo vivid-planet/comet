@@ -3,6 +3,7 @@ import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeP
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -33,6 +34,8 @@ export type TimePickerProps = ThemedComponentBaseProps<{
      * @param time - The new time value in 24-hour format (HH:mm), or `undefined` if cleared.
      */
     onChange?: (time: string | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -79,6 +82,8 @@ export const TimePicker = (inProps: TimePickerProps) => {
         disabled,
         value: stringValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
@@ -86,6 +91,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         name: "CometAdminTimePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
     const dateValue = getDateFromTimeString(stringValue);
 
     const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
@@ -121,6 +127,8 @@ export const TimePicker = (inProps: TimePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
                             ...textFieldProps?.InputProps,
@@ -131,6 +139,16 @@ export const TimePicker = (inProps: TimePickerProps) => {
                                         inputIsReadOnly={readOnly}
                                         onClick={() => setOpen(true)}
                                         {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.timePicker.openPicker",
+                                                    defaultMessage: "Open time picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
                                     >
                                         {openPickerIcon}
                                     </OpenPickerAdornment>
