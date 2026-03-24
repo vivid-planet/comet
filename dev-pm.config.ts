@@ -134,6 +134,11 @@ export default defineConfig({
             script: "pnpm --filter @comet/mail-react run dev",
             group: ["mail-react"],
         },
+        {
+            name: "storybook-mail-react",
+            script: "pnpm --filter @comet/mail-react run storybook",
+            group: ["mail-react"],
+        },
 
         //group brevo
         {
@@ -278,11 +283,6 @@ export default defineConfig({
             script: "pnpm --filter @comet/admin run storybook",
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
-        },
-        {
-            name: "storybook-mail-react",
-            script: "pnpm --filter @comet/mail-react run storybook",
-            group: ["storybook"],
         },
     ],
 });
