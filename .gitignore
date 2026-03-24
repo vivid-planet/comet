@@ -15,6 +15,7 @@ junit.xml
 *storybook.log
 .claude
 .context
+.playwright-mcp
 
 # Agent files
 .agents/skills/
