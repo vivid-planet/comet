@@ -2550,6 +2550,41 @@
         ]
     },
     {
+        "name": "Placeholder",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "field",
+                "kind": "Enum",
+                "enum": [
+                    "title",
+                    "price"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "field",
+                "kind": "Enum",
+                "enum": [
+                    "title",
+                    "price"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "ProductList",
         "fields": [
             {

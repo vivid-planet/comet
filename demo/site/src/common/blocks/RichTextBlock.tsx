@@ -87,6 +87,11 @@ const defaultRichTextRenderers: Renderers = {
             ) : (
                 <span>{children}</span>
             ),
+        PLACEHOLDER: (children, data: { productId?: string; field: string }, { key }) => (
+            <span key={key} data-placeholder-product-id={data.productId} data-placeholder-field={data.field}>
+                {children}
+            </span>
+        ),
     },
 };
 

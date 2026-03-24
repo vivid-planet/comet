@@ -4,12 +4,14 @@ import {
     convertFromHTML,
     convertFromRaw,
     convertToRaw,
+    type DraftDecorator,
     EditorState,
     type EntityInstance,
     Modifier,
     type RawDraftContentState,
 } from "draft-js";
 import isEqual from "lodash.isequal";
+import { type ComponentType } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import type { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
@@ -23,7 +25,18 @@ export interface RichTextBlockState {
     editorState: EditorState;
 }
 
-const [, { createEmptyState, createStateFromRawContent, convertStateToRawContent }] = makeRteApi<RawDraftContentState>({
+interface EntityToolbarButtonProps {
+    editorState: EditorState;
+    setEditorState: (editorState: EditorState) => void;
+}
+
+export interface RichTextBlockEntityOptions {
+    block: BlockInterface;
+    decorator: DraftDecorator;
+    toolbarButton?: ComponentType<EntityToolbarButtonProps>;
+}
+
+const [, defaultStaticFunctions] = makeRteApi<RawDraftContentState>({
     decorators: [CmsLinkDecorator],
     // @TODO: implement a compound decorator in rte
     // like https://jsfiddle.net/paulyoung85/2unzgt68/
@@ -42,21 +55,30 @@ export const isRichTextEqual = (a?: RichTextBlockState, b?: RichTextBlockState):
     } else if (!a?.editorState || !b?.editorState) {
         return false;
     } else {
-        return isEqual(convertStateToRawContent(a.editorState), convertStateToRawContent(b.editorState));
+        return isEqual(
+            defaultStaticFunctions.convertStateToRawContent(a.editorState),
+            defaultStaticFunctions.convertStateToRawContent(b.editorState),
+        );
     }
 };
 
-// map thru all LINK entities of a RawDraftContentState
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapLinkEntitiesData(rawContent: RawDraftContentState, fn: (linkBlock: any) => any) {
+// map thru all registered entities of a RawDraftContentState
+
+function mapEntitiesData(
+    rawContent: RawDraftContentState,
+    entityBlockMap: Record<string, BlockInterface>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fn: (block: BlockInterface, data: any) => any,
+) {
     const convertedEntityMap = Object.fromEntries(
         Object.entries(rawContent.entityMap).map(([key, val]) => {
-            if (val.type === "LINK") {
+            const entityBlock = entityBlockMap[val.type];
+            if (entityBlock) {
                 return [
                     key,
                     {
                         ...val,
-                        data: fn(val.data),
+                        data: fn(entityBlock, val.data),
                     },
                 ];
             } else {
@@ -67,16 +89,21 @@ function mapLinkEntitiesData(rawContent: RawDraftContentState, fn: (linkBlock: a
     return { ...rawContent, entityMap: convertedEntityMap };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function mapLinkEntitiesDataAsync(rawContent: RawDraftContentState, fn: (linkBlock: any) => Promise<any>) {
+async function mapEntitiesDataAsync(
+    rawContent: RawDraftContentState,
+    entityBlockMap: Record<string, BlockInterface>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fn: (block: BlockInterface, data: any) => Promise<any>,
+) {
     const convertedEntityMap = await Promise.all(
         Object.entries(rawContent.entityMap).map(async ([key, val]) => {
-            if (val.type === "LINK") {
+            const entityBlock = entityBlockMap[val.type];
+            if (entityBlock) {
                 return [
                     key,
                     {
                         ...val,
-                        data: await fn(val.data),
+                        data: await fn(entityBlock, val.data),
                     },
                 ];
             } else {
@@ -90,6 +117,7 @@ async function mapLinkEntitiesDataAsync(rawContent: RawDraftContentState, fn: (l
 
 export interface RichTextBlockFactoryOptions {
     link: BlockInterface & LinkBlockInterface;
+    entities?: Record<string, RichTextBlockEntityOptions>;
     rte?: IRteOptions;
     minHeight?: number;
     tags?: Array<MessageDescriptor | string>;
@@ -103,7 +131,37 @@ export const createRichTextBlock = (
         block: BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>,
     ) => BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>,
 ): BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> => {
+    const customEntities = options.entities ?? {};
+
+    if ("LINK" in customEntities) {
+        throw new Error("'LINK' is a reserved entity type handled by the 'link' option. Use a different key in 'entities'.");
+    }
+
+    // Build a combined map of entity type → BlockInterface for all entity types
+    const entityBlockMap: Record<string, BlockInterface> = {
+        LINK: options.link,
+        ...Object.fromEntries(Object.entries(customEntities).map(([type, opts]) => [type, opts.block])),
+    };
+
+    // Create RTE API with custom decorators if custom entities are provided
+    const hasCustomEntities = Object.keys(customEntities).length > 0;
+    const customDecorators = Object.values(customEntities).map((opts) => opts.decorator);
+
+    const { createEmptyState, createStateFromRawContent, convertStateToRawContent } = hasCustomEntities
+        ? makeRteApi<RawDraftContentState>({
+              decorators: [CmsLinkDecorator, ...customDecorators],
+              parse: convertFromRaw,
+              format: convertToRaw,
+          })[1]
+        : defaultStaticFunctions;
+
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
+
+    // Collect custom toolbar buttons from entity options
+    const entityToolbarButtons: Array<ComponentType<EntityToolbarButtonProps>> = Object.values(customEntities)
+        .filter((opts): opts is RichTextBlockEntityOptions & { toolbarButton: ComponentType<EntityToolbarButtonProps> } => opts.toolbarButton != null)
+        .map((opts) => opts.toolbarButton);
+
     const defaultRteOptions: IRteOptions = {
         supports: [
             "bold",
@@ -131,6 +189,8 @@ export const createRichTextBlock = (
         standardBlockType: "unstyled",
 
         overwriteLinkButton: CmsLinkToolbarButton,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        customToolbarButtons: entityToolbarButtons as any[],
     };
     const LinkBlock = options.link;
     const rteOptions = { ...defaultRteOptions, ...(options.rte ?? {}) };
@@ -152,10 +212,8 @@ export const createRichTextBlock = (
             return {
                 editorState: draftContent
                     ? createStateFromRawContent(
-                          mapLinkEntitiesData(draftContent as RawDraftContentState, (linkData) => {
-                              // @TODO: bei linkdata ist targetPage noch kein object!
-                              // das muss/soll von der Api auch so kommen wie beim linkblock
-                              return LinkBlock.input2State(linkData);
+                          mapEntitiesData(draftContent as RawDraftContentState, entityBlockMap, (block, data) => {
+                              return block.input2State(data);
                           }),
                       )
                     : createEmptyState(),
@@ -165,7 +223,7 @@ export const createRichTextBlock = (
         state2Output: ({ editorState }) => {
             const rawContent = convertStateToRawContent(editorState);
             return {
-                draftContent: mapLinkEntitiesData(rawContent, (linkState) => LinkBlock.state2Output(linkState)),
+                draftContent: mapEntitiesData(rawContent, entityBlockMap, (block, state) => block.state2Output(state)),
             };
         },
 
@@ -176,7 +234,7 @@ export const createRichTextBlock = (
 
             return {
                 editorState: createStateFromRawContent(
-                    await mapLinkEntitiesDataAsync(draftContent, (linkData) => LinkBlock.output2State(linkData, context)),
+                    await mapEntitiesDataAsync(draftContent, entityBlockMap, (block, data) => block.output2State(data, context)),
                 ),
             };
         },
@@ -184,7 +242,7 @@ export const createRichTextBlock = (
         createPreviewState: ({ editorState }, previewCtx) => {
             const rawContent = convertStateToRawContent(editorState);
             return {
-                draftContent: mapLinkEntitiesData(rawContent, (linkState) => LinkBlock.createPreviewState(linkState, previewCtx)),
+                draftContent: mapEntitiesData(rawContent, entityBlockMap, (block, state) => block.createPreviewState(state, previewCtx)),
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },

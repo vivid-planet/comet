@@ -23,6 +23,7 @@ import { BlockFactoryNameOrOptions } from "./types";
 
 interface CreateRichTextBlockOptions {
     link: Block;
+    entities?: Record<string, Block>;
     indexSearchText?: boolean;
 }
 
@@ -48,14 +49,16 @@ interface RawDraftContentBlock {
 interface DraftJsFactoryProps<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
-        [key: string]: { type: "LINK"; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> }; // extend this once more draftJS entities are supported
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [key: string]: { type: string; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> | any };
     };
 }
 
 interface DraftJsInput<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
-        [key: string]: { type: "LINK"; mutability: DraftEntityMutability; data: LinkBlockInput }; // extend this once more draftJS entities are supported
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [key: string]: { type: string; mutability: DraftEntityMutability; data: LinkBlockInput | any };
     };
 }
 
@@ -69,12 +72,20 @@ interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputInterface
 }
 
 export function createRichTextBlock<LinkBlock extends Block>(
-    { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
+    { link: LinkBlock, entities: customEntities, indexSearchText = true }: CreateRichTextBlockOptions,
     nameOrOptions: BlockFactoryNameOrOptions = "RichText",
 ): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
     if (!LinkBlock) {
         throw new Error("Provided 'link' is undefined. This is most likely due to a circular import");
     }
+
+    if (customEntities && "LINK" in customEntities) {
+        throw new Error("'LINK' is a reserved entity type handled by the 'link' option. Use a different key in 'entities'.");
+    }
+
+    // Combined map of all entity types to their Block definitions
+    const entityTypeBlockMap: Record<string, Block> = { LINK: LinkBlock, ...customEntities };
+    const registeredEntityTypes = new Set(Object.keys(entityTypeBlockMap));
 
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
@@ -112,12 +123,13 @@ export function createRichTextBlock<LinkBlock extends Block>(
         childBlocksInfo(): ChildBlockInfo[] {
             const ret: ChildBlockInfo[] = [];
             Object.entries(this.draftContent.entityMap).map(([key, entity]) => {
-                if (entity.type === "LINK") {
+                const entityBlock = entityTypeBlockMap[entity.type];
+                if (entityBlock) {
                     ret.push({
                         visible: true,
                         relJsonPath: ["draftContent", "entityMap", key, "data"],
                         block: entity.data as BlockDataInterface,
-                        name: LinkBlock.name,
+                        name: entityBlock.name,
                     });
                 }
             });
@@ -126,7 +138,7 @@ export function createRichTextBlock<LinkBlock extends Block>(
     }
 
     class RichTextBlockInput implements RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>> {
-        @IsDraftContent(LinkBlock)
+        @IsDraftContent(entityTypeBlockMap, registeredEntityTypes)
         @BlockField({ type: "json" })
         draftContent: DraftJsInput<ExtractBlockInput<LinkBlock>>;
 
@@ -137,14 +149,15 @@ export function createRichTextBlock<LinkBlock extends Block>(
                     ...this.draftContent,
                     entityMap: Object.fromEntries(
                         Object.entries(this.draftContent.entityMap).map(([key, entity]) => {
-                            if (entity.type === "LINK") {
+                            const entityBlock = entityTypeBlockMap[entity.type];
+                            if (entityBlock) {
                                 return [
                                     key,
                                     {
                                         ...entity,
                                         // we need plainToInstance here as data is not typed by class-transformer
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        data: LinkBlock.blockInputFactory(entity.data as any).transformToBlockData(),
+                                        data: entityBlock.blockInputFactory(entity.data as any).transformToBlockData(),
                                     },
                                 ];
                             } else {
@@ -163,13 +176,14 @@ export function createRichTextBlock<LinkBlock extends Block>(
     const blockDataFactory: BlockDataFactory<RichTextBlockData> = ({ draftContent }: { draftContent: RawDraftContentState }) => {
         const entityMap = Object.fromEntries(
             Object.entries(draftContent.entityMap).map(([key, entity]) => {
-                if (entity.type === "LINK") {
+                const entityBlock = entityTypeBlockMap[entity.type];
+                if (entityBlock) {
                     return [
                         key,
                         {
                             ...entity,
                             // we need plainToInstance here as data is not typed by class-transformer
-                            data: LinkBlock.blockDataFactory(entity.data),
+                            data: entityBlock.blockDataFactory(entity.data),
                         },
                     ];
                 } else {
@@ -212,22 +226,28 @@ export function createRichTextBlock<LinkBlock extends Block>(
     return RichTextBlock;
 }
 
-function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
+function IsDraftContent(entityTypeBlockMap: Record<string, Block>, registeredEntityTypes: Set<string>, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
             name: "isDraftContent",
             target: object.constructor,
             propertyName,
-            constraints: [link],
+            constraints: [entityTypeBlockMap, registeredEntityTypes],
             options: validationOptions,
             validator: {
                 async validate(value: unknown, args: ValidationArguments) {
-                    const LinkBlock = args.constraints[0] as Block;
+                    const blockMap = args.constraints[0] as Record<string, Block>;
+                    const validTypes = args.constraints[1] as Set<string>;
 
-                    if (isDraftJsInput(value)) {
+                    if (isDraftJsInput(value, validTypes)) {
                         for (const entity of Object.values(value.entityMap)) {
-                            const validationErrors = await validate(LinkBlock.blockInputFactory(entity.data), {
+                            const entityBlock = blockMap[entity.type];
+                            if (!entityBlock) {
+                                return false;
+                            }
+
+                            const validationErrors = await validate(entityBlock.blockInputFactory(entity.data), {
                                 forbidNonWhitelisted: true,
                                 whitelist: true,
                             });
@@ -247,7 +267,7 @@ function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
     };
 }
 
-function isDraftJsInput(value: unknown): value is DraftJsInput<BlockInputInterface> {
+function isDraftJsInput(value: unknown, validEntityTypes: Set<string>): value is DraftJsInput<BlockInputInterface> {
     return (
         typeof value === "object" &&
         value !== null &&
@@ -256,6 +276,8 @@ function isDraftJsInput(value: unknown): value is DraftJsInput<BlockInputInterfa
         Array.isArray(value.blocks) &&
         typeof value.entityMap === "object" &&
         value.entityMap !== null &&
-        Object.values(value.entityMap).every((entity) => typeof entity === "object" && entity !== null && entity.type === "LINK")
+        Object.values(value.entityMap).every(
+            (entity) => typeof entity === "object" && entity !== null && typeof entity.type === "string" && validEntityTypes.has(entity.type),
+        )
     );
 }
