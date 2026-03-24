@@ -1,6 +1,6 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsString, ValidateNested } from "class-validator";
 
 import { BooleanFilter } from "../../common/filter/boolean.filter";
 import { StringFilter } from "../../common/filter/string.filter";
@@ -11,7 +11,7 @@ export class DependencyFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    @IsOptional()
+    @IsUndefinable()
     targetGraphqlObjectType?: StringFilter;
 
     @Field({ nullable: true })
@@ -27,31 +27,31 @@ export class DependencyFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    @IsOptional()
+    @IsUndefinable()
     name?: StringFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    @IsOptional()
+    @IsUndefinable()
     secondaryInformation?: StringFilter;
 
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()
     @Type(() => BooleanFilter)
-    @IsOptional()
+    @IsUndefinable()
     visible?: BooleanFilter;
 
     @Field(() => [DependencyFilter], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => DependencyFilter)
-    @IsOptional()
+    @IsUndefinable()
     and?: DependencyFilter[];
 
     @Field(() => [DependencyFilter], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => DependencyFilter)
-    @IsOptional()
+    @IsUndefinable()
     or?: DependencyFilter[];
 }
 
@@ -60,7 +60,7 @@ export class DependentFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    @IsOptional()
+    @IsUndefinable()
     rootGraphqlObjectType?: StringFilter;
 
     @Field({ nullable: true })
@@ -76,30 +76,30 @@ export class DependentFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    @IsOptional()
+    @IsUndefinable()
     name?: StringFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    @IsOptional()
+    @IsUndefinable()
     secondaryInformation?: StringFilter;
 
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()
     @Type(() => BooleanFilter)
-    @IsOptional()
+    @IsUndefinable()
     visible?: BooleanFilter;
 
     @Field(() => [DependentFilter], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => DependentFilter)
-    @IsOptional()
+    @IsUndefinable()
     and?: DependentFilter[];
 
     @Field(() => [DependentFilter], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => DependentFilter)
-    @IsOptional()
+    @IsUndefinable()
     or?: DependentFilter[];
 }
