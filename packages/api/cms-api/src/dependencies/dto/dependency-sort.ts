@@ -3,7 +3,7 @@ import { IsEnum } from "class-validator";
 
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
-export enum DependencySortField {
+enum DependencySortField {
     name = "name",
     secondaryInformation = "secondaryInformation",
     graphqlObjectType = "graphqlObjectType",
