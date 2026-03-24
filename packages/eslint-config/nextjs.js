@@ -1,5 +1,6 @@
 import coreConfig from "./core.js";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import nextPlugin from "@next/eslint-plugin-next";
 
@@ -46,6 +47,7 @@ const config = [
         },
         plugins: {
             react: react,
+            "react-hooks": reactHooks,
         },
         settings: {
             react: {
@@ -53,6 +55,8 @@ const config = [
             },
         },
         rules: {
+            ...react.configs.recommended.rules,
+            ...reactHooks.configs.recommended.rules,
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": "error",
             "react/prop-types": "off",
