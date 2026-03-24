@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.20.2
+
+### Patch Changes
+
+- 016adfb: Fix `MailerLogStatus` GQL enum name (was incorrectly registered as `WarningStatus`)
+
 ## 8.20.1
 
 ### Patch Changes

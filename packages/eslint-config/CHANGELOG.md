@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 8.20.2
+
+### Patch Changes
+
+- bd884f5: Fix missing Rules of React in `@comet/eslint-config/nextjs.js`
+    - @comet/eslint-plugin@8.20.2
+
 ## 8.20.1
 
 ### Patch Changes
