@@ -54,7 +54,7 @@ The `storybook-static/` directory SHALL be listed in `.gitignore`.
 
 ### Requirement: dev-pm integration
 
-The monorepo's `dev-pm.config.ts` SHALL include a `storybook-mail-react` entry that starts the mail-react Storybook. That entry SHALL belong to the `mail-react` dev-pm group and SHALL NOT belong to the `storybook` dev-pm group.
+The monorepo's `dev-pm.config.ts` SHALL include a `mail-react-storybook` entry that starts the mail-react Storybook. That entry SHALL belong to the `mail-react` dev-pm group and SHALL NOT belong to the `storybook` dev-pm group.
 
 #### Scenario: Mail-react group starts mail Storybook
 
@@ -64,7 +64,7 @@ The monorepo's `dev-pm.config.ts` SHALL include a `storybook-mail-react` entry t
 #### Scenario: Storybook group does not start mail-react Storybook
 
 - **WHEN** a developer runs `pnpm exec dev-pm start @storybook` from the monorepo root
-- **THEN** the `storybook-mail-react` process is not started as part of that group
+- **THEN** the `mail-react-storybook` process is not started as part of that group
 
 ### Requirement: Sample story
 
