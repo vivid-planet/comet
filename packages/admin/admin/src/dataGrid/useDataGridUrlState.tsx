@@ -1,7 +1,8 @@
 import { type DataGridProps, type GridFilterModel, type GridPaginationModel, type GridSortDirection, type GridSortModel } from "@mui/x-data-grid";
 import { type GridCallbackDetails } from "@mui/x-data-grid/models/api";
+import isEqual from "lodash.isequal";
 import queryString from "query-string";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 
 type UseDataGridUrlStateReturnValue = {
@@ -61,7 +62,7 @@ export function useDataGridUrlState({
         [history, location, pageParamName, pageSizeParamName, parsedSearch],
     );
 
-    const sortModel =
+    const sortModel = useDeepEqualMemo(
         (!parsedSearch[sortParamName]
             ? undefined
             : !Array.isArray(parsedSearch[sortParamName])
@@ -76,9 +77,10 @@ export function useDataGridUrlState({
                 sort: parts[1] as GridSortDirection,
             };
         }) ??
-        fallbackSort ??
-        initialSort ??
-        [];
+            fallbackSort ??
+            initialSort ??
+            [],
+    );
 
     const handleSortModelChange = useCallback(
         (sortModel: GridSortModel) => {
@@ -113,4 +115,12 @@ export function useDataGridUrlState({
         sortModel,
         onSortModelChange: handleSortModelChange,
     };
+}
+
+function useDeepEqualMemo<T>(value: T): T {
+    const ref = useRef(value);
+    if (!isEqual(ref.current, value)) {
+        ref.current = value;
+    }
+    return ref.current;
 }
