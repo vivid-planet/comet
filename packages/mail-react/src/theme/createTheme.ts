@@ -4,28 +4,29 @@ import type { Theme, ThemeBreakpoints, ThemeSizes } from "./themeTypes.js";
 
 type CreateThemeOverrides = {
     sizes?: Partial<ThemeSizes>;
-    breakpoints?: Partial<Record<keyof ThemeBreakpoints, number>>;
+    breakpoints?: Partial<ThemeBreakpoints>;
 };
 
 /**
  * Creates a complete theme by merging optional overrides onto the default
- * theme values. Breakpoints are specified as plain numbers and are
- * automatically converted to `ThemeBreakpoint` objects.
+ * theme values.
  *
- * When `breakpoints.default` is not explicitly provided, it is auto-derived
- * from `sizes.bodyWidth`.
+ * Breakpoint overrides must be `ThemeBreakpoint` objects constructed via
+ * `createBreakpoint`. Arbitrary breakpoint keys from `ThemeBreakpoints`
+ * module augmentation are supported and flow through to the result.
+ *
+ * `breakpoints.default` is always auto-derived from `sizes.bodyWidth` unless
+ * explicitly overridden.
  */
 export function createTheme(overrides?: CreateThemeOverrides): Theme {
     const resolvedSizes: ThemeSizes = { ...defaultTheme.sizes, ...overrides?.sizes };
 
-    const defaultBreakpointValue = overrides?.breakpoints?.default ?? resolvedSizes.bodyWidth;
-    const mobileBreakpointValue = overrides?.breakpoints?.mobile ?? defaultTheme.breakpoints.mobile.value;
-
     return {
         sizes: resolvedSizes,
         breakpoints: {
-            default: createBreakpoint(defaultBreakpointValue),
-            mobile: createBreakpoint(mobileBreakpointValue),
+            ...defaultTheme.breakpoints,
+            default: createBreakpoint(resolvedSizes.bodyWidth),
+            ...overrides?.breakpoints,
         },
     };
 }

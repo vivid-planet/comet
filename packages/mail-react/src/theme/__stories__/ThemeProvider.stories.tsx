@@ -2,6 +2,7 @@ import { MjmlColumn, MjmlText } from "@faire/mjml-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { MjmlSection } from "../../components/section/MjmlSection.js";
+import { createBreakpoint } from "../createBreakpoint.js";
 import { createTheme } from "../createTheme.js";
 import { ThemeProvider } from "../ThemeProvider.js";
 
@@ -27,7 +28,7 @@ export const Basic: Story = {
 
 const narrowTheme = createTheme({
     sizes: { bodyWidth: 400 },
-    breakpoints: { mobile: 360 },
+    breakpoints: { mobile: createBreakpoint(360) },
 });
 
 export const CustomTheme: Story = {
