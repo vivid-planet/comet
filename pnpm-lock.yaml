@@ -2390,6 +2390,12 @@ importers:
       '@faire/mjml-react':
         specifier: ^3.5.3
         version: 3.5.3(mjml@4.18.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      mjml:
+        specifier: ^4.18.0
+        version: 4.18.0
+      mjml-browser:
+        specifier: ^4.18.0
+        version: 4.18.0
     devDependencies:
       '@comet/cli':
         specifier: workspace:*
@@ -2406,6 +2412,9 @@ importers:
       '@storybook/react-vite':
         specifier: ^10.3.1
         version: 10.3.1(esbuild@0.25.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.53.3)(storybook@10.3.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(typescript@5.9.3)(vite@7.2.6(@types/node@24.12.0)(jiti@2.6.1)(sass@1.93.0)(terser@5.43.1)(yaml@2.8.3))(webpack@5.103.0(esbuild@0.25.10))
+      '@types/mjml':
+        specifier: ^4.7.4
+        version: 4.7.4
       '@types/mjml-browser':
         specifier: ^4.15.0
         version: 4.15.0
@@ -2421,9 +2430,6 @@ importers:
       eslint:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
-      mjml-browser:
-        specifier: ^4.18.0
-        version: 4.18.0
       npm-run-all2:
         specifier: ^8.0.4
         version: 8.0.4
