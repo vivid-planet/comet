@@ -70,6 +70,21 @@ The `mjml` and `mjml-browser` packages SHALL be listed as production `dependenci
 - **WHEN** a consumer runs `npm install @comet/mail-react`
 - **THEN** both `mjml` and `mjml-browser` are installed as transitive dependencies
 
+### Requirement: Integration test for server renderMailHtml
+An integration test SHALL exist at `src/server/renderMailHtml.test.tsx` verifying the server-side render pipeline. The test SHALL render a simple component tree (`MjmlMailRoot > MjmlSection > MjmlColumn > MjmlText`) via `server/renderMailHtml` and verify the output.
+
+#### Scenario: Rendered HTML contains a doctype
+- **WHEN** the test renders a valid MJML component tree via `server/renderMailHtml`
+- **THEN** the returned `html` string starts with `<!doctype html>` (case-insensitive)
+
+#### Scenario: Rendered HTML contains the passed-in text content
+- **WHEN** the test renders a component tree containing `<MjmlText>` with specific text
+- **THEN** the returned `html` string contains that text
+
+#### Scenario: Valid component tree produces no MJML warnings
+- **WHEN** the test renders a valid MJML component tree
+- **THEN** the returned `mjmlWarnings` array is empty
+
 ### Requirement: Sub-paths export only renderMailHtml
 
 The `/server` and `/client` sub-paths SHALL export only the `renderMailHtml` function. Components, blocks, and other utilities SHALL remain exclusively on the main `"."` entry point.
