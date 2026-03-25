@@ -59,24 +59,37 @@ The default theme SHALL have `breakpoints.mobile.value` equal to `420` and `brea
 - **WHEN** `createTheme()` is called with no arguments
 - **THEN** `breakpoints.default.belowMediaQuery === "@media (max-width: 599px)"` and `breakpoints.mobile.belowMediaQuery === "@media (max-width: 419px)"`
 
+### Requirement: createBreakpoint is exported
+
+The library SHALL export a `createBreakpoint` function from its main entry point. `createBreakpoint` SHALL accept a `value` parameter of type `number` and return a `ThemeBreakpoint` with the corresponding `value` and `belowMediaQuery`.
+
+#### Scenario: Consumer imports createBreakpoint
+
+- **WHEN** a consumer writes `import { createBreakpoint } from "@comet/mail-react"`
+- **THEN** the import resolves successfully
+
+#### Scenario: createBreakpoint produces a ThemeBreakpoint
+
+- **WHEN** `createBreakpoint(540)` is called
+- **THEN** it returns `{ value: 540, belowMediaQuery: "@media (max-width: 539px)" }`
+
 ### Requirement: createTheme function
 
 The library SHALL export a `createTheme` function from its main entry point. `createTheme` SHALL accept an optional partial overrides object and return a complete `Theme`.
 
 The overrides object SHALL accept `sizes` as a partial object (e.g. `{ sizes: { bodyWidth: 700 } }`).
 
-The overrides object SHALL accept `breakpoints` as a partial record of numbers (e.g. `{ breakpoints: { mobile: 480 } }`), NOT as `ThemeBreakpoint` objects. The function SHALL internally convert each number to a `ThemeBreakpoint` with the corresponding `value` and `belowMediaQuery`.
+The overrides object SHALL accept `breakpoints` as a partial `ThemeBreakpoints` object containing `ThemeBreakpoint` values (e.g. `{ breakpoints: { mobile: createBreakpoint(480) } }`), NOT as plain numbers. Consumers SHALL use `createBreakpoint` to construct breakpoint override values.
 
 Overrides SHALL be deep-merged with the default theme values.
 
-#### Scenario: Override bodyWidth
+`createTheme` SHALL handle breakpoint keys dynamically. Any key present in the `breakpoints` overrides — including keys added via module augmentation — SHALL appear in the returned theme's `breakpoints` object.
 
-- **WHEN** `createTheme({ sizes: { bodyWidth: 700 } })` is called
-- **THEN** the returned theme has `sizes.bodyWidth === 700`
+The built-in breakpoints `default` and `mobile` SHALL always be present in the returned theme, even when not included in overrides.
 
-#### Scenario: Override breakpoint as number
+#### Scenario: Override breakpoint with createBreakpoint
 
-- **WHEN** `createTheme({ breakpoints: { mobile: 480 } })` is called
+- **WHEN** `createTheme({ breakpoints: { mobile: createBreakpoint(480) } })` is called
 - **THEN** the returned theme has `breakpoints.mobile.value === 480` and `breakpoints.mobile.belowMediaQuery === "@media (max-width: 479px)"`
 
 #### Scenario: Unspecified values retain defaults
@@ -91,13 +104,28 @@ Overrides SHALL be deep-merged with the default theme values.
 
 #### Scenario: Explicit breakpoints.default overrides auto-derivation
 
-- **WHEN** `createTheme({ sizes: { bodyWidth: 700 }, breakpoints: { default: 650 } })` is called
+- **WHEN** `createTheme({ sizes: { bodyWidth: 700 }, breakpoints: { default: createBreakpoint(650) } })` is called
 - **THEN** `breakpoints.default.value === 650` (explicit value wins)
 
 #### Scenario: No arguments produces complete default theme
 
 - **WHEN** `createTheme()` is called with no arguments
 - **THEN** the result is identical to the default theme
+
+#### Scenario: Override bodyWidth
+
+- **WHEN** `createTheme({ sizes: { bodyWidth: 700 } })` is called
+- **THEN** the returned theme has `sizes.bodyWidth === 700`
+
+#### Scenario: Augmented breakpoint key is included in result
+
+- **WHEN** a consumer has augmented `ThemeBreakpoints` with `tablet: ThemeBreakpoint` and calls `createTheme({ breakpoints: { tablet: createBreakpoint(540) } })`
+- **THEN** the returned theme has `breakpoints.tablet.value === 540` and `breakpoints.tablet.belowMediaQuery === "@media (max-width: 539px)"`
+
+#### Scenario: Augmented breakpoint key coexists with built-in breakpoints
+
+- **WHEN** a consumer calls `createTheme({ breakpoints: { tablet: createBreakpoint(540) } })` without specifying `default` or `mobile`
+- **THEN** `breakpoints.default` and `breakpoints.mobile` retain their default values alongside the augmented `breakpoints.tablet`
 
 ### Requirement: ThemeProvider component
 
@@ -131,11 +159,3 @@ The library SHALL export a `useTheme` hook from its main entry point. `useTheme`
 - **WHEN** `useTheme()` is called without any ancestor `ThemeProvider`
 - **THEN** it throws an error
 
-### Requirement: createBreakpoint is not exported
-
-The `createBreakpoint` helper function SHALL NOT be exported from the package's main entry point. It is an internal utility used by `createTheme` and `defaultTheme`.
-
-#### Scenario: createBreakpoint is not importable
-
-- **WHEN** a consumer attempts `import { createBreakpoint } from "@comet/mail-react"`
-- **THEN** the import fails — `createBreakpoint` is not part of the public API
