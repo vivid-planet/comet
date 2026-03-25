@@ -269,6 +269,7 @@ export default defineConfig({
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
             group: ["storybook", "docs"],
+            waitOn: ["tcp:26646"], // storybook-comet-admin
         },
         {
             name: "docs",
