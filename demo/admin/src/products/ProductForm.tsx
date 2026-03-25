@@ -33,7 +33,7 @@ const submissionErrorMessages: { [K in GQLProductMutationErrorCode]: MessageDesc
     }),
 };
 
-type FormValues = GQLProductFormManualFragment & {};
+type FormValues = GQLProductFormManualFragment;
 
 export function ProductForm({ id, onCreate }: FormProps) {
     const client = useApolloClient();
