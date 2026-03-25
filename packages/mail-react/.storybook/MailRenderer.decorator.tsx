@@ -3,9 +3,9 @@ import React from "react";
 import { MjmlMailRoot } from "../src/index.ts";
 import { renderMailHtml } from "../src/client/renderMailHtml.js";
 
-export const MailRendererDecorator: Decorator = (Story) => {
+export const MailRendererDecorator: Decorator = (Story, context) => {
     const { html, mjmlWarnings } = renderMailHtml(
-        <MjmlMailRoot>
+        <MjmlMailRoot theme={context.parameters.theme}>
             <Story />
         </MjmlMailRoot>,
     );

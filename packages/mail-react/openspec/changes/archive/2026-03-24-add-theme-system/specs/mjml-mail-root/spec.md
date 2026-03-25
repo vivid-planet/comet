@@ -1,4 +1,4 @@
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Email skeleton rendering
 
@@ -39,20 +39,6 @@
 
 - **WHEN** a child component of `MjmlMailRoot` calls `useTheme()`
 - **THEN** it receives the theme provided to (or defaulted by) `MjmlMailRoot`
-
-### Requirement: Default zero padding
-
-The `<MjmlHead>` SHALL contain `<MjmlAttributes><MjmlAll padding={0} /></MjmlAttributes>` so that all MJML components default to zero padding.
-
-#### Scenario: Components inherit zero padding
-
-- **WHEN** `<MjmlMailRoot>` is rendered without any additional configuration
-- **THEN** the MJML head includes `<mj-attributes><mj-all padding="0" /></mj-attributes>`
-
-#### Scenario: No other default attributes
-
-- **WHEN** `<MjmlMailRoot>` is rendered
-- **THEN** the `<mj-attributes>` block contains only `<mj-all padding="0" />` and no other attribute elements
 
 ### Requirement: Optional theme prop
 

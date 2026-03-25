@@ -1,22 +1,43 @@
-import { Mjml, MjmlAll, MjmlAttributes, MjmlBody, MjmlHead } from "@faire/mjml-react";
+import { Mjml, MjmlAll, MjmlAttributes, MjmlBody, MjmlBreakpoint, MjmlHead } from "@faire/mjml-react";
 import type { PropsWithChildren, ReactNode } from "react";
+
+import { createTheme } from "../../theme/createTheme.js";
+import { ThemeProvider } from "../../theme/ThemeProvider.js";
+import type { Theme } from "../../theme/themeTypes.js";
+
+type MjmlMailRootProps = PropsWithChildren<{
+    /**
+     * Theme to use for the email. When omitted, the default theme
+     * (equivalent to `createTheme()`) is used.
+     */
+    theme?: Theme;
+}>;
 
 /**
  * The root element for email templates. Renders the standard MJML email skeleton
  * (`<Mjml>`, `<MjmlHead>`, `<MjmlBody>`) with `<MjmlAll padding={0} />` as the
  * default attribute so all components start with zero padding.
  *
+ * Accepts an optional `theme` prop that controls the body width and responsive
+ * breakpoints. The theme is made available to all descendant components via
+ * `useTheme()`.
+ *
  * Direct children should be section-level components (e.g. `MjmlSection`).
  */
-export function MjmlMailRoot({ children }: PropsWithChildren): ReactNode {
+export function MjmlMailRoot({ theme: themeProp, children }: MjmlMailRootProps): ReactNode {
+    const theme = themeProp ?? createTheme();
+
     return (
-        <Mjml>
-            <MjmlHead>
-                <MjmlAttributes>
-                    <MjmlAll padding="0" />
-                </MjmlAttributes>
-            </MjmlHead>
-            <MjmlBody>{children}</MjmlBody>
-        </Mjml>
+        <ThemeProvider theme={theme}>
+            <Mjml>
+                <MjmlHead>
+                    <MjmlAttributes>
+                        <MjmlAll padding="0" />
+                    </MjmlAttributes>
+                    <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
+                </MjmlHead>
+                <MjmlBody width={theme.sizes.bodyWidth}>{children}</MjmlBody>
+            </Mjml>
+        </ThemeProvider>
     );
 }
