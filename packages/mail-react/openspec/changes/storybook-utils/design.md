@@ -66,5 +66,5 @@ The storybook utilities are regular TypeScript source files under `src/storybook
 
 ## Risks / Trade-offs
 
-- **Storybook version coupling**: The addons use `storybook/manager-api`, `storybook/preview-api`, and `storybook/internal/components` — all Storybook 8+ APIs. If Storybook's internal component API changes, our addons break. → Mitigation: pin `storybook` peer dependency range; the components used (`Button`, `AddonPanel`, `Badge`, `WithTooltip`, `TooltipNote`) are stable public components.
+- **Storybook version coupling**: The addons use `storybook/manager-api`, `storybook/preview-api`, and `storybook/internal/components` — Storybook 10+ APIs. Only tested against Storybook 10; the peer dependency requires `>=10.0.0` to avoid claiming untested compatibility with older versions. If Storybook's internal component API changes, our addons break. → Mitigation: the components used (`Button`, `AddonPanel`, `Badge`, `WithTooltip`, `TooltipNote`) are stable public components; widen the range later if older versions are verified.
 - **No tree-shaking of storybook source**: TypeScript compiles the storybook source files into `lib/` even though most consumers won't use them. → Acceptable: the files are tiny and the `exports` map prevents accidental imports.

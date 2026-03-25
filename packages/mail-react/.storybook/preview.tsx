@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react-vite";
 
-import { MailRendererDecorator } from "./MailRenderer.decorator.tsx";
+import { MailRendererDecorator } from "../src/storybook-preview/index.ts";
 
 const preview: Preview = {
     decorators: [MailRendererDecorator],
