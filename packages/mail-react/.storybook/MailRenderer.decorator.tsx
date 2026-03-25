@@ -1,15 +1,14 @@
 import type { Decorator } from "@storybook/react-vite";
-import mjml2html from "mjml-browser";
-import { MjmlMailRoot, renderToMjml } from "../src/index.ts";
+import React from "react";
+import { MjmlMailRoot } from "../src/index.ts";
+import { renderMailHtml } from "../src/client/renderMailHtml.js";
 
 export const MailRendererDecorator: Decorator = (Story, context) => {
-    const mjmlString = renderToMjml(
+    const { html, mjmlWarnings } = renderMailHtml(
         <MjmlMailRoot theme={context.parameters.theme}>
             <Story />
         </MjmlMailRoot>,
     );
-
-    const { html, errors: mjmlWarnings } = mjml2html(mjmlString);
 
     for (const warning of mjmlWarnings) {
         console.warn("MJML warning:", warning);

@@ -4,14 +4,13 @@
 
 The decorator SHALL convert the story's React element tree into rendered HTML by:
 1. Wrapping the story node in `<MjmlMailRoot>...</MjmlMailRoot>`
-2. Converting the React tree to an MJML string using `renderToMjml`
-3. Converting the MJML string to HTML using `mjml2html` from `mjml-browser`
-4. Displaying the resulting HTML via `dangerouslySetInnerHTML`
+2. Converting the combined tree to HTML using the `renderMailHtml` function imported from the client sub-path (`../src/client/renderMailHtml.js`)
+3. Displaying the resulting HTML via `dangerouslySetInnerHTML`
 
 #### Scenario: Component renders as email HTML
 
 - **WHEN** a story returns an MJML component (e.g., `<MjmlSection>`)
-- **THEN** the decorator wraps it in `<MjmlMailRoot>`, converts to HTML, and displays the rendered email output
+- **THEN** the decorator wraps it in `<MjmlMailRoot>`, converts to HTML via `renderMailHtml`, and displays the rendered email output
 
 #### Scenario: Nested MJML components render correctly
 
