@@ -2,9 +2,9 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import { filterByFragment, Loading, RHFForm, RHFTextField } from "@comet/admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useSaveConflict } from "@comet/cms-admin";
 import { type GQLProductInput, type GQLProductMutationErrorCode } from "@src/graphql.generated";
-import { type ReactNode, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { FormattedMessage } from "react-intl";
+import { defineMessage, FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
@@ -26,13 +26,11 @@ interface FormProps {
     onCreate?: (id: string) => void;
 }
 
-const submissionErrorMessages: { [K in GQLProductMutationErrorCode]: ReactNode } = {
-    titleTooShort: (
-        <FormattedMessage
-            id="product.form.error.titleTooShort"
-            defaultMessage="Title must be at least 3 characters long when creating a product, except for foo"
-        />
-    ),
+const submissionErrorMessages: { [K in GQLProductMutationErrorCode]: MessageDescriptor } = {
+    titleTooShort: defineMessage({
+        id: "product.form.error.titleTooShort",
+        defaultMessage: "Title must be at least 3 characters long when creating a product, except for foo",
+    }),
 };
 
 type FormValues = GQLProductFormManualFragment & {};
@@ -63,6 +61,7 @@ export function ProductForm({ id, onCreate }: FormProps) {
             keepDirtyValues: true,
         },
     });
+    const intl = useIntl();
     const { control, setError } = form;
 
     const saveConflict = useSaveConflict({
@@ -105,9 +104,9 @@ export function ProductForm({ id, onCreate }: FormProps) {
                     mutationResponse.createProduct.errors.forEach((error) => {
                         const errorMessage = submissionErrorMessages[error.code];
                         if (error.field) {
-                            setError(error.field as keyof FormValues, { message: String(errorMessage) });
+                            setError(error.field as keyof FormValues, { message: intl.formatMessage(errorMessage) });
                         } else {
-                            setError("root", { message: String(errorMessage) });
+                            setError("root", { message: intl.formatMessage(errorMessage) });
                         }
                     });
                     throw new Error("Submit errors");
@@ -121,7 +120,7 @@ export function ProductForm({ id, onCreate }: FormProps) {
                 }
             }
         },
-        [client, id, mode, onCreate, saveConflict, setError, form, initialValues],
+        [client, id, intl, mode, onCreate, saveConflict, setError, form, initialValues],
     );
 
     if (error) throw error;
