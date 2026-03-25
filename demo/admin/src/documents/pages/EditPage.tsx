@@ -37,10 +37,17 @@ interface Props {
 }
 
 const pageTreeNodeDependentsQuery = gql`
-    query PageTreeNodeDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+    query PageTreeNodeDependents(
+        $id: ID!
+        $offset: Int!
+        $limit: Int!
+        $forceRefresh: Boolean = false
+        $filter: DependentFilter
+        $sort: [DependencySort!]
+    ) {
         item: pageTreeNode(id: $id) {
             id
-            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
                 nodes {
                     rootGraphqlObjectType
                     rootId
@@ -48,6 +55,7 @@ const pageTreeNodeDependentsQuery = gql`
                     jsonPath
                     name
                     secondaryInformation
+                    visible
                 }
                 totalCount
             }
@@ -56,10 +64,17 @@ const pageTreeNodeDependentsQuery = gql`
 `;
 
 const pageTreeNodeDependenciesQuery = gql`
-    query PageTreeNodeDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+    query PageTreeNodeDependencies(
+        $id: ID!
+        $offset: Int!
+        $limit: Int!
+        $forceRefresh: Boolean = false
+        $filter: DependencyFilter
+        $sort: [DependencySort!]
+    ) {
         item: page(id: $id) {
             id
-            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
                 nodes {
                     targetGraphqlObjectType
                     targetId
@@ -67,6 +82,7 @@ const pageTreeNodeDependenciesQuery = gql`
                     jsonPath
                     name
                     secondaryInformation
+                    visible
                 }
                 totalCount
             }

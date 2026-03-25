@@ -9,4 +9,11 @@ export default defineConfig([
             "@comet/no-other-module-relative-import": "off",
         },
     },
+    {
+        files: ["src/**/*.stories.tsx"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
+            "react/jsx-no-literals": "off",
+        },
+    },
 ]);

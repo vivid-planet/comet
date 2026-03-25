@@ -314,7 +314,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -336,9 +336,47 @@ interface DocumentInterface {
 }
 
 input DependentFilter {
-  rootGraphqlObjectType: String
+  rootGraphqlObjectType: StringFilter
   rootId: String
   rootColumnName: String
+  name: StringFilter
+  secondaryInformation: StringFilter
+  visible: BooleanFilter
+  and: [DependentFilter!]
+  or: [DependentFilter!]
+}
+
+input StringFilter {
+  contains: String
+  notContains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input DependencySort {
+  field: DependencySortField!
+  direction: SortDirection! = ASC
+}
+
+enum DependencySortField {
+  name
+  secondaryInformation
+  graphqlObjectType
+  visible
+}
+
+enum SortDirection {
+  ASC
+  DESC
 }
 
 type Redirect {
@@ -352,7 +390,7 @@ type Redirect {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
@@ -366,9 +404,14 @@ enum RedirectGenerationType {
 }
 
 input DependencyFilter {
-  targetGraphqlObjectType: String
+  targetGraphqlObjectType: StringFilter
   targetId: String
   rootColumnName: String
+  name: StringFilter
+  secondaryInformation: StringFilter
+  visible: BooleanFilter
+  and: [DependencyFilter!]
+  or: [DependencyFilter!]
 }
 
 type PaginatedRedirects {
@@ -416,7 +459,7 @@ type DamFile {
   damPath: String!
   alternativesForThisFile: [DamMediaAlternative!]!
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type PaginatedDamItems {
@@ -505,11 +548,6 @@ input RedirectScopeInput {
   thisScopeHasNoFields____: String
 }
 
-enum SortDirection {
-  ASC
-  DESC
-}
-
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
@@ -521,22 +559,6 @@ input RedirectFilter {
   updatedAt: DateTimeFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
-}
-
-input StringFilter {
-  contains: String
-  notContains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
-  isAnyOf: [String!]
-  isEmpty: Boolean
-  isNotEmpty: Boolean
-}
-
-input BooleanFilter {
-  equal: Boolean
 }
 
 input RedirectSourceTypeEnumFilter {
