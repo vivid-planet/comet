@@ -39,6 +39,47 @@ export interface ThemeSizes {
     contentIndentation: ResponsiveValue;
 }
 
+/** Base text styles using plain (non-responsive) values. */
+export interface TextStyles {
+    fontFamily?: string;
+    fontSize?: string | number;
+    fontWeight?: string | number;
+    fontStyle?: string;
+    lineHeight?: string | number;
+    letterSpacing?: string | number;
+    textDecoration?: string;
+    textTransform?: string;
+    color?: string;
+    bottomSpacing?: number;
+}
+
+/** Variant-level text styles where each value supports responsive overrides. */
+export interface TextVariantStyles {
+    fontFamily?: ResponsiveValue<string>;
+    fontSize?: ResponsiveValue<string | number>;
+    fontWeight?: ResponsiveValue<string | number>;
+    fontStyle?: ResponsiveValue<string>;
+    lineHeight?: ResponsiveValue<string | number>;
+    letterSpacing?: ResponsiveValue<string | number>;
+    textDecoration?: ResponsiveValue<string>;
+    textTransform?: ResponsiveValue<string>;
+    color?: ResponsiveValue<string>;
+    bottomSpacing?: ResponsiveValue;
+}
+
+/**
+ * Empty interface for consumer-defined text variant names.
+ * Extend via module augmentation to add variant keys.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- intentional augmentation root; keyof TextVariants is `never` until extended
+export interface TextVariants {}
+
+/** Theme configuration for text styling, including base styles and optional variants. */
+export interface ThemeText extends TextStyles {
+    defaultVariant?: keyof TextVariants;
+    variants?: { [K in keyof TextVariants]?: TextVariantStyles };
+}
+
 /**
  * The root theme object that holds all design tokens for `@comet/mail-react`.
  *
@@ -48,4 +89,5 @@ export interface ThemeSizes {
 export interface Theme {
     sizes: ThemeSizes;
     breakpoints: ThemeBreakpoints;
+    text: ThemeText;
 }

@@ -10,4 +10,10 @@ export const defaultTheme: Theme = {
         default: createBreakpoint(600),
         mobile: createBreakpoint(420),
     },
+    text: {
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px",
+        lineHeight: "20px",
+        bottomSpacing: 16,
+    },
 };
