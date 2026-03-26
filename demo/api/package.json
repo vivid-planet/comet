@@ -101,7 +101,7 @@
         "@types/inquirer": "^8.2.12",
         "@types/mjml": "^4.7.4",
         "@types/mjml-browser": "^4.15.0",
-        "@types/node": "^24.10.9",
+        "@types/node": "^24.12.0",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
         "@types/response-time": "^2.3.9",
