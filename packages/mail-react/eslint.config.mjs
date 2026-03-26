@@ -10,10 +10,16 @@ export default defineConfig([
         },
     },
     {
-        files: ["src/**/*.stories.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
+        files: ["src/**/*.stories.tsx", "src/**/*.test.ts", "src/**/*.test.tsx", "src/storybook/**"],
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
             "react/jsx-no-literals": "off",
+        },
+    },
+    {
+        files: ["src/storybook/manager.ts", "src/storybook/CopyMailHtmlButton.tsx", "src/storybook/UsePublicImageUrlsToggle.tsx", "src/storybook/MjmlWarningsPanel.tsx"],
+        rules: {
+            "no-restricted-imports": "off",
         },
     },
 ]);
