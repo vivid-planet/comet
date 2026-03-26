@@ -1,6 +1,7 @@
 import { Mjml, MjmlAll, MjmlAttributes, MjmlBody, MjmlBreakpoint, MjmlHead } from "@faire/mjml-react";
 import type { PropsWithChildren, ReactNode } from "react";
 
+import { Styles } from "../../styles/Styles.js";
 import { createTheme } from "../../theme/createTheme.js";
 import { ThemeProvider } from "../../theme/ThemeProvider.js";
 import type { Theme } from "../../theme/themeTypes.js";
@@ -35,6 +36,7 @@ export function MjmlMailRoot({ theme: themeProp, children }: MjmlMailRootProps):
                         <MjmlAll padding="0" />
                     </MjmlAttributes>
                     <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
+                    <Styles />
                 </MjmlHead>
                 <MjmlBody width={theme.sizes.bodyWidth}>{children}</MjmlBody>
             </Mjml>

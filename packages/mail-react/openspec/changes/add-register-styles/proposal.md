@@ -9,7 +9,7 @@ The first practical use case is content indentation on `MjmlSection`: desktop pa
 - Add a `registerStyles(styles, mjmlStyleProps?)` function that registers component-level CSS into a module-scoped registry, using the styles value itself (function reference or `ReturnType<typeof css>` value) as the deduplication key — no manual id required. The `styles` parameter is typed with `ReturnType<typeof css>` (the existing `css` tagged template); no additional exported type alias.
 - Add an internal (non-exported) component that iterates the registry and renders `<MjmlStyle>` tags, used only from `MjmlMailRoot` inside `<MjmlHead>`.
 - Add a generic `ResponsiveValue<T = number>` type (`T` or object keyed by breakpoint names with required `default`) and exported helpers `getDefaultValue<T>` and `getResponsiveOverrides<T>`.
-- Add `contentIndentation` of type `ResponsiveValue` (default `T` is `number`) to `ThemeSizes` (default: `{ default: 20, mobile: 10 }`), and include it in `createTheme`.
+- Add `contentIndentation` of type `ResponsiveValue` (default `T` is `number`) to `ThemeSizes` (default: `{ default: 32, mobile: 16 }`), and include it in `createTheme`.
 - Add an `indent` prop to `MjmlSection` that applies the default indentation value as inline padding and registers media-query overrides for each responsive breakpoint via `registerStyles`.
 
 ## Capabilities

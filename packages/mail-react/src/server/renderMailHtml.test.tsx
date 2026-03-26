@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 
 import { MjmlMailRoot } from "../components/mailRoot/MjmlMailRoot.js";
 import { MjmlSection } from "../components/section/MjmlSection.js";
+import { registerStyles } from "../styles/registerStyles.js";
+import { css } from "../utils/css.js";
 import { renderMailHtml } from "./renderMailHtml.js";
 
 describe("server/renderMailHtml", () => {
@@ -34,6 +36,50 @@ describe("server/renderMailHtml", () => {
         );
 
         expect(html).toContain(textContent);
+    });
+
+    it("includes registered styles in the rendered HTML", () => {
+        registerStyles(css`
+            .myComponent {
+                color: red;
+            }
+        `);
+
+        const { html } = renderMailHtml(
+            <MjmlMailRoot>
+                <MjmlSection>
+                    <MjmlColumn>
+                        <MjmlText>Hello</MjmlText>
+                    </MjmlColumn>
+                </MjmlSection>
+            </MjmlMailRoot>,
+        );
+
+        expect(html).toContain(".myComponent");
+        expect(html).toContain("color: red");
+    });
+
+    it("includes function-style registered styles resolved with the theme", () => {
+        registerStyles(
+            (theme) => css`
+                .themed {
+                    width: ${theme.sizes.bodyWidth}px;
+                }
+            `,
+        );
+
+        const { html } = renderMailHtml(
+            <MjmlMailRoot>
+                <MjmlSection>
+                    <MjmlColumn>
+                        <MjmlText>Hello</MjmlText>
+                    </MjmlColumn>
+                </MjmlSection>
+            </MjmlMailRoot>,
+        );
+
+        expect(html).toContain(".themed");
+        expect(html).toContain("width: 600px");
     });
 
     it("produces no MJML warnings for a valid component tree", () => {

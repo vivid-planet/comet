@@ -40,6 +40,8 @@ context: |
     - Every custom component has a Storybook story in
       `src/components/<concern>/__stories__/<Component>.stories.tsx`
     - Exported components and props have TSDoc comments
+    - Component file ordering: imports, types/props, main component, styles
+      (registerStyles calls go below the component definition)
     - CSS class names follow BEM with camelCase blocks: block `mjmlSection`,
       element `mjmlSection__item`, modifier `mjmlSection--indented`.
       Every custom component applies its block class and merges any consumer-
