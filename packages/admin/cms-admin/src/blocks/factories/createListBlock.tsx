@@ -552,6 +552,15 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             }, []);
             return content;
         },
+        translateContent: async (state, translate) => {
+            const translatedBlocks = await Promise.all(
+                state.blocks.map(async (child) => {
+                    const translatedProps = block.translateContent ? await block.translateContent(child.props, translate) : child.props;
+                    return { ...child, props: translatedProps };
+                }),
+            );
+            return { ...state, blocks: translatedBlocks };
+        },
     };
     if (override) {
         return override(BlockListBlock);
