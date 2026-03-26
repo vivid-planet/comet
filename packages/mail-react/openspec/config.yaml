@@ -21,6 +21,16 @@ context: |
     - Some components may gain Html variants (for use inside MJML ending tags),
       with their own API independent from the Mjml version
 
+    Styling model (default-first):
+    - Email clients that lack CSS support are typically desktop (e.g. Outlook).
+      The base/default rendering must rely solely on inline styles (MJML props)
+      and look correct without any <style> block.
+    - Media queries (via registerStyles / <mj-style>) are a progressive
+      enhancement for mobile viewports, which generally have good CSS support.
+      Use max-width media queries (theme.breakpoints.*.belowMediaQuery) to
+      target viewports below a breakpoint. Modern CSS features (flex, grid)
+      are acceptable inside these media queries.
+
     Conventions:
     - No `as` type assertions — use type guards
     - ESM-only (type: module), .js extensions in imports
