@@ -57,7 +57,7 @@ The preview annotation SHALL export `initialGlobals` containing `{ usePublicImag
 
 ### Requirement: Source file location
 
-All storybook source files SHALL live under `src/storybook/`. The preset entry SHALL be `src/storybook/index.ts`, the manager entry SHALL be `src/storybook/manager.ts`, and the preview entry SHALL be `src/storybook/preview.ts`.
+All storybook source files SHALL live under `src/storybook/`. The preset entry SHALL be `src/storybook/index.ts`, the manager entry SHALL be `src/storybook/manager.tsx`, and the preview entry SHALL be `src/storybook/preview.ts`.
 
 #### Scenario: Compiled output exists after build
 

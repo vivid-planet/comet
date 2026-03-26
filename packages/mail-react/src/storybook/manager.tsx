@@ -11,18 +11,18 @@ addons.register(ADDON_ID, () => {
     addons.add(`${ADDON_ID}/copy-html`, {
         type: types.TOOL,
         title: "Copy Mail HTML",
-        render: () => React.createElement(CopyMailHtmlButton),
+        render: () => <CopyMailHtmlButton />,
     });
 
     addons.add(`${ADDON_ID}/public-urls`, {
         type: types.TOOL,
         title: "Use public image URLs",
-        render: () => React.createElement(UsePublicImageUrlsToggle),
+        render: () => <UsePublicImageUrlsToggle />,
     });
 
     addons.add(`${ADDON_ID}/mjml-warnings`, {
         type: types.PANEL,
-        title: () => React.createElement(MjmlWarningsPanelTitle),
-        render: ({ active }) => React.createElement(MjmlWarningsPanel, { active: Boolean(active) }),
+        title: () => <MjmlWarningsPanelTitle />,
+        render: ({ active }) => <MjmlWarningsPanel active={Boolean(active)} />,
     });
 });

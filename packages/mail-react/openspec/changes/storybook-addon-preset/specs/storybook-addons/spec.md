@@ -47,7 +47,7 @@ The manager SHALL include a panel titled "MJML Warnings" that displays MJML vali
 #### Scenario: Panel before first render
 
 - **WHEN** no render result has been received yet (e.g., initial load)
-- **THEN** the panel renders nothing (null)
+- **THEN** the panel renders an empty `AddonPanel` with no content
 
 ### Requirement: Addon registration
 

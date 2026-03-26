@@ -23,31 +23,23 @@ export function MjmlWarningsPanel({ active }: { active: boolean }) {
         },
     });
 
-    if (!renderResult) {
-        return (
-            <AddonPanel active={active}>
-                <div />
-            </AddonPanel>
-        );
-    }
-
-    const { mjmlWarnings } = renderResult;
-
     return (
         <AddonPanel active={active}>
-            <div style={{ padding: 16 }}>
-                {mjmlWarnings.length === 0 ? (
-                    <p style={{ color: "green" }}>✓ No MJML warnings</p>
-                ) : (
-                    <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-                        {mjmlWarnings.map((warning, index) => (
-                            <li key={index} style={{ marginBottom: 8 }}>
-                                <strong>{warning.tagName}</strong> (line {warning.line}): {warning.message}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+            {renderResult && (
+                <div style={{ padding: 16 }}>
+                    {renderResult.mjmlWarnings.length === 0 ? (
+                        <p style={{ color: "green" }}>✓ No MJML warnings</p>
+                    ) : (
+                        <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                            {renderResult.mjmlWarnings.map((warning, index) => (
+                                <li key={index} style={{ marginBottom: 8 }}>
+                                    <strong>{warning.tagName}</strong> (line {warning.line}): {warning.message}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            )}
         </AddonPanel>
     );
 }

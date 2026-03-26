@@ -17,7 +17,7 @@ export default defineConfig([
         },
     },
     {
-        files: ["src/storybook/manager.ts", "src/storybook/CopyMailHtmlButton.tsx", "src/storybook/UsePublicImageUrlsToggle.tsx", "src/storybook/MjmlWarningsPanel.tsx"],
+        files: ["src/storybook/**"],
         rules: {
             "no-restricted-imports": "off",
         },

@@ -13,7 +13,7 @@
 - [x] 3.1 Create `src/storybook/CopyMailHtmlButton.tsx` — toolbar button that subscribes to `comet-mail-render-result` and copies the HTML to clipboard, showing "Copied to clipboard!" for 2 seconds
 - [x] 3.2 Create `src/storybook/UsePublicImageUrlsToggle.tsx` — toolbar toggle button with checkbox, tooltip, and ℹ️ emoji that controls the `usePublicImageUrls` Storybook global
 - [x] 3.3 Create `src/storybook/MjmlWarningsPanel.tsx` — addon panel that subscribes to `comet-mail-render-result` and displays MJML warnings with tag name, line number, and message; panel title includes a compact badge with warning count or "✓"
-- [x] 3.4 Create `src/storybook/manager.ts` — self-executing module that calls `addons.register(...)` and registers all three addons (copy HTML as tool, public URLs as tool, MJML warnings as panel)
+- [x] 3.4 Create `src/storybook/manager.tsx` — self-executing module that calls `addons.register(...)` and registers all three addons (copy HTML as tool, public URLs as tool, MJML warnings as panel) using JSX
 
 ## 4. Package Configuration
 
@@ -23,13 +23,13 @@
 ## 5. ESLint Configuration
 
 - [x] 5.1 Update `eslint.config.mjs` to exempt `src/storybook/**` files from `@calm/react-intl/missing-formatted-message` and `react/jsx-no-literals` rules
-- [x] 5.2 Update `eslint.config.mjs` to allow React default import in `src/storybook/**` manager-side files (needed for Storybook's manager API which expects React in scope)
+- [x] 5.2 Update `eslint.config.mjs` to disable `no-restricted-imports` for all `src/storybook/**` files
 
 ## 6. Internal Storybook Refactor
 
-- [x] 6.1 Update `.storybook/preview.tsx` to re-export `decorators` and `initialGlobals` from `../src/storybook/preview.ts`
+- [x] 6.1 Update `.storybook/preview.ts` to re-export `decorators` and `initialGlobals` from `../src/storybook/preview.ts`
 - [x] 6.2 Delete `.storybook/MailRenderer.decorator.tsx`
-- [x] 6.3 Create `.storybook/manager.tsx` that imports `../src/storybook/manager.ts` (side-effect import to register addons)
+- [x] 6.3 Create `.storybook/manager.ts` that imports `../src/storybook/manager.tsx` (side-effect import to register addons)
 - [x] 6.4 Verify the internal Storybook starts and renders stories correctly with all three addons visible
 
 ## 7. Lint, Build, and Changeset
