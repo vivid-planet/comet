@@ -1,4 +1,4 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import { RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
 import { CircularProgress } from "@mui/material";
@@ -58,20 +58,12 @@ export function TranslatePageMenuItem({ page, documentType }: Props) {
                 return text;
             });
 
-            // Pass 2: Batch translate page name, slug, and document content together
-            const allTexts = [page.name, page.slug, ...collectedTexts];
-            const allTranslated = await effectiveBatchTranslate(allTexts);
-            const [translatedName, translatedSlug, ...translatedTexts] = allTranslated;
+            if (collectedTexts.length === 0) {
+                return;
+            }
 
-            // Update the page tree node name and slug
-            await apolloClient.mutate({
-                mutation: updatePageTreeNodeNameMutation,
-                variables: {
-                    id: page.id,
-                    input: { name: translatedName, slug: translatedSlug },
-                },
-                refetchQueries: ["Pages"],
-            });
+            // Pass 2: Batch translate
+            const translatedTexts = await effectiveBatchTranslate(collectedTexts);
 
             // Pass 3: Apply translations to document content
             let textIndex = 0;
@@ -110,12 +102,3 @@ export function TranslatePageMenuItem({ page, documentType }: Props) {
         </RowActionsItem>
     );
 }
-
-const updatePageTreeNodeNameMutation = gql`
-    mutation TranslatePageTreeNodeName($id: ID!, $input: PageTreeNodeUpdateInput!) {
-        updatePageTreeNode(id: $id, input: $input) {
-            id
-            name
-        }
-    }
-`;
