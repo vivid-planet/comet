@@ -493,6 +493,7 @@ type Query {
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
+  azureAiTranslateBatch(input: AzureAiTranslationBatchInput!): [String!]!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
   blockPreviewJwt(scope: JSONObject!, url: String!, includeInvisible: Boolean!): String!
   warning(id: ID!): Warning!
@@ -651,6 +652,11 @@ enum UserPermissionsUserSortField {
 
 input AzureAiTranslationInput {
   text: String!
+  targetLanguage: String!
+}
+
+input AzureAiTranslationBatchInput {
+  texts: [String!]!
   targetLanguage: String!
 }
 

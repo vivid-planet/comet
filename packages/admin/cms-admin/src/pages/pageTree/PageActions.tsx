@@ -13,6 +13,7 @@ import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
 import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
+import { TranslatePageMenuItem } from "./TranslatePageMenuItem";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
 import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
@@ -118,6 +119,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <MovePageMenuItem key="movePage" page={page} />,
                         <Divider key="divider2" />,
                         <CopyPasteMenuItem key="copyPaste" page={page} />,
+                        <TranslatePageMenuItem key="translate" page={page} documentType={documentType} />,
                         <Divider key="divider3" />,
                     ]}
                     <RowActionsItem
