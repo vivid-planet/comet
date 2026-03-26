@@ -30,6 +30,11 @@ context: |
     - Every custom component has a Storybook story in
       `src/components/<concern>/__stories__/<Component>.stories.tsx`
     - Exported components and props have TSDoc comments
+    - CSS class names follow BEM with camelCase blocks: block `mjmlSection`,
+      element `mjmlSection__item`, modifier `mjmlSection--indented`.
+      Every custom component applies its block class and merges any consumer-
+      provided className via clsx: `clsx("mjmlSection", className)`.
+      clsx is a dependency of this package.
 
 rules:
     proposal:
