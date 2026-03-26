@@ -128,6 +128,7 @@ export function EmailCampaignsGrid({
         },
         { value: "DRAFT", label: intl.formatMessage({ id: "cometBrevoModule.emailCampaign.draft", defaultMessage: "Draft" }) },
         { value: "SCHEDULED", label: intl.formatMessage({ id: "cometBrevoModule.emailCampaign.scheduled", defaultMessage: "Scheduled" }) },
+        { value: "FAILED", label: intl.formatMessage({ id: "cometBrevoModule.emailCampaign.failed", defaultMessage: "Failed" }) },
     ];
 
     const columns: GridColDef<GQLEmailCampaignsListFragment>[] = [
@@ -185,7 +186,7 @@ export function EmailCampaignsGrid({
 
                 return (
                     <>
-                        {row.sendingState !== "SENT" && !isScheduledDateInPast && (
+                        {row.sendingState !== "SENT" && (row.sendingState === "FAILED" || !isScheduledDateInPast) && (
                             <IconButton component={StackLink} pageName="edit" payload={row.id}>
                                 <Edit color="primary" />
                             </IconButton>
