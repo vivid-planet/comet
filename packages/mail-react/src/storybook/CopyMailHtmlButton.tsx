@@ -1,3 +1,5 @@
+/** @jsxRuntime classic */
+/** @jsx React.createElement */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "storybook/internal/components";
 import { useChannel } from "storybook/manager-api";

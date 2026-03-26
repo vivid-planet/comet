@@ -1,3 +1,5 @@
+/** @jsxRuntime classic */
+/** @jsx React.createElement */
 import React from "react";
 import { IconButton, TooltipNote, WithTooltip } from "storybook/internal/components";
 import { useGlobals } from "storybook/manager-api";

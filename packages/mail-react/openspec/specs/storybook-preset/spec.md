@@ -32,6 +32,15 @@ The preset's `managerEntries` function SHALL return a filesystem path to `manage
 - **WHEN** Storybook calls the preset's `managerEntries()` function
 - **THEN** it returns a path to the manager file, and Storybook loads it to register the toolbar buttons and panel
 
+### Requirement: Classic JSX for manager-only sources
+
+Manager-only `.tsx` files (the manager entry and each module that implements manager toolbar or panel UI) SHALL begin with the TypeScript pragmas `/** @jsxRuntime classic */` and `/** @jsx React.createElement */` and SHALL keep the default `React` binding in scope for the pragma factory, so JSX compiles to `React.createElement` instead of `react/jsx-runtime`. Preview-side Storybook sources SHALL use the package-wide automatic JSX transform without these pragmas.
+
+#### Scenario: Compiled manager modules avoid jsx-runtime
+
+- **WHEN** `pnpm run build` completes
+- **THEN** `lib/storybook/manager.js`, `lib/storybook/CopyMailHtmlButton.js`, `lib/storybook/UsePublicImageUrlsToggle.js`, and `lib/storybook/MjmlWarningsPanel.js` do not import `react/jsx-runtime`
+
 ### Requirement: Preview annotation via preset
 
 The preset's `previewAnnotations` function SHALL return a filesystem path to `preview.js` in the same directory as the preset file. The preview annotation SHALL export `decorators` and `initialGlobals`.

@@ -1,3 +1,5 @@
+/** @jsxRuntime classic */
+/** @jsx React.createElement */
 import React, { useState } from "react";
 import { AddonPanel, Badge } from "storybook/internal/components";
 import { useChannel } from "storybook/manager-api";
