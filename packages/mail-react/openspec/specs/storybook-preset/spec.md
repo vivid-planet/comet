@@ -25,12 +25,12 @@ The `package.json` `exports` field SHALL include `"./storybook"` mapping to `"./
 
 ### Requirement: Manager entry via preset
 
-The preset's `managerEntries` function SHALL return a filesystem path to `manager.js` in the same directory as the preset file. The manager entry SHALL be auto-loaded by Storybook to register all addons.
+The preset's `managerEntries` function SHALL accept the accumulated manager entry paths Storybook passes as its first argument and SHALL return that list with an additional filesystem path to `manager.js` in the same directory as the preset file appended. The manager entry SHALL be auto-loaded by Storybook to register all addons without discarding entries from other presets.
 
 #### Scenario: Manager addons are registered
 
-- **WHEN** Storybook calls the preset's `managerEntries()` function
-- **THEN** it returns a path to the manager file, and Storybook loads it to register the toolbar buttons and panel
+- **WHEN** Storybook calls the preset's `managerEntries(existing)` function
+- **THEN** it returns `existing` plus the path to the manager file, and Storybook loads it to register the toolbar buttons and panel alongside other manager entries
 
 ### Requirement: Classic JSX for manager-only sources
 
