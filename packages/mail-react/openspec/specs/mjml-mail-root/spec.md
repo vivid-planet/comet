@@ -8,6 +8,8 @@
 
 `MjmlMailRoot` SHALL render `<MjmlBreakpoint width={theme.breakpoints.mobile.value + "px"} />` inside `<MjmlHead>`, setting the MJML responsive breakpoint from the theme's mobile breakpoint value.
 
+`MjmlMailRoot` SHALL render registered styles inside `<MjmlHead>`, after the `<MjmlBreakpoint>` element, using an internal implementation component that is not exported from the package, so that all styles registered via `registerStyles` are included in the email output.
+
 `MjmlMailRoot` SHALL wrap its children in a `ThemeProvider`, making the resolved theme available to all descendant components via `useTheme()`.
 
 #### Scenario: Basic email with a section
@@ -39,6 +41,11 @@
 
 - **WHEN** a child component of `MjmlMailRoot` calls `useTheme()`
 - **THEN** it receives the theme provided to (or defaulted by) `MjmlMailRoot`
+
+#### Scenario: Registered styles appear in head
+
+- **WHEN** a module has called `registerStyles` with CSS, and `MjmlMailRoot` is rendered
+- **THEN** the `<mj-head>` contains `<mj-style>` elements with the registered CSS
 
 ### Requirement: Default zero padding
 
