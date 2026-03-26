@@ -1,4 +1,5 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
+import { MailRoot } from "@src/mail/components/MailRoot";
 import { renderMailHtml } from "@src/mail/utils/renderMailHtml";
 import { TranslationService } from "@src/translation/translation.service";
 import { IntlProvider } from "react-intl";
@@ -13,7 +14,9 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         const intl = await this.translationService.getIntl(props.recipient.language);
         const mailHtml = renderMailHtml(
             <IntlProvider {...intl}>
-                <Mail {...props} />
+                <MailRoot>
+                    <Mail {...props} />
+                </MailRoot>
             </IntlProvider>,
         );
 
