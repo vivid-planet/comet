@@ -87,7 +87,10 @@ const defaultRichTextRenderers: Renderers = {
             ) : (
                 <span>{children}</span>
             ),
-        PLACEHOLDER: (children, data: PlaceholderBlockData, { key }) => <span key={key}>{data.value ?? children}</span>,
+        PLACEHOLDER: (children, data: PlaceholderBlockData, { key }) => {
+            const fallbackText = data.value ?? (data.field ? `{{${data.field}}}` : "");
+            return <span key={key}>{fallbackText}</span>;
+        },
     },
 };
 
