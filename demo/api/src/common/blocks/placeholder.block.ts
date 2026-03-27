@@ -13,7 +13,7 @@ import { IsEnum, IsString } from "class-validator";
 
 import { PlaceholderBlockTransformerService } from "./placeholder-block-transformer.service";
 
-export enum PlaceholderField {
+enum PlaceholderField {
     title = "title",
     price = "price",
 }
