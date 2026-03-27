@@ -116,6 +116,7 @@ function PlaceholderDialog({ onClose, placeholderEntity, savedSelection, editorS
     const handleUpdate = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
+            if (!state.productId) return;
             const contentState = editorState.getCurrentContent();
 
             const label = getPlaceholderLabel(state);
@@ -153,7 +154,7 @@ function PlaceholderDialog({ onClose, placeholderEntity, savedSelection, editorS
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={onClose} />
-                <OkayButton onClick={handleUpdate} />
+                <OkayButton onClick={handleUpdate} disabled={!state.productId} />
             </DialogActions>
         </Dialog>
     );
