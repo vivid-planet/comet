@@ -124,18 +124,13 @@ export const PlaceholderBlock = {
     AdminComponent: ({
         state,
         updateState,
+        isEditing,
     }: {
         state: PlaceholderBlockState;
         updateState: (setter: PlaceholderBlockState | ((prev: PlaceholderBlockState) => PlaceholderBlockState)) => void;
+        isEditing?: boolean;
     }) => {
         const client = useApolloClient();
-        const initialProduct: ProductOption | undefined = state.productId
-            ? {
-                  id: state.productId,
-                  title: state.productTitle ?? state.productId,
-                  price: state.productPrice ? Number(state.productPrice) : undefined,
-              }
-            : undefined;
 
         return (
             <div>
@@ -148,12 +143,21 @@ export const PlaceholderBlock = {
                             productPrice: product?.price != null ? String(product.price) : undefined,
                         }));
                     }}
-                    initialValues={{ product: initialProduct }}
+                    initialValues={{
+                        product: state.productId
+                            ? {
+                                  id: state.productId,
+                                  title: state.productTitle ?? state.productId,
+                                  price: state.productPrice ? Number(state.productPrice) : undefined,
+                              }
+                            : undefined,
+                    }}
                 >
                     <AsyncAutocompleteField
                         name="product"
                         label={<FormattedMessage id="placeholderBlock.product" defaultMessage="Product" />}
                         fullWidth
+                        disabled={isEditing}
                         loadOptions={async (search?: string) => {
                             const { data } = await client.query({
                                 query: placeholderBlockProductSearchQuery,
