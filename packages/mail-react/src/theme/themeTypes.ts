@@ -24,11 +24,14 @@ export type TextStyles = { [K in keyof TextStyleMap]?: TextStyleMap[K] };
 export type TextVariantStyles = { [K in keyof TextStyleMap]?: ResponsiveValue<TextStyleMap[K]> };
 
 /**
- * Augmentation root for consumer-defined variant names.
- * Augment this interface to get strict variant key enforcement:
+ * Defines the variants available on the `MjmlText` component.
+ *
  * ```ts
  * declare module "@comet/mail-react" {
- *     interface TextVariants { heading: true; body: true }
+ *     interface TextVariants {
+ *         heading: true;
+ *         body: true;
+ *     }
  * }
  * ```
  */
