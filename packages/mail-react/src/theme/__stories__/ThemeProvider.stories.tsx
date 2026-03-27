@@ -18,7 +18,7 @@ export default config;
 
 export const Basic: Story = {
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText>Using the default theme from the decorator.</MjmlText>
             </MjmlColumn>
@@ -34,7 +34,7 @@ const narrowTheme = createTheme({
 export const CustomTheme: Story = {
     parameters: { theme: narrowTheme },
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText>This email uses a 400px body width and 360px mobile breakpoint.</MjmlText>
             </MjmlColumn>

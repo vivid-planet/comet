@@ -41,7 +41,9 @@ context: |
     - Custom components live in `src/components/<concern>/` directories
       (e.g. `src/components/section/MjmlSection.tsx`)
     - Every custom component has a Storybook story in
-      `src/components/<concern>/__stories__/<Component>.stories.tsx`
+      `src/components/<concern>/__stories__/<Component>.stories.tsx`.
+      When a story demonstrates a non-section component, wrap it in
+      `<MjmlSection indent>` to show a realistic indented layout.
     - Exported components and props have TSDoc comments
     - Component file ordering: imports, types/props, main component, styles
       (registerStyles calls go below the component definition)

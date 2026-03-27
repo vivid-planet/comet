@@ -18,7 +18,7 @@ export default config;
 export const Basic: Story = {
     render: () => (
         <MjmlMailRoot>
-            <MjmlSection>
+            <MjmlSection indent>
                 <MjmlColumn>
                     <MjmlText>Hello from MjmlMailRoot</MjmlText>
                 </MjmlColumn>
@@ -30,7 +30,7 @@ export const Basic: Story = {
 export const CustomBodyBackground: Story = {
     render: () => (
         <MjmlMailRoot theme={createTheme({ colors: { background: { body: "#EAEAEA" } } })}>
-            <MjmlSection>
+            <MjmlSection indent>
                 <MjmlColumn>
                     <MjmlText>Custom body background color</MjmlText>
                 </MjmlColumn>
