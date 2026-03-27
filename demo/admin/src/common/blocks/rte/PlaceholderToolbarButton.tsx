@@ -9,9 +9,16 @@ import { FormattedMessage } from "react-intl";
 import { PlaceholderBlock, type PlaceholderBlockState } from "../PlaceholderBlock";
 import { PLACEHOLDER_ENTITY_TYPE } from "./PlaceholderDecorator";
 
+function formatPrice(price: string | undefined): string | undefined {
+    if (price == null) return undefined;
+    const num = Number(price);
+    if (isNaN(num)) return price;
+    return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(num);
+}
+
 function getPlaceholderLabel(state: PlaceholderBlockState): string {
     if (state.field === "price") {
-        return state.productPrice ?? "Price";
+        return formatPrice(state.productPrice) ?? "Price";
     }
     return state.productTitle ?? "Title";
 }
