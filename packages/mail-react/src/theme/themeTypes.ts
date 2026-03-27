@@ -1,6 +1,51 @@
 import type { ResponsiveValue } from "./responsiveValue.js";
 
 /**
+ * Single source of truth for text style property names and their value types.
+ * Both `TextStyles` and `TextVariantStyles` are derived from this interface.
+ */
+interface TextStyleMap {
+    fontFamily: string;
+    fontSize: string | number;
+    fontWeight: string | number;
+    fontStyle: string;
+    lineHeight: string | number;
+    letterSpacing: string | number;
+    textDecoration: string;
+    textTransform: string;
+    color: string;
+    bottomSpacing: number;
+}
+
+/** Base text styles where each property holds a plain value. */
+export type TextStyles = { [K in keyof TextStyleMap]?: TextStyleMap[K] };
+
+/** Variant text styles where each property supports responsive values. */
+export type TextVariantStyles = { [K in keyof TextStyleMap]?: ResponsiveValue<TextStyleMap[K]> };
+
+/**
+ * Augmentation root for consumer-defined variant names.
+ * Augment this interface to get strict variant key enforcement:
+ * ```ts
+ * declare module "@comet/mail-react" {
+ *     interface TextVariants { heading: true; body: true }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface TextVariants {}
+
+type VariantsRecord = keyof TextVariants extends never ? Record<string, TextVariantStyles> : { [K in keyof TextVariants]?: TextVariantStyles };
+
+export type VariantName = keyof TextVariants extends never ? string : keyof TextVariants;
+
+/** Theme configuration for text styles, variants, and default variant. */
+export interface ThemeText extends TextStyles {
+    defaultVariant?: VariantName;
+    variants?: VariantsRecord;
+}
+
+/**
  * A resolved breakpoint with its numeric value and a ready-to-use media query
  * string that targets viewports narrower than this breakpoint.
  */
@@ -48,4 +93,5 @@ export interface ThemeSizes {
 export interface Theme {
     sizes: ThemeSizes;
     breakpoints: ThemeBreakpoints;
+    text: ThemeText;
 }

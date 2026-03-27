@@ -24,6 +24,16 @@ export function getDefaultFromResponsiveValue<T = number>(value: ResponsiveValue
 }
 
 /**
+ * Returns the default value from a `ResponsiveValue`, or `undefined` if the
+ * input is `undefined`. Useful for extracting inline prop values from optional
+ * theme properties.
+ */
+export function getDefaultOrUndefined<T>(value: ResponsiveValue<T> | undefined): T | undefined {
+    if (value === undefined) return undefined;
+    return getDefaultValue(value);
+}
+
+/**
  * Returns the non-default breakpoint overrides from a `ResponsiveValue`.
  * For a plain value, returns an empty array. For an object, returns one
  * entry per breakpoint key (excluding `default`).
