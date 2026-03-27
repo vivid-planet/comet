@@ -1,13 +1,56 @@
 import { CancelButton, Dialog, OkayButton } from "@comet/admin";
 import { RteTextPlaceholder } from "@comet/admin-icons";
-import { ControlButton, findEntityInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
+import { ControlButton, selectionIsInOneBlock } from "@comet/admin-rte";
 import { DialogActions, DialogContent } from "@mui/material";
-import { EditorState, RichUtils } from "draft-js";
+import { type ContentBlock, EditorState, Modifier, SelectionState } from "draft-js";
 import { type ReactElement, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PlaceholderBlock } from "../PlaceholderBlock";
 import { PLACEHOLDER_ENTITY_TYPE } from "./PlaceholderDecorator";
+
+// Unicode object replacement character – used as the underlying text for inserted placeholder entities.
+const PLACEHOLDER_CHAR = "\uFFFC";
+
+function findPlaceholderAtCursor(editorState: EditorState) {
+    const contentState = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+
+    if (!selectionIsInOneBlock(editorState)) {
+        return { entity: null, entitySelection: null };
+    }
+
+    const blockKey = selection.getStartKey();
+    const block: ContentBlock = contentState.getBlockForKey(blockKey);
+    const offset = selection.getStartOffset();
+
+    // Check the character at cursor and the one before it
+    const offsets = [offset - 1, offset].filter((o) => o >= 0 && o < block.getLength());
+
+    for (const o of offsets) {
+        const entityKey = block.getEntityAt(o);
+        if (entityKey) {
+            const entity = contentState.getEntity(entityKey);
+            if (entity.getType() === PLACEHOLDER_ENTITY_TYPE) {
+                // Find the full range of this entity
+                let start = o;
+                let end = o + 1;
+                while (start > 0 && block.getEntityAt(start - 1) === entityKey) start--;
+                while (end < block.getLength() && block.getEntityAt(end) === entityKey) end++;
+
+                const entitySelection = new SelectionState({
+                    anchorKey: blockKey,
+                    anchorOffset: start,
+                    focusKey: blockKey,
+                    focusOffset: end,
+                });
+                return { entity, entitySelection };
+            }
+        }
+    }
+
+    return { entity: null, entitySelection: null };
+}
 
 interface PlaceholderToolbarButtonProps {
     editorState: EditorState;
@@ -16,9 +59,8 @@ interface PlaceholderToolbarButtonProps {
 
 export function PlaceholderToolbarButton({ editorState, setEditorState }: PlaceholderToolbarButtonProps): ReactElement {
     const [open, setOpen] = useState(false);
-    const { entity: placeholderEntity, entitySelection: placeholderSelection } = findEntityInCurrentSelection(editorState, PLACEHOLDER_ENTITY_TYPE);
-    const selection = editorState.getSelection();
-    const disabled = !placeholderEntity && (selection.isCollapsed() || !selectionIsInOneBlock(editorState));
+    const { entity: placeholderEntity, entitySelection: placeholderSelection } = findPlaceholderAtCursor(editorState);
+    const disabled = !selectionIsInOneBlock(editorState);
 
     function handleClick() {
         if (disabled) {
@@ -31,7 +73,7 @@ export function PlaceholderToolbarButton({ editorState, setEditorState }: Placeh
     }
 
     return (
-        <ControlButton disabled={disabled} onButtonClick={handleClick} icon={RteTextPlaceholder}>
+        <ControlButton disabled={disabled} onButtonClick={handleClick} icon={RteTextPlaceholder} selected={!!placeholderEntity}>
             {open && (
                 <PlaceholderDialog
                     editorState={editorState}
@@ -59,15 +101,25 @@ function PlaceholderDialog({ onClose, placeholderEntity, editorState, setEditorS
     const handleUpdate = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
-            const selection = editorState.getSelection();
             const contentState = editorState.getCurrentContent();
-            const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "MUTABLE", state);
-            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            const newEditorState = EditorState.push(editorState, contentStateWithEntity, "apply-entity");
-            setEditorState(RichUtils.toggleLink(newEditorState, selection, entityKey));
+            const selection = editorState.getSelection();
+
+            if (placeholderEntity) {
+                // Editing existing: replace the entity data on the selected range
+                const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "IMMUTABLE", state);
+                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+                const newContentState = Modifier.applyEntity(contentStateWithEntity, selection, entityKey);
+                setEditorState(EditorState.push(editorState, newContentState, "apply-entity"));
+            } else {
+                // Creating new: insert a placeholder character with the entity at the cursor
+                const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "IMMUTABLE", state);
+                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+                const newContentState = Modifier.insertText(contentStateWithEntity, selection, PLACEHOLDER_CHAR, undefined, entityKey);
+                setEditorState(EditorState.push(editorState, newContentState, "insert-characters"));
+            }
             onClose();
         },
-        [editorState, setEditorState, onClose, state],
+        [editorState, setEditorState, onClose, state, placeholderEntity],
     );
 
     return (
