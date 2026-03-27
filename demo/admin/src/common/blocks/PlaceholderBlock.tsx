@@ -43,7 +43,7 @@ const fieldOptions: Array<{ value: PlaceholderBlockData["field"]; label: React.R
     },
 ];
 
-interface PlaceholderBlockState {
+export interface PlaceholderBlockState {
     productId?: string;
     field: PlaceholderBlockData["field"];
     productTitle?: string;

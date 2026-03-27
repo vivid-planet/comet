@@ -6,11 +6,15 @@ import { type ContentBlock, EditorState, Modifier, SelectionState } from "draft-
 import { type ReactElement, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PlaceholderBlock } from "../PlaceholderBlock";
+import { PlaceholderBlock, type PlaceholderBlockState } from "../PlaceholderBlock";
 import { PLACEHOLDER_ENTITY_TYPE } from "./PlaceholderDecorator";
 
-// Unicode object replacement character – used as the underlying text for inserted placeholder entities.
-const PLACEHOLDER_CHAR = "\uFFFC";
+function getPlaceholderLabel(state: PlaceholderBlockState): string {
+    if (state.field === "price") {
+        return state.productPrice ?? "Price";
+    }
+    return state.productTitle ?? "Title";
+}
 
 function findPlaceholderAtCursor(editorState: EditorState) {
     const contentState = editorState.getCurrentContent();
@@ -104,17 +108,17 @@ function PlaceholderDialog({ onClose, placeholderEntity, editorState, setEditorS
             const contentState = editorState.getCurrentContent();
             const selection = editorState.getSelection();
 
+            const label = getPlaceholderLabel(state);
+            const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "IMMUTABLE", state);
+            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
             if (placeholderEntity) {
-                // Editing existing: replace the entity data on the selected range
-                const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "IMMUTABLE", state);
-                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                const newContentState = Modifier.applyEntity(contentStateWithEntity, selection, entityKey);
-                setEditorState(EditorState.push(editorState, newContentState, "apply-entity"));
+                // Editing existing: replace text and entity data
+                const newContentState = Modifier.replaceText(contentStateWithEntity, selection, label, undefined, entityKey);
+                setEditorState(EditorState.push(editorState, newContentState, "insert-characters"));
             } else {
-                // Creating new: insert a placeholder character with the entity at the cursor
-                const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "IMMUTABLE", state);
-                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                const newContentState = Modifier.insertText(contentStateWithEntity, selection, PLACEHOLDER_CHAR, undefined, entityKey);
+                // Creating new: insert label text with entity at the cursor
+                const newContentState = Modifier.insertText(contentStateWithEntity, selection, label, undefined, entityKey);
                 setEditorState(EditorState.push(editorState, newContentState, "insert-characters"));
             }
             onClose();
