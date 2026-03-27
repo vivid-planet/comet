@@ -122,7 +122,7 @@ export function createRichTextBlock<LinkBlock extends Block>(
 
         childBlocksInfo(): ChildBlockInfo[] {
             const ret: ChildBlockInfo[] = [];
-            Object.entries(this.draftContent.entityMap).map(([key, entity]) => {
+            for (const [key, entity] of Object.entries(this.draftContent.entityMap)) {
                 const entityBlock = entityTypeBlockMap[entity.type];
                 if (entityBlock) {
                     ret.push({
@@ -132,7 +132,7 @@ export function createRichTextBlock<LinkBlock extends Block>(
                         name: entityBlock.name,
                     });
                 }
-            });
+            }
             return ret;
         }
     }
