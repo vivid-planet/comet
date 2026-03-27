@@ -31,7 +31,7 @@
 
 ## 6. Type Safety: Tighten CSS Property Types
 
-- [ ] 6.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `fontSize` and `letterSpacing` from `string | number` to `string`
+- [x] 6.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `fontSize` and `letterSpacing` from `string | number` to `string`
 
 ## 7. Changeset
 

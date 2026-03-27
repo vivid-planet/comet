@@ -6,11 +6,11 @@ import type { ResponsiveValue } from "./responsiveValue.js";
  */
 interface TextStyleMap {
     fontFamily: string;
-    fontSize: string | number;
+    fontSize: string;
     fontWeight: string | number;
     fontStyle: string;
     lineHeight: string | number;
-    letterSpacing: string | number;
+    letterSpacing: string;
     textDecoration: string;
     textTransform: string;
     color: string;
