@@ -1,4 +1,4 @@
-import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml, type ToolbarButtonComponent } from "@comet/admin-rte";
+import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,
@@ -27,7 +27,7 @@ export interface RichTextBlockState {
 export interface RichTextBlockEntityOptions {
     block: BlockInterface;
     decorator: DraftDecorator;
-    toolbarButton?: ToolbarButtonComponent;
+    toolbarButton?: NonNullable<IRteOptions["customToolbarButtons"]>[number];
 }
 
 const [, defaultStaticFunctions] = makeRteApi<RawDraftContentState>({
@@ -152,8 +152,11 @@ export const createRichTextBlock = (
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
 
     // Collect custom toolbar buttons from entity options
-    const entityToolbarButtons: ToolbarButtonComponent[] = Object.values(customEntities)
-        .filter((opts): opts is RichTextBlockEntityOptions & { toolbarButton: ToolbarButtonComponent } => opts.toolbarButton != null)
+    const entityToolbarButtons: NonNullable<IRteOptions["customToolbarButtons"]> = Object.values(customEntities)
+        .filter(
+            (opts): opts is RichTextBlockEntityOptions & { toolbarButton: NonNullable<IRteOptions["customToolbarButtons"]>[number] } =>
+                opts.toolbarButton != null,
+        )
         .map((opts) => opts.toolbarButton);
 
     const defaultRteOptions: IRteOptions = {
