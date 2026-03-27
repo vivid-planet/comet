@@ -90,6 +90,7 @@ export function PlaceholderToolbarButton({ editorState, setEditorState }: Placeh
                     editorState={editorState}
                     setEditorState={setEditorState}
                     placeholderEntity={placeholderEntity}
+                    savedSelection={placeholderSelection}
                     onClose={() => setOpen(false)}
                 />
             )}
@@ -100,37 +101,39 @@ export function PlaceholderToolbarButton({ editorState, setEditorState }: Placeh
 interface PlaceholderDialogProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     placeholderEntity: any;
+    savedSelection: SelectionState | null;
     editorState: EditorState;
     setEditorState: (editorState: EditorState) => void;
     onClose: () => void;
 }
 
-function PlaceholderDialog({ onClose, placeholderEntity, editorState, setEditorState }: PlaceholderDialogProps) {
+function PlaceholderDialog({ onClose, placeholderEntity, savedSelection, editorState, setEditorState }: PlaceholderDialogProps) {
     const initialState = placeholderEntity ? placeholderEntity.getData() : PlaceholderBlock.defaultValues();
     const [state, setState] = useState(initialState);
+    // Capture the selection at dialog open time — the dialog steals focus from Draft.js, collapsing the live selection
+    const [selectionOnOpen] = useState(() => savedSelection ?? editorState.getSelection());
 
     const handleUpdate = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
             const contentState = editorState.getCurrentContent();
-            const selection = editorState.getSelection();
 
             const label = getPlaceholderLabel(state);
             const contentStateWithEntity = contentState.createEntity(PLACEHOLDER_ENTITY_TYPE, "IMMUTABLE", state);
             const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
             if (placeholderEntity) {
-                // Editing existing: replace text and entity data
-                const newContentState = Modifier.replaceText(contentStateWithEntity, selection, label, undefined, entityKey);
+                // Editing existing: use the saved entity selection to replace text
+                const newContentState = Modifier.replaceText(contentStateWithEntity, selectionOnOpen, label, undefined, entityKey);
                 setEditorState(EditorState.push(editorState, newContentState, "insert-characters"));
             } else {
                 // Creating new: insert label text with entity at the cursor
-                const newContentState = Modifier.insertText(contentStateWithEntity, selection, label, undefined, entityKey);
+                const newContentState = Modifier.insertText(contentStateWithEntity, selectionOnOpen, label, undefined, entityKey);
                 setEditorState(EditorState.push(editorState, newContentState, "insert-characters"));
             }
             onClose();
         },
-        [editorState, setEditorState, onClose, state, placeholderEntity],
+        [editorState, setEditorState, onClose, state, placeholderEntity, selectionOnOpen],
     );
 
     return (
