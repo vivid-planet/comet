@@ -10,7 +10,10 @@ context: |
 
     Current surface:
     - Re-exports all @faire/mjml-react components (prop types renamed to drop `I` prefix)
-    - Custom components wrap/extend @faire/mjml-react — additive only, no breaking changes
+    - Custom components wrap/extend @faire/mjml-react — additive only, no breaking changes.
+      Without new props, the component must work everywhere the base does (no new required
+      providers or context). For example, a component must not call useTheme() unconditionally
+      — use useOptionalTheme() and only require a theme when a prop needs it.
     - When a custom component replaces a re-export, only the custom version is exported
       (consumers never import @faire/mjml-react directly; the base must not be exposed)
     - Block factories (BlocksBlock, ListBlock, OneOfBlock, OptionalBlock) for rendering
