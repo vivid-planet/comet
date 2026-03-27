@@ -84,7 +84,7 @@ export function createRichTextBlock<LinkBlock extends Block>(
     }
 
     // Combined map of all entity types to their Block definitions
-    const entityTypeBlockMap: Record<string, Block> = { LINK: LinkBlock, ...customEntities };
+    const entityTypeBlockMap: Record<string, Block> = { LINK: LinkBlock, ...(customEntities ?? {}) };
     const registeredEntityTypes = new Set(Object.keys(entityTypeBlockMap));
 
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
