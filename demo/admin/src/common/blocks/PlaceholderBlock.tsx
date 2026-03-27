@@ -1,7 +1,8 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { AsyncAutocompleteField } from "@comet/admin";
-import { type BlockContext, BlocksFinalForm, createBlockSkeleton, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { type BlockContext, createBlockSkeleton, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import { type PlaceholderBlockData } from "@src/blocks.generated";
+import { useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 const placeholderBlockProductSearchQuery = gql`
@@ -129,18 +130,54 @@ export const PlaceholderBlock = {
         updateState: (setter: PlaceholderBlockState | ((prev: PlaceholderBlockState) => PlaceholderBlockState)) => void;
     }) => {
         const client = useApolloClient();
-        const initialProduct: ProductOption | undefined = state.productId
+        const [options, setOptions] = useState<ProductOption[]>([]);
+        const [loading, setLoading] = useState(false);
+        const [inputValue, setInputValue] = useState("");
+
+        const selectedProduct: ProductOption | null = state.productId
             ? {
                   id: state.productId,
                   title: state.productTitle ?? state.productId,
                   price: state.productPrice ? Number(state.productPrice) : undefined,
               }
-            : undefined;
+            : null;
+
+        const loadOptions = useCallback(
+            async (search?: string) => {
+                setLoading(true);
+                try {
+                    const { data } = await client.query({
+                        query: placeholderBlockProductSearchQuery,
+                        variables: { search },
+                    });
+                    setOptions(data.products.nodes);
+                } finally {
+                    setLoading(false);
+                }
+            },
+            [client],
+        );
+
+        useEffect(() => {
+            const timeout = setTimeout(() => {
+                loadOptions(inputValue || undefined);
+            }, 300);
+            return () => clearTimeout(timeout);
+        }, [inputValue, loadOptions]);
 
         return (
             <div>
-                <BlocksFinalForm<{ product: ProductOption | undefined }>
-                    onSubmit={({ product }) => {
+                <Autocomplete
+                    options={options}
+                    value={selectedProduct}
+                    loading={loading}
+                    inputValue={inputValue}
+                    onInputChange={(_event, value, reason) => {
+                        if (reason !== "reset") {
+                            setInputValue(value);
+                        }
+                    }}
+                    onChange={(_event, product) => {
                         updateState((prev) => ({
                             ...prev,
                             productId: product?.id,
@@ -148,23 +185,26 @@ export const PlaceholderBlock = {
                             productPrice: product?.price != null ? String(product.price) : undefined,
                         }));
                     }}
-                    initialValues={{ product: initialProduct }}
-                >
-                    <AsyncAutocompleteField
-                        name="product"
-                        label={<FormattedMessage id="placeholderBlock.product" defaultMessage="Product" />}
-                        fullWidth
-                        loadOptions={async (search?: string) => {
-                            const { data } = await client.query({
-                                query: placeholderBlockProductSearchQuery,
-                                variables: { search },
-                            });
-                            return data.products.nodes;
-                        }}
-                        getOptionLabel={(option: ProductOption) => option.title}
-                        isOptionEqualToValue={(option: ProductOption, value: ProductOption) => option.id === value.id}
-                    />
-                </BlocksFinalForm>
+                    getOptionLabel={(option: ProductOption) => option.title}
+                    isOptionEqualToValue={(option: ProductOption, value: ProductOption) => option.id === value.id}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label={<FormattedMessage id="placeholderBlock.product" defaultMessage="Product" />}
+                            slotProps={{
+                                input: {
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <>
+                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {params.InputProps.endAdornment}
+                                        </>
+                                    ),
+                                },
+                            }}
+                        />
+                    )}
+                />
 
                 <FieldSelect.AdminComponent
                     state={state.field}
