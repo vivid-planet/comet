@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultValue, getResponsiveOverrides } from "../../theme/responsiveValue.js";
-import { useTheme } from "../../theme/ThemeProvider.js";
+import { useOptionalTheme } from "../../theme/ThemeProvider.js";
+import type { Theme } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
 
 export type MjmlSectionProps = IMjmlSectionProps & {
@@ -21,22 +22,27 @@ export type MjmlSectionProps = IMjmlSectionProps & {
 
 /** A section wrapper for email layouts. Must be a direct child of `MjmlBody`. */
 export function MjmlSection({ children, indent, disableResponsiveBehavior, slotProps, className, ...props }: MjmlSectionProps): ReactNode {
-    const theme = useTheme();
+    const theme = useOptionalTheme();
 
+    const indentProps = indent ? getIndentProps(theme) : {};
     const resolvedClassName = clsx("mjmlSection", indent && "mjmlSection--indented", className);
-
-    const indentProps = indent
-        ? {
-              paddingLeft: getDefaultValue(theme.sizes.contentIndentation),
-              paddingRight: getDefaultValue(theme.sizes.contentIndentation),
-          }
-        : {};
 
     return (
         <BaseMjmlSection className={resolvedClassName} {...indentProps} {...props}>
             {disableResponsiveBehavior ? <MjmlGroup {...slotProps?.group}>{children}</MjmlGroup> : <>{children}</>}
         </BaseMjmlSection>
     );
+}
+
+function getIndentProps(theme: Theme | null): Pick<IMjmlSectionProps, "paddingLeft" | "paddingRight"> {
+    if (theme === null) {
+        throw new Error("The `indent` prop requires being wrapped in a ThemeProvider or MjmlMailRoot.");
+    }
+
+    return {
+        paddingLeft: getDefaultValue(theme.sizes.contentIndentation),
+        paddingRight: getDefaultValue(theme.sizes.contentIndentation),
+    };
 }
 
 registerStyles((theme) => {
