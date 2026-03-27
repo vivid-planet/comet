@@ -149,7 +149,7 @@ function PlaceholderDialog({ onClose, placeholderEntity, savedSelection, editorS
             }
         >
             <DialogContent>
-                <PlaceholderBlock.AdminComponent state={state} updateState={setState} />
+                <PlaceholderBlock.AdminComponent state={state} updateState={setState} isEditing={!!placeholderEntity} />
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={onClose} />
