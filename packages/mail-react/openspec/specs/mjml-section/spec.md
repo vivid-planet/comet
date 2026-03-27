@@ -2,12 +2,17 @@
 
 ### Requirement: Drop-in replacement for base MjmlSection
 
-The custom `MjmlSection` component SHALL accept all props that the `@faire/mjml-react` `MjmlSection` accepts and forward them to the underlying component. Existing call sites that use `MjmlSection` without any of the new props SHALL produce identical output.
+The custom `MjmlSection` component SHALL accept all props that the `@faire/mjml-react` `MjmlSection` accepts and forward them to the underlying component. Existing call sites that use `MjmlSection` without any of the new props SHALL produce identical output. The component SHALL NOT require a `ThemeProvider` ancestor when theme-dependent features are not used.
 
 #### Scenario: Base props are forwarded
 
 - **WHEN** a consumer renders `<MjmlSection backgroundColor="#fff" padding="10px">` without any new props
 - **THEN** the underlying `@faire/mjml-react` `MjmlSection` receives `backgroundColor="#fff"` and `padding="10px"` and renders identically to a direct usage
+
+#### Scenario: Works without ThemeProvider
+
+- **WHEN** `MjmlSection` is rendered without any `ThemeProvider` or `MjmlMailRoot` ancestor and without theme-dependent props
+- **THEN** the component renders successfully without throwing an error
 
 ### Requirement: Disable responsive behavior via `disableResponsiveBehavior` prop
 
@@ -64,6 +69,8 @@ The component SHALL accept an `indent` boolean prop (default `false`). When `tru
 
 When `indent` is `false` or not provided, no indentation padding SHALL be applied by the component.
 
+When `indent` is `true` and no `ThemeProvider` ancestor is present, the component SHALL throw an error with a message indicating that the `indent` prop requires a `ThemeProvider` or `MjmlMailRoot`.
+
 #### Scenario: Indentation enabled with number
 
 - **WHEN** `indent` is `true` and the theme has `sizes.contentIndentation === 20`
@@ -78,6 +85,11 @@ When `indent` is `false` or not provided, no indentation padding SHALL be applie
 
 - **WHEN** `indent` is not set or `false`
 - **THEN** no `paddingLeft` or `paddingRight` is set by the component
+
+#### Scenario: Indent without ThemeProvider throws targeted error
+
+- **WHEN** `indent` is `true` and there is no `ThemeProvider` or `MjmlMailRoot` ancestor
+- **THEN** the component throws an error with a message indicating that `indent` requires a `ThemeProvider` or `MjmlMailRoot`
 
 ### Requirement: Responsive indentation overrides via registered styles
 
