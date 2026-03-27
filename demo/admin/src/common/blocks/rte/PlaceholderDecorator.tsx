@@ -3,32 +3,17 @@ import type { ReactNode } from "react";
 
 export const PLACEHOLDER_ENTITY_TYPE = "PLACEHOLDER";
 
-interface PlaceholderEditorComponentProps {
-    children: ReactNode;
-    contentState: ContentState;
-    entityKey: string;
-}
-
-function PlaceholderEditorComponent({ children, contentState, entityKey }: PlaceholderEditorComponentProps): ReactNode {
-    const data = contentState.getEntity(entityKey).getData();
-    const label = data.field === "price" ? (data.productPrice ?? "Price") : (data.productTitle ?? "Title");
-
+function PlaceholderEditorComponent({ children }: { children: ReactNode }): ReactNode {
     return (
-        <span>
-            <span
-                contentEditable={false}
-                style={{
-                    backgroundColor: "#e8f0fe",
-                    border: "1px solid #a8c7fa",
-                    borderRadius: "3px",
-                    padding: "0 4px",
-                    userSelect: "none",
-                }}
-            >
-                {label}
-            </span>
-            {/* Render Draft.js children outside the chip so the cursor appears after it, not inside */}
-            <span style={{ fontSize: 0, color: "transparent", overflow: "hidden", display: "inline-block", width: 0 }}>{children}</span>
+        <span
+            style={{
+                backgroundColor: "#e8f0fe",
+                border: "1px solid #a8c7fa",
+                borderRadius: "3px",
+                padding: "0 4px",
+            }}
+        >
+            {children}
         </span>
     );
 }
