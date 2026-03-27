@@ -2567,6 +2567,16 @@
                 "nullable": false
             },
             {
+                "name": "productTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "productPrice",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "value",
                 "kind": "String",
                 "nullable": true
@@ -2586,6 +2596,16 @@
                     "price"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "productTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "productPrice",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },

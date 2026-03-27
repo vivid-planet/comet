@@ -8,6 +8,8 @@ import { PlaceholderBlockData } from "./placeholder.block";
 type TransformResponse = {
     productId?: string;
     field: string;
+    productTitle?: string;
+    productPrice?: string;
     value?: string;
 };
 
@@ -39,6 +41,8 @@ export class PlaceholderBlockTransformerService implements BlockTransformerServi
         return {
             productId: block.productId,
             field: block.field,
+            productTitle: product.title,
+            productPrice: product.price != null ? String(product.price) : undefined,
             value,
         };
     }
