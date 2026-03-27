@@ -20,6 +20,7 @@ export { type IMakeRteApiProps, type IRteApiProps, default as makeRteApi, type O
 export { type FilterEditorStateBeforeUpdateFn, type IOptions as IRteOptions, type IRteRef, Rte, type RteClassKey, type RteProps } from "./core/Rte";
 export { type IOptions as IRteReadOnlyOptions, type IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
 export { stateToHtml } from "./core/translation/stateToHtml";
+export type { IControlProps, ToolbarButtonComponent } from "./core/types";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";

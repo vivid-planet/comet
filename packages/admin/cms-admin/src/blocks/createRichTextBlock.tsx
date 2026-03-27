@@ -1,4 +1,4 @@
-import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
+import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml, type ToolbarButtonComponent } from "@comet/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,
@@ -11,7 +11,6 @@ import {
     type RawDraftContentState,
 } from "draft-js";
 import isEqual from "lodash.isequal";
-import { type ComponentType } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { type RichTextBlockData, type RichTextBlockInput } from "../blocks.generated";
@@ -25,15 +24,10 @@ export interface RichTextBlockState {
     editorState: EditorState;
 }
 
-interface EntityToolbarButtonProps {
-    editorState: EditorState;
-    setEditorState: (editorState: EditorState) => void;
-}
-
 export interface RichTextBlockEntityOptions {
     block: BlockInterface;
     decorator: DraftDecorator;
-    toolbarButton?: ComponentType<EntityToolbarButtonProps>;
+    toolbarButton?: ToolbarButtonComponent;
 }
 
 const [, defaultStaticFunctions] = makeRteApi<RawDraftContentState>({
@@ -158,8 +152,8 @@ export const createRichTextBlock = (
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
 
     // Collect custom toolbar buttons from entity options
-    const entityToolbarButtons: Array<ComponentType<EntityToolbarButtonProps>> = Object.values(customEntities)
-        .filter((opts): opts is RichTextBlockEntityOptions & { toolbarButton: ComponentType<EntityToolbarButtonProps> } => opts.toolbarButton != null)
+    const entityToolbarButtons: ToolbarButtonComponent[] = Object.values(customEntities)
+        .filter((opts): opts is RichTextBlockEntityOptions & { toolbarButton: ToolbarButtonComponent } => opts.toolbarButton != null)
         .map((opts) => opts.toolbarButton);
 
     const defaultRteOptions: IRteOptions = {
@@ -189,8 +183,7 @@ export const createRichTextBlock = (
         standardBlockType: "unstyled",
 
         overwriteLinkButton: CmsLinkToolbarButton,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        customToolbarButtons: entityToolbarButtons as any[],
+        customToolbarButtons: entityToolbarButtons,
     };
     const LinkBlock = options.link;
     const rteOptions = { ...defaultRteOptions, ...(options.rte ?? {}) };
