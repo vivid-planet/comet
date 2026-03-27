@@ -1,6 +1,7 @@
 import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
+import { PlaceholderBlockTransformerService } from "@src/common/blocks/placeholder-block-transformer.service";
 import { ConfigModule } from "@src/config/config.module";
 import { TranslationModule } from "@src/translation/translation.module";
 
@@ -70,6 +71,7 @@ import { ProductPublishedMail } from "./published-mail/product-published.mail";
         ProductCategoryTypeResolver,
         ProductService,
         ProductVariantService,
+        PlaceholderBlockTransformerService,
     ],
     exports: [],
 })

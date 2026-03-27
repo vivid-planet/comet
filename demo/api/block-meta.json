@@ -2565,6 +2565,11 @@
                     "price"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "value",
+                "kind": "String",
+                "nullable": true
             }
         ],
         "inputFields": [
