@@ -1,6 +1,7 @@
 import { MjmlColumn, MjmlText } from "@faire/mjml-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { createTheme } from "../../../theme/createTheme.js";
 import { MjmlSection } from "../../section/MjmlSection.js";
 import { MjmlMailRoot } from "../MjmlMailRoot.js";
 
@@ -20,6 +21,18 @@ export const Basic: Story = {
             <MjmlSection>
                 <MjmlColumn>
                     <MjmlText>Hello from MjmlMailRoot</MjmlText>
+                </MjmlColumn>
+            </MjmlSection>
+        </MjmlMailRoot>
+    ),
+};
+
+export const CustomBodyBackground: Story = {
+    render: () => (
+        <MjmlMailRoot theme={createTheme({ colors: { background: { body: "#EAEAEA" } } })}>
+            <MjmlSection>
+                <MjmlColumn>
+                    <MjmlText>Custom body background color</MjmlText>
                 </MjmlColumn>
             </MjmlSection>
         </MjmlMailRoot>

@@ -1,11 +1,12 @@
 import { createBreakpoint } from "./createBreakpoint.js";
 import { defaultTheme } from "./defaultTheme.js";
-import type { Theme, ThemeBreakpoints, ThemeSizes, ThemeText } from "./themeTypes.js";
+import type { Theme, ThemeBackgroundColors, ThemeBreakpoints, ThemeColors, ThemeSizes, ThemeText } from "./themeTypes.js";
 
 type CreateThemeOverrides = {
     sizes?: Partial<ThemeSizes>;
     breakpoints?: Partial<ThemeBreakpoints>;
     text?: Partial<ThemeText>;
+    colors?: { background?: Partial<ThemeBackgroundColors> } & Partial<Omit<ThemeColors, "background">>;
 };
 
 /**
@@ -30,5 +31,10 @@ export function createTheme(overrides?: CreateThemeOverrides): Theme {
             ...overrides?.breakpoints,
         },
         text: { ...defaultTheme.text, ...overrides?.text },
+        colors: {
+            ...defaultTheme.colors,
+            ...overrides?.colors,
+            background: { ...defaultTheme.colors.background, ...overrides?.colors?.background },
+        },
     };
 }

@@ -36,6 +36,19 @@ export const Indented: Story = {
     ),
 };
 
+export const ExplicitBackgroundColor: Story = {
+    args: {
+        backgroundColor: "#FF0000",
+    },
+    render: (args) => (
+        <MjmlSection {...args}>
+            <MjmlColumn>
+                <MjmlText>Explicit backgroundColor overrides theme default</MjmlText>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
 export const DisabledResponsiveBehavior: Story = {
     args: {
         disableResponsiveBehavior: true,
