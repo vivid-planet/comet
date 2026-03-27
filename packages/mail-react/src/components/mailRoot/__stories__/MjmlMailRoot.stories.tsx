@@ -11,6 +11,7 @@ const config: Meta<typeof MjmlMailRoot> = {
     title: "Components/MjmlMailRoot",
     component: MjmlMailRoot,
     tags: ["autodocs"],
+    parameters: { mailRoot: false },
 };
 
 export default config;
