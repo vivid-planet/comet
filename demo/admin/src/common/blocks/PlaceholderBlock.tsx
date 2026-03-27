@@ -2,6 +2,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { BlocksFinalForm, createBlockSkeleton, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { type PlaceholderBlockData } from "@src/blocks.generated";
+import { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 
 const placeholderBlockProductSearchQuery = gql`
@@ -10,6 +11,7 @@ const placeholderBlockProductSearchQuery = gql`
             nodes {
                 id
                 title
+                price
             }
         }
     }
@@ -20,6 +22,7 @@ const placeholderBlockProductQuery = gql`
         product(id: $id) {
             id
             title
+            price
         }
     }
 `;
@@ -27,6 +30,7 @@ const placeholderBlockProductQuery = gql`
 interface ProductOption {
     id: string;
     title: string;
+    price?: number;
 }
 
 const fieldOptions: Array<{ value: PlaceholderBlockData["field"]; label: React.ReactNode }> = [
@@ -43,6 +47,8 @@ const fieldOptions: Array<{ value: PlaceholderBlockData["field"]; label: React.R
 interface PlaceholderBlockState {
     productId?: string;
     field: PlaceholderBlockData["field"];
+    productTitle?: string;
+    productPrice?: string;
 }
 
 const [FieldSelect] = createCompositeBlockSelectField<PlaceholderBlockData["field"]>({
@@ -50,6 +56,15 @@ const [FieldSelect] = createCompositeBlockSelectField<PlaceholderBlockData["fiel
     defaultValue: "title",
     options: fieldOptions,
 });
+
+function resolveValue(state: PlaceholderBlockState): string | undefined {
+    switch (state.field) {
+        case "title":
+            return state.productTitle;
+        case "price":
+            return state.productPrice;
+    }
+}
 
 export const PlaceholderBlock = {
     ...createBlockSkeleton(),
@@ -78,6 +93,7 @@ export const PlaceholderBlock = {
     createPreviewState: (state: PlaceholderBlockState) => ({
         productId: state.productId,
         field: state.field,
+        value: resolveValue(state),
     }),
 
     AdminComponent: ({
@@ -94,11 +110,26 @@ export const PlaceholderBlock = {
         });
         const initialProduct: ProductOption | undefined = productData?.product ?? undefined;
 
+        useEffect(() => {
+            if (initialProduct) {
+                updateState((prev) => ({
+                    ...prev,
+                    productTitle: initialProduct.title,
+                    productPrice: initialProduct.price != null ? String(initialProduct.price) : undefined,
+                }));
+            }
+        }, [initialProduct, updateState]);
+
         return (
             <div>
                 <BlocksFinalForm<{ product: ProductOption | undefined }>
                     onSubmit={({ product }) => {
-                        updateState((prev) => ({ ...prev, productId: product?.id }));
+                        updateState((prev) => ({
+                            ...prev,
+                            productId: product?.id,
+                            productTitle: product?.title,
+                            productPrice: product?.price != null ? String(product.price) : undefined,
+                        }));
                     }}
                     initialValues={{ product: initialProduct }}
                 >
