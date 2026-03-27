@@ -19,11 +19,7 @@ const theme = createTheme({
 });
 
 <MjmlMailRoot theme={theme}>
-    <MjmlSection>
-        {/* Section gets #F8F8F8 background from theme */}
-    </MjmlSection>
-    <MjmlSection backgroundColor="#FF0000">
-        {/* Explicit prop overrides theme default */}
-    </MjmlSection>
-</MjmlMailRoot>
+    <MjmlSection>{/* Section gets #F8F8F8 background from theme */}</MjmlSection>
+    <MjmlSection backgroundColor="#FF0000">{/* Explicit prop overrides theme default */}</MjmlSection>
+</MjmlMailRoot>;
 ```
