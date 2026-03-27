@@ -30,7 +30,7 @@ export function getDefaultFromResponsiveValue<T = number>(value: ResponsiveValue
  */
 export function getDefaultOrUndefined<T>(value: ResponsiveValue<T> | undefined): T | undefined {
     if (value === undefined) return undefined;
-    return getDefaultValue(value);
+    return getDefaultFromResponsiveValue(value);
 }
 
 /**
