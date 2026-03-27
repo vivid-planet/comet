@@ -88,7 +88,11 @@ The library SHALL export a `getResponsiveOverrides` function from its main entry
 
 ### Requirement: Theme type interfaces
 
-The library SHALL export the following interfaces from its main entry point: `Theme`, `ThemeSizes`, `ThemeBreakpoints`, `ThemeBreakpoint`, `ThemeText`, `TextStyles`, `TextVariantStyles`, `TextVariants`.
+The library SHALL export the following interfaces from its main entry point: `Theme`, `ThemeSizes`, `ThemeBreakpoints`, `ThemeBreakpoint`, `ThemeText`, `TextStyles`, `TextVariantStyles`, `TextVariants`, `ThemeColors`, `ThemeBackgroundColors`.
+
+`ThemeBackgroundColors` SHALL contain a `body` property of type `string` and a `content` property of type `string`.
+
+`ThemeColors` SHALL contain a `background` property of type `ThemeBackgroundColors`.
 
 `ThemeSizes` SHALL contain a `bodyWidth` property of type `number` with a TSDoc comment describing it as the width of the email body in pixels.
 
@@ -100,7 +104,7 @@ The library SHALL export the following interfaces from its main entry point: `Th
 
 The `mobile` property SHALL have a TSDoc comment explaining that it defines the mobile breakpoint and that, when used with `MjmlMailRoot`, this value also controls the MJML responsive breakpoint (`<mj-breakpoint>`), which determines the viewport width at which columns stack vertically.
 
-`Theme` SHALL contain a `sizes` property of type `ThemeSizes`, a `breakpoints` property of type `ThemeBreakpoints`, and a `text` property of type `ThemeText`.
+`Theme` SHALL contain a `sizes` property of type `ThemeSizes`, a `breakpoints` property of type `ThemeBreakpoints`, a `text` property of type `ThemeText`, and a `colors` property of type `ThemeColors`.
 
 All interfaces SHALL support TypeScript module augmentation (declaration merging) so consumers can extend the theme at any level.
 
@@ -114,6 +118,21 @@ All interfaces SHALL support TypeScript module augmentation (declaration merging
 - **WHEN** a consumer writes `import type { TextStyles, TextVariantStyles, TextVariants } from "@comet/mail-react"`
 - **THEN** all imports resolve successfully
 
+#### Scenario: Consumer imports color type interfaces
+
+- **WHEN** a consumer writes `import type { ThemeColors, ThemeBackgroundColors } from "@comet/mail-react"`
+- **THEN** all imports resolve successfully
+
+#### Scenario: Theme includes colors property
+
+- **WHEN** a consumer accesses `theme.colors`
+- **THEN** the property exists and is of type `ThemeColors`
+
+#### Scenario: ThemeColors includes background
+
+- **WHEN** a consumer accesses `theme.colors.background`
+- **THEN** the property exists and is of type `ThemeBackgroundColors` with `body` and `content` string properties
+
 #### Scenario: Theme includes text property
 
 - **WHEN** a consumer accesses `theme.text`
@@ -123,6 +142,16 @@ All interfaces SHALL support TypeScript module augmentation (declaration merging
 
 - **WHEN** a consumer accesses `theme.sizes.contentIndentation`
 - **THEN** the property exists and is of type `ResponsiveValue` (numeric responsive values via the default type parameter)
+
+#### Scenario: Module augmentation on ThemeBackgroundColors
+
+- **WHEN** a consumer declares `declare module "@comet/mail-react" { interface ThemeBackgroundColors { sidebar: string } }`
+- **THEN** the augmented `sidebar` property is present on `Theme["colors"]["background"]`
+
+#### Scenario: Module augmentation on ThemeColors
+
+- **WHEN** a consumer declares `declare module "@comet/mail-react" { interface ThemeColors { brand: { primary: string } } }`
+- **THEN** the augmented `brand` property is present on `Theme["colors"]`
 
 #### Scenario: Module augmentation on root Theme
 
@@ -149,6 +178,10 @@ The default theme SHALL have `breakpoints.default.value` equal to `600` and `bre
 
 The default theme SHALL have `breakpoints.mobile.value` equal to `420` and `breakpoints.mobile.belowMediaQuery` equal to `@media (max-width: 419px)`.
 
+The default theme SHALL have `colors.background.body` equal to `"#F2F2F2"`.
+
+The default theme SHALL have `colors.background.content` equal to `"#FFFFFF"`.
+
 #### Scenario: Default sizes
 
 - **WHEN** `createTheme()` is called with no arguments
@@ -169,6 +202,11 @@ The default theme SHALL have `breakpoints.mobile.value` equal to `420` and `brea
 
 - **WHEN** `createTheme()` is called with no arguments
 - **THEN** `breakpoints.default.belowMediaQuery === "@media (max-width: 599px)"` and `breakpoints.mobile.belowMediaQuery === "@media (max-width: 419px)"`
+
+#### Scenario: Default background colors
+
+- **WHEN** `createTheme()` is called with no arguments
+- **THEN** the returned theme has `colors.background.body === "#F2F2F2"` and `colors.background.content === "#FFFFFF"`
 
 #### Scenario: Override contentIndentation with number
 
@@ -204,6 +242,8 @@ The overrides object SHALL accept `breakpoints` as a partial `ThemeBreakpoints` 
 
 The overrides object SHALL accept `text` as a partial `ThemeText` object (e.g. `{ text: { fontFamily: "Georgia" } }`). Text overrides SHALL be shallow-merged with the default text values.
 
+The overrides object SHALL accept `colors` as a partial nested object. `colors.background` SHALL accept a partial `ThemeBackgroundColors` (e.g. `{ colors: { background: { body: "#EEE" } } }`). Color overrides SHALL be deep-merged with the default color values so that unspecified sibling keys retain their defaults.
+
 Overrides SHALL be deep-merged with the default theme values.
 
 `createTheme` SHALL handle breakpoint keys dynamically. Any key present in the `breakpoints` overrides — including keys added via module augmentation — SHALL appear in the returned theme's `breakpoints` object.
@@ -233,7 +273,7 @@ The built-in breakpoints `default` and `mobile` SHALL always be present in the r
 #### Scenario: No arguments produces complete default theme
 
 - **WHEN** `createTheme()` is called with no arguments
-- **THEN** the result is identical to the default theme (including `text` defaults)
+- **THEN** the result is identical to the default theme (including `text` and `colors` defaults)
 
 #### Scenario: Override text styles
 
@@ -244,6 +284,21 @@ The built-in breakpoints `default` and `mobile` SHALL always be present in the r
 
 - **WHEN** `createTheme({ text: { variants: { heading: { fontSize: { default: "32px", mobile: "24px" } } } } })` is called
 - **THEN** the returned theme includes the variants alongside default base text styles
+
+#### Scenario: Override body background color
+
+- **WHEN** `createTheme({ colors: { background: { body: "#EAEAEA" } } })` is called
+- **THEN** the returned theme has `colors.background.body === "#EAEAEA"` and `colors.background.content === "#FFFFFF"` (default retained)
+
+#### Scenario: Override content background color
+
+- **WHEN** `createTheme({ colors: { background: { content: "#F8F8F8" } } })` is called
+- **THEN** the returned theme has `colors.background.content === "#F8F8F8"` and `colors.background.body === "#F2F2F2"` (default retained)
+
+#### Scenario: Override both background colors
+
+- **WHEN** `createTheme({ colors: { background: { body: "#EEE", content: "#FFF" } } })` is called
+- **THEN** the returned theme has `colors.background.body === "#EEE"` and `colors.background.content === "#FFF"`
 
 #### Scenario: Override bodyWidth
 

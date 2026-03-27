@@ -6,6 +6,8 @@
 
 `MjmlMailRoot` SHALL set the `width` attribute on `<MjmlBody>` to the value of `theme.sizes.bodyWidth` from the resolved theme, formatted as a pixel string (e.g. `"600px"`).
 
+`MjmlMailRoot` SHALL set the `backgroundColor` attribute on `<MjmlBody>` to the value of `theme.colors.background.body` from the resolved theme.
+
 `MjmlMailRoot` SHALL render `<MjmlBreakpoint width={theme.breakpoints.mobile.value + "px"} />` inside `<MjmlHead>`, setting the MJML responsive breakpoint from the theme's mobile breakpoint value.
 
 `MjmlMailRoot` SHALL render registered styles inside `<MjmlHead>`, after the `<MjmlBreakpoint>` element, using an internal implementation component that is not exported from the package, so that all styles registered via `registerStyles` are included in the email output.
@@ -21,6 +23,16 @@
 
 - **WHEN** `<MjmlMailRoot>` is rendered with no theme prop
 - **THEN** the `<mj-body>` element has `width="600px"` (the default `sizes.bodyWidth`)
+
+#### Scenario: Body background color from theme
+
+- **WHEN** `<MjmlMailRoot>` is rendered with no theme prop
+- **THEN** the `<mj-body>` element has `background-color="#F2F2F2"` (the default `colors.background.body`)
+
+#### Scenario: Custom theme body background color
+
+- **WHEN** `<MjmlMailRoot theme={createTheme({ colors: { background: { body: "#EAEAEA" } } })}>` is rendered
+- **THEN** the `<mj-body>` element has `background-color="#EAEAEA"`
 
 #### Scenario: Custom theme body width
 
