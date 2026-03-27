@@ -25,10 +25,6 @@ export const Default: Story = {
     ),
 };
 
-// In a real project, consumers would augment TextVariants for type-safe variant keys:
-//   declare module "@comet/mail-react" { interface TextVariants { heading: true; body: true } }
-// Without augmentation, variant keys accept any string.
-
 export const WithVariants: Story = {
     parameters: {
         theme: createTheme({
