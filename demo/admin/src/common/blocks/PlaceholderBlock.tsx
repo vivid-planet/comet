@@ -56,12 +56,19 @@ const [FieldSelect] = createCompositeBlockSelectField<PlaceholderBlockData["fiel
     options: fieldOptions,
 });
 
+function formatPrice(price: string | undefined): string | undefined {
+    if (price == null) return undefined;
+    const num = Number(price);
+    if (isNaN(num)) return price;
+    return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(num);
+}
+
 function resolveValue(state: PlaceholderBlockState): string | undefined {
     switch (state.field) {
         case "title":
             return state.productTitle;
         case "price":
-            return state.productPrice;
+            return formatPrice(state.productPrice);
     }
 }
 

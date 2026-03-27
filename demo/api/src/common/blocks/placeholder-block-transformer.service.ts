@@ -34,7 +34,8 @@ export class PlaceholderBlockTransformerService implements BlockTransformerServi
                 value = product.title;
                 break;
             case "price":
-                value = product.price != null ? String(product.price) : undefined;
+                value =
+                    product.price != null ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(product.price) : undefined;
                 break;
         }
 
