@@ -2,10 +2,88 @@
 "@comet/mail-react": minor
 ---
 
-Add themed `MjmlText` component with `variant` and `bottomSpacing` props
+`MjmlText` now supports `variant` and `bottomSpacing` props, configured through `theme.text`
 
-`MjmlText` accepts optional `variant` and `bottomSpacing` props; typography is driven by the theme so you do not repeat font and spacing attributes on every block.
+- `theme.text` defines static base styles, e.g., the global default font family
+- `theme.text.variants` overrides the base styles, optionally, with responsive style objects where needed
+- The `bottomSpacing` prop on `MjmlText` enables spacing below the text, as defined by the `theme.text.bottomSpacing` or `theme.text.variants.bottomSpacing` theme values
+- `MjmlMailRoot` applies the `fontFamily` from `theme.text` as the mail-wide default
 
-Configure text styles under `theme.text`: base typography (`fontFamily`, `fontSize`, `lineHeight`, spacing), optional named variants, and `defaultVariant` for text without an explicit variant.
+**Simple example theme**
 
-`MjmlMailRoot` applies the theme text `fontFamily` as the default for the whole email.
+```ts
+import { createTheme } from "@comet/mail-react";
+
+const theme = createTheme({
+    text: {
+        fontFamily: "Georgia, serif",
+        fontSize: "16px",
+        lineHeight: "24px",
+        bottomSpacing: "12px",
+    },
+});
+```
+
+Usage:
+
+```tsx
+import { MjmlMailRoot, MjmlText } from "@comet/mail-react";
+
+<MjmlMailRoot theme={theme}>
+    <MjmlSection>
+        <MjmlColumn>
+            <MjmlText bottomSpacing>Hello</MjmlText>
+            <MjmlText>This is a small paragraph.</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlMailRoot>;
+```
+
+**Example theme with custom variants**
+
+```ts
+import { createTheme } from "@comet/mail-react";
+
+const theme = createTheme({
+    text: {
+        fontFamily: "Georgia, serif",
+        fontSize: "16px",
+        lineHeight: "24px",
+        defaultVariant: "body",
+        variants: {
+            heading: {
+                fontSize: { default: "28px", mobile: "22px" },
+                fontWeight: 700,
+            },
+            body: {
+                fontSize: "16px",
+            },
+        },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface TextVariants {
+        heading: true;
+        body: true;
+    }
+}
+```
+
+Usage:
+
+```tsx
+import { MjmlMailRoot, MjmlText } from "@comet/mail-react";
+
+<MjmlMailRoot theme={theme}>
+    <MjmlSection>
+        <MjmlColumn>
+            <MjmlText variant="heading" bottomSpacing>
+                Title
+            </MjmlText>
+            <MjmlText bottomSpacing>Body copy uses defaultVariant, which is "body" in this theme.</MjmlText>
+            <MjmlText>This is another paragraph, using the "body" variant.</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlMailRoot>;
+```
