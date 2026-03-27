@@ -9,7 +9,7 @@ describe("createTheme text", () => {
         expect(theme.text.fontFamily).toBe("Arial, sans-serif");
         expect(theme.text.fontSize).toBe("16px");
         expect(theme.text.lineHeight).toBe("20px");
-        expect(theme.text.bottomSpacing).toBe(16);
+        expect(theme.text.bottomSpacing).toBe("16px");
     });
 
     it("shallow-merges text overrides with defaults", () => {
@@ -17,7 +17,7 @@ describe("createTheme text", () => {
         expect(theme.text.fontFamily).toBe("Georgia, serif");
         expect(theme.text.fontSize).toBe("18px");
         expect(theme.text.lineHeight).toBe("20px");
-        expect(theme.text.bottomSpacing).toBe(16);
+        expect(theme.text.bottomSpacing).toBe("16px");
     });
 
     it("passes through variant definitions", () => {

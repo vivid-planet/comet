@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { ReactNode } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
-import { getDefaultOrUndefined, getResponsiveOverrides, type ResponsiveValue } from "../../theme/responsiveValue.js";
+import { getDefaultOrUndefined, getResponsiveOverrides } from "../../theme/responsiveValue.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, ThemeBreakpoints, VariantName } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
@@ -69,20 +69,19 @@ export function MjmlText({ variant: variantProp, bottomSpacing, className, ...re
     );
 }
 
-function collectOverride<T>(
-    overrides: Map<keyof ThemeBreakpoints, string[]>,
-    value: ResponsiveValue<T> | undefined,
-    cssProperty: string,
-    formatValue: (v: T) => string,
-): void {
-    if (value === undefined) return;
+type StylePropertyKey = Exclude<keyof TextVariantStyles, "bottomSpacing">;
 
-    for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(value)) {
-        const declarations = overrides.get(breakpointKey) ?? [];
-        declarations.push(`${cssProperty}: ${formatValue(breakpointValue)} !important`);
-        overrides.set(breakpointKey, declarations);
-    }
-}
+const textStyleCssProperties: ReadonlyArray<[StylePropertyKey, string]> = [
+    ["fontFamily", "font-family"],
+    ["fontSize", "font-size"],
+    ["fontWeight", "font-weight"],
+    ["fontStyle", "font-style"],
+    ["lineHeight", "line-height"],
+    ["letterSpacing", "letter-spacing"],
+    ["textDecoration", "text-decoration"],
+    ["textTransform", "text-transform"],
+    ["color", "color"],
+];
 
 export function generateTextStyles(theme: Theme): string {
     const { variants } = theme.text;
@@ -96,16 +95,25 @@ export function generateTextStyles(theme: Theme): string {
         const styleOverrides = new Map<keyof ThemeBreakpoints, string[]>();
         const spacingOverrides = new Map<keyof ThemeBreakpoints, string[]>();
 
-        collectOverride(styleOverrides, variantStyles.fontFamily, "font-family", String);
-        collectOverride(styleOverrides, variantStyles.fontSize, "font-size", String);
-        collectOverride(styleOverrides, variantStyles.fontWeight, "font-weight", String);
-        collectOverride(styleOverrides, variantStyles.fontStyle, "font-style", String);
-        collectOverride(styleOverrides, variantStyles.lineHeight, "line-height", String);
-        collectOverride(styleOverrides, variantStyles.letterSpacing, "letter-spacing", String);
-        collectOverride(styleOverrides, variantStyles.textDecoration, "text-decoration", String);
-        collectOverride(styleOverrides, variantStyles.textTransform, "text-transform", String);
-        collectOverride(styleOverrides, variantStyles.color, "color", String);
-        collectOverride(spacingOverrides, variantStyles.bottomSpacing, "padding-bottom", (v) => `${v}px`);
+        for (const [themeKey, cssProperty] of textStyleCssProperties) {
+            const value = variantStyles[themeKey];
+            if (value === undefined) continue;
+
+            for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(value)) {
+                const declarations = styleOverrides.get(breakpointKey) ?? [];
+                declarations.push(`${cssProperty}: ${String(breakpointValue)} !important`);
+                styleOverrides.set(breakpointKey, declarations);
+            }
+        }
+
+        const bottomSpacingValue = variantStyles.bottomSpacing;
+        if (bottomSpacingValue !== undefined) {
+            for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(bottomSpacingValue)) {
+                const declarations = spacingOverrides.get(breakpointKey) ?? [];
+                declarations.push(`padding-bottom: ${String(breakpointValue)} !important`);
+                spacingOverrides.set(breakpointKey, declarations);
+            }
+        }
 
         for (const [breakpointKey, declarations] of styleOverrides) {
             const breakpoint = theme.breakpoints[breakpointKey];
