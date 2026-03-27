@@ -33,6 +33,14 @@
 
 - [x] 6.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `fontSize` and `letterSpacing` from `string | number` to `string`
 
-## 7. Changeset
+## 7. Refactor: bottomSpacing type and CSS generation
 
-- [x] 7.1 Create changeset file in `.changeset/` (at monorepo root) describing: addition of `variant` and `bottomSpacing` props to `MjmlText`, theme-based text styling with `ThemeText`, and `fontFamily` default attribute in `MjmlMailRoot`
+- [ ] 7.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `bottomSpacing` from `number` to `string`
+- [ ] 7.2 Update default `bottomSpacing` value in `src/theme/defaultTheme.ts` from `16` to `"16px"`
+- [ ] 7.3 Update all story/test themes that set `bottomSpacing` to use string values
+- [ ] 7.4 In `MjmlText.tsx`, replace `collectOverride` and per-property calls with a static `textStyleCssProperties` mapping (theme key → CSS property name) and a loop that collects style overrides; handle `bottomSpacing` separately with a single direct collection (different selector)
+- [ ] 7.5 Update existing CSS generation tests to reflect `bottomSpacing` as string and the new generation approach
+
+## 8. Changeset
+
+- [x] 8.1 Create changeset file in `.changeset/` (at monorepo root) describing: addition of `variant` and `bottomSpacing` props to `MjmlText`, theme-based text styling with `ThemeText`, and `fontFamily` default attribute in `MjmlMailRoot`

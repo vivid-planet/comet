@@ -30,7 +30,7 @@ Both `TextStyles` (plain values for base theme) and `TextVariantStyles` (respons
 
 ### CSS properties that require units are typed as `string` only
 
-`TextStyleMap` uses `string` for properties where a bare number would produce invalid CSS (`fontSize`, `letterSpacing`), and `string | number` only for properties where unitless numbers are valid CSS (`fontWeight`, `lineHeight`). This makes invalid states unrepresentable at the type level — `fontSize: 16` is a type error, forcing the consumer to write `fontSize: "16px"`.
+`TextStyleMap` uses `string` for properties where a bare number would produce invalid CSS (`fontSize`, `letterSpacing`, `bottomSpacing`), and `string | number` only for properties where unitless numbers are valid CSS (`fontWeight`, `lineHeight`). This makes invalid states unrepresentable at the type level — `fontSize: 16` is a type error, forcing the consumer to write `fontSize: "16px"`. Similarly, `bottomSpacing: 16` is a type error; the consumer writes `bottomSpacing: "16px"`.
 
 `fontWeight` keeps `string | number` because theme authors naturally write `fontWeight: 700` (valid CSS). `IMjmlTextProps.fontWeight` accepts only `string`, so the component converts via `String()` — a runtime function call, not a type assertion.
 
@@ -63,13 +63,15 @@ Without augmentation, internal code uses `Record<string, TextVariantStyles>` (no
 
 **Alternative**: Using `Record<string, TextVariantStyles>` unconditionally. Rejected because it loses consumer type safety — typos in variant names would not be caught at compile time.
 
-### Breakpoint-grouped CSS generation with `collectOverride` helper
-
-A generic `collectOverride<T>` helper collects responsive overrides grouped by breakpoint into a `Map<breakpointKey, CssDeclaration[]>`. Each call site infers `T` independently, making every call type-safe.
+### Declarative CSS generation with a static property mapping
 
 CSS output groups all property overrides into a single `@media` block per breakpoint per variant, rather than one block per property. This produces cleaner CSS and fewer bytes.
 
-`bottomSpacing` responsive overrides use a compound selector `.mjmlText--bottomSpacing.mjmlText--{variant}` (separate from style overrides that target `.mjmlText--{variant} > div`), so they are collected into a separate map and emitted with their own selector.
+A static `textStyleCssProperties` mapping defines the relationship between `TextStyleMap` keys and their CSS property names (e.g., `fontFamily` → `"font-family"`). The style properties (all except `bottomSpacing`) are collected by iterating this mapping. Since all values are converted to strings via `String()` for CSS output, the type differences between `string` and `string | number` properties don't matter — no generic type parameter or `formatValue` callback is needed.
+
+`bottomSpacing` responsive overrides use a compound selector `.mjmlText--bottomSpacing.mjmlText--{variant}` (separate from style overrides that target `.mjmlText--{variant} > div`), so they are collected separately with a single direct call.
+
+**Alternative**: Per-property `collectOverride` calls with a generic `<T>` type parameter and `formatValue` callback. Rejected because with `bottomSpacing` typed as `string`, all values use `String()` uniformly, making the generic and callback unnecessary boilerplate.
 
 ### CSS class structure (BEM)
 
@@ -99,6 +101,6 @@ Storybook stories that demonstrate variants use `@ts-expect-error` comments on t
 
 - **Variant CSS emitted even when unused**: `registerStyles` emits media queries for all defined variants, even if a particular email template doesn't use them all. Low risk — the CSS is small and MJML inlines what it can. → Accept; premature optimization to conditionally emit.
 - **`!important` in media queries**: Required to override inline styles. Standard pattern in email development and already used by `MjmlSection`. → Accept.
-- **Per-property extraction verbosity**: Extracting inline props requires one line per text style property. This is more verbose than a loop but provides full type safety. → Accept; readability and safety outweigh brevity.
+- **Per-property inline prop extraction verbosity**: Extracting inline props for the component JSX requires one line per text style property. This is more verbose than a loop but provides full type safety (correlated types limitation). → Accept; readability and safety outweigh brevity. Note: this does NOT apply to CSS generation, which uses a declarative mapping loop.
 - **Conditional types add complexity to type definitions**: The `VariantsRecord` and `VariantName` conditional types are less obvious than simple mapped types. → Accept; they eliminate all casts in the implementation and the types are well-documented via TSDoc.
 - **`MjmlAll fontFamily` changes default attributes**: The existing spec says `<mj-attributes>` contains only `<mj-all padding="0" />`. Adding `fontFamily` changes this. → The spec modification captures this explicitly.
