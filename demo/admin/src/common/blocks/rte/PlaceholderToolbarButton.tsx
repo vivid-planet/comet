@@ -1,6 +1,6 @@
 import { CancelButton, Dialog, OkayButton } from "@comet/admin";
 import { RteTextPlaceholder } from "@comet/admin-icons";
-import { ControlButton, selectionIsInOneBlock } from "@comet/admin-rte";
+import { ControlButton, type IControlProps, selectionIsInOneBlock } from "@comet/admin-rte";
 import { DialogActions, DialogContent } from "@mui/material";
 import { type ContentBlock, EditorState, Modifier, SelectionState } from "draft-js";
 import { type ReactElement, useCallback, useState } from "react";
@@ -63,15 +63,10 @@ function findPlaceholderAtCursor(editorState: EditorState) {
     return { entity: null, entitySelection: null };
 }
 
-interface PlaceholderToolbarButtonProps {
-    editorState: EditorState;
-    setEditorState: (editorState: EditorState) => void;
-}
-
-export function PlaceholderToolbarButton({ editorState, setEditorState }: PlaceholderToolbarButtonProps): ReactElement {
+export function PlaceholderToolbarButton({ editorState, setEditorState, disabled: globallyDisabled }: IControlProps): ReactElement {
     const [open, setOpen] = useState(false);
     const { entity: placeholderEntity, entitySelection: placeholderSelection } = findPlaceholderAtCursor(editorState);
-    const disabled = !selectionIsInOneBlock(editorState);
+    const disabled = !!globallyDisabled || !selectionIsInOneBlock(editorState);
 
     function handleClick() {
         if (disabled) {
