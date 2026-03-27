@@ -28,9 +28,13 @@ Both `TextStyles` (plain values for base theme) and `TextVariantStyles` (respons
 
 **Alternative**: Two independent interfaces with duplicated property lists. Rejected because they could drift apart and would require manual synchronization.
 
-### fontWeight uses `string | number` in theme, `String()` conversion for MJML
+### CSS properties that require units are typed as `string` only
 
-`IMjmlTextProps.fontWeight` accepts only `string`, but theme authors naturally write `fontWeight: 700` (a number). The theme types use `string | number` for fontWeight. When extracting inline props, the component converts via `String()` — a runtime function call, not a type assertion. This keeps the theme DX natural while respecting MJML's type constraint.
+`TextStyleMap` uses `string` for properties where a bare number would produce invalid CSS (`fontSize`, `letterSpacing`), and `string | number` only for properties where unitless numbers are valid CSS (`fontWeight`, `lineHeight`). This makes invalid states unrepresentable at the type level — `fontSize: 16` is a type error, forcing the consumer to write `fontSize: "16px"`.
+
+`fontWeight` keeps `string | number` because theme authors naturally write `fontWeight: 700` (valid CSS). `IMjmlTextProps.fontWeight` accepts only `string`, so the component converts via `String()` — a runtime function call, not a type assertion.
+
+**Alternative**: Allow `string | number` for all properties and auto-append `px` for numeric values at runtime. Rejected because it introduces implicit behavior (`1` → `"1px"` could surprise someone who intended `"1rem"`) and requires the conversion logic in two places (inline props and responsive CSS generation).
 
 ### Spread-based merge for base + variant styles
 
