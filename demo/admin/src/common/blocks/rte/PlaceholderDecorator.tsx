@@ -9,22 +9,23 @@ interface PlaceholderEditorComponentProps {
     entityKey: string;
 }
 
-function PlaceholderEditorComponent({ contentState, entityKey }: PlaceholderEditorComponentProps): ReactNode {
+function PlaceholderEditorComponent({ children, contentState, entityKey }: PlaceholderEditorComponentProps): ReactNode {
     const data = contentState.getEntity(entityKey).getData();
     const label = data.field === "price" ? (data.productPrice ?? "Price") : (data.productTitle ?? "Title");
 
     return (
         <span
-            contentEditable={false}
             style={{
                 backgroundColor: "#e8f0fe",
                 border: "1px solid #a8c7fa",
                 borderRadius: "3px",
                 padding: "0 4px",
-                userSelect: "none",
-                display: "inline-block",
             }}
         >
+            {/* Render Draft.js children hidden so cursor/selection tracking works for deletion */}
+            <span style={{ fontSize: 0, lineHeight: 0, color: "transparent", overflow: "hidden", display: "inline-block", width: 0 }}>
+                {children}
+            </span>
             {label}
         </span>
     );
