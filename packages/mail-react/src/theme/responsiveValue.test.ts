@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getDefaultFromResponsiveValue, getResponsiveOverrides, type ResponsiveValue } from "./responsiveValue.js";
+import { getDefaultFromResponsiveValue, getDefaultOrUndefined, getResponsiveOverrides, type ResponsiveValue } from "./responsiveValue.js";
 
 describe("getDefaultFromResponsiveValue", () => {
     it("returns the value when given a plain number", () => {
@@ -53,5 +53,27 @@ describe("getResponsiveOverrides", () => {
     it("works with string type", () => {
         const result = getResponsiveOverrides<string>({ default: "24px", mobile: "20px" });
         expect(result).toEqual([{ breakpointKey: "mobile", value: "20px" }]);
+    });
+});
+
+describe("getDefaultOrUndefined", () => {
+    it("returns undefined when given undefined", () => {
+        expect(getDefaultOrUndefined(undefined)).toBeUndefined();
+    });
+
+    it("returns the value when given a plain value", () => {
+        expect(getDefaultOrUndefined(20)).toBe(20);
+    });
+
+    it("returns the default property from an object", () => {
+        expect(getDefaultOrUndefined({ default: 20, mobile: 10 })).toBe(20);
+    });
+
+    it("works with string type", () => {
+        expect(getDefaultOrUndefined<string>("24px")).toBe("24px");
+    });
+
+    it("returns default from a string responsive object", () => {
+        expect(getDefaultOrUndefined<string>({ default: "32px", mobile: "24px" })).toBe("32px");
     });
 });

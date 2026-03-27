@@ -3,6 +3,42 @@ import { describe, expect, it } from "vitest";
 import { createTheme } from "./createTheme.js";
 import { getDefaultFromResponsiveValue, getResponsiveOverrides } from "./responsiveValue.js";
 
+describe("createTheme text", () => {
+    it("includes default text values when no overrides given", () => {
+        const theme = createTheme();
+        expect(theme.text.fontFamily).toBe("Arial, sans-serif");
+        expect(theme.text.fontSize).toBe("16px");
+        expect(theme.text.lineHeight).toBe("20px");
+        expect(theme.text.bottomSpacing).toBe(16);
+    });
+
+    it("shallow-merges text overrides with defaults", () => {
+        const theme = createTheme({ text: { fontFamily: "Georgia, serif", fontSize: "18px" } });
+        expect(theme.text.fontFamily).toBe("Georgia, serif");
+        expect(theme.text.fontSize).toBe("18px");
+        expect(theme.text.lineHeight).toBe("20px");
+        expect(theme.text.bottomSpacing).toBe(16);
+    });
+
+    it("passes through variant definitions", () => {
+        const theme = createTheme({
+            text: {
+                variants: {
+                    heading: { fontSize: { default: "32px", mobile: "24px" } },
+                },
+            },
+        });
+        expect(theme.text.variants).toBeDefined();
+        expect(theme.text.variants?.heading).toEqual({ fontSize: { default: "32px", mobile: "24px" } });
+    });
+
+    it("does not set defaultVariant or variants by default", () => {
+        const theme = createTheme();
+        expect(theme.text.defaultVariant).toBeUndefined();
+        expect(theme.text.variants).toBeUndefined();
+    });
+});
+
 describe("createTheme contentIndentation", () => {
     it("has default contentIndentation with responsive mobile value", () => {
         const theme = createTheme();

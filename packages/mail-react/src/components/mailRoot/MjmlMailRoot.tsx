@@ -33,7 +33,7 @@ export function MjmlMailRoot({ theme: themeProp, children }: MjmlMailRootProps):
             <Mjml>
                 <MjmlHead>
                     <MjmlAttributes>
-                        <MjmlAll padding="0" />
+                        <MjmlAll padding="0" fontFamily={theme.text.fontFamily} />
                     </MjmlAttributes>
                     <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
                     <Styles />
