@@ -14,19 +14,21 @@ function PlaceholderEditorComponent({ children, contentState, entityKey }: Place
     const label = data.field === "price" ? (data.productPrice ?? "Price") : (data.productTitle ?? "Title");
 
     return (
-        <span
-            style={{
-                backgroundColor: "#e8f0fe",
-                border: "1px solid #a8c7fa",
-                borderRadius: "3px",
-                padding: "0 4px",
-            }}
-        >
-            {/* Render Draft.js children hidden so cursor/selection tracking works for deletion */}
-            <span style={{ fontSize: 0, lineHeight: 0, color: "transparent", overflow: "hidden", display: "inline-block", width: 0 }}>
-                {children}
+        <span>
+            <span
+                contentEditable={false}
+                style={{
+                    backgroundColor: "#e8f0fe",
+                    border: "1px solid #a8c7fa",
+                    borderRadius: "3px",
+                    padding: "0 4px",
+                    userSelect: "none",
+                }}
+            >
+                {label}
             </span>
-            {label}
+            {/* Render Draft.js children outside the chip so the cursor appears after it, not inside */}
+            <span style={{ fontSize: 0, color: "transparent", overflow: "hidden", display: "inline-block", width: 0 }}>{children}</span>
         </span>
     );
 }
