@@ -79,9 +79,9 @@ export const BottomSpacing: Story = {
     parameters: {
         theme: createTheme({
             text: {
-                bottomSpacing: 20,
+                bottomSpacing: "20px",
                 variants: {
-                    heading: { fontSize: "32px", fontWeight: 700, bottomSpacing: { default: 24, mobile: 16 } },
+                    heading: { fontSize: "32px", fontWeight: 700, bottomSpacing: { default: "24px", mobile: "16px" } },
                 },
             },
         }),

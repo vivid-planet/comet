@@ -35,11 +35,11 @@
 
 ## 7. Refactor: bottomSpacing type and CSS generation
 
-- [ ] 7.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `bottomSpacing` from `number` to `string`
-- [ ] 7.2 Update default `bottomSpacing` value in `src/theme/defaultTheme.ts` from `16` to `"16px"`
-- [ ] 7.3 Update all story/test themes that set `bottomSpacing` to use string values
-- [ ] 7.4 In `MjmlText.tsx`, replace `collectOverride` and per-property calls with a static `textStyleCssProperties` mapping (theme key → CSS property name) and a loop that collects style overrides; handle `bottomSpacing` separately with a single direct collection (different selector)
-- [ ] 7.5 Update existing CSS generation tests to reflect `bottomSpacing` as string and the new generation approach
+- [x] 7.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `bottomSpacing` from `number` to `string`
+- [x] 7.2 Update default `bottomSpacing` value in `src/theme/defaultTheme.ts` from `16` to `"16px"`
+- [x] 7.3 Update all story/test themes that set `bottomSpacing` to use string values
+- [x] 7.4 In `MjmlText.tsx`, replace `collectOverride` and per-property calls with a static `textStyleCssProperties` mapping (theme key → CSS property name) and a loop that collects style overrides; handle `bottomSpacing` separately with a single direct collection (different selector)
+- [x] 7.5 Update existing CSS generation tests to reflect `bottomSpacing` as string and the new generation approach
 
 ## 8. Changeset
 

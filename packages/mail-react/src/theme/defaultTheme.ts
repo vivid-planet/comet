@@ -14,6 +14,6 @@ export const defaultTheme: Theme = {
         fontFamily: "Arial, sans-serif",
         fontSize: "16px",
         lineHeight: "20px",
-        bottomSpacing: 16,
+        bottomSpacing: "16px",
     },
 };

@@ -92,7 +92,7 @@ describe("generateTextStyles", () => {
             text: {
                 variants: {
                     heading: {
-                        bottomSpacing: { default: 24, mobile: 16 },
+                        bottomSpacing: { default: "24px", mobile: "16px" },
                     },
                 },
             },
@@ -122,7 +122,7 @@ describe("generateTextStyles", () => {
                 variants: {
                     heading: {
                         fontSize: { default: "32px", mobile: "24px" },
-                        bottomSpacing: { default: 24, mobile: 16 },
+                        bottomSpacing: { default: "24px", mobile: "16px" },
                     },
                 },
             },

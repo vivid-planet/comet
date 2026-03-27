@@ -14,7 +14,7 @@ interface TextStyleMap {
     textDecoration: string;
     textTransform: string;
     color: string;
-    bottomSpacing: number;
+    bottomSpacing: string;
 }
 
 /** Base text styles where each property holds a plain value. */
