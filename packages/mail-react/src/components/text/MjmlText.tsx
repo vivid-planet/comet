@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultValue, getResponsiveOverrides } from "../../theme/responsiveValue.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
-import type { TextStyles, TextVariants, TextVariantStyles, ThemeText } from "../../theme/themeTypes.js";
+import type { TextVariants, TextVariantStyles, ThemeText } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
 
 /** Props for the themed `MjmlText` component. */
@@ -43,6 +43,34 @@ function cssValue(key: TextStyleKey | "bottomSpacing", value: string | number): 
     return String(value);
 }
 
+/**
+ * Merges base text styles with variant styles (variant wins per key).
+ * Contains the unavoidable `as any` casts for dynamic key assignment —
+ * safe because keys come from the `textStyleKeys` const array.
+ */
+function mergeTextStyles(base: ThemeText, variant: TextVariantStyles | undefined): TextVariantStyles {
+    const merged: Record<string, unknown> = {};
+    for (const key of textStyleKeys) {
+        const val = variant?.[key] ?? base[key];
+        if (val !== undefined) {
+            merged[key] = val;
+        }
+    }
+    const bottomSpacing = variant?.bottomSpacing ?? base.bottomSpacing;
+    if (bottomSpacing !== undefined) {
+        merged.bottomSpacing = bottomSpacing;
+    }
+    return merged as TextVariantStyles;
+}
+
+/** Resolves a variant name from the theme, returning the variant styles if found. */
+function resolveVariant(themeText: ThemeText, variant: keyof TextVariants | undefined): { name: string; styles: TextVariantStyles } | undefined {
+    const name = variant ?? (themeText.defaultVariant as string | undefined);
+    if (!name || !themeText.variants) return undefined;
+    const styles = (themeText.variants as Record<string, TextVariantStyles>)[name];
+    return styles ? { name, styles } : undefined;
+}
+
 interface ResolvedTextStyles {
     props: Partial<Pick<IMjmlTextProps, TextStyleKey | "paddingBottom">>;
     variant: string | undefined;
@@ -58,26 +86,8 @@ export function resolveTextStyles(
     variant: keyof TextVariants | undefined,
     bottomSpacing: boolean | undefined,
 ): ResolvedTextStyles {
-    const activeVariant = variant ?? (themeText.defaultVariant as string | undefined);
-    const variantStyles: TextVariantStyles | undefined =
-        activeVariant && themeText.variants ? (themeText.variants as Record<string, TextVariantStyles>)[activeVariant] : undefined;
-
-    // Merge base + variant (variant wins per key)
-    const merged: TextVariantStyles = {};
-    for (const key of textStyleKeys) {
-        const baseVal = (themeText as TextStyles)[key];
-        const variantVal = variantStyles?.[key];
-        const val = variantVal ?? baseVal;
-        if (val !== undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (merged as any)[key] = val;
-        }
-    }
-    // Handle bottomSpacing separately
-    const mergedBottomSpacing = variantStyles?.bottomSpacing ?? themeText.bottomSpacing;
-    if (mergedBottomSpacing !== undefined) {
-        merged.bottomSpacing = mergedBottomSpacing;
-    }
+    const resolved = resolveVariant(themeText, variant);
+    const merged = mergeTextStyles(themeText, resolved?.styles);
 
     // Extract default values as props
     const props: ResolvedTextStyles["props"] = {};
@@ -95,7 +105,7 @@ export function resolveTextStyles(
         props.paddingBottom = getDefaultValue(merged.bottomSpacing);
     }
 
-    return { props, variant: activeVariant, bottomSpacingActive };
+    return { props, variant: resolved?.name, bottomSpacingActive };
 }
 
 /**
@@ -127,20 +137,7 @@ registerStyles((theme) => {
     for (const [variantName, variantStyles] of Object.entries(variants) as Array<[string, TextVariantStyles]>) {
         if (!variantStyles) continue;
 
-        // Merge base + variant for responsive overrides
-        const merged: TextVariantStyles = {};
-        for (const key of textStyleKeys) {
-            const baseVal = (theme.text as TextStyles)[key];
-            const variantVal = variantStyles[key];
-            const val = variantVal ?? baseVal;
-            if (val !== undefined) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (merged as any)[key] = val;
-            }
-        }
-        if (variantStyles.bottomSpacing !== undefined || theme.text.bottomSpacing !== undefined) {
-            merged.bottomSpacing = variantStyles.bottomSpacing ?? theme.text.bottomSpacing;
-        }
+        const merged = mergeTextStyles(theme.text, variantStyles);
 
         // Emit responsive overrides for each style key
         for (const key of textStyleKeys) {
@@ -153,7 +150,7 @@ registerStyles((theme) => {
                 const declaration = `${cssPropertyName(key)}: ${cssValue(key, override.value)} !important;`;
                 rules.push(css`
                     ${breakpoint.belowMediaQuery} {
-                        .mjmlText--${variantName} {
+                        .mjmlText--${variantName} > div {
                             ${declaration}
                         }
                     }
