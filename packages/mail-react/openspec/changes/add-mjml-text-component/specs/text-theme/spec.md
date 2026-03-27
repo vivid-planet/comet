@@ -5,11 +5,11 @@
 The library SHALL define an internal `TextStyleMap` interface that serves as the single source of truth for text style property names and their value types. The interface SHALL contain the following properties:
 
 - `fontFamily: string`
-- `fontSize: string | number`
-- `fontWeight: string | number`
+- `fontSize: string` — must include a CSS unit (e.g. `"16px"`, `"1rem"`)
+- `fontWeight: string | number` — unitless numbers are valid CSS (e.g. `700`)
 - `fontStyle: string`
-- `lineHeight: string | number`
-- `letterSpacing: string | number`
+- `lineHeight: string | number` — unitless numbers are valid CSS (e.g. `1.5`)
+- `letterSpacing: string` — must include a CSS unit (e.g. `"0.5px"`, `"0.02em"`)
 - `textDecoration: string`
 - `textTransform: string`
 - `color: string`

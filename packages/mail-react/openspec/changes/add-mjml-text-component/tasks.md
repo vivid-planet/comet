@@ -29,6 +29,10 @@
 - [x] 5.3 Smoke test via `renderMailHtml` in `src/components/text/__tests__/MjmlText.test.tsx`: render MjmlText with a variant theme and assert no MJML warnings (validates the component produces valid MJML structure)
 - [x] 5.4 Unit tests for `registerStyles` CSS output in `src/components/text/__tests__/MjmlText.test.tsx`: test the CSS generation function directly — given a theme with variants, verify correct selector construction (`.mjmlText--{variant} > div`, `.mjmlText--bottomSpacing.mjmlText--{variant}`), breakpoint grouping, and `!important` declarations
 
-## 6. Changeset
+## 6. Type Safety: Tighten CSS Property Types
 
-- [x] 6.1 Create changeset file in `.changeset/` (at monorepo root) describing: addition of `variant` and `bottomSpacing` props to `MjmlText`, theme-based text styling with `ThemeText`, and `fontFamily` default attribute in `MjmlMailRoot`
+- [ ] 6.1 In `TextStyleMap` (`src/theme/themeTypes.ts`), change `fontSize` and `letterSpacing` from `string | number` to `string`
+
+## 7. Changeset
+
+- [x] 7.1 Create changeset file in `.changeset/` (at monorepo root) describing: addition of `variant` and `bottomSpacing` props to `MjmlText`, theme-based text styling with `ThemeText`, and `fontFamily` default attribute in `MjmlMailRoot`
