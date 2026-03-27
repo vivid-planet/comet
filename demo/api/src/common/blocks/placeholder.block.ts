@@ -25,6 +25,12 @@ class PlaceholderBlockData extends BlockData {
     @BlockField({ type: "enum", enum: PlaceholderField })
     field: PlaceholderField;
 
+    @BlockField({ nullable: true })
+    productTitle?: string;
+
+    @BlockField({ nullable: true })
+    productPrice?: string;
+
     async transformToPlain() {
         return PlaceholderBlockTransformerService;
     }
@@ -52,6 +58,16 @@ class PlaceholderBlockInput extends BlockInput {
     @IsEnum(PlaceholderField)
     @BlockField({ type: "enum", enum: PlaceholderField })
     field: PlaceholderField;
+
+    @IsUndefinable()
+    @IsString()
+    @BlockField({ nullable: true })
+    productTitle?: string;
+
+    @IsUndefinable()
+    @IsString()
+    @BlockField({ nullable: true })
+    productPrice?: string;
 
     transformToBlockData(): PlaceholderBlockData {
         return blockInputToData(PlaceholderBlockData, this);

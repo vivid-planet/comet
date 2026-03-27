@@ -1,8 +1,7 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { AsyncAutocompleteField } from "@comet/admin";
-import { BlocksFinalForm, createBlockSkeleton, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { type BlockContext, BlocksFinalForm, createBlockSkeleton, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { type PlaceholderBlockData } from "@src/blocks.generated";
-import { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 
 const placeholderBlockProductSearchQuery = gql`
@@ -78,17 +77,36 @@ export const PlaceholderBlock = {
     input2State: (input: PlaceholderBlockData): PlaceholderBlockState => ({
         productId: input.productId ?? undefined,
         field: input.field,
+        productTitle: input.productTitle,
+        productPrice: input.productPrice,
     }),
 
     state2Output: (state: PlaceholderBlockState): PlaceholderBlockData => ({
         productId: state.productId,
         field: state.field,
+        productTitle: state.productTitle,
+        productPrice: state.productPrice,
     }),
 
-    output2State: async (output: PlaceholderBlockData): Promise<PlaceholderBlockState> => ({
-        productId: output.productId ?? undefined,
-        field: output.field,
-    }),
+    output2State: async (output: PlaceholderBlockData, context: BlockContext): Promise<PlaceholderBlockState> => {
+        const state: PlaceholderBlockState = {
+            productId: output.productId ?? undefined,
+            field: output.field,
+        };
+
+        if (state.productId) {
+            const { data } = await context.apolloClient.query({
+                query: placeholderBlockProductQuery,
+                variables: { id: state.productId },
+            });
+            if (data?.product) {
+                state.productTitle = data.product.title;
+                state.productPrice = data.product.price != null ? String(data.product.price) : undefined;
+            }
+        }
+
+        return state;
+    },
 
     createPreviewState: (state: PlaceholderBlockState) => ({
         productId: state.productId,
@@ -104,21 +122,13 @@ export const PlaceholderBlock = {
         updateState: (setter: PlaceholderBlockState | ((prev: PlaceholderBlockState) => PlaceholderBlockState)) => void;
     }) => {
         const client = useApolloClient();
-        const { data: productData } = useQuery(placeholderBlockProductQuery, {
-            variables: { id: state.productId },
-            skip: !state.productId,
-        });
-        const initialProduct: ProductOption | undefined = productData?.product ?? undefined;
-
-        useEffect(() => {
-            if (initialProduct) {
-                updateState((prev) => ({
-                    ...prev,
-                    productTitle: initialProduct.title,
-                    productPrice: initialProduct.price != null ? String(initialProduct.price) : undefined,
-                }));
-            }
-        }, [initialProduct, updateState]);
+        const initialProduct: ProductOption | undefined = state.productId
+            ? {
+                  id: state.productId,
+                  title: state.productTitle ?? state.productId,
+                  price: state.productPrice ? Number(state.productPrice) : undefined,
+              }
+            : undefined;
 
         return (
             <div>
