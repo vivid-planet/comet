@@ -88,7 +88,7 @@ The library SHALL export a `getResponsiveOverrides` function from its main entry
 
 ### Requirement: Theme type interfaces
 
-The library SHALL export the following interfaces from its main entry point: `Theme`, `ThemeSizes`, `ThemeBreakpoints`, and `ThemeBreakpoint`.
+The library SHALL export the following interfaces from its main entry point: `Theme`, `ThemeSizes`, `ThemeBreakpoints`, `ThemeBreakpoint`, `ThemeText`, `TextStyles`, `TextVariantStyles`, `TextVariants`.
 
 `ThemeSizes` SHALL contain a `bodyWidth` property of type `number` with a TSDoc comment describing it as the width of the email body in pixels.
 
@@ -100,14 +100,24 @@ The library SHALL export the following interfaces from its main entry point: `Th
 
 The `mobile` property SHALL have a TSDoc comment explaining that it defines the mobile breakpoint and that, when used with `MjmlMailRoot`, this value also controls the MJML responsive breakpoint (`<mj-breakpoint>`), which determines the viewport width at which columns stack vertically.
 
-`Theme` SHALL contain a `sizes` property of type `ThemeSizes` and a `breakpoints` property of type `ThemeBreakpoints`.
+`Theme` SHALL contain a `sizes` property of type `ThemeSizes`, a `breakpoints` property of type `ThemeBreakpoints`, and a `text` property of type `ThemeText`.
 
 All interfaces SHALL support TypeScript module augmentation (declaration merging) so consumers can extend the theme at any level.
 
 #### Scenario: Consumer imports theme interfaces
 
-- **WHEN** a consumer writes `import type { Theme, ThemeSizes, ThemeBreakpoints, ThemeBreakpoint } from "@comet/mail-react"`
-- **THEN** all four imports resolve successfully
+- **WHEN** a consumer writes `import type { Theme, ThemeSizes, ThemeBreakpoints, ThemeBreakpoint, ThemeText } from "@comet/mail-react"`
+- **THEN** all imports resolve successfully
+
+#### Scenario: Consumer imports text type interfaces
+
+- **WHEN** a consumer writes `import type { TextStyles, TextVariantStyles, TextVariants } from "@comet/mail-react"`
+- **THEN** all imports resolve successfully
+
+#### Scenario: Theme includes text property
+
+- **WHEN** a consumer accesses `theme.text`
+- **THEN** the property exists and is of type `ThemeText`
 
 #### Scenario: ThemeSizes includes contentIndentation
 
@@ -192,6 +202,8 @@ The overrides object SHALL accept `sizes` as a partial object (e.g. `{ sizes: { 
 
 The overrides object SHALL accept `breakpoints` as a partial `ThemeBreakpoints` object containing `ThemeBreakpoint` values (e.g. `{ breakpoints: { mobile: createBreakpoint(480) } }`), NOT as plain numbers. Consumers SHALL use `createBreakpoint` to construct breakpoint override values.
 
+The overrides object SHALL accept `text` as a partial `ThemeText` object (e.g. `{ text: { fontFamily: "Georgia" } }`). Text overrides SHALL be shallow-merged with the default text values.
+
 Overrides SHALL be deep-merged with the default theme values.
 
 `createTheme` SHALL handle breakpoint keys dynamically. Any key present in the `breakpoints` overrides — including keys added via module augmentation — SHALL appear in the returned theme's `breakpoints` object.
@@ -221,7 +233,17 @@ The built-in breakpoints `default` and `mobile` SHALL always be present in the r
 #### Scenario: No arguments produces complete default theme
 
 - **WHEN** `createTheme()` is called with no arguments
-- **THEN** the result is identical to the default theme
+- **THEN** the result is identical to the default theme (including `text` defaults)
+
+#### Scenario: Override text styles
+
+- **WHEN** `createTheme({ text: { fontFamily: "Georgia, serif" } })` is called
+- **THEN** the returned theme has `text.fontFamily === "Georgia, serif"` and `text.fontSize === "16px"` (default retained)
+
+#### Scenario: Text overrides with variants
+
+- **WHEN** `createTheme({ text: { variants: { heading: { fontSize: { default: "32px", mobile: "24px" } } } } })` is called
+- **THEN** the returned theme includes the variants alongside default base text styles
 
 #### Scenario: Override bodyWidth
 
