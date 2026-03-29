@@ -80,6 +80,35 @@ Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag
 
 Skills with `metadata.internal: true` in their `SKILL.md` are excluded when installing from external repos.
 
+### Filtering skills from a repo
+
+To install only specific skills from a repo, use an object with `repo` and `skills` instead of a plain string:
+
+```json
+{
+    "repos": [
+        {
+            "repo": "git@github.com:anthropics/skills.git",
+            "skills": ["skill-creator", "another-skill"]
+        }
+    ]
+}
+```
+
+You can mix plain string entries and object entries in the same `repos` array:
+
+```json
+{
+    "repos": [
+        "git@github.com:vivid-planet/comet.git",
+        {
+            "repo": "git@github.com:anthropics/skills.git",
+            "skills": ["skill-creator"]
+        }
+    ]
+}
+```
+
 ## Priority order
 
 When the same skill name exists in multiple sources, the higher-priority source wins. Local skills always take priority over external ones.

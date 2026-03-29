@@ -296,3 +296,64 @@ describe("installSkills – filterInternal", () => {
         expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining("internal-skill"));
     });
 });
+
+describe("installSkills – skills filter", () => {
+    it("installs only the listed skills when skills filter is provided", () => {
+        mockFilesystem({ "/remote/skills": ["skill-a", "skill-b", "skill-c"] });
+
+        const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/skills", symlink: false, skills: ["skill-a", "skill-c"] }];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.cpSync).toHaveBeenCalledTimes(4); // 2 skills × 2 target dirs
+        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote/skills/skill-a"), expect.any(String), { recursive: true });
+        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote/skills/skill-c"), expect.any(String), { recursive: true });
+        expect(fs.cpSync).not.toHaveBeenCalledWith(path.resolve("/remote/skills/skill-b"), expect.any(String), expect.any(Object));
+    });
+
+    it("logs 'No skills found' when skills filter matches no available skills", () => {
+        mockFilesystem({ "/remote/skills": ["skill-a", "skill-b"] });
+
+        const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/skills", symlink: false, skills: ["skill-c"] }];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.cpSync).not.toHaveBeenCalled();
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No skills found"));
+    });
+
+    it("installs all skills when skills filter is undefined", () => {
+        mockFilesystem({ "/remote/skills": ["skill-a", "skill-b"] });
+
+        const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/skills", symlink: false }];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        expect(fs.cpSync).toHaveBeenCalledTimes(4); // 2 skills × 2 target dirs
+    });
+
+    it("skills filter works together with filterInternal", () => {
+        mockFilesystem({ "/remote/skills": ["skill-a", "skill-b", "internal-skill"] }, [], {
+            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
+        });
+
+        const sources: SkillSource[] = [
+            { label: "external repo", directory: "/remote/skills", symlink: false, filterInternal: true, skills: ["skill-a", "internal-skill"] },
+        ];
+        installSkills(sources, targetDirs, defaultOptions);
+
+        // skill-a is installed (in filter and not internal)
+        // internal-skill is excluded (internal, even though it's in the filter)
+        expect(fs.cpSync).toHaveBeenCalledTimes(2); // only skill-a × 2 target dirs
+        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote/skills/skill-a"), expect.any(String), { recursive: true });
+        expect(fs.cpSync).not.toHaveBeenCalledWith(path.resolve("/remote/skills/internal-skill"), expect.any(String), expect.any(Object));
+    });
+
+    it("skills filter works in dry-run mode", () => {
+        mockFilesystem({ "/remote/skills": ["skill-a", "skill-b", "skill-c"] });
+
+        const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/skills", symlink: false, skills: ["skill-b"] }];
+        installSkills(sources, targetDirs, { dryRun: true });
+
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("skill-b"));
+        expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining("skill-a"));
+        expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining("skill-c"));
+    });
+});
