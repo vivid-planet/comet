@@ -394,9 +394,6 @@ importers:
       mjml:
         specifier: ^4.18.0
         version: 4.18.0
-      mjml-browser:
-        specifier: ^4.18.0
-        version: 4.18.0
       nest-commander:
         specifier: ^3.20.1
         version: 3.20.1(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.12)(@types/inquirer@8.2.12)(@types/node@24.12.0)(typescript@5.9.3)
@@ -467,9 +464,6 @@ importers:
       '@types/mjml':
         specifier: ^4.7.4
         version: 4.7.4
-      '@types/mjml-browser':
-        specifier: ^4.15.0
-        version: 4.15.0
       '@types/node':
         specifier: ^24.12.0
         version: 24.12.0

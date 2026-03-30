@@ -1,4 +1,4 @@
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: MJML-to-HTML rendering
 
@@ -57,6 +57,8 @@ The decorator SHALL be defined in `src/storybook/MailRendererDecorator.tsx`.
 
 - **WHEN** the library source is complete
 - **THEN** `src/storybook/MailRendererDecorator.tsx` exists and exports the decorator
+
+## ADDED Requirements
 
 ### Requirement: Render result emission
 
