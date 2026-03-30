@@ -49,16 +49,14 @@ interface RawDraftContentBlock {
 interface DraftJsFactoryProps<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [key: string]: { type: string; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> | any };
+        [key: string]: { type: string; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> | unknown };
     };
 }
 
 interface DraftJsInput<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [key: string]: { type: string; mutability: DraftEntityMutability; data: LinkBlockInput | any };
+        [key: string]: { type: string; mutability: DraftEntityMutability; data: LinkBlockInput | unknown };
     };
 }
 
@@ -247,7 +245,8 @@ function IsDraftContent(entityTypeBlockMap: Record<string, Block>, registeredEnt
                                 return false;
                             }
 
-                            const validationErrors = await validate(entityBlock.blockInputFactory(entity.data), {
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            const validationErrors = await validate(entityBlock.blockInputFactory(entity.data as any), {
                                 forbidNonWhitelisted: true,
                                 whitelist: true,
                             });
