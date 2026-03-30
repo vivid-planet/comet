@@ -189,7 +189,11 @@ export const createRichTextBlock = (
         customToolbarButtons: entityToolbarButtons,
     };
     const LinkBlock = options.link;
-    const rteOptions = { ...defaultRteOptions, ...(options.rte ?? {}) };
+    const rteOptions = {
+        ...defaultRteOptions,
+        ...(options.rte ?? {}),
+        customToolbarButtons: [...entityToolbarButtons, ...(options.rte?.customToolbarButtons ?? [])],
+    };
 
     const RichTextBlock: BlockInterface<RichTextBlockData, RichTextBlockState> = {
         ...createBlockSkeleton(),
