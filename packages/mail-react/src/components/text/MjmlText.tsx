@@ -6,6 +6,7 @@ import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, VariantName } from "../../theme/themeTypes.js";
+import { OutlookTextStyleProvider, type OutlookTextStyleValues } from "./OutlookTextStyleContext.js";
 import { generateResponsiveTextCss } from "./textStyles.js";
 
 export type MjmlTextProps = IMjmlTextProps & {
@@ -41,10 +42,10 @@ export type MjmlTextProps = IMjmlTextProps & {
  * Works without a `ThemeProvider` as a plain pass-through to the base MJML text component.
  * The `variant` and `bottomSpacing` props require a `ThemeProvider` (or `MjmlMailRoot`).
  */
-export function MjmlText({ variant: variantProp, bottomSpacing, className, ...restProps }: MjmlTextProps): ReactNode {
+export function MjmlText({ variant: variantProp, bottomSpacing, className, children, ...restProps }: MjmlTextProps): ReactNode {
     const theme = useOptionalTheme();
 
-    const themedProps = getThemedProps(theme, variantProp, bottomSpacing);
+    const themedProps = getThemedProps(theme, variantProp, bottomSpacing, restProps);
 
     const resolvedClassName = clsx(
         "mjmlText",
@@ -53,14 +54,23 @@ export function MjmlText({ variant: variantProp, bottomSpacing, className, ...re
         className,
     );
 
-    return <BaseMjmlText {...themedProps.baseProps} className={resolvedClassName} {...restProps} />;
+    return (
+        <BaseMjmlText {...themedProps.baseProps} className={resolvedClassName} {...restProps}>
+            {themedProps.outlookTextStyleValues !== null ? (
+                <OutlookTextStyleProvider value={themedProps.outlookTextStyleValues}>{children}</OutlookTextStyleProvider>
+            ) : (
+                children
+            )}
+        </BaseMjmlText>
+    );
 }
 
 function getThemedProps(
     theme: Theme | null,
     variantProp: VariantName | undefined,
     bottomSpacing: boolean | undefined,
-): { activeVariant: VariantName | undefined; baseProps: Partial<IMjmlTextProps> } {
+    explicitProps: Partial<IMjmlTextProps>,
+): { activeVariant: VariantName | undefined; baseProps: Partial<IMjmlTextProps>; outlookTextStyleValues: OutlookTextStyleValues | null } {
     if (theme === null) {
         if (variantProp !== undefined) {
             throw new Error("The `variant` prop requires being wrapped in a ThemeProvider or MjmlMailRoot.");
@@ -68,7 +78,7 @@ function getThemedProps(
         if (bottomSpacing) {
             throw new Error("The `bottomSpacing` prop requires being wrapped in a ThemeProvider or MjmlMailRoot.");
         }
-        return { activeVariant: undefined, baseProps: {} };
+        return { activeVariant: undefined, baseProps: {}, outlookTextStyleValues: null };
     }
 
     const { defaultVariant, variants, ...baseStyles } = theme.text;
@@ -92,6 +102,13 @@ function getThemedProps(
             textTransform: getDefaultOrUndefined(mergedStyles.textTransform),
             color: getDefaultOrUndefined(mergedStyles.color),
             paddingBottom: bottomSpacing ? getDefaultOrUndefined(mergedStyles.bottomSpacing) : undefined,
+        },
+        outlookTextStyleValues: {
+            fontFamily: explicitProps.fontFamily ?? getDefaultOrUndefined(mergedStyles.fontFamily),
+            fontSize: explicitProps.fontSize ?? getDefaultOrUndefined(mergedStyles.fontSize),
+            fontWeight: explicitProps.fontWeight ?? fontWeightDefault,
+            lineHeight: explicitProps.lineHeight ?? getDefaultOrUndefined(mergedStyles.lineHeight),
+            color: explicitProps.color ?? getDefaultOrUndefined(mergedStyles.color),
         },
     };
 }
