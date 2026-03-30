@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined, getResponsiveOverrides } from "../../theme/responsiveValue.js";
-import { useTheme } from "../../theme/ThemeProvider.js";
+import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, ThemeBreakpoints, VariantName } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
 
@@ -36,10 +36,40 @@ export type MjmlTextProps = IMjmlTextProps & {
 };
 
 /**
- * Text component that can be styled using the theme, optionally, using a variant.
+ * Text component that can be styled using the theme, optionally using a variant.
+ *
+ * Works without a `ThemeProvider` as a plain pass-through to the base MJML text component.
+ * The `variant` and `bottomSpacing` props require a `ThemeProvider` (or `MjmlMailRoot`).
  */
 export function MjmlText({ variant: variantProp, bottomSpacing, className, ...restProps }: MjmlTextProps): ReactNode {
-    const theme = useTheme();
+    const theme = useOptionalTheme();
+
+    const themedProps = getThemedProps(theme, variantProp, bottomSpacing);
+
+    const resolvedClassName = clsx(
+        "mjmlText",
+        themedProps.activeVariant && `mjmlText--${themedProps.activeVariant}`,
+        bottomSpacing && "mjmlText--bottomSpacing",
+        className,
+    );
+
+    return <BaseMjmlText {...themedProps.baseProps} className={resolvedClassName} {...restProps} />;
+}
+
+function getThemedProps(
+    theme: Theme | null,
+    variantProp: VariantName | undefined,
+    bottomSpacing: boolean | undefined,
+): { activeVariant: VariantName | undefined; baseProps: Partial<IMjmlTextProps> } {
+    if (theme === null) {
+        if (variantProp !== undefined) {
+            throw new Error("The `variant` prop requires being wrapped in a ThemeProvider or MjmlMailRoot.");
+        }
+        if (bottomSpacing) {
+            throw new Error("The `bottomSpacing` prop requires being wrapped in a ThemeProvider or MjmlMailRoot.");
+        }
+        return { activeVariant: undefined, baseProps: {} };
+    }
 
     const { defaultVariant, variants, ...baseStyles } = theme.text;
     const activeVariant = variantProp ?? defaultVariant;
@@ -49,24 +79,21 @@ export function MjmlText({ variant: variantProp, bottomSpacing, className, ...re
 
     const fontWeightDefault = getDefaultOrUndefined(mergedStyles.fontWeight);
 
-    const resolvedClassName = clsx("mjmlText", activeVariant && `mjmlText--${activeVariant}`, bottomSpacing && "mjmlText--bottomSpacing", className);
-
-    return (
-        <BaseMjmlText
-            fontFamily={getDefaultOrUndefined(mergedStyles.fontFamily)}
-            fontSize={getDefaultOrUndefined(mergedStyles.fontSize)}
-            fontWeight={fontWeightDefault !== undefined ? String(fontWeightDefault) : undefined}
-            fontStyle={getDefaultOrUndefined(mergedStyles.fontStyle)}
-            lineHeight={getDefaultOrUndefined(mergedStyles.lineHeight)}
-            letterSpacing={getDefaultOrUndefined(mergedStyles.letterSpacing)}
-            textDecoration={getDefaultOrUndefined(mergedStyles.textDecoration)}
-            textTransform={getDefaultOrUndefined(mergedStyles.textTransform)}
-            color={getDefaultOrUndefined(mergedStyles.color)}
-            paddingBottom={bottomSpacing ? getDefaultOrUndefined(mergedStyles.bottomSpacing) : undefined}
-            className={resolvedClassName}
-            {...restProps}
-        />
-    );
+    return {
+        activeVariant,
+        baseProps: {
+            fontFamily: getDefaultOrUndefined(mergedStyles.fontFamily),
+            fontSize: getDefaultOrUndefined(mergedStyles.fontSize),
+            fontWeight: fontWeightDefault !== undefined ? String(fontWeightDefault) : undefined,
+            fontStyle: getDefaultOrUndefined(mergedStyles.fontStyle),
+            lineHeight: getDefaultOrUndefined(mergedStyles.lineHeight),
+            letterSpacing: getDefaultOrUndefined(mergedStyles.letterSpacing),
+            textDecoration: getDefaultOrUndefined(mergedStyles.textDecoration),
+            textTransform: getDefaultOrUndefined(mergedStyles.textTransform),
+            color: getDefaultOrUndefined(mergedStyles.color),
+            paddingBottom: bottomSpacing ? getDefaultOrUndefined(mergedStyles.bottomSpacing) : undefined,
+        },
+    };
 }
 
 type StylePropertyKey = Exclude<keyof TextVariantStyles, "bottomSpacing">;
