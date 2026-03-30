@@ -3,10 +3,10 @@ import clsx from "clsx";
 import type { ReactNode } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
-import { getDefaultOrUndefined, getResponsiveOverrides } from "../../theme/responsiveValue.js";
+import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
-import type { TextVariantStyles, Theme, ThemeBreakpoints, VariantName } from "../../theme/themeTypes.js";
-import { css } from "../../utils/css.js";
+import { type TextVariantStyles, type Theme, type VariantName } from "../../theme/themeTypes.js";
+import { generateResponsiveTextCss } from "./textStyles.js";
 
 export type MjmlTextProps = IMjmlTextProps & {
     /**
@@ -96,80 +96,11 @@ function getThemedProps(
     };
 }
 
-type StylePropertyKey = Exclude<keyof TextVariantStyles, "bottomSpacing">;
-
-const textStyleCssProperties: ReadonlyArray<[StylePropertyKey, string]> = [
-    ["fontFamily", "font-family"],
-    ["fontSize", "font-size"],
-    ["fontWeight", "font-weight"],
-    ["fontStyle", "font-style"],
-    ["lineHeight", "line-height"],
-    ["letterSpacing", "letter-spacing"],
-    ["textDecoration", "text-decoration"],
-    ["textTransform", "text-transform"],
-    ["color", "color"],
-];
-
 export function generateTextStyles(theme: Theme): string {
-    const { variants } = theme.text;
-    if (!variants) return css``;
-
-    const cssChunks: string[] = [];
-
-    for (const [variantName, variantStyles] of Object.entries(variants)) {
-        if (!variantStyles) continue;
-
-        const styleOverrides = new Map<keyof ThemeBreakpoints, string[]>();
-        const spacingOverrides = new Map<keyof ThemeBreakpoints, string[]>();
-
-        for (const [themeKey, cssProperty] of textStyleCssProperties) {
-            const value = variantStyles[themeKey];
-            if (value === undefined) continue;
-
-            for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(value)) {
-                const declarations = styleOverrides.get(breakpointKey) ?? [];
-                declarations.push(`${cssProperty}: ${String(breakpointValue)} !important`);
-                styleOverrides.set(breakpointKey, declarations);
-            }
-        }
-
-        const bottomSpacingValue = variantStyles.bottomSpacing;
-        if (bottomSpacingValue !== undefined) {
-            for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(bottomSpacingValue)) {
-                const declarations = spacingOverrides.get(breakpointKey) ?? [];
-                declarations.push(`padding-bottom: ${String(breakpointValue)} !important`);
-                spacingOverrides.set(breakpointKey, declarations);
-            }
-        }
-
-        for (const [breakpointKey, declarations] of styleOverrides) {
-            const breakpoint = theme.breakpoints[breakpointKey];
-            if (!breakpoint) continue;
-
-            cssChunks.push(css`
-                ${breakpoint.belowMediaQuery} {
-                    .mjmlText--${variantName} > div {
-                        ${declarations.join(";\n")}
-                    }
-                }
-            `);
-        }
-
-        for (const [breakpointKey, declarations] of spacingOverrides) {
-            const breakpoint = theme.breakpoints[breakpointKey];
-            if (!breakpoint) continue;
-
-            cssChunks.push(css`
-                ${breakpoint.belowMediaQuery} {
-                    .mjmlText--bottomSpacing.mjmlText--${variantName} {
-                        ${declarations.join(";\n")}
-                    }
-                }
-            `);
-        }
-    }
-
-    return cssChunks.join("\n");
+    return generateResponsiveTextCss(theme, {
+        styleSelector: (variantName) => `.mjmlText--${variantName} > div`,
+        spacingSelector: (variantName) => `.mjmlText--bottomSpacing.mjmlText--${variantName}`,
+    });
 }
 
 registerStyles(generateTextStyles);

@@ -7,6 +7,8 @@ export type { PropsWithData } from "./blocks/helpers/PropsWithData.js";
 export { MjmlMailRoot } from "./components/mailRoot/MjmlMailRoot.js";
 export type { MjmlSectionProps } from "./components/section/MjmlSection.js";
 export { MjmlSection } from "./components/section/MjmlSection.js";
+export type { HtmlTextProps } from "./components/text/HtmlText.js";
+export { HtmlText } from "./components/text/HtmlText.js";
 export type { MjmlTextProps } from "./components/text/MjmlText.js";
 export { MjmlText } from "./components/text/MjmlText.js";
 export { registerStyles } from "./styles/registerStyles.js";
