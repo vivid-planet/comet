@@ -6,6 +6,8 @@ The library SHALL export a custom `MjmlText` component from its main entry point
 
 The component SHALL NOT require a `ThemeProvider` ancestor when theme-dependent features (`variant`, `bottomSpacing`) are not used. When no theme is present and no theme-dependent props are specified, the component SHALL render as a transparent pass-through to the base `MjmlText`, applying no theme-derived inline styles.
 
+When a `ThemeProvider` is present, `MjmlText` SHALL wrap its children in an `OutlookTextStyleProvider`, passing the effective text style values (`fontFamily`, `fontSize`, `lineHeight`, `fontWeight`, `color`). The effective values SHALL be computed by merging the user's explicit props on top of the resolved theme styles (base + variant), so that explicit prop overrides take precedence over theme values. When no `ThemeProvider` is present, `MjmlText` SHALL NOT wrap children in an `OutlookTextStyleProvider`.
+
 #### Scenario: Consumer imports MjmlText
 
 - **WHEN** a consumer writes `import { MjmlText } from "@comet/mail-react"`
@@ -35,6 +37,23 @@ The component SHALL NOT require a `ThemeProvider` ancestor when theme-dependent 
 
 - **WHEN** `<MjmlText className="custom">Hello</MjmlText>` is rendered without a `ThemeProvider`
 - **THEN** the output element has both `mjmlText` and `custom` CSS classes
+
+#### Scenario: OutlookTextStyleProvider wraps children with theme values
+
+- **WHEN** `<MjmlText>content</MjmlText>` is rendered within a `ThemeProvider`
+- **AND** the theme has `fontFamily: "Arial"`, `fontSize: "16px"`, `color: "#333"`
+- **THEN** an `OutlookTextStyleProvider` ancestor with those values is accessible to descendants via `useOutlookTextStyle()`
+
+#### Scenario: Explicit props override propagate to context
+
+- **WHEN** `<MjmlText color="red">content</MjmlText>` is rendered within a `ThemeProvider`
+- **AND** the theme has `color: "#333"`
+- **THEN** `useOutlookTextStyle()` returns `color: "red"` (explicit prop wins over theme)
+
+#### Scenario: No OutlookTextStyleProvider without theme
+
+- **WHEN** `<MjmlText>content</MjmlText>` is rendered without a `ThemeProvider`
+- **THEN** `useOutlookTextStyle()` called by a descendant returns `null`
 
 ### Requirement: MjmlTextProps type
 
