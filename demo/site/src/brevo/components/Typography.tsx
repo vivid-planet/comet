@@ -12,7 +12,7 @@ export interface TypographyProps extends MjmlTextProps {
     children?: ReactNode;
 }
 
-type VariantStyle = MjmlTextProps & {
+type VariantStyle = Omit<MjmlTextProps, "variant" | "bottomSpacing"> & {
     bottomSpacing: number;
 };
 

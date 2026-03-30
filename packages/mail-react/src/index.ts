@@ -7,13 +7,24 @@ export type { PropsWithData } from "./blocks/helpers/PropsWithData.js";
 export { MjmlMailRoot } from "./components/mailRoot/MjmlMailRoot.js";
 export type { MjmlSectionProps } from "./components/section/MjmlSection.js";
 export { MjmlSection } from "./components/section/MjmlSection.js";
+export type { MjmlTextProps } from "./components/text/MjmlText.js";
+export { MjmlText } from "./components/text/MjmlText.js";
 export { registerStyles } from "./styles/registerStyles.js";
 export { createBreakpoint } from "./theme/createBreakpoint.js";
 export { createTheme } from "./theme/createTheme.js";
 export type { ResponsiveValue } from "./theme/responsiveValue.js";
 export { getDefaultFromResponsiveValue, getResponsiveOverrides } from "./theme/responsiveValue.js";
 export { ThemeProvider, useTheme } from "./theme/ThemeProvider.js";
-export type { Theme, ThemeBreakpoint, ThemeBreakpoints, ThemeSizes } from "./theme/themeTypes.js";
+export type {
+    TextStyles,
+    TextVariants,
+    TextVariantStyles,
+    Theme,
+    ThemeBreakpoint,
+    ThemeBreakpoints,
+    ThemeSizes,
+    ThemeText,
+} from "./theme/themeTypes.js";
 export { css } from "./utils/css.js";
 export {
     Mjml,
@@ -82,8 +93,6 @@ export {
     type IMjmlStyleProps as MjmlStyleProps,
     MjmlTable,
     type IMjmlTableProps as MjmlTableProps,
-    MjmlText,
-    type IMjmlTextProps as MjmlTextProps,
     MjmlTitle,
     type IMjmlTitleProps as MjmlTitleProps,
     MjmlWrapper,
