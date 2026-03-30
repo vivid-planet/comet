@@ -96,8 +96,10 @@ interface PlaceholderDialogProps {
 }
 
 function PlaceholderDialog({ onClose, placeholderEntity, savedSelection, editorState, setEditorState }: PlaceholderDialogProps) {
-    const initialState = placeholderEntity ? placeholderEntity.getData() : PlaceholderBlock.defaultValues();
-    const [state, setState] = useState(initialState);
+    const initialState: PlaceholderBlockState = placeholderEntity
+        ? (placeholderEntity.getData() as PlaceholderBlockState)
+        : PlaceholderBlock.defaultValues();
+    const [state, setState] = useState<PlaceholderBlockState>(initialState);
     // Capture the selection at dialog open time — the dialog steals focus from Draft.js, collapsing the live selection
     const [selectionOnOpen] = useState(() => savedSelection ?? editorState.getSelection());
 
