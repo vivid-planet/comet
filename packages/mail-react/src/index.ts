@@ -4,6 +4,13 @@ export { OneOfBlock } from "./blocks/factories/OneOfBlock.js";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock.js";
 export type { SupportedBlocks } from "./blocks/factories/types.js";
 export type { PropsWithData } from "./blocks/helpers/PropsWithData.js";
+export { MjmlMailRoot } from "./components/mailRoot/MjmlMailRoot.js";
+export type { MjmlSectionProps } from "./components/section/MjmlSection.js";
+export { MjmlSection } from "./components/section/MjmlSection.js";
+export { createBreakpoint } from "./theme/createBreakpoint.js";
+export { createTheme } from "./theme/createTheme.js";
+export { ThemeProvider, useTheme } from "./theme/ThemeProvider.js";
+export type { Theme, ThemeBreakpoint, ThemeBreakpoints, ThemeSizes } from "./theme/themeTypes.js";
 export { css } from "./utils/css.js";
 export {
     Mjml,
@@ -60,8 +67,6 @@ export {
     type IMjmlProps as MjmlProps,
     MjmlRaw,
     type IMjmlRawProps as MjmlRawProps,
-    MjmlSection,
-    type IMjmlSectionProps as MjmlSectionProps,
     MjmlSelector,
     type IMjmlSelectorProps as MjmlSelectorProps,
     MjmlSocial,
