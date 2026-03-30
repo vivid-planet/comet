@@ -1,7 +1,8 @@
-import { useChannel, useGlobals } from "storybook/preview-api";
+import { useChannel, useGlobals, useParameter } from "storybook/preview-api";
 
 import { renderMailHtml } from "../client/renderMailHtml.js";
 import { MjmlMailRoot } from "../components/mailRoot/MjmlMailRoot.js";
+import type { Theme } from "../theme/themeTypes.js";
 import { replaceImagesWithPublicUrl } from "./replaceImagesWithPublicUrl.js";
 
 const RENDER_RESULT_EVENT = "comet-mail-render-result";
@@ -9,9 +10,10 @@ const RENDER_RESULT_EVENT = "comet-mail-render-result";
 export function MailRendererDecorator(Story: () => React.JSX.Element) {
     const [globals] = useGlobals();
     const emit = useChannel({});
+    const theme = useParameter<Theme>("theme");
 
     const { html: rawHtml, mjmlWarnings } = renderMailHtml(
-        <MjmlMailRoot>
+        <MjmlMailRoot theme={theme}>
             <Story />
         </MjmlMailRoot>,
     );
