@@ -41,13 +41,13 @@ export function GridToolbarQuickFilter({ placeholder }: GridToolbarQuickFilterPr
                             </InputAdornment>
                         }
                         endAdornment={
-                            other.value ? (
-                                <InputAdornment position="end">
+                            <InputAdornment position="end">
+                                {other.value ? (
                                     <ClearButton edge="end" aria-label={intl.formatMessage(messages.clear)}>
                                         <Clear fontSize="inherit" />
                                     </ClearButton>
-                                </InputAdornment>
-                            ) : null
+                                ) : null}
+                            </InputAdornment>
                         }
                     />
                 )}
