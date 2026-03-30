@@ -35,10 +35,13 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
         position: relative;
         z-index: 1;
         display: flex;
+        justify-content: start;
         align-items: center;
         min-height: auto;
         gap: ${theme.spacing(2)};
         padding: ${theme.spacing(2)};
+        border-bottom: none;
+        box-shadow: ${theme.shadows[1]};
 
         ${ownerState.density === "comfortable" &&
         css`
