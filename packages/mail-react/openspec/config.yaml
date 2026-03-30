@@ -10,7 +10,10 @@ context: |
 
     Current surface:
     - Re-exports all @faire/mjml-react components (prop types renamed to drop `I` prefix)
-    - Custom components wrap/extend @faire/mjml-react — additive only, no breaking changes
+    - Custom components wrap/extend @faire/mjml-react — additive only, no breaking changes.
+      Without new props, the component must work everywhere the base does (no new required
+      providers or context). For example, a component must not call useTheme() unconditionally
+      — use useOptionalTheme() and only require a theme when a prop needs it.
     - When a custom component replaces a re-export, only the custom version is exported
       (consumers never import @faire/mjml-react directly; the base must not be exposed)
     - Block factories (BlocksBlock, ListBlock, OneOfBlock, OptionalBlock) for rendering
@@ -21,6 +24,16 @@ context: |
     - Some components may gain Html variants (for use inside MJML ending tags),
       with their own API independent from the Mjml version
 
+    Styling model (default-first):
+    - Email clients that lack CSS support are typically desktop (e.g. Outlook).
+      The base/default rendering must rely solely on inline styles (MJML props)
+      and look correct without any <style> block.
+    - Media queries (via registerStyles / <mj-style>) are a progressive
+      enhancement for mobile viewports, which generally have good CSS support.
+      Use max-width media queries (theme.breakpoints.*.belowMediaQuery) to
+      target viewports below a breakpoint. Modern CSS features (flex, grid)
+      are acceptable inside these media queries.
+
     Conventions:
     - No `as` type assertions — use type guards
     - ESM-only (type: module), .js extensions in imports
@@ -30,6 +43,13 @@ context: |
     - Every custom component has a Storybook story in
       `src/components/<concern>/__stories__/<Component>.stories.tsx`
     - Exported components and props have TSDoc comments
+    - Component file ordering: imports, types/props, main component, styles
+      (registerStyles calls go below the component definition)
+    - CSS class names follow BEM with camelCase blocks: block `mjmlSection`,
+      element `mjmlSection__item`, modifier `mjmlSection--indented`.
+      Every custom component applies its block class and merges any consumer-
+      provided className via clsx: `clsx("mjmlSection", className)`.
+      clsx is a dependency of this package.
 
 rules:
     proposal:

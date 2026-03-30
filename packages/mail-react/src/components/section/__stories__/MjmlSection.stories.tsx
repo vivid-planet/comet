@@ -23,6 +23,19 @@ export const Primary: Story = {
     ),
 };
 
+export const Indented: Story = {
+    args: {
+        indent: true,
+    },
+    render: (args) => (
+        <MjmlSection {...args}>
+            <MjmlColumn>
+                <MjmlText>Indented section content</MjmlText>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
 export const DisabledResponsiveBehavior: Story = {
     args: {
         disableResponsiveBehavior: true,

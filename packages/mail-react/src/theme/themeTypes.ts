@@ -1,3 +1,5 @@
+import type { ResponsiveValue } from "./responsiveValue.js";
+
 /**
  * A resolved breakpoint with its numeric value and a ready-to-use media query
  * string that targets viewports narrower than this breakpoint.
@@ -33,6 +35,8 @@ export interface ThemeBreakpoints {
 export interface ThemeSizes {
     /** The width of the email body in pixels. */
     bodyWidth: number;
+    /** Content indentation (left/right padding) in pixels, supporting per-breakpoint values. */
+    contentIndentation: ResponsiveValue;
 }
 
 /**

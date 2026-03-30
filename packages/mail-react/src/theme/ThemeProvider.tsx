@@ -17,3 +17,8 @@ export function useTheme(): Theme {
 
     return theme;
 }
+
+/** Returns the current theme or `null` if no `ThemeProvider` is present. Internal use only. */
+export function useOptionalTheme(): Theme | null {
+    return useContext(ThemeContext);
+}
