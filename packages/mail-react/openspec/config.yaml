@@ -53,6 +53,11 @@ context: |
       provided className via clsx: `clsx("mjmlSection", className)`.
       clsx is a dependency of this package.
 
+    Docs:
+    - User-facing documentation lives at ../../docs/docs/3-features-modules/13-building-html-emails/
+      (relative to this package). Library changes that affect usage should consider
+      updating these docs, but docs are not part of specs.
+
 rules:
     proposal:
         - Changes must not break existing @faire/mjml-react component API compatibility
