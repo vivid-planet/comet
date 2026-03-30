@@ -199,6 +199,8 @@ Responsive overrides SHALL be grouped by breakpoint — one `@media` block per b
 
 When no variants are defined in the theme, no CSS SHALL be emitted.
 
+The CSS generation logic SHALL use the shared `generateResponsiveTextCss` utility from `textStyles.ts`, passing component-specific selectors. The `textStyleCssProperties` mapping and `generateTextStyles` function SHALL be moved to or imported from `textStyles.ts`.
+
 #### Scenario: Responsive variant emits media query
 
 - **WHEN** the theme defines variant `heading` with `fontSize: { default: "32px", mobile: "24px" }`
