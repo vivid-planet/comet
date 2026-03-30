@@ -156,3 +156,29 @@ export const DefaultVariant: Story = {
         </MjmlSection>
     ),
 };
+
+export const ComponentPropAsDiv: Story = {
+    render: () => (
+        <MjmlSection>
+            <MjmlColumn>
+                <MjmlRaw>
+                    <HtmlText component="div">Rendered as a div with theme styles</HtmlText>
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+export const ComponentPropAsAnchor: Story = {
+    render: () => (
+        <MjmlSection>
+            <MjmlColumn>
+                <MjmlRaw>
+                    <HtmlText component="a" href="https://example.com" style={{ textDecoration: "underline" }}>
+                        Rendered as an anchor with href
+                    </HtmlText>
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
