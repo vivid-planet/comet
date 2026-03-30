@@ -38,7 +38,9 @@ export function MjmlMailRoot({ theme: themeProp, children }: MjmlMailRootProps):
                     <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
                     <Styles />
                 </MjmlHead>
-                <MjmlBody width={theme.sizes.bodyWidth}>{children}</MjmlBody>
+                <MjmlBody width={theme.sizes.bodyWidth} backgroundColor={theme.colors.background.body}>
+                    {children}
+                </MjmlBody>
             </Mjml>
         </ThemeProvider>
     );

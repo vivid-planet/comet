@@ -16,4 +16,10 @@ export const defaultTheme: Theme = {
         lineHeight: "20px",
         bottomSpacing: "16px",
     },
+    colors: {
+        background: {
+            body: "#F2F2F2",
+            content: "#FFFFFF",
+        },
+    },
 };

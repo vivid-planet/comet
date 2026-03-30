@@ -20,8 +20,10 @@ export type {
     TextVariants,
     TextVariantStyles,
     Theme,
+    ThemeBackgroundColors,
     ThemeBreakpoint,
     ThemeBreakpoints,
+    ThemeColors,
     ThemeSizes,
     ThemeText,
 } from "./theme/themeTypes.js";

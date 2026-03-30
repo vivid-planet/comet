@@ -21,14 +21,16 @@ export type MjmlSectionProps = IMjmlSectionProps & {
 };
 
 /** A section wrapper for email layouts. Must be a direct child of `MjmlBody`. */
-export function MjmlSection({ children, indent, disableResponsiveBehavior, slotProps, className, ...props }: MjmlSectionProps): ReactNode {
+export function MjmlSection({ children, indent, disableResponsiveBehavior, slotProps, className, ...restProps }: MjmlSectionProps): ReactNode {
     const theme = useOptionalTheme();
 
     const indentProps = indent ? getIndentProps(theme) : {};
     const resolvedClassName = clsx("mjmlSection", indent && "mjmlSection--indented", className);
 
+    const themeBackgroundProps = theme ? { backgroundColor: theme.colors.background.content } : {};
+
     return (
-        <BaseMjmlSection className={resolvedClassName} {...indentProps} {...props}>
+        <BaseMjmlSection className={resolvedClassName} {...themeBackgroundProps} {...indentProps} {...restProps}>
             {disableResponsiveBehavior ? <MjmlGroup {...slotProps?.group}>{children}</MjmlGroup> : <>{children}</>}
         </BaseMjmlSection>
     );

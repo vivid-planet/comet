@@ -87,6 +87,17 @@ export interface ThemeSizes {
     contentIndentation: ResponsiveValue;
 }
 
+/** Background color tokens for usage through the email layout. */
+export interface ThemeBackgroundColors {
+    body: string;
+    content: string;
+}
+
+/** Color tokens for usage through the email layout. */
+export interface ThemeColors {
+    background: ThemeBackgroundColors;
+}
+
 /**
  * The root theme object that holds all design tokens for `@comet/mail-react`.
  *
@@ -97,4 +108,5 @@ export interface Theme {
     sizes: ThemeSizes;
     breakpoints: ThemeBreakpoints;
     text: ThemeText;
+    colors: ThemeColors;
 }
