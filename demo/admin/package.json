@@ -27,7 +27,7 @@
         "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
-        "@apollo/client": "^3.14.0",
+        "@apollo/client": "^3.14.1",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
@@ -46,7 +46,7 @@
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
-        "graphql": "^16.0.0",
+        "graphql": "^16.13.2",
         "lodash.isequal": "^4.5.0",
         "p-debounce": "^4.0.0",
         "rdndmb-html5-to-touch": "^9.0.0",
@@ -78,7 +78,7 @@
         "@parcel/watcher": "^2.5.6",
         "@swc/plugin-emotion": "^14.0.1",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/node": "^24.10.9",
+        "@types/node": "^24.12.0",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
@@ -93,7 +93,7 @@
         "prettier": "^3.6.2",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
-        "vite": "^7.2.6",
+        "vite": "^7.3.1",
         "vite-plugin-compression2": "^2.3.1",
         "vite-plugin-html": "^3.2.2"
     }

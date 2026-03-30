@@ -134,6 +134,11 @@ export default defineConfig({
             script: "pnpm --filter @comet/mail-react run dev",
             group: ["mail-react"],
         },
+        {
+            name: "mail-react-storybook",
+            script: "pnpm --filter @comet/mail-react run storybook",
+            group: ["mail-react"],
+        },
 
         //group brevo
         {
@@ -210,7 +215,7 @@ export default defineConfig({
         //group demo api
         {
             name: "demo-docker",
-            script: "pnpm run dev:docker-compose up",
+            script: "set -a; . .env; . .env.local; set +a; docker compose up",
             group: ["demo-api", "demo"],
         },
         {
@@ -266,6 +271,7 @@ export default defineConfig({
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
             group: ["storybook", "docs"],
+            waitOn: ["tcp:26646"], // storybook-comet-admin
         },
         {
             name: "docs",

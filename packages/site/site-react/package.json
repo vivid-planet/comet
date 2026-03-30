@@ -20,8 +20,6 @@
         "./css": "./lib/style.css",
         "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
-    "module": "./lib/index.js",
-    "types": "lib/index.d.ts",
     "files": [
         "lib/*"
     ],
