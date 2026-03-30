@@ -7,7 +7,8 @@
     "exports": {
         ".": "./lib/index.js",
         "./client": "./lib/client/index.js",
-        "./server": "./lib/server/index.js"
+        "./server": "./lib/server/index.js",
+        "./storybook": "./lib/storybook/index.js"
     },
     "files": [
         "lib/*"
@@ -57,7 +58,13 @@
         "vitest": "^4.0.16"
     },
     "peerDependencies": {
-        "react": "^18.0.0 || ^19.0.0"
+        "react": "^18.0.0 || ^19.0.0",
+        "storybook": ">=10.0.0"
+    },
+    "peerDependenciesMeta": {
+        "storybook": {
+            "optional": true
+        }
     },
     "engines": {
         "node": ">=22.0.0"

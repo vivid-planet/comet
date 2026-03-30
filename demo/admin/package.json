@@ -46,7 +46,7 @@
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
-        "graphql": "^16.0.0",
+        "graphql": "^16.13.2",
         "lodash.isequal": "^4.5.0",
         "p-debounce": "^4.0.0",
         "rdndmb-html5-to-touch": "^9.0.0",
@@ -93,7 +93,7 @@
         "prettier": "^3.6.2",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
-        "vite": "^7.2.6",
+        "vite": "^7.3.1",
         "vite-plugin-compression2": "^2.3.1",
         "vite-plugin-html": "^3.2.2"
     }
