@@ -54,6 +54,18 @@ context: |
       clsx is a dependency of this package.
 
 rules:
+    specs:
+        - >-
+            Scenarios are optional. Only add a scenario when it communicates
+            something the requirement text alone doesn't make obvious — edge
+            cases, negative cases, subtle interactions, or behavior that could
+            reasonably be misinterpreted. A clear, unambiguous requirement
+            needs no scenarios. Never restate the requirement with concrete
+            values just to have a scenario.
+        - >-
+            Don't split trivially similar behavior into separate requirements.
+            If multiple cases follow the same pattern, describe the general
+            rule in one requirement and mention the variations inline.
     proposal:
         - Changes must not break existing @faire/mjml-react component API compatibility
         - >-
