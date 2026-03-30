@@ -2,7 +2,7 @@
 "@comet/mail-react": minor
 ---
 
-Add `ResponsiveValue<T>` type with `getDefaultValue` and `getResponsiveOverrides` helpers
+Add `ResponsiveValue<T>` type with `getDefaultFromResponsiveValue` and `getResponsiveOverrides` helpers
 
 Generic type for breakpoint-aware theme tokens. A `ResponsiveValue` is either a plain value or an object keyed by breakpoint names with a required `default`. The helpers resolve the default value for inline styles and extract per-breakpoint overrides for media queries.
 

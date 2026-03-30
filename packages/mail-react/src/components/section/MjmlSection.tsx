@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { ReactNode } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
-import { getDefaultValue, getResponsiveOverrides } from "../../theme/responsiveValue.js";
+import { getDefaultFromResponsiveValue, getResponsiveOverrides } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { Theme } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
@@ -40,8 +40,8 @@ function getIndentProps(theme: Theme | null): Pick<IMjmlSectionProps, "paddingLe
     }
 
     return {
-        paddingLeft: getDefaultValue(theme.sizes.contentIndentation),
-        paddingRight: getDefaultValue(theme.sizes.contentIndentation),
+        paddingLeft: getDefaultFromResponsiveValue(theme.sizes.contentIndentation),
+        paddingRight: getDefaultFromResponsiveValue(theme.sizes.contentIndentation),
     };
 }
 

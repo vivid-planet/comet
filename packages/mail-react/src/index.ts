@@ -11,7 +11,7 @@ export { registerStyles } from "./styles/registerStyles.js";
 export { createBreakpoint } from "./theme/createBreakpoint.js";
 export { createTheme } from "./theme/createTheme.js";
 export type { ResponsiveValue } from "./theme/responsiveValue.js";
-export { getDefaultValue, getResponsiveOverrides } from "./theme/responsiveValue.js";
+export { getDefaultFromResponsiveValue, getResponsiveOverrides } from "./theme/responsiveValue.js";
 export { ThemeProvider, useTheme } from "./theme/ThemeProvider.js";
 export type { Theme, ThemeBreakpoint, ThemeBreakpoints, ThemeSizes } from "./theme/themeTypes.js";
 export { css } from "./utils/css.js";

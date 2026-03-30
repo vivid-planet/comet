@@ -19,7 +19,7 @@ function isResponsiveObject<T>(value: ResponsiveValue<T>): value is ResponsiveOb
  * Returns the default (inline) value from a `ResponsiveValue`.
  * For a plain value, returns it directly. For an object, returns the `default` property.
  */
-export function getDefaultValue<T = number>(value: ResponsiveValue<T>): T {
+export function getDefaultFromResponsiveValue<T = number>(value: ResponsiveValue<T>): T {
     return isResponsiveObject(value) ? value.default : value;
 }
 

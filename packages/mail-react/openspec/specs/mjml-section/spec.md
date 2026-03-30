@@ -65,7 +65,7 @@ Any consumer-provided `className` prop SHALL be merged with the internal class n
 
 ### Requirement: Content indentation via `indent` prop
 
-The component SHALL accept an `indent` boolean prop (default `false`). When `true`, the component SHALL set `paddingLeft` and `paddingRight` to the default value of `theme.sizes.contentIndentation` (resolved via `getDefaultValue`) on the underlying `MjmlSection`.
+The component SHALL accept an `indent` boolean prop (default `false`). When `true`, the component SHALL set `paddingLeft` and `paddingRight` to the default value of `theme.sizes.contentIndentation` (resolved via `getDefaultFromResponsiveValue`) on the underlying `MjmlSection`.
 
 When `indent` is `false` or not provided, no indentation padding SHALL be applied by the component.
 

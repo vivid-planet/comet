@@ -38,28 +38,28 @@ When the value is an object, the `default` key SHALL be required and SHALL be of
 - **WHEN** a consumer assigns `const lineHeight: ResponsiveValue<string> = { default: "24px", mobile: "20px" }`
 - **THEN** the assignment is type-safe and override values are strings
 
-### Requirement: getDefaultValue helper
+### Requirement: getDefaultFromResponsiveValue helper
 
-The library SHALL export a `getDefaultValue` function from its main entry point. The function SHALL be generic with default type parameter `T` equal to `number`. Its signature SHALL accept `ResponsiveValue<T>` and return `T`. When the input is a plain `T`, it SHALL return that value. When the input is an object, it SHALL return the `default` property.
+The library SHALL export a `getDefaultFromResponsiveValue` function from its main entry point. The function SHALL be generic with default type parameter `T` equal to `number`. Its signature SHALL accept `ResponsiveValue<T>` and return `T`. When the input is a plain `T`, it SHALL return that value. When the input is an object, it SHALL return the `default` property.
 
 #### Scenario: Plain number input
 
-- **WHEN** `getDefaultValue(20)` is called
+- **WHEN** `getDefaultFromResponsiveValue(20)` is called
 - **THEN** it returns `20`
 
 #### Scenario: Object input
 
-- **WHEN** `getDefaultValue({ default: 20, mobile: 10 })` is called
+- **WHEN** `getDefaultFromResponsiveValue({ default: 20, mobile: 10 })` is called
 - **THEN** it returns `20`
 
 #### Scenario: String input with explicit type argument
 
-- **WHEN** `getDefaultValue<string>({ default: "24px", mobile: "20px" })` is called
+- **WHEN** `getDefaultFromResponsiveValue<string>({ default: "24px", mobile: "20px" })` is called
 - **THEN** it returns `"24px"`
 
 ### Requirement: getResponsiveOverrides helper
 
-The library SHALL export a `getResponsiveOverrides` function from its main entry point. The function SHALL be generic with default type parameter `T` equal to `number`. Its signature SHALL accept `ResponsiveValue<T>` and return an array of objects for all non-`default` entries. Each object SHALL have a `breakpointKey` property of type `string` and a `value` property of type `T`. The `default` key SHALL never appear as any `breakpointKey` — it is only consumed via `getDefaultValue` for inline styles; media-query CSS SHALL use only the overrides returned here. When the input is a plain `T`, the returned array SHALL be empty.
+The library SHALL export a `getResponsiveOverrides` function from its main entry point. The function SHALL be generic with default type parameter `T` equal to `number`. Its signature SHALL accept `ResponsiveValue<T>` and return an array of objects for all non-`default` entries. Each object SHALL have a `breakpointKey` property of type `string` and a `value` property of type `T`. The `default` key SHALL never appear as any `breakpointKey` — it is only consumed via `getDefaultFromResponsiveValue` for inline styles; media-query CSS SHALL use only the overrides returned here. When the input is a plain `T`, the returned array SHALL be empty.
 
 #### Scenario: Plain number input
 
@@ -147,7 +147,7 @@ The default theme SHALL have `breakpoints.mobile.value` equal to `420` and `brea
 #### Scenario: Default contentIndentation
 
 - **WHEN** `createTheme()` is called with no arguments
-- **THEN** `getDefaultValue(theme.sizes.contentIndentation) === 32`
+- **THEN** `getDefaultFromResponsiveValue(theme.sizes.contentIndentation) === 32`
 - **AND** `getResponsiveOverrides(theme.sizes.contentIndentation)` contains `{ breakpointKey: "mobile", value: 16 }`
 
 #### Scenario: Default breakpoints
@@ -163,12 +163,12 @@ The default theme SHALL have `breakpoints.mobile.value` equal to `420` and `brea
 #### Scenario: Override contentIndentation with number
 
 - **WHEN** `createTheme({ sizes: { contentIndentation: 30 } })` is called
-- **THEN** `getDefaultValue(theme.sizes.contentIndentation) === 30` and `getResponsiveOverrides(theme.sizes.contentIndentation)` is empty
+- **THEN** `getDefaultFromResponsiveValue(theme.sizes.contentIndentation) === 30` and `getResponsiveOverrides(theme.sizes.contentIndentation)` is empty
 
 #### Scenario: Override contentIndentation with object
 
 - **WHEN** `createTheme({ sizes: { contentIndentation: { default: 30, mobile: 15 } } })` is called
-- **THEN** `getDefaultValue(theme.sizes.contentIndentation) === 30` and `getResponsiveOverrides(theme.sizes.contentIndentation)` contains `{ breakpointKey: "mobile", value: 15 }`
+- **THEN** `getDefaultFromResponsiveValue(theme.sizes.contentIndentation) === 30` and `getResponsiveOverrides(theme.sizes.contentIndentation)` contains `{ breakpointKey: "mobile", value: 15 }`
 
 ### Requirement: createBreakpoint is exported
 
