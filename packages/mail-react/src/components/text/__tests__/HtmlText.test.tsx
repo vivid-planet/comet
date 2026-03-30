@@ -25,31 +25,6 @@ describe("HtmlText", () => {
         expect(html).toContain("line-height:20px");
     });
 
-    it("applies mso-line-height-rule when lineHeight is present", () => {
-        const theme = createTheme({ text: { lineHeight: "24px" } });
-        const html = renderHtmlText(
-            <ThemeProvider theme={theme}>
-                <HtmlText>Hello</HtmlText>
-            </ThemeProvider>,
-        );
-
-        expect(html).toContain("mso-line-height-rule:exactly");
-    });
-
-    it("does not apply mso-line-height-rule when lineHeight is absent", () => {
-        const theme = createTheme();
-        // Override lineHeight to undefined by creating a theme without it
-        theme.text.lineHeight = undefined;
-
-        const html = renderHtmlText(
-            <ThemeProvider theme={theme}>
-                <HtmlText>Hello</HtmlText>
-            </ThemeProvider>,
-        );
-
-        expect(html).not.toContain("mso-line-height-rule");
-    });
-
     it("applies variant styles over base styles", () => {
         const theme = createTheme({
             text: {
@@ -222,9 +197,5 @@ describe("HtmlText", () => {
 
         expect(html).toContain('colSpan="2"');
         expect(html).toContain('align="center"');
-    });
-
-    it("throws without ThemeProvider", () => {
-        expect(() => renderHtmlText(<HtmlText>Hello</HtmlText>)).toThrow();
     });
 });

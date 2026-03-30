@@ -9,18 +9,28 @@ import { generateResponsiveTextCss } from "./textStyles.js";
 
 export type HtmlTextProps = TdHTMLAttributes<HTMLTableCellElement> & {
     /**
-     * The text variant to apply from the theme.
+     * The component's variant to apply, as defined in the theme.
      *
-     * Custom variants should be defined in the theme through module augmentation.
+     * Custom variants should be defined in the theme, through module augmentation.
      *
      * ```ts
      * declare module "@comet/mail-react" {
      *     interface TextVariants { heading: true; body: true }
      * }
      * ```
+     *
+     * ```ts
+     * const theme = createTheme({
+     *     text: {
+     *         variants: {
+     *             heading: { fontSize: "24px" },
+     *             body: { fontSize: "16px" },
+     *         },
+     *     },
+     * });
      */
     variant?: VariantName;
-    /** When true, applies the theme's `bottomSpacing` as `padding-bottom`. */
+    /** When true, applies spacing below the text. */
     bottomSpacing?: boolean;
 };
 
