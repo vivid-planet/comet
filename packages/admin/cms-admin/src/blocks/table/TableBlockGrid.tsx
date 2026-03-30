@@ -201,8 +201,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                 right: ["actions"],
             }}
             slots={{
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                rowReorderIcon: DragIndicator as any,
+                rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {
