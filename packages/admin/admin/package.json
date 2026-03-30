@@ -52,7 +52,7 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@apollo/client": "^3.14.0",
+        "@apollo/client": "^3.14.1",
         "@babel/cli": "^7.28.6",
         "@babel/core": "^7.28.6",
         "@comet/admin-babel-preset": "workspace:*",
