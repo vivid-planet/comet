@@ -1,6 +1,6 @@
 {
     "name": "@comet/mail-react",
-    "version": "9.0.0-beta.0",
+    "version": "9.0.0-beta.1",
     "description": "Utilities for building HTML emails with React",
     "license": "BSD-2-Clause",
     "type": "module",
