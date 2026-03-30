@@ -34,6 +34,7 @@ export const createCometTheme = (
         palette: {
             ...paletteOptions,
             DataGrid: {
+                ...paletteOptions.DataGrid,
                 bg: "rgb(255, 255, 255)",
             },
         },
