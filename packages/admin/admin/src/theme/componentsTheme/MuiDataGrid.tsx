@@ -41,6 +41,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     ...component,
     defaultProps: {
         ...component?.defaultProps,
+        columnHeaderHeight: 60,
         disableRowSelectionOnClick: true,
         getRowHeight: ({ densityFactor }) => {
             if (densityFactor === COMPACT_DENSITY_FACTOR) {
