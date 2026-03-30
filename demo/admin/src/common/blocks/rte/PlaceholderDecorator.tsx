@@ -1,7 +1,9 @@
 import { type ContentBlock, type ContentState, type DraftDecorator } from "draft-js";
 import type { ReactNode } from "react";
 
-export const PLACEHOLDER_ENTITY_TYPE = "PLACEHOLDER";
+import { PLACEHOLDER_ENTITY_TYPE } from "../placeholder/constants";
+
+export { PLACEHOLDER_ENTITY_TYPE };
 
 function PlaceholderEditorComponent({ children }: { children: ReactNode }): ReactNode {
     return (

@@ -2,19 +2,13 @@ import { CancelButton, Dialog, OkayButton } from "@comet/admin";
 import { RteTextPlaceholder } from "@comet/admin-icons";
 import { ControlButton, type IControlProps, selectionIsInOneBlock } from "@comet/admin-rte";
 import { DialogActions, DialogContent } from "@mui/material";
-import { type ContentBlock, EditorState, Modifier, SelectionState } from "draft-js";
+import { type ContentBlock, EditorState, type EntityInstance, Modifier, SelectionState } from "draft-js";
 import { type ReactElement, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { formatPrice } from "../placeholder/formatPrice";
 import { PlaceholderBlock, type PlaceholderBlockState } from "../PlaceholderBlock";
 import { PLACEHOLDER_ENTITY_TYPE } from "./PlaceholderDecorator";
-
-function formatPrice(price: string | undefined): string | undefined {
-    if (price == null) return undefined;
-    const num = Number(price);
-    if (isNaN(num)) return price;
-    return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(num);
-}
 
 function getPlaceholderLabel(state: PlaceholderBlockState): string {
     if (state.field === "price") {
@@ -94,8 +88,7 @@ export function PlaceholderToolbarButton({ editorState, setEditorState, disabled
 }
 
 interface PlaceholderDialogProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    placeholderEntity: any;
+    placeholderEntity: EntityInstance | null;
     savedSelection: SelectionState | null;
     editorState: EditorState;
     setEditorState: (editorState: EditorState) => void;

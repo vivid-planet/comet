@@ -4,6 +4,8 @@ import { type BlockContext, BlocksFinalForm, createBlockSkeleton, createComposit
 import { type PlaceholderBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
+import { formatPrice } from "./placeholder/formatPrice";
+
 const placeholderBlockProductSearchQuery = gql`
     query PlaceholderBlockProductSearch($search: String) {
         products(search: $search, offset: 0, limit: 20) {
@@ -56,13 +58,6 @@ const [FieldSelect] = createCompositeBlockSelectField<PlaceholderBlockData["fiel
     options: fieldOptions,
 });
 
-function formatPrice(price: string | undefined): string | undefined {
-    if (price == null) return undefined;
-    const num = Number(price);
-    if (isNaN(num)) return price;
-    return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(num);
-}
-
 function resolveValue(state: PlaceholderBlockState): string | undefined {
     switch (state.field) {
         case "title":
@@ -102,13 +97,17 @@ export const PlaceholderBlock = {
         };
 
         if (state.productId) {
-            const { data } = await context.apolloClient.query({
-                query: placeholderBlockProductQuery,
-                variables: { id: state.productId },
-            });
-            if (data?.product) {
-                state.productTitle = data.product.title;
-                state.productPrice = data.product.price != null ? String(data.product.price) : undefined;
+            try {
+                const { data } = await context.apolloClient.query({
+                    query: placeholderBlockProductQuery,
+                    variables: { id: state.productId },
+                });
+                if (data?.product) {
+                    state.productTitle = data.product.title;
+                    state.productPrice = data.product.price != null ? String(data.product.price) : undefined;
+                }
+            } catch {
+                // Product may have been deleted or network error — fall back to state without product data
             }
         }
 
@@ -153,10 +152,12 @@ export const PlaceholderBlock = {
                             : undefined,
                     }}
                 >
+                    {/* Product is locked when editing to preserve the entity identity; the displayed field (title/price) remains changeable */}
                     <AsyncAutocompleteField
                         name="product"
                         label={<FormattedMessage id="placeholderBlock.product" defaultMessage="Product" />}
                         fullWidth
+                        required
                         disabled={isEditing}
                         loadOptions={async (search?: string) => {
                             const { data } = await client.query({

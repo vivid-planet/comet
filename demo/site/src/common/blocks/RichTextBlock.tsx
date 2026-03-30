@@ -88,7 +88,11 @@ const defaultRichTextRenderers: Renderers = {
                 <span>{children}</span>
             ),
         PLACEHOLDER: (children, data: PlaceholderBlockData, { key }) => {
-            return <span key={key}>{children}</span>;
+            return (
+                <span key={key} style={data.value ? { fontStyle: "inherit" } : undefined}>
+                    {data.value ?? children}
+                </span>
+            );
         },
     },
 };

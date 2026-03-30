@@ -5,6 +5,10 @@ import { Product } from "@src/products/entities/product.entity";
 
 import { PlaceholderBlockData } from "./placeholder.block";
 
+function formatPrice(price: number, locale = "de-DE", currency = "EUR"): string {
+    return new Intl.NumberFormat(locale, { style: "currency", currency }).format(price);
+}
+
 type TransformResponse = {
     productId?: string;
     field: string;
@@ -34,8 +38,7 @@ export class PlaceholderBlockTransformerService implements BlockTransformerServi
                 value = product.title;
                 break;
             case "price":
-                value =
-                    product.price != null ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(product.price) : undefined;
+                value = product.price != null ? formatPrice(product.price) : undefined;
                 break;
         }
 

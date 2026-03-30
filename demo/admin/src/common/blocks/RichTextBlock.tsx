@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { LinkBlock } from "./LinkBlock";
+import { PLACEHOLDER_ENTITY_TYPE } from "./placeholder/constants";
 import { PlaceholderBlock } from "./PlaceholderBlock";
 import { PlaceholderDecorator } from "./rte/PlaceholderDecorator";
 import { PlaceholderToolbarButton } from "./rte/PlaceholderToolbarButton";
@@ -10,7 +11,7 @@ import { PlaceholderToolbarButton } from "./rte/PlaceholderToolbarButton";
 export const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
     entities: {
-        PLACEHOLDER: {
+        [PLACEHOLDER_ENTITY_TYPE]: {
             block: PlaceholderBlock,
             decorator: PlaceholderDecorator,
             toolbarButton: PlaceholderToolbarButton,
