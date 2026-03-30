@@ -41,7 +41,7 @@
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
         "@comet/eslint-plugin": "workspace:*",
-        "@eslint/eslintrc": "^3.3.3",
+        "@eslint/eslintrc": "^3.3.5",
         "@eslint/js": "^9.39.2",
         "@next/eslint-plugin-next": "^16.1.6",
         "eslint-config-prettier": "^10.1.8",
