@@ -13,6 +13,8 @@ export interface SkillSource {
     symlink: boolean;
     /** If true, skills with metadata.internal: true in their SKILL.md are excluded */
     filterInternal?: boolean;
+    /** If set, only install skills whose folder name is in this list */
+    skills?: string[];
 }
 
 export interface InstallOptions {
@@ -98,8 +100,8 @@ function listSkillFolders(directory: string, filterInternal = false): string[] {
 export function installSkills(sources: SkillSource[], targetDirs: string[], { dryRun }: InstallOptions): void {
     const installed = new Set<string>();
 
-    for (const { label, directory, symlink, filterInternal } of sources) {
-        const folders = listSkillFolders(directory, filterInternal);
+    for (const { label, directory, symlink, filterInternal, skills } of sources) {
+        const folders = listSkillFolders(directory, filterInternal).filter((folder) => !skills || skills.includes(folder));
         if (folders.length === 0) {
             console.log(`No skills found in ${label}`);
             continue;
@@ -133,8 +135,16 @@ export function installSkills(sources: SkillSource[], targetDirs: string[], { dr
     console.log(`\nTotal skills installed: ${installed.size}`);
 }
 
+interface RepoConfig {
+    repo: string;
+    /** List of skill folder names to install. If omitted, all skills from the repo are installed. */
+    skills: string[];
+}
+
+type RepoEntry = string | RepoConfig;
+
 interface AgentSkillsConfig {
-    repos?: string[];
+    repos?: RepoEntry[];
 }
 
 function loadConfig(configPath: string): AgentSkillsConfig {
@@ -170,7 +180,9 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
 
         const tempDirs: string[] = [];
         try {
-            for (const rawUrl of repos) {
+            for (const repoEntry of repos) {
+                const rawUrl = typeof repoEntry === "string" ? repoEntry : repoEntry.repo;
+                const skillsFilter = typeof repoEntry === "string" ? undefined : repoEntry.skills;
                 const cloneDir = cloneRepo(rawUrl);
                 tempDirs.push(cloneDir);
                 sources.push({
@@ -178,6 +190,7 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
                     directory: path.join(cloneDir, "skills"),
                     symlink: false,
                     filterInternal: true,
+                    skills: skillsFilter,
                 });
             }
             installSkills(sources, targetDirs, { dryRun });
