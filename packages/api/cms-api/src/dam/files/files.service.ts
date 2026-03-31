@@ -8,7 +8,6 @@ import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
-import sharp from "sharp";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
@@ -558,6 +557,7 @@ export class FilesService {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const imageBuffer = Buffer.from(arrayBuffer);
 
+            const { default: sharp } = await import("sharp");
             const data = await sharp(imageBuffer).removeAlpha().raw().toBuffer();
 
             // since we scale the image to 1px with imgproxy, data only contains the colors for this one pixel
