@@ -21,6 +21,10 @@ const { html, mjmlWarnings } = renderMailHtml(
         </MjmlSection>
     </MjmlMailRoot>,
 );
+
+if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
+    console.warn(`${mjmlWarnings.length} MJML Warnings`, mjmlWarnings);
+}
 ```
 
 `renderMailHtml` accepts a React element tree and returns:
@@ -29,6 +33,10 @@ const { html, mjmlWarnings } = renderMailHtml(
 - **`mjmlWarnings`** — an array of MJML validation warnings (collected, not thrown)
 
 There is no decorator outside Storybook, so you must wrap your content in [`MjmlMailRoot`](./2-components-and-theme.md#mjmlmailroot) yourself. Optional MJML options can be passed as a second argument and are forwarded to the underlying MJML compiler.
+
+### MJML Warnings
+
+`mjmlWarnings` are non-critical validation messages from the MJML compiler — the output HTML is always produced regardless. Log them in development (as shown above) to catch structural issues early, but avoid logging in production where they would add noise to error trackers like Sentry.
 
 ## Integration with the Mail Templates Module
 
