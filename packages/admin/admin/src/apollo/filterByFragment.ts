@@ -1,4 +1,4 @@
-import { type FragmentMatcher } from "@apollo/client";
+import type { FragmentMatcher } from "@apollo/client";
 import {
     argumentsObjectFromField,
     createFragmentMap,
@@ -11,14 +11,7 @@ import {
     resultKeyNameFromField,
     shouldInclude,
 } from "@apollo/client/utilities";
-import {
-    type DirectiveNode,
-    type DocumentNode,
-    type FieldNode,
-    type FragmentDefinitionNode,
-    type InlineFragmentNode,
-    type SelectionSetNode,
-} from "graphql";
+import type { DirectiveNode, DocumentNode, FieldNode, FragmentDefinitionNode, InlineFragmentNode, SelectionSetNode } from "graphql";
 
 // Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/utilities.ts
 export function filterByFragment<FD = any, D extends FD = any>(doc: DocumentNode, data: D, variableValues: VariableMap = {}): FD {

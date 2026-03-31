@@ -10,7 +10,7 @@ import { integerTypes, numberTypes } from "../utils/constants";
 import { findHooksService } from "../utils/find-hooks-service";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import type { GeneratedFile } from "../utils/write-generated-files";
 import { buildOptions } from "./build-options";
 import { generateEnumFilterDto } from "./generate-enum-filter-dto";
 import { generatePayloadObjectTypes } from "./generate-payload-object-types";

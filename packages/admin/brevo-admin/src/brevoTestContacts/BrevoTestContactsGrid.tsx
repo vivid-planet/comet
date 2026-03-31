@@ -17,19 +17,19 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add, Delete, Edit } from "@comet/admin-icons";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { Box, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
-import {
-    type GQLBrevoContactsListFragment,
-    type GQLBrevoTestContactsGridQuery,
-    type GQLBrevoTestContactsGridQueryVariables,
-    type GQLDeleteBrevoTestContactMutation,
-    type GQLDeleteBrevoTestContactMutationVariables,
+import type {
+    GQLBrevoContactsListFragment,
+    GQLBrevoTestContactsGridQuery,
+    GQLBrevoTestContactsGridQueryVariables,
+    GQLDeleteBrevoTestContactMutation,
+    GQLDeleteBrevoTestContactMutationVariables,
 } from "./BrevoTestContactsGrid.generated";
 
 const brevoContactsFragment = gql`

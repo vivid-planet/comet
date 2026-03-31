@@ -17,17 +17,17 @@ import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
-import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
+import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
 import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
-import {
-    type GQLUserAvailablePermissionsAndContentScopesQuery,
-    type GQLUserForGridFragment,
-    type GQLUserGridQuery,
-    type GQLUserGridQueryVariables,
+import type {
+    GQLUserAvailablePermissionsAndContentScopesQuery,
+    GQLUserForGridFragment,
+    GQLUserGridQuery,
+    GQLUserGridQueryVariables,
 } from "./UserGrid.generated";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {

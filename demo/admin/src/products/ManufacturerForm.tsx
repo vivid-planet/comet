@@ -15,20 +15,20 @@ import {
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Collapse, Divider } from "@mui/material";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createManufacturerMutation, manufacturerFormFragment, manufacturerQuery, updateManufacturerMutation } from "./ManufacturerForm.gql";
-import {
-    type GQLCreateManufacturerMutation,
-    type GQLCreateManufacturerMutationVariables,
-    type GQLManufacturerFormDetailsHandmadeFragment,
-    type GQLManufacturerQuery,
-    type GQLManufacturerQueryVariables,
-    type GQLUpdateManufacturerMutation,
-    type GQLUpdateManufacturerMutationVariables,
+import type {
+    GQLCreateManufacturerMutation,
+    GQLCreateManufacturerMutationVariables,
+    GQLManufacturerFormDetailsHandmadeFragment,
+    GQLManufacturerQuery,
+    GQLManufacturerQueryVariables,
+    GQLUpdateManufacturerMutation,
+    GQLUpdateManufacturerMutationVariables,
 } from "./ManufacturerForm.gql.generated";
 
 type FormValues = Omit<GQLManufacturerFormDetailsHandmadeFragment, "address" | "addressAsEmbeddable"> & {

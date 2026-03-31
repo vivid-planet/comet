@@ -3,13 +3,13 @@
 import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
-import { type YouTubeVideoBlockData } from "../blocks.generated";
+import type { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
-import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
+import type { VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import type { PropsWithData } from "./PropsWithData";
 import styles from "./YouTubeVideoBlock.module.scss";
 
 const EXPECTED_YT_ID_LENGTH = 11;

@@ -25,13 +25,13 @@ import {
     useGridRootProps,
     useGridSelector,
 } from "@mui/x-data-grid";
-import { type DataGridProcessedProps } from "@mui/x-data-grid/internals";
+import type { DataGridProcessedProps } from "@mui/x-data-grid/internals";
 import { type ReactNode, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 const panelTypeTitle: Record<GridPreferencePanelsValue, ReactNode> = {
     [GridPreferencePanelsValue.filters]: <FormattedMessage id="dataGrid.panel.filters" defaultMessage="Filters" />,

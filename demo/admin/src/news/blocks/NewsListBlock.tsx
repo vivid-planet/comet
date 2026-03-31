@@ -3,10 +3,10 @@ import { useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from
 import { type BlockInterface, createBlockSkeleton, useContentScope } from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { type NewsListBlockData, type NewsListBlockInput } from "@src/blocks.generated";
+import type { NewsListBlockData, NewsListBlockInput } from "@src/blocks.generated";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLNewsListBlockQuery, type GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
+import type { GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
 
 type State = {
     ids: string[];

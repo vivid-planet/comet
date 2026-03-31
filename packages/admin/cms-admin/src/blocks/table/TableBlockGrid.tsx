@@ -1,6 +1,6 @@
 import { DragIndicator } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { type GridColDef, type GridColumnHeaderParams, type GridValidRowModel } from "@mui/x-data-grid";
+import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GRID_REORDER_COL_DEF,
@@ -11,8 +11,8 @@ import {
 } from "@mui/x-data-grid-pro";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
-import { type TableBlockData } from "../../blocks.generated";
-import { type TableBlockState } from "../createTableBlock";
+import type { TableBlockData } from "../../blocks.generated";
+import type { TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";

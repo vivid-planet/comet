@@ -4,7 +4,7 @@ import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
-import { type PromptRoutes } from "./Prompt";
+import type { PromptRoutes } from "./Prompt";
 
 interface PromptHandlerState {
     showConfirmationDialog: boolean;

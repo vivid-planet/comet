@@ -1,5 +1,5 @@
-import { type ComponentNameToClassKey, type ThemeOptions } from "@mui/material";
-import { type Components, type Theme } from "@mui/material/styles";
+import type { ComponentNameToClassKey, ThemeOptions } from "@mui/material";
+import type { Components, Theme } from "@mui/material/styles";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import type {} from "@mui/x-date-pickers-pro/themeAugmentation";

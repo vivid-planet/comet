@@ -3,7 +3,7 @@ import { EntityManager, EntityRepository, FilterQuery, FindOptions, wrap } from 
 import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
-import { type ExtractBlockData } from "../blocks/block";
+import type { ExtractBlockData } from "../blocks/block";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";

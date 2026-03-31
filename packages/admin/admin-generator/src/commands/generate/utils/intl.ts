@@ -1,7 +1,7 @@
 import { type ComponentProps, isValidElement, type ReactElement } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type FormattedMessageElement } from "../generate-command";
+import type { FormattedMessageElement } from "../generate-command";
 
 type GenerateFormattedMessageOptions = (
     | { config: string | FormattedMessageElement | undefined; defaultMessage: string }

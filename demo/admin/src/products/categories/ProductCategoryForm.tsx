@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { filterByFragment, FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
@@ -12,14 +12,14 @@ import {
     productCategoryQuery,
     updateProductCategoryMutation,
 } from "./ProductCategoryForm.gql";
-import {
-    type GQLCreateProductCategoryMutation,
-    type GQLCreateProductCategoryMutationVariables,
-    type GQLProductCategoryFormHandmadeFragment,
-    type GQLProductCategoryQuery,
-    type GQLProductCategoryQueryVariables,
-    type GQLUpdateProductCategoryMutation,
-    type GQLUpdateProductCategoryMutationVariables,
+import type {
+    GQLCreateProductCategoryMutation,
+    GQLCreateProductCategoryMutationVariables,
+    GQLProductCategoryFormHandmadeFragment,
+    GQLProductCategoryQuery,
+    GQLProductCategoryQueryVariables,
+    GQLUpdateProductCategoryMutation,
+    GQLUpdateProductCategoryMutationVariables,
 } from "./ProductCategoryForm.gql.generated";
 
 type FormValues = GQLProductCategoryFormHandmadeFragment;

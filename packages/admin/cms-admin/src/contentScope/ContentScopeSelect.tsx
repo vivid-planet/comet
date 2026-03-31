@@ -19,7 +19,7 @@ import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { type ContentScope } from "./Provider";
+import type { ContentScope } from "./Provider";
 
 type Option = {
     scope: ContentScope;

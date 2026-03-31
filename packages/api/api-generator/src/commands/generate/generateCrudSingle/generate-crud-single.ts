@@ -1,10 +1,10 @@
 import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
-import { type EntityMetadata } from "@mikro-orm/postgresql";
+import type { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
 import { buildOptions } from "../generateCrud/build-options";
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import type { GeneratedFile } from "../utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {

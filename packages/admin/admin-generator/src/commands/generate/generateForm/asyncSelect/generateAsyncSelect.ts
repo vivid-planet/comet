@@ -1,13 +1,13 @@
-import { type IntrospectionInputValue, type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+import type { IntrospectionInputValue, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { type FormConfig, type FormFieldConfig, isFormFieldConfig } from "../../generate-command";
 import { findQueryTypeOrThrow } from "../../utils/findQueryType";
 import { generateGqlOperation } from "../../utils/generateGqlOperation";
-import { type Imports } from "../../utils/generateImportsCode";
+import type { Imports } from "../../utils/generateImportsCode";
 import { isFieldOptional } from "../../utils/isFieldOptional";
 import { buildFormFieldOptions } from "../formField/options";
 import { findFieldByName, type GenerateFieldsReturn } from "../generateFields";
-import { type Prop } from "../generateForm";
+import type { Prop } from "../generateForm";
 
 function gqlScalarToTypescriptType(scalarName: string): string {
     if (scalarName === "String" || scalarName === "ID" || scalarName === "DateTime" || scalarName === "LocalDate" || scalarName === "Date") {

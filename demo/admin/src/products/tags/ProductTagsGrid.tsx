@@ -18,12 +18,12 @@ import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import {
-    type GQLDeleteProductTagMutation,
-    type GQLDeleteProductTagMutationVariables,
-    type GQLProductTagsGridFragment,
-    type GQLProductTagsGridQuery,
-    type GQLProductTagsGridQueryVariables,
+import type {
+    GQLDeleteProductTagMutation,
+    GQLDeleteProductTagMutationVariables,
+    GQLProductTagsGridFragment,
+    GQLProductTagsGridQuery,
+    GQLProductTagsGridQueryVariables,
 } from "./ProductTagsGrid.generated";
 
 const productTagsFragment = gql`

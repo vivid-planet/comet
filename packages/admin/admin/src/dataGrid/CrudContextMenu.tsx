@@ -10,7 +10,7 @@ import { writeClipboardText } from "../clipboard/writeClipboardText";
 import { DeleteDialog as CommonDeleteDialog } from "../common/DeleteDialog";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";

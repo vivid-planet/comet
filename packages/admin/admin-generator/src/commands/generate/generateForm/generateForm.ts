@@ -1,4 +1,4 @@
-import { type IntrospectionField, type IntrospectionQuery } from "graphql";
+import type { IntrospectionField, IntrospectionQuery } from "graphql";
 
 import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
 import { convertConfigImport } from "../utils/convertConfigImport";

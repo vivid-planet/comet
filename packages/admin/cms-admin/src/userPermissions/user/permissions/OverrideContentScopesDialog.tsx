@@ -11,7 +11,7 @@ import {
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
-import { type ContentScope } from "../../../contentScope/Provider";
+import type { ContentScope } from "../../../contentScope/Provider";
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
     type GQLOverrideContentScopesMutation,

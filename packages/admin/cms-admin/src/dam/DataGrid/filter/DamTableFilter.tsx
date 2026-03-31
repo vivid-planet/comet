@@ -10,7 +10,7 @@ import {
 } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type DamFilter } from "../../DamTable";
+import type { DamFilter } from "../../DamTable";
 import { DamSortPopover } from "./DamSortPopover";
 
 interface DamTableFilterProps {

@@ -5,7 +5,7 @@ import { type ComponentType, type CSSProperties, type ReactNode, useEffect, useR
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../hooks/useStoredState";
 import { MainNavigationContext } from "./mainNavigation/Context";
 import { MasterLayoutContext } from "./MasterLayoutContext";

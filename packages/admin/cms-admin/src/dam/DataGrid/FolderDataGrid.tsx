@@ -31,11 +31,11 @@ import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { type GQLDamItemType } from "../../graphql.generated";
+import type { GQLDamItemType } from "../../graphql.generated";
 import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../config/useDamScope";
-import { type DamConfig, type DamFilter } from "../DamTable";
+import type { DamConfig, DamFilter } from "../DamTable";
 import { licenseTypeLabels } from "../FileForm/licenseType";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -47,15 +47,15 @@ import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { DamTableFilter } from "./filter/DamTableFilter";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
-import {
-    type GQLDamFileTableFragment,
-    type GQLDamFolderQuery,
-    type GQLDamFolderQueryVariables,
-    type GQLDamFolderTableFragment,
-    type GQLDamItemListPositionQuery,
-    type GQLDamItemListPositionQueryVariables,
-    type GQLDamItemsListQuery,
-    type GQLDamItemsListQueryVariables,
+import type {
+    GQLDamFileTableFragment,
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
+    GQLDamItemListPositionQuery,
+    GQLDamItemListPositionQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { DamUploadFooter } from "./footer/UploadFooter";

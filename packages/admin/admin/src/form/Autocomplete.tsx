@@ -9,11 +9,11 @@ import {
     Typography,
 } from "@mui/material";
 import type { ReactNode } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { type AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
+import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,

@@ -1,11 +1,11 @@
 import { Error } from "@comet/admin-icons";
 import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
-import { type ReactNode } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { ReactNode } from "react";
+import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import type { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> {

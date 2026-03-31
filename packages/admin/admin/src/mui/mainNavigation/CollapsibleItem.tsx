@@ -3,7 +3,7 @@ import { Collapse, type ComponentsOverrides, Fade, List, Menu, type Theme, type 
 import { Children, cloneElement, type MouseEvent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import {
     CollapsibleIndicator,
     CollapsibleItemMainNavigationItem,
@@ -13,8 +13,8 @@ import {
     Root,
 } from "./CollapsibleItem.styles";
 import { useMainNavigation } from "./Context";
-import { type MainNavigationItem as CometMainNavigationItem, type MainNavigationItemLevel, type MainNavigationItemProps } from "./Item";
-import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import type { MainNavigationItem as CometMainNavigationItem, MainNavigationItemLevel, MainNavigationItemProps } from "./Item";
+import type { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MainNavigationChild = ReactElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>;
 

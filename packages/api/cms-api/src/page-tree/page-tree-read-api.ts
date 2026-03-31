@@ -4,7 +4,7 @@ import { compareAsc, compareDesc, isEqual } from "date-fns";
 
 import { SortDirection } from "../common/sorting/sort-direction.enum";
 import { type PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
-import { type AttachedDocument } from "./entities/attached-document.entity";
+import type { AttachedDocument } from "./entities/attached-document.entity";
 import { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, type ScopeInterface } from "./types";
 import pathBuilder from "./utils/path-builder";
 

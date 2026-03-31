@@ -1,4 +1,4 @@
-import { type PureQueryOptions } from "@apollo/client";
+import type { PureQueryOptions } from "@apollo/client";
 import { Delete } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps, IconButton } from "@mui/material";

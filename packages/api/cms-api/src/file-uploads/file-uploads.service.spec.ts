@@ -7,7 +7,7 @@ import { Readable } from "stream";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadExpirationSubscriber } from "./file-upload-expiration.subscriber";
-import { type FileUploadsConfig } from "./file-uploads.config";
+import type { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 import { FileUploadsService } from "./file-uploads.service";
 

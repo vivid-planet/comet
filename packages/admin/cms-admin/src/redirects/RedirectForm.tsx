@@ -22,16 +22,16 @@ import { type JSX, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { createFinalFormBlock } from "../blocks/form/createFinalFormBlock";
-import { type BlockInterface, type BlockState } from "../blocks/types";
+import type { BlockInterface, BlockState } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { type GQLRedirectSourceTypeValues } from "../graphql.generated";
-import { type GQLRedirectSourceAvailableQuery, type GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+import type { GQLRedirectSourceTypeValues } from "../graphql.generated";
+import type { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 import { redirectDetailQuery } from "./RedirectForm.gql";
-import {
-    type GQLCreateRedirectMutation,
-    type GQLRedirectDetailFragment,
-    type GQLRedirectDetailQuery,
-    type GQLRedirectDetailQueryVariables,
+import type {
+    GQLCreateRedirectMutation,
+    GQLRedirectDetailFragment,
+    GQLRedirectDetailQuery,
+    GQLRedirectDetailQueryVariables,
 } from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
 

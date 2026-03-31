@@ -1,6 +1,6 @@
 import { InputBase, type InputBaseProps } from "@mui/material";
 import { type ChangeEvent, type FocusEvent, useCallback, useEffect, useState } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";

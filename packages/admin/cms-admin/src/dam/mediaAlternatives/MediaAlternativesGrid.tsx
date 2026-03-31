@@ -23,15 +23,15 @@ import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridT
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLDamMediaAlternativeType } from "../../graphql.generated";
+import type { GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { VideoPreviewCaptionsQueryName } from "../FileForm/previews/VideoPreview";
 import { MediaAlternativeForm } from "./MediaAlternativeForm";
-import {
-    type GQLDamMediaAlternativeGridFragment,
-    type GQLDamMediaAlternativesQuery,
-    type GQLDamMediaAlternativesQueryVariables,
-    type GQLDeleteDamMediaAlternativeMutation,
-    type GQLDeleteDamMediaAlternativeMutationVariables,
+import type {
+    GQLDamMediaAlternativeGridFragment,
+    GQLDamMediaAlternativesQuery,
+    GQLDamMediaAlternativesQueryVariables,
+    GQLDeleteDamMediaAlternativeMutation,
+    GQLDeleteDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativesGrid.generated";
 
 const damMediaAlternativeFragment = gql`

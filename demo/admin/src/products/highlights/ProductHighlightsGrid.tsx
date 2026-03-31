@@ -14,12 +14,12 @@ import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import {
-    type GQLDeleteProductHighlightMutation,
-    type GQLDeleteProductHighlightMutationVariables,
-    type GQLProductHighlightsFormFragment,
-    type GQLProductHighlightsGridQuery,
-    type GQLProductHighlightsGridQueryVariables,
+import type {
+    GQLDeleteProductHighlightMutation,
+    GQLDeleteProductHighlightMutationVariables,
+    GQLProductHighlightsFormFragment,
+    GQLProductHighlightsGridQuery,
+    GQLProductHighlightsGridQueryVariables,
 } from "./ProductHighlightsGrid.generated";
 
 const productHighlightsFragment = gql`

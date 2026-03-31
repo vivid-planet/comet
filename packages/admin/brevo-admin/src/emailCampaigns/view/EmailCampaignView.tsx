@@ -16,7 +16,7 @@ import { useRouteMatch } from "react-router";
 
 import { useBrevoConfig } from "../../common/BrevoConfigProvider";
 import { emailCampaignViewQuery } from "./EmailCampaignView.gql";
-import { type GQLEmailCampaignViewQuery, type GQLEmailCampaignViewQueryVariables } from "./EmailCampaignView.gql.generated";
+import type { GQLEmailCampaignViewQuery, GQLEmailCampaignViewQueryVariables } from "./EmailCampaignView.gql.generated";
 
 interface EmailCampaignViewProps {
     id: string;

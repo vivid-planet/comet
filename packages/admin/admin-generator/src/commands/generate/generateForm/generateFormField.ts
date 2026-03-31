@@ -1,17 +1,17 @@
-import { type IntrospectionEnumType, type IntrospectionNamedTypeRef, type IntrospectionQuery } from "graphql";
+import type { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap } from "../generate-command";
+import type { FormConfig, FormFieldConfig, GQLDocumentConfigMap } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
-import { type Imports } from "../utils/generateImportsCode";
+import type { Imports } from "../utils/generateImportsCode";
 import { generateFormattedMessage } from "../utils/intl";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateAsyncSelect } from "./asyncSelect/generateAsyncSelect";
 import { buildFormFieldOptions } from "./formField/options";
-import { type GenerateFieldsReturn } from "./generateFields";
-import { type Prop } from "./generateForm";
+import type { GenerateFieldsReturn } from "./generateFields";
+import type { Prop } from "./generateForm";
 
 export function generateFormField({
     gqlIntrospection,

@@ -1,10 +1,10 @@
-import {
-    type IntrospectionField,
-    type IntrospectionListTypeRef,
-    type IntrospectionNamedTypeRef,
-    type IntrospectionObjectType,
-    type IntrospectionQuery,
-    type IntrospectionTypeRef,
+import type {
+    IntrospectionField,
+    IntrospectionListTypeRef,
+    IntrospectionNamedTypeRef,
+    IntrospectionObjectType,
+    IntrospectionQuery,
+    IntrospectionTypeRef,
 } from "graphql";
 
 interface ErrorEnumsResult {

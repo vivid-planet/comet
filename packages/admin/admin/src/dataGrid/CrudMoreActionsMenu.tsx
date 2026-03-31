@@ -15,7 +15,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import { type Maybe } from "graphql/jsutils/Maybe";
+import type { Maybe } from "graphql/jsutils/Maybe";
 import {
     type ComponentProps,
     createContext,
@@ -31,7 +31,7 @@ import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
 

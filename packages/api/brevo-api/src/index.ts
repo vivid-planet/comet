@@ -1,4 +1,4 @@
-import { type BrevoPermission } from "./permissions/brevo-permission.enum";
+import type { BrevoPermission } from "./permissions/brevo-permission.enum";
 
 export { createBlacklistedContactsEntity } from "./blacklisted-contacts/entity/blacklisted-contacts.entity.factory";
 export { NewsletterImageBlock } from "./blocks/newsletter-image.block";

@@ -10,10 +10,10 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { type BlockState, createFinalFormBlock, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { type GQLProductVariantMutationErrorCode } from "@src/graphql.generated";
+import type { GQLProductVariantMutationErrorCode } from "@src/graphql.generated";
 import { FORM_ERROR, type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -22,14 +22,14 @@ import {
     productVariantFormQuery,
     updateProductVariantFormMutation,
 } from "./ProductVariantForm.gql";
-import {
-    type GQLCreateProductVariantMutation,
-    type GQLCreateProductVariantMutationVariables,
-    type GQLProductVariantFormFragment,
-    type GQLProductVariantFormQuery,
-    type GQLProductVariantFormQueryVariables,
-    type GQLUpdateProductVariantMutation,
-    type GQLUpdateProductVariantMutationVariables,
+import type {
+    GQLCreateProductVariantMutation,
+    GQLCreateProductVariantMutationVariables,
+    GQLProductVariantFormFragment,
+    GQLProductVariantFormQuery,
+    GQLProductVariantFormQueryVariables,
+    GQLUpdateProductVariantMutation,
+    GQLUpdateProductVariantMutationVariables,
 } from "./ProductVariantForm.gql.generated";
 
 interface FormProps {

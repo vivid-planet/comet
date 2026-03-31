@@ -19,7 +19,7 @@ import {
 } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { type ContentScope, ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import { type ReactElement, type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -30,17 +30,17 @@ import {
     sendersSelectQuery,
     updateBrevoConfigMutation,
 } from "./BrevoConfigForm.gql";
-import {
-    type GQLBrevoConfigFormQuery,
-    type GQLBrevoConfigFormQueryVariables,
-    type GQLCreateBrevoConfigMutation,
-    type GQLCreateBrevoConfigMutationVariables,
-    type GQLDoubleOptInTemplatesSelectQuery,
-    type GQLDoubleOptInTemplatesSelectQueryVariables,
-    type GQLSendersSelectQuery,
-    type GQLSendersSelectQueryVariables,
-    type GQLUpdateBrevoConfigMutation,
-    type GQLUpdateBrevoConfigMutationVariables,
+import type {
+    GQLBrevoConfigFormQuery,
+    GQLBrevoConfigFormQueryVariables,
+    GQLCreateBrevoConfigMutation,
+    GQLCreateBrevoConfigMutationVariables,
+    GQLDoubleOptInTemplatesSelectQuery,
+    GQLDoubleOptInTemplatesSelectQueryVariables,
+    GQLSendersSelectQuery,
+    GQLSendersSelectQueryVariables,
+    GQLUpdateBrevoConfigMutation,
+    GQLUpdateBrevoConfigMutationVariables,
 } from "./BrevoConfigForm.gql.generated";
 
 interface Option {

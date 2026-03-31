@@ -40,14 +40,14 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
-import {
-    type GQLDeleteProductMutation,
-    type GQLDeleteProductMutationVariables,
-    type GQLProductsListManualFragment,
-    type GQLProductsListQuery,
-    type GQLProductsListQueryVariables,
-    type GQLUpdateProductStatusMutation,
-    type GQLUpdateProductStatusMutationVariables,
+import type {
+    GQLDeleteProductMutation,
+    GQLDeleteProductMutationVariables,
+    GQLProductsListManualFragment,
+    GQLProductsListQuery,
+    GQLProductsListQueryVariables,
+    GQLUpdateProductStatusMutation,
+    GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 

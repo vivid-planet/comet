@@ -10,8 +10,8 @@ import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
-import { type GQLBlockPreviewJwtQuery } from "./BlockPreview.generated";
-import { type BlockPreviewApi } from "./useBlockPreview";
+import type { GQLBlockPreviewJwtQuery } from "./BlockPreview.generated";
+import type { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;

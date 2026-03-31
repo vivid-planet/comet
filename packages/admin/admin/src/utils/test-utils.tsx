@@ -4,7 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { render, type RenderOptions, type RenderResult } from "@testing-library/react";
 import { enUS } from "date-fns/locale";
-import { type ReactElement, type ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { IntlProvider } from "react-intl";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
