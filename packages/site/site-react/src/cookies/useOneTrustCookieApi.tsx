@@ -71,8 +71,7 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
                 });
             } else if (window.OnetrustActiveGroups) {
                 initialCookieConsent.push(
-                    ...window.OnetrustActiveGroups
-                        .split(",")
+                    ...window.OnetrustActiveGroups.split(",")
                         .map((groupId) => groupId.trim())
                         .filter(Boolean),
                 );
