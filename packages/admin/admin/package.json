@@ -138,9 +138,6 @@
         },
         "@mui/x-date-pickers-pro": {
             "optional": true
-        },
-        "react-hook-form": {
-            "optional": true
         }
     },
     "engines": {
