@@ -67,7 +67,6 @@
         "rimraf": "^6.1.2",
         "sharp": "^0.34.5",
         "slugify": "^1.6.6",
-        "ts-morph": "^25.0.1",
         "uuid": "^11.1.0",
         "uuid-by-string": "^4.0.0"
     },
