@@ -17,7 +17,7 @@ export default config;
 
 export const Default: Story = {
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText>Default text with base theme styles</MjmlText>
             </MjmlColumn>
@@ -38,7 +38,7 @@ export const WithVariants: Story = {
         }),
     },
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText variant="heading">Heading variant</MjmlText>
                 <MjmlText variant="body">Body variant</MjmlText>
@@ -63,7 +63,7 @@ export const ResponsiveVariants: Story = {
         }),
     },
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText variant="heading">Responsive heading — shrinks on mobile</MjmlText>
             </MjmlColumn>
@@ -83,7 +83,7 @@ export const BottomSpacing: Story = {
         }),
     },
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText variant="heading" bottomSpacing>
                     Heading with bottom spacing
@@ -108,7 +108,7 @@ export const DefaultVariant: Story = {
         }),
     },
     render: () => (
-        <MjmlSection>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText>Uses the default &quot;body&quot; variant automatically</MjmlText>
                 <MjmlText variant="heading">Explicit heading variant</MjmlText>
