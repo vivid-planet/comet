@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { CSSProperties, ReactNode, TdHTMLAttributes } from "react";
+import { type ComponentPropsWithoutRef, type CSSProperties, type JSX, type ReactNode, type TdHTMLAttributes } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
@@ -7,11 +7,11 @@ import { useTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, VariantName } from "../../theme/themeTypes.js";
 import { generateResponsiveTextCss } from "./textStyles.js";
 
-export type HtmlTextProps = TdHTMLAttributes<HTMLTableCellElement> & {
+interface HtmlTextOwnProps {
     /**
      * The component's variant to apply, as defined in the theme.
      *
-     * Custom variants should be defined in the theme, through module augmentation.
+     * Custom variants should be defined in the theme through module augmentation:
      *
      * ```ts
      * declare module "@comet/mail-react" {
@@ -32,10 +32,45 @@ export type HtmlTextProps = TdHTMLAttributes<HTMLTableCellElement> & {
     variant?: VariantName;
     /** When true, applies spacing below the text. */
     bottomSpacing?: boolean;
-};
+}
 
-/** Themed text component that renders a `<td>` with inline styles, for use inside MJML ending tags, or outside of the MJML context. */
-export function HtmlText({ variant: variantProp, bottomSpacing, className, style, children, ...restProps }: HtmlTextProps): ReactNode {
+interface HtmlTextImplementationProps extends HtmlTextOwnProps {
+    element?: keyof JSX.IntrinsicElements;
+    className?: string;
+    style?: CSSProperties;
+    children?: ReactNode;
+    [key: string]: unknown;
+}
+
+export type HtmlTextProps<E extends keyof JSX.IntrinsicElements = "td"> = HtmlTextOwnProps & {
+    /**
+     * The HTML element to render instead of the default `<td>`.
+     *
+     * @example
+     * ```tsx
+     * <HtmlText element="div">Rendered as a div</HtmlText>
+     * <HtmlText element="a" href="/link">Rendered as an anchor</HtmlText>
+     * ```
+     */
+    element?: E;
+} & Omit<ComponentPropsWithoutRef<E>, keyof HtmlTextOwnProps | "element">;
+
+/**
+ * Themed text component for use inside MJML ending tags or outside of the MJML context.
+ */
+export function HtmlText<E extends keyof JSX.IntrinsicElements>(
+    props: HtmlTextOwnProps & { element: E } & Omit<ComponentPropsWithoutRef<E>, keyof HtmlTextOwnProps | "element">,
+): ReactNode;
+export function HtmlText(props: HtmlTextOwnProps & Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof HtmlTextOwnProps>): ReactNode;
+export function HtmlText({
+    element: Element = "td",
+    variant: variantProp,
+    bottomSpacing,
+    className,
+    style,
+    children,
+    ...restProps
+}: HtmlTextImplementationProps): ReactNode {
     const theme = useTheme();
 
     const { defaultVariant, variants, ...baseStyles } = theme.text;
@@ -59,13 +94,13 @@ export function HtmlText({ variant: variantProp, bottomSpacing, className, style
     };
 
     return (
-        <td
+        <Element
+            {...restProps}
             className={clsx("htmlText", activeVariant && `htmlText--${activeVariant}`, bottomSpacing && "htmlText--bottomSpacing", className)}
             style={{ ...themeStyle, ...style }}
-            {...restProps}
         >
             {children}
-        </td>
+        </Element>
     );
 }
 
