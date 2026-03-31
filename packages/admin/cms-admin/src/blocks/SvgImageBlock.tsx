@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
