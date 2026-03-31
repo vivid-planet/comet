@@ -71,7 +71,10 @@
             {
                 "name": "openFileType",
                 "kind": "Enum",
-                "enum": ["NewTab", "Download"],
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
                 "nullable": false
             }
         ],
@@ -84,7 +87,10 @@
             {
                 "name": "openFileType",
                 "kind": "Enum",
-                "enum": ["NewTab", "Download"],
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
                 "nullable": false
             }
         ]
@@ -501,7 +507,14 @@
                                                 {
                                                     "name": "focalPoint",
                                                     "kind": "Enum",
-                                                    "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
+                                                    "enum": [
+                                                        "SMART",
+                                                        "CENTER",
+                                                        "NORTHWEST",
+                                                        "NORTHEAST",
+                                                        "SOUTHWEST",
+                                                        "SOUTHEAST"
+                                                    ],
                                                     "nullable": false
                                                 },
                                                 {
@@ -554,7 +567,14 @@
                         {
                             "name": "focalPoint",
                             "kind": "Enum",
-                            "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
+                            "enum": [
+                                "SMART",
+                                "CENTER",
+                                "NORTHWEST",
+                                "NORTHEAST",
+                                "SOUTHWEST",
+                                "SOUTHEAST"
+                            ],
                             "nullable": false
                         },
                         {
@@ -601,7 +621,14 @@
                         {
                             "name": "focalPoint",
                             "kind": "Enum",
-                            "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
+                            "enum": [
+                                "SMART",
+                                "CENTER",
+                                "NORTHWEST",
+                                "NORTHEAST",
+                                "SOUTHWEST",
+                                "SOUTHEAST"
+                            ],
                             "nullable": false
                         },
                         {
