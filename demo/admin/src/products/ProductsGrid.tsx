@@ -31,7 +31,7 @@ import {
     getGridStringOperators,
     GridFilterInputSingleSelect,
     type GridRowSelectionModel,
-    type GridSlotsComponent,
+    type GridSlotProps,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import { ProductCategoryFilterOperators } from "@src/products/ProductCategoryFilter";
@@ -56,7 +56,10 @@ type ProductsGridToolbarProps = {
     selectionModel: GridRowSelectionModel;
 };
 
-function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarProps) {
+const ProductsGridToolbar: React.JSXElementConstructor<GridSlotProps["toolbar"] & ProductsGridToolbarProps> = ({
+    exportApi,
+    selectionModel,
+}: ProductsGridToolbarProps) => {
     const client = useApolloClient();
     const theme = useTheme();
 
@@ -117,7 +120,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
             </Button>
         </DataGridToolbar>
     );
-}
+};
 
 export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -378,7 +381,7 @@ export function ProductsGrid() {
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
+                toolbar: ProductsGridToolbar,
             }}
             slotProps={{
                 toolbar: { exportApi, selectionModel } as ProductsGridToolbarProps,
