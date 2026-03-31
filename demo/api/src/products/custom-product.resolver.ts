@@ -1,4 +1,5 @@
-import { MailerService, RequiredPermission } from "@comet/cms-api";
+import { RequiredPermission } from "@comet/cms-api";
+import { MailerService } from "@comet/cms-api/mail";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Mutation, Resolver } from "@nestjs/graphql";
 

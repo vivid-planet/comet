@@ -11,6 +11,16 @@
     "type": "commonjs",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "default": "./lib/index.js"
+        },
+        "./mail": {
+            "types": "./lib/mail/index.d.ts",
+            "default": "./lib/mail/index.js"
+        }
+    },
     "files": [
         "bin/**/*.js",
         "lib/*"
