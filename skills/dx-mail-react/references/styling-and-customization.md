@@ -59,25 +59,9 @@ No runtime styling logic — purely a developer experience improvement.
 
 Since `<style>` blocks are ignored by some desktop clients, `registerStyles` is intended for responsive overrides inside media queries — not for base styles, which must be inline.
 
-### Static CSS
+### Theme-Aware CSS (Preferred)
 
-When you don't need theme values:
-
-```ts
-import { css, registerStyles } from "@comet/mail-react";
-
-registerStyles(css`
-    @media (max-width: 419px) {
-        .calloutBox {
-            padding: 12px !important;
-        }
-    }
-`);
-```
-
-### Theme-Aware CSS
-
-When you need access to theme tokens (breakpoints, colors, sizes):
+When you need access to theme tokens (breakpoints, colors, sizes) — which is **most of the time**. Always prefer theme-aware styles over static CSS so that breakpoints and tokens stay in sync with the theme. If a breakpoint value is needed repeatedly but doesn't exist in the theme, add it via `createBreakpoint` and module augmentation rather than hardcoding media queries.
 
 ```ts
 registerStyles(
@@ -93,6 +77,22 @@ registerStyles(
 ```
 
 Theme-aware entries are called at render time with the theme from `MjmlMailRoot`. Using `theme.breakpoints.mobile.belowMediaQuery` keeps styles in sync with the theme's breakpoint configuration.
+
+### Static CSS
+
+When you genuinely don't need any theme values (rare — most responsive styles benefit from theme breakpoints):
+
+```ts
+import { css, registerStyles } from "@comet/mail-react";
+
+registerStyles(css`
+    @media (max-width: 419px) {
+        .calloutBox {
+            padding: 12px !important;
+        }
+    }
+`);
+```
 
 ### Important Details
 

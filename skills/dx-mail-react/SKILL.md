@@ -33,7 +33,7 @@ Keep these open during email development:
 When implementing any visual feature:
 
 1. Check [Can I email](https://www.caniemail.com/) for the CSS properties involved
-2. If Outlook support is needed and the property isn't supported, search for VML workarounds
+2. If the property isn't supported in Outlook, search for VML workarounds or provide a graceful fallback (skipping border-radius is generally acceptable)
 3. Test in Storybook with the MJML Warnings panel open
 4. When uncertain, consult the Litmus blog or Campaign Monitor guide for known patterns
 
@@ -69,7 +69,7 @@ Content components placed outside this hierarchy produce MJML validation warning
 
 ### Ending Tags
 
-Some MJML components are **ending tags** — they accept raw HTML as children but **cannot** contain other MJML components. The most common: `MjmlText`, `MjmlButton`, `MjmlRaw`.
+Some MJML components are [**ending tags**](https://documentation.mjml.io/#ending-tags) — they accept raw HTML as children but **cannot** contain other MJML components. The most common: `MjmlText`, `MjmlButton`, `MjmlTable`, `MjmlRaw`.
 
 Once inside an ending tag, you are in **HTML-land for the entire subtree**. Use HTML elements (`<span>`, `<a>`, `<table>`, `<td>`) but not MJML components. The library provides `HtmlText` and `HtmlInlineLink` for themed text and links inside ending tags.
 
@@ -89,15 +89,19 @@ Email styling follows a **desktop-first** approach:
 
 Never rely on `<style>` blocks for base/desktop layout. Set all default styles inline via MJML component props.
 
+### Prefer Theme Breakpoints
+
+Always use `theme.breakpoints.*.belowMediaQuery` inside `registerStyles` instead of hardcoding media query values. This keeps responsive styles in sync with the theme configuration. If a breakpoint value is needed repeatedly but doesn't exist in the theme, add it via `createBreakpoint` and module augmentation rather than duplicating raw media queries. Reserve hardcoded media queries for genuinely one-off values.
+
 → For the full `registerStyles` API, `css` helper, and custom component patterns, read [`references/styling-and-customization.md`](references/styling-and-customization.md).
 
 ---
 
 ## Common Pitfalls
 
-### Avoid `<p>`, `<h1>`, `<h2>`, and Other Block-Level HTML Elements
+### Avoid Block-Level HTML Elements Inside Ending Tags
 
-These have wildly inconsistent default margins across email clients. Use `MjmlText` or `HtmlText` with text variants for typography hierarchy. If block-level elements are unavoidable inside ending tags, always reset margins inline: `style={{ margin: 0 }}`.
+Don't use `<p>`, `<h1>`, `<h2>`, or other block-level HTML elements inside ending tags. They have wildly inconsistent default margins and spacing across email clients and add no rendering value in email HTML. Instead, use `<td>`, `<div>`, and `<span>` for structure, and build your typography hierarchy through `MjmlText`/`HtmlText` variants rather than HTML semantics. If a block-level element is truly unavoidable, always reset its margins inline: `style={{ margin: 0 }}`.
 
 ### Set `mso-line-height-rule: exactly` on Every Manual `line-height`
 
@@ -178,7 +182,7 @@ declare module "@comet/mail-react" {
 }
 ```
 
-Place `declare module` blocks in your theme file alongside `createTheme()`.
+Place `declare module` blocks in your theme file below the `createTheme()` call.
 
 → For the full theme structure, defaults, and all component props, read [`references/components-and-theme.md`](references/components-and-theme.md).
 
@@ -217,7 +221,9 @@ All components are imported from `@comet/mail-react` — never from `@faire/mjml
 
 ## Custom Components
 
-When built-in components don't cover your needs, create custom components following these conventions:
+When built-in components don't cover your needs, create custom components. **Always try to compose layouts using MJML components first** (`MjmlSection`, `MjmlColumn`, `MjmlText`, `MjmlImage`, etc.) — they handle cross-client compatibility automatically. Only drop into raw HTML (`MjmlRaw`, `MjmlTable`) when the MJML layout model genuinely can't express the structure you need. Raw HTML is an escape hatch, not the default approach.
+
+When raw HTML is necessary, follow these conventions:
 
 ### BEM Class Naming
 
@@ -387,6 +393,10 @@ export const CustomTheme: StoryObj = {
 3. Check the **MJML Warnings** panel for validation issues
 4. Use **Copy Mail HTML** to test in external services (Litmus, Email on Acid)
 5. Enable **Use Public Image URLs** when testing on services that can't reach localhost (e.g., Litmus, Email on Acid)
+
+### Cross-Client Testing
+
+Storybook previews show how the email renders in a web browser, but email clients vary dramatically. Use services like [Litmus](https://www.litmus.com/) or [Email on Acid](https://www.emailonacid.com/) to test the rendered HTML across real email clients and devices. The **Copy Mail HTML** button and **Use Public Image URLs** toggle in Storybook are designed for this workflow.
 
 ---
 

@@ -78,6 +78,13 @@ Augment `ThemeBackgroundColors` or `ThemeColors` to add project-specific color t
 ```ts title="theme.ts"
 import { createTheme } from "@comet/mail-react";
 
+export const theme = createTheme({
+    colors: {
+        background: { highlight: "#FFF3CD" },
+        brand: { primary: "#0066CC", secondary: "#004499" },
+    },
+});
+
 declare module "@comet/mail-react" {
     interface ThemeBackgroundColors {
         highlight: string;
@@ -87,13 +94,6 @@ declare module "@comet/mail-react" {
         brand: { primary: string; secondary: string };
     }
 }
-
-export const theme = createTheme({
-    colors: {
-        background: { highlight: "#FFF3CD" },
-        brand: { primary: "#0066CC", secondary: "#004499" },
-    },
-});
 ```
 
 ## MjmlMailRoot

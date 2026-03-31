@@ -43,6 +43,10 @@ This single entry auto-configures:
 - A **Use Public Image URLs** toolbar toggle that replaces image sources with public placeholder URLs — useful for testing on external services (e.g., Litmus, Email on Acid) that cannot reach `localhost`
 - An **MJML Warnings** panel for debugging validation issues
 
+### Cross-Client Testing
+
+Storybook previews show how the email renders in a web browser, but email clients vary dramatically. Use services like [Litmus](https://www.litmus.com/) or [Email on Acid](https://www.emailonacid.com/) to test the rendered HTML across real email clients and devices. The **Copy Mail HTML** button and **Use Public Image URLs** toggle in Storybook are designed for this workflow.
+
 ## Your First Email
 
 The Storybook decorator handles `MjmlMailRoot` automatically, so stories only need to define the email content:

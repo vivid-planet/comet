@@ -30,7 +30,7 @@ Media queries, registered via [`registerStyles`](./4-customization.md#registerin
 
 ### Ending Tags
 
-Some MJML components are [**ending tags**](https://documentation.mjml.io/#ending-tags) — they accept HTML content as children but **cannot** contain other MJML components. The most common ending tags are `mj-text`, `mj-button`, and `mj-raw`.
+Some MJML components are [**ending tags**](https://documentation.mjml.io/#ending-tags) — they accept HTML content as children but **cannot** contain other MJML components. The most common ending tags are `mj-text`, `mj-button`, `mj-table`, and `mj-raw`.
 
 Once you enter an ending tag, you are in **HTML-land for the entire subtree**. No MJML components can be used at any nesting depth within that subtree. Everything inside `MjmlText`, for example, is treated as raw HTML by the MJML engine. You can use HTML elements like `<span>`, `<a>`, `<table>`, `<tr>`, and `<td>`, but you cannot nest another `MjmlText` or `MjmlSection` inside it.
 
@@ -40,9 +40,9 @@ When you need to drop into raw HTML outside of a text context — for example, t
 
 ## Common Pitfalls
 
-### Avoid `<p>`, `<h1>`, `<h2>`, and Other Block-Level HTML Elements
+### Avoid Block-Level HTML Elements Inside Ending Tags
 
-These elements have wildly inconsistent default margins and spacing across email clients. Use `MjmlText` or `HtmlText` with [text variants](./2-components-and-theme.md#text-variants) to build a typography hierarchy instead. If you must use semantic block-level elements inside ending tags, always reset their margins explicitly with inline styles (e.g., `style={{ margin: 0 }}`).
+Don't use `<p>`, `<h1>`, `<h2>`, or other block-level HTML elements inside ending tags. They have wildly inconsistent default margins and spacing across email clients and add no rendering value in email HTML. Instead, use `<td>`, `<div>`, and `<span>` for structure, and build your typography hierarchy through `MjmlText`/`HtmlText` [text variants](./2-components-and-theme.md#text-variants) rather than HTML semantics. If a block-level element is truly unavoidable, always reset its margins explicitly with inline styles (e.g., `style={{ margin: 0 }}`).
 
 ### Set `mso-line-height-rule: exactly` for Manual HTML
 
