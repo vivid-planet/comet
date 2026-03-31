@@ -49,8 +49,8 @@ export class EcgRtrListService {
             throw new Error("ECG-RTR List check could not be executed.");
         }
 
-        const data = await response.json();
-        const hashedResponseValues: string[] = (data as { emails?: string[] }).emails ?? [];
+        const data = (await response.json()) as { emails?: string[] };
+        const hashedResponseValues: string[] = data.emails ?? [];
 
         let containedEmails: string[] = [];
 
