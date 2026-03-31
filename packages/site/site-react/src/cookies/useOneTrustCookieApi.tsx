@@ -70,7 +70,12 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
                     }
                 });
             } else if (window.OnetrustActiveGroups) {
-                initialCookieConsent.push(...window.OnetrustActiveGroups.split(",").filter(Boolean));
+                initialCookieConsent.push(
+                    ...window.OnetrustActiveGroups
+                        .split(",")
+                        .map((groupId) => groupId.trim())
+                        .filter(Boolean),
+                );
             }
 
             setConsentedCookies(initialCookieConsent);
