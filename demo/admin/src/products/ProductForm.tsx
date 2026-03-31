@@ -74,7 +74,7 @@ export function ProductForm({ id, onCreate }: FormProps) {
             await refetch();
         },
         onDiscardButtonPressed: async () => {
-            form.reset();
+            form.reset(undefined, { keepDirtyValues: false });
             await refetch();
         },
     });
