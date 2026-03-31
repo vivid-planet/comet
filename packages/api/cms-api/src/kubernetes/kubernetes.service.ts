@@ -1,5 +1,5 @@
-import { BatchV1Api, CoreV1Api, KubeConfig, V1CronJob, V1Job, V1ObjectMeta, V1Pod } from "@kubernetes/client-node";
-import { Inject, Injectable, Logger } from "@nestjs/common";
+import type { BatchV1Api, CoreV1Api, V1CronJob, V1Job, V1ObjectMeta, V1Pod } from "@kubernetes/client-node";
+import { Inject, Injectable, Logger, type OnModuleInit } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
@@ -10,7 +10,7 @@ import { KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants
 import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
-export class KubernetesService {
+export class KubernetesService implements OnModuleInit {
     private readonly logger = new Logger(KubernetesService.name);
 
     isAuthenticated: boolean = false;
@@ -20,7 +20,11 @@ export class KubernetesService {
     batchApi: BatchV1Api;
     coreApi: CoreV1Api;
 
-    constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
+    constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {}
+
+    async onModuleInit(): Promise<void> {
+        const { KubeConfig, BatchV1Api, CoreV1Api } = await import("@kubernetes/client-node");
+
         if ("namespace" in this.config) {
             // Local mode, used for development and testing
             this.namespace = this.config.namespace;

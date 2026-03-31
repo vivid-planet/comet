@@ -1,4 +1,4 @@
-import { V1CronJob } from "@kubernetes/client-node";
+import type { V1CronJob } from "@kubernetes/client-node";
 import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 

@@ -1,4 +1,4 @@
-import { V1Job } from "@kubernetes/client-node";
+import type { V1Job } from "@kubernetes/client-node";
 import { Injectable } from "@nestjs/common";
 import { format } from "date-fns";
 
