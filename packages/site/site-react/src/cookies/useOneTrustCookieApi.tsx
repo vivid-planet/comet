@@ -28,7 +28,7 @@ type DomainData = {
             purposes: ConsentPayloadPurpose[];
         };
         [key: string]: unknown;
-    };
+    } | null;
     Groups: ConsentGroup[];
     [key: string]: unknown;
 };
@@ -42,6 +42,7 @@ type OneTrust = {
 
 type WindowWithOneTrust = Window & {
     OneTrust: OneTrust;
+    OnetrustActiveGroups?: string;
 };
 
 const isWindowWithOneTrust = (window: Window): window is WindowWithOneTrust => {
@@ -53,19 +54,24 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
     const [initialized, setInitialized] = useState(false);
 
     useEffect(() => {
-        const startListeningForConsentChanges = (oneTrust: OneTrust) => {
+        const startListeningForConsentChanges = (window: WindowWithOneTrust) => {
+            const oneTrust = window.OneTrust;
             const initialCookieConsent: string[] = [];
             const domainData = oneTrust.GetDomainData();
 
-            domainData.ConsentIntegrationData.consentPayload.purposes.forEach((purpose) => {
-                if (purpose.TransactionType === "CONFIRMED") {
-                    const targetGroup = domainData.Groups.find(({ PurposeId }) => PurposeId === purpose.Id);
+            if (domainData.ConsentIntegrationData) {
+                domainData.ConsentIntegrationData.consentPayload.purposes.forEach((purpose) => {
+                    if (purpose.TransactionType === "CONFIRMED") {
+                        const targetGroup = domainData.Groups.find(({ PurposeId }) => PurposeId === purpose.Id);
 
-                    if (targetGroup) {
-                        initialCookieConsent.push(targetGroup.OptanonGroupId);
+                        if (targetGroup) {
+                            initialCookieConsent.push(targetGroup.OptanonGroupId);
+                        }
                     }
-                }
-            });
+                });
+            } else if (window.OnetrustActiveGroups) {
+                initialCookieConsent.push(...window.OnetrustActiveGroups.split(",").filter(Boolean));
+            }
 
             setConsentedCookies(initialCookieConsent);
 
@@ -78,7 +84,7 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
             if (isWindowWithOneTrust(window)) {
                 setInitialized(true);
                 clearInterval(tryToAccessOneTrustInterval);
-                startListeningForConsentChanges(window.OneTrust);
+                startListeningForConsentChanges(window);
             }
         }, 200);
 
