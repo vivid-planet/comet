@@ -236,7 +236,7 @@ Themed text for use inside ending tags (`MjmlText`, `MjmlRaw`) or custom HTML st
 | --------------- | -------------------- | ------- | ---------------------- |
 | `variant`       | `keyof TextVariants` | —       | Typography preset      |
 | `bottomSpacing` | `boolean`            | `false` | Add spacing below      |
-| `component`     | `string`             | `"td"`  | HTML element to render |
+| `element`       | `string`             | `"td"`  | HTML element to render |
 
 **CSS classes:** `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing`.
 
@@ -250,7 +250,7 @@ Themed text for use inside ending tags (`MjmlText`, `MjmlRaw`) or custom HTML st
 </MjmlRaw>
 
 <MjmlText>
-    <HtmlText component="div" variant="caption">Rendered as a div</HtmlText>
+    <HtmlText element="div" variant="caption">Rendered as a div</HtmlText>
 </MjmlText>
 ```
 

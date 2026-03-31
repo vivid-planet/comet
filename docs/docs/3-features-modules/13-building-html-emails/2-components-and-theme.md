@@ -343,10 +343,10 @@ It supports the same `variant` and `bottomSpacing` props as `MjmlText`:
 
 #### Rendering as a Different Element
 
-`HtmlText` renders a `<td>` by default. Use the `component` prop to render a different HTML element:
+`HtmlText` renders a `<td>` by default. Use the `element` prop to render a different HTML element:
 
 ```tsx
-<HtmlText component="div">Rendered as a div</HtmlText>
+<HtmlText element="div">Rendered as a div</HtmlText>
 ```
 
 **CSS class names:** `.htmlText`, `.htmlText--{variant}` (per variant), `.htmlText--bottomSpacing`.
