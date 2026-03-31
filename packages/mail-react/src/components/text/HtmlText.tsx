@@ -35,35 +35,35 @@ interface HtmlTextOwnProps {
 }
 
 interface HtmlTextImplementationProps extends HtmlTextOwnProps {
-    component?: keyof JSX.IntrinsicElements;
+    element?: keyof JSX.IntrinsicElements;
     className?: string;
     style?: CSSProperties;
     children?: ReactNode;
     [key: string]: unknown;
 }
 
-export type HtmlTextProps<C extends keyof JSX.IntrinsicElements = "td"> = HtmlTextOwnProps & {
+export type HtmlTextProps<E extends keyof JSX.IntrinsicElements = "td"> = HtmlTextOwnProps & {
     /**
      * The HTML element to render instead of the default `<td>`.
      *
      * @example
      * ```tsx
-     * <HtmlText component="div">Rendered as a div</HtmlText>
-     * <HtmlText component="a" href="/link">Rendered as an anchor</HtmlText>
+     * <HtmlText element="div">Rendered as a div</HtmlText>
+     * <HtmlText element="a" href="/link">Rendered as an anchor</HtmlText>
      * ```
      */
-    component?: C;
-} & Omit<ComponentPropsWithoutRef<C>, keyof HtmlTextOwnProps | "component">;
+    element?: E;
+} & Omit<ComponentPropsWithoutRef<E>, keyof HtmlTextOwnProps | "element">;
 
 /**
  * Themed text component for use inside MJML ending tags or outside of the MJML context.
  */
-export function HtmlText<C extends keyof JSX.IntrinsicElements>(
-    props: HtmlTextOwnProps & { component: C } & Omit<ComponentPropsWithoutRef<C>, keyof HtmlTextOwnProps | "component">,
+export function HtmlText<E extends keyof JSX.IntrinsicElements>(
+    props: HtmlTextOwnProps & { element: E } & Omit<ComponentPropsWithoutRef<E>, keyof HtmlTextOwnProps | "element">,
 ): ReactNode;
 export function HtmlText(props: HtmlTextOwnProps & Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof HtmlTextOwnProps>): ReactNode;
 export function HtmlText({
-    component: Component = "td",
+    element: Element = "td",
     variant: variantProp,
     bottomSpacing,
     className,
@@ -94,13 +94,13 @@ export function HtmlText({
     };
 
     return (
-        <Component
+        <Element
             {...restProps}
             className={clsx("htmlText", activeVariant && `htmlText--${activeVariant}`, bottomSpacing && "htmlText--bottomSpacing", className)}
             style={{ ...themeStyle, ...style }}
         >
             {children}
-        </Component>
+        </Element>
     );
 }
 

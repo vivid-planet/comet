@@ -157,24 +157,24 @@ export const DefaultVariant: Story = {
     ),
 };
 
-export const ComponentPropAsDiv: Story = {
+export const ElementPropAsDiv: Story = {
     render: () => (
         <MjmlSection>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlText component="div">Rendered as a div with theme styles</HtmlText>
+                    <HtmlText element="div">Rendered as a div with theme styles</HtmlText>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
     ),
 };
 
-export const ComponentPropAsAnchor: Story = {
+export const ElementPropAsAnchor: Story = {
     render: () => (
         <MjmlSection>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlText component="a" href="https://example.com" style={{ textDecoration: "underline" }}>
+                    <HtmlText element="a" href="https://example.com" style={{ textDecoration: "underline" }}>
                         Rendered as an anchor with href
                     </HtmlText>
                 </MjmlRaw>

@@ -15,15 +15,15 @@ void (<HtmlText href="/foo">text</HtmlText>);
 void (
     (
         // @ts-expect-error colSpan is not valid on <a>
-        <HtmlText component="a" colSpan={2}>
+        <HtmlText element="a" colSpan={2}>
             text
         </HtmlText>
     )
 );
 
-// Own props are always accepted regardless of component — no error expected
+// Own props are always accepted regardless of element — no error expected
 void (
-    <HtmlText component="div" variant="heading" bottomSpacing>
+    <HtmlText element="div" variant="heading" bottomSpacing>
         text
     </HtmlText>
 );
@@ -227,11 +227,11 @@ describe("HtmlText", () => {
         expect(html).toContain('align="center"');
     });
 
-    it("renders a <div> when component is 'div'", () => {
+    it("renders a <div> when element is 'div'", () => {
         const theme = createTheme();
         const html = renderHtmlText(
             <ThemeProvider theme={theme}>
-                <HtmlText component="div">Hello</HtmlText>
+                <HtmlText element="div">Hello</HtmlText>
             </ThemeProvider>,
         );
 
@@ -241,11 +241,11 @@ describe("HtmlText", () => {
         expect(html).toContain("font-family:Arial, sans-serif");
     });
 
-    it("renders an <a> with href when component is 'a'", () => {
+    it("renders an <a> with href when element is 'a'", () => {
         const theme = createTheme();
         const html = renderHtmlText(
             <ThemeProvider theme={theme}>
-                <HtmlText component="a" href="/link">
+                <HtmlText element="a" href="/link">
                     Click
                 </HtmlText>
             </ThemeProvider>,
@@ -268,7 +268,7 @@ describe("HtmlText", () => {
 
         const html = renderHtmlText(
             <ThemeProvider theme={theme}>
-                <HtmlText component="div" variant="heading" bottomSpacing className="custom">
+                <HtmlText element="div" variant="heading" bottomSpacing className="custom">
                     Title
                 </HtmlText>
             </ThemeProvider>,

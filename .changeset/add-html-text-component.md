@@ -20,9 +20,9 @@ const MyText = () => (
 );
 ```
 
-Supports an optional `component` prop to render as any HTML element instead of the default `<td>`.
+Supports an optional `element` prop to render as any HTML element instead of the default `<td>`.
 
 ```tsx
-<HtmlText component="div">Rendered as a div</HtmlText>
-<HtmlText component="a" href="/link">Rendered as an anchor</HtmlText>
+<HtmlText element="div">Rendered as a div</HtmlText>
+<HtmlText element="a" href="/link">Rendered as an anchor</HtmlText>
 ```
