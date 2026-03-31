@@ -4,6 +4,6 @@
         "sourceRoot": "/dist"
     },
     "include": ["src"],
-    "exclude": ["**/*.stories.tsx", "**/*.stories.ts", ".storybook"],
+    "exclude": ["**/*.stories.tsx", "**/*.stories.ts"],
     "extends": "./tsconfig.json"
 }
