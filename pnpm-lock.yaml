@@ -1907,9 +1907,6 @@ importers:
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
-      '@types/node-fetch':
-        specifier: ^2.6.13
-        version: 2.6.13
       '@types/uuid':
         specifier: ^8.3.4
         version: 8.3.4
