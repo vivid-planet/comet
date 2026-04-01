@@ -111,6 +111,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                 secret: envVars.FILE_UPLOADS_DOWNLOAD_SECRET,
             },
         },
+        anthropicApiKey: envVars.ANTHROPIC_API_KEY,
         sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
         siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
         brevo: {

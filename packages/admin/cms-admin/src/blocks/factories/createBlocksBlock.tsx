@@ -262,6 +262,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                             key: child.key,
                             visible: child.visible,
                             type: child.type,
+                            previewType: child.previewType,
                             adminRoute: blockAdminRoute,
                             props: block.createPreviewState(child.props, { ...previewCtx, parentUrlSubRoute: undefined, parentUrl: blockAdminRoute }),
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error

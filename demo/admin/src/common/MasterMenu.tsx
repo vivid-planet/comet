@@ -1,4 +1,4 @@
-import { Assets, Dashboard, Data, Mail, PageTree, Snips, Wrench } from "@comet/admin-icons";
+import { Assets, Dashboard, Data, Mail, PageTree, Robot, Snips, Wrench } from "@comet/admin-icons";
 import {
     BrevoConfigPage,
     createBrevoContactsPage,
@@ -20,6 +20,7 @@ import {
     UserPermissionsPage,
     WarningsPage,
 } from "@comet/cms-admin";
+import { AiChatPage } from "@src/ai-chat/AiChatPage";
 import { type BrevoContactConfig, getBrevoContactConfig } from "@src/brevo/brevoModuleConfig/brevoContactsPageAttributesConfig";
 import { additionalFormConfig } from "@src/brevo/brevoModuleConfig/targetGroupFormConfig";
 import { EmailCampaignContentBlock } from "@src/brevo/emailCampaigns/blocks/EmailCampaignContentBlock";
@@ -243,6 +244,15 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
             ],
             requiredPermission: "brevoNewsletter",
+        },
+        {
+            type: "route",
+            primary: <FormattedMessage id="menu.aiChat" defaultMessage="AI" />,
+            icon: <Robot />,
+            route: {
+                path: "/ai-chat",
+                component: AiChatPage,
+            },
         },
         {
             type: "collapsible",

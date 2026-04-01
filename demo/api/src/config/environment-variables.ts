@@ -210,4 +210,8 @@ export class EnvironmentVariables {
     @IsUndefinable()
     @Transform(({ value }) => value === "true")
     BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI?: boolean;
+
+    @IsOptional()
+    @IsString()
+    ANTHROPIC_API_KEY?: string;
 }

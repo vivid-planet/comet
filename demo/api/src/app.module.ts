@@ -46,6 +46,7 @@ import { PagesModule } from "@src/documents/pages/pages.module";
 import { TranslationModule } from "@src/translation/translation.module";
 import { Request } from "express";
 
+import { AiChatModule } from "./ai-chat/ai-chat.module";
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
@@ -278,6 +279,7 @@ export class AppModule {
                 }),
                 BrevoContactSubscribeModule,
                 BrevoTransactionalMailsModule,
+                AiChatModule,
             ],
         };
     }

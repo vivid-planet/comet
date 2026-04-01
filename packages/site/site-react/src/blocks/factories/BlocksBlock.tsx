@@ -7,7 +7,7 @@ import { type SupportedBlocks } from "./types";
 interface Props {
     supportedBlocks: SupportedBlocks;
     data: {
-        blocks: Array<{ key: string; type: string; visible: boolean; props: unknown }>;
+        blocks: Array<{ key: string; type: string; visible: boolean; props: unknown; previewType: "added" | "removed" | null }>;
     };
 }
 
@@ -35,9 +35,22 @@ export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
                     return null;
                 }
 
+                const content = <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>;
+
                 return (
                     <Fragment key={block.key}>
-                        <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
+                        {block.previewType ? (
+                            <div
+                                style={{
+                                    borderLeft: `4px solid ${block.previewType === "added" ? "green" : "red"}`,
+                                    backgroundColor: block.previewType === "added" ? "rgba(0, 128, 0, 0.5)" : "rgba(255, 0, 0, 0.5)",
+                                }}
+                            >
+                                {content}
+                            </div>
+                        ) : (
+                            content
+                        )}
                     </Fragment>
                 );
             })}

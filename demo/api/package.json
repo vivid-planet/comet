@@ -38,6 +38,7 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
+        "@anthropic-ai/sdk": "^0.54.0",
         "@apollo/server": "^5.2.0",
         "@as-integrations/express5": "^1.1.2",
         "@comet/brevo-api": "workspace:*",
