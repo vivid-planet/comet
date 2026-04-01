@@ -57,4 +57,5 @@ export const messages = defineMessages({
     downloadAsExcel: { id: "comet.generic.downloadAsExcel", defaultMessage: "Download as Excel" },
     openInNewTab: { id: "comet.generic.openInNewTab", defaultMessage: "Open in new tab" },
     openInThisTab: { id: "comet.generic.openInThisTab", defaultMessage: "Open in this tab" },
+    clear: { id: "comet.generic.clear", defaultMessage: "Clear" },
 });

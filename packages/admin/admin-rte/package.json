@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "9.0.0-beta.0",
+    "version": "9.0.0-beta.1",
     "description": "Comet Admin Rich Text Editor component",
     "repository": {
         "directory": "packages/admin/admin-rte",
@@ -8,6 +8,10 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
+    "sideEffects": [
+        "./lib/core/Rte.js",
+        "./lib/core/RteReadOnly.js"
+    ],
     "type": "module",
     "exports": {
         ".": {

@@ -193,9 +193,6 @@ export class EnvironmentVariables {
     BREVO_API_KEY: string;
 
     @IsString()
-    BREVO_REDIRECT_URL_FOR_IMPORT: string;
-
-    @IsString()
     BREVO_ECG_RTR_LIST_API_KEY: string;
 
     @IsString()
