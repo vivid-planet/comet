@@ -30,6 +30,13 @@ export type OwnerState = {
 const getSharedStyles = (theme: Theme, headerHeight: number) => css`
     background-color: ${theme.palette.common.white};
     overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     height: calc(100% - ${headerHeight}px);
     top: ${headerHeight}px;
 
