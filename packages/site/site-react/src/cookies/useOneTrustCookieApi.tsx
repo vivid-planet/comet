@@ -11,32 +11,9 @@ type OneTrustOnConsentChangedEvent = {
 
 type OnConsentChangedCallback = (event: OneTrustOnConsentChangedEvent) => void;
 
-type ConsentPayloadPurpose = {
-    Id: string;
-    TransactionType: "NO_CHOICE" | "CONFIRMED" | "OPT_OUT";
-};
-
-type ConsentGroup = {
-    OptanonGroupId: string;
-    PurposeId: string;
-    [key: string]: unknown;
-};
-
-type DomainData = {
-    ConsentIntegrationData: {
-        consentPayload: {
-            purposes: ConsentPayloadPurpose[];
-        };
-        [key: string]: unknown;
-    } | null;
-    Groups: ConsentGroup[];
-    [key: string]: unknown;
-};
-
 type OneTrust = {
     ToggleInfoDisplay: () => void;
     OnConsentChanged: (callback: OnConsentChangedCallback) => void;
-    GetDomainData: () => DomainData;
     [key: string]: unknown;
 };
 
@@ -57,19 +34,8 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
         const startListeningForConsentChanges = (window: WindowWithOneTrust) => {
             const oneTrust = window.OneTrust;
             const initialCookieConsent: string[] = [];
-            const domainData = oneTrust.GetDomainData();
 
-            if (domainData.ConsentIntegrationData) {
-                domainData.ConsentIntegrationData.consentPayload.purposes.forEach((purpose) => {
-                    if (purpose.TransactionType === "CONFIRMED") {
-                        const targetGroup = domainData.Groups.find(({ PurposeId }) => PurposeId === purpose.Id);
-
-                        if (targetGroup) {
-                            initialCookieConsent.push(targetGroup.OptanonGroupId);
-                        }
-                    }
-                });
-            } else if (window.OnetrustActiveGroups) {
+            if (window.OnetrustActiveGroups) {
                 initialCookieConsent.push(
                     ...window.OnetrustActiveGroups.split(",")
                         .map((groupId) => groupId.trim())
