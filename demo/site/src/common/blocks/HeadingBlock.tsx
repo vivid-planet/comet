@@ -10,7 +10,6 @@ const eyebrowRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
     blocks: {
         unstyled: createTextBlockRenderFn({ variant: "headline400", as: "p", bottomSpacing: true }),
-        "paragraph-standard": createTextBlockRenderFn({ variant: "headline400", as: "p", bottomSpacing: true }),
     },
 };
 

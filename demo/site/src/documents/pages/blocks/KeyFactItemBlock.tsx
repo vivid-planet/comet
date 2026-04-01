@@ -10,8 +10,6 @@ const descriptionRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
     blocks: {
         unstyled: createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
-        "paragraph-standard": createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
-        "paragraph-small": createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
     },
 };
 
