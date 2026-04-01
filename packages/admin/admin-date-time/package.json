@@ -8,7 +8,10 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "sideEffects": ["./lib/datePicker/DatePicker.js", "./lib/dateRangePicker/DateRangePicker.js"],
+    "sideEffects": [
+        "./lib/datePicker/DatePicker.js",
+        "./lib/dateRangePicker/DateRangePicker.js"
+    ],
     "type": "module",
     "exports": {
         ".": {
