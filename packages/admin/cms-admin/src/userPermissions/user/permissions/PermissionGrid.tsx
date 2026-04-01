@@ -200,6 +200,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 slotProps={{
                     toolbar: toolbarSlotProps,
                 }}
+                showToolbar
             />
             {overrideContentScopesId && (
                 <OverrideContentScopesDialog
