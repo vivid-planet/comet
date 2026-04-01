@@ -22,7 +22,7 @@ export type DateTimeRange = {
 export type DateTimeRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
-    root: ComponentType<MuiDateTimeRangePickerProps<Date, true>>;
+    root: ComponentType<MuiDateTimeRangePickerProps>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -52,7 +52,7 @@ export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDateTimeRangePickerProps<Date, true>, "value" | "onChange">;
+} & Omit<MuiDateTimeRangePickerProps, "value" | "onChange">;
 
 /**
  * The DateTimeRangePicker component allows users to select a date-time range from a combined picker interface.
@@ -89,13 +89,11 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
     return (
         <Suspense>
             <LazyRoot
-                enableAccessibleFieldDOMStructure
                 disabled={disabled}
                 readOnly={readOnly}
                 open={open}
                 onOpen={() => setOpen(true)}
                 onClose={() => setOpen(false)}
-                disableOpenPicker
                 value={arrayValue}
                 onChange={([startDate, endDate]) => {
                     const startDateIsInvalid = startDate !== null && !isValidDate(startDate);
@@ -132,33 +130,28 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
                             onFocus,
                             ...textFieldProps,
                             InputProps: {
-                                ...textFieldProps?.InputProps,
                                 startAdornment: (
-                                    <>
-                                        <OpenPickerAdornment
-                                            inputIsDisabled={disabled}
-                                            inputIsReadOnly={readOnly}
-                                            onClick={() => setOpen(true)}
-                                            {...slotProps?.openPickerAdornment}
-                                            slotProps={{
-                                                ...slotProps?.openPickerAdornment?.slotProps,
-                                                openPickerButton: {
-                                                    "aria-label": intl.formatMessage({
-                                                        id: "comet.dateTimeRangePicker.openPicker",
-                                                        defaultMessage: "Open date time range picker",
-                                                    }),
-                                                    ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
-                                                },
-                                            }}
-                                        >
-                                            {openPickerIcon}
-                                        </OpenPickerAdornment>
-                                        {textFieldProps?.InputProps?.startAdornment}
-                                    </>
+                                    <OpenPickerAdornment
+                                        inputIsDisabled={disabled}
+                                        inputIsReadOnly={readOnly}
+                                        onClick={() => setOpen(true)}
+                                        {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.dateTimeRangePicker.openPicker",
+                                                    defaultMessage: "Open date time range picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
+                                    >
+                                        {openPickerIcon}
+                                    </OpenPickerAdornment>
                                 ),
                                 endAdornment: (
                                     <>
-                                        {textFieldProps?.InputProps?.endAdornment}
                                         <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
                                         <ClearInputAdornment
                                             position="end"
@@ -180,7 +173,7 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
 const LazyRoot = lazy(async () => {
     const module = await import("@mui/x-date-pickers-pro");
 
-    const Root = createComponentSlot(module.DateTimeRangePicker<Date, true>)<DateTimeRangePickerClassKey>({
+    const Root = createComponentSlot(module.DateTimeRangePicker)<DateTimeRangePickerClassKey>({
         componentName: "DateTimeRangePicker",
         slotName: "root",
     })(css`
@@ -194,7 +187,7 @@ const LazyRoot = lazy(async () => {
     `);
 
     return {
-        default: (props: MuiDateTimeRangePickerProps<Date, true>) => <Root {...props} />,
+        default: (props: MuiDateTimeRangePickerProps) => <Root {...props} slots={{ field: module.MultiInputDateTimeRangeField, ...props.slots }} />,
     };
 });
 

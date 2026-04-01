@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "9.0.0-beta.0",
+    "version": "9.0.0-beta.1",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -41,20 +41,20 @@
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "@mui/material": "^7.3.7",
-        "@mui/x-data-grid": "^7.29.8",
+        "@mui/x-data-grid": "^8.27.5",
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
         "glob": "^11.1.0",
-        "graphql": "^16.11.0",
+        "graphql": "^16.13.2",
         "jiti": "^2.6.1",
         "object-path": "^0.11.8",
         "pluralize": "^8.0.0",
         "typescript": "5.9.3"
     },
     "devDependencies": {
-        "@apollo/client": "^3.14.0",
+        "@apollo/client": "^3.14.1",
         "@comet/eslint-config": "workspace:*",
-        "@types/node": "^24.10.9",
+        "@types/node": "^24.12.0",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",
         "@types/react": "^19.2.10",

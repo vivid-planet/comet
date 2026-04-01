@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- 4b1d586: Fix missing Rules of React in `@comet/eslint-config/nextjs.js`
+    - @comet/eslint-plugin@9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes

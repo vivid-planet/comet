@@ -5,6 +5,7 @@ import {
     GridCellContent,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     MainContent,
     messages,
     muiGridFilterToGql,
@@ -15,7 +16,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Chip } from "@mui/material";
-import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -236,6 +237,7 @@ export function WarningsGrid() {
                 slots={{
                     toolbar: WarningsGridToolbar,
                 }}
+                showToolbar
             />
         </MainContent>
     );
