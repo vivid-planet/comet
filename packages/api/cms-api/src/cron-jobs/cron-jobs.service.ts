@@ -1,4 +1,4 @@
-import { V1CronJob } from "@kubernetes/client-node";
+import type { V1CronJob } from "@kubernetes/client-node";
 import { Injectable } from "@nestjs/common";
 
 import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants";

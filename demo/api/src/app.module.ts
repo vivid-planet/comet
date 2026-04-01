@@ -14,14 +14,13 @@ import {
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
-    MailerModule,
-    MailTemplatesModule,
     PageTreeModule,
     RedirectsModule,
     SentryModule,
     UserPermissionsModule,
     WarningsModule,
 } from "@comet/cms-api";
+import { MailerModule, MailTemplatesModule } from "@comet/cms-api/mail";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";

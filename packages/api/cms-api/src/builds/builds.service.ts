@@ -1,4 +1,4 @@
-import { V1CronJob, V1Job } from "@kubernetes/client-node";
+import type { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Logger } from "@nestjs/common";

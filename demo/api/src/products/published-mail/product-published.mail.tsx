@@ -1,4 +1,4 @@
-import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
+import { MailTemplate, MailTemplateInterface } from "@comet/cms-api/mail";
 import { MailRoot } from "@src/mail/components/MailRoot";
 import { renderMailHtml } from "@src/mail/utils/renderMailHtml";
 import { TranslationService } from "@src/translation/translation.service";
