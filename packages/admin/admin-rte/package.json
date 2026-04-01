@@ -8,6 +8,10 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
+    "sideEffects": [
+        "./lib/core/Rte.js",
+        "./lib/core/RteReadOnly.js"
+    ],
     "type": "module",
     "exports": {
         ".": {
