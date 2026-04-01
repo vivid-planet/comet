@@ -175,6 +175,9 @@ export { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from
 export { FormSection, type FormSectionClassKey, type FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, type FinalFormRadioProps } from "./form/Radio";
+export { RHFNumberField } from "./form/react-hook-form/fields/RHFNumberField";
+export { RHFTextField } from "./form/react-hook-form/fields/RHFTextField";
+export { RHFForm, type RHFFormProps } from "./form/react-hook-form/RHFForm";
 export { FinalFormSwitch, type FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
 export { FullPageAlert, type FullPageAlertClassKey, type FullPageAlertProps } from "./fullPageAlert/FullPageAlert";
