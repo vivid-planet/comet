@@ -287,7 +287,7 @@ importers:
   demo/api:
     dependencies:
       '@apollo/server':
-        specifier: ^5.2.0
+        specifier: ^5.5.0
         version: 5.5.0(graphql@16.13.2)
       '@as-integrations/express5':
         specifier: ^1.1.2
