@@ -1,5 +1,7 @@
 # @comet/cms-api
 
+## 9.0.0-beta.2
+
 ## 9.0.0-beta.1
 
 ### Major Changes
