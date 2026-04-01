@@ -2,7 +2,8 @@
 import { execSync } from "child_process";
 import { Command } from "commander";
 import fs from "fs";
-import { resolve } from "path";
+import os from "os";
+import { join, resolve } from "path";
 
 import { type BaseSiteConfig, type ExtractPrivateSiteConfig, type ExtractPublicSiteConfig } from "../site-configs.types";
 
@@ -94,18 +95,20 @@ export const resolveOpReferences = (input: string): string => {
         );
     }
 
-    let result = input;
-    for (const ref of opRefs) {
-        const opUri = ref.replace("{{ ", "").replace(" }}", "");
+    console.log(`inject-site-configs: - Resolving ${opRefs.length} 1Password reference(s) via op inject`);
+    const tmpFile = join(os.tmpdir(), `comet-op-inject-${Date.now()}.tmp`);
+    try {
+        fs.writeFileSync(tmpFile, input);
+        return execSync(`op inject -i "${tmpFile}"`, { encoding: "utf-8" });
+    } catch (e) {
+        throw new Error(`inject-site-configs: Failed to resolve 1Password references: ${e}`);
+    } finally {
         try {
-            const secret = execSync(`op read "${opUri}"`, { encoding: "utf-8" }).trim();
-            console.log(`inject-site-configs: - Resolved ${ref}`);
-            result = result.replace(ref, secret);
-        } catch (e) {
-            throw new Error(`inject-site-configs: Failed to resolve 1Password reference ${ref}: ${e}`);
+            fs.unlinkSync(tmpFile);
+        } catch {
+            // ignore cleanup errors
         }
     }
-    return result;
 };
 
 // https://stackoverflow.com/a/75205316

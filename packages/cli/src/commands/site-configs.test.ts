@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import fs from "fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { resolveOpReferences } from "./site-configs";
@@ -6,6 +7,11 @@ import { resolveOpReferences } from "./site-configs";
 vi.mock("child_process", () => ({
     execSync: vi.fn(),
 }));
+
+vi.mock("fs", async () => {
+    const actual = await vi.importActual<typeof import("fs")>("fs");
+    return { ...actual, default: { ...actual, writeFileSync: vi.fn(), unlinkSync: vi.fn() } };
+});
 
 const mockedExecSync = vi.mocked(execSync);
 
@@ -18,13 +24,15 @@ describe("resolveOpReferences", () => {
     it("should resolve op:// references", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
             if (cmd === "op --version") return Buffer.from("2.0.0");
-            if (cmd === 'op read "op://vault/item/password"') return "resolved-secret\n";
+            if (typeof cmd === "string" && cmd.startsWith("op inject -i")) return '{"key":"resolved-secret"}';
             return "";
         });
 
         const result = resolveOpReferences('{"key":"{{ op://vault/item/password }}"}');
 
         expect(result).toBe('{"key":"resolved-secret"}');
+        expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+        expect(fs.unlinkSync).toHaveBeenCalledTimes(1);
     });
 
     it("should throw an error when op CLI is not installed", () => {
@@ -37,26 +45,26 @@ describe("resolveOpReferences", () => {
         );
     });
 
-    it("should throw an error when op reference resolution fails", () => {
+    it("should throw an error when op inject fails", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
             if (cmd === "op --version") return Buffer.from("2.0.0");
-            if (cmd === 'op read "op://vault/item/password"') {
+            if (typeof cmd === "string" && cmd.startsWith("op inject -i")) {
                 throw new Error("Item not found");
             }
             return "";
         });
 
         expect(() => resolveOpReferences('{"key":"{{ op://vault/item/password }}"}')).toThrow(
-            "inject-site-configs: Failed to resolve 1Password reference {{ op://vault/item/password }}",
+            "inject-site-configs: Failed to resolve 1Password references",
         );
+        expect(fs.unlinkSync).toHaveBeenCalledTimes(1);
     });
 
     it("should resolve multiple op:// references", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
             if (cmd === "op --version") return Buffer.from("2.0.0");
-            if (cmd === 'op read "op://vault/item/api-key"') return "resolved-api-key\n";
-            if (cmd === 'op read "op://vault/item/api-secret"') return "resolved-api-secret\n";
-            if (cmd === 'op read "op://vault/database/password"') return "resolved-db-password\n";
+            if (typeof cmd === "string" && cmd.startsWith("op inject -i"))
+                return '{"apiKey":"resolved-api-key","apiSecret":"resolved-api-secret","dbPassword":"resolved-db-password"}';
             return "";
         });
 
