@@ -28,13 +28,19 @@
     "comet-storybook": "1.0.0"
   },
   "changesets": [
+    "add-html-inline-link",
+    "add-html-text-component",
     "add-mjml-mail-root-component",
     "add-mjml-section-component",
+    "add-mjml-text-component",
+    "add-react-17-support",
     "add-register-styles",
     "add-render-mail-html",
     "add-responsive-value",
     "add-section-indentation",
+    "add-side-effects-false-admin-packages",
     "add-storybook-addon-preset",
+    "add-theme-background-colors",
     "add-theme-system",
     "curly-mirrors-agree",
     "deps-list-filter-sort",
@@ -42,6 +48,7 @@
     "empty-trams-allow",
     "fix-mailer-log-status-enum-name",
     "fuzzy-paths-press",
+    "great-pants-create",
     "green-badgers-smell",
     "heavy-books-report",
     "heavy-swans-help",
@@ -56,10 +63,12 @@
     "petite-ears-return",
     "pink-geckos-carry",
     "remove-cjs-site-packages",
+    "remove-node-fetch-from-ecg-rtr-list",
     "rich-clubs-enjoy",
     "split-dependency-list",
     "swift-monkeys-turn",
     "thick-lights-taste",
+    "upgrade-mui-x-date-pickers-v8",
     "violet-peaches-march"
   ]
 }
