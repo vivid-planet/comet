@@ -8,6 +8,9 @@ import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock }
 
 const eyebrowRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
+    blocks: {
+        unstyled: createTextBlockRenderFn({ variant: "headline400", as: "p", bottomSpacing: true }),
+    },
 };
 
 const getHeadlineRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers => ({
@@ -39,11 +42,7 @@ export const HeadingBlock = withPreview(
 
         return (
             <>
-                {hasRichTextBlockContent(eyebrow) && (
-                    <Typography variant="headline400" as="p" bottomSpacing>
-                        <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
-                    </Typography>
-                )}
+                {hasRichTextBlockContent(eyebrow) && <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />}
                 <PreviewSkeleton
                     hasContent={hasRichTextBlockContent(headline)}
                     title={
