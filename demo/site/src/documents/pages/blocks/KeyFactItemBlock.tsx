@@ -1,6 +1,6 @@
 import { hasRichTextBlockContent, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
 import { type KeyFactsItemBlockData } from "@src/blocks.generated";
-import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { type Renderers } from "redraft";
 
@@ -8,6 +8,11 @@ import styles from "./KeyFactItemBlock.module.scss";
 
 const descriptionRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
+    blocks: {
+        unstyled: createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
+        "paragraph-standard": createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
+        "paragraph-small": createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
+    },
 };
 
 export const KeyFactItemBlock = withPreview(
@@ -19,9 +24,9 @@ export const KeyFactItemBlock = withPreview(
             </Typography>
             <Typography variant="headline350">{label}</Typography>
             {hasRichTextBlockContent(description) && (
-                <Typography variant="paragraph200" className={styles.description}>
+                <div className={styles.description}>
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
-                </Typography>
+                </div>
             )}
         </div>
     ),

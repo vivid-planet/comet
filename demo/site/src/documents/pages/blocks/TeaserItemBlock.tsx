@@ -2,7 +2,7 @@ import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type TeaserItemBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
-import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { isValidLink } from "@src/common/helpers/HiddenIfInvalidLink";
 import { SvgUse } from "@src/common/helpers/SvgUse";
@@ -12,6 +12,11 @@ import styles from "./TeaserItemBlock.module.scss";
 
 const descriptionRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
+    blocks: {
+        unstyled: createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
+        "paragraph-standard": createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
+        "paragraph-small": createTextBlockRenderFn({ variant: "paragraph200", bottomSpacing: true }),
+    },
 };
 
 export const TeaserItemBlock = withPreview(
@@ -27,9 +32,7 @@ export const TeaserItemBlock = withPreview(
                 <Typography className={styles.title} variant="headline350" as={titleHtmlTag}>
                     {title}
                 </Typography>
-                <Typography variant="paragraph200">
-                    <RichTextBlock data={description} renderers={descriptionRenderers} />
-                </Typography>
+                <RichTextBlock data={description} renderers={descriptionRenderers} />
                 {link.text && isValidLink(link.link) && (
                     <div className={styles.textLinkContainer}>
                         <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
