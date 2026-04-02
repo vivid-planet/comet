@@ -26,6 +26,15 @@
         transform: rotate(45deg);
     }
 
+    &--checked {
+        background-color: var(--contact-form-checkbox-bg-selected);
+        border-color: var(--contact-form-checkbox-bg-selected);
+
+        &::after {
+            display: block;
+        }
+    }
+
     &--error {
         border-color: var(--contact-form-checkbox-border-error);
     }
@@ -38,15 +47,6 @@
     position: absolute;
     white-space: nowrap;
     width: 1px;
-
-    &:checked + .checkbox {
-        background-color: var(--contact-form-checkbox-bg-selected);
-        border-color: var(--contact-form-checkbox-bg-selected);
-
-        &::after {
-            display: block;
-        }
-    }
 
     &:focus-visible + .checkbox {
         border: 2px solid var(--contact-form-checkbox-border-focus);
@@ -64,7 +64,7 @@
         box-shadow: 0 8px 16px rgb(0 0 0 / 8%);
     }
 
-    &:hover .input:checked + .checkbox {
+    &:hover .checkbox--checked {
         background-color: var(--contact-form-checkbox-bg-selected-hover);
         border-color: var(--contact-form-checkbox-bg-selected-hover);
     }
