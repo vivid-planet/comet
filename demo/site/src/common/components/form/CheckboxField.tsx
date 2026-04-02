@@ -1,5 +1,9 @@
-import { type InputHTMLAttributes, type ReactNode } from "react";
+import clsx from "clsx";
+import { type InputHTMLAttributes, type ReactNode, useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
+
+import styles from "./CheckboxField.module.scss";
+import { FieldContainer } from "./FieldContainer";
 
 type CheckboxFieldProps<TFieldValues extends FieldValues> = Omit<InputHTMLAttributes<HTMLInputElement>, "name"> &
     Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
@@ -15,19 +19,22 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
     rules,
     ...inputProps
 }: CheckboxFieldProps<TFieldValues>) => {
+    const id = useId();
     const required = !!rules?.required;
+
     return (
         <Controller
             name={name}
             control={control}
             rules={rules}
             render={({ field: { value, ...field }, fieldState }) => (
-                <div>
-                    <input type="checkbox" required={required} {...inputProps} {...field} checked={value} />
-                    <label>{label}</label>
-                    {helperText && <div>{helperText}</div>}
-                    {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
-                </div>
+                <FieldContainer helperText={helperText} errorText={fieldState.error?.message}>
+                    <label htmlFor={id} className={styles.wrapper}>
+                        <input type="checkbox" id={id} {...inputProps} {...field} required={required} checked={value} className={styles.input} />
+                        <span className={clsx(styles.checkbox, fieldState.error && styles["checkbox--error"])} />
+                        <span className={styles.labelText}>{label}</span>
+                    </label>
+                </FieldContainer>
             )}
         />
     );
