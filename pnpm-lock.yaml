@@ -2066,9 +2066,6 @@ importers:
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
-      ts-morph:
-        specifier: ^25.0.1
-        version: 25.0.1
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
