@@ -27,10 +27,12 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
             name={name}
             control={control}
             rules={rules}
-            render={({ field: { value, ...field }, fieldState }) => (
+            render={({ field: { value, ...field }, fieldState }) => {
+                const isChecked = Boolean(value);
+                return (
                 <label htmlFor={id} className={styles.wrapper}>
-                    <input type="checkbox" id={id} {...inputProps} {...field} checked={Boolean(value)} required={required} className={styles.input} />
-                    <span className={clsx(styles.checkbox, value && styles["checkbox--checked"], fieldState.error && styles["checkbox--error"])} />
+                    <input type="checkbox" id={id} {...inputProps} {...field} checked={isChecked} required={required} className={styles.input} />
+                    <span className={clsx(styles.checkbox, isChecked && styles["checkbox--checked"], fieldState.error && styles["checkbox--error"])} />
                     <span className={styles.labelContent}>
                         <span className={styles.labelText}>{label}</span>
                         {fieldState.error?.message ? (
@@ -43,7 +45,8 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
                         ) : null}
                     </span>
                 </label>
-            )}
+                );
+            }}
         />
     );
 };
