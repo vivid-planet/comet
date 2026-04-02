@@ -88,7 +88,7 @@ export const Default = {
                 <Field component={FinalFormInput} name="password" label="Password" type="password" placeholder="Password" fullWidth required />
                 <Field
                     component={FinalFormInput}
-                    name="password"
+                    name="passwordReadOnly"
                     label="Password (read only)"
                     type="password"
                     placeholder="Password"
