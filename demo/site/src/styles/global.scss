@@ -118,11 +118,6 @@ textarea {
     border-radius: 0;
 }
 
-/* Hide the reCAPTCHA badge – adding a disclaimer text to reCAPTCHA implementations is required by Google instead */
-.grecaptcha-badge {
-    visibility: hidden;
-}
-
 /* Improve media defaults */
 img,
 picture,
