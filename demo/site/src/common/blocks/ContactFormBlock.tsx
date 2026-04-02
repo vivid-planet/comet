@@ -2,7 +2,7 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type ContactFormBlockData } from "@src/blocks.generated";
 import { getRecaptchaToken } from "@src/util/getRecaptchaToken";
-import { useNextPublic } from "@src/util/NextPublicProvider";
+import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
 import Script from "next/script";
 import { useForm } from "react-hook-form";
@@ -37,7 +37,7 @@ export const ContactFormBlock = withPreview(
         const params = useParams<{ visibility: string; domain: string; language: string }>();
         const language = params.language;
 
-        const recaptchaKey = useNextPublic("RECAPTCHA_SITE_KEY");
+        const { recaptchaSiteKey } = useSiteConfig();
 
         const {
             control,
@@ -59,7 +59,7 @@ export const ContactFormBlock = withPreview(
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
 
-            if (!recaptchaKey) {
+            if (!recaptchaSiteKey) {
                 setError("root.serverError", {
                     type: "manual",
                     message: intl.formatMessage({
@@ -71,7 +71,7 @@ export const ContactFormBlock = withPreview(
             }
 
             try {
-                recaptchaToken = await getRecaptchaToken("form_submit", recaptchaKey);
+                recaptchaToken = await getRecaptchaToken("form_submit", recaptchaSiteKey);
             } catch (error) {
                 console.error(error);
                 setError("root.serverError", {
@@ -110,7 +110,7 @@ export const ContactFormBlock = withPreview(
 
         return (
             <>
-                <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${recaptchaKey}`} />
+                <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${recaptchaSiteKey}`} />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         name="name"

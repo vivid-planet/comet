@@ -1,4 +1,5 @@
 import { assessRecaptchaToken } from "@src/common/api/assessRecaptchaToken";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -13,7 +14,7 @@ const queryValidationSchema = z.object({
     recaptchaToken: z.string(),
 });
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, { params: { domain } }: { params: { domain: string } }) {
     const body = await request.json();
     const validationResult = queryValidationSchema.safeParse(body);
 
@@ -29,9 +30,12 @@ export async function POST(request: NextRequest) {
         );
     }
 
+    const siteConfig = getSiteConfigForDomain(domain);
+
     const recaptchaTokenValid = await assessRecaptchaToken({
         token: validationResult.data.recaptchaToken,
         action: "form_submit",
+        siteKey: siteConfig.recaptchaSiteKey,
     });
 
     if (!recaptchaTokenValid) {

@@ -15,6 +15,7 @@ export default ((env) => {
                 domain: "main",
                 languages: ["en", "de"],
             },
+            recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY ?? "",
         },
     };
 }) satisfies GetSiteConfig;
