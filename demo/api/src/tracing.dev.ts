@@ -17,7 +17,7 @@ const sdk = new NodeSDK({
             },
             () => {
                 const { endpoint } = PrometheusExporter.DEFAULT_OPTIONS;
-                console.log(`prometheus scrape endpoint: http://localhost:9465${endpoint}`);
+                console.info(`prometheus scrape endpoint: http://localhost:9465${endpoint}`);
             },
         ),
     ],

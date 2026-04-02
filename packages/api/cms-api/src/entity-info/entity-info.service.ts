@@ -130,10 +130,10 @@ export class EntityInfoService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        console.time("creating EntityInfo view");
+        const startTime = Date.now();
         await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "EntityInfo"`);
         await this.entityManager.getConnection().execute(`CREATE VIEW "EntityInfo" AS ${viewSql}`);
-        console.timeEnd("creating EntityInfo view");
+        console.info(`creating EntityInfo view: ${Date.now() - startTime}ms`);
     }
 
     async dropEntityInfoView() {
