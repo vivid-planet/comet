@@ -20,8 +20,6 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
     ...inputProps
 }: CheckboxFieldProps<TFieldValues>) => {
     const id = useId();
-    const required = !!rules?.required;
-
     return (
         <Controller
             name={name}
@@ -30,7 +28,7 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
             render={({ field: { value, ...field }, fieldState }) => (
                 <FieldContainer helperText={helperText} errorText={fieldState.error?.message}>
                     <label htmlFor={id} className={styles.wrapper}>
-                        <input type="checkbox" id={id} {...inputProps} {...field} required={required} checked={value} className={styles.input} />
+                        <input type="checkbox" id={id} {...inputProps} {...field} checked={value} className={styles.input} />
                         <span className={clsx(styles.checkbox, fieldState.error && styles["checkbox--error"])} />
                         <span className={styles.labelText}>{label}</span>
                     </label>
