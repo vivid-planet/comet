@@ -4,6 +4,8 @@ export { OneOfBlock } from "./blocks/factories/OneOfBlock.js";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock.js";
 export type { SupportedBlocks } from "./blocks/factories/types.js";
 export type { PropsWithData } from "./blocks/helpers/PropsWithData.js";
+export type { HtmlInlineLinkProps } from "./components/inlineLink/HtmlInlineLink.js";
+export { HtmlInlineLink } from "./components/inlineLink/HtmlInlineLink.js";
 export { MjmlMailRoot } from "./components/mailRoot/MjmlMailRoot.js";
 export type { MjmlSectionProps } from "./components/section/MjmlSection.js";
 export { MjmlSection } from "./components/section/MjmlSection.js";

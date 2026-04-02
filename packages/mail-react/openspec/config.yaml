@@ -53,7 +53,26 @@ context: |
       provided className via clsx: `clsx("mjmlSection", className)`.
       clsx is a dependency of this package.
 
+    Docs & Agent Skill:
+    - User-facing documentation lives at ../../docs/docs/3-features-modules/13-building-html-emails/
+      and a consumer-facing AI skill at ../../skills/dx-mail-react/ (both relative to
+      this package). Library changes that affect usage patterns, component APIs, or
+      styling conventions should consider updating both. Neither docs nor the skill
+      are part of specs.
+
 rules:
+    specs:
+        - >-
+            Scenarios are optional. Only add a scenario when it communicates
+            something the requirement text alone doesn't make obvious — edge
+            cases, negative cases, subtle interactions, or behavior that could
+            reasonably be misinterpreted. A clear, unambiguous requirement
+            needs no scenarios. Never restate the requirement with concrete
+            values just to have a scenario.
+        - >-
+            Don't split trivially similar behavior into separate requirements.
+            If multiple cases follow the same pattern, describe the general
+            rule in one requirement and mention the variations inline.
     proposal:
         - Changes must not break existing @faire/mjml-react component API compatibility
         - >-
@@ -72,13 +91,17 @@ rules:
     tasks:
         - >-
             When a change affects library usage (new export, changed component API,
-            bug fix, visual change), include a task to create a changeset file in the
-            monorepo root (.changeset/ at the git root, two levels up from this package).
-            No changeset is needed for internal-only changes (refactors, non-exported utils).
-            The changeset must describe the change from the consumer's perspective — what
-            is new or different in the API they use — not what was built or restructured
-            internally. If a component already existed as a re-export, adding props to it
-            is not "adding a component", it is "adding props to <Component>".
+            bug fix, visual change), include a task to ensure a changeset covers it.
+            Check `.changeset/` at the git root (two levels up from this package)
+            for an existing changeset that describes the affected feature — if one
+            exists (e.g., from an unmerged PR), update it rather than creating a
+            new one. Only create a new changeset when no existing one covers the
+            change. No changeset is needed for internal-only changes (refactors,
+            non-exported utils). The changeset must describe the change from the
+            consumer's perspective — what is new or different in the API they use —
+            not what was built or restructured internally. If a component already
+            existed as a re-export, adding props to it is not "adding a component",
+            it is "adding props to <Component>".
             See CONTRIBUTING.md in the repo root for changeset formatting guidelines.
         - >-
             When a change adds or modifies a custom component, include tasks to:
