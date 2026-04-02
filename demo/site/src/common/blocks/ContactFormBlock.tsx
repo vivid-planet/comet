@@ -1,7 +1,8 @@
 "use client";
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type ContactFormBlockData } from "@src/blocks.generated";
-import { PageLayout } from "@src/layout/PageLayout";
+import { getRecaptchaToken } from "@src/util/getRecaptchaToken";
+import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -11,7 +12,7 @@ import { CheckboxField } from "../components/form/CheckboxField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
-import styles from "./ContactFormBlock.module.scss";
+import { Typography } from "../components/Typography";
 
 const subjectOptions = [
     { value: "Option 1", label: "Option 1" },
@@ -35,6 +36,8 @@ export const ContactFormBlock = withPreview(
         const params = useParams<{ visibility: string; domain: string; language: string }>();
         const language = params.language;
 
+        const { recaptchaSiteKey } = useSiteConfig();
+
         const {
             control,
             handleSubmit,
@@ -53,13 +56,40 @@ export const ContactFormBlock = withPreview(
         });
 
         const onSubmit = async (formValues: ContactFormValues) => {
+            let recaptchaToken: string;
+
+            if (!recaptchaSiteKey) {
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactFormBlock.missingRecaptchaKey",
+                        defaultMessage: "ReCAPTCHA key is missing.",
+                    }),
+                });
+                return;
+            }
+
+            try {
+                recaptchaToken = await getRecaptchaToken("form_submit", recaptchaSiteKey);
+            } catch (error) {
+                console.error(error);
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactFormBlock.missingRecaptchaToken",
+                        defaultMessage: "ReCAPTCHA token is missing.",
+                    }),
+                });
+                return;
+            }
+
             try {
                 const response = await fetch(`/${language}/api/contact-form`, {
                     method: "POST",
                     headers: {
                         "content-type": "application/json",
                     },
-                    body: JSON.stringify(formValues),
+                    body: JSON.stringify({ ...formValues, recaptchaToken }),
                 });
 
                 if (!response.ok) {
@@ -78,104 +108,112 @@ export const ContactFormBlock = withPreview(
         };
 
         return (
-            <PageLayout grid>
-                <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    <TextField
-                        name="name"
-                        control={control}
-                        rules={{
-                            required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Please enter your name" }),
-                        }}
-                        placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
-                        label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
-                    />
-                    <TextField
-                        name="company"
-                        control={control}
-                        placeholder={intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" })}
-                        label={intl.formatMessage({ id: "contactForm.company.label", defaultMessage: "Company" })}
-                    />
-                    <TextField
-                        name="email"
-                        control={control}
-                        rules={{
-                            required: intl.formatMessage({
-                                id: "contactForm.email.required",
-                                defaultMessage: "Please enter your email address",
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <TextField
+                    name="name"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({ id: "contactForm.name.required", defaultMessage: "Please enter your name" }),
+                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.name.placeholder", defaultMessage: "First and last name" })}
+                    label={intl.formatMessage({ id: "contactForm.name.label", defaultMessage: "Name" })}
+                />
+                <TextField
+                    name="company"
+                    control={control}
+                    placeholder={intl.formatMessage({ id: "contactForm.company.placeholder", defaultMessage: "Company name" })}
+                    label={intl.formatMessage({ id: "contactForm.company.label", defaultMessage: "Company" })}
+                />
+                <TextField
+                    name="email"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.email.required",
+                            defaultMessage: "Please enter your email address",
+                        }),
+                        pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: intl.formatMessage({ id: "contactForm.email.invalid", defaultMessage: "Invalid email address" }),
+                        },
+                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
+                    label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
+                />
+                <TextField
+                    name="phoneNumber"
+                    control={control}
+                    rules={{
+                        pattern: {
+                            value: /^[0-9+]*$/,
+                            message: intl.formatMessage({
+                                id: "contactForm.phoneNumber.invalid",
+                                defaultMessage: "Please enter only numbers",
                             }),
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: intl.formatMessage({ id: "contactForm.email.invalid", defaultMessage: "Invalid email address" }),
-                            },
+                        },
+                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" })}
+                    label={intl.formatMessage({ id: "contactForm.phoneNumber.label", defaultMessage: "Phone Number" })}
+                    helperText={intl.formatMessage({
+                        id: "contactForm.phoneNumber.helperText",
+                        defaultMessage: "Please enter without special characters and spaces",
+                    })}
+                />
+                <SelectField
+                    name="subject"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.subject.required",
+                            defaultMessage: "Please select a subject",
+                        }),
+                    }}
+                    label={intl.formatMessage({ id: "contactForm.subject.label", defaultMessage: "Subject" })}
+                    placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
+                    options={subjectOptions}
+                />
+                <TextareaField
+                    name="message"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.message.required",
+                            defaultMessage: "Please enter your message",
+                        }),
+                    }}
+                    placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
+                    label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
+                />
+                <CheckboxField
+                    name="privacyConsent"
+                    control={control}
+                    rules={{
+                        required: intl.formatMessage({
+                            id: "contactForm.privacyConsent.required",
+                            defaultMessage: "You must agree to the privacy policy to continue",
+                        }),
+                    }}
+                    label={intl.formatMessage({
+                        id: "contactForm.privacyConsent.label",
+                        defaultMessage:
+                            "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
+                    })}
+                />
+                <Button type="submit" variant="contained" disabled={isSubmitting}>
+                    <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
+                </Button>
+                {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
+                <Typography variant="paragraph200" bottomSpacing>
+                    <FormattedMessage
+                        id="contactForm.recaptchaDisclaimer"
+                        defaultMessage="This site is protected by reCAPTCHA and the Google <privacyLink>Privacy Policy</privacyLink> and <termsLink>Terms of Service</termsLink> apply."
+                        values={{
+                            privacyLink: (chunks) => <a href="https://policies.google.com/privacy">{chunks}</a>,
+                            termsLink: (chunks) => <a href="https://policies.google.com/terms">{chunks}</a>,
                         }}
-                        placeholder={intl.formatMessage({ id: "contactForm.email.placeholder", defaultMessage: "Your email address" })}
-                        label={intl.formatMessage({ id: "contactForm.email.label", defaultMessage: "Email" })}
                     />
-                    <TextField
-                        name="phoneNumber"
-                        control={control}
-                        rules={{
-                            pattern: {
-                                value: /^[0-9+]*$/,
-                                message: intl.formatMessage({
-                                    id: "contactForm.phoneNumber.invalid",
-                                    defaultMessage: "Please enter only numbers",
-                                }),
-                            },
-                        }}
-                        placeholder={intl.formatMessage({ id: "contactForm.phoneNumber.placeholder", defaultMessage: "0043123456789" })}
-                        label={intl.formatMessage({ id: "contactForm.phoneNumber.label", defaultMessage: "Phone Number" })}
-                        helperText={intl.formatMessage({
-                            id: "contactForm.phoneNumber.helperText",
-                            defaultMessage: "Please enter without special characters and spaces",
-                        })}
-                    />
-                    <SelectField
-                        name="subject"
-                        control={control}
-                        rules={{
-                            required: intl.formatMessage({
-                                id: "contactForm.subject.required",
-                                defaultMessage: "Please select a subject",
-                            }),
-                        }}
-                        label={intl.formatMessage({ id: "contactForm.subject.label", defaultMessage: "Subject" })}
-                        placeholder={intl.formatMessage({ id: "contactForm.subject.placeholder", defaultMessage: "Please select" })}
-                        options={subjectOptions}
-                    />
-                    <TextareaField
-                        name="message"
-                        control={control}
-                        rules={{
-                            required: intl.formatMessage({
-                                id: "contactForm.message.required",
-                                defaultMessage: "Please enter your message",
-                            }),
-                        }}
-                        placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
-                        label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
-                    />
-                    <CheckboxField
-                        name="privacyConsent"
-                        control={control}
-                        rules={{
-                            required: intl.formatMessage({
-                                id: "contactForm.privacyConsent.required",
-                                defaultMessage: "You must agree to the privacy policy to continue",
-                            }),
-                        }}
-                        label={intl.formatMessage({
-                            id: "contactForm.privacyConsent.label",
-                            defaultMessage:
-                                "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
-                        })}
-                    />
-                    <Button type="submit" variant="contained" disabled={isSubmitting}>
-                        <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
-                    </Button>
-                    {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
-                </form>
-            </PageLayout>
+                </Typography>
+            </form>
         );
     },
     { label: "Contact Form" },
