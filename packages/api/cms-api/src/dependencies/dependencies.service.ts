@@ -109,17 +109,17 @@ export class DependenciesService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        let startTime = Date.now();
+        console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
         await this.connection.execute(`CREATE MATERIALIZED VIEW block_index_dependencies AS ${viewSql}`);
         await this.connection.execute(
             `CREATE UNIQUE INDEX ON block_index_dependencies ("rootId", "rootTableName", "rootColumnName", "blockname", "jsonPath", "targetTableName", "targetId")`,
         );
-        console.info(`creating block dependency materialized view: ${Date.now() - startTime}ms`);
+        console.timeEnd("creating block dependency materialized view");
 
-        startTime = Date.now();
+        console.time("creating block dependency materialized view index");
         await this.connection.execute(`CREATE INDEX block_index_dependencies_targetId ON block_index_dependencies ("targetId")`);
-        console.info(`creating block dependency materialized view index: ${Date.now() - startTime}ms`);
+        console.timeEnd("creating block dependency materialized view index");
     }
 
     private async createBlockIndexView(): Promise<void> {
@@ -152,10 +152,10 @@ export class DependenciesService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        const startTime = Date.now();
+        console.time("creating block index view");
         await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
         await this.connection.execute(`CREATE VIEW block_index AS ${viewSql}`);
-        console.info(`creating block index view: ${Date.now() - startTime}ms`);
+        console.timeEnd("creating block index view");
     }
 
     /**

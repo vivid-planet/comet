@@ -151,14 +151,14 @@ export class ImportRedirectsCommand extends CommandRunner {
                     this.entityManager.persist(redirect);
                 }
             } else {
-                console.info(`Error for Redirect ${row["source"]}`);
+                console.log(`Error for Redirect ${row["source"]}`);
                 errors++;
             }
         }
 
         await this.entityManager.flush();
-        console.info(`\nSuccess: ${successes}`);
-        console.info(`Error: ${errors}`);
+        console.log(`\nSuccess: ${successes}`);
+        console.log(`Error: ${errors}`);
     }
 
     readRedirectsCsv = async (filePath: string): Promise<Row[]> => {
@@ -185,7 +185,7 @@ export class ImportRedirectsCommand extends CommandRunner {
                     imports.push(row);
                 })
                 .on("end", (rowCount: number) => {
-                    console.info(`Parsed ${rowCount} rows`);
+                    console.log(`Parsed ${rowCount} rows`);
                     resolve(imports);
                 });
         });

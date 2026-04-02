@@ -13,6 +13,7 @@ const config = [
         },
         rules: {
             "import/order": "off",
+            "no-console": "off",
             "no-duplicate-imports": "error",
             "sort-imports": "off",
         },

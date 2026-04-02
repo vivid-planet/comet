@@ -95,6 +95,6 @@ async function bootstrap(): Promise<void> {
     const port = config.apiPort;
     const host = config.serverHost;
     await app.listen(port, host);
-    console.info(`Application is running on: http://${host}:${port}/`);
+    console.log(`Application is running on: http://${host}:${port}/`);
 }
 bootstrap();
