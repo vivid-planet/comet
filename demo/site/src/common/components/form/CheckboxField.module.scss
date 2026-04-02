@@ -56,7 +56,7 @@
 .wrapper {
     display: flex;
     align-items: flex-start;
-    gap: var(--spacing-s200);
+    gap: var(--spacing-s300);
     cursor: pointer;
 
     &:hover .checkbox {
@@ -73,7 +73,7 @@
 .labelContent {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-s100);
+    gap: var(--spacing-s200);
 }
 
 .labelText {
