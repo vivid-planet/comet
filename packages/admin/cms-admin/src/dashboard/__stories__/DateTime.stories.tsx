@@ -9,6 +9,6 @@ const config: Meta<typeof DateTime> = {
 
 export default config;
 
-export const Default: StoryObj<typeof DateTime> = {
-    render: () => <DateTime />,
-};
+type Story = StoryObj<typeof config>;
+
+export const Default: Story = {};
