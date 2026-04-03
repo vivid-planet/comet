@@ -31,7 +31,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { GridToolbarQuickFilter } from "@comet/admin";
 import { useMemo } from "react";
 import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
@@ -354,6 +354,7 @@ export function ManufacturersGrid() {
                 toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
             onRowClick={handleRowClick}
+            showToolbar
         />
     );
 }

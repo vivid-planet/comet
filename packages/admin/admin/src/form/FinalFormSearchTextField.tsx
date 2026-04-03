@@ -5,12 +5,10 @@ import { type ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { FinalFormInput, type FinalFormInputProps } from "./FinalFormInput";
 
 export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
     icon?: ReactNode;
-    clearable?: boolean;
 }
 
 type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
@@ -21,13 +19,7 @@ type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputE
  * @see {@link SearchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps & FinalFormSearchTextFieldInternalProps) {
-    const {
-        icon = <Search />,
-        placeholder,
-        endAdornment,
-        clearable,
-        ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
+    const { icon = <Search />, placeholder, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
     const intl = useIntl();
 
     return (
@@ -38,20 +30,6 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
                 <InputAdornment position="start" disablePointerEvents>
                     {icon}
                 </InputAdornment>
-            }
-            endAdornment={
-                clearable ? (
-                    <>
-                        <ClearInputAdornment
-                            position="end"
-                            hasClearableContent={Boolean(restProps.input.value)}
-                            onClick={() => restProps.input.onChange("")}
-                        />
-                        {endAdornment}
-                    </>
-                ) : (
-                    endAdornment
-                )
             }
             disableContentTranslation={true}
         />

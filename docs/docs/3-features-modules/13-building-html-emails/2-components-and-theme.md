@@ -1,0 +1,435 @@
+---
+title: Components & Theme
+---
+
+## Setting Up a Theme
+
+The theme controls layout dimensions, typography, colors, and responsive breakpoints across all mail components. Use `createTheme()` to build one:
+
+```ts
+import { createTheme } from "@comet/mail-react";
+
+const theme = createTheme();
+```
+
+### Overriding Defaults
+
+Pass a partial overrides object to customize any part of the theme.
+
+```ts
+import { createBreakpoint, createTheme } from "@comet/mail-react";
+
+const theme = createTheme({
+    sizes: {
+        bodyWidth: 700,
+        contentIndentation: { default: 40, mobile: 20 },
+    },
+    breakpoints: {
+        mobile: createBreakpoint(480),
+    },
+    text: {
+        fontFamily: "Georgia, serif",
+        fontSize: "18px",
+    },
+    colors: {
+        background: {
+            body: "#EAEAEA",
+            content: "#FAFAFA",
+        },
+    },
+});
+```
+
+### Adding Custom Breakpoints
+
+The built-in breakpoints are `default` and `mobile`. To add more, augment the `ThemeBreakpoints` interface and pass the new breakpoint to `createTheme`.
+
+Breakpoint values must be created with `createBreakpoint()`, which produces an object containing the pixel width and a ready-to-use media query string.
+
+Once augmented, the new key automatically becomes available in all responsive theme values, e.g. `contentIndentation`.
+
+```ts title="theme.ts"
+import { createBreakpoint, createTheme, type ThemeBreakpoint } from "@comet/mail-react";
+
+export const theme = createTheme({
+    breakpoints: {
+        tablet: createBreakpoint(540),
+    },
+    sizes: {
+        contentIndentation: {
+            default: 40,
+            tablet: 30,
+            mobile: 20,
+        },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface ThemeBreakpoints {
+        tablet: ThemeBreakpoint;
+    }
+}
+```
+
+### Adding Custom Colors
+
+Augment `ThemeBackgroundColors` or `ThemeColors` to add project-specific color tokens:
+
+```ts title="theme.ts"
+import { createTheme } from "@comet/mail-react";
+
+export const theme = createTheme({
+    colors: {
+        background: { highlight: "#FFF3CD" },
+        brand: { primary: "#0066CC", secondary: "#004499" },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface ThemeBackgroundColors {
+        highlight: string;
+    }
+
+    interface ThemeColors {
+        brand: { primary: string; secondary: string };
+    }
+}
+```
+
+## MjmlMailRoot
+
+`MjmlMailRoot` is the root element for every email template. It renders the full MJML skeleton (`<mjml>`, `<mj-head>`, `<mj-body>`) and provides the theme to all descendant components.
+
+### In Storybook
+
+The Storybook decorator wraps every story in `MjmlMailRoot` automatically — you don't need to use it in story code. To pass a custom theme, set it via `parameters.theme`:
+
+```tsx title="src/stories/MyStory.stories.tsx"
+export const MyStory: StoryObj = {
+    parameters: {
+        theme: createTheme({ sizes: { bodyWidth: 500 } }),
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlText>Narrower email at 500px</MjmlText>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+```
+
+### Outside Storybook
+
+When rendering emails outside Storybook, wrap your content in `MjmlMailRoot` yourself and use `renderMailHtml` to convert the React tree to HTML — see [Rendering](./3-rendering.md) for full details.
+
+```tsx title="src/emails/WelcomeEmail.tsx"
+import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlText, createTheme } from "@comet/mail-react";
+
+const theme = createTheme({
+    colors: { background: { body: "#EAEAEA" } },
+});
+
+function WelcomeEmail() {
+    return (
+        <MjmlMailRoot theme={theme}>
+            <MjmlSection indent>
+                <MjmlColumn>
+                    <MjmlText>Welcome!</MjmlText>
+                </MjmlColumn>
+            </MjmlSection>
+        </MjmlMailRoot>
+    );
+}
+```
+
+When no `theme` prop is provided, `MjmlMailRoot` uses the default theme (equivalent to `createTheme()` with no arguments).
+
+### What MjmlMailRoot Configures
+
+From the theme, `MjmlMailRoot` automatically sets:
+
+- **Body width** — from `theme.sizes.bodyWidth`
+- **Body background** — from `theme.colors.background.body`
+- **MJML breakpoint** — from `theme.breakpoints.mobile`, controlling when columns stack vertically
+- **Base font family** — from `theme.text.fontFamily`
+- **Zero default padding** — so components start with no padding
+
+## MjmlSection
+
+`MjmlSection` wraps the MJML section with theme integration. It automatically applies `theme.colors.background.content` as the background color. To change the default for all sections, set it in the theme:
+
+```ts
+const theme = createTheme({
+    colors: { background: { content: "#F8F8F8" } },
+});
+```
+
+To override it for a single section, use the `backgroundColor` prop directly:
+
+```tsx
+<MjmlSection backgroundColor="#FF0000">
+    <MjmlColumn>
+        <MjmlText>Red background section</MjmlText>
+    </MjmlColumn>
+</MjmlSection>
+```
+
+### Indentation
+
+The `indent` prop applies theme-based left and right padding so content doesn't touch the email edges:
+
+```tsx
+<MjmlSection indent>
+    <MjmlColumn>
+        <MjmlText>Indented content with padding from the theme</MjmlText>
+    </MjmlColumn>
+</MjmlSection>
+```
+
+The indentation values come from `theme.sizes.contentIndentation`, which supports responsive values. To customize:
+
+```ts
+const theme = createTheme({
+    sizes: { contentIndentation: { default: 48, mobile: 24 } },
+});
+```
+
+### Disabling Responsive Stacking
+
+By default, columns in a section stack vertically on mobile. To keep them side-by-side at all viewport widths, use `disableResponsiveBehavior`:
+
+```tsx
+<MjmlSection disableResponsiveBehavior>
+    <MjmlColumn>
+        <MjmlText>First column</MjmlText>
+    </MjmlColumn>
+    <MjmlColumn>
+        <MjmlText>Second column</MjmlText>
+    </MjmlColumn>
+</MjmlSection>
+```
+
+This wraps the children in an `MjmlGroup`, preventing the columns from stacking.
+
+**CSS class names:** `.mjmlSection`, `.mjmlSection--indented` (when `indent` is set).
+
+## Text
+
+`MjmlText`, `HtmlText`, and `HtmlInlineLink` share a theme-driven text styling system. Styles are defined once in the theme and applied consistently across all three.
+
+### Variants
+
+Variants are named typography presets. Define them in your theme file alongside the `TextVariants` module augmentation for type-safety:
+
+```ts title="theme.ts"
+import { createTheme } from "@comet/mail-react";
+
+export const theme = createTheme({
+    text: {
+        variants: {
+            heading: { fontSize: "32px", fontWeight: 700, lineHeight: "40px" },
+            body: { fontSize: "16px", lineHeight: "24px" },
+            caption: { fontSize: "12px", lineHeight: "16px", color: "#666666" },
+        },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface TextVariants {
+        heading: true;
+        body: true;
+        caption: true;
+    }
+}
+```
+
+The `declare module` block restricts the `variant` prop to the defined names — TypeScript will error on typos or unknown variants.
+
+```tsx title="ExampleTexts.tsx"
+<MjmlText variant="heading">Large heading text</MjmlText>
+<MjmlText variant="body">Regular body text</MjmlText>
+<MjmlText variant="caption">Small caption text</MjmlText>
+```
+
+Variant styles are merged on top of the base theme text styles — any property not set by the variant inherits from the base.
+
+#### Responsive Variants
+
+Variant properties accept responsive values that change at different breakpoints:
+
+```ts
+const theme = createTheme({
+    text: {
+        variants: {
+            heading: {
+                fontSize: { default: "32px", mobile: "24px" },
+                lineHeight: { default: "40px", mobile: "30px" },
+                bottomSpacing: { default: "24px", mobile: "16px" },
+                fontWeight: 700,
+            },
+        },
+    },
+});
+```
+
+#### Default Variant
+
+Set `defaultVariant` in the theme to apply a variant to all text components that don't specify one explicitly:
+
+```ts
+const theme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: {
+            body: { fontSize: "14px", lineHeight: "22px" },
+            heading: { fontSize: "28px", fontWeight: 700 },
+        },
+    },
+});
+```
+
+```tsx
+<MjmlText>Uses the "body" variant automatically</MjmlText>
+<MjmlText variant="heading">Explicit heading variant</MjmlText>
+```
+
+### Bottom Spacing
+
+Use `bottomSpacing` to add consistent spacing below text elements. The spacing value comes from the theme:
+
+```tsx
+<MjmlText bottomSpacing>First paragraph with spacing below</MjmlText>
+<MjmlText bottomSpacing>Second paragraph with spacing below</MjmlText>
+<MjmlText>Last paragraph, no extra spacing</MjmlText>
+```
+
+The base spacing value is set via `theme.text.bottomSpacing`:
+
+```ts
+const theme = createTheme({
+    text: { bottomSpacing: "20px" },
+});
+```
+
+Variants can override this value individually (see [Responsive Variants](#responsive-variants) above).
+
+### MjmlText
+
+`MjmlText` is an [MJML component](./1-email-basics.md#mjml-components-vs-html-components) — use it inside `MjmlColumn` following the standard MJML layout model.
+The `variant` and `bottomSpacing` props require a `ThemeProvider` or `MjmlMailRoot` ancestor to work.
+
+**CSS class names:** `.mjmlText`, `.mjmlText--{variant}` (per variant), `.mjmlText--bottomSpacing`.
+
+### HtmlText
+
+`HtmlText` is a themed text component for use inside [MJML ending tags](./1-email-basics.md#ending-tags) (`MjmlRaw`, `MjmlText`) or custom HTML structures where MJML components can't be used. It renders a plain HTML element.
+
+It supports the same `variant` and `bottomSpacing` props as `MjmlText`:
+
+```tsx
+<MjmlSection>
+    <MjmlColumn>
+        <MjmlRaw>
+            <table>
+                <tr>
+                    <HtmlText>Themed text inside a raw HTML table</HtmlText>
+                </tr>
+            </table>
+        </MjmlRaw>
+    </MjmlColumn>
+</MjmlSection>
+```
+
+#### Rendering as a Different Element
+
+`HtmlText` renders a `<td>` by default. Use the `element` prop to render a different HTML element:
+
+```tsx
+<HtmlText element="div">Rendered as a div</HtmlText>
+```
+
+**CSS class names:** `.htmlText`, `.htmlText--{variant}` (per variant), `.htmlText--bottomSpacing`.
+
+### HtmlInlineLink
+
+`HtmlInlineLink` renders an `<a>` element for use inside `MjmlText` or `HtmlText`. It ensures that links inherit their parent's font styles — even on Outlook Desktop, which normally overrides link typography with its own defaults.
+
+```tsx
+<MjmlText>
+    Visit our <HtmlInlineLink href="https://example.com">website</HtmlInlineLink> for more
+    information.
+</MjmlText>
+```
+
+The link automatically picks up the font family, size, line height, weight, and color from the parent text component — there is no separate theme configuration for links. To change link typography, customize the parent text styles or variants in the theme. The link defaults to `target="_blank"` and `text-decoration: underline`.
+
+#### Outlook Workaround
+
+Outlook Desktop ignores `<style>` blocks and applies its own "Hyperlink" style to `<a>` tags, overriding inherited CSS properties. To counter this, `HtmlInlineLink` sets explicit inline styles for font properties (sourced from the parent text component's context). Since Outlook does respect inline styles, the link renders with the correct typography.
+
+On modern email clients, the component registers a responsive CSS reset so the link adapts correctly when responsive variant overrides apply at smaller viewports.
+
+#### Custom Color
+
+To set a custom link color that persists across all viewports, use `!important` in the style prop. This is necessary because the component's responsive reset uses `inherit !important` — without `!important` on your override, the reset would take precedence:
+
+```tsx
+<MjmlText>
+    Click{" "}
+    <HtmlInlineLink href="https://example.com" style={{ color: "#0066cc !important" }}>
+        here
+    </HtmlInlineLink>{" "}
+    to continue.
+</MjmlText>
+```
+
+**CSS class name:** `.htmlInlineLink`.
+
+## Scoped Theming
+
+`ThemeProvider` makes a theme available to its children via React context. `MjmlMailRoot` uses it internally, so you don't need it for the top-level theme. Its main use case is **scoped theming** — applying a different theme to a subsection of the email.
+
+### Creating a Dark Section
+
+A common pattern is wrapping a section in a `ThemeProvider` with a modified theme to create a visually distinct area, such as a dark-background footer. Copy the project's theme and override only what needs to change — this preserves the rest of the theme (font family, sizes, breakpoints, variants, etc.):
+
+```tsx
+import { MjmlColumn, MjmlSection, MjmlText, ThemeProvider } from "@comet/mail-react";
+
+import { theme } from "./theme";
+
+const darkSectionTheme = structuredClone(theme);
+darkSectionTheme.colors.background.content = "#1A1A2E";
+darkSectionTheme.text.color = "#FFFFFF";
+
+function EmailWithDarkFooter() {
+    return (
+        <>
+            <MjmlSection indent>
+                <MjmlColumn>
+                    <MjmlText>Regular content using the root theme.</MjmlText>
+                </MjmlColumn>
+            </MjmlSection>
+
+            <ThemeProvider theme={darkSectionTheme}>
+                <MjmlSection indent>
+                    <MjmlColumn>
+                        <MjmlText>Footer content on a dark background with white text.</MjmlText>
+                    </MjmlColumn>
+                </MjmlSection>
+            </ThemeProvider>
+        </>
+    );
+}
+```
+
+Components inside the nested `ThemeProvider` automatically pick up the scoped theme — `MjmlSection` uses the dark background color, and `MjmlText` uses the white text color. Components outside the nested provider continue using the root theme from `MjmlMailRoot`.
+
+### Nesting
+
+`ThemeProvider` is fully nestable. Each provider replaces the theme for its subtree without affecting ancestors or siblings.
+
+:::note
+`ThemeProvider` sets a new theme context — it does not merge with the parent theme. Spread the root theme and override only what you need (as shown above) to avoid losing settings like font family or text variants.
+:::

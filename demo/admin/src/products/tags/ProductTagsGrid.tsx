@@ -6,6 +6,7 @@ import {
     FillSpace,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -15,7 +16,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, type GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -124,6 +125,7 @@ export function ProductTagsGrid() {
             slots={{
                 toolbar: ProductTagsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            showToolbar
         />
     );
 }

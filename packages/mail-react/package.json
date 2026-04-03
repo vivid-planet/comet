@@ -1,20 +1,21 @@
 {
     "name": "@comet/mail-react",
-    "version": "8.19.0",
+    "version": "9.0.0-beta.1",
     "description": "Utilities for building HTML emails with React",
     "license": "BSD-2-Clause",
     "type": "module",
     "exports": {
-        ".": {
-            "types": "./lib/index.d.ts",
-            "default": "./lib/index.js"
-        }
+        ".": "./lib/index.js",
+        "./client": "./lib/client/index.js",
+        "./server": "./lib/server/index.js",
+        "./storybook": "./lib/storybook/index.js"
     },
     "files": [
         "lib/*"
     ],
     "scripts": {
         "build": "pnpm run clean && pnpm run generate-block-types && tsc",
+        "build-storybook": "storybook build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
         "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",
         "generate-block-types": "comet generate-block-types",
@@ -26,25 +27,47 @@
         "lint:fix:eslint": "pnpm run lint:eslint --fix",
         "lint:fix:prettier": "pnpm exec prettier --write '*.{ts,js,json,md,yml,yaml}'",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc"
+        "lint:tsc": "tsc",
+        "openspec:install-skills": "openspec init --tools github-copilot,cursor,claude",
+        "storybook": "storybook dev -p 6066 --no-open",
+        "test": "vitest --run",
+        "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@faire/mjml-react": "^3.5.3"
+        "@faire/mjml-react": "^3.5.3",
+        "clsx": "^2.1.1",
+        "mjml": "^4.18.0",
+        "mjml-browser": "^4.18.0"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@types/react": "^18.3.27",
+        "@fission-ai/openspec": "^1.2.0",
+        "@storybook/addon-docs": "^10.3.1",
+        "@storybook/react-vite": "^10.3.1",
+        "@types/mjml": "^4.7.4",
+        "@types/mjml-browser": "^4.15.0",
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.2",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
         "rimraf": "^6.1.2",
-        "typescript": "^5.9.3"
+        "storybook": "^10.3.1",
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.16"
     },
     "peerDependencies": {
-        "react": "^18.0.0"
+        "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+        "storybook": ">=10.0.0"
+    },
+    "peerDependenciesMeta": {
+        "storybook": {
+            "optional": true
+        }
     },
     "engines": {
         "node": ">=22.0.0"

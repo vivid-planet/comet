@@ -75,7 +75,7 @@ describe("sort by id", () => {
         const sortProps = buildSortProps(orm.em.getMetadata().get("TestEntity3"));
         expect(sortProps).toEqual(["name"]);
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity3"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity3"));
         const formattedOut = await formatGeneratedFiles(out);
 
         const file = formattedOut.find((file) => file.name === "dto/test-entity3s.args.ts");

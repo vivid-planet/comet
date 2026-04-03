@@ -20,7 +20,7 @@ export const RteCustomized = {
         const { editorState, setEditorState } = useRteApi();
 
         // focus the editor to see the cursor immediately
-        const editorRef = useRef<IRteRef>();
+        const editorRef = useRef<IRteRef>(undefined);
         useAutoFocus(editorRef);
 
         return (

@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Video } from "@comet/admin-icons";
 import { Box } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";

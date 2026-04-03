@@ -103,6 +103,7 @@ export function ProductHighlightsGrid() {
             slots={{
                 toolbar: ProductHighlightsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            showToolbar
         />
     );
 }

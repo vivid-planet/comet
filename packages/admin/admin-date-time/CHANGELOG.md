@@ -1,5 +1,80 @@
 # @comet/admin-date-time
 
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 3fda20b: Add a "Legacy" prefix to class-names and theme component-keys
+
+    This affects the components of which their new counterparts are now considered stable in `@comet/admin`.
+
+    **Consider using the new components from `@comet/admin`**
+
+    In most cases, the new components will be a drop-in replacement for the legacy components, so you can simply replace the imports:
+
+    | Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`                  |
+    | ---------------------------------------------- | -------------------------------------------------- |
+    | `DatePicker`                                   | `DatePicker`                                       |
+    | `DateField`                                    | `DatePickerField`                                  |
+    | `FinalFormDatePicker`                          | `DatePickerField` (without using `<Field />`)      |
+    | `DateRangePicker`                              | `DateRangePicker`                                  |
+    | `DateRangeField`                               | `DateRangePickerField`                             |
+    | `FinalFormDateRangePicker`                     | `DateRangePickerField` (without using `<Field />`) |
+    | `TimePicker`                                   | `TimePicker`                                       |
+    | `TimeField`                                    | `TimePickerField`                                  |
+    | `FinalFormTimePicker`                          | `TimePickerField` (without using `<Field />`)      |
+    | `DateTimePicker`                               | `DateTimePicker`                                   |
+    | `DateTimeField`                                | `DateTimePickerField`                              |
+    | `FinalFormDateTimePicker`                      | `DateTimePickerField` (without using `<Field />`)  |
+
+    **To continue using the existing components, the following changes will need to be made:**
+
+    Update any use of class-names of the component's slots:
+    - `CometAdminDatePicker-*` -> `CometAdminLegacyDatePicker-*`
+    - `CometAdminDateRangePicker-*` -> `CometAdminLegacyDateRangePicker-*`
+    - `CometAdminDateTimePicker-*` -> `CometAdminLegacyDateTimePicker-*`
+    - `CometAdminTimePicker-*` -> `CometAdminLegacyTimePicker-*`
+
+    Update the component-keys when using `defaultProps` or `styleOverrides` in the theme:
+    - `CometAdminDatePicker` -> `CometAdminLegacyDatePicker`
+    - `CometAdminDateRangePicker` -> `CometAdminLegacyDateRangePicker`
+    - `CometAdminDateTimePicker` -> `CometAdminLegacyDateTimePicker`
+    - `CometAdminTimePicker` -> `CometAdminLegacyTimePicker`
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+
 ## 8.19.0
 
 ### Patch Changes

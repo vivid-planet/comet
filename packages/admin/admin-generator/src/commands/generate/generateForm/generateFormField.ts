@@ -196,11 +196,11 @@ export function generateFormField({
         formValueConfig.defaultInitializationCode = config.initialValue ? "true" : "false";
     } else if (config.type == "date") {
         imports.push({
-            name: "Future_DatePickerField",
+            name: "DatePickerField",
             importPath: "@comet/admin",
         });
         code = `
-            <Future_DatePickerField
+            <DatePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
@@ -226,7 +226,7 @@ export function generateFormField({
         }
     } else if (config.type == "dateTime") {
         imports.push({
-            name: "Future_DateTimePickerField as DateTimePickerField",
+            name: "DateTimePickerField",
             importPath: "@comet/admin",
         });
         code = `<DateTimePickerField

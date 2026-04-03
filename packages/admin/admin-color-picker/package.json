@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-color-picker",
-    "version": "8.19.0",
+    "version": "9.0.0-beta.1",
     "description": "Comet Admin Color Picker component",
     "repository": {
         "directory": "packages/admin/admin-color-picker",
@@ -8,9 +8,14 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "sideEffects": false,
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        }
+    },
     "files": [
         "lib"
     ],
@@ -44,15 +49,15 @@
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.3.7",
-        "@types/react": "^18.3.27",
-        "@types/react-dom": "^18.3.7",
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
         "@types/tinycolor2": "^1.4.6",
         "eslint": "^9.39.2",
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
@@ -60,8 +65,8 @@
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
     },
