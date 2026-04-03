@@ -24,7 +24,7 @@
         "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
         "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
         "lint:fix:eslint": "pnpm run lint:eslint --fix",
-        "lint:fix:prettier": "pnpm exec prettier --write './**/*.{js,json,md,yml,yaml}'",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
