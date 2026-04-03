@@ -1,4 +1,5 @@
 "use client";
+import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { PageLink } from "@src/layout/header/PageLink";
 import { PageLayout } from "@src/layout/PageLayout";
@@ -10,12 +11,14 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { type GQLMobileMenuFragment } from "./MobileMenu.fragment.generated";
 import styles from "./MobileMenu.module.scss";
+import { type GQLNavigationCallToActionButtonListFragment } from "./NavigationCallToActionButtonList.fragment.generated";
 
 interface Props {
     menu: GQLMobileMenuFragment;
+    navigationCallToActionButtonList?: GQLNavigationCallToActionButtonListFragment | null;
 }
 
-export const MobileMenu = ({ menu }: Props) => {
+export const MobileMenu = ({ menu, navigationCallToActionButtonList }: Props) => {
     const intl = useIntl();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [expandedSubLevelNavigation, setExpandedSubLevelNavigation] = useState<string | null>(null);
@@ -157,6 +160,7 @@ export const MobileMenu = ({ menu }: Props) => {
                                     );
                                 })}
                             </ol>
+                            {navigationCallToActionButtonList && <CallToActionListBlock data={navigationCallToActionButtonList.content} />}
                         </FocusLock>
                     </div>
                 </PageLayout>
