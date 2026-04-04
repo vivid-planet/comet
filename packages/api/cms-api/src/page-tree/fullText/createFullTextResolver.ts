@@ -7,7 +7,7 @@ import { EmptyPageTreeNodeScope } from "../dto/empty-page-tree-node-scope";
 import { PageTreeService } from "../page-tree.service";
 import { PageTreeReadApiService } from "../page-tree-read-api.service";
 import { PageTreeNodeInterface, ScopeInterface } from "../types";
-import { PageTreeNodeFulltext } from "./entities/page-tree-node-full-text.object";
+import { PageTreeNodeFullText } from "./entities/page-tree-node-full-text.object";
 
 export function createFullTextResolver({
     PageTreeNode,
@@ -46,8 +46,8 @@ export function createFullTextResolver({
             @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
             @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
         ): Promise<typeof PaginatedPageTreeNodes> {
-            const where: FilterQuery<PageTreeNodeFulltext> = {
-                fulltext: { $fulltext: search },
+            const where: FilterQuery<PageTreeNodeFullText> = {
+                fullText: { $fulltext: search },
             };
 
             const scopeValue = nonEmptyScopeOrNothing(scope);
@@ -55,7 +55,7 @@ export function createFullTextResolver({
                 where.pageTreeNode = { scope: scopeValue };
             }
 
-            const [results, totalCount] = await this.entityManager.findAndCount(PageTreeNodeFulltext, where, {
+            const [results, totalCount] = await this.entityManager.findAndCount(PageTreeNodeFullText, where, {
                 offset,
                 limit,
             });

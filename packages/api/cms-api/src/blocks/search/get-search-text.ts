@@ -30,7 +30,7 @@ export function getSearchTextFromBlock(block: BlockDataInterface): WeightedSearc
     return weightedSearchText;
 }
 
-export function mikroOrmBlockFullText(block: BlockDataInterface): WeightedFullTextValue {
+export function mikroOrmBlockFullText(block: BlockDataInterface): string | WeightedFullTextValue {
     const weightToPostgresWeight: Record<string, "A" | "B" | "C" | "D"> = {
         h1: "A",
         h2: "B",
@@ -43,8 +43,14 @@ export function mikroOrmBlockFullText(block: BlockDataInterface): WeightedFullTe
     const searchText = getSearchTextFromBlock(block);
     const ret: WeightedFullTextValue = {};
     for (const t of searchText) {
-        const pgWeight = weightToPostgresWeight[t.weight] || "D";
-        ret[pgWeight] = (ret[pgWeight] ? `${ret[pgWeight]} ` : "") + t.text;
+        if (t.text.length > 0) {
+            const pgWeight = weightToPostgresWeight[t.weight] || "D";
+            ret[pgWeight] = (ret[pgWeight] ? `${ret[pgWeight]} ` : "") + t.text;
+        }
     }
-    return ret;
+    if (Object.keys(ret).length === 0) {
+        return " "; // single space: truthy so FullTextType won't convert to null, but to_tsvector('simple', ' ') yields an empty tsvector
+    } else {
+        return ret;
+    }
 }

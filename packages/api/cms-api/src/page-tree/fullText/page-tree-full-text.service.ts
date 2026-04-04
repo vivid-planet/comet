@@ -60,4 +60,49 @@ export class PageTreeFullTextService {
         await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "PageTreeNodeFullText"`);
         await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "PageTreeDocumentFullText"`);
     }
+
+    /**
+     * for initial filling of fulltext column when column is added. Queries for NULL entries and updates them to at least empty tsvector.
+     *
+     * Not needed anymore after a single run, even nullable could be removed
+     */
+    async migrateDocuments(): Promise<void> {
+        const metadataStorage = this.entityManager.getMetadata();
+
+        for (const entity of this.documents) {
+            const metadata = metadataStorage.get(entity.name);
+            const primary = metadata.primaryKeys[0];
+
+            const fulltextColumns = metadata.props
+                .filter((prop) => prop.columnTypes && prop.columnTypes.some((ct) => ct === "tsvector"))
+                .filter((prop) => prop.nullable); //only nullable
+            if (fulltextColumns.length === 0) continue;
+
+            const pageSize = 100;
+            let updatedCount = 0;
+
+            while (true) {
+                const em = this.entityManager;
+                const where = { $or: fulltextColumns.map((col) => ({ [col.name]: null })) };
+
+                const entities = await em.find(entity, where, { limit: pageSize, offset: 0, orderBy: { [primary]: "ASC" } });
+                if (entities.length === 0) {
+                    break;
+                }
+                for (const entity of entities) {
+                    for (const col of fulltextColumns) {
+                        entity[col.name] = " "; //trigger onUpdate
+                    }
+                }
+
+                await em.flush();
+                await em.clear();
+                updatedCount += entities.length;
+            }
+
+            if (updatedCount > 0) {
+                console.log(`Migrated fulltext for ${updatedCount} ${metadata.name} entities`);
+            }
+        }
+    }
 }
