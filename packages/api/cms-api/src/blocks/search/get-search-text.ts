@@ -1,3 +1,5 @@
+import { type WeightedFullTextValue } from "@mikro-orm/postgresql";
+
 import { type BlockDataInterface } from "../block";
 import { FlatBlocks } from "../flat-blocks/flat-blocks";
 
@@ -26,4 +28,23 @@ export function getSearchTextFromBlock(block: BlockDataInterface): WeightedSearc
     });
 
     return weightedSearchText;
+}
+
+export function mikroOrmBlockFullText(block: BlockDataInterface): WeightedFullTextValue {
+    const weightToPostgresWeight: Record<string, "A" | "B" | "C" | "D"> = {
+        h1: "A",
+        h2: "B",
+        h3: "C",
+        h4: "D",
+        h5: "D",
+        h6: "D",
+        other: "D",
+    };
+    const searchText = getSearchTextFromBlock(block);
+    const ret: WeightedFullTextValue = {};
+    for (const t of searchText) {
+        const pgWeight = weightToPostgresWeight[t.weight] || "D";
+        ret[pgWeight] = (ret[pgWeight] ? `${ret[pgWeight]} ` : "") + t.text;
+    }
+    return ret;
 }
