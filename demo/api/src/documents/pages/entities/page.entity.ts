@@ -1,6 +1,7 @@
 import {
     BlockDataInterface,
     DocumentInterface,
+    mikroOrmBlockFullText,
     PageTreeNodeDocumentEntityScopeService,
     RootBlock,
     RootBlockDataScalar,
@@ -8,7 +9,7 @@ import {
     RootBlockType,
     ScopedEntity,
 } from "@comet/cms-api";
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { BaseEntity, Entity, FullTextType, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
@@ -34,15 +35,27 @@ export class Page extends BaseEntity implements DocumentInterface {
     @Field(() => RootBlockDataScalar(PageContentBlock))
     content: BlockDataInterface;
 
+    @Index({ type: "fulltext" })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => mikroOrmBlockFullText(page.content) })
+    searchableContent?: string;
+
     @RootBlock(SeoBlock)
     @Property({ type: new RootBlockType(SeoBlock) })
     @Field(() => RootBlockDataScalar(SeoBlock))
     seo: BlockDataInterface;
 
+    @Index({ type: "fulltext" })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => mikroOrmBlockFullText(page.seo) })
+    searchableSeo?: string;
+
     @RootBlock(StageBlock)
     @Property({ type: new RootBlockType(StageBlock) })
     @Field(() => RootBlockDataScalar(StageBlock))
     stage: BlockDataInterface;
+
+    @Index({ type: "fulltext" })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => mikroOrmBlockFullText(page.stage) })
+    searchableStage?: string;
 
     @Property({
         type: "timestamp with time zone",

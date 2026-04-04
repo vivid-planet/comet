@@ -1,11 +1,12 @@
 import { AnyEntity, Connection, EntityManager, type FindOptions, type ObjectQuery } from "@mikro-orm/postgresql";
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Optional } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
 import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "../common/filter/mikro-orm";
 import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
+import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
@@ -31,6 +32,7 @@ export class DependenciesService {
         private readonly discoverService: DiscoverService,
         private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
+        @Optional() private readonly pageTreeFullTextService?: PageTreeFullTextService,
     ) {
         this.connection = entityManager.getConnection();
     }
@@ -41,12 +43,14 @@ export class DependenciesService {
         await this.createBlockIndexView();
         await this.entityInfoService.createEntityInfoView();
         await this.createDependenciesView();
+        await this.pageTreeFullTextService?.createPageTreeFullTextView();
     }
 
     async dropViews(): Promise<void> {
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "block_index_dependencies"`);
         await this.connection.execute(`DROP VIEW IF EXISTS "block_index"`);
         await this.entityInfoService.dropEntityInfoView();
+        await this.pageTreeFullTextService?.dropPageTreeFullTextView();
     }
 
     private async createDependenciesView(): Promise<void> {

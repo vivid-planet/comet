@@ -43,7 +43,7 @@ export function createPageTreeResolver({
     PageTreeNodeUpdateInput?: Type<PageTreeNodeUpdateInputInterface>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
-}): Type<unknown> {
+}): { PageTreeResolver: Type<unknown>; PaginatedPageTreeNodes: Type } {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
 
     @ObjectType()
@@ -431,8 +431,8 @@ export function createPageTreeResolver({
             }
         }
 
-        return ScopedPageTreeResolver;
+        return { PageTreeResolver: ScopedPageTreeResolver, PaginatedPageTreeNodes };
     }
 
-    return PageTreeResolver;
+    return { PageTreeResolver, PaginatedPageTreeNodes };
 }
