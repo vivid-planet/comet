@@ -74,7 +74,7 @@ async function generateSchema(): Promise<void> {
     const RedirectInput = RedirectInputFactory.create({ linkBlock });
 
     const redirectsResolver = createRedirectsResolver({ Redirect: RedirectEntity, RedirectInput });
-    const pageTreeResolver = createPageTreeResolver({
+    const { PageTreeResolver } = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],
     }); // no scope
@@ -107,7 +107,7 @@ async function generateSchema(): Promise<void> {
         FileLicensesResolver,
         FileImagesResolver,
         createFoldersResolver({ Folder }),
-        pageTreeResolver,
+        PageTreeResolver,
         CronJobsResolver,
         JobsResolver,
         AuthResolver,
