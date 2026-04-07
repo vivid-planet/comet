@@ -2,13 +2,13 @@
     "compilerOptions": {
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "lib": ["ES2024"],
+        "lib": ["ES2023"],
         "outDir": "lib",
         "rootDir": "src",
         "strict": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
-        "target": "ES2024",
+        "target": "ES2023",
         "useDefineForClassFields": false
     },
     "exclude": ["node_modules", "lib"],
