@@ -1,7 +1,8 @@
-import { createMock } from "@golevelup/ts-jest";
+import { createMock } from "@golevelup/ts-vitest";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { AbstractAccessControlService } from "../access-control.service";
@@ -44,7 +45,7 @@ describe("UserPermissionsGuard", () => {
         disableCometGuards?: boolean;
         affectedScope?: AffectedScopeMeta;
     }) => {
-        reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
+        reflector.getAllAndOverride = vi.fn().mockImplementation((decorator: string) => {
             if (decorator === REQUIRED_PERMISSION_METADATA_KEY) return annotations.requiredPermission;
             if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
             if (decorator === SCOPED_ENTITY_METADATA_KEY) return annotations.scopedEntity;
@@ -71,9 +72,9 @@ describe("UserPermissionsGuard", () => {
         });
     };
     const mockAffectedEntityValues = (values: { id: number; [key: string]: unknown }[]) => {
-        orm.em.getRepository = jest
+        orm.em.getRepository = vi
             .fn()
-            .mockReturnValue({ findOneOrFail: jest.fn().mockImplementation((id: number) => values.find((v) => v.id === id)) });
+            .mockReturnValue({ findOneOrFail: vi.fn().mockImplementation((id: number) => values.find((v) => v.id === id)) });
     };
 
     beforeEach(async () => {

@@ -1,15 +1,15 @@
 import { type ArgumentsHost, BadRequestException, HttpException, InternalServerErrorException } from "@nestjs/common";
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 
 import { CometEntityNotFoundException } from "./entity-not-found.exception";
 import { ExceptionFilter } from "./exception.filter";
 import { CometValidationException } from "./validation.exception";
-import Mock = jest.Mock;
 
 const graphQLHost = {
     getType: () => "graphql",
 } as ArgumentsHost;
 
-jest.spyOn(console, "error").mockImplementation(() => {
+vi.spyOn(console, "error").mockImplementation(() => {
     // noop
 });
 
@@ -85,13 +85,13 @@ describe("ExceptionFilter", () => {
             let jsonMock: Mock;
 
             beforeEach(() => {
-                statusMock = jest.fn();
-                jsonMock = jest.fn();
+                statusMock = vi.fn();
+                jsonMock = vi.fn();
 
                 httpHost = {
                     getType: () => "http",
-                    switchToHttp: jest.fn(() => ({
-                        getResponse: jest.fn(() => ({
+                    switchToHttp: vi.fn(() => ({
+                        getResponse: vi.fn(() => ({
                             status: statusMock.mockReturnThis(),
                             json: jsonMock,
                         })),
