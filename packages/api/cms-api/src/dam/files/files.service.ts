@@ -559,12 +559,12 @@ export class FilesService {
         try {
             imageResponse = await fetch(imgUrl);
         } catch (error) {
-            console.error("Failed to calculate dominant color: imgproxy is not available", error);
+            this.logger.error("Failed to calculate dominant color: imgproxy is not available", error);
             return undefined;
         }
 
         if (!imageResponse.ok) {
-            console.error(`Failed to calculate dominant color: imgproxy returned ${imageResponse.status} ${imageResponse.statusText}`);
+            this.logger.error(`Failed to calculate dominant color: imgproxy returned ${imageResponse.status} ${imageResponse.statusText}`);
             return undefined;
         }
 
@@ -575,7 +575,7 @@ export class FilesService {
             // Parse the dominant color from the 1x1 PNG produced by imgproxy
             return await this.parsePngPixelColor(pngBuffer);
         } catch (error) {
-            console.error("Failed to calculate dominant color: could not parse imgproxy response", error);
+            this.logger.error("Failed to calculate dominant color: could not parse imgproxy response", error);
             return undefined;
         }
     }
@@ -617,7 +617,7 @@ export class FilesService {
             offset += 12 + length;
         }
 
-        console.warn("No IDAT chunk found in PNG");
+        this.logger.warn("Failed to calculate dominant color: no IDAT chunk found in PNG");
         return undefined;
     }
 
