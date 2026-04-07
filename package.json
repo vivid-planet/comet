@@ -49,10 +49,10 @@
         "browser:demo": "run-p browser:demo:api browser:demo:admin browser:demo:site browser:demo:jaeger",
         "browser:demo:api": "dotenv -- sh -c 'open-cli $API_URL/graphql'",
         "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
-        "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
+        "browser:demo:site": "dotenv -- sh -c 'open-cli http://localhost:$SITE_PORT'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
+        "setup:ci": "pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build && pnpm run create-site-configs-env && pnpm run copy-project-files",
         "install-agent-skills": "pnpm exec comet install-agent-skills --config agent-skills.json",
-        "setup:ci": "pnpm run copy-project-files",
         "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec comet download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'",
         "setup:download-mitmproxy": "dotenv -- sh -c 'pnpm exec comet download-mitmproxy -v $MITMPROXY_VERSION'"
     },
@@ -60,9 +60,9 @@
         "@changesets/cli": "^2.29.8",
         "@comet/cli": "workspace:*",
         "@comet/dev-oidc-provider": "^1.2.1",
-        "@comet/dev-process-manager": "^3.0.0",
+        "@comet/dev-process-manager": "^3.1.0",
         "@formatjs/cli": "^6.7.2",
-        "@types/node": "^24.10.9",
+        "@types/node": "^24.12.0",
         "cspell": "^9.0.0",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
@@ -80,6 +80,12 @@
         "pnpm": "10.17.0"
     },
     "pnpm": {
+        "peerDependencyRules": {
+            "allowedVersions": {
+                "react-final-form>react": "19",
+                "react-final-form-arrays>react": "19"
+            }
+        },
         "overrides": {
             "@apollo/server-plugin-landing-page-graphql-playground>@apollo/server": "^5.1.0"
         }

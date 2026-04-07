@@ -10,7 +10,6 @@ import { PlainTextTranslationDialog } from "../translator/PlainTextTranslationDi
 import { useContentTranslationService } from "../translator/useContentTranslationService";
 
 export type FinalFormInputProps = InputBaseProps & {
-    clearable?: boolean;
     disableContentTranslation?: boolean;
 };
 
@@ -21,8 +20,10 @@ export function FinalFormInput({
     input,
     innerRef,
     endAdornment,
-    clearable,
     disableContentTranslation,
+    required,
+    disabled,
+    readOnly,
     ...props
 }: FinalFormInputProps & FinalFormInputInternalProps) {
     const type = props.type ?? input.type ?? "text";
@@ -32,11 +33,16 @@ export function FinalFormInput({
     const [open, setOpen] = useState<boolean>(false);
     const [pendingTranslation, setPendingTranslation] = useState<string | undefined>(undefined);
 
+    const clearable = !required && !disabled && !readOnly;
+
     return (
         <>
             <InputBase
                 {...input}
                 {...props}
+                required={required}
+                disabled={disabled}
+                readOnly={readOnly}
                 endAdornment={
                     (endAdornment || clearable || isTranslatable) && (
                         <>

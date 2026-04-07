@@ -25,7 +25,7 @@ import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
-import { DependencyList } from "../../dependencies/DependencyList";
+import { DependentsList } from "../../dependencies/DependentsList";
 import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig } from "../config/damConfig";
@@ -283,7 +283,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
                                         path="/dependents"
                                     >
-                                        <DependencyList
+                                        <DependentsList
                                             query={damFileDependentsQuery}
                                             variables={{
                                                 id: id,

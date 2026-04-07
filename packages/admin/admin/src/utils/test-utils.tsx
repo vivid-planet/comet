@@ -1,7 +1,7 @@
 // Inspired by https://testing-library.com/docs/react-testing-library/setup/#custom-render
 import { createTheme } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { render, type RenderOptions, type RenderResult } from "@testing-library/react";
 import { enUS } from "date-fns/locale";
 import { type ReactElement, type ReactNode } from "react";

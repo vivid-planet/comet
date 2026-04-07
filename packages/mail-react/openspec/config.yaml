@@ -1,0 +1,109 @@
+schema: spec-driven
+
+context: |
+    Package: @comet/mail-react
+    Stack: TypeScript, React, MJML (via @faire/mjml-react)
+    Type: Library (published to npm)
+
+    Goal: Single-package solution for building HTML emails with React and MJML.
+    Projects install only this package (plus react) — no direct `@faire/mjml-react`.
+
+    Current surface:
+    - Re-exports all @faire/mjml-react components (prop types renamed to drop `I` prefix)
+    - Custom components wrap/extend @faire/mjml-react — additive only, no breaking changes.
+      Without new props, the component must work everywhere the base does (no new required
+      providers or context). For example, a component must not call useTheme() unconditionally
+      — use useOptionalTheme() and only require a theme when a prop needs it.
+    - When a custom component replaces a re-export, only the custom version is exported
+      (consumers never import @faire/mjml-react directly; the base must not be exposed)
+    - Block factories (BlocksBlock, ListBlock, OneOfBlock, OptionalBlock) for rendering
+      Comet CMS block data in mail templates
+    - css() tagged template literal for IDE syntax highlighting
+
+    Future direction:
+    - Some components may gain Html variants (for use inside MJML ending tags),
+      with their own API independent from the Mjml version
+
+    Styling model (default-first):
+    - Email clients that lack CSS support are typically desktop (e.g. Outlook).
+      The base/default rendering must rely solely on inline styles (MJML props)
+      and look correct without any <style> block.
+    - Media queries (via registerStyles / <mj-style>) are a progressive
+      enhancement for mobile viewports, which generally have good CSS support.
+      Use max-width media queries (theme.breakpoints.*.belowMediaQuery) to
+      target viewports below a breakpoint. Modern CSS features (flex, grid)
+      are acceptable inside these media queries.
+
+    Conventions:
+    - No `as` type assertions — use type guards
+    - ESM-only (type: module), .js extensions in imports
+    - Part of the vivid-planet/comet monorepo (packages/mail-react)
+    - Custom components live in `src/components/<concern>/` directories
+      (e.g. `src/components/section/MjmlSection.tsx`)
+    - Every custom component has a Storybook story in
+      `src/components/<concern>/__stories__/<Component>.stories.tsx`.
+      When a story demonstrates a non-section component, wrap it in
+      `<MjmlSection indent>` to show a realistic indented layout.
+    - Exported components and props have TSDoc comments
+    - Component file ordering: imports, types/props, main component, styles
+      (registerStyles calls go below the component definition)
+    - CSS class names follow BEM with camelCase blocks: block `mjmlSection`,
+      element `mjmlSection__item`, modifier `mjmlSection--indented`.
+      Every custom component applies its block class and merges any consumer-
+      provided className via clsx: `clsx("mjmlSection", className)`.
+      clsx is a dependency of this package.
+
+    Docs & Agent Skill:
+    - User-facing documentation lives at ../../docs/docs/3-features-modules/13-building-html-emails/
+      and a consumer-facing AI skill at ../../skills/dx-mail-react/ (both relative to
+      this package). Library changes that affect usage patterns, component APIs, or
+      styling conventions should consider updating both. Neither docs nor the skill
+      are part of specs.
+
+rules:
+    specs:
+        - >-
+            Scenarios are optional. Only add a scenario when it communicates
+            something the requirement text alone doesn't make obvious — edge
+            cases, negative cases, subtle interactions, or behavior that could
+            reasonably be misinterpreted. A clear, unambiguous requirement
+            needs no scenarios. Never restate the requirement with concrete
+            values just to have a scenario.
+        - >-
+            Don't split trivially similar behavior into separate requirements.
+            If multiple cases follow the same pattern, describe the general
+            rule in one requirement and mention the variations inline.
+    proposal:
+        - Changes must not break existing @faire/mjml-react component API compatibility
+        - >-
+            Keep "What Changes" at the manifest level: list affected files, exports,
+            and APIs without explaining the technical approach or rationale.
+            Implementation details and decision rationale belong in design.md.
+    design:
+        - Prefer wrapping @faire/mjml-react components over reimplementing
+        - >-
+            Do not re-describe what the proposal already covers. Reference it for
+            the list of changes and focus on decisions, alternatives considered,
+            and rationale — the "why" behind the "what".
+        - >-
+            Do not re-describe requirements from specs. Reference them and focus
+            on the technical choices made to satisfy them.
+    tasks:
+        - >-
+            When a change affects library usage (new export, changed component API,
+            bug fix, visual change), include a task to ensure a changeset covers it.
+            Check `.changeset/` at the git root (two levels up from this package)
+            for an existing changeset that describes the affected feature — if one
+            exists (e.g., from an unmerged PR), update it rather than creating a
+            new one. Only create a new changeset when no existing one covers the
+            change. No changeset is needed for internal-only changes (refactors,
+            non-exported utils). The changeset must describe the change from the
+            consumer's perspective — what is new or different in the API they use —
+            not what was built or restructured internally. If a component already
+            existed as a re-export, adding props to it is not "adding a component",
+            it is "adding props to <Component>".
+            See CONTRIBUTING.md in the repo root for changeset formatting guidelines.
+        - >-
+            When a change adds or modifies a custom component, include tasks to:
+            (1) add or update the Storybook story in the component's __stories__/ directory,
+            and (2) add or update TSDoc comments on the component and its exported props.

@@ -12,6 +12,7 @@ export default ((env) => {
         name: "Comet Site Main",
         domains: {
             main: envToDomainMap[env],
+            additional: ["test.localhost:3000"],
         },
         public: {
             scope: {
