@@ -8,6 +8,10 @@ import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
+import { promisify } from "util";
+import { inflate as inflateCallback } from "zlib";
+
+const inflate = promisify(inflateCallback);
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
@@ -582,8 +586,7 @@ export class FilesService {
             } else if (type === "PLTE") {
                 palette = data;
             } else if (type === "IDAT") {
-                const { inflateSync } = await import("zlib");
-                const decompressed = inflateSync(data);
+                const decompressed = await inflate(data);
                 // Decompressed scanline: [filter_byte, pixel_data...]
                 let r: number, g: number, b: number;
                 if (colorType === 3 && palette) {
