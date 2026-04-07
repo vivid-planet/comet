@@ -1,5 +1,17 @@
 # @comet/eslint-config
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- @comet/eslint-plugin@9.0.0-beta.2
+
 ## 9.0.0-beta.1
 
 ### Patch Changes
