@@ -557,51 +557,55 @@ export class FilesService {
             const pngBuffer = Buffer.from(arrayBuffer);
 
             // Parse the dominant color from the 1x1 PNG produced by imgproxy
-            // PNG: 8-byte signature, then chunks (4-byte length + 4-byte type + data + 4-byte CRC)
-            let offset = 8;
-            let colorType = -1;
-            let palette: Buffer | undefined;
-
-            while (offset < pngBuffer.length) {
-                const length = pngBuffer.readUInt32BE(offset);
-                const type = pngBuffer.toString("ascii", offset + 4, offset + 8);
-                const data = pngBuffer.subarray(offset + 8, offset + 8 + length);
-
-                if (type === "IHDR") {
-                    colorType = data[9];
-                } else if (type === "PLTE") {
-                    palette = data;
-                } else if (type === "IDAT") {
-                    const { inflateSync } = await import("zlib");
-                    const decompressed = inflateSync(data);
-                    // Decompressed scanline: [filter_byte, pixel_data...]
-                    let r: number, g: number, b: number;
-                    if (colorType === 3 && palette) {
-                        // Indexed color: pixel value is a palette index
-                        const index = decompressed[1] * 3;
-                        [r, g, b] = [palette[index], palette[index + 1], palette[index + 2]];
-                    } else if (colorType === 0) {
-                        // Grayscale
-                        const gray = decompressed[1];
-                        [r, g, b] = [gray, gray, gray];
-                    } else {
-                        // RGB (type 2) or RGBA (type 6): R, G, B are at bytes 1-3
-                        [r, g, b] = [decompressed[1], decompressed[2], decompressed[3]];
-                    }
-                    return `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
-                }
-
-                offset += 12 + length;
-            }
-
-            console.error("No IDAT chunk found in PNG");
-            return undefined;
+            return await this.parsePngPixelColor(pngBuffer);
         } catch (e) {
             // When imageproxy is not available it is ok.
             console.error(e);
 
             return undefined;
         }
+    }
+
+    private async parsePngPixelColor(pngBuffer: Buffer): Promise<string | undefined> {
+        // PNG: 8-byte signature, then chunks (4-byte length + 4-byte type + data + 4-byte CRC)
+        let offset = 8;
+        let colorType = -1;
+        let palette: Buffer | undefined;
+
+        while (offset < pngBuffer.length) {
+            const length = pngBuffer.readUInt32BE(offset);
+            const type = pngBuffer.toString("ascii", offset + 4, offset + 8);
+            const data = pngBuffer.subarray(offset + 8, offset + 8 + length);
+
+            if (type === "IHDR") {
+                colorType = data[9];
+            } else if (type === "PLTE") {
+                palette = data;
+            } else if (type === "IDAT") {
+                const { inflateSync } = await import("zlib");
+                const decompressed = inflateSync(data);
+                // Decompressed scanline: [filter_byte, pixel_data...]
+                let r: number, g: number, b: number;
+                if (colorType === 3 && palette) {
+                    // Indexed color: pixel value is a palette index
+                    const index = decompressed[1] * 3;
+                    [r, g, b] = [palette[index], palette[index + 1], palette[index + 2]];
+                } else if (colorType === 0) {
+                    // Grayscale
+                    const gray = decompressed[1];
+                    [r, g, b] = [gray, gray, gray];
+                } else {
+                    // RGB (type 2) or RGBA (type 6): R, G, B are at bytes 1-3
+                    [r, g, b] = [decompressed[1], decompressed[2], decompressed[3]];
+                }
+                return `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+            }
+
+            offset += 12 + length;
+        }
+
+        console.warn("No IDAT chunk found in PNG");
+        return undefined;
     }
 
     async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
