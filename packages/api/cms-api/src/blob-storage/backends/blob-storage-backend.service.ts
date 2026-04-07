@@ -23,6 +23,10 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface, O
         } else if (this.config.backend.driver === "s3") {
             const { BlobStorageS3Storage } = await import("./s3/blob-storage-s3.storage");
             this.backend = new BlobStorageS3Storage(this.config.backend.s3);
+        } else {
+            throw new Error(
+                `Unsupported blob storage driver: ${(this.config.backend as { driver: string }).driver}. Supported drivers are: file, azure, s3`,
+            );
         }
     }
 
