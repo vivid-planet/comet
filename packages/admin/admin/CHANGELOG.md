@@ -1,5 +1,23 @@
 # @comet/admin
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+- 9cb3f95: Bump MUI X Date Pickers peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+    - @comet/admin-icons@9.0.0-beta.2
+
 ## 9.0.0-beta.1
 
 ### Minor Changes

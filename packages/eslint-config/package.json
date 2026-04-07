@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "9.0.0-beta.1",
+    "version": "9.0.0-beta.2",
     "description": "A set of ESLint configurations for Comet projects",
     "repository": {
         "directory": "packages/eslint-config",
