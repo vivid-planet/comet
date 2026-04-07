@@ -555,17 +555,27 @@ export class FilesService {
             );
 
         const imgUrl = this.imgproxyService.getSignedUrl(path);
+        let imageResponse: Response;
         try {
-            const imageResponse = await fetch(imgUrl);
+            imageResponse = await fetch(imgUrl);
+        } catch (error) {
+            console.error("Failed to calculate dominant color: imgproxy is not available", error);
+            return undefined;
+        }
+
+        if (!imageResponse.ok) {
+            console.error(`Failed to calculate dominant color: imgproxy returned ${imageResponse.status} ${imageResponse.statusText}`);
+            return undefined;
+        }
+
+        try {
             const arrayBuffer = await imageResponse.arrayBuffer();
             const pngBuffer = Buffer.from(arrayBuffer);
 
             // Parse the dominant color from the 1x1 PNG produced by imgproxy
             return await this.parsePngPixelColor(pngBuffer);
-        } catch (e) {
-            // When imageproxy is not available it is ok.
-            console.error(e);
-
+        } catch (error) {
+            console.error("Failed to calculate dominant color: could not parse imgproxy response", error);
             return undefined;
         }
     }
