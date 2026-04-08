@@ -1,5 +1,207 @@
 # @comet/admin
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+- 9cb3f95: Bump MUI X Date Pickers peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+    - @comet/admin-icons@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Minor Changes
+
+- 8c2fdde: Add filtering and sorting to `DependenciesList` and `DependentsList`
+
+    Users can now filter dependencies/dependents by name, type, secondary information, and visibility, and sort by all columns. A default filter shows only visible items. The `GqlFilter` type is now exported from `@comet/admin`.
+
+    **Breaking changes:**
+
+    **`@comet/cms-api`:** `DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` changed from `string` to `StringFilter`. Update any code passing a plain string to use `{ equal: "..." }` instead.
+
+    **`@comet/cms-api`:** `DependenciesService.getDependents()` and `getDependencies()` consolidated the `filter`, `paginationArgs`, and `options` parameters into a single `options` object. If you call these methods directly, merge the arguments:
+
+    ```ts
+    // Before
+    service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+    // After
+    service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+    ```
+
+    **`@comet/cms-admin`:** The GQL queries passed to `DependenciesList` and `DependentsList` must now accept `$filter` and `$sort` variables and forward them to the `dependencies`/`dependents` field. Update your queries as follows:
+
+    ```graphql
+    # DependentsList
+    query MyDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependentFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+
+    # DependenciesList
+    query MyDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependencyFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+    ```
+
+- 8e3a074: New helper: downloadFile, to be used instead of file-saver dependency
+
+### Patch Changes
+
+- @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+- 3fda20b: Remove the "Future" prefix from date/time components as they are now considered stable
+
+    **If already in use, update the imports of these components and their types:**
+
+    DatePicker:
+    - `Future_DatePicker` -> `DatePicker`
+    - `Future_DatePickerProps` -> `DatePickerProps`
+    - `Future_DatePickerClassKey` -> `DatePickerClassKey`
+    - `Future_DatePickerField` -> `DatePickerField`
+    - `Future_DatePickerFieldProps` -> `DatePickerFieldProps`
+
+    DateRangePicker:
+    - `Future_DateRangePicker` -> `DateRangePicker`
+    - `Future_DateRangePickerProps` -> `DateRangePickerProps`
+    - `Future_DateRangePickerClassKey` -> `DateRangePickerClassKey`
+    - `Future_DateRangePickerField` -> `DateRangePickerField`
+    - `Future_DateRangePickerFieldProps` -> `DateRangePickerFieldProps`
+
+    TimePicker:
+    - `Future_TimePicker` -> `TimePicker`
+    - `Future_TimePickerProps` -> `TimePickerProps`
+    - `Future_TimePickerClassKey` -> `TimePickerClassKey`
+    - `Future_TimePickerField` -> `TimePickerField`
+    - `Future_TimePickerFieldProps` -> `TimePickerFieldProps`
+
+    DateTimePicker:
+    - `Future_DateTimePicker` -> `DateTimePicker`
+    - `Future_DateTimePickerProps` -> `DateTimePickerProps`
+    - `Future_DateTimePickerClassKey` -> `DateTimePickerClassKey`
+    - `Future_DateTimePickerField` -> `DateTimePickerField`
+    - `Future_DateTimePickerFieldProps` -> `DateTimePickerFieldProps`
+
+    **If your theme is using `defaultProps` or `styleOverrides` for any of these components, update their component-keys:**
+    - `CometAdminFutureDatePicker` -> `CometAdminDatePicker`
+    - `CometAdminFutureDateRangePicker` -> `CometAdminDateRangePicker`
+    - `CometAdminFutureTimePicker` -> `CometAdminTimePicker`
+    - `CometAdminFutureDateTimePicker` -> `CometAdminDateTimePicker`
+
+    **If you are using class-names to access these components' slots, update them:**
+    - `CometAdminFuture_DatePicker-*` -> `CometAdminDatePicker-*`
+    - `CometAdminFuture_DateRangePicker-*` -> `CometAdminDateRangePicker-*`
+    - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
+    - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
+
+- fd5c36f: Remove `clearable` prop from `Autocomplete`, `FinalFormInput`, `FinalFormNumberInput` and `FinalFormSearchTextField`
+
+    Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
+
+- 631540c: Rename `variant` prop of `Tooltip` to `color` and remove the `neutral` and `primary` options
+
+    ```diff
+     <Tooltip
+         title="Title"
+    -    variant="light"
+    +    color="light"
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+    ```diff
+     <Tooltip
+         title="Title"
+    -    variant="neutral"
+     >
+         <Info />
+     </Tooltip>
+    ```
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+    - @comet/admin-icons@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- 412ed19: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+- Updated dependencies [caceff8]
+    - @comet/admin-icons@8.20.0
+
+## 8.19.0
+
+### Minor Changes
+
+- fff2cc2: Add support for `onBlur` and `onFocus` props to `DatePicker`, `DateRangePicker`, `DateTimePicker`, `DateTimeRangePicker` and `TimePicker`
+
+    Errors and warnings are now correctly shown after validation in `DatePickerField`, `DateRangePickerField`, `DateTimePickerField`, `DateTimeRangePickerField` and `TimePickerField`.
+
+- fff2cc2: Add aria-labels to the open picker buttons of date/time picker components
+
+### Patch Changes
+
+- @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- 0ce431c: Toggle filter panel when clicking on `GridFilterButton`
+- d344f53: Remove Data Grid Pro usages to allow usage without the Pro version
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

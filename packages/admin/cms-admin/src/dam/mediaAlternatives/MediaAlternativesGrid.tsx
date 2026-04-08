@@ -6,6 +6,7 @@ import {
     FillSpace,
     GridCellContent,
     type GridColDef,
+    GridToolbarQuickFilter,
     messages,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -18,8 +19,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
+import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -202,6 +202,7 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
                 slotProps={{
                     toolbar: { handleAdd: () => editDialogApi.openAddDialog(file.id) } as MediaAlternativesGridToolbarProps,
                 }}
+                showToolbar
             />
             <EditDialog>
                 {selection.id && selection.mode ? (

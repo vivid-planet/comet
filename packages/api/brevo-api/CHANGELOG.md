@@ -1,5 +1,54 @@
 # @comet/brevo-api
 
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- ba83625: Remove `node-fetch` dependency from `EcgRtrListService` in favor of Node's native `fetch`
+- Updated dependencies [1ad7de3]
+    - @comet/cms-api@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [19a0528]
+- Updated dependencies [f162fa5]
+- Updated dependencies [3f3da52]
+- Updated dependencies [171c335]
+    - @comet/cms-api@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Patch Changes
+
+- @comet/cms-api@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [ed00704]
+    - @comet/cms-api@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [0eb28a7]
+    - @comet/cms-api@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [64b70bc]
+- Updated dependencies [e9c54bc]
+- Updated dependencies [ef98821]
+- Updated dependencies [b3bfe86]
+    - @comet/cms-api@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

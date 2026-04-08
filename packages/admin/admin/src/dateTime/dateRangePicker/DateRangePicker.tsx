@@ -2,6 +2,7 @@ import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { type DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -18,10 +19,10 @@ export type DateRange = {
     end: string | null;
 };
 
-export type Future_DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
+export type DateRangePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
-export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
-    root: ComponentType<MuiDateRangePickerProps<Date, true>>;
+export type DateRangePickerProps = ThemedComponentBaseProps<{
+    root: ComponentType<MuiDateRangePickerProps>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -41,6 +42,8 @@ export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
      * @param date - The new date range value, or `undefined` if cleared.
      */
     onChange?: (date: DateRange | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -49,7 +52,7 @@ export type Future_DateRangePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDateRangePickerProps<Date, true>, "value" | "onChange">;
+} & Omit<MuiDateRangePickerProps, "value" | "onChange">;
 
 const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | null] => {
     return [getDateValue(value?.start), getDateValue(value?.end)];
@@ -63,7 +66,7 @@ const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | n
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-daterangepicker--docs)
  * - [MUI X DateRangePicker Documentation](https://mui.com/x/react-date-pickers/date-range-picker/)
  */
-export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => {
+export const DateRangePicker = (inProps: DateRangePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,
@@ -72,12 +75,16 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
         disabled,
         value: stringDateRangeValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
         props: inProps,
         name: "CometAdminFutureDateRangePicker",
     });
+    const intl = useIntl();
+
     const [open, setOpen] = useState(false);
 
     const dateRangeValue = getDateRangeValue(stringDateRangeValue);
@@ -88,13 +95,11 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
     return (
         <Suspense>
             <LazyRoot
-                enableAccessibleFieldDOMStructure
                 disabled={disabled}
                 readOnly={readOnly}
                 open={open}
                 onOpen={() => setOpen(true)}
                 onClose={() => setOpen(false)}
-                disableOpenPicker
                 value={dateRangeValue}
                 onChange={([startDate, endDate]) => {
                     if (!startDate && !endDate) {
@@ -120,25 +125,32 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
                         return {
                             fullWidth,
                             required,
+                            onBlur,
+                            onFocus,
                             ...textFieldProps,
                             InputProps: {
-                                ...textFieldProps?.InputProps,
                                 startAdornment: (
-                                    <>
-                                        <OpenPickerAdornment
-                                            inputIsDisabled={disabled}
-                                            inputIsReadOnly={readOnly}
-                                            onClick={() => setOpen(true)}
-                                            {...slotProps?.openPickerAdornment}
-                                        >
-                                            {openPickerIcon}
-                                        </OpenPickerAdornment>
-                                        {textFieldProps?.InputProps?.startAdornment}
-                                    </>
+                                    <OpenPickerAdornment
+                                        inputIsDisabled={disabled}
+                                        inputIsReadOnly={readOnly}
+                                        onClick={() => setOpen(true)}
+                                        {...slotProps?.openPickerAdornment}
+                                        slotProps={{
+                                            ...slotProps?.openPickerAdornment?.slotProps,
+                                            openPickerButton: {
+                                                "aria-label": intl.formatMessage({
+                                                    id: "comet.dateRangePicker.openPicker",
+                                                    defaultMessage: "Open date range picker",
+                                                }),
+                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                            },
+                                        }}
+                                    >
+                                        {openPickerIcon}
+                                    </OpenPickerAdornment>
                                 ),
                                 endAdornment: (
                                     <>
-                                        {textFieldProps?.InputProps?.endAdornment}
                                         <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
                                         <ClearInputAdornment
                                             position="end"
@@ -160,8 +172,8 @@ export const Future_DateRangePicker = (inProps: Future_DateRangePickerProps) => 
 const LazyRoot = lazy(async () => {
     const module = await import("@mui/x-date-pickers-pro");
 
-    const Root = createComponentSlot(module.DateRangePicker<Date, true>)<Future_DateRangePickerClassKey>({
-        componentName: "Future_DateRangePicker",
+    const Root = createComponentSlot(module.DateRangePicker)<DateRangePickerClassKey>({
+        componentName: "DateRangePicker",
         slotName: "root",
     })(css`
         .${inputLabelClasses.root} {
@@ -174,30 +186,28 @@ const LazyRoot = lazy(async () => {
     `);
 
     return {
-        default: (props: MuiDateRangePickerProps<Date, true>) => (
-            <Root {...props} slots={{ field: module.SingleInputDateRangeField, ...props.slots }} />
-        ),
+        default: (props: MuiDateRangePickerProps) => <Root {...props} />,
     };
 });
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DateRangePickerClassKey>({
-    componentName: "Future_DateRangePicker",
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateRangePickerClassKey>({
+    componentName: "DateRangePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFutureDateRangePicker: Future_DateRangePickerProps;
+        CometAdminDateRangePicker: DateRangePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFutureDateRangePicker: Future_DateRangePickerClassKey;
+        CometAdminDateRangePicker: DateRangePickerClassKey;
     }
 
     interface Components {
-        CometAdminFutureDateRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureDateRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureDateRangePicker"];
+        CometAdminDateRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDateRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateRangePicker"];
         };
     }
 }

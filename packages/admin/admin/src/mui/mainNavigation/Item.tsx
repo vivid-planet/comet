@@ -75,7 +75,6 @@ export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
 
     return (
         <Tooltip
-            variant="light"
             placement="right"
             disableHoverListener={!showTooltip}
             disableFocusListener={!showTooltip}

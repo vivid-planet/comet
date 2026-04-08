@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
-import { Future_DatePickerField } from "../DatePickerField";
+import { DatePickerField } from "../DatePickerField";
 
-type Story = StoryObj<typeof Future_DatePickerField>;
-const config: Meta<typeof Future_DatePickerField> = {
-    component: Future_DatePickerField,
+type Story = StoryObj<typeof DatePickerField>;
+const config: Meta<typeof DatePickerField> = {
+    component: DatePickerField,
     title: "components/dateTime/DatePickerField",
 };
 
@@ -36,7 +36,7 @@ export const Default: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DatePickerField name="value" label="Date Picker" fullWidth variant="horizontal" />
+                            <DatePickerField name="value" label="Date Picker" fullWidth variant="horizontal" />
 
                             <FinalFormDebug />
                         </>
@@ -83,7 +83,7 @@ export const MinMaxDate: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DatePickerField
+                            <DatePickerField
                                 name="value"
                                 label="Date Picker with Min/Max Date"
                                 fullWidth
@@ -125,7 +125,7 @@ export const Clearable: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DatePickerField clearable name="value" label="Clearable Date Picker" fullWidth variant="horizontal" />
+                            <DatePickerField clearable name="value" label="Clearable Date Picker" fullWidth variant="horizontal" />
 
                             <FinalFormDebug />
                         </>
@@ -161,12 +161,60 @@ export const Disabled: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DatePickerField disabled name="value" label="Disabled Date Picker" fullWidth variant="horizontal" />
+                            <DatePickerField disabled name="value" label="Disabled Date Picker" fullWidth variant="horizontal" />
 
                             <FinalFormDebug />
                         </>
                     );
                 }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * Before implementing custom validation, try to disable certain values using the props provided by MUI's DatePicker, such as `shouldDisableDate`, `disableFuture`, `disablePast`.
+ *
+ * Use this when:
+ * - You need to validate the date against a custom rule, which cannot be achieved using the props provided by MUI's DatePicker
+ * - You want to provide a custom error message
+ * - You want to validate the date asynchronously
+ */
+export const CustomValidation: Story = {
+    render: () => {
+        interface FormValues {
+            value: string;
+        }
+
+        const validateIsWeekday = async (value: string | undefined) => {
+            if (!value) return undefined;
+            const day = new Date(value).getDay();
+            const isWeekday = day !== 0 && day !== 6;
+            return isWeekday ? undefined : "Please select a weekday";
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {() => (
+                    <>
+                        <DatePickerField
+                            name="value"
+                            label="Date Picker"
+                            helperText="Only weekdays are valid"
+                            fullWidth
+                            variant="horizontal"
+                            validate={validateIsWeekday}
+                        />
+
+                        <FinalFormDebug />
+                    </>
+                )}
             </FinalForm>
         );
     },

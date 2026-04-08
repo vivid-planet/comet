@@ -24,7 +24,7 @@ import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generate
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { GQLCreateCapProductFormDetailsFragment } from "./CreateCapProductForm.gql.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import { GQLCreateProductMutation } from "./CreateCapProductForm.gql.generated";
@@ -161,7 +161,7 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
                         variant="horizontal"
                     />
 
-                    <Future_DatePickerField
+                    <DatePickerField
                         variant="horizontal"
                         fullWidth
                         name="availableSince"

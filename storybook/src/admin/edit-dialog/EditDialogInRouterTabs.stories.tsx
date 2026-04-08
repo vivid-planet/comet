@@ -33,7 +33,7 @@ const products = [
 ];
 
 type DialogProps = {
-    dialogApiRef: RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi | null>;
 };
 
 const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
@@ -110,6 +110,7 @@ export const EditDialogInRouterTabs = {
                                     ),
                                 } as ToolbarProps,
                             }}
+                            showToolbar
                         />
                     </MainContent>
                 </RouterTab>

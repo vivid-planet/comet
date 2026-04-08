@@ -1,5 +1,6 @@
 import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { type ProductListBlockData } from "@src/blocks.generated";
+import type { JSX } from "react";
 import { FormattedMessage } from "react-intl";
 
 const options: { value: ProductListBlockData["types"][number]; label: JSX.Element }[] = [

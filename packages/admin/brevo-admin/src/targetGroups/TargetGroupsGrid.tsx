@@ -3,8 +3,10 @@ import {
     Button,
     CrudContextMenu,
     DataGridToolbar,
+    downloadFile,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -19,8 +21,7 @@ import {
 import { Add as AddIcon, Download, Edit } from "@comet/admin-icons";
 import { type ContentScope } from "@comet/cms-admin";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import saveAs from "file-saver";
+import { DataGrid } from "@mui/x-data-grid";
 import { type DocumentNode } from "graphql";
 import { type ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -190,9 +191,9 @@ export function TargetGroupsGrid({
         }
 
         const csvData = convertToCsv(allContacts);
-
         const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-        saveAs(blob, `${title}.csv`);
+
+        downloadFile(blob, `${title}.csv`);
     }
 
     const columns: GridColDef<GQLTargetGroupsListFragment>[] = [
@@ -275,6 +276,7 @@ export function TargetGroupsGrid({
                 slots={{
                     toolbar: TargetGroupsGridToolbar,
                 }}
+                showToolbar
             />
             <EditDialog disableCloseAfterSave componentsProps={{ dialog: { maxWidth: "sm" } }}>
                 <DialogContent>

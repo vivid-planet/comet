@@ -9,7 +9,7 @@ import {
     type IntrospectionQuery,
     type IntrospectionType,
 } from "graphql";
-import { plural, singular } from "pluralize";
+import pluralize from "pluralize";
 import { type ReactNode } from "react";
 
 import {
@@ -38,6 +38,8 @@ import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
 import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./getPropsForFilterProp";
+
+const { plural, singular } = pluralize;
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -280,7 +282,7 @@ export function generateGrid<T extends { __typename?: string }>(
         { name: "GridSlotsComponent", importPath: muiXGridVariant.package },
         { name: "GridToolbarProps", importPath: muiXGridVariant.package },
         { name: "GridColumnHeaderTitle", importPath: muiXGridVariant.package },
-        { name: "GridToolbarQuickFilter", importPath: muiXGridVariant.package },
+        { name: "GridToolbarQuickFilter", importPath: "@comet/admin" },
         { name: "GridRowOrderChangeParams", importPath: muiXGridVariant.package },
         { name: "useMemo", importPath: "react" },
     ];
@@ -825,9 +827,9 @@ export function generateGrid<T extends { __typename?: string }>(
         const intl = useIntl();
         const dataGridProps = { ...${hasPaging ? "useDataGridRemote" : "useDataGridUrlState"}(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
             config.selectionProps === "multiSelect"
-                ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+                ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true, disableRowSelectionExcludeModel: true`
                 : config.selectionProps === "singleSelect"
-                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false`
+                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableRowSelectionOnClick: false, disableRowSelectionExcludeModel: true`
                   : ``
         } };
         ${useScopeFromContext ? `const { scope } = useContentScope();` : ""}
@@ -1103,6 +1105,7 @@ export function generateGrid<T extends { __typename?: string }>(
                 }
                 ${config.density ? `density="${config.density}"` : ""}
                 ${showEditInActionsColumn ? `onRowClick={handleRowClick}` : forwardRowAction ? `onRowClick={onRowClick}` : ""}
+                showToolbar
             />
         );
     }

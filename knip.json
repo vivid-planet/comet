@@ -49,9 +49,11 @@
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts"]
+            "ignore": ["**/*.generated.ts"],
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "jsdom"]
         },
         "packages/admin/admin-generator": {
+            "entry": ["./src/index.ts", "./src/adminGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/brevo-admin": {
@@ -79,7 +81,8 @@
         },
         "packages/mail-react": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./src/**/*.generated.ts"]
+            "ignore": ["./src/**/*.generated.ts"],
+            "ignoreDependencies": ["storybook"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
@@ -103,7 +106,7 @@
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts"],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/proxy.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]

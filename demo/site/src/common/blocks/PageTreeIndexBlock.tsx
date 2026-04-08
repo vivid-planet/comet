@@ -3,6 +3,7 @@ import { type PageTreeIndexBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { createSitePath } from "@src/util/createSitePath";
 import NextLink from "next/link";
+import { type JSX } from "react";
 
 import { type LoadedData, type PageTreeNode } from "./PageTreeIndexBlock.loader";
 import styles from "./PageTreeIndexBlock.module.scss";

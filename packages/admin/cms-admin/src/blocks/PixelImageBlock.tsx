@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Crop } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
