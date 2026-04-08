@@ -123,7 +123,9 @@ export function ProductForm({ id, onCreate }: FormProps) {
         [client, id, intl, mode, onCreate, saveConflict, setError, form, initialValues],
     );
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

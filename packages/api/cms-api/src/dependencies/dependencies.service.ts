@@ -300,7 +300,9 @@ export class DependenciesService {
         const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependents")) as ObjectQuery<BlockIndexDependencyObject>;
         where.targetEntityName = entityName;
         where.targetId = target.id;
-        if (rootEntityName) where.rootEntityName = rootEntityName;
+        if (rootEntityName) {
+            where.rootEntityName = rootEntityName;
+        }
 
         const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
         if (options?.sort) {
@@ -331,7 +333,9 @@ export class DependenciesService {
         const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependencies")) as ObjectQuery<BlockIndexDependencyObject>;
         where.rootEntityName = entityName;
         where.rootId = root.id;
-        if (targetEntityName) where.targetEntityName = targetEntityName;
+        if (targetEntityName) {
+            where.targetEntityName = targetEntityName;
+        }
 
         const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
         if (options?.sort) {
@@ -350,7 +354,9 @@ export class DependenciesService {
         const remapped: Record<string, any> = {};
 
         for (const [key, value] of Object.entries(filter)) {
-            if (value === undefined) continue;
+            if (value === undefined) {
+                continue;
+            }
 
             if (key === "and" || key === "or") {
                 remapped[key] = (value as Record<string, unknown>[]).map((f) => this.remapFilter(f, context));

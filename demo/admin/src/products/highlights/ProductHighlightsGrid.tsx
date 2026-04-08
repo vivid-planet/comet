@@ -92,7 +92,9 @@ export function ProductHighlightsGrid() {
         },
     ];
     const { data, loading, error } = useQuery<GQLProductHighlightsGridQuery, GQLProductHighlightsGridQueryVariables>(productHighlightsQuery);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.productHighlights ?? [];
     return (
         <DataGridPro

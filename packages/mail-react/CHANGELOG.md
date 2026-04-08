@@ -1,5 +1,155 @@
 # @comet/mail-react
 
+## 9.0.0-beta.2
+
+### Minor Changes
+
+- 1852cfc: Add `HtmlInlineLink` component
+
+    Renders an `<a>` tag that inherits text styles from the surrounding `HtmlText` or `MjmlText` component, working around Outlook Desktop's built-in "Hyperlink" character style that overrides natural CSS inheritance with blue color and Times New Roman.
+
+    ```tsx
+    <MjmlText>
+        Visit our <HtmlInlineLink href="https://example.com">website</HtmlInlineLink> for details.
+    </MjmlText>
+    ```
+
+- 09e9d03: Add `HtmlText` component for rendering themed text inside MJML ending tags or outside of the MJML context
+
+    ```tsx
+    import { HtmlText } from "@comet/mail-react";
+
+    const MyText = () => (
+        <MjmlRaw>
+            <table>
+                <tr>
+                    <HtmlText variant="heading" bottomSpacing>
+                        Heading inside raw HTML
+                    </HtmlText>
+                </tr>
+            </table>
+        </MjmlRaw>
+    );
+    ```
+
+    Supports an optional `element` prop to render as any HTML element instead of the default `<td>`.
+
+    ```tsx
+    <HtmlText element="div">Rendered as a div</HtmlText>
+    <HtmlText element="a" href="/link">Rendered as an anchor</HtmlText>
+    ```
+
+- 1fd6ed9: `MjmlText` now supports `variant` and `bottomSpacing` props, configured through `theme.text`
+    - `theme.text` defines static base styles, e.g., the global default font family
+    - `theme.text.variants` overrides the base styles, optionally, with responsive style objects where needed
+    - The `bottomSpacing` prop on `MjmlText` enables spacing below the text, as defined by the `theme.text.bottomSpacing` or `theme.text.variants.bottomSpacing` theme values
+    - `MjmlMailRoot` applies the `fontFamily` from `theme.text` as the mail-wide default
+
+    **Simple example theme**
+
+    ```ts
+    import { createTheme } from "@comet/mail-react";
+
+    const theme = createTheme({
+        text: {
+            fontFamily: "Georgia, serif",
+            fontSize: "16px",
+            lineHeight: "24px",
+            bottomSpacing: "12px",
+        },
+    });
+    ```
+
+    Usage:
+
+    ```tsx
+    import { MjmlMailRoot, MjmlText } from "@comet/mail-react";
+
+    <MjmlMailRoot theme={theme}>
+        <MjmlSection>
+            <MjmlColumn>
+                <MjmlText bottomSpacing>Hello</MjmlText>
+                <MjmlText>This is a small paragraph.</MjmlText>
+            </MjmlColumn>
+        </MjmlSection>
+    </MjmlMailRoot>;
+    ```
+
+    **Example theme with custom variants**
+
+    ```ts
+    import { createTheme } from "@comet/mail-react";
+
+    const theme = createTheme({
+        text: {
+            fontFamily: "Georgia, serif",
+            fontSize: "16px",
+            lineHeight: "24px",
+            defaultVariant: "body",
+            variants: {
+                heading: {
+                    fontSize: { default: "28px", mobile: "22px" },
+                    fontWeight: 700,
+                },
+                body: {
+                    fontSize: "16px",
+                },
+            },
+        },
+    });
+
+    declare module "@comet/mail-react" {
+        interface TextVariants {
+            heading: true;
+            body: true;
+        }
+    }
+    ```
+
+    Usage:
+
+    ```tsx
+    import { MjmlMailRoot, MjmlText } from "@comet/mail-react";
+
+    <MjmlMailRoot theme={theme}>
+        <MjmlSection>
+            <MjmlColumn>
+                <MjmlText variant="heading" bottomSpacing>
+                    Title
+                </MjmlText>
+                <MjmlText bottomSpacing>Body copy uses defaultVariant, which is "body" in this theme.</MjmlText>
+                <MjmlText>This is another paragraph, using the "body" variant.</MjmlText>
+            </MjmlColumn>
+        </MjmlSection>
+    </MjmlMailRoot>;
+    ```
+
+- a0fef0b: Add theme background colors
+
+    Add a `colors` key to the theme with `background.body` and `background.content` defaults. `MjmlMailRoot` now applies `theme.colors.background.body` as the body background color, and `MjmlSection` applies `theme.colors.background.content` as the default section background when a theme is present. An explicit `backgroundColor` prop on `MjmlSection` always takes precedence.
+
+    **Example**
+
+    ```tsx
+    const theme = createTheme({
+        colors: {
+            background: {
+                body: "#EAEAEA",
+                content: "#F8F8F8",
+            },
+        },
+    });
+
+    <MjmlMailRoot theme={theme}>
+        <MjmlSection>{/* Section gets #F8F8F8 background from theme */}</MjmlSection>
+        <MjmlSection backgroundColor="#FF0000">{/* Explicit prop overrides theme default */}</MjmlSection>
+    </MjmlMailRoot>;
+    ```
+
+### Patch Changes
+
+- ffe85a7: Add support for React 17
+
 ## 9.0.0-beta.1
 
 ### Minor Changes

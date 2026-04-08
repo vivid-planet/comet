@@ -67,7 +67,9 @@ describe("nested two level", () => {
     it("input dto should reference the correct import", async () => {
         const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
         const fooInputDto = out.find((f) => f.name == "dto/foo.input.ts");
-        if (!fooInputDto) throw new Error();
+        if (!fooInputDto) {
+            throw new Error();
+        }
 
         expect(fooInputDto.content).toContain(`bars: FooNestedBarInput[];`);
         expect(fooInputDto.content).toContain(`import { FooNestedBarInput } from "./foo-nested-bar.input";`);

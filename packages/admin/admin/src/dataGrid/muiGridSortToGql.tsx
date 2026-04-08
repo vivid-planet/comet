@@ -8,7 +8,9 @@ type SortEntry = {
 };
 
 export function muiGridSortToGql(sortModel?: GridSortModel, columns?: GridColDef[]) {
-    if (!sortModel || sortModel.length === 0) return undefined;
+    if (!sortModel || sortModel.length === 0) {
+        return undefined;
+    }
 
     const sortFieldMapping: Record<string, string[]> = {};
 

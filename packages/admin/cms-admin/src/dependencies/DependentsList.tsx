@@ -210,7 +210,9 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
         },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rowCount = useBufferedRowCount(data?.item.dependents?.totalCount);
     const rows =

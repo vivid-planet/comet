@@ -1,5 +1,29 @@
 # @comet/brevo-admin
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+- 9cb3f95: Bump MUI X Date Pickers peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [25f7342]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-date-time@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+    - @comet/cms-admin@9.0.0-beta.2
+
 ## 9.0.0-beta.1
 
 ### Patch Changes

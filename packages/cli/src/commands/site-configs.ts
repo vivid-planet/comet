@@ -83,7 +83,9 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
 
 export const resolveOpReferences = (input: string): string => {
     const opRefs = input.match(/\{\{ op:\/\/[^ }]+ \}\}/g);
-    if (!opRefs) return input;
+    if (!opRefs) {
+        return input;
+    }
 
     try {
         execSync("op --version", { stdio: "ignore" });

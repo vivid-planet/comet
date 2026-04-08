@@ -11,12 +11,8 @@ export { createSitePreviewAuthService } from "./auth/services/site-preview.auth-
 export { createStaticUserAuthService } from "./auth/services/static-authed-user.auth-service";
 export { createAuthGuardProviders } from "./auth/util/auth-guard.providers";
 export { AuthServiceInterface } from "./auth/util/auth-service.interface";
-export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
-export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
 export { BlobStorageBackendService } from "./blob-storage/backends/blob-storage-backend.service";
-export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage-file.config";
-export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
 export { ScaledImagesCacheService } from "./blob-storage/cache/scaled-images-cache.service";
