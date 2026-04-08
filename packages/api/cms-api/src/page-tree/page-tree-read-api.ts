@@ -310,6 +310,10 @@ export function createReadApi(
         },
 
         async getNodeByPath(path, options = {}) {
+            if (path === "/home") {
+                return null;
+            }
+
             if (path === "/") {
                 const nodes = await queryNodes(options.scope, {
                     slug: "home",
