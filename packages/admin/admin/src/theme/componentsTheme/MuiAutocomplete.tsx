@@ -26,6 +26,11 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
                 paddingRight: 26,
             },
         },
+        tag: ({ ownerState }) => ({
+            ...(ownerState.multiple && {
+                maxWidth: "calc(100% - 68px)",
+            }),
+        }),
         popupIndicator: {
             "&:hover": {
                 backgroundColor: "transparent",
