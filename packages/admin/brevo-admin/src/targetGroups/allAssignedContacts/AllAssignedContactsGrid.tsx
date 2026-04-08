@@ -102,7 +102,9 @@ export function AllAssignedContactsGrid({ id, scope, brevoId }: AllAssignedConta
 
     const allAssignedContactsRowCount = useBufferedRowCount(allAssignedContactsData?.brevoContacts.totalCount);
 
-    if (allAssignedContactsError) throw allAssignedContactsError;
+    if (allAssignedContactsError) {
+        throw allAssignedContactsError;
+    }
 
     return (
         <DataGrid

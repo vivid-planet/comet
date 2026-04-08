@@ -98,8 +98,12 @@ export function generateFormLayout({
         const name = String(config.name);
 
         const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
-        if (!introspectionFieldType) throw new Error(`field ${name} in gql introspection type ${gqlType} not found`);
-        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
+        if (!introspectionFieldType) {
+            throw new Error(`field ${name} in gql introspection type ${gqlType} not found`);
+        }
+        if (introspectionFieldType.kind !== "OBJECT") {
+            throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
+        }
 
         const generatedFields = generateFields({
             gqlIntrospection,

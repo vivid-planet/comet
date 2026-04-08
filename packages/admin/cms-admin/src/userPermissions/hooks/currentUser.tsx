@@ -72,7 +72,9 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
         );
     }
 
-    if (!data) return <Loading behavior="fillPageHeight" />;
+    if (!data) {
+        return <Loading behavior="fillPageHeight" />;
+    }
 
     const context: CurrentUserContext = {
         currentUser: {
@@ -93,7 +95,9 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: Permission, contentScope?: ContentScope) => {
-                if (user.email === undefined) return false;
+                if (user.email === undefined) {
+                    return false;
+                }
                 return user.permissions.some(
                     (p) =>
                         p.permission === permission &&
@@ -107,13 +111,17 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
 
 export function useCurrentUser(): CurrentUserInterface {
     const ret = useContext(CurrentUserContext);
-    if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
+    if (!ret || !ret.currentUser) {
+        throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
+    }
     return ret.currentUser;
 }
 
 export function useUserPermissionCheck(): (permission: Permission) => boolean {
     const context = useContext(CurrentUserContext);
-    if (!context) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
+    if (!context) {
+        throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
+    }
     const contentScope = useContentScope();
     return (permission) => context.isAllowed(context.currentUser, permission, contentScope.scope);
 }

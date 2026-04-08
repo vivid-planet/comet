@@ -212,7 +212,9 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
         },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rowCount = useBufferedRowCount(data?.item.dependencies?.totalCount);
     const rows =

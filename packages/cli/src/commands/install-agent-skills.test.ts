@@ -25,12 +25,16 @@ function mockFilesystem(skillMap: Record<string, string[]>, existingDests: strin
         return { isDirectory: () => isDir } as fs.Stats;
     });
     vi.mocked(fs.lstatSync).mockImplementation((p) => {
-        if (existingDests.includes(String(p))) return {} as fs.Stats;
+        if (existingDests.includes(String(p))) {
+            return {} as fs.Stats;
+        }
         throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
     });
     vi.mocked(fs.readFileSync as (path: fs.PathLike | number, options: BufferEncoding) => string).mockImplementation((p) => {
         const content = skillMdContents[String(p)];
-        if (content !== undefined) return content;
+        if (content !== undefined) {
+            return content;
+        }
         throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
     });
 }

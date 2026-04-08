@@ -35,7 +35,9 @@ export function EmailCampaignView({ id, EmailCampaignContentBlock }: EmailCampai
         variables: { id },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
