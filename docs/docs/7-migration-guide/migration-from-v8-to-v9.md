@@ -301,7 +301,7 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` an
 +       "@mui/x-data-grid-pro": "^8.27.5",
 -       "@mui/x-date-pickers": "^7.29.4",
 -       "@mui/x-date-pickers-pro": "^7.29.4",
--       "@mui/x-license": "^7.29.1",
+-       "@mui/x-license-pro": "^7.29.1",
 +       "@mui/x-date-pickers": "^8.27.2",
 +       "@mui/x-date-pickers-pro": "^8.27.2",
 +       "@mui/x-license": "^8.26.0",
@@ -515,7 +515,16 @@ import { CometConfigProvider } from "@comet/cms-admin";
     // ...rest of config
 >
     {children}
-</CometConfigProvider>
+</CometConfigProvider>;
+```
+
+### Update `LicenseInfo` import
+
+In MUI X v8, `LicenseInfo` is now exported from `@mui/x-license`:
+
+```diff
+-import { LicenseInfo } from "@mui/x-license-pro";
++import { LicenseInfo } from "@mui/x-license";
 ```
 
 ### Upgrade MUI X Date Pickers to v8
