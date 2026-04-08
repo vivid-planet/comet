@@ -98,6 +98,7 @@ const config = [
             "no-unused-vars": "off",
             "prefer-template": "error",
             "no-console": ["error", { allow: ["warn", "error"] }],
+            curly: "error",
             "no-return-await": "error",
             "no-restricted-imports": [
                 "error",
