@@ -26,19 +26,25 @@ interface GenerateResponsiveTextCssOptions {
 /** Generates responsive CSS media queries for text variant overrides. */
 export function generateResponsiveTextCss(theme: Theme, options: GenerateResponsiveTextCssOptions): string {
     const { variants } = theme.text;
-    if (!variants) return css``;
+    if (!variants) {
+        return css``;
+    }
 
     const cssChunks: string[] = [];
 
     for (const [variantName, variantStyles] of Object.entries(variants)) {
-        if (!variantStyles) continue;
+        if (!variantStyles) {
+            continue;
+        }
 
         const styleOverrides = new Map<keyof ThemeBreakpoints, string[]>();
         const spacingOverrides = new Map<keyof ThemeBreakpoints, string[]>();
 
         for (const [themeKey, cssProperty] of textStyleCssProperties) {
             const value = variantStyles[themeKey];
-            if (value === undefined) continue;
+            if (value === undefined) {
+                continue;
+            }
 
             for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(value)) {
                 const declarations = styleOverrides.get(breakpointKey) ?? [];
@@ -58,7 +64,9 @@ export function generateResponsiveTextCss(theme: Theme, options: GenerateRespons
 
         for (const [breakpointKey, declarations] of styleOverrides) {
             const breakpoint = theme.breakpoints[breakpointKey];
-            if (!breakpoint) continue;
+            if (!breakpoint) {
+                continue;
+            }
 
             cssChunks.push(css`
                 ${breakpoint.belowMediaQuery} {
@@ -71,7 +79,9 @@ export function generateResponsiveTextCss(theme: Theme, options: GenerateRespons
 
         for (const [breakpointKey, declarations] of spacingOverrides) {
             const breakpoint = theme.breakpoints[breakpointKey];
-            if (!breakpoint) continue;
+            if (!breakpoint) {
+                continue;
+            }
 
             cssChunks.push(css`
                 ${breakpoint.belowMediaQuery} {

@@ -29,7 +29,9 @@ export function getDefaultFromResponsiveValue<T = number>(value: ResponsiveValue
  * theme properties.
  */
 export function getDefaultOrUndefined<T>(value: ResponsiveValue<T> | undefined): T | undefined {
-    if (value === undefined) return undefined;
+    if (value === undefined) {
+        return undefined;
+    }
     return getDefaultFromResponsiveValue(value);
 }
 

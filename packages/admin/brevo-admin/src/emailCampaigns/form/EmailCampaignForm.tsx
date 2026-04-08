@@ -139,7 +139,9 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
         saveConflict,
         mode,
         validate: async () => {
-            if (!state) return false;
+            if (!state) {
+                return false;
+            }
 
             const validateBlocks = await parallelAsyncEvery(
                 Object.entries(rootBlocks) as Array<[keyof typeof rootBlocks, BlockInterface]>,
@@ -164,7 +166,9 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
             throw new Error("Conflicts detected");
         }
 
-        if (!output) throw new Error("Output is required");
+        if (!output) {
+            throw new Error("Output is required");
+        }
 
         if (mode === "edit") {
             if (!id) {
@@ -199,7 +203,9 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
         return null;
     }
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

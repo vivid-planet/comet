@@ -188,7 +188,9 @@ export class FoldersService {
 
     async updateById(id: string, data: UpdateFolderInput): Promise<FolderInterface> {
         const folder = await this.findOneById(id);
-        if (!folder) throw new CometEntityNotFoundException();
+        if (!folder) {
+            throw new CometEntityNotFoundException();
+        }
         return this.updateByEntity(folder, data);
     }
 

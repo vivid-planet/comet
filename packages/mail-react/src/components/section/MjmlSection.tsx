@@ -49,12 +49,16 @@ function getIndentProps(theme: Theme | null): Pick<IMjmlSectionProps, "paddingLe
 
 registerStyles((theme) => {
     const overrides = getResponsiveOverrides(theme.sizes.contentIndentation);
-    if (overrides.length === 0) return css``;
+    if (overrides.length === 0) {
+        return css``;
+    }
 
     return overrides
         .map((override) => {
             const breakpoint = theme.breakpoints[override.breakpointKey];
-            if (!breakpoint) return "";
+            if (!breakpoint) {
+                return "";
+            }
             return css`
                 ${breakpoint.belowMediaQuery} {
                     .mjmlSection--indented > table > tbody > tr > td {

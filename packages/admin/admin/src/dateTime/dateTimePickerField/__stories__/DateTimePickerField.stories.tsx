@@ -183,7 +183,9 @@ export const CustomValidation: Story = {
         }
 
         const validateIsWeekday = async (value: Date | undefined) => {
-            if (!value) return undefined;
+            if (!value) {
+                return undefined;
+            }
             const day = value.getDay();
             const isWeekday = day !== 0 && day !== 6;
             return isWeekday ? undefined : "Please select a weekday";

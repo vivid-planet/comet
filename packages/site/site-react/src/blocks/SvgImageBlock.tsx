@@ -19,7 +19,9 @@ export const SvgImageBlock = withPreview(
         height = "auto",
         ...restProps
     }: SvgImageBlockProps & Omit<HTMLAttributes<HTMLImageElement>, "width" | "height">) => {
-        if (!damFile) return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;
+        if (!damFile) {
+            return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;
+        }
         return (
             <img
                 src={damFile.fileUrl}

@@ -5,7 +5,9 @@ export const getRecursiveChildrenOfPreviewElement = (rootElement: Element): Elem
     const previewElementChildNodes: Element[] = [];
 
     rootElement.childNodes.forEach((childNode) => {
-        if (!(childNode instanceof Element)) return;
+        if (!(childNode instanceof Element)) {
+            return;
+        }
 
         if (childNode.hasAttribute(BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE)) {
             previewElementChildNodes.push(...getRecursiveChildrenOfPreviewElement(childNode));

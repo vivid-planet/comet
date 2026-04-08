@@ -24,7 +24,9 @@ describe("GenerateCrudResolveIdInteger", () => {
         const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithIntegerId"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "test-entity-with-integer-id.resolver.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
         const source = parseSource(file.content);
 
         const classes = source.getClasses();
