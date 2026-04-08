@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "8.20.3",
+    "version": "8.20.4",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",

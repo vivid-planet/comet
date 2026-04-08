@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.20.4
+
+### Patch Changes
+
+- 1e140d6: Return null in `getNodeByPath` when path is `/home` to prevent the home page from being returned for that path (results in 404)
+
 ## 8.20.3
 
 ## 8.20.2
