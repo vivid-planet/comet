@@ -62,6 +62,14 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                     />,
                 );
 
+                const isHomePage = page.slug === "home";
+
+                // Pass 1: Collect all translatable texts
+                const collectedTexts: string[] = isHomePage ? [] : [page.name];
+
+                let documentInput: Record<string, unknown> | undefined;
+                let documentId: string | undefined;
+
                 if (hasTranslatableContent) {
                     const { data: pageData } = await apolloClient.query({
                         query: documentType.getQuery,
@@ -70,85 +78,63 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                     });
 
                     const document = pageData?.page?.document;
-                    if (!document) {
-                        continue;
+                    if (document) {
+                        const { __typename: _, id, updatedAt: _updatedAt, ...input } = document as GQLDocument;
+                        documentInput = input;
+                        documentId = id;
+
+                        await documentType.translateContent(documentInput, async (text) => {
+                            collectedTexts.push(text);
+                            return text;
+                        });
                     }
+                }
 
-                    const { __typename: _, id, updatedAt: _updatedAt, ...documentInput } = document as GQLDocument;
+                if (collectedTexts.length === 0) {
+                    continue;
+                }
 
-                    const isHomePage = page.slug === "home";
+                // Pass 2: Batch translate all texts together
+                const translatedTexts = await effectiveBatchTranslate(collectedTexts);
 
-                    // Pass 1: Collect all translatable texts
-                    const collectedTexts: string[] = isHomePage ? [] : [page.name];
-                    await documentType.translateContent(documentInput, async (text) => {
-                        collectedTexts.push(text);
-                        return text;
+                // Pass 3: Apply translations
+                let translatedContentTexts: string[];
+                if (isHomePage) {
+                    translatedContentTexts = translatedTexts;
+                } else {
+                    const [translatedName, ...rest] = translatedTexts;
+                    translatedContentTexts = rest;
+
+                    const translatedSlug = transformToSlug(translatedName, scope.language);
+                    const available = await findAvailableSlug(apolloClient, {
+                        slug: translatedSlug,
+                        name: translatedName,
+                        parentId: page.parentId,
+                        scope,
                     });
+                    await apolloClient.mutate({
+                        mutation: updatePageTreeNodeMutation,
+                        variables: {
+                            id: page.id,
+                            input: { name: available.name, slug: available.slug },
+                        },
+                    });
+                }
 
-                    if (collectedTexts.length === 0) {
-                        continue;
-                    }
-
-                    // Pass 2: Batch translate all texts together
-                    const translatedTexts = await effectiveBatchTranslate(collectedTexts);
-
-                    // Pass 3: Apply translations
+                if (hasTranslatableContent && documentInput && documentId) {
                     let textIndex = 0;
-                    let translatedContentTexts: string[];
-                    if (isHomePage) {
-                        translatedContentTexts = translatedTexts;
-                    } else {
-                        const [translatedName, ...rest] = translatedTexts;
-                        translatedContentTexts = rest;
-
-                        const translatedSlug = transformToSlug(translatedName, scope.language);
-                        const available = await findAvailableSlug(apolloClient, {
-                            slug: translatedSlug,
-                            name: translatedName,
-                            parentId: page.parentId,
-                            scope,
-                        });
-                        await apolloClient.mutate({
-                            mutation: updatePageTreeNodeMutation,
-                            variables: {
-                                id: page.id,
-                                input: { name: available.name, slug: available.slug },
-                            },
-                        });
-                    }
-
                     const translatedOutput = await documentType.translateContent(documentInput, async () => {
                         return translatedContentTexts[textIndex++];
                     });
 
-                    // Save translated document content
                     await apolloClient.mutate({
                         mutation: documentType.updateMutation,
                         variables: {
-                            pageId: id,
+                            pageId: documentId,
                             input: translatedOutput,
                             attachedPageTreeNodeId: page.id,
                         },
                     });
-                } else {
-                    // Only translate page name and slug (skip for home page)
-                    if (page.slug !== "home") {
-                        const [translatedName] = await effectiveBatchTranslate([page.name]);
-                        const translatedSlug = transformToSlug(translatedName, scope.language);
-                        const available = await findAvailableSlug(apolloClient, {
-                            slug: translatedSlug,
-                            name: translatedName,
-                            parentId: page.parentId,
-                            scope,
-                        });
-                        await apolloClient.mutate({
-                            mutation: updatePageTreeNodeMutation,
-                            variables: {
-                                id: page.id,
-                                input: { name: available.name, slug: available.slug },
-                            },
-                        });
-                    }
                 }
             }
 
