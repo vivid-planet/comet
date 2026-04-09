@@ -58,8 +58,6 @@ When the translation provider is enabled, text fields automatically show a trans
 
 `FinalFormInput` fields of type `"text"` (the default) automatically support translation. A translate icon button appears in the input's end adornment.
 
-If `showApplyTranslationDialog` is enabled on the provider, a dialog shows the original and translated text side by side, allowing the editor to review and edit the translation before applying it.
-
 ### Rich text editor
 
 The rich text editor (`Rte` from `@comet/admin-rte`) also supports translation out of the box. A translate button appears in the toolbar. The editor translates the HTML content while preserving formatting and entities.
@@ -86,7 +84,7 @@ Some fields should not be translated (e.g., URLs, identifiers, technical values)
 
 ## Block-level translation
 
-Built-in blocks like `RichTextBlock` and composite text fields (`createCompositeBlockTextField`) implement `translateContent` out of the box. Container blocks (`BlocksBlock`, `ColumnsBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) recursively translate their children.
+Built-in blocks like `RichTextBlock` and composite text fields (`createCompositeBlockTextField`) implement `translateContent` out of the box. Block factories (`BlocksBlock`, `ColumnsBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) recursively translate their children.
 
 ### Custom blocks
 
@@ -97,11 +95,8 @@ const MyBlock: BlockInterface = {
     // ...
     translateContent: async (state, translate) => {
         const translatedTitle = state.title ? await translate(state.title) : state.title;
-        return {
-            ...state,
-            title: translatedTitle,
-            // Non-translatable fields are returned unchanged
-        };
+        // Non-translatable fields are returned unchanged
+        return { ...state, title: translatedTitle };
     },
 };
 ```
@@ -112,7 +107,7 @@ The `translate` function passed to `translateContent` handles a single text stri
 
 To enable translation for a document, add translation methods to its definition using `createDocumentTranslationMethods`. This enables the "Translate" action in the document's toolbar menu, which translates all translatable blocks within the document at once.
 
-### 1) Define root blocks and add translation methods
+### 1) Implement the `TranslatableInterface`
 
 ```tsx title="Page.tsx"
 import {
@@ -160,38 +155,28 @@ export const EditPage = ({ id }: Props) => {
     const { pageState, translateContent, pageSaveButton, /* ... */ } = usePage({ pageId: id });
 
     return (
-        <CrudMoreActionsMenu
-            overallActions={[
-                <TranslateContentMenuItem
-                    key="translate"
-                    translateContent={translateContent}
-                    disabled={!pageState?.document}
-                />,
-            ]}
-        />
+        <Toolbar>
+            {/* ... */}
+            <ToolbarActions>
+                <CrudMoreActionsMenu
+                    overallActions={[
+                        <TranslateContentMenuItem
+                            key="translate"
+                            translateContent={translateContent}
+                            disabled={!pageState?.document}
+                        />,
+                    ]}
+                />
+                {pageSaveButton}
+            </ToolbarActions>
+        </Toolbar>
     );
 };
 ```
 
-The `translateContent` function returned by `usePage` handles the two-pass translation process:
-
-1. **Collect**: Walks all blocks to gather translatable texts
-2. **Batch translate**: Sends all texts to the translation service at once
-3. **Apply**: Distributes translated texts back to the blocks and updates the page state
-
 ## Page tree translation
 
-The page tree supports translating one or multiple pages at once, including their names, slugs, and document content.
-
-When translating pages:
-
-- Page names are translated and slugs are regenerated from the translated name
-- The home page slug is preserved (not translated)
-- Archived pages are skipped
-- A progress dialog shows the current translation status
-- If a translated slug already exists, a unique slug is generated automatically
-
-The page tree translation is built in and works automatically when the translation provider is enabled and the document types implement the `TranslatableInterface`.
+The page tree supports translating one or multiple pages at once, including their names, slugs, and document content. Slugs are automatically regenerated from the translated page name. The page tree translation works automatically when the translation provider is enabled and the document types implement the `TranslatableInterface`.
 
 ## Azure AI Translator
 
