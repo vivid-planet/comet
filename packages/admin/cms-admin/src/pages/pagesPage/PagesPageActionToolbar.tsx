@@ -53,7 +53,7 @@ export const PagesPageActionToolbar = ({
     const selectedPages = treeMapToArray(selectedTree) as PageTreePage[];
     const {
         dialogs: translateDialogs,
-        translating: translateLoading,
+        translating,
         enabled: translateEnabled,
         openDialog: openTranslateDialog,
     } = useTranslatePagesAction({ pages: selectedPages, documentTypes });
@@ -218,8 +218,8 @@ export const PagesPageActionToolbar = ({
                     {translateEnabled && (
                         <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.translate" defaultMessage="Translate" />}>
                             <span>
-                                <IconButton disabled={selectedTree.size === 0 || translateLoading} onClick={openTranslateDialog} size="large">
-                                    {!translateLoading ? <Translate /> : <ThreeDotSaving />}
+                                <IconButton disabled={selectedTree.size === 0 || translating} onClick={openTranslateDialog} size="large">
+                                    {!translating ? <Translate /> : <ThreeDotSaving />}
                                 </IconButton>
                             </span>
                         </Tooltip>
