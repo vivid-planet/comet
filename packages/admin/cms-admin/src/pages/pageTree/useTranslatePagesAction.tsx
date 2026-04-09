@@ -78,8 +78,10 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
 
                     const { __typename: _, id, updatedAt: _updatedAt, ...documentInput } = document as GQLDocument;
 
-                    // Pass 1: Collect all translatable texts (page name + document content)
-                    const collectedTexts: string[] = [page.name];
+                    const isHomePage = page.slug === "home";
+
+                    // Pass 1: Collect all translatable texts
+                    const collectedTexts: string[] = isHomePage ? [] : [page.name];
                     await documentType.translateContent(documentInput, async (text) => {
                         collectedTexts.push(text);
                         return text;
@@ -87,22 +89,28 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
 
                     // Pass 2: Batch translate all texts together
                     const translatedTexts = await effectiveBatchTranslate(collectedTexts);
-                    const [translatedName, ...translatedContentTexts] = translatedTexts;
 
-                    // Pass 3: Apply translations to document content
+                    // Pass 3: Apply translations
                     let textIndex = 0;
+                    let translatedContentTexts: string[];
+                    if (isHomePage) {
+                        translatedContentTexts = translatedTexts;
+                    } else {
+                        const [translatedName, ...rest] = translatedTexts;
+                        translatedContentTexts = rest;
+
+                        const translatedSlug = transformToSlug(translatedName, scope.language);
+                        await apolloClient.mutate({
+                            mutation: updatePageTreeNodeMutation,
+                            variables: {
+                                id: page.id,
+                                input: { name: translatedName, slug: translatedSlug },
+                            },
+                        });
+                    }
+
                     const translatedOutput = await documentType.translateContent(documentInput, async () => {
                         return translatedContentTexts[textIndex++];
-                    });
-
-                    // Update the page tree node name and slug
-                    const translatedSlug = transformToSlug(translatedName, scope.language);
-                    await apolloClient.mutate({
-                        mutation: updatePageTreeNodeMutation,
-                        variables: {
-                            id: page.id,
-                            input: { name: translatedName, slug: translatedSlug },
-                        },
                     });
 
                     // Save translated document content
@@ -115,16 +123,18 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                         },
                     });
                 } else {
-                    // Only translate page name and slug
-                    const [translatedName] = await effectiveBatchTranslate([page.name]);
-                    const translatedSlug = transformToSlug(translatedName, scope.language);
-                    await apolloClient.mutate({
-                        mutation: updatePageTreeNodeMutation,
-                        variables: {
-                            id: page.id,
-                            input: { name: translatedName, slug: translatedSlug },
-                        },
-                    });
+                    // Only translate page name and slug (skip for home page)
+                    if (page.slug !== "home") {
+                        const [translatedName] = await effectiveBatchTranslate([page.name]);
+                        const translatedSlug = transformToSlug(translatedName, scope.language);
+                        await apolloClient.mutate({
+                            mutation: updatePageTreeNodeMutation,
+                            variables: {
+                                id: page.id,
+                                input: { name: translatedName, slug: translatedSlug },
+                            },
+                        });
+                    }
                 }
             }
 
