@@ -81,7 +81,9 @@ export function ProductForm({ id, onCreate }: FormProps) {
 
     const onSubmit = useCallback(
         async ({ ...formValues }: FormValues) => {
-            if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+            if (await saveConflict.checkForConflicts()) {
+                throw new Error("Conflicts detected");
+            }
 
             const output: GQLProductInput = {
                 ...formValues,
@@ -90,7 +92,9 @@ export function ProductForm({ id, onCreate }: FormProps) {
             };
 
             if (mode === "edit") {
-                if (!id) throw new Error();
+                if (!id) {
+                    throw new Error();
+                }
                 await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                     mutation: updateProductMutation,
                     variables: { id, input: output },
