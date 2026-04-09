@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Button, Dialog, RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
+import { Button, Dialog, messages, RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
 import { DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { type ReactNode, useState } from "react";
@@ -205,7 +205,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setConfirmDialogOpen(false)} variant="textDark">
-                        <FormattedMessage id="comet.translateContent.confirmDialog.cancel" defaultMessage="Cancel" />
+                        <FormattedMessage {...messages.cancel} />
                     </Button>
                     <Button onClick={handleTranslate} variant="primary">
                         <FormattedMessage id="comet.translateContent.confirmDialog.confirm" defaultMessage="Translate" />
