@@ -9,8 +9,8 @@ import { type DocumentInterface, type GQLDocument } from "../../documents/types"
 import { type TranslatableInterface } from "../../translation/TranslatableInterface";
 import { findAvailableSlug } from "./findAvailableSlug";
 import { transformToSlug } from "./transformToSlug";
-import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { type PageTreePage } from "./usePageTree";
+import { useProgressDialog } from "./useProgressDialog";
 
 function isTranslatable(
     documentType: DocumentInterface,
