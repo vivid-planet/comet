@@ -27,6 +27,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
     menuItem: ReactNode;
     dialogs: ReactNode;
     translating: boolean;
+    enabled: boolean;
     openDialog: () => void;
 } {
     const apolloClient = useApolloClient();
@@ -215,7 +216,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
         </>
     );
 
-    return { menuItem, dialogs, translating, openDialog: () => setConfirmDialogOpen(true) };
+    return { menuItem, dialogs, translating, enabled, openDialog: () => setConfirmDialogOpen(true) };
 }
 
 const updatePageTreeNodeMutation = gql`

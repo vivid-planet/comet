@@ -54,6 +54,7 @@ export const PagesPageActionToolbar = ({
     const {
         dialogs: translateDialogs,
         translating: translateLoading,
+        enabled: translateEnabled,
         openDialog: openTranslateDialog,
     } = useTranslatePagesAction({ pages: selectedPages, documentTypes });
     const [publishLoading, setPublishLoading] = useState(false);
@@ -214,13 +215,15 @@ export const PagesPageActionToolbar = ({
                             </IconButton>
                         </span>
                     </Tooltip>
-                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.translate" defaultMessage="Translate" />}>
-                        <span>
-                            <IconButton disabled={selectedTree.size === 0 || translateLoading} onClick={openTranslateDialog} size="large">
-                                {!translateLoading ? <Translate /> : <ThreeDotSaving />}
-                            </IconButton>
-                        </span>
-                    </Tooltip>
+                    {translateEnabled && (
+                        <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.translate" defaultMessage="Translate" />}>
+                            <span>
+                                <IconButton disabled={selectedTree.size === 0 || translateLoading} onClick={openTranslateDialog} size="large">
+                                    {!translateLoading ? <Translate /> : <ThreeDotSaving />}
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                    )}
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
