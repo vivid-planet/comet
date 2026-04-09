@@ -62,7 +62,9 @@ export function RHFForm<TFieldValues extends FieldValues = FieldValues, TContext
     ...form
 }: RHFFormProps<TFieldValues, TContext, TTransformedValues>) {
     const saveBoundaryApi = useSaveBoundaryApi();
-    if (!saveBoundaryApi) throw new Error("RHFForm must be used inside a SaveBoundary");
+    if (!saveBoundaryApi) {
+        throw new Error("RHFForm must be used inside a SaveBoundary");
+    }
 
     return (
         <FormProvider {...form}>
