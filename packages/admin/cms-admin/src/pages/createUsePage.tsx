@@ -423,7 +423,9 @@ export const createUsePage: CreateUsePage =
 
             const translateContent = useCallback(
                 async (batchTranslate: (texts: string[]) => Promise<string[]>) => {
-                    if (!pageState?.document) return;
+                    if (!pageState?.document) {
+                        return;
+                    }
 
                     // Pass 1: Collect all translatable texts
                     const collectedTexts: string[] = [];
@@ -440,7 +442,9 @@ export const createUsePage: CreateUsePage =
                         }),
                     );
 
-                    if (collectedTexts.length === 0) return;
+                    if (collectedTexts.length === 0) {
+                        return;
+                    }
 
                     // Pass 2: Batch translate
                     const translatedTexts = await batchTranslate(collectedTexts);
@@ -460,7 +464,9 @@ export const createUsePage: CreateUsePage =
                     );
 
                     setPageState((s) => {
-                        if (!s?.document) return s;
+                        if (!s?.document) {
+                            return s;
+                        }
                         return {
                             ...s,
                             document: {

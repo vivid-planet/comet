@@ -267,7 +267,9 @@ export const createRichTextBlock = (
         },
         translateContent: async function (state, translate) {
             const content = state.editorState.getCurrentContent();
-            if (!content.hasText()) return state;
+            if (!content.hasText()) {
+                return state;
+            }
 
             const { html, entities } = stateToHtml({ editorState: state.editorState, options: rteOptions });
             const translatedHtml = await translate(html);
