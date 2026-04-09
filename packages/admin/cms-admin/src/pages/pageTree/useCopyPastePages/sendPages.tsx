@@ -10,6 +10,7 @@ import { type ContentScope } from "../../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { type GQLDamFile } from "../../../graphql.generated";
 import { type PageTreeConfig } from "../../pageTreeConfig";
+import { findAvailableSlug } from "../findAvailableSlug";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { type PageClipboard, type PagesClipboard } from "../useCopyPastePages";
 import { createInboxFolder } from "./createInboxFolder";
@@ -20,15 +21,7 @@ import {
     type GQLCreatePageNodeMutationVariables,
     type GQLFindCopiesOfFileInScopeQuery,
     type GQLFindCopiesOfFileInScopeQueryVariables,
-    type GQLSlugAvailableQuery,
-    type GQLSlugAvailableQueryVariables,
 } from "./sendPages.generated";
-
-const slugAvailableQuery = gql`
-    query SlugAvailable($parentId: ID, $slug: String!, $scope: PageTreeNodeScopeInput!) {
-        pageTreeNodeSlugAvailable(parentId: $parentId, slug: $slug, scope: $scope)
-    }
-`;
 
 const createPageNodeMutation = gql`
     mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
@@ -175,30 +168,12 @@ export async function sendPages(
         }
 
         // 2a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
-        let slug: string = node.slug;
-        let name: string = node.name;
-        let duplicateNumber = 1;
-        let slugAvailable = false;
-
-        do {
-            const { data } = await client.query<GQLSlugAvailableQuery, GQLSlugAvailableQueryVariables>({
-                query: slugAvailableQuery,
-                variables: {
-                    parentId: newParentId,
-                    slug,
-                    scope: targetContentScope,
-                },
-                fetchPolicy: "network-only",
-                context: LocalErrorScopeApolloContext,
-            });
-
-            slugAvailable = data.pageTreeNodeSlugAvailable === "Available";
-            if (!slugAvailable) {
-                ++duplicateNumber;
-                name = `${node.name} ${duplicateNumber}`;
-                slug = `${node.slug}-${duplicateNumber}`;
-            }
-        } while (!slugAvailable);
+        const { slug, name } = await findAvailableSlug(client, {
+            slug: node.slug,
+            name: node.name,
+            parentId: newParentId,
+            scope: targetContentScope,
+        });
 
         // 2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
         const { data } = await client.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({

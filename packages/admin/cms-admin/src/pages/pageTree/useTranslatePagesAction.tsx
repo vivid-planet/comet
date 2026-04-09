@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { useContentScope } from "../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument } from "../../documents/types";
 import { type TranslatableInterface } from "../../translation/TranslatableInterface";
+import { findAvailableSlug } from "./findAvailableSlug";
 import { transformToSlug } from "./transformToSlug";
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { type PageTreePage } from "./usePageTree";
@@ -101,11 +102,17 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                         translatedContentTexts = rest;
 
                         const translatedSlug = transformToSlug(translatedName, scope.language);
+                        const available = await findAvailableSlug(apolloClient, {
+                            slug: translatedSlug,
+                            name: translatedName,
+                            parentId: page.parentId,
+                            scope,
+                        });
                         await apolloClient.mutate({
                             mutation: updatePageTreeNodeMutation,
                             variables: {
                                 id: page.id,
-                                input: { name: translatedName, slug: translatedSlug },
+                                input: { name: available.name, slug: available.slug },
                             },
                         });
                     }
@@ -128,11 +135,17 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                     if (page.slug !== "home") {
                         const [translatedName] = await effectiveBatchTranslate([page.name]);
                         const translatedSlug = transformToSlug(translatedName, scope.language);
+                        const available = await findAvailableSlug(apolloClient, {
+                            slug: translatedSlug,
+                            name: translatedName,
+                            parentId: page.parentId,
+                            scope,
+                        });
                         await apolloClient.mutate({
                             mutation: updatePageTreeNodeMutation,
                             variables: {
                                 id: page.id,
-                                input: { name: translatedName, slug: translatedSlug },
+                                input: { name: available.name, slug: available.slug },
                             },
                         });
                     }
