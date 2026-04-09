@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { type IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
-import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings } from "@comet/admin-icons";
+import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings, Translate } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import { type PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -33,7 +33,15 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const documentType = documentTypes[page.documentType];
-    const { menuItem: translateMenuItem, dialogs: translateDialogs } = useTranslatePagesAction({ pages: [page], documentTypes });
+    const {
+        dialogs: translateDialogs,
+        enabled: translateEnabled,
+        translating,
+        openDialog: openTranslateDialog,
+    } = useTranslatePagesAction({
+        pages: [page],
+        documentTypes,
+    });
     const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
     const handleDeleteClick = async () => {
@@ -120,7 +128,11 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <MovePageMenuItem key="movePage" page={page} />,
                         <Divider key="divider2" />,
                         <CopyPasteMenuItem key="copyPaste" page={page} />,
-                        translateMenuItem,
+                        translateEnabled && (
+                            <RowActionsItem key="translate" icon={<Translate />} disabled={translating} onClick={openTranslateDialog}>
+                                <FormattedMessage id="comet.translateContent.translate" defaultMessage="Translate" />
+                            </RowActionsItem>
+                        ),
                         <Divider key="divider3" />,
                     ]}
                     <RowActionsItem

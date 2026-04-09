@@ -1,6 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Button, Dialog, messages, RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
-import { Translate } from "@comet/admin-icons";
+import { Button, Dialog, messages, useContentTranslationService, useErrorDialog } from "@comet/admin";
 import { DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -24,7 +23,6 @@ interface Props {
 }
 
 export function useTranslatePagesAction({ pages, documentTypes }: Props): {
-    menuItem: ReactNode;
     dialogs: ReactNode;
     translating: boolean;
     enabled: boolean;
@@ -41,8 +39,6 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
     });
 
     const eligiblePages = pages.filter((page) => page.visibility !== "Archived");
-
-    const isDisabled = !enabled || eligiblePages.length === 0;
 
     const handleTranslate = async () => {
         setConfirmDialogOpen(false);
@@ -164,12 +160,6 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
 
     const isSinglePage = eligiblePages.length === 1;
 
-    const menuItem = (
-        <RowActionsItem key="translate" icon={<Translate />} disabled={isDisabled || translating} onClick={() => setConfirmDialogOpen(true)}>
-            <FormattedMessage id="comet.translateContent.translate" defaultMessage="Translate" />
-        </RowActionsItem>
-    );
-
     const dialogs = (
         <>
             <Dialog
@@ -216,7 +206,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
         </>
     );
 
-    return { menuItem, dialogs, translating, enabled, openDialog: () => setConfirmDialogOpen(true) };
+    return { dialogs, translating, enabled, openDialog: () => setConfirmDialogOpen(true) };
 }
 
 const updatePageTreeNodeMutation = gql`
