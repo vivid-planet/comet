@@ -16,83 +16,51 @@ Translation happens at three levels:
 
 ## Setup
 
-### 1) API: Register the translation module
+### 1) API: Provide translation queries
 
-Register a translation module in your `AppModule`. COMET provides `AzureAiTranslatorModule` as a ready-to-use implementation (see [Azure AI Translator](#azure-ai-translator) below), but you can also provide your own GraphQL queries.
-
-```ts title="app.module.ts"
-import { AzureAiTranslatorModule } from "@comet/cms-api";
-
-@Module({
-    imports: [
-        // ...
-        AzureAiTranslatorModule.register({
-            endpoint: config.azureAiTranslator.endpoint,
-            key: config.azureAiTranslator.key,
-            region: config.azureAiTranslator.region,
-        }),
-    ],
-})
-export class AppModule {}
-```
+The admin application needs GraphQL queries for translating text. You can either implement your own or use the built-in [Azure AI Translator](#azure-ai-translator) module.
 
 :::info
 
-The translation API queries require the `"translation"` permission. Make sure to assign this permission to users who should be able to translate content.
+The built-in Azure AI Translator queries require the `"translation"` permission. Make sure to assign this permission to users who should be able to translate content.
 
 :::
 
 ### 2) Admin: Add the translation provider
 
-Wrap your application with a translation provider. When using Azure AI Translator, use the `AzureAiTranslatorProvider` from `@comet/cms-admin`:
+Wrap your application with the `ContentTranslationServiceProvider` from `@comet/admin`:
 
 ```tsx title="App.tsx"
-import { AzureAiTranslatorProvider } from "@comet/cms-admin";
+import { ContentTranslationServiceProvider } from "@comet/admin";
 
 function App() {
     return (
-        <ContentScopeProvider>
-            {({ match }) => (
-                <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
-                    {/* Your app routes */}
-                </AzureAiTranslatorProvider>
-            )}
-        </ContentScopeProvider>
+        <ContentTranslationServiceProvider
+            enabled={true}
+            showApplyTranslationDialog
+            translate={async (text) => {
+                // Call your translation API
+                return translatedText;
+            }}
+            batchTranslate={async (texts) => {
+                // Optional: translate multiple texts at once for better performance
+                return translatedTexts;
+            }}
+        >
+            {children}
+        </ContentTranslationServiceProvider>
     );
 }
 ```
 
 **Props:**
 
-| Prop                         | Type      | Default | Description                                                        |
-| ---------------------------- | --------- | ------- | ------------------------------------------------------------------ |
-| `enabled`                    | `boolean` | `false` | Enables the translation feature                                    |
-| `showApplyTranslationDialog` | `boolean` | `false` | Shows a confirmation dialog with the translation before applying it |
-
-The `AzureAiTranslatorProvider` automatically determines the target language from the current content scope and checks the user's `"translation"` permission.
-
-#### Custom translation provider
-
-If you want to use a different translation service, use the `ContentTranslationServiceProvider` from `@comet/admin` directly:
-
-```tsx title="App.tsx"
-import { ContentTranslationServiceProvider } from "@comet/admin";
-
-<ContentTranslationServiceProvider
-    enabled={true}
-    showApplyTranslationDialog
-    translate={async (text) => {
-        // Call your translation API
-        return translatedText;
-    }}
-    batchTranslate={async (texts) => {
-        // Optional: translate multiple texts at once for better performance
-        return translatedTexts;
-    }}
->
-    {children}
-</ContentTranslationServiceProvider>;
-```
+| Prop                         | Type                                         | Default | Description                                                         |
+| ---------------------------- | -------------------------------------------- | ------- | ------------------------------------------------------------------- |
+| `enabled`                    | `boolean`                                    |         | Enables the translation feature                                     |
+| `translate`                  | `(text: string) => Promise<string>`          |         | Translates a single text                                            |
+| `batchTranslate`             | `(texts: string[]) => Promise<string[]>`     |         | Translates multiple texts at once (falls back to sequential `translate` calls if not provided) |
+| `showApplyTranslationDialog` | `boolean`                                    |         | Shows a confirmation dialog with the translation before applying it |
 
 ## Field-level translation
 
@@ -239,7 +207,7 @@ The `translate` function passed to `translateContent` handles a single text stri
 
 ## Azure AI Translator
 
-COMET provides a built-in integration with [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) as a concrete translation service implementation.
+COMET provides a built-in integration with [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) as a ready-to-use translation service implementation.
 
 ### API setup
 
@@ -290,14 +258,22 @@ Both queries accept HTML content (`textType: "html"`) so formatting is preserved
 
 ### Admin setup
 
-Use the `AzureAiTranslatorProvider` from `@comet/cms-admin`:
+Use the `AzureAiTranslatorProvider` from `@comet/cms-admin` instead of configuring `ContentTranslationServiceProvider` manually. It handles the GraphQL queries and permission checks automatically:
 
 ```tsx title="App.tsx"
 import { AzureAiTranslatorProvider } from "@comet/cms-admin";
 
-<AzureAiTranslatorProvider enabled showApplyTranslationDialog>
-    {children}
-</AzureAiTranslatorProvider>;
+function App() {
+    return (
+        <ContentScopeProvider>
+            {({ match }) => (
+                <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+                    {/* Your app routes */}
+                </AzureAiTranslatorProvider>
+            )}
+        </ContentScopeProvider>
+    );
+}
 ```
 
 The provider:
