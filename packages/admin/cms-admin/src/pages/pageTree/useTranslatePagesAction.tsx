@@ -106,19 +106,22 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                     translatedContentTexts = rest;
 
                     const translatedSlug = transformToSlug(translatedName, scope.language);
-                    const available = await findAvailableSlug(apolloClient, {
-                        slug: translatedSlug,
-                        name: translatedName,
-                        parentId: page.parentId,
-                        scope,
-                    });
-                    await apolloClient.mutate({
-                        mutation: updatePageTreeNodeMutation,
-                        variables: {
-                            id: page.id,
-                            input: { name: available.name, slug: available.slug },
-                        },
-                    });
+
+                    if (translatedName !== page.name || translatedSlug !== page.slug) {
+                        const available = await findAvailableSlug(apolloClient, {
+                            slug: translatedSlug,
+                            name: translatedName,
+                            parentId: page.parentId,
+                            scope,
+                        });
+                        await apolloClient.mutate({
+                            mutation: updatePageTreeNodeMutation,
+                            variables: {
+                                id: page.id,
+                                input: { name: available.name, slug: available.slug },
+                            },
+                        });
+                    }
                 }
 
                 if (hasTranslatableContent && documentInput && documentId) {
