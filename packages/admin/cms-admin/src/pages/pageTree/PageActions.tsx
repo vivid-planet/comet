@@ -130,7 +130,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <CopyPasteMenuItem key="copyPaste" page={page} />,
                         translateEnabled && (
                             <RowActionsItem key="translate" icon={<Translate />} disabled={translating} onClick={openTranslateDialog}>
-                                <FormattedMessage id="comet.translateContent.translate" defaultMessage="Translate" />
+                                <FormattedMessage id="comet.translator.translate" defaultMessage="Translate" />
                             </RowActionsItem>
                         ),
                         <Divider key="divider3" />,

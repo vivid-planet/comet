@@ -27,10 +27,10 @@ export const TranslateContentMenuItem = ({ translateContent, disabled }: Props) 
             await translateContent(effectiveBatchTranslate);
         } catch (error) {
             errorDialog?.showError({
-                title: <FormattedMessage id="comet.translateContent.error.title" defaultMessage="Translation failed" />,
+                title: <FormattedMessage id="comet.translator.error.title" defaultMessage="Translation failed" />,
                 userMessage: (
                     <FormattedMessage
-                        id="comet.translateContent.error.message"
+                        id="comet.translator.error.message"
                         defaultMessage="An error occurred while translating the content. Please try again."
                     />
                 ),
@@ -44,7 +44,7 @@ export const TranslateContentMenuItem = ({ translateContent, disabled }: Props) 
     return (
         <CrudMoreActionsMenuItem disabled={disabled || translating} onClick={handleTranslate}>
             <ListItemIcon>{translating ? <CircularProgress size={16} /> : <Translate />}</ListItemIcon>
-            <ListItemText primary={<FormattedMessage id="comet.translateContent.translate" defaultMessage="Translate" />} />
+            <ListItemText primary={<FormattedMessage id="comet.translator.translate" defaultMessage="Translate" />} />
         </CrudMoreActionsMenuItem>
     );
 };
