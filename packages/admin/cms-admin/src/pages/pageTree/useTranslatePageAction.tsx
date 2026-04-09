@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client";
-import { RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
+import { Button, Dialog, RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
-import { CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { CircularProgress, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type DocumentInterface, type GQLDocument } from "../../documents/types";
@@ -20,19 +20,21 @@ interface Props {
     documentType: DocumentInterface;
 }
 
-export function TranslatePageMenuItem({ page, documentType }: Props) {
+export function useTranslatePageAction({ page, documentType }: Props): { menuItem: ReactNode; dialog: ReactNode } {
     const apolloClient = useApolloClient();
     const { enabled, translate, batchTranslate } = useContentTranslationService();
     const errorDialog = useErrorDialog();
     const [translating, setTranslating] = useState(false);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
     if (!enabled || !isTranslatable(documentType)) {
-        return null;
+        return { menuItem: null, dialog: null };
     }
 
     const translatable = documentType;
 
     const handleTranslate = async () => {
+        setConfirmDialogOpen(false);
         setTranslating(true);
 
         const effectiveBatchTranslate = batchTranslate ?? (async (texts: string[]) => Promise.all(texts.map(translate)));
@@ -96,9 +98,41 @@ export function TranslatePageMenuItem({ page, documentType }: Props) {
         }
     };
 
-    return (
-        <RowActionsItem icon={translating ? <CircularProgress size={16} /> : <Translate />} disabled={translating} onClick={handleTranslate}>
+    const menuItem = (
+        <RowActionsItem
+            key="translate"
+            icon={translating ? <CircularProgress size={16} /> : <Translate />}
+            disabled={translating}
+            onClick={() => setConfirmDialogOpen(true)}
+        >
             <FormattedMessage id="comet.translateContent.translate" defaultMessage="Translate" />
         </RowActionsItem>
     );
+
+    const dialog = (
+        <Dialog
+            open={confirmDialogOpen}
+            onClose={() => setConfirmDialogOpen(false)}
+            title={<FormattedMessage id="comet.translateContent.confirmDialog.title" defaultMessage="Translate page content?" />}
+        >
+            <DialogContent>
+                <DialogContentText>
+                    <FormattedMessage
+                        id="comet.translateContent.confirmDialog.message"
+                        defaultMessage="All text content of this page will be translated. This action cannot be reverted."
+                    />
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setConfirmDialogOpen(false)} variant="textDark">
+                    <FormattedMessage id="comet.translateContent.confirmDialog.cancel" defaultMessage="Cancel" />
+                </Button>
+                <Button onClick={handleTranslate} variant="primary">
+                    <FormattedMessage id="comet.translateContent.confirmDialog.confirm" defaultMessage="Translate" />
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+
+    return { menuItem, dialog };
 }

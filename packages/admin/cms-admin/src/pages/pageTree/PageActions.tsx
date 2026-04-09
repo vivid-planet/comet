@@ -13,10 +13,10 @@ import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
 import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
-import { TranslatePageMenuItem } from "./TranslatePageMenuItem";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
 import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
+import { useTranslatePageAction } from "./useTranslatePageAction";
 
 interface Props {
     page: PageTreePage;
@@ -33,6 +33,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const documentType = documentTypes[page.documentType];
+    const { menuItem: translateMenuItem, dialog: translateDialog } = useTranslatePageAction({ page, documentType });
     const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
     const handleDeleteClick = async () => {
@@ -119,7 +120,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <MovePageMenuItem key="movePage" page={page} />,
                         <Divider key="divider2" />,
                         <CopyPasteMenuItem key="copyPaste" page={page} />,
-                        <TranslatePageMenuItem key="translate" page={page} documentType={documentType} />,
+                        translateMenuItem,
                         <Divider key="divider3" />,
                     ]}
                     <RowActionsItem
@@ -133,6 +134,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </RowActionsItem>
                 </RowActionsMenu>
             </RowActionsMenu>
+            {translateDialog}
             <PageDeleteDialog
                 dialogOpen={deleteDialogOpen}
                 handleCancelClick={() => {
