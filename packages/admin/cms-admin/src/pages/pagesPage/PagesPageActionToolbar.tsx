@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { Button, Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Archive, Copy, Delete, Offline, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
+import { Archive, Copy, Delete, Offline, Online, Paste, ThreeDotSaving, Translate, TreeCollapseAll } from "@comet/admin-icons";
 import { Checkbox, Grid, IconButton, useTheme } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -9,8 +9,10 @@ import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeleteP
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
 import { traverse, type TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { type GQLPageTreePageFragment, type PageTreeSelectionState } from "../pageTree/usePageTree";
+import { type GQLPageTreePageFragment, type PageTreePage, type PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
+import { useTranslatePagesAction } from "../pageTree/useTranslatePagesAction";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
 import { PageCanNotDeleteDialog } from "./PageCanNotDeleteDialog";
@@ -47,6 +49,13 @@ export const PagesPageActionToolbar = ({
     const [confirmAction, setConfirmAction] = useState<ConfirmActionState | null>(null);
 
     const { tree } = usePageTreeContext();
+    const { documentTypes } = usePageTreeConfig();
+    const selectedPages = treeMapToArray(selectedTree) as PageTreePage[];
+    const {
+        dialogs: translateDialogs,
+        translating: translateLoading,
+        openDialog: openTranslateDialog,
+    } = useTranslatePagesAction({ pages: selectedPages, documentTypes });
     const [publishLoading, setPublishLoading] = useState(false);
     const [unpublishLoading, setUnpublishLoading] = useState(false);
     const [archiveLoading, setArchiveLoading] = useState(false);
@@ -205,6 +214,13 @@ export const PagesPageActionToolbar = ({
                             </IconButton>
                         </span>
                     </Tooltip>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.translate" defaultMessage="Translate" />}>
+                        <span>
+                            <IconButton disabled={selectedTree.size === 0 || translateLoading} onClick={openTranslateDialog} size="large">
+                                {!translateLoading ? <Translate /> : <ThreeDotSaving />}
+                            </IconButton>
+                        </span>
+                    </Tooltip>
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
@@ -239,6 +255,7 @@ export const PagesPageActionToolbar = ({
                     </Button>
                 </Grid>
             </Root>
+            {translateDialogs}
             <ConfirmPageActionDialog
                 open={confirmAction !== null}
                 action={confirmAction?.action}

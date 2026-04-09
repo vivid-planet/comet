@@ -1,0 +1,206 @@
+import { gql, useApolloClient } from "@apollo/client";
+import { Button, Dialog, RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
+import { Translate } from "@comet/admin-icons";
+import { DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import { type ReactNode, useState } from "react";
+import { FormattedMessage } from "react-intl";
+
+import { useContentScope } from "../../contentScope/Provider";
+import { type DocumentInterface, type GQLDocument } from "../../documents/types";
+import { type TranslatableInterface } from "../../translation/TranslatableInterface";
+import { transformToSlug } from "./transformToSlug";
+import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
+import { type PageTreePage } from "./usePageTree";
+
+function isTranslatable(
+    documentType: DocumentInterface,
+): documentType is DocumentInterface & TranslatableInterface & Required<Pick<DocumentInterface, "getQuery" | "updateMutation">> {
+    return "translateContent" in documentType && !!documentType.getQuery && !!documentType.updateMutation;
+}
+
+interface Props {
+    pages: PageTreePage[];
+    documentTypes: Record<string, DocumentInterface>;
+}
+
+export function useTranslatePagesAction({ pages, documentTypes }: Props): {
+    menuItem: ReactNode;
+    dialogs: ReactNode;
+    translating: boolean;
+    openDialog: () => void;
+} {
+    const apolloClient = useApolloClient();
+    const { enabled, translate, batchTranslate } = useContentTranslationService();
+    const { scope } = useContentScope();
+    const errorDialog = useErrorDialog();
+    const [translating, setTranslating] = useState(false);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const progress = useProgressDialog({
+        title: <FormattedMessage id="comet.translateContent.progress.title" defaultMessage="Translating pages" />,
+    });
+
+    const translatablePages = pages.filter((page) => {
+        const documentType = documentTypes[page.documentType];
+        return documentType && isTranslatable(documentType) && page.visibility !== "Archived";
+    });
+
+    const isDisabled = !enabled || translatablePages.length === 0;
+
+    const handleTranslate = async () => {
+        setConfirmDialogOpen(false);
+        setTranslating(true);
+
+        const effectiveBatchTranslate = batchTranslate ?? (async (texts: string[]) => Promise.all(texts.map(translate)));
+
+        try {
+            for (let i = 0; i < translatablePages.length; i++) {
+                const page = translatablePages[i];
+                progress.updateProgress(
+                    (i / translatablePages.length) * 100,
+                    <FormattedMessage
+                        id="comet.translateContent.progress.message"
+                        defaultMessage="Translating {current} of {total}: {name}"
+                        values={{ current: i + 1, total: translatablePages.length, name: page.name }}
+                    />,
+                );
+
+                const documentType = documentTypes[page.documentType] as DocumentInterface &
+                    TranslatableInterface &
+                    Required<Pick<DocumentInterface, "getQuery" | "updateMutation">>;
+
+                const { data: pageData } = await apolloClient.query({
+                    query: documentType.getQuery,
+                    variables: { id: page.id },
+                    fetchPolicy: "network-only",
+                });
+
+                const document = pageData?.page?.document;
+                if (!document) {
+                    continue;
+                }
+
+                const { __typename: _, id, updatedAt: _updatedAt, ...documentInput } = document as GQLDocument;
+
+                // Pass 1: Collect all translatable texts (page name + document content)
+                const collectedTexts: string[] = [page.name];
+                await documentType.translateContent(documentInput, async (text) => {
+                    collectedTexts.push(text);
+                    return text;
+                });
+
+                // Pass 2: Batch translate all texts together
+                const translatedTexts = await effectiveBatchTranslate(collectedTexts);
+                const [translatedName, ...translatedContentTexts] = translatedTexts;
+
+                // Pass 3: Apply translations to document content
+                let textIndex = 0;
+                const translatedOutput = await documentType.translateContent(documentInput, async () => {
+                    return translatedContentTexts[textIndex++];
+                });
+
+                // Update the page tree node name and slug
+                const translatedSlug = transformToSlug(translatedName, scope.language);
+                await apolloClient.mutate({
+                    mutation: updatePageTreeNodeMutation,
+                    variables: {
+                        id: page.id,
+                        input: { name: translatedName, slug: translatedSlug },
+                    },
+                });
+
+                // Save translated document content
+                await apolloClient.mutate({
+                    mutation: documentType.updateMutation,
+                    variables: {
+                        pageId: id,
+                        input: translatedOutput,
+                        attachedPageTreeNodeId: page.id,
+                    },
+                });
+            }
+
+            progress.updateProgress(undefined);
+            await apolloClient.refetchQueries({ include: ["Pages"] });
+        } catch (error) {
+            progress.updateProgress(undefined);
+            errorDialog?.showError({
+                title: <FormattedMessage id="comet.translateContent.error.title" defaultMessage="Translation failed" />,
+                userMessage: (
+                    <FormattedMessage
+                        id="comet.translateContent.error.message"
+                        defaultMessage="An error occurred while translating the content. Please try again."
+                    />
+                ),
+                error: error instanceof Error ? error.message : "Translation failed",
+            });
+        } finally {
+            setTranslating(false);
+        }
+    };
+
+    const isSinglePage = translatablePages.length === 1;
+
+    const menuItem = (
+        <RowActionsItem key="translate" icon={<Translate />} disabled={isDisabled || translating} onClick={() => setConfirmDialogOpen(true)}>
+            <FormattedMessage id="comet.translateContent.translate" defaultMessage="Translate" />
+        </RowActionsItem>
+    );
+
+    const dialogs = (
+        <>
+            <Dialog
+                open={confirmDialogOpen}
+                onClose={() => setConfirmDialogOpen(false)}
+                title={
+                    isSinglePage ? (
+                        <FormattedMessage id="comet.translateContent.confirmDialog.title" defaultMessage="Translate page content?" />
+                    ) : (
+                        <FormattedMessage
+                            id="comet.translateContent.confirmDialog.titleMultiple"
+                            defaultMessage="Translate {count} pages?"
+                            values={{ count: translatablePages.length }}
+                        />
+                    )
+                }
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        {isSinglePage ? (
+                            <FormattedMessage
+                                id="comet.translateContent.confirmDialog.message"
+                                defaultMessage="All text content of this page will be translated. This action cannot be reverted."
+                            />
+                        ) : (
+                            <FormattedMessage
+                                id="comet.translateContent.confirmDialog.messageMultiple"
+                                defaultMessage="All text content of {count} pages will be translated. This action cannot be reverted."
+                                values={{ count: translatablePages.length }}
+                            />
+                        )}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmDialogOpen(false)} variant="textDark">
+                        <FormattedMessage id="comet.translateContent.confirmDialog.cancel" defaultMessage="Cancel" />
+                    </Button>
+                    <Button onClick={handleTranslate} variant="primary">
+                        <FormattedMessage id="comet.translateContent.confirmDialog.confirm" defaultMessage="Translate" />
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            {progress.dialog}
+        </>
+    );
+
+    return { menuItem, dialogs, translating, openDialog: () => setConfirmDialogOpen(true) };
+}
+
+const updatePageTreeNodeMutation = gql`
+    mutation TranslatePageTreeNode($id: ID!, $input: PageTreeNodeUpdateInput!) {
+        updatePageTreeNode(id: $id, input: $input) {
+            id
+            name
+            slug
+        }
+    }
+`;

@@ -16,7 +16,7 @@ import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
 import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
-import { useTranslatePageAction } from "./useTranslatePageAction";
+import { useTranslatePagesAction } from "./useTranslatePagesAction";
 
 interface Props {
     page: PageTreePage;
@@ -33,7 +33,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const documentType = documentTypes[page.documentType];
-    const { menuItem: translateMenuItem, dialog: translateDialog } = useTranslatePageAction({ page, documentType });
+    const { menuItem: translateMenuItem, dialogs: translateDialogs } = useTranslatePagesAction({ pages: [page], documentTypes });
     const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
     const handleDeleteClick = async () => {
@@ -134,7 +134,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </RowActionsItem>
                 </RowActionsMenu>
             </RowActionsMenu>
-            {translateDialog}
+            {translateDialogs}
             <PageDeleteDialog
                 dialogOpen={deleteDialogOpen}
                 handleCancelClick={() => {
