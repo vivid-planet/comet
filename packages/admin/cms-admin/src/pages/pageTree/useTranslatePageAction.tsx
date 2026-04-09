@@ -1,12 +1,14 @@
-import { useApolloClient } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Button, Dialog, RowActionsItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
 import { CircularProgress, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument } from "../../documents/types";
 import { type TranslatableInterface } from "../../translation/TranslatableInterface";
+import { transformToSlug } from "./transformToSlug";
 import { type PageTreePage } from "./usePageTree";
 
 function isTranslatable(
@@ -23,6 +25,7 @@ interface Props {
 export function useTranslatePageAction({ page, documentType }: Props): { menuItem: ReactNode; dialog: ReactNode } {
     const apolloClient = useApolloClient();
     const { enabled, translate, batchTranslate } = useContentTranslationService();
+    const { scope } = useContentScope();
     const errorDialog = useErrorDialog();
     const [translating, setTranslating] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -53,26 +56,34 @@ export function useTranslatePageAction({ page, documentType }: Props): { menuIte
 
             const { __typename: _, id, updatedAt: _updatedAt, ...documentInput } = document as GQLDocument;
 
-            // Pass 1: Collect all translatable texts
-            const collectedTexts: string[] = [];
+            // Pass 1: Collect all translatable texts (page name + document content)
+            const collectedTexts: string[] = [page.name];
             await translatable.translateContent(documentInput, async (text) => {
                 collectedTexts.push(text);
                 return text;
             });
 
-            if (collectedTexts.length === 0) {
-                return;
-            }
-
-            // Pass 2: Batch translate
+            // Pass 2: Batch translate all texts together
             const translatedTexts = await effectiveBatchTranslate(collectedTexts);
+            const [translatedName, ...translatedContentTexts] = translatedTexts;
 
             // Pass 3: Apply translations to document content
             let textIndex = 0;
             const translatedOutput = await translatable.translateContent(documentInput, async () => {
-                return translatedTexts[textIndex++];
+                return translatedContentTexts[textIndex++];
             });
 
+            // Update the page tree node name and slug
+            const translatedSlug = transformToSlug(translatedName, scope.language);
+            await apolloClient.mutate({
+                mutation: updatePageTreeNodeMutation,
+                variables: {
+                    id: page.id,
+                    input: { name: translatedName, slug: translatedSlug },
+                },
+            });
+
+            // Save translated document content
             await apolloClient.mutate({
                 mutation: translatable.updateMutation,
                 variables: {
@@ -80,7 +91,7 @@ export function useTranslatePageAction({ page, documentType }: Props): { menuIte
                     input: translatedOutput,
                     attachedPageTreeNodeId: page.id,
                 },
-                refetchQueries: [translatable.getQuery],
+                refetchQueries: [translatable.getQuery, "Pages"],
             });
         } catch (error) {
             errorDialog?.showError({
@@ -136,3 +147,13 @@ export function useTranslatePageAction({ page, documentType }: Props): { menuIte
 
     return { menuItem, dialog };
 }
+
+const updatePageTreeNodeMutation = gql`
+    mutation TranslatePageTreeNode($id: ID!, $input: PageTreeNodeUpdateInput!) {
+        updatePageTreeNode(id: $id, input: $input) {
+            id
+            name
+            slug
+        }
+    }
+`;
