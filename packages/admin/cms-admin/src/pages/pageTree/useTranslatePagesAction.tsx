@@ -39,12 +39,9 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
         title: <FormattedMessage id="comet.translateContent.progress.title" defaultMessage="Translating pages" />,
     });
 
-    const translatablePages = pages.filter((page) => {
-        const documentType = documentTypes[page.documentType];
-        return documentType && isTranslatable(documentType) && page.visibility !== "Archived";
-    });
+    const eligiblePages = pages.filter((page) => page.visibility !== "Archived");
 
-    const isDisabled = !enabled || translatablePages.length === 0;
+    const isDisabled = !enabled || eligiblePages.length === 0;
 
     const handleTranslate = async () => {
         setConfirmDialogOpen(false);
@@ -53,70 +50,82 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
         const effectiveBatchTranslate = batchTranslate ?? (async (texts: string[]) => Promise.all(texts.map(translate)));
 
         try {
-            for (let i = 0; i < translatablePages.length; i++) {
-                const page = translatablePages[i];
+            for (let i = 0; i < eligiblePages.length; i++) {
+                const page = eligiblePages[i];
+                const documentType = documentTypes[page.documentType];
+                const hasTranslatableContent = documentType && isTranslatable(documentType);
+
                 progress.updateProgress(
-                    (i / translatablePages.length) * 100,
+                    (i / eligiblePages.length) * 100,
                     <FormattedMessage
                         id="comet.translateContent.progress.message"
                         defaultMessage="Translating {current} of {total}: {name}"
-                        values={{ current: i + 1, total: translatablePages.length, name: page.name }}
+                        values={{ current: i + 1, total: eligiblePages.length, name: page.name }}
                     />,
                 );
 
-                const documentType = documentTypes[page.documentType] as DocumentInterface &
-                    TranslatableInterface &
-                    Required<Pick<DocumentInterface, "getQuery" | "updateMutation">>;
+                if (hasTranslatableContent) {
+                    const { data: pageData } = await apolloClient.query({
+                        query: documentType.getQuery,
+                        variables: { id: page.id },
+                        fetchPolicy: "network-only",
+                    });
 
-                const { data: pageData } = await apolloClient.query({
-                    query: documentType.getQuery,
-                    variables: { id: page.id },
-                    fetchPolicy: "network-only",
-                });
+                    const document = pageData?.page?.document;
+                    if (!document) {
+                        continue;
+                    }
 
-                const document = pageData?.page?.document;
-                if (!document) {
-                    continue;
+                    const { __typename: _, id, updatedAt: _updatedAt, ...documentInput } = document as GQLDocument;
+
+                    // Pass 1: Collect all translatable texts (page name + document content)
+                    const collectedTexts: string[] = [page.name];
+                    await documentType.translateContent(documentInput, async (text) => {
+                        collectedTexts.push(text);
+                        return text;
+                    });
+
+                    // Pass 2: Batch translate all texts together
+                    const translatedTexts = await effectiveBatchTranslate(collectedTexts);
+                    const [translatedName, ...translatedContentTexts] = translatedTexts;
+
+                    // Pass 3: Apply translations to document content
+                    let textIndex = 0;
+                    const translatedOutput = await documentType.translateContent(documentInput, async () => {
+                        return translatedContentTexts[textIndex++];
+                    });
+
+                    // Update the page tree node name and slug
+                    const translatedSlug = transformToSlug(translatedName, scope.language);
+                    await apolloClient.mutate({
+                        mutation: updatePageTreeNodeMutation,
+                        variables: {
+                            id: page.id,
+                            input: { name: translatedName, slug: translatedSlug },
+                        },
+                    });
+
+                    // Save translated document content
+                    await apolloClient.mutate({
+                        mutation: documentType.updateMutation,
+                        variables: {
+                            pageId: id,
+                            input: translatedOutput,
+                            attachedPageTreeNodeId: page.id,
+                        },
+                    });
+                } else {
+                    // Only translate page name and slug
+                    const [translatedName] = await effectiveBatchTranslate([page.name]);
+                    const translatedSlug = transformToSlug(translatedName, scope.language);
+                    await apolloClient.mutate({
+                        mutation: updatePageTreeNodeMutation,
+                        variables: {
+                            id: page.id,
+                            input: { name: translatedName, slug: translatedSlug },
+                        },
+                    });
                 }
-
-                const { __typename: _, id, updatedAt: _updatedAt, ...documentInput } = document as GQLDocument;
-
-                // Pass 1: Collect all translatable texts (page name + document content)
-                const collectedTexts: string[] = [page.name];
-                await documentType.translateContent(documentInput, async (text) => {
-                    collectedTexts.push(text);
-                    return text;
-                });
-
-                // Pass 2: Batch translate all texts together
-                const translatedTexts = await effectiveBatchTranslate(collectedTexts);
-                const [translatedName, ...translatedContentTexts] = translatedTexts;
-
-                // Pass 3: Apply translations to document content
-                let textIndex = 0;
-                const translatedOutput = await documentType.translateContent(documentInput, async () => {
-                    return translatedContentTexts[textIndex++];
-                });
-
-                // Update the page tree node name and slug
-                const translatedSlug = transformToSlug(translatedName, scope.language);
-                await apolloClient.mutate({
-                    mutation: updatePageTreeNodeMutation,
-                    variables: {
-                        id: page.id,
-                        input: { name: translatedName, slug: translatedSlug },
-                    },
-                });
-
-                // Save translated document content
-                await apolloClient.mutate({
-                    mutation: documentType.updateMutation,
-                    variables: {
-                        pageId: id,
-                        input: translatedOutput,
-                        attachedPageTreeNodeId: page.id,
-                    },
-                });
             }
 
             progress.updateProgress(undefined);
@@ -138,7 +147,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
         }
     };
 
-    const isSinglePage = translatablePages.length === 1;
+    const isSinglePage = eligiblePages.length === 1;
 
     const menuItem = (
         <RowActionsItem key="translate" icon={<Translate />} disabled={isDisabled || translating} onClick={() => setConfirmDialogOpen(true)}>
@@ -158,7 +167,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                         <FormattedMessage
                             id="comet.translateContent.confirmDialog.titleMultiple"
                             defaultMessage="Translate {count} pages?"
-                            values={{ count: translatablePages.length }}
+                            values={{ count: eligiblePages.length }}
                         />
                     )
                 }
@@ -174,7 +183,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                             <FormattedMessage
                                 id="comet.translateContent.confirmDialog.messageMultiple"
                                 defaultMessage="All text content of {count} pages will be translated. This action cannot be reverted."
-                                values={{ count: translatablePages.length }}
+                                values={{ count: eligiblePages.length }}
                             />
                         )}
                     </DialogContentText>
