@@ -26,7 +26,9 @@ export const SendManagerWrapper = ({ scope, children }: PropsWithChildren<SendMa
         return <Loading />;
     }
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (brevoConfig?.isBrevoConfigDefined === false) {
         return (

@@ -16,10 +16,14 @@ export function generateServiceHookCall(
         scopeProp: EntityProperty | undefined;
     },
 ) {
-    if (!hooksService) return "";
+    if (!hooksService) {
+        return "";
+    }
 
     const hook = type === "validateCreateInput" ? hooksService.validateCreateInput : hooksService.validateUpdateInput;
-    if (!hook) return "";
+    if (!hook) {
+        return "";
+    }
     const options = [];
     if (hook.options?.includes("currentUser")) {
         options.push("currentUser: user");

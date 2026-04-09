@@ -76,7 +76,9 @@ export function isInternalSkill(skillFolderPath: string): boolean {
     }
 
     const frontmatterMatch = skillMdContent.match(/^---\n([\s\S]*?)\n---/);
-    if (!frontmatterMatch) return false;
+    if (!frontmatterMatch) {
+        return false;
+    }
 
     try {
         const parsed = yaml.load(frontmatterMatch[1]) as SkillFrontmatter | undefined;
@@ -87,7 +89,9 @@ export function isInternalSkill(skillFolderPath: string): boolean {
 }
 
 function listSkillFolders(directory: string, filterInternal = false): string[] {
-    if (!fs.existsSync(directory)) return [];
+    if (!fs.existsSync(directory)) {
+        return [];
+    }
     return fs
         .readdirSync(directory)
         .filter((f) => fs.statSync(path.join(directory, f)).isDirectory())
@@ -117,7 +121,9 @@ export function installSkills(sources: SkillSource[], targetDirs: string[], { dr
                 if (dryRun) {
                     console.log(`  [dry-run] Would ${symlink ? "symlink" : "copy"}: ${srcPath} -> ${destPath}`);
                 } else {
-                    if (exists) fs.rmSync(destPath, { recursive: true, force: true });
+                    if (exists) {
+                        fs.rmSync(destPath, { recursive: true, force: true });
+                    }
                     if (symlink) {
                         fs.symlinkSync(srcPath, destPath);
                     } else {

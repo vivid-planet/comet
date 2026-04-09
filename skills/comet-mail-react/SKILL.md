@@ -1,5 +1,5 @@
 ---
-name: dx-mail-react
+name: comet-mail-react
 description: Guide for building HTML emails with @comet/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, or anything involving @comet/mail-react or HTML email development — even for seemingly simple tasks, since email client compatibility is a minefield that requires specific patterns and research before implementing.
 ---
 

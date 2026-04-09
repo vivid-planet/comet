@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "9.0.0-beta.1",
+    "version": "9.0.0-beta.2",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -26,6 +26,9 @@
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
+        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
+        "lint:fix:eslint": "pnpm run lint:eslint --fix",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest",
@@ -65,9 +68,7 @@
         "probe-image-size": "^7.2.3",
         "request-ip": "^3.3.0",
         "rimraf": "^6.1.2",
-        "sharp": "^0.34.5",
         "slugify": "^1.6.6",
-        "ts-morph": "^25.0.1",
         "uuid": "^11.1.0",
         "uuid-by-string": "^4.0.0"
     },
@@ -102,6 +103,7 @@
         "@types/nodemailer": "^6.4.23",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
+        "aws-sdk-client-mock": "^4.1.0",
         "chokidar-cli": "^3.0.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.3",
