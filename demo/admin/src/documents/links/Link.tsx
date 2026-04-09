@@ -4,9 +4,11 @@ import { Link as LinkIcon } from "@comet/admin-icons";
 import {
     createDocumentDependencyMethods,
     createDocumentRootBlocksMethods,
+    createDocumentTranslationMethods,
     type DependencyInterface,
     type DocumentInterface,
     type InfoTagProps,
+    type TranslatableInterface,
 } from "@comet/cms-admin";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -21,7 +23,9 @@ const rootBlocks = {
     content: LinkBlock,
 };
 
-export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & DependencyInterface = {
+export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> &
+    TranslatableInterface<Pick<GQLLink, "content">, GQLLinkInput> &
+    DependencyInterface = {
     displayName: <FormattedMessage {...messages.link} />,
     editComponent: EditLink,
     getQuery: gql`
@@ -62,6 +66,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
     menuIcon: LinkIcon,
     hasNoSitePreview: true,
     ...createDocumentRootBlocksMethods(rootBlocks),
+    ...createDocumentTranslationMethods(rootBlocks),
     ...createDocumentDependencyMethods({
         rootQueryName: "link",
         rootBlocks,
