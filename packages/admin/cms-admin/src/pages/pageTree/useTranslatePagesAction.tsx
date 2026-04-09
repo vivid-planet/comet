@@ -87,6 +87,10 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                         return text;
                     });
 
+                    if (collectedTexts.length === 0) {
+                        continue;
+                    }
+
                     // Pass 2: Batch translate all texts together
                     const translatedTexts = await effectiveBatchTranslate(collectedTexts);
 
