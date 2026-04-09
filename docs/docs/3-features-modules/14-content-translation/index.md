@@ -16,19 +16,7 @@ Translation happens at three levels:
 
 ## Setup
 
-### 1) API: Provide translation queries
-
-The admin application needs GraphQL queries for translating text. You can either implement your own or use the built-in [Azure AI Translator](#azure-ai-translator) module.
-
-:::info
-
-The built-in Azure AI Translator queries require the `"translation"` permission. Make sure to assign this permission to users who should be able to translate content.
-
-:::
-
-### 2) Admin: Add the translation provider
-
-Wrap your application with the `ContentTranslationServiceProvider` from `@comet/admin`:
+Wrap your application (or parts of it) with the `ContentTranslationServiceProvider` from `@comet/admin`:
 
 ```tsx title="App.tsx"
 import { ContentTranslationServiceProvider } from "@comet/admin";
@@ -95,6 +83,30 @@ Some fields should not be translated (e.g., URLs, identifiers, technical values)
 ```tsx
 <Rte value={value} onChange={onChange} options={{ disableContentTranslation: true }} />
 ```
+
+## Block-level translation
+
+Built-in blocks like `RichTextBlock` and composite text fields (`createCompositeBlockTextField`) implement `translateContent` out of the box. Container blocks (`BlocksBlock`, `ColumnsBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) recursively translate their children.
+
+### Custom blocks
+
+To make a custom block translatable, implement the `translateContent` method:
+
+```tsx
+const MyBlock: BlockInterface = {
+    // ...
+    translateContent: async (state, translate) => {
+        const translatedTitle = state.title ? await translate(state.title) : state.title;
+        return {
+            ...state,
+            title: translatedTitle,
+            // Non-translatable fields are returned unchanged
+        };
+    },
+};
+```
+
+The `translate` function passed to `translateContent` handles a single text string. For blocks used inside documents, this function is provided by the two-pass batch translation system, so individual `translate` calls are efficiently batched.
 
 ## Document-level translation
 
@@ -169,7 +181,7 @@ The `translateContent` function returned by `usePage` handles the two-pass trans
 
 ## Page tree translation
 
-The page tree supports translating one or multiple pages at once, including their names, slugs, and document content. This is available through the `useTranslatePagesAction` hook.
+The page tree supports translating one or multiple pages at once, including their names, slugs, and document content.
 
 When translating pages:
 
@@ -180,30 +192,6 @@ When translating pages:
 - If a translated slug already exists, a unique slug is generated automatically
 
 The page tree translation is built in and works automatically when the translation provider is enabled and the document types implement the `TranslatableInterface`.
-
-## Block-level translation
-
-Built-in blocks like `RichTextBlock` and composite text fields (`createCompositeBlockTextField`) implement `translateContent` out of the box. Container blocks (`BlocksBlock`, `ColumnsBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) recursively translate their children.
-
-### Custom blocks
-
-To make a custom block translatable, implement the `translateContent` method:
-
-```tsx
-const MyBlock = createBlockSkeleton()({
-    // ...
-    translateContent: async (state, translate) => {
-        const translatedTitle = state.title ? await translate(state.title) : state.title;
-        return {
-            ...state,
-            title: translatedTitle,
-            // Non-translatable fields are returned unchanged
-        };
-    },
-});
-```
-
-The `translate` function passed to `translateContent` handles a single text string. For blocks used inside documents, this function is provided by the two-pass batch translation system, so individual `translate` calls are efficiently batched.
 
 ## Azure AI Translator
 
@@ -249,16 +237,9 @@ You can conditionally register the module based on whether the configuration is 
 
 :::
 
-The module exposes two GraphQL queries:
-
-- `azureAiTranslate(input: AzureAiTranslationInput!): String!` - Translates a single text
-- `azureAiTranslateBatch(input: AzureAiTranslationBatchInput!): [String!]!` - Translates multiple texts (automatically chunked into batches of 25 to respect Azure API limits)
-
-Both queries accept HTML content (`textType: "html"`) so formatting is preserved during translation.
-
 ### Admin setup
 
-Use the `AzureAiTranslatorProvider` from `@comet/cms-admin` instead of configuring `ContentTranslationServiceProvider` manually. It handles the GraphQL queries and permission checks automatically:
+Use the `AzureAiTranslatorProvider` from `@comet/cms-admin` instead of configuring `ContentTranslationServiceProvider` manually:
 
 ```tsx title="App.tsx"
 import { AzureAiTranslatorProvider } from "@comet/cms-admin";
@@ -275,10 +256,3 @@ function App() {
     );
 }
 ```
-
-The provider:
-
-- Checks the user's `"translation"` permission before enabling translation
-- Uses the current content scope language as the target language
-- Calls the `azureAiTranslate` and `azureAiTranslateBatch` GraphQL queries
-- Supports both single and batch translation for optimal performance
