@@ -18,10 +18,12 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
 
         const siteConfigsCache = new Map<string, BaseSiteConfig[]>();
         const getCachedSiteConfigs = async (env: string): Promise<BaseSiteConfig[]> => {
-            if (!siteConfigsCache.has(env)) {
-                siteConfigsCache.set(env, await getSiteConfigs(env));
+            let cached = siteConfigsCache.get(env);
+            if (!cached) {
+                cached = await getSiteConfigs(env);
+                siteConfigsCache.set(env, cached);
             }
-            return siteConfigsCache.get(env)!;
+            return cached;
         };
 
         console.log(`inject-site-configs: Replace site-configs in ${options.inFile}`);
@@ -109,10 +111,11 @@ export const resolveOpReferences = (input: string): string => {
     for (const ref of opRefs) {
         const opUri = ref.replace("{{ ", "").replace(" }}", "");
         try {
-            if (!opCache.has(opUri)) {
-                opCache.set(opUri, execSync(`op read "${opUri}"`, { encoding: "utf-8" }).trim());
+            let secret = opCache.get(opUri);
+            if (!secret) {
+                secret = execSync(`op read "${opUri}"`, { encoding: "utf-8" }).trim();
+                opCache.set(opUri, secret);
             }
-            const secret = opCache.get(opUri)!;
             console.log(`inject-site-configs: - Resolved ${ref}`);
             result = result.replace(ref, secret);
         } catch (e) {
