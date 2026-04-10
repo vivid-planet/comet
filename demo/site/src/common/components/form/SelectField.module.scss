@@ -53,11 +53,18 @@
     }
 }
 
+.valueContainer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    overflow: hidden;
+}
+
 .menu {
     position: absolute;
     width: 100%;
     left: 0;
-    margin-top: 0;
+    margin-top: -4px;
     background-color: var(--contact-form-dropdown-bg-default, white);
     border-radius: 4px;
     box-shadow: 0 0 10px 0 rgb(0 0 0 / 15%);

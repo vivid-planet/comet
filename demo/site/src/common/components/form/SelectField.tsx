@@ -40,7 +40,10 @@ export const SelectField = <TFieldValues extends FieldValues>({
                         <Select<Option>
                             unstyled
                             isSearchable={false}
-                            styles={{ control: (base) => ({ ...base, outline: undefined }) }}
+                            styles={{
+                                control: (base) => ({ ...base, outline: undefined }),
+                                option: () => ({ display: "flex", alignItems: "center" }),
+                            }}
                             inputId={id}
                             options={options}
                             value={selectedOption}
@@ -61,6 +64,7 @@ export const SelectField = <TFieldValues extends FieldValues>({
                             classNames={{
                                 container: () => styles.container,
                                 control: () => clsx(styles.control, fieldState.error && styles["control--error"]),
+                                valueContainer: () => styles.valueContainer,
                                 placeholder: () => styles.placeholder,
                                 singleValue: () => styles.singleValue,
                                 menu: () => styles.menu,
