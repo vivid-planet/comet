@@ -1835,8 +1835,8 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5
       '@getbrevo/brevo':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.0.4
+        version: 3.0.4
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.5)(rxjs@7.8.2)
@@ -5500,8 +5500,8 @@ packages:
       ts-jest:
         optional: true
 
-  '@getbrevo/brevo@3.0.1':
-    resolution: {integrity: sha512-BS5hlgb9qPHhXqjV+VbEOciygnsEVZV8BgoX+JYpD+I+R9u3U05y/euqdmk8nATfcEUCUlQq+aWdWOWTF4cEjQ==}
+  '@getbrevo/brevo@3.0.4':
+    resolution: {integrity: sha512-MtsqqsB9MjMEDYKP3QBHGRJmYbUBHCYH2RxA4DHeB8sbm0TEraoaiOfng0kBebPplR9WSvf6jXw+ri10bGP/aA==}
 
   '@golevelup/nestjs-discovery@5.0.0':
     resolution: {integrity: sha512-NaIWLCLI+XvneUK05LH2idHLmLNITYT88YnpOuUQmllKtiJNIS3woSt7QXrMZ5k3qUWuZpehEVz1JtlX4I1KyA==}
@@ -22456,7 +22456,7 @@ snapshots:
     optionalDependencies:
       ts-jest: 29.4.6(@babel/core@7.28.6)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.6))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.12.0)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
 
-  '@getbrevo/brevo@3.0.1':
+  '@getbrevo/brevo@3.0.4':
     dependencies:
       axios: 1.13.5
       bluebird: 3.7.2

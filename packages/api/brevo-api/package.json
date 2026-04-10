@@ -34,7 +34,7 @@
     "dependencies": {
         "@comet/cms-api": "workspace:*",
         "@fast-csv/parse": "^5.0.5",
-        "@getbrevo/brevo": "^3.0.1",
+        "@getbrevo/brevo": "^3.0.4",
         "@nestjs/axios": "^4.0.1",
         "@nestjs/cache-manager": "^3.0.1",
         "@nestjs/jwt": "^11.0.1",
