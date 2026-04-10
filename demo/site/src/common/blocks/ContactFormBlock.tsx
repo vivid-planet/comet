@@ -1,7 +1,7 @@
 "use client";
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type ContactFormBlockData } from "@src/blocks.generated";
-import { getRecaptchaToken } from "@src/util/getRecaptchaToken";
+import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";

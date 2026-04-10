@@ -1,4 +1,4 @@
-import { assessRecaptchaToken } from "@src/common/api/assessRecaptchaToken";
+import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
