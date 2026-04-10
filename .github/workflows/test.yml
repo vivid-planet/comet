@@ -57,6 +57,8 @@ jobs:
     test-storybook:
         name: Test Storybook
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         steps:
             - uses: actions/checkout@v5
               with:
@@ -90,7 +92,7 @@ jobs:
               run: |
                   cd storybook
                   pnpm exec http-server storybook-static --port 6006 --silent &
-                  sleep 5
+                  until curl -s http://127.0.0.1:6006/ > /dev/null 2>&1; do sleep 1; done
                   pnpm run test-storybook --url http://127.0.0.1:6006 --junit
 
             - name: Upload test results
