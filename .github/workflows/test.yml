@@ -53,3 +53,50 @@ jobs:
                   name: test-results
                   path: packages/**/junit.xml
                   overwrite: true
+
+    test-storybook:
+        name: Test Storybook
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.event.pull_request.head.ref || github.ref }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - uses: pnpm/action-setup@v4
+
+            - name: Use Node.js 24.x
+              uses: actions/setup-node@v5
+              with:
+                  node-version: 24
+                  registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm"
+
+            - run: pnpm install --frozen-lockfile
+
+            - name: Setup project for CI run
+              run: pnpm run setup:ci
+
+            - name: Build packages
+              run: pnpm run build:packages
+
+            - name: Install Playwright browsers
+              run: pnpm --filter comet-storybook exec playwright install --with-deps chromium
+
+            - name: Build Storybook
+              run: pnpm --filter comet-storybook run build-storybook
+
+            - name: Serve Storybook and run tests
+              run: |
+                  cd storybook
+                  pnpm exec http-server storybook-static --port 6006 --silent &
+                  sleep 5
+                  pnpm run test-storybook --url http://127.0.0.1:6006 --junit
+
+            - name: Upload test results
+              uses: actions/upload-artifact@v4
+              if: success() || failure()
+              with:
+                  name: storybook-test-results
+                  path: storybook/junit.xml
+                  overwrite: true

@@ -17,7 +17,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
-        "storybook": "storybook dev -p 26638 --no-version-updates --disable-telemetry"
+        "storybook": "storybook dev -p 26638 --no-version-updates --disable-telemetry",
+        "test-storybook": "test-storybook"
     },
     "dependencies": {
         "@apollo/client": "^3.14.1",
@@ -59,9 +60,9 @@
         "@faker-js/faker": "^10.1.0",
         "@graphql-mocks/network-msw": "^0.4.4",
         "@storybook/addon-docs": "^10.3.3",
-        "@storybook/addon-vitest": "^10.3.3",
         "@storybook/addon-webpack5-compiler-babel": "^4.0.0",
         "@storybook/react-webpack5": "^10.3.3",
+        "@storybook/test-runner": "0.24.3",
         "@types/draft-js": "^0.11.20",
         "@types/history": "^4.7.11",
         "@types/qs": "^6.14.0",
@@ -69,8 +70,6 @@
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
-        "@vitest/browser": "^4.0.16",
-        "@vitest/browser-playwright": "^4.0.16",
         "draft-js": "^0.11.7",
         "draft-js-export-html": "^1.4.1",
         "draft-js-export-markdown": "^1.4.0",
@@ -78,6 +77,7 @@
         "eslint": "^9.39.2",
         "eslint-plugin-storybook": "^10.3.3",
         "graphql-mocks": "^0.10.0",
+        "http-server": "^14.1.1",
         "immutable": "^3.8.2",
         "msw": "^2.0.0",
         "npm-run-all2": "^8.0.4",
@@ -89,8 +89,7 @@
         "react-router-dom": "^5.3.4",
         "remark-gfm": "^4.0.1",
         "storybook": "^10.3.3",
-        "typescript": "^5.9.3",
-        "vitest": "^4.0.16"
+        "typescript": "^5.9.3"
     },
     "msw": {
         "workerDirectory": "public"
