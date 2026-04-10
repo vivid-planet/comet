@@ -1,6 +1,6 @@
-import { type DataGridProps, type GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
-import { type DataGridProProps, type GridPinnedColumnFields } from "@mui/x-data-grid-pro";
-import { type MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { type DataGridProps, type GridColumnVisibilityModel, type GridPinnedColumnFields, useGridApiRef } from "@mui/x-data-grid";
+import { type DataGridProProps } from "@mui/x-data-grid-pro";
+import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouteMatch } from "react-router";
 
 import { useStoredState } from "../hooks/useStoredState";
@@ -33,8 +33,12 @@ const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefi
 
             columns?.forEach((column: GridColDef) => {
                 if (column.visible !== undefined) {
-                    const mediaQuery = column.visible.replace("@media", "").trim();
-                    visibilityModel[column.field] = window.matchMedia(mediaQuery).matches;
+                    if (typeof column.visible === "string") {
+                        const mediaQuery = column.visible.replace("@media", "").trim();
+                        visibilityModel[column.field] = window.matchMedia(mediaQuery).matches;
+                    } else if (column.visible == false) {
+                        visibilityModel[column.field] = column.visible;
+                    }
                 }
             });
 
@@ -65,7 +69,7 @@ type GridProps = {
 
     initialState: DataGridProps["initialState"];
 
-    apiRef: MutableRefObject<any>;
+    apiRef: RefObject<any>;
 };
 
 export function usePersistentColumnState(stateKey: string): GridProps {

@@ -105,10 +105,10 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef<HTMLDivElement>(null);
 
-    const handleMenuItemClick: (event: MouseEvent, index: number, child: ReactElement) => void = (
+    const handleMenuItemClick: (event: MouseEvent, index: number, child: ReactElement<any>) => void = (
         event: MouseEvent,
         index: number,
-        child: ReactElement,
+        child: ReactElement<any>,
     ) => {
         _onSelectIndex(index, child);
         setOpen(false);
@@ -133,7 +133,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
         return null;
     }
 
-    const ActiveChild = childrenArray[_selectedIndex] as ReactElement;
+    const ActiveChild = childrenArray[_selectedIndex] as ReactElement<any>;
 
     const { variant: activeChildVariant, color: activeChildColor } = ActiveChild.props;
 
@@ -165,7 +165,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
                 {...slotProps?.popover}
             >
                 <MenuList {...slotProps?.menuList}>
-                    {childrenArray.map((child: ReactElement, index) => {
+                    {childrenArray.map((child: ReactElement<any>, index) => {
                         return (
                             <MenuItem
                                 key={index}

@@ -99,7 +99,9 @@ export async function recursivelyLoadBlockData({
                 blockData[field.name] = iterateField(field.object, blockData[field.name]);
             } else if (field.kind == "OneOfBlocks") {
                 const oneOfBlockType = field.blocks[blockData.type];
-                if (!oneOfBlockType) throw new Error("invalid blockType");
+                if (!oneOfBlockType) {
+                    throw new Error("invalid blockType");
+                }
                 blockData[field.name] = iterateBlock({
                     blockType: oneOfBlockType,
                     blockData: blockData[field.name],
@@ -117,7 +119,9 @@ export async function recursivelyLoadBlockData({
     const loadedBlockData: any[] = [];
     function iterateBlock({ blockType, blockData }: { blockType: string; blockData: unknown }) {
         const block = blocksMeta.find((block) => block.name === blockType) as BetterBlockMeta;
-        if (!block) throw new Error("invalid blockType");
+        if (!block) {
+            throw new Error("invalid blockType");
+        }
 
         const newBlockData = iterateField(block, blockData);
         if (loaders[blockType]) {

@@ -282,7 +282,9 @@ export async function sendPages(
                 }
 
                 if (fileIdsToCopyDirectly.length > 0) {
-                    if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
+                    if (!inboxFolderIdForCopiedFiles) {
+                        throw new Error("inbox folder must be created in step 0 when files need to be copied");
+                    }
                     const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                         mutation: copyFilesToScopeMutation,
                         variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles },

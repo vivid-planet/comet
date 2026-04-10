@@ -15,6 +15,8 @@ import { BlockState } from "@comet/cms-admin";
 import { createFinalFormBlock } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
+import { ReactNode } from "react";
+import { FORM_ERROR } from "final-form";
 import { GQLProductType } from "@src/graphql.generated";
 import { DamImageBlock } from "@comet/cms-admin";
 import { validateTitle } from "../validateTitle";
@@ -22,14 +24,15 @@ import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generate
 import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { GQLCreateCapProductFormDetailsFragment } from "./CreateCapProductForm.gql.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import { GQLCreateProductMutation } from "./CreateCapProductForm.gql.generated";
 import { GQLCreateProductMutationVariables } from "./CreateCapProductForm.gql.generated";
+import { GQLProductMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
-    image: DamImageBlock
+    image: DamImageBlock,
 };
 type FormValues = Omit<GQLCreateCapProductFormDetailsFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
@@ -38,22 +41,51 @@ interface FormProps {
     onCreate?: (id: string) => void;
     type: GQLProductType;
 }
+const submissionErrorMessages: Record<GQLProductMutationErrorCode, ReactNode> = {
+    titleTooShort: (
+        <FormattedMessage
+            id="product.form.error.titleTooShort"
+            defaultMessage="Title must be at least 3 characters long when creating a product, except for foo"
+        />
+    ),
+};
 export function CreateCapProductForm({ onCreate, type }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
     const initialValues = {
-        inStock: false, image: rootBlocks.image.defaultValues(),
+        inStock: false,
+        image: rootBlocks.image.defaultValues(),
     };
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        const output = { ...formValues, description: formValues.description ?? null, category: formValues.category ? formValues.category.id : null, availableSince: formValues.availableSince ?? null, image: rootBlocks.image.state2Output(formValues.image), };
+        const output = {
+            ...formValues,
+            description: formValues.description ?? null,
+            category: formValues.category ? formValues.category.id : null,
+            availableSince: formValues.availableSince ?? null,
+            image: rootBlocks.image.state2Output(formValues.image),
+        };
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
             variables: {
-                input: { ...output, type }
+                input: { ...output, type },
             },
         });
-        const id = mutationResponse?.createProduct.id;
+        if (mutationResponse?.createProduct.errors.length) {
+            return mutationResponse?.createProduct.errors.reduce(
+                (submissionErrors, error) => {
+                    const errorMessage = submissionErrorMessages[error.code];
+                    if (error.field) {
+                        submissionErrors[error.field] = errorMessage;
+                    } else {
+                        submissionErrors[FORM_ERROR] = errorMessage;
+                    }
+                    return submissionErrors;
+                },
+                {} as Record<string, ReactNode>,
+            );
+        }
+        const id = mutationResponse?.createProduct.product?.id;
         if (id) {
             setTimeout(() => {
                 onCreate?.(id);
@@ -63,36 +95,94 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
             });
         }
     };
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode="add" initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                            
-        <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Titel"/>} validate={validateTitle}/>
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode="add"
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    <TextField
+                        required
+                        variant="horizontal"
+                        fullWidth
+                        name="title"
+                        label={<FormattedMessage id="product.title" defaultMessage="Title" />}
+                        validate={validateTitle}
+                    />
 
-        <TextField required variant="horizontal" fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug"/>}/>
+                    <TextField
+                        required
+                        variant="horizontal"
+                        fullWidth
+                        name="slug"
+                        label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
+                    />
 
-        <TextAreaField variant="horizontal" fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description"/>}/>
-        <AsyncAutocompleteField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async (search?: string) => {
-                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                    query: gql`
-    query ProductCategoriesSelect($search: String) {
-        productCategories(search: $search) {
-            nodes { id title }
-        }
-    }
-    
-    `, variables: {
-                        search,
-                    }
-                });
-                return data.productCategories.nodes;
-            }} getOptionLabel={(option) => option.title}/>
-        <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
+                    <TextAreaField
+                        variant="horizontal"
+                        fullWidth
+                        name="description"
+                        label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                    />
+                    <AsyncAutocompleteField
+                        variant="horizontal"
+                        fullWidth
+                        name="category"
+                        label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                        loadOptions={async (search?: string) => {
+                            const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                query: gql`
+                                    query ProductCategoriesSelect($search: String) {
+                                        productCategories(search: $search) {
+                                            nodes {
+                                                id
+                                                title
+                                            }
+                                        }
+                                    }
+                                `,
+                                variables: {
+                                    search,
+                                },
+                            });
+                            return data.productCategories.nodes;
+                        }}
+                        getOptionLabel={(option) => option.title}
+                    />
+                    <CheckboxField
+                        fieldLabel={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
+                        name="inStock"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-            <Future_DatePickerField variant="horizontal" fullWidth name="availableSince" label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="product.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-                        </>)}
-            </FinalForm>);
+                    <DatePickerField
+                        variant="horizontal"
+                        fullWidth
+                        name="availableSince"
+                        label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <CalendarTodayIcon />
+                            </InputAdornment>
+                        }
+                    />
+                    <Field
+                        name="image"
+                        isEqual={isEqual}
+                        label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                        variant="horizontal"
+                        fullWidth
+                    >
+                        {createFinalFormBlock(rootBlocks.image)}
+                    </Field>
+                </>
+            )}
+        </FinalForm>
+    );
 }

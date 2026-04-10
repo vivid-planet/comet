@@ -13,7 +13,7 @@ interface IProps {
     editorState: EditorState;
     setEditorState: (editorState: EditorState) => void;
     supportedThings: SupportedThings[];
-    editorRef: RefObject<Editor>;
+    editorRef: RefObject<Editor | null>;
     customInlineStyles?: CustomInlineStyles;
 }
 

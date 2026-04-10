@@ -102,56 +102,40 @@ Next, you probably want to display the dependencies or dependents (usages) of an
 The `@EntityInfo()` decorator allows you to configure which information about an entity should be displayed in the admin interface.
 You can provide a `name` and `secondaryInformation`.
 
-The decorator accepts two inputs:
+##### Object-based (recommended)
 
-##### `GetEntityInfo` method
-
-The simple way is to provide a function returning a `name` and (optional) `secondaryInformation` based on the entity instance.
+Pass an object with dot-notation field paths. Supports direct fields as well as ManyToOne/OneToOne relations and embeddables.
 
 ```ts
 // news.entity.ts
-@EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug" })
 ```
 
-##### `EntityInfoService`
-
-If you need to load additional information from a service or repository, you can implement an `EntityInfoService`.
-In this service, you can use Nest's dependency injection.
-
-The service must offer a `getEntityInfo()` method returning a `name` and (optional) `secondaryInformation`.
+Use the `visible` field (a MikroORM `ObjectQuery`) to control whether the entity is considered visible in dependency/warning lists:
 
 ```ts
-// file.entity.ts
-@EntityInfo<DamFile>(FilesEntityInfoService)
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
 ```
+
+Dot-notation resolves nested relations and embeddables:
 
 ```ts
-// files-entity-info.service.ts
-@Injectable()
-export class FilesEntityInfoService implements EntityInfoServiceInterface<FileInterface> {
-    constructor(
-        @Inject(forwardRef(() => FilesService))
-        private readonly filesService: FilesService,
-    ) {}
-
-    async getEntityInfo(file: FileInterface) {
-        return { name: file.name, secondaryInformation: await this.filesService.getDamPath(file) };
-    }
-}
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name" })
 ```
 
-###### Helper service for documents
+##### Raw SQL string
 
-For documents, you can simply use the `PageTreeNodeDocumentEntityInfoService`.
-It will return the `PageTreeNode` name and slug (as secondary information).
+For cases where the object syntax is insufficient (e.g. when entity info is computed from a dedicated SQL view), pass a raw `SELECT` statement.
+The query must return the columns `name`, `secondaryInformation`, `visible`, `id`, and `entityName`:
 
 ```ts
-// page.entity.ts
-@EntityInfo(PageTreeNodeDocumentEntityInfoService)
-export class Page extends BaseEntity implements DocumentInterface {
-    // ...
-}
+@EntityInfo<DamFile>(`SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`)
 ```
+
+##### Documents (Page, Link, etc.)
+
+Document entities do **not** need an `@EntityInfo()` decorator.
+Their entity info is derived automatically from the `PageTreeNodeEntityInfo` SQL view, which resolves the page tree name and path for you.
 
 #### 2. Admin: Implement the `DependencyInterface`
 
@@ -301,14 +285,13 @@ If you want to query the dependencies or dependents of an entity, use the factor
 export class NewsModule {}
 ```
 
-#### 5. Admin: Display dependencies with the `DependencyList` component
+#### 5. Admin: Display dependencies with `DependenciesList` or `DependentsList`
 
-You can use the `DependencyList` component provided by `@comet/cms-admin` to display dependencies or dependents.
-The DAM uses this component in its "Dependents" tab.
+Use `DependenciesList` to display what an entity depends on, or `DependentsList` to display what depends on an entity. Both components are provided by `@comet/cms-admin`. The DAM uses `DependentsList` in its "Dependents" tab.
 
-The component requires two props:
+Each component requires two props:
 
-- `query`: A GraphQL query. It must have a `dependencies` or `dependents` field resolver.
+- `query`: A GraphQL query. `DependenciesList` requires a `dependencies` field resolver; `DependentsList` requires a `dependents` field resolver.
 - `variables`: The variables for the query.
 
 <details>
@@ -316,17 +299,19 @@ The component requires two props:
 <summary>A usage could look like this</summary>
 
 ```tsx
-<DependencyList
+<DependentsList
     query={gql`
-        query DamFileDependencies(
+        query DamFileDependents(
             $id: ID!
             $offset: Int!
             $limit: Int!
             $forceRefresh: Boolean = false
+            $filter: DependentFilter
+            $sort: [DependencySort!]
         ) {
             item: damFile(id: $id) {
                 id
-                dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
                     nodes {
                         rootGraphqlObjectType
                         rootId
@@ -334,6 +319,7 @@ The component requires two props:
                         jsonPath
                         name
                         secondaryInformation
+                        visible
                     }
                     totalCount
                 }

@@ -5,9 +5,10 @@ import { type ReactNode, useContext } from "react";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
+import { FillSpace } from "../FillSpace";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
-export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
+export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator" | "topBarActions";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -17,10 +18,12 @@ export interface ToolbarProps
         topBar: "div";
         breadcrumbs: typeof ToolbarBreadcrumbs;
         scopeIndicator: "div";
+        topBarActions: "div";
     }> {
     elevation?: number;
     children?: ReactNode;
     scopeIndicator?: ReactNode;
+    topBarActions?: ReactNode;
     hideTopBar?: boolean;
     /**
      * The height of the header above the toolbar. Default behaviour is to use the height of the headerHeight from the
@@ -70,6 +73,11 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
         }
     `,
 );
+
+const TopBarActions = createComponentSlot("div")<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "topBarActions",
+})();
 
 const ScopeIndicator = createComponentSlot("div")<ToolbarClassKey>({
     componentName: "Toolbar",
@@ -128,6 +136,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
         elevation = 1,
         slotProps,
         scopeIndicator,
+        topBarActions,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = useContext(MasterLayoutContext);
@@ -141,6 +150,8 @@ export const Toolbar = (inProps: ToolbarProps) => {
                 <TopBar {...slotProps?.topBar}>
                     {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
                     <Breadcrumbs {...slotProps?.breadcrumbs} />
+                    <FillSpace />
+                    {Boolean(topBarActions) && <TopBarActions {...slotProps?.topBarActions}>{topBarActions}</TopBarActions>}
                 </TopBar>
             )}
             {children && (

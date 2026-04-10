@@ -1,7 +1,6 @@
 import { css, type Theme } from "@mui/material";
 
-export const previewGlobalStyles = (theme: Theme) =>
-    css(`
+export const previewGlobalStyles = (theme: Theme) => css`
     body {
         margin: 0;
         background-color: ${theme.palette.background.default};
@@ -24,4 +23,4 @@ export const previewGlobalStyles = (theme: Theme) =>
             margin-top: 25px;
         }
     }
-`);
+`;

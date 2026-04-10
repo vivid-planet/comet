@@ -3,7 +3,7 @@ import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type PropsWithChildren } from "react";
+import { type JSX, type PropsWithChildren } from "react";
 
 import { type GQLPageLinkFragment } from "./PageLink.fragment.generated";
 

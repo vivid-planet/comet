@@ -1,6 +1,6 @@
 "use client";
 
-import { cloneElement, type MouseEventHandler, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type MouseEventHandler, type ReactElement } from "react";
 
 import { type ExternalLinkBlockData } from "../blocks.generated";
 import { usePreview } from "../preview/usePreview";
@@ -8,14 +8,12 @@ import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSi
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
 import { type PropsWithData } from "./PropsWithData";
 
-interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
+interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
     children: ReactElement;
-    title?: string;
-    className?: string;
     legacyBehavior?: boolean;
 }
 
-export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, title, className, legacyBehavior }: ExternalLinkBlockProps) {
+export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, legacyBehavior, ...anchorProps }: ExternalLinkBlockProps) {
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
@@ -31,11 +29,15 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         };
 
         if (legacyBehavior) {
-            return cloneElement(children, { href: "#", onClick, title });
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                ...anchorProps,
+                href: "#",
+                onClick,
+            });
         }
 
         return (
-            <a href="#" onClick={onClick} title={title} className={className}>
+            <a {...anchorProps} href="#" onClick={onClick}>
                 {children}
             </a>
         );
@@ -45,18 +47,22 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
                 return children;
             }
 
-            return <span className={className}>{children}</span>;
+            return <span className={anchorProps.className}>{children}</span>;
         }
 
         const href = targetUrl;
-        const target = openInNewWindow ? "_blank" : undefined;
+        const target = openInNewWindow ? "_blank" : anchorProps.target;
 
         if (legacyBehavior) {
-            return cloneElement(children, { href, target, title });
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                ...anchorProps,
+                href,
+                target,
+            });
         }
 
         return (
-            <a href={href} target={target} title={title} className={className}>
+            <a {...anchorProps} href={href} target={target}>
                 {children}
             </a>
         );

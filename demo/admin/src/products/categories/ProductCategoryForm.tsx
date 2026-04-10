@@ -55,12 +55,16 @@ export function ProductCategoryForm({ id }: FormProps) {
         },
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
         const output = {
             ...formValues,
         };
         if (mode === "edit") {
-            if (!id) throw new Error();
+            if (!id) {
+                throw new Error();
+            }
             const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
@@ -81,7 +85,9 @@ export function ProductCategoryForm({ id }: FormProps) {
             }
         }
     };
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
     }

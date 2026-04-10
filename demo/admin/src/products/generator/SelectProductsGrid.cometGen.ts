@@ -10,7 +10,7 @@ export default defineConfig<GQLProduct>({
     readOnly: true,
     selectionProps: "multiSelect",
     columns: [
-        { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
+        { type: "text", name: "title", headerName: "Title", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },
         { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
         { type: "staticSelect", name: "type", maxWidth: 150, values: productTypeValues },
