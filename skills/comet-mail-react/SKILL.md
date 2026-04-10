@@ -91,7 +91,7 @@ const halfGap = columnGap / 2;
 
 On mobile, reset the gap padding so content stretches full-width, and add a vertical margin between the stacked columns. Column padding compiles to an inner `<td>`, so target it via `.className > table > tbody > tr > td`.
 
-→ For the complete two-column pattern with responsive styles, CSS targeting rules, and BEM naming conventions, read [`references/layout-patterns.md`](references/layout-patterns.md).
+→ For complete two-column patterns (equal-width and fixed+fluid) with responsive styles, CSS targeting rules, and the `direction="rtl"` technique for controlling mobile stack order, read [`references/layout-patterns.md`](references/layout-patterns.md).
 
 ### Ending Tags
 
