@@ -31,9 +31,9 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
                 <label htmlFor={id} className={styles.wrapper}>
                     <input
                         type="checkbox"
-                        id={id}
                         {...inputProps}
                         {...field}
+                        id={id}
                         checked={Boolean(value)}
                         aria-required={required}
                         className={styles.input}
