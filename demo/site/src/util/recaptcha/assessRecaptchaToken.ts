@@ -1,13 +1,13 @@
 import { recaptchaClient, recaptchaResourceName } from "./recaptchaClient";
 
-interface Props {
+interface Options {
     token: string;
     action: "form_submit";
     siteKey: string;
     minimalRiskAnalysisScore?: number;
 }
 
-export const assessRecaptchaToken = async ({ token, action, siteKey, minimalRiskAnalysisScore = 0.5 }: Props): Promise<boolean> => {
+export const assessRecaptchaToken = async ({ token, action, siteKey, minimalRiskAnalysisScore = 0.5 }: Options): Promise<boolean> => {
     const [assessment] = await recaptchaClient.createAssessment({
         assessment: {
             event: {
