@@ -1,5 +1,5 @@
 import { type ComponentsOverrides, TablePagination, type TablePaginationProps, type Theme, type Typography, useThemeProps } from "@mui/material";
-import { gridPageCountSelector, gridPaginationSelector, useGridApiContext, useGridRootProps, useGridSelector } from "@mui/x-data-grid-pro";
+import { gridPageCountSelector, gridPaginationSelector, useGridApiContext, useGridRootProps, useGridSelector } from "@mui/x-data-grid";
 import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import { type ChangeEvent, type FunctionComponent, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
@@ -52,7 +52,8 @@ export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (i
                     id="comet.dataGridPagination.pageInformation"
                     defaultMessage="{itemsFrom}-{itemsTo} of {itemsTotal} items"
                     values={{
-                        itemsFrom: paginationState.paginationModel.page * paginationState.paginationModel.pageSize + 1,
+                        itemsFrom:
+                            paginationState.rowCount === 0 ? 0 : paginationState.paginationModel.page * paginationState.paginationModel.pageSize + 1,
                         itemsTo: Math.min(
                             (paginationState.paginationModel.page + 1) * paginationState.paginationModel.pageSize,
                             paginationState.rowCount,

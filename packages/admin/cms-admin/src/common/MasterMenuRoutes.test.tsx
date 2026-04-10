@@ -1,8 +1,10 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { type Permission } from "../userPermissions/hooks/currentUser";
 import { type MasterMenuData } from "./MasterMenu";
 import { useRoutePropsFromMasterMenuData } from "./MasterMenuRoutes";
 
-jest.mock("../userPermissions/hooks/currentUser", () => ({
+vi.mock("../userPermissions/hooks/currentUser", () => ({
     useUserPermissionCheck: () => (permission: string) => permission === "allowed",
 }));
 

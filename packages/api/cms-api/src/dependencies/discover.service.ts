@@ -1,4 +1,4 @@
-import { EntityClass, EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
+import { AnyEntity, EntityClass, EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 import { ObjectTypeMetadata } from "@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata";
@@ -19,6 +19,7 @@ interface DiscoverRootBlocksResult {
 }
 
 interface DiscoverTargetEntitiesResult {
+    entity: AnyEntity;
     entityName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
@@ -74,6 +75,7 @@ export class DiscoverService {
 
         entities.forEach((entity) => {
             ret.push({
+                entity,
                 entityName: entity.name,
                 repository: this.orm.em.getRepository(entity.name),
                 metadata: metadataStorage.get(entity.name),

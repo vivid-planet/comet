@@ -18,7 +18,9 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegExMatch = vimeoIdentifier.match(urlRegEx);
     const idRegExMatch = vimeoIdentifier.match(idRegEx);
 
-    if (!urlRegExMatch && !idRegExMatch) return undefined;
+    if (!urlRegExMatch && !idRegExMatch) {
+        return undefined;
+    }
 
     if (urlRegExMatch) {
         return urlRegExMatch[6];
@@ -90,12 +92,20 @@ export const VimeoVideoBlock = withPreview(
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
         const searchParams = new URLSearchParams();
-        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
-        if (autoplay) searchParams.append("muted", "1");
+        if (hasPreviewImage && !showPreviewImage) {
+            searchParams.append("autoplay", "1");
+        }
+        if (autoplay) {
+            searchParams.append("muted", "1");
+        }
 
-        if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
+        if (loop !== undefined) {
+            searchParams.append("loop", Number(loop).toString());
+        }
 
-        if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
+        if (showControls !== undefined) {
+            searchParams.append("controls", Number(showControls).toString());
+        }
 
         searchParams.append("dnt", "1");
 

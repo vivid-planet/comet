@@ -40,10 +40,14 @@ export class BlockMigrateService {
                 const rows = await this.connection.execute(
                     `SELECT "${primary}", "${column}" FROM "${metadata.tableName}" ORDER BY "${primary}" LIMIT ${pageSize} OFFSET ${skip}`,
                 );
-                if (rows.length === 0) break;
+                if (rows.length === 0) {
+                    break;
+                }
 
                 for (const row of rows) {
-                    if (!row[column]) continue;
+                    if (!row[column]) {
+                        continue;
+                    }
                     statistics.rootBlocks++;
                     let blockData;
                     if (row[column].data && row[column].index) {

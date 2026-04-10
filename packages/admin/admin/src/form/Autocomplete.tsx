@@ -22,8 +22,10 @@ export type FinalFormAutocompleteProps<
     FreeSolo extends boolean | undefined,
 > = Partial<AsyncAutocompleteOptionsProps<T>> &
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput"> & {
-        clearable?: boolean;
         errorText?: ReactNode;
+        required?: boolean;
+        disabled?: boolean;
+        readOnly?: boolean;
     };
 
 type FinalFormAutocompleteInternalProps<T extends Record<string, any>> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
@@ -43,14 +45,18 @@ export const FinalFormAutocomplete = <
     loading = false,
     loadingError,
     isAsync = false,
-    clearable,
+    disabled,
+    readOnly,
     loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
     noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
     errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
+    required,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+    const clearable = !required && !disabled && !readOnly;
+
     return (
         <Autocomplete
             popupIcon={popupIcon}
@@ -73,7 +79,9 @@ export const FinalFormAutocomplete = <
                 </Typography>
             }
             isOptionEqualToValue={(option: T, value: T) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 return option === value;
             }}
             onChange={(_e, option) => {
@@ -81,12 +89,16 @@ export const FinalFormAutocomplete = <
             }}
             value={value ? (value as T) : (null as any)}
             {...rest}
+            disabled={disabled}
+            readOnly={readOnly}
             multiple={multiple as Multiple}
             renderInput={(params: AutocompleteRenderInputParams) => (
                 <InputBase
                     {...restInput}
                     {...params}
                     {...params.InputProps}
+                    // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
+                    required={multiple ? false : required}
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}

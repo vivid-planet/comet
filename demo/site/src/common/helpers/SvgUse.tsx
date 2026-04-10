@@ -7,6 +7,6 @@ interface SvgUseProps extends SVGProps<SVGSVGElement> {
 
 export const SvgUse = ({ href, ...props }: SvgUseProps) => (
     <svg aria-hidden="true" {...props}>
-        <use href={href} xlinkHref={href} />
+        <use href={href} />
     </svg>
 );

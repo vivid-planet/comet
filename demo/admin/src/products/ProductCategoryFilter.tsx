@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { ClearInputAdornment } from "@comet/admin";
 import Autocomplete from "@mui/material/Autocomplete";
 import { type GridFilterInputValueProps, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid-pro";
-import { useCallback, useState } from "react";
+import { type ChangeEvent, useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
@@ -73,8 +73,8 @@ function ProductCategoryFilter({ item, applyValue, apiRef }: GridFilterInputValu
                     {...params}
                     autoComplete="off"
                     placeholder={intl.formatMessage({ id: "productCategory.placeholder", defaultMessage: "Choose a Product Category" })}
-                    value={search ? search : null}
-                    onChange={(event) => {
+                    value={search}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         setSearch(event.target.value);
                     }}
                     label={apiRef.current.getLocaleText("filterPanelInputLabel")}

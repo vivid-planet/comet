@@ -10,7 +10,7 @@ const files = [
                   targetDir: ["demo/admin", "demo/api", "demo/site"],
               },
               {
-                  file: "demo/.env.local",
+                  file: ".env.local",
                   targetDir: ["demo/admin", "demo/api", "demo/site", "storybook"],
               },
               {
@@ -25,6 +25,14 @@ const files = [
     {
         file: "packages/api/cms-api/schema.gql",
         targetDir: ["packages/admin/cms-admin"],
+    },
+    {
+        file: "packages/api/brevo-api/block-meta.json",
+        targetDir: ["packages/admin/brevo-admin", "packages/mail-react"],
+    },
+    {
+        file: "packages/api/brevo-api/schema.gql",
+        targetDir: ["packages/admin/brevo-admin"],
     },
     {
         file: "demo/api/block-meta.json",

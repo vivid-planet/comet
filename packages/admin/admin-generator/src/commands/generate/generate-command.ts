@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { readFile, writeFile } from "node:fs/promises";
+
 import { type ApolloClient } from "@apollo/client";
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
@@ -20,7 +22,8 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import type { ComponentType, ReactElement } from "react";
+import { format, resolveConfig } from "prettier";
+import type { ComponentType, JSX, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
 
 import { parseConfig } from "./config/parseConfig";
@@ -49,7 +52,7 @@ function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
     return arg && arg.type === "component";
 }
 
-export type StaticSelectValue = { value: string; label: string } | string;
+export type StaticSelectValue = { value: string; label: string | FormattedMessageElement } | string;
 type AsyncSelectFilter =
     | {
           /**
@@ -95,7 +98,7 @@ export type FormFieldConfig<T> = (
           disableSlider?: boolean;
           initialValue?: { min: number; max: number };
       } & InputBaseFieldConfig)
-    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean }
+    | { type: "boolean"; name: UsableFormFields<T>; initialValue?: boolean; checkboxLabel?: string | FormattedMessageElement }
     | ({ type: "date"; name: UsableFormFields<T>; initialValue?: string } & InputBaseFieldConfig)
     | ({ type: "dateTime"; name: UsableFormFields<T>; initialValue?: Date } & InputBaseFieldConfig)
     | ({
@@ -196,6 +199,11 @@ export type FormConfig<T extends { __typename?: string }> = {
      * @default true
      */
     navigateOnCreate?: boolean;
+    /**
+     * If true, the generated form will have an initialValues prop to set initial form values.
+     * @default false
+     */
+    initialValuesAsProp?: boolean;
 };
 export type InjectedFormVariables = {
     id?: string;
@@ -311,6 +319,10 @@ export type GridConfig<T extends { __typename?: string }> = {
      */
     scopeAsProp?: boolean;
     density?: "comfortable" | "compact" | "standard";
+    crudContextMenu?: {
+        deleteType?: "delete" | "remove";
+        deleteText?: string;
+    };
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
@@ -331,6 +343,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         loaders: [new GraphQLFileLoader()],
     });
     const gqlIntrospection = introspectionFromSchema(schema);
+    const writtenFiles: string[] = [];
 
     const files: string[] = await glob(filePattern);
     for (const file of files) {
@@ -341,13 +354,15 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = await parseConfig(file);
+        const config = await parseConfig(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
 
         const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
-        if (!exportName) throw new Error("Can not determine exportName");
+        if (!exportName) {
+            throw new Error("Can not determine exportName");
+        }
 
         let generated: GeneratorReturn;
         if (config.type == "form") {
@@ -364,6 +379,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         }
 
         await writeGenerated(codeOuputFilename, outputCode);
+        writtenFiles.push(codeOuputFilename);
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
@@ -374,8 +390,19 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
                 ${gqlDocumentsOutputCode}
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
+            writtenFiles.push(gqlDocumentsOuputFilename);
         }
         console.log("");
+    }
+    if (writtenFiles.length > 0) {
+        console.log(`Formatting ${writtenFiles.length} generated files...`);
+        await Promise.all(
+            writtenFiles.map(async (filepath) => {
+                const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
+                const formatted = await format(content, { ...options, filepath });
+                await writeFile(filepath, formatted);
+            }),
+        );
     }
 }
 

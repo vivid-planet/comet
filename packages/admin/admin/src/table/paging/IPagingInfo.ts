@@ -8,5 +8,5 @@ export interface IPagingInfo {
     fetchPreviousPage?: () => void;
     totalPages?: number | null;
     currentPage?: number;
-    attachTableRef: (ref: RefObject<HTMLDivElement | undefined>) => void;
+    attachTableRef: (ref: RefObject<HTMLDivElement | undefined | null>) => void;
 }

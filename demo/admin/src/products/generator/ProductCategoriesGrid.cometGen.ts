@@ -9,6 +9,9 @@ export default defineConfig<GQLProductCategory>({
     rowReordering: {
         enabled: true,
     },
+    crudContextMenu: {
+        deleteType: "remove",
+    },
     columns: [
         {
             type: "text",

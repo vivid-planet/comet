@@ -83,7 +83,9 @@ export const EditLink = ({ id }: Props) => {
         return <Loading behavior="fillPageHeight" />;
     }
 
-    if (!linkState) return null;
+    if (!linkState) {
+        return null;
+    }
 
     return (
         <>

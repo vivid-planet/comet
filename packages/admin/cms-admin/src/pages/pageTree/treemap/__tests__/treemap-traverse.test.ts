@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { traverse, type TreeMapNode } from "../TreeMapUtils";
 import { sampleTree } from "./treemap.test";
 

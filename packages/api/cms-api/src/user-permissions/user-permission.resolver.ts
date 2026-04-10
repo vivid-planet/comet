@@ -98,7 +98,9 @@ export class UserPermissionResolver {
             throw new Error(`Permission not found: ${id}`);
         }
         for (const p of await this.service.getPermissions(await this.service.getUser(userId))) {
-            if (p.id === id) return p;
+            if (p.id === id) {
+                return p;
+            }
         }
         throw new Error("Permission not found");
     }

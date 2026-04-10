@@ -85,7 +85,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Field(() => Int)
         numberOfFiles: number;
 
-        @Property({ columnType: "uuid array", type: ArrayType })
+        @Property({ columnType: "uuid[]", type: ArrayType })
         @Index()
         @Field(() => [ID])
         mpath: string[];

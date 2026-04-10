@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { saveAs } from "file-saver";
+import { downloadFile } from "@comet/admin";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useState } from "react";
 
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
@@ -267,7 +267,7 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
             if (downloadInfo === null) {
                 showError(setHasDownloadErrors);
             } else {
-                saveAs(downloadInfo.fileUrl, downloadInfo.name);
+                downloadFile(downloadInfo.fileUrl, downloadInfo.name);
             }
         }
 

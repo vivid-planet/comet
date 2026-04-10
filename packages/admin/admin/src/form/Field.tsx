@@ -10,6 +10,10 @@ const requiredValidator = (value: any) => {
     if (value === undefined || value === null || value === false || value === "") {
         return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
     }
+    // Check for empty arrays (relevant for multiple select fields)
+    if (Array.isArray(value) && value.length === 0) {
+        return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
+    }
     return undefined;
 };
 
@@ -47,6 +51,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     shouldShowError: passedShouldShowError,
     shouldShowWarning: passedShouldShowWarning,
     shouldScrollTo: passedShouldScrollTo,
+    "data-testid": dataTestId,
     ...otherProps
 }: FieldProps<FieldValue, FieldElement>) {
     const { disabled, variant, fullWidth } = otherProps;
@@ -89,6 +94,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
+                data-testid={dataTestId}
                 {...fieldContainerProps}
             >
                 {render()}

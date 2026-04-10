@@ -68,8 +68,14 @@ type CurrentUser {
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
   authenticatedUser: UserPermissionsUser
+  accountUrl: String
   permissionsForScope(scope: JSONObject!): [String!]!
   allowedContentScopes: [ContentScopeWithLabel!]!
+}
+
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
 }
 
 type Dependency {
@@ -286,11 +292,6 @@ enum WarningStatus {
   ignored
 }
 
-type EntityInfo {
-  name: String!
-  secondaryInformation: String
-}
-
 type PaginatedWarnings {
   nodes: [Warning!]!
   totalCount: Int!
@@ -313,7 +314,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -335,9 +336,47 @@ interface DocumentInterface {
 }
 
 input DependentFilter {
-  rootGraphqlObjectType: String
+  rootGraphqlObjectType: StringFilter
   rootId: String
   rootColumnName: String
+  name: StringFilter
+  secondaryInformation: StringFilter
+  visible: BooleanFilter
+  and: [DependentFilter!]
+  or: [DependentFilter!]
+}
+
+input StringFilter {
+  contains: String
+  notContains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input DependencySort {
+  field: DependencySortField!
+  direction: SortDirection! = ASC
+}
+
+enum DependencySortField {
+  name
+  secondaryInformation
+  graphqlObjectType
+  visible
+}
+
+enum SortDirection {
+  ASC
+  DESC
 }
 
 type Redirect {
@@ -351,11 +390,12 @@ type Redirect {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
   path
+  domain
 }
 
 enum RedirectGenerationType {
@@ -364,9 +404,14 @@ enum RedirectGenerationType {
 }
 
 input DependencyFilter {
-  targetGraphqlObjectType: String
+  targetGraphqlObjectType: StringFilter
   targetId: String
   rootColumnName: String
+  name: StringFilter
+  secondaryInformation: StringFilter
+  visible: BooleanFilter
+  and: [DependencyFilter!]
+  or: [DependencyFilter!]
 }
 
 type PaginatedRedirects {
@@ -414,7 +459,7 @@ type DamFile {
   damPath: String!
   alternativesForThisFile: [DamMediaAlternative!]!
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type PaginatedDamItems {
@@ -503,16 +548,12 @@ input RedirectScopeInput {
   thisScopeHasNoFields____: String
 }
 
-enum SortDirection {
-  ASC
-  DESC
-}
-
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
   target: StringFilter
   active: BooleanFilter
+  sourceType: RedirectSourceTypeEnumFilter
   activatedAt: DateTimeFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -520,20 +561,10 @@ input RedirectFilter {
   or: [RedirectFilter!]
 }
 
-input StringFilter {
-  contains: String
-  notContains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
-  isAnyOf: [String!]
-  isEmpty: Boolean
-  isNotEmpty: Boolean
-}
-
-input BooleanFilter {
-  equal: Boolean
+input RedirectSourceTypeEnumFilter {
+  isAnyOf: [RedirectSourceTypeValues!]
+  equal: RedirectSourceTypeValues
+  notEqual: RedirectSourceTypeValues
 }
 
 input DateTimeFilter {

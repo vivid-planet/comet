@@ -1,5 +1,159 @@
 # @comet/admin-generator
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [92281f1]
+- Updated dependencies [25f7342]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+    - @comet/cms-admin@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+- Updated dependencies [85b09a2]
+- Updated dependencies [171c335]
+    - @comet/cms-admin@9.0.0-beta.1
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 0ec748a: Convert to ESM
+
+    To upgrade, make the following changes to your `tsconfig.json`:
+
+    ```diff
+    {
+        "compilerOptions": {
+    -       "module": "ESNext",
+    -       "moduleResolution": "Node",
+    +       "module": "preserve",
+    +       "moduleResolution": "bundler"
+        }
+    }
+    ```
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [ee24125]
+- Updated dependencies [5f1566a]
+- Updated dependencies [790e8d0]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+    - @comet/cms-admin@9.0.0-beta.0
+
+## 8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- 4bb3d09: Fix Prettier formatting in monorepo setups by using the Prettier API directly instead of the CLI
+
+## 8.18.0
+
+### Patch Changes
+
+- b35454a: Fix `asyncSelect` form field generation and `staticSelect` grid column generation for nested fields from 1:1 relations (e.g., `"product.category"`)
+- 69324f9: Grid: Fix emitting string literals for non-string `initialFilter` values
+
+## 8.17.1
+
+## 8.17.0
+
+### Minor Changes
+
+- cd854dc: Grid: Add automatic `onRowClick` navigation
+
+    Generated grids now automatically navigate to the edit page when a row is clicked, improving user experience.
+    - When `rowActionProp` is `false` (default): generates a `handleRowClick` handler using `useStackSwitchApi().activatePage("edit", id)`
+    - When `rowActionProp` is `true`: adds an `onRowClick` prop to allow parent components to implement needed action
+
+- 45163f1: Grid: Enable client side filter and sort when non paging api is used
+
+## 8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 82ff4c2: Form field boolean: use `label` as field label (before: checkbox label) and add new `checkboxLabel` option
+- 14f9ef0: Add support for `<FormattedMessage />` in staticSelect values label
+- 39a9bb0: Make paging conditional in grid generation: only add paging args (`offset`, `limit`) and paging return (`totalCount`, nested `nodes`) when the GQL schema query returns a paginated type
+- cc96333: Add support for custom error responses in update and create mutation and show it in form as submission error
+
+### Patch Changes
+
+- 33ac500: Use the GraphQL schema scope type in generated grids when scope comes from context.
+- 47ed8cf: Only emit grid sort variables and helpers when the schema supports sorting.
+
+## 8.14.0
+
+### Patch Changes
+
+- 540f8c8: Form: Use scope type from gql schema when using scope from context
+
+## 8.13.0
+
+### Minor Changes
+
+- 94abd9b: Add initialValuesAsProp config to generate a initialValues prop for the form that allows injecting dynamic initialValues
+
+## 8.12.0
+
+### Minor Changes
+
+- 12466e4: CrudContextMenu: add deleteType ("delete"|"remove") that changes menu item and dialog from delete to remove for non-destructive data (relations)
+
+## 8.11.1
+
+### Patch Changes
+
+- 64bd5f4: Revert "Replace ts-node with jiti"
+
+    This broke import aliases (e.g, `@src/`) in config files.
+
+- 0839bd6: Fix accidentally formatting all files
+
+## 8.11.0
+
+### Minor Changes
+
+- 438e182: Replace ts-node with jiti
+
+    This in preparation for the upcoming switch to ESM.
+
+- 4bb9e21: Format generated files using prettier
+- 0998531: Grid: add support for density setting to specify grid density programmatically
+- 52006d2: Allow usage of `<FormattedMessage>` for user visible stings in config to allow customizing message ids
+- f293762: Grid: Add support for column visible=false (not just breakpoints)
+- 0371889: Grid: Add crudContextMenu.deleteText that allows customizing the menu item text for delete action
+- 222ff35: Form: don't use `string` as form value for number fields as `NumberField` uses `number`
+
 ## 8.10.0
 
 ### Minor Changes
