@@ -7,8 +7,8 @@ import {
     GridCellContent,
     type GridColDef,
     type IFilterApi,
+    muiGridSortToGql,
     PrettyBytes,
-    SortDirection,
     ToolbarActions,
     ToolbarItem,
     Tooltip,
@@ -25,7 +25,6 @@ import {
     type GridRowClassNameParams,
     type GridRowSelectionModel,
     type GridSlotsComponent,
-    type GridSortModel,
     useGridApiRef,
 } from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
@@ -170,7 +169,7 @@ const FolderDataGrid = ({
         setUploadTargetFolderName(undefined);
     };
 
-    const dataGridProps = useDataGridRemote({ pageSize: 20 });
+    const dataGridProps = useDataGridRemote({ pageSize: 20, initialSort: [{ field: "name", sort: "asc" }] });
 
     const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
@@ -181,266 +180,6 @@ const FolderDataGrid = ({
     });
 
     const apiRef = useGridApiRef();
-
-    const { data: dataGridData, loading } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
-        variables: {
-            folderId: currentFolderId,
-            includeArchived: filterApi.current.archived,
-            filter: {
-                mimetypes: props.allowedMimetypes,
-                searchText: filterApi.current.searchText,
-            },
-            sortColumnName: filterApi.current.sort?.columnName,
-            sortDirection: filterApi.current.sort?.direction,
-            limit: dataGridProps.paginationModel.pageSize,
-            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
-            scope,
-        },
-    });
-
-    const { matches } = useDamSearchHighlighting({
-        items: dataGridData?.damItemsList.nodes ?? [],
-        query: filterApi.current.searchText ?? "",
-    });
-    const isSearching = !!(filterApi.current.searchText && filterApi.current.searchText.length > 0);
-
-    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-
-    const fileUploadApi = useDamFileUpload({
-        acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
-    });
-
-    useEffect(() => {
-        async function navigateToNewlyUploadedItems() {
-            if (fileUploadApi.newlyUploadedItems.length === 0) {
-                return;
-            }
-
-            let type: GQLDamItemType | undefined;
-            let id: string | undefined;
-            let parentId: string | undefined;
-            let redirectToSubfolder;
-
-            if (fileUploadApi.newlyUploadedItems.find((item) => item.type === "folder")) {
-                const folders = fileUploadApi.newlyUploadedItems.filter((item) => item.type === "folder");
-                const firstFolder = folders[0];
-
-                type = "Folder";
-                id = firstFolder.id;
-
-                if (firstFolder.parentId === currentFolderId) {
-                    // upload to current folder / creates new folders
-                    parentId = currentFolderId;
-                    redirectToSubfolder = false;
-                } else {
-                    // upload to subfolder / creates new folders
-                    parentId = firstFolder.parentId;
-                    redirectToSubfolder = true;
-                }
-            } else {
-                const files = fileUploadApi.newlyUploadedItems;
-                const firstFile = files[0];
-
-                type = "File";
-                id = firstFile.id;
-
-                if (firstFile.parentId === currentFolderId) {
-                    // upload to current folder / creates NO new folders (only files)
-                    parentId = currentFolderId;
-                    redirectToSubfolder = false;
-                } else {
-                    // upload to subfolder / creates NO new folders (only files)
-                    parentId = firstFile.parentId;
-                    redirectToSubfolder = true;
-                }
-            }
-
-            if (id === redirectedToId) {
-                // otherwise it's not possible to navigate to another folder while the new item is in newlyUploadedItems
-                // because it always automatically redirects to the new item
-                return;
-            }
-
-            const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
-                query: damItemListPosition,
-                variables: {
-                    id: id,
-                    type: type,
-                    folderId: parentId,
-                    includeArchived: filterApi.current.archived,
-                    filter: {
-                        mimetypes: props.allowedMimetypes,
-                        searchText: filterApi.current.searchText,
-                    },
-                    sortColumnName: filterApi.current.sort?.columnName,
-                    sortDirection: filterApi.current.sort?.direction,
-                    scope,
-                },
-            });
-
-            const position = result.data.damItemListPosition;
-            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
-
-            if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
-                switchApi.activatePage("folder", parentId);
-            } else {
-                apiRef.current?.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
-            }
-
-            setRedirectedToId(id);
-        }
-
-        navigateToNewlyUploadedItems();
-
-        // useEffect dependencies must only include `newlyUploadedItems`, because the function should only be called once after new items are added.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fileUploadApi.newlyUploadedItems]);
-
-    const [hoveredId, setHoveredId] = useState<string | null>(null);
-
-    const showHoverStyles = useDebouncedCallback(
-        (id = "root") => {
-            setHoveredId(id);
-        },
-        500,
-        { leading: true },
-    );
-
-    const hideHoverStyles = () => {
-        if (showHoverStyles.isPending()) {
-            showHoverStyles.cancel();
-        }
-        setHoveredId(null);
-    };
-
-    const emptyFolderSnackbarElement = (
-        <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            autoHideDuration={5000}
-            TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage="Empty folders can't be uploaded" />}
-        />
-    );
-
-    // handles upload of native file (e.g. file from desktop) to current folder:
-    // If the native file is dropped on a file row in the DataGrid, it is uploaded
-    // to the current folder
-    const { getRootProps: getFileRootProps } = useDropzone({
-        ...fileUploadApi.dropzoneConfig,
-        noClick: true,
-        onDragOver: () => {
-            showHoverStyles();
-            showUploadFooter({
-                folderName:
-                    currentFolderData?.damFolder.name ??
-                    intl.formatMessage({
-                        id: "comet.dam.footer.assetManager",
-                        defaultMessage: "Asset Manager",
-                    }),
-            });
-        },
-        onDragLeave: () => {
-            hideHoverStyles();
-            hideUploadFooter();
-        },
-        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[], event) => {
-            hideHoverStyles();
-            hideUploadFooter();
-
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, { folderId: currentFolderId });
-
-            // react-dropzone doesn't support folder drops natively
-            // the only way to find out if an empty folder was dropped is if there are no rejected files and no accepted files
-            if (!fileRejections.length && !acceptedFiles.length) {
-                snackbarApi.showSnackbar(emptyFolderSnackbarElement);
-            }
-        },
-    });
-
-    const [damItemToMove, setDamItemToMove] = useState<{ id: string; type: "file" | "folder" }>();
-    const moveDialogOpen = damItemToMove !== undefined;
-
-    const openMoveDialog = (itemToMove: { id: string; type: "file" | "folder" }) => {
-        setDamItemToMove(itemToMove);
-    };
-
-    const closeMoveDialog = () => {
-        setDamItemToMove(undefined);
-    };
-
-    const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
-        const newMap: DamItemSelectionMap = new Map();
-
-        newSelectionModel.forEach((selectedId) => {
-            const typedId = selectedId as string;
-
-            if (damSelectionActionsApi.selectionMap.has(typedId)) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                newMap.set(typedId, damSelectionActionsApi.selectionMap.get(typedId)!);
-            } else {
-                const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
-
-                if (!item) {
-                    throw new Error("Selected item does not exist");
-                }
-
-                let type: "file" | "folder";
-                if (item && isFolder(item)) {
-                    type = "folder";
-                } else {
-                    type = "file";
-                }
-                newMap.set(typedId, type);
-            }
-        });
-
-        damSelectionActionsApi.setSelectionMap(newMap);
-    };
-
-    const getRowClassName = ({ row }: GridRowClassNameParams) => {
-        if (fileUploadApi.newlyUploadedItems.find((newItem) => newItem.id === row.id)) {
-            return "CometDataGridRow--highlighted";
-        }
-
-        if (row.isInboxFromOtherScope) {
-            return "CometDataGridRow--inboxFolder";
-        }
-
-        return "";
-    };
-
-    const FIELD_TO_SORT_COLUMN: Record<string, string> = {
-        name: "name",
-        createdAt: "createdAt",
-        updatedAt: "updatedAt",
-        info: "size",
-    };
-    const SORT_COLUMN_TO_FIELD: Record<string, string> = {
-        name: "name",
-        createdAt: "createdAt",
-        updatedAt: "updatedAt",
-        size: "info",
-    };
-
-    const currentSort = filterApi.current.sort;
-    const sortedField = currentSort ? SORT_COLUMN_TO_FIELD[currentSort.columnName] : undefined;
-    const sortModel: GridSortModel =
-        currentSort && sortedField ? [{ field: sortedField, sort: currentSort.direction === SortDirection.ASC ? "asc" : "desc" }] : [];
-
-    const handleSortModelChange = (newSortModel: GridSortModel) => {
-        if (newSortModel.length === 0) {
-            filterApi.formApi.change("sort", { columnName: "name", direction: SortDirection.ASC });
-            return;
-        }
-        const { field, sort } = newSortModel[0];
-        const columnName = FIELD_TO_SORT_COLUMN[field];
-        if (columnName && sort) {
-            filterApi.formApi.change("sort", {
-                columnName,
-                direction: sort === "asc" ? SortDirection.ASC : SortDirection.DESC,
-            });
-        }
-    };
 
     const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
         {
@@ -516,6 +255,7 @@ const FolderDataGrid = ({
         },
         {
             field: "info",
+            sortBy: "size",
             headerName: intl.formatMessage({
                 id: "comet.dam.file.info",
                 defaultMessage: "Info",
@@ -669,6 +409,237 @@ const FolderDataGrid = ({
         },
     ];
 
+    const gqlSort = muiGridSortToGql(dataGridProps.sortModel, dataGridColumns);
+    const sortColumnName = gqlSort?.[0]?.field;
+    const sortDirection = gqlSort?.[0]?.direction;
+
+    const { data: dataGridData, loading } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
+        variables: {
+            folderId: currentFolderId,
+            includeArchived: filterApi.current.archived,
+            filter: {
+                mimetypes: props.allowedMimetypes,
+                searchText: filterApi.current.searchText,
+            },
+            sortColumnName,
+            sortDirection,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            scope,
+        },
+    });
+
+    const { matches } = useDamSearchHighlighting({
+        items: dataGridData?.damItemsList.nodes ?? [],
+        query: filterApi.current.searchText ?? "",
+    });
+    const isSearching = !!(filterApi.current.searchText && filterApi.current.searchText.length > 0);
+
+    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+
+    const fileUploadApi = useDamFileUpload({
+        acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
+    });
+
+    useEffect(() => {
+        async function navigateToNewlyUploadedItems() {
+            if (fileUploadApi.newlyUploadedItems.length === 0) {
+                return;
+            }
+
+            let type: GQLDamItemType | undefined;
+            let id: string | undefined;
+            let parentId: string | undefined;
+            let redirectToSubfolder;
+
+            if (fileUploadApi.newlyUploadedItems.find((item) => item.type === "folder")) {
+                const folders = fileUploadApi.newlyUploadedItems.filter((item) => item.type === "folder");
+                const firstFolder = folders[0];
+
+                type = "Folder";
+                id = firstFolder.id;
+
+                if (firstFolder.parentId === currentFolderId) {
+                    // upload to current folder / creates new folders
+                    parentId = currentFolderId;
+                    redirectToSubfolder = false;
+                } else {
+                    // upload to subfolder / creates new folders
+                    parentId = firstFolder.parentId;
+                    redirectToSubfolder = true;
+                }
+            } else {
+                const files = fileUploadApi.newlyUploadedItems;
+                const firstFile = files[0];
+
+                type = "File";
+                id = firstFile.id;
+
+                if (firstFile.parentId === currentFolderId) {
+                    // upload to current folder / creates NO new folders (only files)
+                    parentId = currentFolderId;
+                    redirectToSubfolder = false;
+                } else {
+                    // upload to subfolder / creates NO new folders (only files)
+                    parentId = firstFile.parentId;
+                    redirectToSubfolder = true;
+                }
+            }
+
+            if (id === redirectedToId) {
+                // otherwise it's not possible to navigate to another folder while the new item is in newlyUploadedItems
+                // because it always automatically redirects to the new item
+                return;
+            }
+
+            const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+                query: damItemListPosition,
+                variables: {
+                    id: id,
+                    type: type,
+                    folderId: parentId,
+                    includeArchived: filterApi.current.archived,
+                    filter: {
+                        mimetypes: props.allowedMimetypes,
+                        searchText: filterApi.current.searchText,
+                    },
+                    sortColumnName,
+                    sortDirection,
+                    scope,
+                },
+            });
+
+            const position = result.data.damItemListPosition;
+            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
+
+            if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
+                switchApi.activatePage("folder", parentId);
+            } else {
+                apiRef.current?.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
+            }
+
+            setRedirectedToId(id);
+        }
+
+        navigateToNewlyUploadedItems();
+
+        // useEffect dependencies must only include `newlyUploadedItems`, because the function should only be called once after new items are added.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fileUploadApi.newlyUploadedItems]);
+
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+    const showHoverStyles = useDebouncedCallback(
+        (id = "root") => {
+            setHoveredId(id);
+        },
+        500,
+        { leading: true },
+    );
+
+    const hideHoverStyles = () => {
+        if (showHoverStyles.isPending()) {
+            showHoverStyles.cancel();
+        }
+        setHoveredId(null);
+    };
+
+    const emptyFolderSnackbarElement = (
+        <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            autoHideDuration={5000}
+            TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
+            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage="Empty folders can't be uploaded" />}
+        />
+    );
+
+    // handles upload of native file (e.g. file from desktop) to current folder:
+    // If the native file is dropped on a file row in the DataGrid, it is uploaded
+    // to the current folder
+    const { getRootProps: getFileRootProps } = useDropzone({
+        ...fileUploadApi.dropzoneConfig,
+        noClick: true,
+        onDragOver: () => {
+            showHoverStyles();
+            showUploadFooter({
+                folderName:
+                    currentFolderData?.damFolder.name ??
+                    intl.formatMessage({
+                        id: "comet.dam.footer.assetManager",
+                        defaultMessage: "Asset Manager",
+                    }),
+            });
+        },
+        onDragLeave: () => {
+            hideHoverStyles();
+            hideUploadFooter();
+        },
+        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[], event) => {
+            hideHoverStyles();
+            hideUploadFooter();
+
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, { folderId: currentFolderId });
+
+            // react-dropzone doesn't support folder drops natively
+            // the only way to find out if an empty folder was dropped is if there are no rejected files and no accepted files
+            if (!fileRejections.length && !acceptedFiles.length) {
+                snackbarApi.showSnackbar(emptyFolderSnackbarElement);
+            }
+        },
+    });
+
+    const [damItemToMove, setDamItemToMove] = useState<{ id: string; type: "file" | "folder" }>();
+    const moveDialogOpen = damItemToMove !== undefined;
+
+    const openMoveDialog = (itemToMove: { id: string; type: "file" | "folder" }) => {
+        setDamItemToMove(itemToMove);
+    };
+
+    const closeMoveDialog = () => {
+        setDamItemToMove(undefined);
+    };
+
+    const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
+        const newMap: DamItemSelectionMap = new Map();
+
+        newSelectionModel.forEach((selectedId) => {
+            const typedId = selectedId as string;
+
+            if (damSelectionActionsApi.selectionMap.has(typedId)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                newMap.set(typedId, damSelectionActionsApi.selectionMap.get(typedId)!);
+            } else {
+                const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
+
+                if (!item) {
+                    throw new Error("Selected item does not exist");
+                }
+
+                let type: "file" | "folder";
+                if (item && isFolder(item)) {
+                    type = "folder";
+                } else {
+                    type = "file";
+                }
+                newMap.set(typedId, type);
+            }
+        });
+
+        damSelectionActionsApi.setSelectionMap(newMap);
+    };
+
+    const getRowClassName = ({ row }: GridRowClassNameParams) => {
+        if (fileUploadApi.newlyUploadedItems.find((newItem) => newItem.id === row.id)) {
+            return "CometDataGridRow--highlighted";
+        }
+
+        if (row.isInboxFromOtherScope) {
+            return "CometDataGridRow--inboxFolder";
+        }
+
+        return "";
+    };
+
     const uploadFilters = {
         allowedMimetypes: props.allowedMimetypes,
     };
@@ -686,8 +657,6 @@ const FolderDataGrid = ({
                     pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
-                    sortModel={sortModel}
-                    onSortModelChange={handleSortModelChange}
                     checkboxSelection={!hideMultiselect}
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
