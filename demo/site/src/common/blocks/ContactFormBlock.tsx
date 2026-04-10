@@ -63,7 +63,7 @@ export const ContactFormBlock = withPreview(
                     type: "manual",
                     message: intl.formatMessage({
                         id: "contactFormBlock.missingRecaptchaKey",
-                        defaultMessage: "ReCAPTCHA key is missing.",
+                        defaultMessage: "The form is currently unavailable. Please try again later.",
                     }),
                 });
                 return;
@@ -77,7 +77,7 @@ export const ContactFormBlock = withPreview(
                     type: "manual",
                     message: intl.formatMessage({
                         id: "contactFormBlock.missingRecaptchaToken",
-                        defaultMessage: "ReCAPTCHA token is missing.",
+                        defaultMessage: "ReCAPTCHA validation failed. Please try again.",
                     }),
                 });
                 return;
