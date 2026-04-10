@@ -8,7 +8,7 @@ import { createTheme } from "../../theme/createTheme.js";
 import { css } from "../../utils/css.js";
 
 const config: Meta = {
-    title: "Examples/TwoColumnLayout",
+    title: "Layout Patterns/Symmetric Two-Column Layout",
 };
 
 export default config;
