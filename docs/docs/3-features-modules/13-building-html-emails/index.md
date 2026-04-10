@@ -92,3 +92,4 @@ In Storybook, the decorator handles MJML-to-HTML conversion automatically. When 
 - [**Components and Theme**](./2-components-and-theme.md) — Full theme API, text variants, responsive values, and all available components
 - [**Rendering**](./3-rendering.md) — Converting email templates to HTML with `renderMailHtml`, browser environments, and Mail Templates Module integration
 - [**Customization**](./4-customization.md) — Creating custom components, extending the theme with module augmentation, and adding responsive styles
+- [**Layout Patterns**](./5-layout-patterns.md) — Ready-to-use layout recipes including multi-column layouts with gaps and responsive stacking
