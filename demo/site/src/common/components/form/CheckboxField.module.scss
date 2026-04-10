@@ -74,6 +74,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-s200);
+    padding-left: calc(24px + var(--spacing-s300));
+    margin-top: var(--spacing-s200);
 }
 
 .labelText {

@@ -20,6 +20,7 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
     ...inputProps
 }: CheckboxFieldProps<TFieldValues>) => {
     const id = useId();
+    const descriptionId = useId();
     const required = !!rules?.required;
 
     return (
@@ -28,35 +29,41 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
             control={control}
             rules={rules}
             render={({ field: { value, ...field }, fieldState }) => (
-                <label htmlFor={id} className={styles.wrapper}>
-                    <input
-                        type="checkbox"
-                        {...inputProps}
-                        {...field}
-                        id={id}
-                        checked={Boolean(value)}
-                        aria-required={required}
-                        className={styles.input}
-                    />
-                    <span
-                        className={clsx(
-                            styles.checkbox,
-                            Boolean(value) && styles["checkbox--checked"],
-                            fieldState.error && styles["checkbox--error"],
-                        )}
-                    />
-                    <span className={styles.labelContent}>
+                <div>
+                    <label htmlFor={id} className={styles.wrapper}>
+                        <input
+                            type="checkbox"
+                            {...inputProps}
+                            {...field}
+                            id={id}
+                            checked={Boolean(value)}
+                            aria-required={required}
+                            aria-invalid={fieldState.error ? true : undefined}
+                            aria-describedby={fieldState.error?.message || helperText ? descriptionId : undefined}
+                            className={styles.input}
+                        />
+                        <span
+                            className={clsx(
+                                styles.checkbox,
+                                Boolean(value) && styles["checkbox--checked"],
+                                fieldState.error && styles["checkbox--error"],
+                            )}
+                        />
                         <span className={styles.labelText}>{label}</span>
-                        {fieldState.error?.message ? (
-                            <span className={styles.error}>
-                                <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
-                                {fieldState.error.message}
-                            </span>
-                        ) : helperText ? (
-                            <span className={styles.helperText}>{helperText}</span>
-                        ) : null}
-                    </span>
-                </label>
+                    </label>
+                    {(fieldState.error?.message || helperText) && (
+                        <div id={descriptionId} className={styles.labelContent}>
+                            {fieldState.error?.message ? (
+                                <span className={styles.error}>
+                                    <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
+                                    {fieldState.error.message}
+                                </span>
+                            ) : (
+                                <span className={styles.helperText}>{helperText}</span>
+                            )}
+                        </div>
+                    )}
+                </div>
             )}
         />
     );
