@@ -51,5 +51,7 @@ jobs:
               if: success() || failure()
               with:
                   name: test-results
-                  path: packages/**/junit.xml
+                  path: |
+                      packages/**/junit.xml
+                      storybook/junit.xml
                   overwrite: true
