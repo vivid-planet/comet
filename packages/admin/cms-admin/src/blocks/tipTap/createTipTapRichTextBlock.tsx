@@ -53,15 +53,15 @@ export interface TipTapBlockStyle {
 }
 
 export interface TipTapRichTextBlockState {
-    content: JSONContent;
+    tipTapContent: JSONContent;
 }
 
 interface TipTapRichTextBlockData {
-    content: JSONContent;
+    tipTapContent: JSONContent;
 }
 
 interface TipTapRichTextBlockInput {
-    content: JSONContent;
+    tipTapContent: JSONContent;
 }
 
 export interface TipTapRichTextBlockFactoryOptions {
@@ -94,7 +94,6 @@ const TipTapEditor = ({
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
-    onEditorReady?: (editor: import("@tiptap/react").Editor) => void;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
 
@@ -119,9 +118,9 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
         ],
-        content: state.content,
+        content: state.tipTapContent,
         onUpdate: ({ editor }) => {
-            updateState({ content: editor.getJSON() });
+            updateState({ tipTapContent: editor.getJSON() });
         },
     });
 
@@ -156,25 +155,25 @@ export const createTipTapRichTextBlock = (
 
         displayName: <FormattedMessage id="comet.blocks.tipTapRichText" defaultMessage="Rich Text (TipTap)" />,
 
-        defaultValues: () => ({ content: emptyContent }),
+        defaultValues: () => ({ tipTapContent: emptyContent }),
 
         category: BlockCategory.TextAndContent,
 
-        input2State: ({ content }) => {
-            return { content: content ?? emptyContent };
+        input2State: ({ tipTapContent }) => {
+            return { tipTapContent: tipTapContent ?? emptyContent };
         },
 
-        state2Output: ({ content }) => {
-            return { content };
+        state2Output: ({ tipTapContent }) => {
+            return { tipTapContent };
         },
 
-        output2State: async ({ content }) => {
-            return { content: content ?? emptyContent };
+        output2State: async ({ tipTapContent }) => {
+            return { tipTapContent: tipTapContent ?? emptyContent };
         },
 
-        createPreviewState: ({ content }, previewCtx) => {
+        createPreviewState: ({ tipTapContent }, previewCtx) => {
             return {
-                content,
+                tipTapContent,
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
@@ -184,13 +183,13 @@ export const createTipTapRichTextBlock = (
         },
 
         previewContent: (state) => {
-            const text = getPlainTextFromContent(state.content);
+            const text = getPlainTextFromContent(state.tipTapContent);
             const MAX_CHARS = 100;
             return text.length > 0 ? [{ type: "text", content: text.slice(0, MAX_CHARS) }] : [];
         },
 
         extractTextContents: (state) => {
-            const text = getPlainTextFromContent(state.content);
+            const text = getPlainTextFromContent(state.tipTapContent);
             return text.length > 0 ? [text] : [];
         },
     };

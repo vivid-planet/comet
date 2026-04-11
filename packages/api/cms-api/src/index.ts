@@ -87,6 +87,7 @@ export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
 export { createTableBlock } from "./blocks/factories/createTableBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
+export { createTipTapRichTextBlock } from "./blocks/factories/createTipTapRichTextBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { FlatBlocks } from "./blocks/flat-blocks/flat-blocks";
 export { getMostSignificantPreviewImageUrlTemplateFromBlock, getPreviewImageUrlTemplatesFromBlock } from "./blocks/get-preview-image-url-templates";
