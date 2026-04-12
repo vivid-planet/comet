@@ -87,7 +87,6 @@ export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
 export { createTableBlock } from "./blocks/factories/createTableBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
-export { createTipTapRichTextBlock } from "./blocks/factories/createTipTapRichTextBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { FlatBlocks } from "./blocks/flat-blocks/flat-blocks";
 export { getMostSignificantPreviewImageUrlTemplateFromBlock, getPreviewImageUrlTemplatesFromBlock } from "./blocks/get-preview-image-url-templates";
@@ -104,6 +103,13 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
+export {
+    createTipTapRichTextBlock,
+    type CreateTipTapRichTextBlockOptions,
+    type TipTapApiBlockStyle,
+    type TipTapBlockType,
+    type TipTapSupports,
+} from "./blocks/tipTap/createTipTapRichTextBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";

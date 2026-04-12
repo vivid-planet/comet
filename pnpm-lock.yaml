@@ -2033,6 +2033,27 @@ importers:
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
+      '@tiptap/core':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/pm@3.22.3)
+      '@tiptap/extension-heading':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+      '@tiptap/extension-paragraph':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+      '@tiptap/extension-subscript':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
+      '@tiptap/extension-superscript':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
+      '@tiptap/pm':
+        specifier: ^3.22.3
+        version: 3.22.3
+      '@tiptap/starter-kit':
+        specifier: ^3.22.3
+        version: 3.22.3
       base64url:
         specifier: ^3.0.1
         version: 3.0.1
