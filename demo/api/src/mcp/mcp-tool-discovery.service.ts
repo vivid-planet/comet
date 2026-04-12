@@ -6,12 +6,9 @@ import {
     type GraphQLField,
     type GraphQLInputObjectType,
     type GraphQLInputType,
-    type GraphQLList,
     type GraphQLNamedType,
-    type GraphQLNonNull,
     type GraphQLOutputType,
     type GraphQLScalarType,
-    type GraphQLType,
     isEnumType,
     isInputObjectType,
     isListType,
@@ -151,9 +148,9 @@ export class McpToolDiscoveryService implements OnModuleInit {
      * Extract the parameter mappings from NestJS's @Args() metadata.
      * This tells us how to map flat GraphQL arguments to the resolver method's parameters.
      */
-    private extractParamMappings(target: object, methodName: string): ParamMapping[] {
+    private extractParamMappings(resolverInstance: object, methodName: string): ParamMapping[] {
         const metadata: Record<string, { index: number; data: string | undefined }> =
-            Reflect.getMetadata(PARAM_ARGS_METADATA, target.constructor, methodName) || {};
+            Reflect.getMetadata(PARAM_ARGS_METADATA, resolverInstance.constructor, methodName) || {};
 
         const mappings: ParamMapping[] = [];
 
@@ -460,12 +457,10 @@ export class McpToolDiscoveryService implements OnModuleInit {
     }
 
     private unwrapType(type: GraphQLOutputType | GraphQLInputType): GraphQLNamedType {
-        if (isNonNullType(type)) {
-            return this.unwrapType((type as GraphQLNonNull<GraphQLType>).ofType as GraphQLOutputType);
+        let current = type;
+        while (isNonNullType(current) || isListType(current)) {
+            current = current.ofType as GraphQLOutputType;
         }
-        if (isListType(type)) {
-            return this.unwrapType((type as GraphQLList<GraphQLType>).ofType as GraphQLOutputType);
-        }
-        return type as GraphQLNamedType;
+        return current as GraphQLNamedType;
     }
 }

@@ -3,6 +3,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { Controller, Delete, Get, Logger, type OnModuleDestroy, type OnModuleInit, Post, Req, Res } from "@nestjs/common";
+import { randomUUID } from "crypto";
 import type { Request, Response } from "express";
 
 import { McpToolDiscoveryService } from "./mcp-tool-discovery.service";
@@ -98,7 +99,7 @@ export class McpController implements OnModuleInit, OnModuleDestroy {
         } else {
             // New session - create transport and connect
             transport = new StreamableHTTPServerTransport({
-                sessionIdGenerator: () => crypto.randomUUID(),
+                sessionIdGenerator: () => randomUUID(),
             });
             transport.onclose = () => {
                 if (transport.sessionId) {
