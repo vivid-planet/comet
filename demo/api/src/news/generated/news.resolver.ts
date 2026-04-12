@@ -2,6 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { EntityManager, FindOptions } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+import { McpField, McpTool } from "@src/mcp/mcp-tool.decorator";
 import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { PaginatedNews } from "./dto/paginated-news";
 import { NewsListArgs } from "./dto/news-list.args";
@@ -26,6 +27,7 @@ export class NewsResolver {
     ) {}
     @Query(() => News)
     @AffectedEntity(News)
+    @McpTool({ description: "Get a single news article by ID" })
     async news(
         @Args("id", { type: () => ID })
         id: string,
@@ -34,6 +36,7 @@ export class NewsResolver {
         return news;
     }
     @Query(() => News, { nullable: true })
+    @McpTool({ description: "Find a news article by its slug and content scope" })
     async newsBySlug(
         @Args("slug")
         slug: string,
@@ -44,6 +47,7 @@ export class NewsResolver {
         return news ?? null;
     }
     @Query(() => PaginatedNews)
+    @McpTool({ description: "List news articles with optional filtering, sorting, and pagination" })
     async newsList(
         @Args()
         { scope, search, filter, sort, offset, limit }: NewsListArgs,
@@ -58,6 +62,7 @@ export class NewsResolver {
         return new PaginatedNews(entities, totalCount);
     }
     @Mutation(() => News)
+    @McpTool({ description: "Create a new news article" })
     async createNews(
         @Args("scope", { type: () => NewsContentScope })
         scope: NewsContentScope,
@@ -76,6 +81,7 @@ export class NewsResolver {
     }
     @Mutation(() => News)
     @AffectedEntity(News)
+    @McpTool({ description: "Update an existing news article" })
     async updateNews(
         @Args("id", { type: () => ID })
         id: string,
@@ -98,6 +104,7 @@ export class NewsResolver {
     }
     @Mutation(() => Boolean)
     @AffectedEntity(News)
+    @McpTool({ description: "Delete a news article by ID" })
     async deleteNews(
         @Args("id", { type: () => ID })
         id: string,
@@ -115,6 +122,7 @@ export class NewsResolver {
         return news.comments.loadItems();
     }
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))
+    @McpField()
     async image(
         @Parent()
         news: News,
@@ -122,6 +130,7 @@ export class NewsResolver {
         return this.blocksTransformer.transformToPlain(news.image);
     }
     @ResolveField(() => RootBlockDataScalar(NewsContentBlock))
+    @McpField()
     async content(
         @Parent()
         news: News,

@@ -57,6 +57,7 @@ import { Page } from "./documents/pages/entities/page.entity";
 import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
+import { McpModule } from "./mcp/mcp.module";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { News } from "./news/entities/news.entity";
@@ -278,6 +279,7 @@ export class AppModule {
                 }),
                 BrevoContactSubscribeModule,
                 BrevoTransactionalMailsModule,
+                McpModule,
             ],
         };
     }

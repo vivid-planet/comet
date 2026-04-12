@@ -1,6 +1,7 @@
 import { AffectedEntity, RequiredPermission } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
+import { McpTool } from "@src/mcp/mcp-tool.decorator";
 
 import { News } from "./entities/news.entity";
 
@@ -11,6 +12,7 @@ export class ExtendedNewsResolver {
 
     @Query(() => [News])
     @AffectedEntity(News, { idArg: "ids" })
+    @McpTool({ description: "Get multiple news articles by their IDs" })
     async newsListByIds(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<News[]> {
         const newsList = await this.entityManager.find(News, { id: { $in: ids } });
 
