@@ -33,7 +33,7 @@ decorator. The usage of both decorators is the same.
 | `delete`             | `boolean`                     | `true`      | If `true`, includes the "delete" operation.                                           |
 | `list`               | `boolean`                     | `true`      | If `true`, includes the "list" operation.                                             |
 | `position`           | `object`                      | `undefined` | Configures the optional [magic `position` field](#position).                          |
-| `hooksService`       | `Type<CrudGeneratorHooksService>` | `undefined` | An optional service class for injecting custom validation logic into mutations. See [Hooks Service](#hooks-service). |
+| `hooksService`       | `class implementing CrudGeneratorHooksService` | `undefined` | An optional service class for injecting custom validation logic into mutations. See [Hooks Service](#hooks-service). |
 
 ## Annotate field
 
@@ -332,7 +332,7 @@ type Mutation {
 }
 ```
 
-If `errors` is non-empty the entity is `null` (the mutation was not applied).
+If `errors` is non-empty, the entity is `null` (the mutation was not applied).
 
 #### Registering the service in `@CrudGenerator` and the module
 
