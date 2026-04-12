@@ -2,7 +2,7 @@ import { DisableCometGuards } from "@comet/cms-api";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
-import { Controller, Delete, Get, Logger, type OnModuleDestroy, type OnModuleInit, Post, Req, Res } from "@nestjs/common";
+import { Controller, Delete, Get, HttpException, Logger, type OnModuleDestroy, type OnModuleInit, Post, Req, Res } from "@nestjs/common";
 import { randomUUID } from "crypto";
 import type { Request, Response } from "express";
 
@@ -73,7 +73,7 @@ export class McpController implements OnModuleInit, OnModuleDestroy {
                     ],
                 };
             } catch (error) {
-                const message = error instanceof Error ? error.message : String(error);
+                const message = this.formatError(error);
                 return {
                     content: [{ type: "text" as const, text: `Error: ${message}` }],
                     isError: true,
@@ -149,5 +149,26 @@ export class McpController implements OnModuleInit, OnModuleDestroy {
             await transport.close();
         }
         this.transports.clear();
+    }
+
+    /**
+     * Extract a human-readable error message. For validation errors (HttpException from ValidationPipe),
+     * includes the detailed validation messages.
+     */
+    private formatError(error: unknown): string {
+        if (error instanceof HttpException) {
+            const response = error.getResponse();
+            if (typeof response === "object" && response !== null && "message" in response) {
+                const messages = (response as { message: unknown }).message;
+                if (Array.isArray(messages)) {
+                    return `Validation failed: ${messages.join("; ")}`;
+                }
+                return String(messages);
+            }
+        }
+        if (error instanceof Error) {
+            return error.message;
+        }
+        return String(error);
     }
 }

@@ -1,6 +1,7 @@
-import { Injectable, Logger, type OnModuleInit } from "@nestjs/common";
+import { Injectable, Logger, type OnModuleInit, ValidationPipe } from "@nestjs/common";
 import { DiscoveryService, MetadataScanner, Reflector } from "@nestjs/core";
 import { GraphQLSchemaHost } from "@nestjs/graphql";
+import { plainToInstance } from "class-transformer";
 import {
     type GraphQLEnumType,
     type GraphQLField,
@@ -43,6 +44,8 @@ interface ParamMapping {
     index: number;
     type: "named" | "args-object";
     name?: string; // only for "named" type
+    /** The class constructor for this parameter (from TypeScript's design:paramtypes) */
+    metatype?: new (...args: unknown[]) => unknown;
 }
 
 export interface McpToolDefinition {
@@ -82,6 +85,12 @@ export class McpToolDiscoveryService implements OnModuleInit {
         private readonly reflector: Reflector,
         private readonly schemaHost: GraphQLSchemaHost,
     ) {}
+
+    private readonly validationPipe = new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+    });
 
     onModuleInit(): void {
         this.discoverFieldResolvers();
@@ -152,6 +161,9 @@ export class McpToolDiscoveryService implements OnModuleInit {
         const metadata: Record<string, { index: number; data: string | undefined }> =
             Reflect.getMetadata(PARAM_ARGS_METADATA, resolverInstance.constructor, methodName) || {};
 
+        // Get the TypeScript-emitted parameter types for validation
+        const paramTypes: (new (...args: unknown[]) => unknown)[] = Reflect.getMetadata("design:paramtypes", resolverInstance, methodName) || [];
+
         const mappings: ParamMapping[] = [];
 
         for (const [key, value] of Object.entries(metadata)) {
@@ -160,12 +172,13 @@ export class McpToolDiscoveryService implements OnModuleInit {
             const paramType = parseInt(paramTypeStr, 10);
 
             if (paramType === GQL_PARAMTYPE_ARGS) {
+                const metatype = paramTypes[value.index];
                 if (value.data) {
                     // Named arg: @Args("name")
-                    mappings.push({ index: value.index, type: "named", name: value.data });
+                    mappings.push({ index: value.index, type: "named", name: value.data, metatype });
                 } else {
                     // Unnamed args: @Args() - receives all args as object
-                    mappings.push({ index: value.index, type: "args-object" });
+                    mappings.push({ index: value.index, type: "args-object", metatype });
                 }
             }
         }
@@ -256,19 +269,28 @@ export class McpToolDiscoveryService implements OnModuleInit {
     /**
      * Execute a tool by directly calling the resolver method.
      * Maps the flat MCP arguments to the resolver's parameter format using the extracted parameter mappings.
+     * Validates input using class-validator/class-transformer (same as NestJS's ValidationPipe).
      */
     async executeTool(tool: McpToolDefinition, args: Record<string, unknown>): Promise<unknown> {
         const { instance, methodName } = tool.resolverRef;
 
-        // Build the arguments array based on the param mappings
+        // Build the arguments array based on the param mappings, transforming and validating each
         const resolverArgs: unknown[] = [];
         for (const mapping of tool.paramMappings) {
+            let value: unknown;
             if (mapping.type === "named" && mapping.name) {
-                resolverArgs[mapping.index] = args[mapping.name];
+                value = args[mapping.name];
             } else if (mapping.type === "args-object") {
                 // Pass all args as an object (for @Args() without a name)
-                resolverArgs[mapping.index] = args;
+                value = args;
             }
+
+            // Transform and validate using the ValidationPipe if a metatype (class) is available
+            if (mapping.metatype && value !== undefined && value !== null && this.shouldValidate(mapping.metatype)) {
+                value = await this.transformAndValidate(value, mapping.metatype);
+            }
+
+            resolverArgs[mapping.index] = value;
         }
 
         const result = await instance[methodName](...resolverArgs);
@@ -279,6 +301,32 @@ export class McpToolDiscoveryService implements OnModuleInit {
         }
 
         return result;
+    }
+
+    /**
+     * Returns true if the metatype should be validated (i.e., it's a class, not a primitive).
+     * Mirrors NestJS's ValidationPipe.toValidate() logic.
+     */
+    private shouldValidate(metatype: new (...args: unknown[]) => unknown): boolean {
+        const primitives: (new (...args: unknown[]) => unknown)[] = [String, Boolean, Number, Array, Object, Buffer, Date];
+        return !primitives.some((t) => metatype === t);
+    }
+
+    /**
+     * Transform a plain object into a class instance using class-transformer's plainToInstance,
+     * then validate using NestJS's ValidationPipe (which uses class-validator internally).
+     */
+    private async transformAndValidate(value: unknown, metatype: new (...args: unknown[]) => unknown): Promise<unknown> {
+        // Use plainToInstance to convert the raw JSON into a proper class instance
+        // (this triggers @Transform decorators from class-transformer)
+        const instance = plainToInstance(metatype, value);
+
+        // Run validation through NestJS's ValidationPipe
+        // This performs class-validator checks and applies whitelist/forbidNonWhitelisted
+        return this.validationPipe.transform(instance, {
+            type: "body",
+            metatype,
+        });
     }
 
     private async resolveFields(entity: unknown, typeName: string): Promise<unknown> {
