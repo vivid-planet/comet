@@ -25,14 +25,15 @@ decorator. The usage of both decorators is the same.
 
 ### `@CrudGenerator()` options
 
-| Parameter            | Type                 | Default     | Description                                                  |
-| -------------------- | -------------------- | ----------- | ------------------------------------------------------------ |
-| `requiredPermission` | `string[] \| string` | Required    | Permission(s) required to access the CRUD operations.        |
-| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                  |
-| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                  |
-| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                  |
-| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                    |
-| `position`           | `object`             | `undefined` | Configures the optional [magic `position` field](#position). |
+| Parameter            | Type                          | Default     | Description                                                                           |
+| -------------------- | ----------------------------- | ----------- | ------------------------------------------------------------------------------------- |
+| `requiredPermission` | `string[] \| string`          | Required    | Permission(s) required to access the CRUD operations.                                 |
+| `create`             | `boolean`                     | `true`      | If `true`, includes the "create" operation.                                           |
+| `update`             | `boolean`                     | `true`      | If `true`, includes the "update" operation.                                           |
+| `delete`             | `boolean`                     | `true`      | If `true`, includes the "delete" operation.                                           |
+| `list`               | `boolean`                     | `true`      | If `true`, includes the "list" operation.                                             |
+| `position`           | `object`                      | `undefined` | Configures the optional [magic `position` field](#position).                          |
+| `hooksService`       | `Type<CrudGeneratorHooksService>` | `undefined` | An optional service class for injecting custom validation logic into mutations. See [Hooks Service](#hooks-service). |
 
 ## Annotate field
 
@@ -267,6 +268,95 @@ export class CustomProductsService {
 
 The custom service can also be extended using inheritance in the same way as the resolver.
 
+### Hooks Service
+
+The `hooksService` option allows you to inject a custom NestJS service into the generated `create` and `update` mutations for validation logic that cannot be expressed with class-validator decorators alone — for example, when you need access to the current user, the scope, or dedicated resolver arguments.
+
+#### Implementing the hooks service
+
+Create a class that implements `CrudGeneratorHooksService` and define the hooks you need:
+
+```ts
+// products/product.service.ts
+import { CrudGeneratorHooksService, CurrentUser, MutationError } from "@comet/cms-api";
+import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { ProductInput } from "./generated/dto/product.input";
+
+enum ProductMutationErrorCode {
+    titleTooShort = "titleTooShort",
+}
+registerEnumType(ProductMutationErrorCode, { name: "ProductMutationErrorCode" });
+
+@ObjectType()
+export class ProductMutationError implements MutationError {
+    @Field({ nullable: true })
+    field?: string;
+
+    @Field(() => ProductMutationErrorCode)
+    code: ProductMutationErrorCode;
+}
+
+export class ProductService implements CrudGeneratorHooksService {
+    async validateCreateInput(input: ProductInput, options: { currentUser: CurrentUser }): Promise<ProductMutationError[]> {
+        if (input.title.length < 3) {
+            return [{ code: ProductMutationErrorCode.titleTooShort, field: "title" }];
+        }
+        return [];
+    }
+}
+```
+
+The API Generator inspects the hooks service using ts-morph at generation time to detect which hooks are defined and which options (e.g., `currentUser`, `scope`, `args`) are used. Only the hooks that are defined in the service class are called in the generated resolver.
+
+#### Available hooks and their options
+
+| Hook                  | Available options                                   | Description                                |
+| --------------------- | --------------------------------------------------- | ------------------------------------------ |
+| `validateCreateInput` | `currentUser`, `scope` (if entity has scope), `args` (for each dedicated resolver arg) | Called before a new entity is persisted.  |
+| `validateUpdateInput` | `currentUser`, `entity` (the existing entity)       | Called before an existing entity is updated. |
+
+Each hook returns `Promise<MutationError[]>`. Return an empty array when validation passes.
+
+#### Mutation response with a hooks service
+
+When a `hooksService` is provided, the generated mutations no longer return the entity directly. Instead, they return a payload object that contains both the entity and any validation errors:
+
+```graphql
+type CreateProductPayload {
+    product: Product
+    errors: [ProductMutationError!]!
+}
+
+type Mutation {
+    createProduct(input: ProductInput!): CreateProductPayload!
+}
+```
+
+If `errors` is non-empty the entity is `null` (the mutation was not applied).
+
+#### Registering the service in `@CrudGenerator` and the module
+
+```ts
+// products/entities/product.entity.ts
+import { ProductService } from "../product.service";
+
+@CrudGenerator({ requiredPermission: "products", hooksService: ProductService })
+export class Product extends BaseEntity { ... }
+```
+
+Register the hooks service as a NestJS provider in the module alongside the generated resolver:
+
+```ts
+// products/products.module.ts
+import { ProductService } from "./product.service";
+import { ProductResolver } from "./generated/product.resolver";
+
+@Module({
+    providers: [ProductResolver, ProductService],
+})
+export class ProductsModule {}
+```
+
 ### Scaffolding
 
 If the generated code doesn't fit your needs at all, you can "scaffold" the code. To do this, you must
@@ -326,9 +416,9 @@ Instead, create a second, custom resolver [as described above](#resolver).
 
 #### I need custom logic only in my create mutation
 
-Don't scaffold.
+If you need validation or pre-processing logic in the create mutation, consider using a [hooks service](#hooks-service). This keeps the rest of the CRUD operations generated and adds a strongly-typed way to return validation errors.
 
-Instead, deactivate `create` in the `@CrudGenerator` decorator:
+If a hooks service is not sufficient (e.g., you need to change the mutation signature), you can deactivate `create` in the `@CrudGenerator` decorator:
 
 ```ts
 @CrudGenerator({
