@@ -1,4 +1,5 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { FullTextType } from "@mikro-orm/postgresql";
 import { Field, ObjectType } from "@nestjs/graphql";
 
 // Note: This file is intentionally not named *.entity.ts to exclude it from MikroORM's CLI migration glob pattern.
@@ -23,4 +24,7 @@ export class EntityInfoObject {
 
     @Property({ type: "boolean" })
     visible: boolean;
+
+    @Property({ type: FullTextType })
+    fullText: string;
 }

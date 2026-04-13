@@ -1,4 +1,4 @@
-import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
+import { CrudGenerator, EntityInfo, IsNullable, IsUndefinable } from "@comet/cms-api";
 import {
     BaseEntity,
     Embeddable,
@@ -91,6 +91,10 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
     alternativeAddress: AlternativeAddressAsEmbeddable;
 }
 
+@EntityInfo<Manufacturer>({
+    name: "name",
+    fullText: "searchable",
+})
 @Entity()
 @ObjectType()
 @CrudGenerator({ requiredPermission: ["manufacturers"] })
