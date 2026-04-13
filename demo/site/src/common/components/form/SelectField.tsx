@@ -11,13 +11,14 @@ import styles from "./SelectField.module.scss";
 type Option = { value: string; label: string };
 
 type SelectFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
-    Omit<FieldContainerFieldProps, "helperText"> & {
+    FieldContainerFieldProps & {
         options: Array<Option>;
         placeholder?: string;
     };
 
 export const SelectField = <TFieldValues extends FieldValues>({
     label,
+    helperText,
     name,
     control,
     rules,
@@ -36,7 +37,7 @@ export const SelectField = <TFieldValues extends FieldValues>({
                 const selectedOption = options.find((o) => o.value === field.value) ?? null;
 
                 return (
-                    <FieldContainer required={required} label={label} errorText={fieldState.error?.message} htmlFor={id}>
+                    <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={id}>
                         <Select<Option>
                             unstyled
                             isSearchable={false}
