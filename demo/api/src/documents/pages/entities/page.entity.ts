@@ -1,7 +1,7 @@
 import {
     BlockDataInterface,
+    blockToMikroOrmFullText,
     DocumentInterface,
-    mikroOrmBlockFullText,
     PageTreeNodeDocumentEntityScopeService,
     RootBlock,
     RootBlockDataScalar,
@@ -36,7 +36,7 @@ export class Page extends BaseEntity implements DocumentInterface {
     content: BlockDataInterface;
 
     @Index({ type: "fulltext" })
-    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => mikroOrmBlockFullText(page.content) })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.content) })
     searchableContent?: string;
 
     @RootBlock(SeoBlock)
@@ -45,7 +45,7 @@ export class Page extends BaseEntity implements DocumentInterface {
     seo: BlockDataInterface;
 
     @Index({ type: "fulltext" })
-    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => mikroOrmBlockFullText(page.seo) })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.seo) })
     searchableSeo?: string;
 
     @RootBlock(StageBlock)
@@ -54,7 +54,7 @@ export class Page extends BaseEntity implements DocumentInterface {
     stage: BlockDataInterface;
 
     @Index({ type: "fulltext" })
-    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => mikroOrmBlockFullText(page.stage) })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.stage) })
     searchableStage?: string;
 
     @Property({

@@ -30,7 +30,7 @@ export function getSearchTextFromBlock(block: BlockDataInterface): WeightedSearc
     return weightedSearchText;
 }
 
-export function mikroOrmBlockFullText(block: BlockDataInterface): string | WeightedFullTextValue {
+export function blockToMikroOrmFullText(block: BlockDataInterface): string | WeightedFullTextValue {
     const weightToPostgresWeight: Record<string, "A" | "B" | "C" | "D"> = {
         h1: "A",
         h2: "B",
