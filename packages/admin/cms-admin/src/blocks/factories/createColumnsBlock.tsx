@@ -484,6 +484,17 @@ export function createColumnsBlock<T extends BlockInterface>(
                 return [...content, ...(contentBlock.extractTextContents?.(column.props, options) ?? [])];
             }, []);
         },
+        translateContent: async (state, translate) => {
+            const translatedColumns = await Promise.all(
+                state.columns.map(async (column) => {
+                    const translatedProps = contentBlock.translateContent
+                        ? await contentBlock.translateContent(column.props, translate)
+                        : column.props;
+                    return { ...column, props: translatedProps };
+                }),
+            );
+            return { ...state, columns: translatedColumns };
+        },
     };
 
     if (override) {
