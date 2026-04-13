@@ -4,14 +4,14 @@ import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";
 import { StageBlock } from "@src/documents/pages/blocks/stage.block";
 import { Page } from "@src/documents/pages/entities/page.entity";
+import { tool } from "ai";
 import { validate, type ValidationError } from "class-validator";
 import { readFile } from "fs/promises";
 import { join } from "path";
+import { z } from "zod";
 
 import { blockMetaToTypeScript } from "./block-meta-to-typescript";
-import { type AiChatTool } from "./tool.interface";
-
-type Input = Record<string, unknown>;
+import { type AiChatTools } from "./tool.interface";
 
 function formatValidationErrors(errors: ValidationError[], prefix = ""): string[] {
     return errors.flatMap((e) => {
@@ -22,7 +22,7 @@ function formatValidationErrors(errors: ValidationError[], prefix = ""): string[
     });
 }
 
-function createBlockInputs(i: Input) {
+function createBlockInputs(i: Record<string, unknown>) {
     return {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content: PageContentBlock.blockInputFactory(i.content as any),
@@ -33,8 +33,7 @@ function createBlockInputs(i: Input) {
     };
 }
 
-async function validatePageBlocks(i: Input): Promise<string[] | null> {
-    console.log("validatePageBlocks", i);
+async function validatePageBlocks(i: Record<string, unknown>): Promise<string[] | null> {
     const blocks = createBlockInputs(i);
     const errors = (await Promise.all([validate(blocks.content), validate(blocks.seo), validate(blocks.stage)])).flat();
     return errors.length > 0 ? formatValidationErrors(errors) : null;
@@ -42,36 +41,26 @@ async function validatePageBlocks(i: Input): Promise<string[] | null> {
 
 let blockTypesCache: string | null = null;
 
-const PAGE_BLOCK_INPUT_SCHEMA = {
-    type: "object" as const,
-    properties: {
-        pageId: { type: "string", description: "The Page document UUID. For a new page, generate a UUID." },
-        content: { type: "object", description: "Main page content block data, must match PageContentBlockInputData from get_block_input_types" },
-        seo: { type: "object", description: "SEO block data, must match SeoBlockInputData from get_block_input_types" },
-        stage: { type: "object", description: "Stage/hero block data, must match StageBlockInputData from get_block_input_types" },
-        attachedPageTreeNodeId: { type: "string", description: "Page tree node UUID this page belongs to." },
-    },
-    required: ["pageId", "content", "seo", "stage"],
-};
+const pageBlockInputSchema = z.object({
+    pageId: z.string().describe("The Page document UUID. For a new page, generate a UUID."),
+    content: z
+        .record(z.string(), z.unknown())
+        .describe("Main page content block data, must match PageContentBlockInputData from get_block_input_types"),
+    seo: z.record(z.string(), z.unknown()).describe("SEO block data, must match SeoBlockInputData from get_block_input_types"),
+    stage: z.record(z.string(), z.unknown()).describe("Stage/hero block data, must match StageBlockInputData from get_block_input_types"),
+    attachedPageTreeNodeId: z.string().optional().describe("Page tree node UUID this page belongs to."),
+});
 
-export function createPagesTools(pageTreeService: PageTreeService, em: EntityManager): AiChatTool[] {
-    return [
-        {
-            definition: {
-                name: "get_page",
-                description:
-                    "Read the content of a CMS Page document by its ID. Returns extracted text and raw block data. To find the document ID for a page tree node, call get_page_tree_node and use the returned documentId.",
-                input_schema: {
-                    type: "object",
-                    properties: {
-                        pageId: { type: "string", description: "The Page document UUID (not the page tree node ID)." },
-                    },
-                    required: ["pageId"],
-                },
-            },
-            execute: async (input: unknown) => {
-                const i = input as Input;
-                const page = await em.findOne(Page, { id: i.pageId as string });
+export function createPagesTools(pageTreeService: PageTreeService, em: EntityManager): AiChatTools {
+    return {
+        get_page: tool({
+            description:
+                "Read the content of a CMS Page document by its ID. Returns extracted text and raw block data. To find the document ID for a page tree node, call get_page_tree_node and use the returned documentId.",
+            inputSchema: z.object({
+                pageId: z.string().describe("The Page document UUID (not the page tree node ID)."),
+            }),
+            execute: async (input) => {
+                const page = await em.findOne(Page, { id: input.pageId });
                 if (!page) return JSON.stringify({ error: "Page not found." });
                 const textContent = [...getSearchTextFromBlock(page.stage), ...getSearchTextFromBlock(page.content)];
                 return JSON.stringify({
@@ -83,82 +72,29 @@ export function createPagesTools(pageTreeService: PageTreeService, em: EntityMan
                     stage: page.stage,
                 });
             },
-        },
-        {
-            definition: {
-                name: "validate_save_page",
-                description:
-                    "Validate page block data without saving. Always call this before save_page to catch schema and constraint errors early. Returns a list of validation errors, or success if the data is valid.",
-                input_schema: PAGE_BLOCK_INPUT_SCHEMA,
-            },
-            execute: async (input: unknown) => {
-                const errors = await validatePageBlocks(input as Input);
+        }),
+        validate_save_page: tool({
+            description:
+                "Validate page block data without saving. Always call this before save_page to catch schema and constraint errors early. Returns a list of validation errors, or success if the data is valid.",
+            inputSchema: pageBlockInputSchema,
+            execute: async (input) => {
+                const errors = await validatePageBlocks(input as unknown as Record<string, unknown>);
                 if (errors) {
                     return JSON.stringify({ valid: false, errors });
                 }
                 return JSON.stringify({ valid: true });
             },
-        },
-        {
-            definition: {
-                name: "save_page",
-                description:
-                    "Create or update a CMS Page document. Always call validate_save_page first with the same arguments — do not call save_page if validation fails. attachedPageTreeNodeId must be provided on every call.",
-                input_schema: PAGE_BLOCK_INPUT_SCHEMA,
-            },
-            execute: async (input: unknown) => {
-                const i = input as Input;
-                const pageId = i.pageId as string;
-                const attachedPageTreeNodeId = i.attachedPageTreeNodeId as string | undefined;
-
-                if (attachedPageTreeNodeId) {
-                    const node = await pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
-                    if (node.visibility === PageTreeNodeVisibility.Archived) {
-                        return JSON.stringify({ error: "Archived pages cannot be updated." });
-                    }
-                }
-
-                const validationErrors = await validatePageBlocks(i);
-                if (validationErrors) {
-                    return JSON.stringify({ error: "Validation failed", details: validationErrors });
-                }
-
-                const blocks = createBlockInputs(i);
-
-                let page = await em.findOne(Page, { id: pageId });
-                if (page) {
-                    page.assign({
-                        content: blocks.content.transformToBlockData(),
-                        seo: blocks.seo.transformToBlockData(),
-                        stage: blocks.stage.transformToBlockData(),
-                    });
-                } else {
-                    page = em.create(Page, {
-                        id: pageId,
-                        content: blocks.content.transformToBlockData(),
-                        seo: blocks.seo.transformToBlockData(),
-                        stage: blocks.stage.transformToBlockData(),
-                    });
-                    em.persist(page);
-                }
-
-                if (attachedPageTreeNodeId) {
-                    await pageTreeService.attachDocument({ id: pageId, type: "Page" }, attachedPageTreeNodeId);
-                }
-
-                await em.flush();
-                return JSON.stringify({ success: true, id: page.id, updatedAt: page.updatedAt });
-            },
-        },
-        {
-            definition: {
-                name: "get_block_input_types",
-                description: "Get TypeScript interfaces describing the shape of all CMS content blocks needed as input to eg save_page tool.",
-                input_schema: {
-                    type: "object",
-                    properties: {},
-                },
-            },
+        }),
+        // save_page has no execute handler — it requires human confirmation via the frontend.
+        // The frontend will call executeSavePage() after the user approves.
+        save_page: tool({
+            description:
+                "Create or update a CMS Page document. Always call validate_save_page first with the same arguments — do not call save_page if validation fails. attachedPageTreeNodeId must be provided on every call.",
+            inputSchema: pageBlockInputSchema,
+        }),
+        get_block_input_types: tool({
+            description: "Get TypeScript interfaces describing the shape of all CMS content blocks needed as input to eg save_page tool.",
+            inputSchema: z.object({}),
             execute: async () => {
                 if (!blockTypesCache) {
                     const raw = await readFile(join(process.cwd(), "block-meta.json"), "utf-8");
@@ -166,22 +102,54 @@ export function createPagesTools(pageTreeService: PageTreeService, em: EntityMan
                 }
                 return blockTypesCache;
             },
-        },
-        /*
-        {
-            definition: {
-                name: "get_block_meta",
-                description:
-                    "Get full block schema metadata — field definitions, types, enums, and nesting for all CMS content blocks. Use get_block_types instead unless you need enum values or detailed field metadata. Note: large document (~3000 lines).",
-                input_schema: {
-                    type: "object",
-                    properties: {},
-                },
-            },
-            execute: async () => {
-                return readFile(join(process.cwd(), "block-meta.json"), "utf-8");
-            },
-        },
-        */
-    ];
+        }),
+    };
+}
+
+export async function executeSavePage(
+    input: z.infer<typeof pageBlockInputSchema>,
+    pageTreeService: PageTreeService,
+    em: EntityManager,
+): Promise<string> {
+    const i = input as unknown as Record<string, unknown>;
+    const pageId = i.pageId as string;
+    const attachedPageTreeNodeId = i.attachedPageTreeNodeId as string | undefined;
+
+    if (attachedPageTreeNodeId) {
+        const node = await pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+        if (node.visibility === PageTreeNodeVisibility.Archived) {
+            return JSON.stringify({ error: "Archived pages cannot be updated." });
+        }
+    }
+
+    const validationErrors = await validatePageBlocks(i);
+    if (validationErrors) {
+        return JSON.stringify({ error: "Validation failed", details: validationErrors });
+    }
+
+    const blocks = createBlockInputs(i);
+
+    let page = await em.findOne(Page, { id: pageId });
+    if (page) {
+        page.assign({
+            content: blocks.content.transformToBlockData(),
+            seo: blocks.seo.transformToBlockData(),
+            stage: blocks.stage.transformToBlockData(),
+        });
+    } else {
+        page = em.create(Page, {
+            id: pageId,
+            content: blocks.content.transformToBlockData(),
+            seo: blocks.seo.transformToBlockData(),
+            stage: blocks.stage.transformToBlockData(),
+        });
+        em.persist(page);
+    }
+
+    if (attachedPageTreeNodeId) {
+        await pageTreeService.attachDocument({ id: pageId, type: "Page" }, attachedPageTreeNodeId);
+    }
+
+    await em.flush();
+    return JSON.stringify({ success: true, id: page.id, updatedAt: page.updatedAt });
 }

@@ -1,42 +1,30 @@
 import { type EntityManager } from "@mikro-orm/postgresql";
 import { DamFile } from "@src/dam/entities/dam-file.entity";
+import { tool } from "ai";
+import { z } from "zod";
 
-import { type AiChatTool } from "./tool.interface";
+import { type AiChatTools } from "./tool.interface";
 
-type Input = Record<string, unknown>;
-
-export function createDamTools(em: EntityManager): AiChatTool[] {
-    return [
-        {
-            definition: {
-                name: "list_dam_files",
-                description:
-                    "List files in the Digital Asset Manager (DAM). Returns metadata including ID, name, mimetype, size, and image dimensions.",
-                input_schema: {
-                    type: "object",
-                    properties: {
-                        folderId: { type: "string", description: "Filter by folder UUID. Omit for all folders." },
-                        searchText: { type: "string", description: "Search files by name (case-insensitive)." },
-                        mimetypes: {
-                            type: "array",
-                            items: { type: "string" },
-                            description: "Filter by MIME types (e.g. ['image/jpeg', 'image/png']).",
-                        },
-                        limit: { type: "number", description: "Maximum results to return. Default: 50." },
-                        offset: { type: "number", description: "Pagination offset. Default: 0." },
-                    },
-                },
-            },
-            execute: async (input: unknown) => {
-                const i = input as Input;
+export function createDamTools(em: EntityManager): AiChatTools {
+    return {
+        list_dam_files: tool({
+            description: "List files in the Digital Asset Manager (DAM). Returns metadata including ID, name, mimetype, size, and image dimensions.",
+            inputSchema: z.object({
+                folderId: z.string().optional().describe("Filter by folder UUID. Omit for all folders."),
+                searchText: z.string().optional().describe("Search files by name (case-insensitive)."),
+                mimetypes: z.array(z.string()).optional().describe("Filter by MIME types (e.g. ['image/jpeg', 'image/png'])."),
+                limit: z.number().optional().describe("Maximum results to return. Default: 50."),
+                offset: z.number().optional().describe("Pagination offset. Default: 0."),
+            }),
+            execute: async (input) => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const where: Record<string, any> = { archived: false };
-                if (i.folderId) where.folder = { id: i.folderId };
-                if (Array.isArray(i.mimetypes) && i.mimetypes.length > 0) where.mimetype = { $in: i.mimetypes };
-                if (i.searchText) where.name = { $ilike: `%${i.searchText}%` };
+                if (input.folderId) where.folder = { id: input.folderId };
+                if (input.mimetypes && input.mimetypes.length > 0) where.mimetype = { $in: input.mimetypes };
+                if (input.searchText) where.name = { $ilike: `%${input.searchText}%` };
 
-                const limit = (i.limit as number) ?? 50;
-                const offset = (i.offset as number) ?? 0;
+                const limit = input.limit ?? 50;
+                const offset = input.offset ?? 0;
 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const [files, total] = await em.findAndCount(DamFile as any, where, {
@@ -62,23 +50,15 @@ export function createDamTools(em: EntityManager): AiChatTool[] {
                     total,
                 });
             },
-        },
-        {
-            definition: {
-                name: "get_dam_file",
-                description: "Get detailed metadata of a single DAM file by its UUID.",
-                input_schema: {
-                    type: "object",
-                    properties: {
-                        id: { type: "string", description: "The DAM file UUID." },
-                    },
-                    required: ["id"],
-                },
-            },
-            execute: async (input: unknown) => {
-                const i = input as Input;
+        }),
+        get_dam_file: tool({
+            description: "Get detailed metadata of a single DAM file by its UUID.",
+            inputSchema: z.object({
+                id: z.string().describe("The DAM file UUID."),
+            }),
+            execute: async (input) => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const file = await em.findOne(DamFile as any, { id: i.id as string }, { populate: ["image", "folder"] as any });
+                const file = await em.findOne(DamFile as any, { id: input.id }, { populate: ["image", "folder"] as any });
                 if (!file) return JSON.stringify({ error: "File not found." });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const f = file as any;
@@ -96,6 +76,6 @@ export function createDamTools(em: EntityManager): AiChatTool[] {
                     updatedAt: f.updatedAt,
                 });
             },
-        },
-    ];
+        }),
+    };
 }

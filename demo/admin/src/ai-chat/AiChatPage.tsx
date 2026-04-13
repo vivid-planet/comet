@@ -1,30 +1,13 @@
+import { useChat } from "@ai-sdk/react";
 import { Button } from "@comet/admin";
 import { BlockPreview, IFrameBridgeProvider, useBlockContext, useBlockPreview, useContentScope, useSiteConfig } from "@comet/cms-admin";
 import { Box, CircularProgress, Paper, TextField, Typography } from "@mui/material";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
-import { useEffect, useRef, useState } from "react";
+import { DefaultChatTransport, getToolName, isToolUIPart } from "ai";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-type MessagePart =
-    | { type: "text"; text: string }
-    | { type: "toolCall"; id: string; name: string; args: string; result?: string }
-    | { type: "notice"; text: string };
-
-interface Message {
-    role: "user" | "assistant";
-    parts: MessagePart[];
-}
-
-interface StreamEvent {
-    text?: string;
-    toolUse?: { id: string; name: string; args: string };
-    toolResult?: { id: string; result: string };
-    toolErrorLine?: string;
-    maxTokens?: boolean;
-    permissionRequest?: { requestId: string; toolName: string; newData: unknown; currentData: unknown };
-}
-
-function PageContentPreview({ currentData, newData }: { currentData: any; newData: any }) {
+function PageContentPreview({ currentData, newData }: { currentData: unknown; newData: unknown }) {
     const blockContext = useBlockContext();
     const blockContextRef = useRef(blockContext);
     blockContextRef.current = blockContext;
@@ -32,44 +15,41 @@ function PageContentPreview({ currentData, newData }: { currentData: any; newDat
     const siteConfig = useSiteConfig({ scope });
     const previewApi = useBlockPreview();
     const [previewState, setPreviewState] = useState<unknown>(undefined);
-    console.log("render PageContentPreview", currentData, newData);
 
     useEffect(() => {
-        console.log("PageContentPreveiw useEffect");
-        if (!newData || !newData.content) return;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!newData || !(newData as any).content) return;
         async function compute() {
-            const currentState = await PageContentBlock.output2State(currentData.content, blockContextRef.current);
-            const newState = PageContentBlock.input2State(newData.content);
-            console.log("data", currentData, newData);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const currentState = await PageContentBlock.output2State((currentData as any).content, blockContextRef.current);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const newState = PageContentBlock.input2State((newData as any).content);
 
-            const currentKeys = new Set(currentState.blocks.map((b) => b.key));
-            const newKeys = new Set(newState.blocks.map((b) => b.key));
-            console.log("keys", currentKeys, newKeys);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const currentKeys = new Set((currentState as any).blocks.map((b: any) => b.key));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const newKeys = new Set((newState as any).blocks.map((b: any) => b.key));
             const combinedBlocks = [
-                ...newState.blocks.map((b) => ({
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ...(newState as any).blocks.map((b: any) => ({
                     ...b,
                     ...(currentKeys.has(b.key) ? {} : { previewType: "added" as const }),
                 })),
-                ...currentState.blocks.filter((b) => !newKeys.has(b.key)).map((b) => ({ ...b, previewType: "removed" as const })),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ...(currentState as any).blocks.filter((b: any) => !newKeys.has(b.key)).map((b: any) => ({ ...b, previewType: "removed" as const })),
             ];
-            const combinedState = { ...newState, blocks: combinedBlocks };
-            console.log("combinedState", combinedState);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const combinedState = { ...(newState as any), blocks: combinedBlocks };
 
             const ps = PageContentBlock.createPreviewState(combinedState, {
                 ...blockContextRef.current,
-                //parentUrl: `${siteConfig.blockPreviewBaseUrl}/page`,
                 parentUrl: "/",
-                //showVisibleOnly: previewApi.showOnlyVisible,
                 showVisibleOnly: false,
             });
             setPreviewState(ps);
         }
         void compute();
-    }, [currentData, newData /*siteConfig, previewApi.showOnlyVisible*/]);
-
-    //return <pre>{JSON.stringify(previewState as any)}</pre>;
-
-    console.log("previewState", previewState);
+    }, [currentData, newData]);
 
     const previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
     return (
@@ -81,136 +61,112 @@ function PageContentPreview({ currentData, newData }: { currentData: any; newDat
     );
 }
 
+interface PendingPermission {
+    toolCallId: string;
+    toolName: string;
+    args: { pageId: string; content: unknown; seo: unknown; stage: unknown; attachedPageTreeNodeId?: string };
+    currentData: unknown;
+}
+
 export function AiChatPage() {
-    const conversationId = useRef(crypto.randomUUID());
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [input, setInput] = useState("");
-    const [streaming, setStreaming] = useState(false);
-    const [permissionRequest, setPermissionRequest] = useState<{
-        requestId: string;
-        toolName: string;
-        newData: unknown;
-        currentData: unknown;
-    } | null>(null);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
     const apiUrl = `${window.location.origin}/api`;
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [input, setInput] = useState("");
+    const [permissionData, setPermissionData] = useState<PendingPermission | null>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    const appendTextToLastAssistantMessage = (chunk: string) => {
-        setMessages((prev) => {
-            const last = prev[prev.length - 1];
-            if (!last || last.role !== "assistant") return prev;
-            const parts = last.parts;
-            const lastPart = parts[parts.length - 1];
-            if (lastPart?.type === "text") {
-                return [...prev.slice(0, -1), { ...last, parts: [...parts.slice(0, -1), { type: "text" as const, text: lastPart.text + chunk }] }];
-            }
-            return [...prev.slice(0, -1), { ...last, parts: [...parts, { type: "text" as const, text: chunk }] }];
-        });
-    };
-
-    const addPartToLastAssistantMessage = (part: MessagePart) => {
-        setMessages((prev) => {
-            const last = prev[prev.length - 1];
-            if (!last || last.role !== "assistant") return prev;
-            return [...prev.slice(0, -1), { ...last, parts: [...last.parts, part] }];
-        });
-    };
-
-    const sendMessage = async () => {
-        const message = input.trim();
-        if (!message || streaming) return;
-
-        setInput("");
-        setStreaming(true);
-        setMessages((prev) => [...prev, { role: "user", parts: [{ type: "text", text: message }] }, { role: "assistant", parts: [] }]);
-
-        try {
-            const response = await fetch(`${apiUrl}/ai-chat/stream`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+    const transport = useMemo(
+        () =>
+            new DefaultChatTransport({
+                api: `${apiUrl}/ai-chat/chat`,
                 credentials: "include",
-                body: JSON.stringify({ conversationId: conversationId.current, message }),
-            });
+            }),
+        [apiUrl],
+    );
 
-            if (!response.ok || !response.body) {
-                throw new Error(`Request failed: ${response.status}`);
-            }
-
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            let buffer = "";
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split("\n");
-                buffer = lines.pop() ?? "";
-
-                for (const line of lines) {
-                    if (!line.startsWith("data: ")) continue;
-                    const data = line.slice(6);
-                    if (data === "[DONE]") break;
-                    try {
-                        const parsed = JSON.parse(data) as StreamEvent;
-                        if (parsed.text) {
-                            appendTextToLastAssistantMessage(parsed.text);
-                        } else if (parsed.toolUse) {
-                            addPartToLastAssistantMessage({
-                                type: "toolCall",
-                                id: parsed.toolUse.id,
-                                name: parsed.toolUse.name,
-                                args: parsed.toolUse.args,
-                            });
-                        } else if (parsed.toolResult) {
-                            const { id, result } = parsed.toolResult;
-                            setMessages((prev) => {
-                                const last = prev[prev.length - 1];
-                                if (!last || last.role !== "assistant") return prev;
-                                const parts = last.parts.map((part) => (part.type === "toolCall" && part.id === id ? { ...part, result } : part));
-                                return [...prev.slice(0, -1), { ...last, parts }];
-                            });
-                        } else if (parsed.toolErrorLine) {
-                            addPartToLastAssistantMessage({ type: "notice", text: `❌ Error: ${parsed.toolErrorLine}` });
-                        } else if (parsed.maxTokens) {
-                            addPartToLastAssistantMessage({ type: "notice", text: "⚠️ Response was cut off because the token limit was reached." });
-                        } else if (parsed.permissionRequest) {
-                            setPermissionRequest(parsed.permissionRequest);
-                        }
-                        scrollToBottom();
-                    } catch {
-                        // ignore malformed events
-                    }
+    const { messages, sendMessage, addToolOutput, status } = useChat({
+        transport,
+        onToolCall: async ({ toolCall }) => {
+            if (toolCall.toolName === "save_page") {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const args = (toolCall as any).input;
+                let currentData = null;
+                try {
+                    const resp = await fetch(`${apiUrl}/ai-chat/get-page-current-data`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ pageId: args.pageId }),
+                    });
+                    currentData = await resp.json();
+                } catch {
+                    // ignore
                 }
+                setPermissionData({
+                    toolCallId: toolCall.toolCallId,
+                    toolName: "save_page",
+                    args,
+                    currentData,
+                });
+                // Return undefined — tool call stays pending until addToolOutput is called
+                return undefined;
             }
-        } catch {
-            setMessages((prev) => {
-                const last = prev[prev.length - 1];
-                return [...prev.slice(0, -1), { ...last, parts: [{ type: "notice", text: "Error: Could not get a response." }] }];
+            // Return undefined for auto-executed tools (they have execute handlers on the server)
+            return undefined;
+        },
+    });
+
+    const isStreaming = status === "streaming" || status === "submitted";
+
+    const scrollToBottom = useCallback(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, scrollToBottom]);
+
+    const respondToPermission = async (approved: boolean) => {
+        if (!permissionData) return;
+        const { toolCallId, args } = permissionData;
+        setPermissionData(null);
+
+        if (approved) {
+            try {
+                const resp = await fetch(`${apiUrl}/ai-chat/execute-save-page`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ args }),
+                });
+                const data = await resp.json();
+                addToolOutput({
+                    tool: "save_page",
+                    toolCallId,
+                    output: data.result,
+                });
+            } catch {
+                addToolOutput({
+                    tool: "save_page",
+                    toolCallId,
+                    state: "output-error",
+                    errorText: "Failed to execute save_page",
+                });
+            }
+        } else {
+            addToolOutput({
+                tool: "save_page",
+                toolCallId,
+                output: JSON.stringify({ error: "Permission denied by user." }),
             });
-        } finally {
-            setStreaming(false);
-            scrollToBottom();
         }
     };
 
-    const respondToPermission = async (approved: boolean) => {
-        if (!permissionRequest) return;
-        const { requestId } = permissionRequest;
-        setPermissionRequest(null);
-        await fetch(`${apiUrl}/ai-chat/permission-response`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ requestId, approved }),
-        });
+    const handleSend = () => {
+        const text = input.trim();
+        if (!text || isStreaming) return;
+        setInput("");
+        void sendMessage({ text });
     };
-    console.log("render AiChatPage");
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "calc(100vh - 64px)", p: 2, gap: 2 }}>
@@ -233,9 +189,9 @@ export function AiChatPage() {
                         <FormattedMessage id="aiChat.startConversation" defaultMessage="Start a conversation" />
                     </Typography>
                 )}
-                {messages.map((msg, i) => (
+                {messages.map((msg) => (
                     <Box
-                        key={i}
+                        key={msg.id}
                         sx={{
                             alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
                             maxWidth: "75%",
@@ -247,56 +203,67 @@ export function AiChatPage() {
                         }}
                     >
                         {msg.parts.map((part, j) => {
-                            if (part.type === "text") {
+                            if (part.type === "text" && part.text) {
                                 return (
                                     <Typography key={j} variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
                                         {part.text}
                                     </Typography>
                                 );
                             }
-                            if (part.type === "toolCall") {
+                            if (isToolUIPart(part)) {
+                                const toolName = getToolName(part);
                                 return (
                                     <details key={j}>
-                                        <summary style={{ cursor: "pointer", fontSize: "0.75rem", opacity: 0.7 }}>{`Tool: ${part.name}`}</summary>
-                                        <pre style={{ fontSize: "0.7rem", overflowX: "auto", maxHeight: 200, margin: "4px 0 0" }}>
-                                            {"Input:\n"}
-                                            {JSON.stringify(JSON.parse(part.args), null, 2)}
-                                        </pre>
-                                        {part.result !== undefined && (
+                                        <summary style={{ cursor: "pointer", fontSize: "0.75rem", opacity: 0.7 }}>
+                                            {`Tool: ${toolName}`}
+                                            {(part.state === "input-streaming" || part.state === "input-available") && " (pending...)"}
+                                        </summary>
+                                        {part.input !== undefined && (
+                                            <pre style={{ fontSize: "0.7rem", overflowX: "auto", maxHeight: 200, margin: "4px 0 0" }}>
+                                                {"Input:\n"}
+                                                {JSON.stringify(part.input, null, 2)}
+                                            </pre>
+                                        )}
+                                        {part.state === "output-available" && part.output !== undefined && (
                                             <pre style={{ fontSize: "0.7rem", overflowX: "auto", maxHeight: 200, margin: "4px 0 0" }}>
                                                 {"Output:\n"}
                                                 {(() => {
                                                     try {
-                                                        return JSON.stringify(JSON.parse(part.result), null, 2);
+                                                        return JSON.stringify(
+                                                            typeof part.output === "string" ? JSON.parse(part.output) : part.output,
+                                                            null,
+                                                            2,
+                                                        );
                                                     } catch {
-                                                        return part.result;
+                                                        return String(part.output);
                                                     }
                                                 })()}
                                             </pre>
                                         )}
+                                        {part.state === "output-error" && (
+                                            <Typography variant="body2" sx={{ color: "error.main", fontSize: "0.7rem" }}>
+                                                {`❌ Error: ${part.errorText}`}
+                                            </Typography>
+                                        )}
                                     </details>
                                 );
                             }
-                            return (
-                                <Typography key={j} variant="body2" sx={{ opacity: 0.7 }}>
-                                    {part.text}
-                                </Typography>
-                            );
+                            return null;
                         })}
                     </Box>
                 ))}
                 <div ref={messagesEndRef} />
             </Paper>
-            {permissionRequest && (
+            {permissionData && (
                 <Paper variant="outlined" sx={{ p: 2, display: "flex", flexDirection: "column", gap: 1, borderColor: "warning.main" }}>
                     <Typography variant="body2">
                         <FormattedMessage
                             id="aiChat.permissionRequest"
                             defaultMessage="Claude wants to call {toolName}. Allow this action?"
-                            values={{ toolName: <strong>{permissionRequest.toolName}</strong> }}
+                            values={{ toolName: <strong>{permissionData.toolName}</strong> }}
                         />
                     </Typography>
-                    <PageContentPreview currentData={permissionRequest.currentData} newData={permissionRequest.newData} />
+                    <PageContentPreview currentData={permissionData.currentData} newData={permissionData.args} />
                     <Box sx={{ display: "flex", gap: 1 }}>
                         <Button onClick={() => void respondToPermission(true)}>
                             <FormattedMessage id="aiChat.permissionApprove" defaultMessage="Approve" />
@@ -317,15 +284,15 @@ export function AiChatPage() {
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
-                            void sendMessage();
+                            handleSend();
                         }
                     }}
-                    disabled={streaming}
+                    disabled={isStreaming}
                     multiline
                     maxRows={4}
                 />
-                <Button onClick={() => void sendMessage()} disabled={!input.trim() || streaming} sx={{ minWidth: 80 }}>
-                    {streaming ? <CircularProgress size={20} color="inherit" /> : <FormattedMessage id="aiChat.send" defaultMessage="Send" />}
+                <Button onClick={handleSend} disabled={!input.trim() || isStreaming} sx={{ minWidth: 80 }}>
+                    {isStreaming ? <CircularProgress size={20} color="inherit" /> : <FormattedMessage id="aiChat.send" defaultMessage="Send" />}
                 </Button>
             </Box>
         </Box>

@@ -1,6 +1,3 @@
-import type Anthropic from "@anthropic-ai/sdk";
+import { type ToolSet } from "ai";
 
-export interface AiChatTool {
-    definition: Anthropic.Tool;
-    execute: (input: unknown) => Promise<string>;
-}
+export type AiChatTools = ToolSet;
