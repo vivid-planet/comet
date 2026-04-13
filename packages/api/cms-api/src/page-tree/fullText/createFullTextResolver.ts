@@ -60,7 +60,7 @@ export function createFullTextResolver({
                 limit,
             });
 
-            const nodes = await Promise.all(results.map((r) => this.pageTreeReadApi.getNodeOrFail(r.pageTreeNodeId)));
+            const nodes = await this.pageTreeReadApi.getNodesByIds(results.map((r) => r.pageTreeNodeId));
 
             return new PaginatedPageTreeNodes(nodes, totalCount);
         }

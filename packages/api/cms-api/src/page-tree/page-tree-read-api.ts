@@ -32,6 +32,7 @@ export interface PageTreeReadApi {
     parentNodes(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]>;
     getNode(id: string): Promise<PageTreeNodeInterface | null>;
     getNodeOrFail(id: string): Promise<PageTreeNodeInterface>;
+    getNodesByIds(ids: string[]): Promise<PageTreeNodeInterface[]>;
     getParentNode(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface | null>;
     getNodes(options?: PageTreeReadApiOptions): Promise<PageTreeNodeInterface[]>;
     getNodesCount(options?: PageTreeReadApiOptions): Promise<number>;
@@ -282,6 +283,44 @@ export function createReadApi(
                 );
             }
             return node;
+        },
+
+        async getNodesByIds(ids) {
+            await waitForPreloadDone();
+            const result = new Map<string, PageTreeNodeInterface>();
+            const missingIds: string[] = [];
+
+            for (const id of ids) {
+                if (nodesById.has(id)) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    result.set(id, nodesById.get(id)!);
+                } else {
+                    missingIds.push(id);
+                }
+            }
+
+            if (missingIds.length > 0) {
+                await tracer.startActiveSpan("live query PageTree getNodesByIds", async (span) => {
+                    span.setAttribute("ids count", missingIds.length);
+                    const nodes = await pageTreeNodeRepository.find({ id: { $in: missingIds }, visibility: { $in: visibilityFilter } });
+                    for (const node of nodes) {
+                        nodesById.set(node.id, node);
+                        result.set(node.id, node);
+                    }
+                    span.end();
+                });
+            }
+
+            // Return in the same order as input ids, throw if any not found
+            return ids.map((id) => {
+                const node = result.get(id);
+                if (!node) {
+                    throw new NotFoundError(
+                        `Cannot find PageTreeNode with ID ${id} and visibility ${Array.isArray(visibility) ? visibility.join(" or ") : visibility}`,
+                    );
+                }
+                return node;
+            });
         },
 
         async getParentNode(node) {
