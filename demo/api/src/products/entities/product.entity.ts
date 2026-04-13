@@ -15,6 +15,8 @@ import {
     Collection,
     Entity,
     Enum,
+    FullTextType,
+    Index,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -237,4 +239,16 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
+
+    @Index({ type: "fulltext" })
+    @Property<Product>({
+        type: new FullTextType(),
+        onUpdate: (page) => {
+            return {
+                A: page.title,
+                D: page.description,
+            };
+        },
+    })
+    searchable: string;
 }
