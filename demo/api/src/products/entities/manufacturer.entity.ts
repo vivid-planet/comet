@@ -131,6 +131,7 @@ export class Manufacturer extends BaseEntity {
 
     @Index({ type: "fulltext" })
     @Property<Manufacturer>({
+        nullable: true,
         type: new FullTextType(),
         onUpdate: (page) => {
             return {
@@ -138,5 +139,5 @@ export class Manufacturer extends BaseEntity {
             };
         },
     })
-    searchable: string;
+    searchable?: string;
 }

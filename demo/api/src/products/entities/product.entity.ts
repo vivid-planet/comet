@@ -247,6 +247,7 @@ export class Product extends BaseEntity implements ImportTargetInterface {
 
     @Index({ type: "fulltext" })
     @Property<Product>({
+        nullable: true,
         type: new FullTextType(),
         onUpdate: (page) => {
             return {
@@ -255,5 +256,5 @@ export class Product extends BaseEntity implements ImportTargetInterface {
             };
         },
     })
-    searchable: string;
+    searchable?: string;
 }

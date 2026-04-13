@@ -9,9 +9,11 @@ import { Field, ObjectType } from "@nestjs/graphql";
 @ObjectType("EntityInfo")
 export class EntityInfoObject {
     @PrimaryKey({ type: "text" })
+    @Field()
     id: string;
 
     @PrimaryKey({ type: "text" })
+    @Field()
     entityName: string;
 
     @Field()

@@ -125,8 +125,9 @@ export class News extends BaseEntity {
 
     @Index({ type: "fulltext" })
     @Property<News>({
+        nullable: true,
         type: new FullTextType(),
         onUpdate: (news) => mikroOrmFullText({ A: news.title, D: news.slug }, news.content),
     })
-    searchable: string;
+    searchable?: string;
 }
