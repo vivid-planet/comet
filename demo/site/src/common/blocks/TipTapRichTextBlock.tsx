@@ -66,12 +66,14 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
     switch (node.type) {
         case "doc":
             return <>{children}</>;
-        case "paragraph":
+        case "paragraph": {
+            const blockStyle = node.attrs?.blockStyle as Parameters<typeof Typography>[0]["variant"];
             return (
-                <Typography key={index} bottomSpacing className={styles.text}>
+                <Typography key={index} variant={blockStyle ?? undefined} bottomSpacing className={styles.text}>
                     {children}
                 </Typography>
             );
+        }
         case "heading": {
             const level = node.attrs?.level ?? 1;
             const variantMap = {
