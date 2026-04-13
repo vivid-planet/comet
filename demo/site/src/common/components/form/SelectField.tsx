@@ -45,6 +45,8 @@ export const SelectField = <TFieldValues extends FieldValues>({
                                 option: () => ({ display: "flex", alignItems: "center" }),
                             }}
                             inputId={id}
+                            name={field.name}
+                            ref={field.ref}
                             options={options}
                             value={selectedOption}
                             onChange={(option) => field.onChange(option?.value ?? "")}
