@@ -61,7 +61,7 @@ export class NewsContentScope {
     language: string;
 }
 
-@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } }, fullText: "searchable" })
 @RootBlockEntity()
 @ObjectType()
 @Entity()
