@@ -12,6 +12,7 @@ import { InternalLinkBlockWarningsService } from "./blocks/internal-link-block-w
 import { createPageTreeResolver } from "./createPageTreeResolver";
 import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
+import { PaginatedPageTreeNodesFactory } from "./dto/paginated-page-tree-nodes.factory";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
 import { createFullTextResolver } from "./fullText/createFullTextResolver";
@@ -57,12 +58,14 @@ export class PageTreeModule {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
         }
 
-        const { PageTreeResolver, PaginatedPageTreeNodes } = createPageTreeResolver({
+        const PaginatedPageTreeNodes = PaginatedPageTreeNodesFactory.create({ PageTreeNode });
+        const PageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,
             Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
+            PaginatedPageTreeNodes,
         });
         const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
         const PageTreeDependenciesResolver = DependenciesResolverFactory.create(PageTreeNode);

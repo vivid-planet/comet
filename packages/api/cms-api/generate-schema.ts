@@ -19,6 +19,7 @@ import {
     InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
+    PaginatedPageTreeNodesFactory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
@@ -74,9 +75,11 @@ async function generateSchema(): Promise<void> {
     const RedirectInput = RedirectInputFactory.create({ linkBlock });
 
     const redirectsResolver = createRedirectsResolver({ Redirect: RedirectEntity, RedirectInput });
-    const { PageTreeResolver } = createPageTreeResolver({
+    const PaginatedPageTreeNodes = PaginatedPageTreeNodesFactory.create({ PageTreeNode });
+    const PageTreeResolver = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],
+        PaginatedPageTreeNodes,
     }); // no scope
     const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
