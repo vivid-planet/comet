@@ -251,6 +251,7 @@ export {
     PageTreeNodeBaseUpdateInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./page-tree/dto/page-tree-node.input";
+export { PaginatedPageTreeNodesFactory } from "./page-tree/dto/paginated-page-tree-nodes.factory";
 export { AttachedDocument } from "./page-tree/entities/attached-document.entity";
 export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entity";
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
