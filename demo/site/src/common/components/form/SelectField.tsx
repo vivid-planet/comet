@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
-import Select from "react-select";
+import Select, { components } from "react-select";
 
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
 import styles from "./SelectField.module.scss";
@@ -53,13 +53,15 @@ export const SelectField = <TFieldValues extends FieldValues>({
                             onBlur={field.onBlur}
                             placeholder={placeholder ?? <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />}
                             components={{
-                                DropdownIndicator: ({ selectProps }) => (
-                                    <SvgUse
-                                        href="/assets/icons/chevron-down.svg#root"
-                                        width={16}
-                                        height={16}
-                                        className={clsx(styles.chevron, selectProps.menuIsOpen && styles["chevron--open"])}
-                                    />
+                                DropdownIndicator: (props) => (
+                                    <components.DropdownIndicator {...props}>
+                                        <SvgUse
+                                            href="/assets/icons/chevron-down.svg#root"
+                                            width={16}
+                                            height={16}
+                                            className={clsx(styles.chevron, props.selectProps.menuIsOpen && styles["chevron--open"])}
+                                        />
+                                    </components.DropdownIndicator>
                                 ),
                                 IndicatorSeparator: null,
                             }}
