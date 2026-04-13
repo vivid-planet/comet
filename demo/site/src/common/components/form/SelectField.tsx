@@ -1,13 +1,19 @@
-import { type ReactNode, type SelectHTMLAttributes } from "react";
+import { SvgUse } from "@src/common/helpers/SvgUse";
+import clsx from "clsx";
+import { useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
+import Select, { components } from "react-select";
 
-type SelectFieldProps<TFieldValues extends FieldValues> = Omit<SelectHTMLAttributes<HTMLSelectElement>, "name"> &
-    Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
-        label: ReactNode;
-        helperText?: ReactNode;
-        options: Array<{ value: string; label: ReactNode }>;
-        placeholder?: ReactNode;
+import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
+import styles from "./SelectField.module.scss";
+
+type Option = { value: string; label: string };
+
+type SelectFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
+    FieldContainerFieldProps & {
+        options: Array<Option>;
+        placeholder?: string;
     };
 
 export const SelectField = <TFieldValues extends FieldValues>({
@@ -17,39 +23,68 @@ export const SelectField = <TFieldValues extends FieldValues>({
     control,
     rules,
     options,
-    placeholder = <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />,
-    ...inputProps
+    placeholder,
 }: SelectFieldProps<TFieldValues>) => {
+    const id = useId();
     const required = !!rules?.required;
+
     return (
         <Controller
             name={name}
             control={control}
             rules={rules}
-            render={({ field, fieldState }) => (
-                <div>
-                    <label>
-                        {label}
-                        {!required && (
-                            <span>
-                                <FormattedMessage id="selectField.optional" defaultMessage="(optional)" />
-                            </span>
-                        )}
-                    </label>
-                    <select required={required} {...inputProps} {...field}>
-                        <option value="" disabled>
-                            {placeholder}
-                        </option>
-                        {options.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
-                    {helperText && <div>{helperText}</div>}
-                    {fieldState.error?.message && <div style={{ color: "red" }}>{fieldState.error.message}</div>}
-                </div>
-            )}
+            render={({ field, fieldState }) => {
+                const selectedOption = options.find((o) => o.value === field.value) ?? null;
+
+                return (
+                    <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={id}>
+                        <Select<Option>
+                            unstyled
+                            isSearchable={false}
+                            styles={{
+                                control: (base) => ({ ...base, outline: undefined }),
+                                option: () => ({ display: "flex", alignItems: "center" }),
+                            }}
+                            inputId={id}
+                            name={field.name}
+                            ref={field.ref}
+                            options={options}
+                            value={selectedOption}
+                            onChange={(option) => field.onChange(option?.value ?? "")}
+                            onBlur={field.onBlur}
+                            placeholder={placeholder ?? <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />}
+                            components={{
+                                DropdownIndicator: (props) => (
+                                    <components.DropdownIndicator {...props}>
+                                        <SvgUse
+                                            href="/assets/icons/chevron-down.svg#root"
+                                            width={16}
+                                            height={16}
+                                            className={clsx(styles.chevron, props.selectProps.menuIsOpen && styles["chevron--open"])}
+                                        />
+                                    </components.DropdownIndicator>
+                                ),
+                                IndicatorSeparator: null,
+                            }}
+                            classNames={{
+                                container: () => styles.container,
+                                control: () => clsx(styles.control, fieldState.error && styles["control--error"]),
+                                valueContainer: () => styles.valueContainer,
+                                placeholder: () => styles.placeholder,
+                                singleValue: () => styles.singleValue,
+                                menu: () => styles.menu,
+                                menuList: () => styles.menuList,
+                                option: ({ isSelected, isFocused }) =>
+                                    clsx(
+                                        styles.option,
+                                        isSelected && styles["option--selected"],
+                                        isFocused && !isSelected && styles["option--focused"],
+                                    ),
+                            }}
+                        />
+                    </FieldContainer>
+                );
+            }}
         />
     );
 };
