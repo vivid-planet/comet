@@ -1,5 +1,5 @@
 import { Injectable, Logger, type OnModuleInit, ValidationPipe } from "@nestjs/common";
-import { DiscoveryService, MetadataScanner, Reflector } from "@nestjs/core";
+import { DiscoveryService, MetadataScanner, ModuleRef, Reflector } from "@nestjs/core";
 import { GraphQLSchemaHost } from "@nestjs/graphql";
 import { plainToInstance } from "class-transformer";
 import {
@@ -31,7 +31,7 @@ interface JsonSchema {
 }
 
 interface FieldResolverRef {
-    instance: Record<string, (...args: unknown[]) => unknown>;
+    metatype: new (...args: unknown[]) => Record<string, (...args: unknown[]) => unknown>;
     methodName: string;
 }
 
@@ -54,9 +54,10 @@ export interface McpToolDefinition {
     inputSchema: JsonSchema;
     operationType: "query" | "mutation";
     graphqlFieldName: string;
-    /** Reference to the resolver instance and method for direct invocation */
+    /** Reference to the resolver class and method for direct invocation */
     resolverRef: {
-        instance: Record<string, (...args: unknown[]) => unknown>;
+        /** The resolver class (constructor) — resolved via ModuleRef at execution time */
+        metatype: new (...args: unknown[]) => Record<string, (...args: unknown[]) => unknown>;
         methodName: string;
     };
     /** Describes how to map MCP input args to resolver method parameters */
@@ -79,11 +80,13 @@ export class McpToolDiscoveryService implements OnModuleInit {
     private mcpFieldMethods = new Set<string>(); // "TypeName.fieldName" - field resolvers with @McpField
     private fieldResolverRefs = new Map<string, FieldResolverRef>(); // "TypeName.fieldName" -> resolver ref
 
+    private schemaHost: GraphQLSchemaHost;
+
     constructor(
         private readonly discoveryService: DiscoveryService,
         private readonly metadataScanner: MetadataScanner,
         private readonly reflector: Reflector,
-        private readonly schemaHost: GraphQLSchemaHost,
+        private readonly moduleRef: ModuleRef,
     ) {}
 
     private readonly validationPipe = new ValidationPipe({
@@ -93,6 +96,7 @@ export class McpToolDiscoveryService implements OnModuleInit {
     });
 
     onModuleInit(): void {
+        this.schemaHost = this.moduleRef.get(GraphQLSchemaHost, { strict: false });
         this.discoverFieldResolvers();
         this.discoverTools();
     }
@@ -139,7 +143,7 @@ export class McpToolDiscoveryService implements OnModuleInit {
                 this.fieldResolverMethods.add(key);
 
                 this.fieldResolverRefs.set(key, {
-                    instance: instance as Record<string, (...args: unknown[]) => unknown>,
+                    metatype: instance.constructor as new (...args: unknown[]) => Record<string, (...args: unknown[]) => unknown>,
                     methodName,
                 });
 
@@ -254,7 +258,7 @@ export class McpToolDiscoveryService implements OnModuleInit {
                     operationType,
                     graphqlFieldName,
                     resolverRef: {
-                        instance: instance as Record<string, (...args: unknown[]) => unknown>,
+                        metatype: instance.constructor as new (...args: unknown[]) => Record<string, (...args: unknown[]) => unknown>,
                         methodName,
                     },
                     paramMappings,
@@ -272,7 +276,8 @@ export class McpToolDiscoveryService implements OnModuleInit {
      * Validates input using class-validator/class-transformer (same as NestJS's ValidationPipe).
      */
     async executeTool(tool: McpToolDefinition, args: Record<string, unknown>): Promise<unknown> {
-        const { instance, methodName } = tool.resolverRef;
+        const { metatype, methodName } = tool.resolverRef;
+        const instance = await this.moduleRef.resolve(metatype, undefined, { strict: false });
 
         // Build the arguments array based on the param mappings, transforming and validating each
         const resolverArgs: unknown[] = [];
@@ -361,7 +366,8 @@ export class McpToolDiscoveryService implements OnModuleInit {
                     const ref = this.fieldResolverRefs.get(key);
                     if (ref) {
                         try {
-                            const resolved = await ref.instance[ref.methodName](entity);
+                            const resolverInstance = await this.moduleRef.resolve(ref.metatype, undefined, { strict: false });
+                            const resolved = await resolverInstance[ref.methodName](entity);
                             if (isObjectType(unwrapped)) {
                                 result[fieldName] = await this.resolveFields(resolved, unwrapped.name);
                             } else {
@@ -415,15 +421,15 @@ export class McpToolDiscoveryService implements OnModuleInit {
         return schema;
     }
 
-    private graphqlInputTypeToJsonSchema(type: GraphQLInputType): JsonSchema {
+    private graphqlInputTypeToJsonSchema(type: GraphQLInputType, visited = new Set<string>()): JsonSchema {
         if (isNonNullType(type)) {
-            return this.graphqlInputTypeToJsonSchema(type.ofType);
+            return this.graphqlInputTypeToJsonSchema(type.ofType, visited);
         }
 
         if (isListType(type)) {
             return {
                 type: "array",
-                items: this.graphqlInputTypeToJsonSchema(type.ofType),
+                items: this.graphqlInputTypeToJsonSchema(type.ofType, visited),
             };
         }
 
@@ -436,7 +442,10 @@ export class McpToolDiscoveryService implements OnModuleInit {
         }
 
         if (isInputObjectType(type)) {
-            return this.inputObjectToJsonSchema(type);
+            if (visited.has(type.name)) {
+                return { type: "object", description: type.description ?? type.name };
+            }
+            return this.inputObjectToJsonSchema(type, visited);
         }
 
         return { type: "object" };
@@ -473,13 +482,14 @@ export class McpToolDiscoveryService implements OnModuleInit {
         };
     }
 
-    private inputObjectToJsonSchema(type: GraphQLInputObjectType): JsonSchema {
+    private inputObjectToJsonSchema(type: GraphQLInputObjectType, visited = new Set<string>()): JsonSchema {
+        visited.add(type.name);
         const fields = type.getFields();
         const properties: Record<string, JsonSchema> = {};
         const required: string[] = [];
 
         for (const [fieldName, field] of Object.entries(fields)) {
-            const fieldSchema = this.graphqlInputTypeToJsonSchema(field.type);
+            const fieldSchema = this.graphqlInputTypeToJsonSchema(field.type, visited);
             if (field.description) {
                 fieldSchema.description = field.description;
             }

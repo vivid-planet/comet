@@ -100,6 +100,7 @@ export class McpController implements OnModuleInit, OnModuleDestroy {
             // New session - create transport and connect
             transport = new StreamableHTTPServerTransport({
                 sessionIdGenerator: () => randomUUID(),
+                enableJsonResponse: true,
             });
             transport.onclose = () => {
                 if (transport.sessionId) {
@@ -109,13 +110,13 @@ export class McpController implements OnModuleInit, OnModuleDestroy {
 
             const server = this.createMcpServer();
             await server.connect(transport);
-
-            if (transport.sessionId) {
-                this.transports.set(transport.sessionId, transport);
-            }
         }
 
         await transport.handleRequest(req, res, req.body);
+
+        if (transport.sessionId && !this.transports.has(transport.sessionId)) {
+            this.transports.set(transport.sessionId, transport);
+        }
     }
 
     @Get()
