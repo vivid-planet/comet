@@ -22,19 +22,21 @@ function formatValidationErrors(errors: ValidationError[], prefix = ""): string[
     });
 }
 
-function createBlockInputs(i: Record<string, unknown>) {
+type PageBlockInput = z.infer<typeof pageBlockInputSchema>;
+
+function createBlockInputs(input: PageBlockInput) {
     return {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        content: PageContentBlock.blockInputFactory(i.content as any),
+        content: PageContentBlock.blockInputFactory(input.content as any),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        seo: SeoBlock.blockInputFactory(i.seo as any),
+        seo: SeoBlock.blockInputFactory(input.seo as any),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        stage: StageBlock.blockInputFactory(i.stage as any),
+        stage: StageBlock.blockInputFactory(input.stage as any),
     };
 }
 
-async function validatePageBlocks(i: Record<string, unknown>): Promise<string[] | null> {
-    const blocks = createBlockInputs(i);
+async function validatePageBlocks(input: PageBlockInput): Promise<string[] | null> {
+    const blocks = createBlockInputs(input);
     const errors = (await Promise.all([validate(blocks.content), validate(blocks.seo), validate(blocks.stage)])).flat();
     return errors.length > 0 ? formatValidationErrors(errors) : null;
 }
@@ -78,7 +80,7 @@ export function createPagesTools(pageTreeService: PageTreeService, em: EntityMan
                 "Validate page block data without saving. Always call this before save_page to catch schema and constraint errors early. Returns a list of validation errors, or success if the data is valid.",
             inputSchema: pageBlockInputSchema,
             execute: async (input) => {
-                const errors = await validatePageBlocks(input as unknown as Record<string, unknown>);
+                const errors = await validatePageBlocks(input);
                 if (errors) {
                     return JSON.stringify({ valid: false, errors });
                 }
@@ -106,14 +108,8 @@ export function createPagesTools(pageTreeService: PageTreeService, em: EntityMan
     };
 }
 
-export async function executeSavePage(
-    input: z.infer<typeof pageBlockInputSchema>,
-    pageTreeService: PageTreeService,
-    em: EntityManager,
-): Promise<string> {
-    const i = input as unknown as Record<string, unknown>;
-    const pageId = i.pageId as string;
-    const attachedPageTreeNodeId = i.attachedPageTreeNodeId as string | undefined;
+export async function executeSavePage(input: PageBlockInput, pageTreeService: PageTreeService, em: EntityManager): Promise<string> {
+    const { pageId, attachedPageTreeNodeId } = input;
 
     if (attachedPageTreeNodeId) {
         const node = await pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
@@ -122,12 +118,12 @@ export async function executeSavePage(
         }
     }
 
-    const validationErrors = await validatePageBlocks(i);
+    const validationErrors = await validatePageBlocks(input);
     if (validationErrors) {
         return JSON.stringify({ error: "Validation failed", details: validationErrors });
     }
 
-    const blocks = createBlockInputs(i);
+    const blocks = createBlockInputs(input);
 
     let page = await em.findOne(Page, { id: pageId });
     if (page) {
