@@ -1,3 +1,5 @@
 import { createTipTapRichTextBlock } from "@comet/cms-admin";
 
-export const TipTapRichTextBlock = createTipTapRichTextBlock();
+import { LinkBlock } from "./LinkBlock";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({ link: LinkBlock });

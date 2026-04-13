@@ -1,5 +1,7 @@
 import { validate } from "class-validator";
 
+import { ExternalLinkBlock } from "../ExternalLinkBlock";
+import { createLinkBlock } from "../factories/createLinkBlock";
 import { createTipTapRichTextBlock } from "./createTipTapRichTextBlock";
 
 describe("createTipTapRichTextBlock validation", () => {
@@ -378,6 +380,91 @@ describe("createTipTapRichTextBlock validation", () => {
                         {
                             type: "paragraph",
                             content: [{ type: "text", marks: [{ type: "strike" }], text: "Struck" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+    });
+
+    describe("schema with link block", () => {
+        const LinkBlock = createLinkBlock({ supportedBlocks: { external: ExternalLinkBlock } }, "TestLink");
+        const block = createTipTapRichTextBlock({ link: LinkBlock }, "TestWithLink");
+
+        it("should accept text with a valid link mark", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                {
+                                    type: "text",
+                                    marks: [
+                                        {
+                                            type: "link",
+                                            attrs: {
+                                                data: {
+                                                    attachedBlocks: [
+                                                        {
+                                                            type: "external",
+                                                            props: { targetUrl: "https://example.com", openInNewWindow: false },
+                                                        },
+                                                    ],
+                                                    activeType: "external",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                    text: "click here",
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept content without any link marks", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: "No links" }] }],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject link mark with invalid link data", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                {
+                                    type: "text",
+                                    marks: [
+                                        {
+                                            type: "link",
+                                            attrs: {
+                                                data: {
+                                                    attachedBlocks: [{ type: "invalid", props: {} }],
+                                                    activeType: "invalid",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                    text: "bad link",
+                                },
+                            ],
                         },
                     ],
                 },

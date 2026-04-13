@@ -5,12 +5,15 @@ import { PageLayout } from "@src/layout/PageLayout";
 import { type ReactNode } from "react";
 
 import { Typography } from "../components/Typography";
+import { isValidLink } from "../helpers/HiddenIfInvalidLink";
+import { LinkBlock } from "./LinkBlock";
 import styles from "./RichTextBlock.module.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapNode = Record<string, any>;
 
-function renderMark(mark: { type: string }, children: ReactNode): ReactNode {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderMark(mark: { type: string; attrs?: Record<string, any> }, children: ReactNode): ReactNode {
     switch (mark.type) {
         case "bold":
             return <strong>{children}</strong>;
@@ -22,6 +25,14 @@ function renderMark(mark: { type: string }, children: ReactNode): ReactNode {
             return <sup>{children}</sup>;
         case "subscript":
             return <sub>{children}</sub>;
+        case "link":
+            return mark.attrs?.data && isValidLink(mark.attrs.data) ? (
+                <LinkBlock data={mark.attrs.data} className={styles.inlineLink}>
+                    {children}
+                </LinkBlock>
+            ) : (
+                <>{children}</>
+            );
         default:
             return children;
     }

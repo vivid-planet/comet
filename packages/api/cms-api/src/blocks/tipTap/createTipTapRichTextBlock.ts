@@ -4,9 +4,18 @@ import Superscript from "@tiptap/extension-superscript";
 import { Node as ProseMirrorNode, type Schema } from "@tiptap/pm/model";
 import StarterKit from "@tiptap/starter-kit";
 import { plainToInstance } from "class-transformer";
-import { registerDecorator, type ValidationOptions } from "class-validator";
+import { registerDecorator, validate, type ValidationOptions } from "class-validator";
 
-import { Block, BlockData, BlockDataFactory, BlockInputFactory, BlockInputInterface, registerBlock } from "../block";
+import {
+    Block,
+    BlockData,
+    BlockDataFactory,
+    BlockDataInterface,
+    BlockInputFactory,
+    BlockInputInterface,
+    ChildBlockInfo,
+    registerBlock,
+} from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "../factories/types";
 import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator";
@@ -16,6 +25,7 @@ import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMig
 import { type SearchText, type WeightedSearchText } from "../search/get-search-text";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
+import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 
@@ -32,7 +42,8 @@ export type TipTapSupports =
     | "ordered-list"
     | "unordered-list"
     | "non-breaking-space"
-    | "soft-hyphen";
+    | "soft-hyphen"
+    | "link";
 
 export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
 
@@ -58,9 +69,10 @@ export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapApiBlockStyle[];
     indexSearchText?: boolean;
+    link?: Block;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[]): Extensions {
+function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[], hasLink: boolean): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
     return [
         StarterKit.configure({
@@ -81,6 +93,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlock
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+        ...(hasLink ? [CmsLink] : []),
     ];
 }
 
@@ -105,7 +118,51 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
     return false;
 }
 
-function IsTipTapContent(schema: Schema, validationOptions?: ValidationOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
+    if (!content || typeof content !== "object") return content;
+    const result = { ...content };
+
+    if (Array.isArray(result.marks)) {
+        result.marks = result.marks.map((mark: TipTapContent) => {
+            if (mark.type === "link" && mark.attrs?.data) {
+                return { ...mark, attrs: { ...mark.attrs, data: fn(mark.attrs.data) } };
+            }
+            return mark;
+        });
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = result.content.map((child: TipTapContent) => mapLinkMarksData(child, fn));
+    }
+
+    return result;
+}
+
+function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
+    const results: Array<{ data: unknown; path: string[] }> = [];
+
+    if (Array.isArray(content.marks)) {
+        content.marks.forEach((mark: TipTapContent, markIdx: number) => {
+            if (mark.type === "link" && mark.attrs?.data) {
+                results.push({
+                    data: mark.attrs.data,
+                    path: [...basePath, "marks", String(markIdx), "attrs", "data"],
+                });
+            }
+        });
+    }
+
+    if (Array.isArray(content.content)) {
+        content.content.forEach((child: TipTapContent, childIdx: number) => {
+            results.push(...collectLinkMarks(child, [...basePath, "content", String(childIdx)]));
+        });
+    }
+
+    return results;
+}
+
+function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -114,7 +171,7 @@ function IsTipTapContent(schema: Schema, validationOptions?: ValidationOptions) 
             propertyName,
             options: { message: "tipTapContent must be valid TipTap JSON content", ...validationOptions },
             validator: {
-                validate(value: unknown) {
+                async validate(value: unknown) {
                     if (typeof value !== "object" || value === null) {
                         return false;
                     }
@@ -125,6 +182,22 @@ function IsTipTapContent(schema: Schema, validationOptions?: ValidationOptions) 
                         }
                         const node = ProseMirrorNode.fromJSON(schema, value);
                         node.check();
+
+                        // Validate link mark data
+                        if (linkBlock) {
+                            const linkMarks = collectLinkMarks(value as TipTapContent);
+                            for (const { data } of linkMarks) {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
+                                    forbidNonWhitelisted: true,
+                                    whitelist: true,
+                                });
+                                if (validationErrors.length > 0) {
+                                    return false;
+                                }
+                            }
+                        }
+
                         return true;
                     } catch {
                         return false;
@@ -157,13 +230,14 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
 }
 
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true }: CreateTipTapRichTextBlockOptions = {},
+    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
-    const extensions = buildExtensions(supports, blockStyles);
+    const hasLink = !!LinkBlock;
+    const extensions = buildExtensions(supports, blockStyles, hasLink);
     const schema = getSchema(extensions);
 
     @BlockDataMigrationVersion(migrate.version)
@@ -184,15 +258,32 @@ export function createTipTapRichTextBlock(
                 return text;
             });
         }
+
+        childBlocksInfo(): ChildBlockInfo[] {
+            if (!LinkBlock) return [];
+            return collectLinkMarks(this.tipTapContent).map(({ data, path }) => ({
+                visible: true,
+                relJsonPath: path,
+                block: data as BlockDataInterface,
+                name: LinkBlock.name,
+            }));
+        }
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema)
+        @IsTipTapContent(schema, LinkBlock)
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 
         transformToBlockData(): TipTapRichTextBlockData {
-            return plainToInstance(TipTapRichTextBlockData, { tipTapContent: this.tipTapContent });
+            let tipTapContent = this.tipTapContent;
+            if (LinkBlock) {
+                tipTapContent = mapLinkMarksData(tipTapContent, (data) =>
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    LinkBlock.blockInputFactory(data as any).transformToBlockData(),
+                );
+            }
+            return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
         }
 
         toPlain() {
@@ -200,7 +291,13 @@ export function createTipTapRichTextBlock(
         }
     }
 
-    const blockDataFactory: BlockDataFactory<TipTapRichTextBlockData> = (o) => plainToInstance(TipTapRichTextBlockData, o);
+    const blockDataFactory: BlockDataFactory<TipTapRichTextBlockData> = (o) => {
+        let tipTapContent = o.tipTapContent;
+        if (LinkBlock) {
+            tipTapContent = mapLinkMarksData(tipTapContent, (data) => LinkBlock.blockDataFactory(data));
+        }
+        return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
+    };
     const blockInputFactory: BlockInputFactory<TipTapRichTextBlockInput> = (o) => plainToInstance(TipTapRichTextBlockInput, o);
 
     // Decorate BlockDataFactory

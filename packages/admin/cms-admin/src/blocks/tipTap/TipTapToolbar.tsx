@@ -2,9 +2,11 @@ import { Tooltip } from "@comet/admin";
 import {
     MoreHorizontal,
     RteBold,
+    RteClearLink,
     RteIndentDecrease,
     RteIndentIncrease,
     RteItalic,
+    RteLink,
     RteNonBreakingSpace,
     RteOl,
     RteRedo,
@@ -32,7 +34,9 @@ import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { type BlockInterface, type LinkBlockInterface } from "../types";
 import { type TipTapBlockStyle, type TipTapBlockType, type TipTapSupports } from "./createTipTapRichTextBlock";
+import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
     display: "flex",
@@ -141,12 +145,24 @@ const selectSx = {
     },
 } as const;
 
-export const TipTapToolbar = ({ editor, supports, blockStyles }: { editor: Editor; supports: TipTapSupports[]; blockStyles: TipTapBlockStyle[] }) => {
+export const TipTapToolbar = ({
+    editor,
+    supports,
+    blockStyles,
+    linkBlock,
+}: {
+    editor: Editor;
+    supports: TipTapSupports[];
+    blockStyles: TipTapBlockStyle[];
+    linkBlock?: BlockInterface & LinkBlockInterface;
+}) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
+    const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const inlineStyles = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
     const specialChars = (["non-breaking-space", "soft-hyphen"] as const).some((s) => supports.includes(s));
+    const hasLink = supports.includes("link") && !!linkBlock;
 
     const editorState = useEditorState({
         editor,
@@ -179,6 +195,8 @@ export const TipTapToolbar = ({ editor, supports, blockStyles }: { editor: Edito
                 isSubscriptActive: e.isActive("subscript"),
                 isOrderedListActive: e.isActive("orderedList"),
                 isBulletListActive: e.isActive("bulletList"),
+                isLinkActive: e.isActive("link"),
+                selectionEmpty: e.state.selection.empty,
             };
         },
     });
@@ -441,6 +459,26 @@ export const TipTapToolbar = ({ editor, supports, blockStyles }: { editor: Edito
                     )}
                 </ToolbarGroup>
             )}
+            {hasLink && linkBlock && (
+                <ToolbarGroup>
+                    <ToolbarButton
+                        editor={editor}
+                        icon={RteLink}
+                        tooltip={<FormattedMessage id="comet.blocks.tipTapRichText.link.tooltip" defaultMessage="Link" />}
+                        isActive="link"
+                        disabled={editorState.selectionEmpty && !editorState.isLinkActive}
+                        onToggle={() => setLinkDialogOpen(true)}
+                    />
+                    <ToolbarButton
+                        editor={editor}
+                        icon={RteClearLink}
+                        tooltip={<FormattedMessage id="comet.blocks.tipTapRichText.removeLink.tooltip" defaultMessage="Remove link" />}
+                        disabled={!editorState.isLinkActive}
+                        onToggle={() => editor.chain().focus().extendMarkRange("link").unsetCmsLink().run()}
+                    />
+                </ToolbarGroup>
+            )}
+            {linkDialogOpen && linkBlock && <TipTapLinkDialog editor={editor} linkBlock={linkBlock} onClose={() => setLinkDialogOpen(false)} />}
         </Box>
     );
 };
