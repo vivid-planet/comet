@@ -2,7 +2,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Type } from "@nestjs/common";
 
 import { DocumentInterface } from "../../document/dto/document-interface";
-import { PAGE_TREE_DOCUMENTS } from "../page-tree.constants";
+import { PAGE_TREE_DOCUMENTS, PAGE_TREE_ENTITY } from "../page-tree.constants";
 
 @Injectable()
 export class PageTreeFullTextService {
@@ -49,9 +49,11 @@ export class PageTreeFullTextService {
         console.time("creating PageTreeNodeFullText view");
         await this.entityManager.getConnection().execute(
             `CREATE VIEW "PageTreeNodeFullText" AS
-                SELECT "ad"."pageTreeNodeId", "ft"."fullText"
-                FROM "PageTreeDocumentFullText" "ft"
-                INNER JOIN "PageTreeNodeDocument" "ad" ON "ad"."documentId" = "ft"."documentId" AND "ad"."type" = "ft"."type"`,
+                SELECT "ptn"."id" "pageTreeNodeId", "ft"."fullText" || COALESCE("ptn"."searchable", ''::tsvector) AS "fullText"
+                FROM "PageTreeNode" "ptn"
+                INNER JOIN "PageTreeNodeDocument" "ad" ON "ad"."pageTreeNodeId" = "ptn"."id" AND "ad"."type" = "ptn"."documentType"
+                INNER JOIN "PageTreeDocumentFullText" "ft" ON "ad"."documentId" = "ft"."documentId" AND "ft"."type" = "ptn"."documentType"    
+            `,
         );
         console.timeEnd("creating PageTreeNodeFullText view");
     }
@@ -102,6 +104,41 @@ export class PageTreeFullTextService {
 
             if (updatedCount > 0) {
                 console.log(`Migrated fulltext for ${updatedCount} ${metadata.name} entities`);
+            }
+        }
+
+        // Migrate PageTreeNode searchable column
+        {
+            const pageTreeNodeMetadata = metadataStorage.get(PAGE_TREE_ENTITY);
+            const primary = pageTreeNodeMetadata.primaryKeys[0];
+            const searchableProp = pageTreeNodeMetadata.props.find((prop) => prop.name === "searchable");
+
+            if (searchableProp?.nullable) {
+                const pageSize = 100;
+                let updatedCount = 0;
+
+                while (true) {
+                    const em = this.entityManager;
+                    const entities = await em.find(
+                        PAGE_TREE_ENTITY,
+                        { searchable: null },
+                        { limit: pageSize, offset: 0, orderBy: { [primary]: "ASC" } },
+                    );
+                    if (entities.length === 0) {
+                        break;
+                    }
+                    for (const entity of entities) {
+                        (entity as Record<string, unknown>).searchable = " "; // trigger onUpdate
+                    }
+
+                    await em.flush();
+                    await em.clear();
+                    updatedCount += entities.length;
+                }
+
+                if (updatedCount > 0) {
+                    console.log(`Migrated fulltext for ${updatedCount} PageTreeNode entities`);
+                }
             }
         }
     }
