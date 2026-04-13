@@ -4,12 +4,26 @@ import {
     CrudGenerator,
     DamImageBlock,
     EntityInfo,
+    mikroOrmFullText,
     RootBlock,
     RootBlockDataScalar,
     RootBlockEntity,
     RootBlockType,
 } from "@comet/cms-api";
-import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import {
+    BaseEntity,
+    Collection,
+    Embeddable,
+    Embedded,
+    Entity,
+    Enum,
+    FullTextType,
+    Index,
+    OneToMany,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { v4 as uuid } from "uuid";
@@ -108,4 +122,11 @@ export class News extends BaseEntity {
     @Property({ onUpdate: () => new Date(), columnType: "timestamp with time zone" })
     @Field()
     updatedAt: Date = new Date();
+
+    @Index({ type: "fulltext" })
+    @Property<News>({
+        type: new FullTextType(),
+        onUpdate: (news) => mikroOrmFullText({ A: news.title, D: news.slug }, news.content),
+    })
+    searchable: string;
 }
