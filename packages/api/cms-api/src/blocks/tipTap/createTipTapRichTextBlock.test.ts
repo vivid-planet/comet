@@ -441,6 +441,84 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
+        it("should return childBlocksInfo for link marks", () => {
+            const blockData = block.blockDataFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                {
+                                    type: "text",
+                                    marks: [
+                                        {
+                                            type: "link",
+                                            attrs: {
+                                                data: {
+                                                    attachedBlocks: [
+                                                        {
+                                                            type: "external",
+                                                            props: { targetUrl: "https://example.com", openInNewWindow: false },
+                                                        },
+                                                    ],
+                                                    activeType: "external",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                    text: "first link",
+                                },
+                                { type: "text", text: " and " },
+                                {
+                                    type: "text",
+                                    marks: [
+                                        {
+                                            type: "link",
+                                            attrs: {
+                                                data: {
+                                                    attachedBlocks: [
+                                                        {
+                                                            type: "external",
+                                                            props: { targetUrl: "https://other.com", openInNewWindow: true },
+                                                        },
+                                                    ],
+                                                    activeType: "external",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                    text: "second link",
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+
+            const childBlocks = blockData.childBlocksInfo();
+            expect(childBlocks).toHaveLength(2);
+
+            expect(childBlocks[0].visible).toBe(true);
+            expect(childBlocks[0].name).toBe("TestLink");
+            expect(childBlocks[0].relJsonPath).toEqual(["tipTapContent", "content", "0", "content", "0", "marks", "0", "attrs", "data"]);
+
+            expect(childBlocks[1].visible).toBe(true);
+            expect(childBlocks[1].name).toBe("TestLink");
+            expect(childBlocks[1].relJsonPath).toEqual(["tipTapContent", "content", "0", "content", "2", "marks", "0", "attrs", "data"]);
+        });
+
+        it("should return empty childBlocksInfo when no link marks", () => {
+            const blockData = block.blockDataFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: "No links" }] }],
+                },
+            });
+
+            expect(blockData.childBlocksInfo()).toHaveLength(0);
+        });
+
         it("should reject link mark with invalid link data", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
