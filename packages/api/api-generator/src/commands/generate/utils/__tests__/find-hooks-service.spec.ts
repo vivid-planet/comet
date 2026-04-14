@@ -22,7 +22,6 @@ class TestEntity2Service implements CrudGeneratorHooksService {
 
 @Entity()
 @CrudGenerator({
-    targetDirectory: __dirname,
     requiredPermission: testPermission,
     hooksService: TestEntity2Service,
 })
@@ -46,10 +45,13 @@ describe("find-hooks-service", () => {
         );
 
         const hooksService = findHooksService({
-            generatorOptions: { targetDirectory: __dirname, requiredPermission: testPermission, hooksService: TestEntityService },
+            generatorOptions: { requiredPermission: testPermission, hooksService: TestEntityService },
             metadata: orm.em.getMetadata().get("TestEntity2"),
+            targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntity2Service");
         expect(hooksService.imports).toEqual([
             {
@@ -76,10 +78,13 @@ describe("find-hooks-service", () => {
         );
 
         const hooksService = findHooksService({
-            generatorOptions: { targetDirectory: __dirname, requiredPermission: testPermission, hooksService: TestEntityService },
+            generatorOptions: { requiredPermission: testPermission, hooksService: TestEntityService },
             metadata: orm.em.getMetadata().get("TestEntity"),
+            targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntityService");
         expect(hooksService.imports).toEqual([
             {
@@ -109,10 +114,13 @@ describe("find-hooks-service", () => {
         );
 
         const hooksService = findHooksService({
-            generatorOptions: { targetDirectory: __dirname, requiredPermission: testPermission, hooksService: TestEntityService },
+            generatorOptions: { requiredPermission: testPermission, hooksService: TestEntityService },
             metadata: orm.em.getMetadata().get("TestEntity3"),
+            targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntity3Service");
         expect(hooksService.imports).toEqual([
             {

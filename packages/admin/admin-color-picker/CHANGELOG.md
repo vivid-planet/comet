@@ -1,5 +1,72 @@
 # @comet/admin-color-picker
 
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [fff2cc2]
+- Updated dependencies [fff2cc2]
+    - @comet/admin@8.19.0
+    - @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/admin@8.18.0
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

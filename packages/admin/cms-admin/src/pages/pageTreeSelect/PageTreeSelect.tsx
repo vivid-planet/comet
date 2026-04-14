@@ -22,7 +22,7 @@ const pageTreeSelectDetail = gql`
     }
 `;
 
-export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps) {
+export function PageTreeSelect({ value, onChange }: PageTreeSelectProps) {
     const config = usePageTreeConfig();
     const [open, setOpen] = useState(false);
 

@@ -381,7 +381,7 @@ type DamFile {
   contentHash: String!
   createdAt: DateTime!
   damPath: String!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   duplicates: [DamFile!]!
   fileUrl: String!
   folder: DamFolder
@@ -542,15 +542,37 @@ type Dependency {
 }
 
 input DependencyFilter {
+  and: [DependencyFilter!]
+  name: StringFilter
+  or: [DependencyFilter!]
   rootColumnName: String
-  targetGraphqlObjectType: String
+  secondaryInformation: StringFilter
+  targetGraphqlObjectType: StringFilter
   targetId: String
+  visible: BooleanFilter
+}
+
+input DependencySort {
+  direction: SortDirection! = ASC
+  field: DependencySortField!
+}
+
+enum DependencySortField {
+  graphqlObjectType
+  name
+  secondaryInformation
+  visible
 }
 
 input DependentFilter {
+  and: [DependentFilter!]
+  name: StringFilter
+  or: [DependentFilter!]
   rootColumnName: String
-  rootGraphqlObjectType: String
+  rootGraphqlObjectType: StringFilter
   rootId: String
+  secondaryInformation: StringFilter
+  visible: BooleanFilter
 }
 
 interface DocumentInterface {
@@ -669,7 +691,7 @@ input FolderFilterInput {
 type Footer {
   content: FooterContentBlockData!
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   scope: FooterScope!
   updatedAt: DateTime!
@@ -799,7 +821,7 @@ type MainMenu {
 type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   node: PageTreeNode!
   updatedAt: DateTime!
@@ -815,6 +837,7 @@ type Manufacturer {
   coordinates: Coordinates
   id: ID!
   name: String!
+  productType: ProductType
   updatedAt: DateTime!
 }
 
@@ -845,6 +868,7 @@ input ManufacturerFilter {
   id: IdFilter
   name: StringFilter
   or: [ManufacturerFilter!]
+  productType: ProductTypeEnumFilter
   updatedAt: DateTimeFilter
 }
 
@@ -853,6 +877,7 @@ input ManufacturerInput {
   addressAsEmbeddable: AddressAsEmbeddableInput!
   coordinates: CoordinatesInput
   name: String!
+  productType: ProductType = null
 }
 
 input ManufacturerSort {
@@ -871,6 +896,7 @@ enum ManufacturerSortField {
   addressAsEmbeddable_zip
   id
   name
+  productType
   updatedAt
 }
 
@@ -879,6 +905,7 @@ input ManufacturerUpdateInput {
   addressAsEmbeddable: AddressAsEmbeddableInput
   coordinates: CoordinatesInput
   name: String
+  productType: ProductType
 }
 
 input ManyToManyFilter {
@@ -1006,8 +1033,8 @@ type News {
   content: NewsContentBlockData!
   createdAt: DateTime!
   date: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   image: DamImageBlockData!
   scope: NewsContentScope!
@@ -1138,6 +1165,7 @@ input OneToManyFilter {
 type Page implements DocumentInterface {
   content: PageContentBlockData!
   createdAt: DateTime!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   pageTreeNode: PageTreeNode
   seo: SeoBlockData!
@@ -1162,7 +1190,8 @@ input PageInput {
 type PageTreeNode {
   category: PageTreeNodeCategory!
   childNodes: [PageTreeNode!]!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   document: PageContentUnion
   documentType: String!
   hideInMenu: Boolean!
@@ -1660,6 +1689,7 @@ enum ProductSortField {
   manufacturer_addressAsEmbeddable_streetNumber
   manufacturer_addressAsEmbeddable_zip
   manufacturer_name
+  manufacturer_productType
   manufacturer_updatedAt
   price
   priceList
@@ -1970,7 +2000,7 @@ type Redirect {
   active: Boolean!
   comment: String
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   generationType: RedirectGenerationType!
   id: ID!
   scope: RedirectScope!
@@ -1988,6 +2018,7 @@ input RedirectFilter {
   generationType: StringFilter
   or: [RedirectFilter!]
   source: StringFilter
+  sourceType: RedirectSourceTypeEnumFilter
   target: StringFilter
   updatedAt: DateTimeFilter
 }
@@ -2025,7 +2056,14 @@ enum RedirectSortField {
   updatedAt
 }
 
+input RedirectSourceTypeEnumFilter {
+  equal: RedirectSourceTypeValues
+  isAnyOf: [RedirectSourceTypeValues!]
+  notEqual: RedirectSourceTypeValues
+}
+
 enum RedirectSourceTypeValues {
+  domain
   path
 }
 

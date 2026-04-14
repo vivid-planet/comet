@@ -1,5 +1,15 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, DataGridToolbar, Field, FillSpace, FinalForm, FinalFormSwitch, type GridColDef, SaveButton } from "@comet/admin";
+import {
+    CancelButton,
+    DataGridToolbar,
+    Field,
+    FillSpace,
+    FinalForm,
+    FinalFormSwitch,
+    type GridColDef,
+    GridToolbarQuickFilter,
+    SaveButton,
+} from "@comet/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
@@ -8,7 +18,7 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
 import { type ContentScope } from "../../../contentScope/Provider";
@@ -121,7 +131,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 disabled={disabled}
                             />
                             {values.overrideContentScopes && (
-                                <Field name="contentScopes" fullWidth>
+                                <Field<string[]> name="contentScopes" fullWidth>
                                     {(props) => {
                                         return (
                                             <DataGrid
@@ -137,14 +147,16 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection={!disabled}
-                                                rowSelectionModel={props.input.value}
+                                                rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
                                                 onRowSelectionModelChange={(selectionModel) => {
-                                                    props.input.onChange(selectionModel.map((id) => String(id)));
+                                                    props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                                                 }}
+                                                disableRowSelectionExcludeModel
                                                 slots={{
                                                     toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}
                                                 initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                                                showToolbar
                                             />
                                         );
                                     }}

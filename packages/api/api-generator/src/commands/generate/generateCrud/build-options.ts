@@ -1,3 +1,5 @@
+import { dirname } from "node:path";
+
 import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature, SCOPED_ENTITY_METADATA_KEY } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/core";
 
@@ -113,7 +115,9 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
-    if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+    if (scopeProp && !scopeProp.targetMeta) {
+        throw new Error("Scope prop has no targetMeta");
+    }
 
     const hasDeletedAtProp = metadata.props.some((prop) => prop.name == "deletedAt");
 
@@ -139,6 +143,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
     });
 
+    const targetDirectory = `${dirname(metadata.path).replace(/\/entities$/, "")}/generated`;
+
     return {
         crudSearchPropNames,
         hasSearchArg,
@@ -158,5 +164,6 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         hasArgsClass,
         blockProps,
         dedicatedResolverArgProps,
+        targetDirectory,
     };
 }

@@ -3,6 +3,7 @@ import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeP
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { type ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
@@ -10,10 +11,10 @@ import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
-export type Future_TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
+export type TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
-export type Future_TimePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiTimePicker<Date, true>;
+export type TimePickerProps = ThemedComponentBaseProps<{
+    root: typeof MuiTimePicker;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -33,6 +34,8 @@ export type Future_TimePickerProps = ThemedComponentBaseProps<{
      * @param time - The new time value in 24-hour format (HH:mm), or `undefined` if cleared.
      */
     onChange?: (time: string | undefined) => void;
+    onBlur?: () => void;
+    onFocus?: () => void;
     /**
      * Custom icons for the picker.
      *
@@ -41,7 +44,7 @@ export type Future_TimePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiTimePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
+} & Omit<MuiTimePickerProps, "value" | "onChange" | "slotProps">;
 
 const getTimeString = (date: Date) => {
     return format(date, "HH:mm");
@@ -70,7 +73,7 @@ const getDateFromTimeString = (value: string | undefined): Date | null => {
  * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-timepicker--docs)
  * - [MUI X TimePicker Documentation](https://mui.com/x/react-date-pickers/time-picker/)
  */
-export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
+export const TimePicker = (inProps: TimePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,
@@ -79,26 +82,27 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
         disabled,
         value: stringValue,
         onChange,
+        onBlur,
+        onFocus,
         readOnly,
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFutureTimePicker",
+        name: "CometAdminTimePicker",
     });
     const [open, setOpen] = useState(false);
+    const intl = useIntl();
     const dateValue = getDateFromTimeString(stringValue);
 
     const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
 
     return (
         <Root
-            enableAccessibleFieldDOMStructure
             disabled={disabled}
             readOnly={readOnly}
             open={open}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            disableOpenPicker
             value={dateValue}
             onChange={(date) => {
                 if (!date) {
@@ -121,25 +125,32 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
                     return {
                         fullWidth,
                         required,
+                        onBlur,
+                        onFocus,
                         ...textFieldProps,
                         InputProps: {
-                            ...textFieldProps?.InputProps,
                             startAdornment: (
-                                <>
-                                    <OpenPickerAdornment
-                                        inputIsDisabled={disabled}
-                                        inputIsReadOnly={readOnly}
-                                        onClick={() => setOpen(true)}
-                                        {...slotProps?.openPickerAdornment}
-                                    >
-                                        {openPickerIcon}
-                                    </OpenPickerAdornment>
-                                    {textFieldProps?.InputProps?.startAdornment}
-                                </>
+                                <OpenPickerAdornment
+                                    inputIsDisabled={disabled}
+                                    inputIsReadOnly={readOnly}
+                                    onClick={() => setOpen(true)}
+                                    {...slotProps?.openPickerAdornment}
+                                    slotProps={{
+                                        ...slotProps?.openPickerAdornment?.slotProps,
+                                        openPickerButton: {
+                                            "aria-label": intl.formatMessage({
+                                                id: "comet.timePicker.openPicker",
+                                                defaultMessage: "Open time picker",
+                                            }),
+                                            ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                        },
+                                    }}
+                                >
+                                    {openPickerIcon}
+                                </OpenPickerAdornment>
                             ),
                             endAdornment: (
                                 <>
-                                    {textFieldProps?.InputProps?.endAdornment}
                                     <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
                                     <ClearInputAdornment
                                         position="end"
@@ -157,8 +168,8 @@ export const Future_TimePicker = (inProps: Future_TimePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiTimePicker<Date, true>)<Future_TimePickerClassKey>({
-    componentName: "Future_TimePicker",
+const Root = createComponentSlot(MuiTimePicker)<TimePickerClassKey>({
+    componentName: "TimePicker",
     slotName: "root",
 })(css`
     .${inputLabelClasses.root} {
@@ -170,24 +181,24 @@ const Root = createComponentSlot(MuiTimePicker<Date, true>)<Future_TimePickerCla
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_TimePickerClassKey>({
-    componentName: "Future_TimePicker",
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<TimePickerClassKey>({
+    componentName: "TimePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFutureTimePicker: Future_TimePickerProps;
+        CometAdminTimePicker: TimePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFutureTimePicker: Future_TimePickerClassKey;
+        CometAdminTimePicker: TimePickerClassKey;
     }
 
     interface Components {
-        CometAdminFutureTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureTimePicker"];
+        CometAdminTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
         };
     }
 }

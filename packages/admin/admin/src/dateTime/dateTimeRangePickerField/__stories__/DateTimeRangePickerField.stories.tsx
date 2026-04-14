@@ -173,3 +173,53 @@ export const Disabled: Story = {
         );
     },
 };
+
+/**
+ * Before implementing custom validation, try to disable certain values using the props provided by MUI's DateTimeRangePicker, such as `shouldDisableDate`, `shouldDisableTime`, `disableFuture`, `disablePast`.
+ *
+ * Use this when:
+ * - You need to validate the date time range against a custom rule, which cannot be achieved using the props provided by MUI's DateTimeRangePicker
+ * - You want to provide a custom error message
+ * - You want to validate the date time range asynchronously
+ */
+export const CustomValidation: Story = {
+    render: () => {
+        interface FormValues {
+            value: { start: Date | null; end: Date | null };
+        }
+
+        const validateMaxThirtyDayRange = async (value: { start: Date | null; end: Date | null } | undefined) => {
+            if (!value?.start || !value?.end) {
+                return undefined;
+            }
+            const millisecondsDifference = value.end.getTime() - value.start.getTime();
+            const daysDifference = millisecondsDifference / (1000 * 60 * 60 * 24);
+            return daysDifference <= 30 ? undefined : "Please select a range no longer than 30 days";
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {() => (
+                    <>
+                        <DateTimeRangePickerField
+                            name="value"
+                            label="Date Time Range Picker"
+                            helperText="The selected range must not exceed 30 days"
+                            fullWidth
+                            variant="horizontal"
+                            validate={validateMaxThirtyDayRange}
+                        />
+
+                        <FinalFormDebug />
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
+};

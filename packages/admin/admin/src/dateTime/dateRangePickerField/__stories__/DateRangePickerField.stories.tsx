@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
-import { Future_DateRangePickerField } from "../DateRangePickerField";
+import { DateRangePickerField } from "../DateRangePickerField";
 
-type Story = StoryObj<typeof Future_DateRangePickerField>;
-const config: Meta<typeof Future_DateRangePickerField> = {
-    component: Future_DateRangePickerField,
+type Story = StoryObj<typeof DateRangePickerField>;
+const config: Meta<typeof DateRangePickerField> = {
+    component: DateRangePickerField,
     title: "components/dateTime/DateRangePickerField",
 };
 
@@ -36,7 +36,7 @@ export const Default: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DateRangePickerField name="value" label="Date Range Picker" fullWidth variant="horizontal" />
+                            <DateRangePickerField name="value" label="Date Range Picker" fullWidth variant="horizontal" />
 
                             <FinalFormDebug />
                         </>
@@ -79,7 +79,7 @@ export const MinMaxDate: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DateRangePickerField
+                            <DateRangePickerField
                                 name="value"
                                 label="Date Range Picker with Min/Max Date"
                                 fullWidth
@@ -121,7 +121,7 @@ export const Clearable: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DateRangePickerField clearable name="value" label="Clearable Date Range Picker" fullWidth variant="horizontal" />
+                            <DateRangePickerField clearable name="value" label="Clearable Date Range Picker" fullWidth variant="horizontal" />
 
                             <FinalFormDebug />
                         </>
@@ -157,12 +157,63 @@ export const Disabled: Story = {
                 {({ values }: { values: FormValues }) => {
                     return (
                         <>
-                            <Future_DateRangePickerField disabled name="value" label="Disabled Date Range Picker" fullWidth variant="horizontal" />
+                            <DateRangePickerField disabled name="value" label="Disabled Date Range Picker" fullWidth variant="horizontal" />
 
                             <FinalFormDebug />
                         </>
                     );
                 }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * Before implementing custom validation, try to disable certain values using the props provided by MUI's DateRangePicker, such as `shouldDisableDate`, `disableFuture`, `disablePast`.
+ *
+ * Use this when:
+ * - You need to validate the date range against a custom rule, which cannot be achieved using the props provided by MUI's DateRangePicker
+ * - You want to provide a custom error message
+ * - You want to validate the date range asynchronously
+ */
+export const CustomValidation: Story = {
+    render: () => {
+        interface FormValues {
+            value: { start: string | null; end: string | null };
+        }
+
+        const validateMaxThirtyDayRange = async (value: { start: string | null; end: string | null } | undefined) => {
+            if (!value?.start || !value?.end) {
+                return undefined;
+            }
+            const startDate = new Date(value.start);
+            const endDate = new Date(value.end);
+            const differenceInDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+            return differenceInDays <= 30 ? undefined : "Please select a range no longer than 30 days";
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {() => (
+                    <>
+                        <DateRangePickerField
+                            name="value"
+                            label="Date Range Picker"
+                            helperText="The selected range must not exceed 30 days"
+                            fullWidth
+                            variant="horizontal"
+                            validate={validateMaxThirtyDayRange}
+                        />
+
+                        <FinalFormDebug />
+                    </>
+                )}
             </FinalForm>
         );
     },

@@ -47,11 +47,11 @@ export class NewsContentScope {
     language: string;
 }
 
-@EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } } })
 @RootBlockEntity()
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["news"] })
+@CrudGenerator({ requiredPermission: ["news"] })
 export class News extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 

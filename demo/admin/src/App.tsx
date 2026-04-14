@@ -13,10 +13,11 @@ import {
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LicenseInfo } from "@mui/x-license";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
+import { PageTreeNodeDependency } from "@src/pageTree/PageTreeNodeDependency";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
@@ -97,6 +98,7 @@ export function App() {
                     Link,
                     News: NewsDependency,
                     Redirect: RedirectDependency,
+                    PageTreeNode: PageTreeNodeDependency,
                     DamFile: createDamFileDependency(),
                 },
             }}
@@ -107,7 +109,9 @@ export function App() {
                         return config.scope.domain === scope.domain;
                     });
 
-                    if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    if (!siteConfig) {
+                        throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    }
                     return {
                         url: siteConfig.url,
                         preloginEnabled: siteConfig.preloginEnabled || false,

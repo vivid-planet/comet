@@ -196,11 +196,11 @@ export function generateFormField({
         formValueConfig.defaultInitializationCode = config.initialValue ? "true" : "false";
     } else if (config.type == "date") {
         imports.push({
-            name: "Future_DatePickerField",
+            name: "DatePickerField",
             importPath: "@comet/admin",
         });
         code = `
-            <Future_DatePickerField
+            <DatePickerField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
@@ -226,7 +226,7 @@ export function generateFormField({
         }
     } else if (config.type == "dateTime") {
         imports.push({
-            name: "Future_DateTimePickerField as DateTimePickerField",
+            name: "DateTimePickerField",
             importPath: "@comet/admin",
         });
         code = `<DateTimePickerField
@@ -295,7 +295,9 @@ export function generateFormField({
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
-        if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+        if (!enumType) {
+            throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+        }
 
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {

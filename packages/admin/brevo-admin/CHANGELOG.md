@@ -1,5 +1,99 @@
 # @comet/brevo-admin
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+- 9cb3f95: Bump MUI X Date Pickers peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [25f7342]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-date-time@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+    - @comet/cms-admin@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+- Updated dependencies [85b09a2]
+- Updated dependencies [171c335]
+    - @comet/cms-admin@9.0.0-beta.1
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-date-time@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [3fda20b]
+- Updated dependencies [f066335]
+- Updated dependencies [ee24125]
+- Updated dependencies [5f1566a]
+- Updated dependencies [790e8d0]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-date-time@9.0.0-beta.0
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+    - @comet/cms-admin@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [ed00704]
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/cms-admin@8.20.0
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+    - @comet/admin-date-time@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [fff2cc2]
+- Updated dependencies [fff2cc2]
+    - @comet/admin@8.19.0
+    - @comet/cms-admin@8.19.0
+    - @comet/admin-date-time@8.19.0
+    - @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [64b70bc]
+- Updated dependencies [ed029fb]
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/cms-admin@8.18.0
+    - @comet/admin@8.18.0
+    - @comet/admin-date-time@8.18.0
+    - @comet/admin-icons@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

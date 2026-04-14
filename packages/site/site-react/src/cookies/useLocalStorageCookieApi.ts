@@ -53,6 +53,5 @@ export const useLocalStorageCookieApi: CookieApiHook = () => {
 };
 
 const logCookieUpdate = (cookies: string[]) => {
-    // eslint-disable-next-line no-console
     console.info("Consented cookies updated:", cookies);
 };

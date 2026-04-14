@@ -1,5 +1,55 @@
 # @comet/site-nextjs
 
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- @comet/site-react@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- 865fcfd: Remove legacy CJS fields (`module`, `types`) from package.json as these packages are ESM-only
+- Updated dependencies [865fcfd]
+    - @comet/site-react@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 740dba8: Bump Next.js peer dependency to v16
+
+    Follow the official migration guides ([v15](https://nextjs.org/docs/app/guides/upgrading/version-15), [v16](https://nextjs.org/docs/app/guides/upgrading/version-16)) to upgrade.
+
+- 740dba8: Bump React peer dependency to v19
+
+    Follow the official [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [740dba8]
+    - @comet/site-react@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- @comet/site-react@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- @comet/site-react@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [2a9e770]
+    - @comet/site-react@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

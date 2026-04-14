@@ -11,7 +11,7 @@ import {
     type ValidationErrors,
 } from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { type MutableRefObject, type PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
+import { type PropsWithChildren, type RefObject, useCallback, useContext, useEffect, useRef } from "react";
 import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
@@ -24,7 +24,7 @@ import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
-    useRef<FormApi<FormValues, InitialFormValues>>();
+    useRef<FormApi<FormValues, InitialFormValues>>(undefined);
 
 // copy of FormProps from final-form, because Omit doen't work on it
 interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
@@ -52,7 +52,7 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues, InitialFormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
-    apiRef?: MutableRefObject<FormApi<FormValues, InitialFormValues> | undefined>;
+    apiRef?: RefObject<FormApi<FormValues, InitialFormValues> | undefined>;
     subRoutePath?: string;
 }
 
@@ -137,7 +137,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
         // Explicit cast to set InitialFormValues because FormRenderProps doesn't pass InitialFormValues to RenderableProps here:
         // https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L56-L67.
         // See https://github.com/final-form/react-final-form/pull/998.
-        if (props.apiRef) props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>;
+        if (props.apiRef) {
+            props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>;
+        }
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
         const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
@@ -149,7 +151,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                     // if we are inside a SaveBoundary, save the whole SaveBoundary
                     return saveBoundaryApi.save();
                 }
-                if (!formRenderProps.dirty) return;
+                if (!formRenderProps.dirty) {
+                    return;
+                }
                 return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
                         () => {
@@ -264,7 +268,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
     async function handleSubmit(values: FormValues, form: FormApi<FormValues, InitialFormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
-        if (ret === undefined) return ret;
+        if (ret === undefined) {
+            return ret;
+        }
 
         return Promise.resolve(ret)
             .then((data) => {

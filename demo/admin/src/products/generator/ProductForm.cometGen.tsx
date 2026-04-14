@@ -1,10 +1,10 @@
 import { defineConfig, type InjectedFormVariables, injectFormVariables } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
+import { productTypeValues } from "@src/products/generator/productTypeValues";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
-import { productTypeValues } from "./productTypeValues";
 import { validateProductSlug } from "./validateProductSlug";
 
 export default defineConfig<GQLProduct>({

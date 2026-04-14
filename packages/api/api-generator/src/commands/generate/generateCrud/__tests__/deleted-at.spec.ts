@@ -30,7 +30,7 @@ describe("deletedAt soft delete", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         formattedOut = await formatGeneratedFiles(out);
     });
     afterEach(async () => {
@@ -38,13 +38,15 @@ describe("deletedAt soft delete", () => {
     });
 
     it("should detect deletedAt property", () => {
-        const options = buildOptions(orm.em.getMetadata().get("TestEntity"), { targetDirectory: __dirname, requiredPermission: testPermission });
+        const options = buildOptions(orm.em.getMetadata().get("TestEntity"), { requiredPermission: testPermission });
         expect(options.hasDeletedAtProp).toBe(true);
     });
 
     it("resolver should contain soft delete logic and not remove logic", async () => {
         const file = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         expect(file.content).toContain("testEntity.assign({ deletedAt: new Date() })");
         expect(file.content).not.toContain("entityManager.remove(testEntity)");
