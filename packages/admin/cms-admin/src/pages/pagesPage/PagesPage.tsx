@@ -43,6 +43,10 @@ interface Props {
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScope) => ReactNode;
+    pageActionProps?: {
+        hidePreviewAction?: boolean;
+        onPreviewClick?: (page: GQLPageTreePageFragment) => void;
+    };
 }
 
 const DefaultEditPageNode = createEditPageNode({});
@@ -53,6 +57,7 @@ export function PagesPage({
     documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
+    pageActionProps,
 }: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
@@ -210,6 +215,8 @@ export function PagesPage({
                                                 onSelectChanged={onSelectChanged}
                                                 category={category}
                                                 siteUrl={siteConfig.url}
+                                                hidePreviewAction={pageActionProps?.hidePreviewAction}
+                                                onPreviewClick={pageActionProps?.onPreviewClick}
                                             />
                                         </>
                                     )}

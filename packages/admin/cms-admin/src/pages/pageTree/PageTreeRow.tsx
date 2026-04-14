@@ -39,6 +39,8 @@ interface PageTreeRowProps {
     virtualizedStyle?: CSSProperties;
     slideIn?: boolean;
     selectedPages: PageTreePage[];
+    hidePreviewAction?: boolean;
+    onPreviewClick?: (page: PageTreePage) => void;
 }
 
 interface PageTreeTableRowElement extends HTMLTableRowElement {
@@ -62,6 +64,8 @@ const PageTreeRow = ({
     virtualizedStyle,
     slideIn,
     selectedPages,
+    hidePreviewAction,
+    onPreviewClick,
 }: PageTreeRowProps) => {
     const rowRef = useRef<PageTreeTableRowElement | null>(null);
     const [hover, setHover] = useState(false);
@@ -239,7 +243,13 @@ const PageTreeRow = ({
                 <PageVisibility page={page} />
             </sc.PageVisibilityCell>
             <sc.PageActionsCell component="div">
-                <PageActions page={page} editDialog={editDialogApi} siteUrl={siteUrl} />
+                <PageActions
+                    page={page}
+                    editDialog={editDialogApi}
+                    siteUrl={siteUrl}
+                    hidePreviewAction={hidePreviewAction}
+                    onPreviewClick={onPreviewClick}
+                />
             </sc.PageActionsCell>
             <sc.RowClickContainer onClick={onRowClick} />
 
