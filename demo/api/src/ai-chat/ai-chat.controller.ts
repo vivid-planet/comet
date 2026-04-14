@@ -3,13 +3,12 @@ import { DisableCometGuards, PageTreeService } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Controller, Inject, Post, Req, Res } from "@nestjs/common";
 import { Config } from "@src/config/config";
-import { Page } from "@src/documents/pages/entities/page.entity";
 import { convertToModelMessages, stepCountIs, streamText, type ToolSet } from "ai";
 import { Request, Response } from "express";
 
 import { createDamTools } from "./tools/dam.tools";
 import { createPageTreeTools } from "./tools/page-tree.tools";
-import { createPagesTools, executeSavePage } from "./tools/pages.tools";
+import { createPagesTools } from "./tools/pages.tools";
 
 const MAX_STEPS = 50;
 
@@ -53,25 +52,5 @@ export class AiChatController {
                 "X-Accel-Buffering": "no",
             },
         });
-    }
-
-    @Post("execute-save-page")
-    async executeSavePageEndpoint(@Req() req: Request, @Res() res: Response): Promise<void> {
-        try {
-            const result = await executeSavePage(req.body.args as Parameters<typeof executeSavePage>[0], this.pageTreeService, this.em);
-            res.json({ result });
-        } catch (err) {
-            res.status(500).json({ result: JSON.stringify({ error: (err as Error).message }) });
-        }
-    }
-
-    @Post("get-page-current-data")
-    async getPageCurrentData(@Req() req: Request, @Res() res: Response): Promise<void> {
-        const page = await this.em.findOne(Page, { id: req.body.pageId });
-        if (!page) {
-            res.json(null);
-            return;
-        }
-        res.json({ content: page.content, seo: page.seo, stage: page.stage });
     }
 }

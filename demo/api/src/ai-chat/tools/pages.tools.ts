@@ -87,12 +87,14 @@ export function createPagesTools(pageTreeService: PageTreeService, em: EntityMan
                 return JSON.stringify({ valid: true });
             },
         }),
-        // save_page has no execute handler — it requires human confirmation via the frontend.
-        // The frontend will call executeSavePage() after the user approves.
         save_page: tool({
             description:
                 "Create or update a CMS Page document. Always call validate_save_page first with the same arguments — do not call save_page if validation fails. attachedPageTreeNodeId must be provided on every call.",
             inputSchema: pageBlockInputSchema,
+            needsApproval: true,
+            execute: async (input) => {
+                return executeSavePage(input, pageTreeService, em);
+            },
         }),
         get_block_input_types: tool({
             description: "Get TypeScript interfaces describing the shape of all CMS content blocks needed as input to eg save_page tool.",
@@ -108,7 +110,7 @@ export function createPagesTools(pageTreeService: PageTreeService, em: EntityMan
     };
 }
 
-export async function executeSavePage(input: PageBlockInput, pageTreeService: PageTreeService, em: EntityManager): Promise<string> {
+async function executeSavePage(input: PageBlockInput, pageTreeService: PageTreeService, em: EntityManager): Promise<string> {
     const { pageId, attachedPageTreeNodeId } = input;
 
     if (attachedPageTreeNodeId) {

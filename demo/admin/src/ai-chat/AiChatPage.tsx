@@ -3,7 +3,14 @@ import { Button } from "@comet/admin";
 import { BlockPreview, IFrameBridgeProvider, useBlockContext, useBlockPreview, useContentScope, useSiteConfig } from "@comet/cms-admin";
 import { Box, CircularProgress, Paper, TextField, Typography } from "@mui/material";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
-import { DefaultChatTransport, getToolName, isToolUIPart } from "ai";
+import {
+    DefaultChatTransport,
+    getToolName,
+    isToolUIPart,
+    lastAssistantMessageIsCompleteWithApprovalResponses,
+    type UIMessage,
+    type UIMessagePart,
+} from "ai";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -61,18 +68,66 @@ function PageContentPreview({ currentData, newData }: { currentData: unknown; ne
     );
 }
 
-interface PendingPermission {
-    toolCallId: string;
+interface PendingApproval {
+    approvalId: string;
     toolName: string;
-    args: { pageId: string; content: unknown; seo: unknown; stage: unknown; attachedPageTreeNodeId?: string };
+    input: { pageId: string; content: unknown; seo: unknown; stage: unknown; attachedPageTreeNodeId?: string };
     currentData: unknown;
+}
+
+/**
+ * Search messages for the most recent get_page tool output that matches the given pageId.
+ * This provides the "current" page data for the diff preview without needing a separate REST call.
+ */
+function findCurrentPageData(messages: UIMessage[], pageId: string): unknown {
+    for (let i = messages.length - 1; i >= 0; i--) {
+        const msg = messages[i];
+        for (let j = msg.parts.length - 1; j >= 0; j--) {
+            const part = msg.parts[j];
+            if (isToolUIPart(part) && getToolName(part) === "get_page" && part.state === "output-available" && part.output) {
+                try {
+                    const parsed = typeof part.output === "string" ? JSON.parse(part.output) : part.output;
+                    if (parsed && parsed.id === pageId) {
+                        return parsed;
+                    }
+                } catch {
+                    // ignore parse errors
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * Find a pending save_page approval-requested tool part in the messages.
+ */
+function findPendingApproval(messages: UIMessage[]): PendingApproval | null {
+    for (let i = messages.length - 1; i >= 0; i--) {
+        const msg = messages[i];
+        for (let j = msg.parts.length - 1; j >= 0; j--) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const part: UIMessagePart<any, any> = msg.parts[j];
+            if (isToolUIPart(part) && getToolName(part) === "save_page" && part.state === "approval-requested") {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const input = part.input as any;
+                const currentData = findCurrentPageData(messages, input?.pageId);
+                return {
+                    approvalId: part.approval.id,
+                    toolName: "save_page",
+                    input,
+                    currentData,
+                };
+            }
+        }
+    }
+    return null;
 }
 
 export function AiChatPage() {
     const apiUrl = `${window.location.origin}/api`;
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [input, setInput] = useState("");
-    const [permissionData, setPermissionData] = useState<PendingPermission | null>(null);
 
     const transport = useMemo(
         () =>
@@ -83,39 +138,14 @@ export function AiChatPage() {
         [apiUrl],
     );
 
-    const { messages, sendMessage, addToolOutput, status } = useChat({
+    const { messages, sendMessage, addToolApprovalResponse, status } = useChat({
         transport,
-        onToolCall: async ({ toolCall }) => {
-            if (toolCall.toolName === "save_page") {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const args = (toolCall as any).input;
-                let currentData = null;
-                try {
-                    const resp = await fetch(`${apiUrl}/ai-chat/get-page-current-data`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify({ pageId: args.pageId }),
-                    });
-                    currentData = await resp.json();
-                } catch {
-                    // ignore
-                }
-                setPermissionData({
-                    toolCallId: toolCall.toolCallId,
-                    toolName: "save_page",
-                    args,
-                    currentData,
-                });
-                // Return undefined — tool call stays pending until addToolOutput is called
-                return undefined;
-            }
-            // Return undefined for auto-executed tools (they have execute handlers on the server)
-            return undefined;
-        },
+        sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
     });
 
     const isStreaming = status === "streaming" || status === "submitted";
+
+    const pendingApproval = useMemo(() => findPendingApproval(messages), [messages]);
 
     const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -125,40 +155,13 @@ export function AiChatPage() {
         scrollToBottom();
     }, [messages, scrollToBottom]);
 
-    const respondToPermission = async (approved: boolean) => {
-        if (!permissionData) return;
-        const { toolCallId, args } = permissionData;
-        setPermissionData(null);
-
-        if (approved) {
-            try {
-                const resp = await fetch(`${apiUrl}/ai-chat/execute-save-page`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify({ args }),
-                });
-                const data = await resp.json();
-                addToolOutput({
-                    tool: "save_page",
-                    toolCallId,
-                    output: data.result,
-                });
-            } catch {
-                addToolOutput({
-                    tool: "save_page",
-                    toolCallId,
-                    state: "output-error",
-                    errorText: "Failed to execute save_page",
-                });
-            }
-        } else {
-            addToolOutput({
-                tool: "save_page",
-                toolCallId,
-                output: JSON.stringify({ error: "Permission denied by user." }),
-            });
-        }
+    const respondToApproval = (approved: boolean) => {
+        if (!pendingApproval) return;
+        void addToolApprovalResponse({
+            id: pendingApproval.approvalId,
+            approved,
+            reason: approved ? undefined : "Permission denied by user.",
+        });
     };
 
     const handleSend = () => {
@@ -216,7 +219,10 @@ export function AiChatPage() {
                                     <details key={j}>
                                         <summary style={{ cursor: "pointer", fontSize: "0.75rem", opacity: 0.7 }}>
                                             {`Tool: ${toolName}`}
-                                            {(part.state === "input-streaming" || part.state === "input-available") && " (pending...)"}
+                                            {(part.state === "input-streaming" ||
+                                                part.state === "input-available" ||
+                                                part.state === "approval-requested") &&
+                                                " (pending...)"}
                                         </summary>
                                         {part.input !== undefined && (
                                             <pre style={{ fontSize: "0.7rem", overflowX: "auto", maxHeight: 200, margin: "4px 0 0" }}>
@@ -245,6 +251,11 @@ export function AiChatPage() {
                                                 {`❌ Error: ${part.errorText}`}
                                             </Typography>
                                         )}
+                                        {part.state === "output-denied" && (
+                                            <Typography variant="body2" sx={{ color: "warning.main", fontSize: "0.7rem" }}>
+                                                <FormattedMessage id="aiChat.toolDenied" defaultMessage="⛔ Denied by user" />
+                                            </Typography>
+                                        )}
                                     </details>
                                 );
                             }
@@ -254,21 +265,21 @@ export function AiChatPage() {
                 ))}
                 <div ref={messagesEndRef} />
             </Paper>
-            {permissionData && (
+            {pendingApproval && (
                 <Paper variant="outlined" sx={{ p: 2, display: "flex", flexDirection: "column", gap: 1, borderColor: "warning.main" }}>
                     <Typography variant="body2">
                         <FormattedMessage
                             id="aiChat.permissionRequest"
                             defaultMessage="Claude wants to call {toolName}. Allow this action?"
-                            values={{ toolName: <strong>{permissionData.toolName}</strong> }}
+                            values={{ toolName: <strong>{pendingApproval.toolName}</strong> }}
                         />
                     </Typography>
-                    <PageContentPreview currentData={permissionData.currentData} newData={permissionData.args} />
+                    <PageContentPreview currentData={pendingApproval.currentData} newData={pendingApproval.input} />
                     <Box sx={{ display: "flex", gap: 1 }}>
-                        <Button onClick={() => void respondToPermission(true)}>
+                        <Button onClick={() => respondToApproval(true)}>
                             <FormattedMessage id="aiChat.permissionApprove" defaultMessage="Approve" />
                         </Button>
-                        <Button onClick={() => void respondToPermission(false)}>
+                        <Button onClick={() => respondToApproval(false)}>
                             <FormattedMessage id="aiChat.permissionDeny" defaultMessage="Deny" />
                         </Button>
                     </Box>
