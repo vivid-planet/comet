@@ -5,12 +5,6 @@ sidebar_position: -9
 
 # Migrating from v8 to v9
 
-## API
-
-### Rename `RedirectSourceTypeValues` to `RedirectSourceType``
-
-Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
-
 ## Admin
 
 This migration guide is designed to be executed by an AI coding agent (e.g., Claude Code). Each section contains structured, step-by-step instructions that an agent can follow to perform the migration automatically.
@@ -187,6 +181,10 @@ npm run lint
 ```
 
 Repeat this step, fixing all lint errors, until the lint passes.
+
+### Rename `RedirectSourceTypeValues` to `RedirectSourceType``
+
+Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
 
 ## Admin
 
