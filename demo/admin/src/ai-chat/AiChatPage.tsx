@@ -1,8 +1,6 @@
 import { useChat } from "@ai-sdk/react";
 import { Button } from "@comet/admin";
-import { BlockPreview, IFrameBridgeProvider, useBlockContext, useBlockPreview, useContentScope, useSiteConfig } from "@comet/cms-admin";
 import { Box, CircularProgress, Paper, TextField, Typography } from "@mui/material";
-import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import {
     DefaultChatTransport,
     getToolName,
@@ -14,94 +12,14 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-function PageContentPreview({ currentData, newData }: { currentData: unknown; newData: unknown }) {
-    const blockContext = useBlockContext();
-    const blockContextRef = useRef(blockContext);
-    blockContextRef.current = blockContext;
-    const { scope } = useContentScope();
-    const siteConfig = useSiteConfig({ scope });
-    const previewApi = useBlockPreview();
-    const [previewState, setPreviewState] = useState<unknown>(undefined);
-
-    useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (!newData || !(newData as any).content) return;
-        async function compute() {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const currentState = await PageContentBlock.output2State((currentData as any).content, blockContextRef.current);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const newState = PageContentBlock.input2State((newData as any).content);
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const currentKeys = new Set((currentState as any).blocks.map((b: any) => b.key));
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const newKeys = new Set((newState as any).blocks.map((b: any) => b.key));
-            const combinedBlocks = [
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ...(newState as any).blocks.map((b: any) => ({
-                    ...b,
-                    ...(currentKeys.has(b.key) ? {} : { previewType: "added" as const }),
-                })),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ...(currentState as any).blocks.filter((b: any) => !newKeys.has(b.key)).map((b: any) => ({ ...b, previewType: "removed" as const })),
-            ];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const combinedState = { ...(newState as any), blocks: combinedBlocks };
-
-            const ps = PageContentBlock.createPreviewState(combinedState, {
-                ...blockContextRef.current,
-                parentUrl: "/",
-                showVisibleOnly: false,
-            });
-            setPreviewState(ps);
-        }
-        void compute();
-    }, [currentData, newData]);
-
-    const previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
-    return (
-        <IFrameBridgeProvider key={previewUrl}>
-            <Box sx={{ height: 400 }}>
-                <BlockPreview url={previewUrl} previewState={previewState} previewApi={previewApi} />
-            </Box>
-        </IFrameBridgeProvider>
-    );
-}
+import { PageContentPreview } from "./PageContentPreview";
 
 interface PendingApproval {
     approvalId: string;
     toolName: string;
     input: { pageId: string; content: unknown; seo: unknown; stage: unknown; attachedPageTreeNodeId?: string };
-    currentData: unknown;
 }
 
-/**
- * Search messages for the most recent get_page tool output that matches the given pageId.
- * This provides the "current" page data for the diff preview without needing a separate REST call.
- */
-function findCurrentPageData(messages: UIMessage[], pageId: string): unknown {
-    for (let i = messages.length - 1; i >= 0; i--) {
-        const msg = messages[i];
-        for (let j = msg.parts.length - 1; j >= 0; j--) {
-            const part = msg.parts[j];
-            if (isToolUIPart(part) && getToolName(part) === "get_page" && part.state === "output-available" && part.output) {
-                try {
-                    const parsed = typeof part.output === "string" ? JSON.parse(part.output) : part.output;
-                    if (parsed && parsed.id === pageId) {
-                        return parsed;
-                    }
-                } catch {
-                    // ignore parse errors
-                }
-            }
-        }
-    }
-    return null;
-}
-
-/**
- * Find a pending save_page approval-requested tool part in the messages.
- */
 function findPendingApproval(messages: UIMessage[]): PendingApproval | null {
     for (let i = messages.length - 1; i >= 0; i--) {
         const msg = messages[i];
@@ -111,12 +29,10 @@ function findPendingApproval(messages: UIMessage[]): PendingApproval | null {
             if (isToolUIPart(part) && getToolName(part) === "save_page" && part.state === "approval-requested") {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const input = part.input as any;
-                const currentData = findCurrentPageData(messages, input?.pageId);
                 return {
                     approvalId: part.approval.id,
                     toolName: "save_page",
                     input,
-                    currentData,
                 };
             }
         }
@@ -274,7 +190,7 @@ export function AiChatPage() {
                             values={{ toolName: <strong>{pendingApproval.toolName}</strong> }}
                         />
                     </Typography>
-                    <PageContentPreview currentData={pendingApproval.currentData} newData={pendingApproval.input} />
+                    <PageContentPreview pageId={pendingApproval.input.pageId} newData={pendingApproval.input} />
                     <Box sx={{ display: "flex", gap: 1 }}>
                         <Button onClick={() => respondToApproval(true)}>
                             <FormattedMessage id="aiChat.permissionApprove" defaultMessage="Approve" />

@@ -19,8 +19,8 @@ export class AiChatController {
 
     constructor(
         @Inject("config") private readonly config: Config,
-        private readonly pageTreeService: PageTreeService,
-        private readonly em: EntityManager,
+        pageTreeService: PageTreeService,
+        em: EntityManager,
     ) {
         this.tools = {
             ...createPageTreeTools(pageTreeService),
