@@ -232,6 +232,7 @@ const FolderDataGrid = ({
         },
         {
             field: "type",
+            sortBy: "mimetype",
             headerName: intl.formatMessage({
                 id: "comet.dam.file.fileType",
                 defaultMessage: "Type/Format",
@@ -249,8 +250,6 @@ const FolderDataGrid = ({
                     });
                 }
             },
-            sortable: false,
-            hideSortIcons: true,
             disableColumnMenu: true,
         },
         {
