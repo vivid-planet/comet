@@ -260,7 +260,6 @@ const FolderDataGrid = ({
                 id: "comet.dam.file.info",
                 defaultMessage: "Info",
             }),
-            headerAlign: "right",
             align: "right",
             minWidth: 100,
             renderCell: ({ row }) => {
