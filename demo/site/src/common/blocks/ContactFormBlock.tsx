@@ -59,7 +59,7 @@ export const ContactFormBlock = withPreview(
             let recaptchaToken: string;
 
             if (!recaptchaSiteKey) {
-                console.error("Error: Missing recaptchaSiteKey in siteConfig");
+                console.error("Missing recaptchaSiteKey in siteConfig");
                 setError("root.serverError", {
                     type: "manual",
                     message: intl.formatMessage({
