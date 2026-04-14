@@ -50,7 +50,7 @@ const withFoldersSelect = (
         qb = addSearchTermFiltertoQueryBuilder(qb, args.query);
     }
 
-    if (args.sortColumnName && args.sortDirection && args.sortColumnName !== "size") {
+    if (args.sortColumnName && args.sortDirection && args.sortColumnName !== "size" && args.sortColumnName !== "mimetype") {
         qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
     }
 
@@ -129,6 +129,9 @@ export class FoldersService {
         const qb = withFoldersSelect(this.selectQueryBuilder(), args);
         if (args.sortColumnName === "size" && args.sortDirection) {
             qb.orderBy({ [raw("(COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id))")]: args.sortDirection });
+        }
+        if (args.sortColumnName === "mimetype" && args.sortDirection) {
+            qb.orderBy({ [`folder.name`]: args.sortDirection });
         }
         const folders = await qb.getResult();
 
@@ -300,9 +303,10 @@ export class FoldersService {
 
     async getFolderPosition(folderId: string, args: Omit<DamFolderListPositionArgs, "scope">, scope?: DamScopeInterface): Promise<number> {
         const isSizeSort = args.sortColumnName === "size";
+        const effectiveSortColumn = args.sortColumnName === "mimetype" ? "name" : args.sortColumnName;
         const rowNumberExpr = isSizeSort
             ? raw(`ROW_NUMBER() OVER( ORDER BY (COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id)) ${args.sortDirection} ) AS row_number`)
-            : raw(`ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`);
+            : raw(`ROW_NUMBER() OVER( ORDER BY folder."${effectiveSortColumn}" ${args.sortDirection} ) AS row_number`);
 
         let baseQb = this.foldersRepository.createQueryBuilder("folder").select(["folder.id", rowNumberExpr]);
 
