@@ -27,6 +27,7 @@
         "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
+        "@ai-sdk/react": "^3.0.160",
         "@apollo/client": "^3.14.1",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
@@ -42,6 +43,7 @@
         "@mui/x-data-grid-pro": "^7.29.12",
         "@mui/x-date-pickers": "^7.29.4",
         "@mui/x-license": "^7.29.1",
+        "ai": "^6.0.158",
         "change-case": "^5.4.4",
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
