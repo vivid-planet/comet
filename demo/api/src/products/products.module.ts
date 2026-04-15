@@ -27,7 +27,6 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
-import { ProductMcpTool } from "./product.mcp-tool";
 import { ProductService } from "./product.service";
 import { ProductImporterCommand } from "./product-importer.command";
 import { ProductImporterService } from "./product-importer.service";
@@ -71,7 +70,6 @@ import { ProductPublishedMail } from "./published-mail/product-published.mail";
         ProductCategoryTypeResolver,
         ProductService,
         ProductVariantService,
-        ProductMcpTool,
     ],
     exports: [],
 })

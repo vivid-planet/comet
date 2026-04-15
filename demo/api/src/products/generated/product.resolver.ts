@@ -2,6 +2,8 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { EntityManager, FindOptions, Reference } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+import { Tool } from "@rekog/mcp-nest";
+import { z } from "zod";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
@@ -19,6 +21,7 @@ import {
     GetCurrentUser,
     RequiredPermission,
     RootBlockDataScalar,
+    SortDirection,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
@@ -27,6 +30,7 @@ import { ProductTag } from "../entities/product-tag.entity";
 import { Product } from "../entities/product.entity";
 import { ProductService } from "../product.service";
 import { ProductMutationError } from "./../product.service";
+import { ProductSortField } from "./dto/product.sort";
 import { Field, ObjectType } from "@nestjs/graphql";
 @ObjectType()
 class CreateProductPayload {
@@ -315,5 +319,113 @@ export class ProductResolver {
         product: Product,
     ): Promise<object> {
         return this.blocksTransformer.transformToPlain(product.image);
+    }
+    @Tool({
+        name: "get-product",
+        description: "Get a single product by its ID",
+        parameters: z.object({
+            id: z.string().describe("The UUID of the product"),
+        }),
+    })
+    async getProductTool({ id }: { id: string }) {
+        const product = await this.entityManager.findOne(Product, id);
+        if (!product) {
+            return `Product with ID "${id}" not found.`;
+        }
+        return JSON.stringify(await this.resolveProductForMcp(product));
+    }
+    @Tool({
+        name: "get-product-by-slug",
+        description: "Get a single product by its slug",
+        parameters: z.object({
+            slug: z.string().describe("The slug of the product"),
+        }),
+    })
+    async getProductBySlugTool({ slug }: { slug: string }) {
+        const product = await this.productBySlug(slug);
+        if (!product) {
+            return `Product with slug "${slug}" not found.`;
+        }
+        return JSON.stringify(await this.resolveProductForMcp(product));
+    }
+    @Tool({
+        name: "list-products",
+        description: "List products with optional search, pagination, and sorting",
+        parameters: z.object({
+            search: z.string().optional().describe("Search term to filter products by title"),
+            offset: z.number().int().min(0).default(0).describe("Pagination offset"),
+            limit: z.number().int().min(1).max(100).default(25).describe("Number of products to return (max 100)"),
+            sortField: z.enum(["title", "createdAt", "price"]).default("createdAt").describe("Field to sort by"),
+            sortDirection: z.enum(["ASC", "DESC"]).default("DESC").describe("Sort direction"),
+        }),
+    })
+    async listProductsTool({
+        search,
+        offset,
+        limit,
+        sortField,
+        sortDirection,
+    }: {
+        search?: string;
+        offset: number;
+        limit: number;
+        sortField: string;
+        sortDirection: string;
+    }) {
+        const where = search ? gqlArgsToMikroOrmQuery({ search, filter: undefined }, this.entityManager.getMetadata(Product)) : {};
+        const options: FindOptions<Product> = { offset, limit };
+
+        const sortFieldMapping: Record<string, ProductSortField> = {
+            title: ProductSortField.title,
+            createdAt: ProductSortField.createdAt,
+            price: ProductSortField.price,
+        };
+
+        options.orderBy = gqlSortToMikroOrmOrderBy([
+            {
+                field: sortFieldMapping[sortField] ?? ProductSortField.createdAt,
+                direction: sortDirection === "ASC" ? SortDirection.ASC : SortDirection.DESC,
+            },
+        ]);
+
+        const [entities, totalCount] = await this.entityManager.findAndCount(Product, where, options);
+        const products = await Promise.all(entities.map((product) => this.resolveProductForMcp(product)));
+
+        return JSON.stringify({
+            products,
+            totalCount,
+            offset,
+            limit,
+        });
+    }
+    /**
+     * Resolves a product with its relations for MCP tool responses.
+     * Reuses the existing GraphQL field resolver methods to avoid code duplication.
+     */
+    private async resolveProductForMcp(product: Product) {
+        const [category, manufacturer, tags, colors] = await Promise.all([
+            this.category(product),
+            this.manufacturer(product),
+            this.tags(product),
+            this.colors(product),
+        ]);
+
+        return {
+            id: product.id,
+            title: product.title,
+            slug: product.slug,
+            description: product.description,
+            type: product.type,
+            status: product.status,
+            price: product.price,
+            inStock: product.inStock,
+            availableSince: product.availableSince,
+            createdAt: product.createdAt,
+            updatedAt: product.updatedAt,
+            category: category ? { id: category.id, title: category.title, slug: category.slug } : null,
+            manufacturer: manufacturer ? { id: manufacturer.id, name: manufacturer.name } : null,
+            tags: tags.map((t) => ({ id: t.id, title: t.title })),
+            colors: colors.map((c) => ({ id: c.id, name: c.name, hexCode: c.hexCode })),
+        };
     }
 }
