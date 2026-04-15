@@ -220,7 +220,7 @@ export const EditPage = ({ id }: Props) => {
                         <CrudMoreActionsMenu
                             overallActions={[
                                 {
-                                    label: <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />,
+                                    label: <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Site preview" />,
                                     icon: <Preview />,
                                     disabled: !pageState,
                                     onClick: () => {
