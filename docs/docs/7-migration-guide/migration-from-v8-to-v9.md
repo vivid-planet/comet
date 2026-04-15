@@ -182,6 +182,10 @@ npm run lint
 
 Repeat this step, fixing all lint errors, until the lint passes.
 
+### Rename `RedirectSourceTypeValues` to `RedirectSourceType``
+
+Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
+
 ## Admin
 
 ### Update Comet and peer dependencies
