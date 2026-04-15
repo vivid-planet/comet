@@ -49,8 +49,13 @@ export interface DocumentInterface<
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
     hasNoSitePreview?: true;
+    SitePreviewAction?: ComponentType<SitePreviewActionProps>;
 }
 
 export type InfoTagProps<PageTreeNodeAdditionalFields extends object = object> = {
+    page: PageTreePage<PageTreeNodeAdditionalFields>;
+};
+
+export type SitePreviewActionProps<PageTreeNodeAdditionalFields extends object = object> = {
     page: PageTreePage<PageTreeNodeAdditionalFields>;
 };
