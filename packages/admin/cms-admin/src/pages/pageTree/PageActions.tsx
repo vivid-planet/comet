@@ -75,7 +75,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
                     </RowActionsItem>,
                     documentType.SitePreviewAction ? (
-                        <documentType.SitePreviewAction key="preview" page={page} />
+                        <documentType.SitePreviewAction key="preview" pageTreeNode={page} />
                     ) : (
                         <RowActionsItem
                             key="preview"

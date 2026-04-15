@@ -57,5 +57,5 @@ export type InfoTagProps<PageTreeNodeAdditionalFields extends object = object> =
 };
 
 export type SitePreviewActionProps<PageTreeNodeAdditionalFields extends object = object> = {
-    page: PageTreePage<PageTreeNodeAdditionalFields>;
+    pageTreeNode: PageTreePage<PageTreeNodeAdditionalFields>;
 };

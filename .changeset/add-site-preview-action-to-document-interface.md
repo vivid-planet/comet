@@ -13,9 +13,9 @@ import { RowActionsItem } from "@comet/admin";
 import { Preview } from "@comet/admin-icons";
 import { type DocumentInterface, openSitePreviewWindow, type SitePreviewActionProps } from "@comet/cms-admin";
 
-function PageSitePreviewAction({ page }: SitePreviewActionProps) {
+function PageSitePreviewAction({ pageTreeNode }: SitePreviewActionProps) {
     // Use hooks to construct a custom preview URL
-    const previewPath = useCustomPreviewPath(page);
+    const previewPath = useCustomPreviewPath(pageTreeNode);
 
     return (
         <RowActionsItem
