@@ -27,6 +27,7 @@ import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apoll
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
+import { McpModule } from "@rekog/mcp-nest";
 import { AppPermission } from "@src/auth/app-permission.enum";
 import { BlacklistedContacts } from "@src/brevo/blacklisted-contacts/entity/blacklisted-contacts.entity";
 import { BrevoContactSubscribeModule } from "@src/brevo/brevo-contact/brevo-contact-subscribe.module";
@@ -217,6 +218,10 @@ export class AppModule {
                 MailerModule.register(config.mailer),
                 MailTemplatesModule,
                 ProductsModule,
+                McpModule.forRoot({
+                    name: "comet-demo-mcp-server",
+                    version: "1.0.0",
+                }),
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {

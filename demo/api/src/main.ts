@@ -32,7 +32,9 @@ async function bootstrap(): Promise<void> {
     //     https://github.com/typestack/class-validator#using-service-container.
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
-    app.setGlobalPrefix("api");
+    app.setGlobalPrefix("api", {
+        exclude: ["sse", "messages", "mcp"],
+    });
     app.enableCors({
         origin: config.corsAllowedOrigin,
         methods: ["GET", "POST"],
