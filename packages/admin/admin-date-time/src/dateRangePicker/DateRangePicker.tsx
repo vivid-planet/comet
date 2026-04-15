@@ -108,9 +108,9 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required ? (
+                !required && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
                     </>
                 ) : (

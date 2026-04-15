@@ -86,11 +86,7 @@ function ProductCategoryFilter({ item, applyValue, apiRef }: GridFilterInputValu
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={Boolean(item.value)}
-                                        onClick={() => handleApplyValue(undefined)}
-                                    />
+                                    {item.value && <ClearInputAdornment position="end" onClick={() => handleApplyValue(undefined)} />}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),
