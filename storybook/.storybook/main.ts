@@ -29,6 +29,10 @@ const config: StorybookConfig = {
                 title: "@comet/admin",
                 url: configType === "DEVELOPMENT" ? "http://localhost:26646/" : "https://main--68e7b70f15b8f51dac492af6.chromatic.com", // TODO: support pull request previews,
             },
+            "@comet/cms-admin": {
+                title: "@comet/cms-admin",
+                url: configType === "DEVELOPMENT" ? "http://localhost:26647/" : "", // TODO: add Chromatic URL once available
+            },
         };
     },
 };
