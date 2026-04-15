@@ -3,4 +3,4 @@
 "@comet/cms-api": minor
 ---
 
-Add TipTapRichTextBlock as an alternativbe to RichTextBlock
+Add TipTapRichTextBlock as an alternative to RichTextBlock
