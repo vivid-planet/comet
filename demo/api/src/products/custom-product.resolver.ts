@@ -1,6 +1,7 @@
 import { MailerService, RequiredPermission } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Mutation, Resolver } from "@nestjs/graphql";
+import { McpTool } from "@src/mcp/mcp-tool.decorator";
 
 import { Product, ProductStatus } from "./entities/product.entity";
 import { ProductPublishedMail } from "./published-mail/product-published.mail";
@@ -15,6 +16,7 @@ export class CustomProductResolver {
     ) {}
 
     @Mutation(() => Boolean)
+    @McpTool({ description: "Publish all products that are not yet published and send a notification email" })
     async publishAllProducts(): Promise<boolean> {
         const countProductPublished = await this.entityManager.count(Product, { status: { $ne: ProductStatus.Published } });
         await this.entityManager.nativeUpdate(Product, { status: { $ne: ProductStatus.Published } }, { status: ProductStatus.Published });

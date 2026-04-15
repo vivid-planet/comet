@@ -1,6 +1,7 @@
 import { AffectedEntity } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Resolver } from "@nestjs/graphql";
+import { McpTool } from "@src/mcp/mcp-tool.decorator";
 
 import { NewsCommentInput } from "./dto/news-comment.input";
 import { News } from "./entities/news.entity";
@@ -12,6 +13,7 @@ export class NewsCommentResolver {
 
     @Mutation(() => NewsComment)
     @AffectedEntity(News, { idArg: "newsId" })
+    @McpTool({ description: "Create a new comment on a news article" })
     async createNewsComment(
         @Args("newsId", { type: () => ID }) newsId: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
@@ -29,6 +31,7 @@ export class NewsCommentResolver {
 
     @Mutation(() => NewsComment)
     @AffectedEntity(NewsComment)
+    @McpTool({ description: "Update an existing news comment" })
     async updateNewsComment(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
@@ -45,6 +48,7 @@ export class NewsCommentResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(NewsComment)
+    @McpTool({ description: "Delete a news comment by ID" })
     async deleteNewsComment(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         await this.entityManager.removeAndFlush({ id });
 

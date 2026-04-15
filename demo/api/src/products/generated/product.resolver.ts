@@ -2,6 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { EntityManager, FindOptions, Reference } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+import { McpField, McpTool } from "@src/mcp/mcp-tool.decorator";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
@@ -45,6 +46,7 @@ export class ProductResolver {
     ) {}
     @Query(() => Product)
     @AffectedEntity(Product)
+    @McpTool({ description: "Get a single product by ID" })
     async product(
         @Args("id", { type: () => ID })
         id: string,
@@ -53,6 +55,7 @@ export class ProductResolver {
         return product;
     }
     @Query(() => Product, { nullable: true })
+    @McpTool({ description: "Find a product by its slug" })
     async productBySlug(
         @Args("slug")
         slug: string,
@@ -61,6 +64,7 @@ export class ProductResolver {
         return product ?? null;
     }
     @Query(() => PaginatedProducts)
+    @McpTool({ description: "List products with optional filtering, sorting, and pagination" })
     async products(
         @Args()
         { search, filter, sort, offset, limit }: ProductsArgs,
@@ -74,6 +78,7 @@ export class ProductResolver {
         return new PaginatedProducts(entities, totalCount);
     }
     @Mutation(() => CreateProductPayload)
+    @McpTool({ description: "Create a new product" })
     async createProduct(
         @Args("input", { type: () => ProductInput })
         input: ProductInput,
@@ -152,6 +157,7 @@ export class ProductResolver {
     }
     @Mutation(() => Product)
     @AffectedEntity(Product)
+    @McpTool({ description: "Update an existing product" })
     async updateProduct(
         @Args("id", { type: () => ID })
         id: string,
@@ -237,6 +243,7 @@ export class ProductResolver {
     }
     @Mutation(() => Boolean)
     @AffectedEntity(Product)
+    @McpTool({ description: "Delete a product by ID" })
     async deleteProduct(
         @Args("id", { type: () => ID })
         id: string,
@@ -310,6 +317,7 @@ export class ProductResolver {
         return product.statistics?.loadOrFail();
     }
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))
+    @McpField()
     async image(
         @Parent()
         product: Product,
