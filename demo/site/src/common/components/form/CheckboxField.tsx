@@ -1,9 +1,9 @@
-import { SvgUse } from "@src/common/helpers/SvgUse";
 import clsx from "clsx";
 import { type InputHTMLAttributes, type ReactNode, useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 
 import styles from "./CheckboxField.module.scss";
+import { FieldContainer } from "./FieldContainer";
 
 type CheckboxFieldProps<TFieldValues extends FieldValues> = Omit<InputHTMLAttributes<HTMLInputElement>, "name"> &
     Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> & {
@@ -29,7 +29,12 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
             control={control}
             rules={rules}
             render={({ field: { value, ...field }, fieldState }) => (
-                <div>
+                <FieldContainer
+                    errorText={fieldState.error?.message}
+                    helperText={helperText}
+                    descriptionId={fieldState.error?.message || helperText ? descriptionId : undefined}
+                    descriptionClassName={styles.description}
+                >
                     <label htmlFor={id} className={styles.wrapper}>
                         <input
                             type="checkbox"
@@ -51,19 +56,7 @@ export const CheckboxField = <TFieldValues extends FieldValues>({
                         />
                         <span className={styles.labelText}>{label}</span>
                     </label>
-                    {(fieldState.error?.message || helperText) && (
-                        <div id={descriptionId} className={styles.labelContent}>
-                            {fieldState.error?.message ? (
-                                <span className={styles.error}>
-                                    <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
-                                    {fieldState.error.message}
-                                </span>
-                            ) : (
-                                <span className={styles.helperText}>{helperText}</span>
-                            )}
-                        </div>
-                    )}
-                </div>
+                </FieldContainer>
             )}
         />
     );
