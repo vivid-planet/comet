@@ -226,7 +226,7 @@ export const EditPage = ({ id }: Props) => {
                                     openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                                 }}
                             >
-                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Site preview" />
                             </Button>
                             {pageSaveButton}
                         </Stack>
