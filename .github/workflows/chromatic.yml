@@ -4,12 +4,14 @@ on:
     pull_request:
         paths:
             - packages/admin/admin/**
+            - packages/admin/cms-admin/**
         branches:
             - main
             - next
     push:
         paths:
             - packages/admin/admin/**
+            - packages/admin/cms-admin/**
         branches:
             - main
             - next
@@ -46,3 +48,9 @@ jobs:
               with:
                   projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_ADMIN }}
                   workingDir: packages/admin/admin
+
+            - name: Publish comet-cms-admin to Chromatic
+              uses: chromaui/action@v1
+              with:
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_CMS_ADMIN }}
+                  workingDir: packages/admin/cms-admin
