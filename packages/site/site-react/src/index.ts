@@ -16,6 +16,8 @@ export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export type { PropsWithData } from "./blocks/PropsWithData";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export type { TipTapElementRenderers, TipTapLinkRendererProps, TipTapRichTextBlockRendererProps } from "./blocks/TipTapRichTextBlockRenderer";
+export { TipTapRichTextBlockRenderer } from "./blocks/TipTapRichTextBlockRenderer";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { type CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
