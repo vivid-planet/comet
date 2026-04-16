@@ -41,6 +41,7 @@ interface PageTreeProps {
     onSelectChanged: (pageId: string, value: boolean) => void;
     category: string;
     siteUrl: string;
+    hidePreviewAction?: boolean;
 }
 
 type PageTreeRefApi = { scrollToItem: List["scrollToItem"] };
@@ -92,7 +93,7 @@ const pagesCacheQuery = gql`
 const levelOffsetPx = 50;
 
 const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
-    { pages, editDialogApi, toggleExpand, onSelectChanged, category, siteUrl },
+    { pages, editDialogApi, toggleExpand, onSelectChanged, category, siteUrl, hidePreviewAction },
     ref,
 ) => {
     const client = useApolloClient();
@@ -363,6 +364,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                                                 debouncedSetHoverState={debouncedSetHoverState}
                                                 siteUrl={siteUrl}
                                                 selectedPages={selectedPages}
+                                                hidePreviewAction={hidePreviewAction}
                                             />
                                         );
                                     }}
