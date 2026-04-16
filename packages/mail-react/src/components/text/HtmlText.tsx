@@ -5,6 +5,7 @@ import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, VariantName } from "../../theme/themeTypes.js";
+import { OutlookTextStyleProvider, type OutlookTextStyleValues } from "./OutlookTextStyleContext.js";
 import { generateResponsiveTextCss } from "./textStyles.js";
 
 interface HtmlTextOwnProps {
@@ -93,13 +94,26 @@ export function HtmlText({
         ...(bottomSpacing && { paddingBottom: getDefaultOrUndefined(mergedStyles.bottomSpacing) }),
     };
 
+    const outlookTextStyleValues: OutlookTextStyleValues = {
+        fontFamily: themeStyle.fontFamily,
+        fontSize: themeStyle.fontSize,
+        lineHeight: themeStyle.lineHeight,
+        fontWeight: themeStyle.fontWeight,
+        color: themeStyle.color,
+        ...(style?.fontFamily !== undefined && { fontFamily: style.fontFamily }),
+        ...(style?.fontSize !== undefined && { fontSize: style.fontSize }),
+        ...(style?.lineHeight !== undefined && { lineHeight: style.lineHeight }),
+        ...(style?.fontWeight !== undefined && { fontWeight: style.fontWeight }),
+        ...(style?.color !== undefined && { color: style.color }),
+    };
+
     return (
         <Element
             {...restProps}
             className={clsx("htmlText", activeVariant && `htmlText--${activeVariant}`, bottomSpacing && "htmlText--bottomSpacing", className)}
             style={{ ...themeStyle, ...style }}
         >
-            {children}
+            <OutlookTextStyleProvider value={outlookTextStyleValues}>{children}</OutlookTextStyleProvider>
         </Element>
     );
 }

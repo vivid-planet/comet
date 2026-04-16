@@ -130,7 +130,9 @@ export async function generateMetadata(
         scope,
     };
     const { generateMetadata } = documentTypes[data.pageTreeNodeByPath.documentType];
-    if (!generateMetadata) return {};
+    if (!generateMetadata) {
+        return {};
+    }
 
     return generateMetadata(props, parent);
 }

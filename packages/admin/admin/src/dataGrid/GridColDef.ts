@@ -6,7 +6,7 @@ import type {
     GridValidRowModel,
     GridValueOptionsParams,
 } from "@mui/x-data-grid";
-import type { GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
+import type { GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/internals";
 import type { ReactNode } from "react";
 
 import type { GqlFilter } from "./muiGridFilterToGql";

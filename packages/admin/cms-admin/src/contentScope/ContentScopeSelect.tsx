@@ -233,14 +233,15 @@ export function ContentScopeSelect({
                                     value={searchValue}
                                     onChange={(event) => setSearchValue(event.currentTarget.value)}
                                     endAdornment={
-                                        <ClearInputAdornment
-                                            onClick={() => setSearchValue("")}
-                                            hasClearableContent={searchValue !== ""}
-                                            position="end"
-                                            slotProps={{
-                                                buttonBase: { sx: { fontSize: "16px" } },
-                                            }}
-                                        />
+                                        searchValue !== "" ? (
+                                            <ClearInputAdornment
+                                                onClick={() => setSearchValue("")}
+                                                position="end"
+                                                slotProps={{
+                                                    buttonBase: { sx: { fontSize: "16px" } },
+                                                }}
+                                            />
+                                        ) : undefined
                                     }
                                     autoFocus
                                     fullWidth

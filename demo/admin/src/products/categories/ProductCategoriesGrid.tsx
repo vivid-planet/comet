@@ -156,7 +156,9 @@ export function ProductCategoriesGrid() {
         },
     });
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows =
         data?.productCategories.nodes.map((node) => ({
             ...node,
@@ -177,6 +179,7 @@ export function ProductCategoriesGrid() {
             rowReordering
             onRowOrderChange={handleRowOrderChange}
             hideFooterPagination
+            showToolbar
         />
     );
 }

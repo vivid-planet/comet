@@ -14,7 +14,7 @@ import { getDateValue, getIsoDateString, isValidDate } from "../utils";
 export type DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type DatePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiDatePicker<Date, true>;
+    root: typeof MuiDatePicker;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -44,7 +44,7 @@ export type DatePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiDatePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
+} & Omit<MuiDatePickerProps, "value" | "onChange" | "slotProps">;
 
 /**
  * The DatePicker component allows users to select a date from a calendar interface. It provides a text field
@@ -79,13 +79,11 @@ export const DatePicker = (inProps: DatePickerProps) => {
 
     return (
         <Root
-            enableAccessibleFieldDOMStructure
             disabled={disabled}
             readOnly={readOnly}
             open={open}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            disableOpenPicker
             value={dateValue}
             onChange={(date) => {
                 let newStringValue: string | undefined = undefined;
@@ -113,40 +111,36 @@ export const DatePicker = (inProps: DatePickerProps) => {
                         onFocus,
                         ...textFieldProps,
                         InputProps: {
-                            ...textFieldProps?.InputProps,
                             startAdornment: (
-                                <>
-                                    <OpenPickerAdornment
-                                        inputIsDisabled={disabled}
-                                        inputIsReadOnly={readOnly}
-                                        onClick={() => setOpen(true)}
-                                        {...slotProps?.openPickerAdornment}
-                                        slotProps={{
-                                            ...slotProps?.openPickerAdornment?.slotProps,
-                                            openPickerButton: {
-                                                "aria-label": intl.formatMessage({
-                                                    id: "comet.datePicker.openPicker",
-                                                    defaultMessage: "Open date picker",
-                                                }),
-                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
-                                            },
-                                        }}
-                                    >
-                                        {openPickerIcon}
-                                    </OpenPickerAdornment>
-                                    {textFieldProps?.InputProps?.startAdornment}
-                                </>
+                                <OpenPickerAdornment
+                                    inputIsDisabled={disabled}
+                                    inputIsReadOnly={readOnly}
+                                    onClick={() => setOpen(true)}
+                                    {...slotProps?.openPickerAdornment}
+                                    slotProps={{
+                                        ...slotProps?.openPickerAdornment?.slotProps,
+                                        openPickerButton: {
+                                            "aria-label": intl.formatMessage({
+                                                id: "comet.datePicker.openPicker",
+                                                defaultMessage: "Open date picker",
+                                            }),
+                                            ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                        },
+                                    }}
+                                >
+                                    {openPickerIcon}
+                                </OpenPickerAdornment>
                             ),
                             endAdornment: (
                                 <>
-                                    {textFieldProps?.InputProps?.endAdornment}
                                     <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={dateValue !== null && !required && !disabled && !readOnly}
-                                        onClick={() => onChange?.(undefined)}
-                                        {...slotProps?.clearInputAdornment}
-                                    />
+                                    {dateValue !== null && !required && !disabled && !readOnly && (
+                                        <ClearInputAdornment
+                                            position="end"
+                                            onClick={() => onChange?.(undefined)}
+                                            {...slotProps?.clearInputAdornment}
+                                        />
+                                    )}
                                 </>
                             ),
                         },
@@ -157,7 +151,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiDatePicker<Date, true>)<DatePickerClassKey>({
+const Root = createComponentSlot(MuiDatePicker)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "root",
 })(css`

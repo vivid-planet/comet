@@ -43,8 +43,8 @@ import { getMuiMenu } from "./MuiMenu";
 import { getMuiMenuItem } from "./MuiMenuItem";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
 import { getMuiPaper } from "./MuiPaper";
+import { getMuiPickerPopper } from "./MuiPickerPopper";
 import { getMuiPickersInputBase } from "./MuiPickersInputBase";
-import { getMuiPickersPopper } from "./MuiPickersPopper";
 import { getMuiPickersTextField } from "./MuiPickersTextField";
 import { getMuiPopover } from "./MuiPopover";
 import { getMuiRadio } from "./MuiRadio";
@@ -124,6 +124,6 @@ export const getComponentsTheme = (components: Components, theme: Theme): ThemeO
     MuiTooltip: getMuiTooltip(components.MuiTooltip, theme),
     MuiTypography: getMuiTypography(components.MuiTypography, theme),
     MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, theme),
-    MuiPickersPopper: getMuiPickersPopper(components.MuiPickersPopper, theme),
+    MuiPickerPopper: getMuiPickerPopper(components.MuiPickerPopper, theme),
     MuiTableFooter: getMuiTableFooter(components.MuiTableFooter, theme),
 });

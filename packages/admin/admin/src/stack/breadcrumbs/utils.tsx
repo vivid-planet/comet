@@ -64,7 +64,9 @@ export const useItemsToRender = (
 ): ReactNode[] => {
     const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(items, containerWidth, Boolean(backButtonUrl), itemWidths);
 
-    if (!items.length) return [];
+    if (!items.length) {
+        return [];
+    }
 
     const renderAllItemsToAllowCalculatingWidths = !itemWidths?.length;
 

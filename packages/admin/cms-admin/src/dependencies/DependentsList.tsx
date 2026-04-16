@@ -210,7 +210,9 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
         },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rowCount = useBufferedRowCount(data?.item.dependents?.totalCount);
     const rows =
@@ -238,6 +240,7 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 slotProps={{
                     toolbar: { refetch } as DependentsListGridToolbarProps,
                 }}
+                showToolbar
             />
             <Alert
                 title={<FormattedMessage id="comet.dependencies.dependents.info.title" defaultMessage="What are dependents?" />}

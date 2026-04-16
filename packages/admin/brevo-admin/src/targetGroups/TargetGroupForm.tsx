@@ -109,7 +109,9 @@ export function TargetGroupForm({ id, scope, additionalFormFields, input2State, 
         });
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

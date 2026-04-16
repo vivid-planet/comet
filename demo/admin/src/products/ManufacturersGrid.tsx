@@ -7,6 +7,7 @@ import {
     FillSpace,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import type {
     GQLDeleteManufacturerMutation,
     GQLDeleteManufacturerMutationVariables,
@@ -146,7 +147,9 @@ export function ManufacturersGrid() {
             sort: muiGridSortToGql(sortModel),
         },
     });
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rows = data?.manufacturers.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
@@ -161,6 +164,7 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar,
             }}
+            showToolbar
         />
     );
 }

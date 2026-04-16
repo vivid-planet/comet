@@ -1,5 +1,4 @@
-import { GridLogicOperator } from "@mui/x-data-grid";
-import type { GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
+import { type GridFilterModel, GridLogicOperator } from "@mui/x-data-grid";
 import { describe, expect, it } from "vitest";
 
 import type { GridColDef } from "./GridColDef";

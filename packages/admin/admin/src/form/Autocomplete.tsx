@@ -79,7 +79,9 @@ export const FinalFormAutocomplete = <
                 </Typography>
             }
             isOptionEqualToValue={(option: T, value: T) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 return option === value;
             }}
             onChange={(_e, option) => {
@@ -100,7 +102,7 @@ export const FinalFormAutocomplete = <
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
                             {loadingError && <Error color="error" />}
                             {params.InputProps.endAdornment}
                         </InputAdornment>

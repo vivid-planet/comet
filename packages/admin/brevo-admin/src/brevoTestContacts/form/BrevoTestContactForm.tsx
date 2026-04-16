@@ -159,7 +159,9 @@ export function BrevoTestContactForm({ id, scope, input2State, additionalFormFie
         }
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

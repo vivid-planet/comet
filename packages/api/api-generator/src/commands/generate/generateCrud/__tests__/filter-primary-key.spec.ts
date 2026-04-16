@@ -32,7 +32,9 @@ describe("filter primary key", () => {
             const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
-            if (!foundFile) throw new Error("File not found");
+            if (!foundFile) {
+                throw new Error("File not found");
+            }
         });
         afterEach(async () => {
             await orm.close();
@@ -40,7 +42,9 @@ describe("filter primary key", () => {
 
         it("filter for embedded field should exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
 

@@ -14,7 +14,7 @@ import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBase
 export type TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
 export type TimePickerProps = ThemedComponentBaseProps<{
-    root: typeof MuiTimePicker<Date, true>;
+    root: typeof MuiTimePicker;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
@@ -44,7 +44,7 @@ export type TimePickerProps = ThemedComponentBaseProps<{
     iconMapping?: {
         openPicker?: ReactNode;
     };
-} & Omit<MuiTimePickerProps<Date, true>, "value" | "onChange" | "slotProps">;
+} & Omit<MuiTimePickerProps, "value" | "onChange" | "slotProps">;
 
 const getTimeString = (date: Date) => {
     return format(date, "HH:mm");
@@ -98,13 +98,11 @@ export const TimePicker = (inProps: TimePickerProps) => {
 
     return (
         <Root
-            enableAccessibleFieldDOMStructure
             disabled={disabled}
             readOnly={readOnly}
             open={open}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            disableOpenPicker
             value={dateValue}
             onChange={(date) => {
                 if (!date) {
@@ -131,40 +129,36 @@ export const TimePicker = (inProps: TimePickerProps) => {
                         onFocus,
                         ...textFieldProps,
                         InputProps: {
-                            ...textFieldProps?.InputProps,
                             startAdornment: (
-                                <>
-                                    <OpenPickerAdornment
-                                        inputIsDisabled={disabled}
-                                        inputIsReadOnly={readOnly}
-                                        onClick={() => setOpen(true)}
-                                        {...slotProps?.openPickerAdornment}
-                                        slotProps={{
-                                            ...slotProps?.openPickerAdornment?.slotProps,
-                                            openPickerButton: {
-                                                "aria-label": intl.formatMessage({
-                                                    id: "comet.timePicker.openPicker",
-                                                    defaultMessage: "Open time picker",
-                                                }),
-                                                ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
-                                            },
-                                        }}
-                                    >
-                                        {openPickerIcon}
-                                    </OpenPickerAdornment>
-                                    {textFieldProps?.InputProps?.startAdornment}
-                                </>
+                                <OpenPickerAdornment
+                                    inputIsDisabled={disabled}
+                                    inputIsReadOnly={readOnly}
+                                    onClick={() => setOpen(true)}
+                                    {...slotProps?.openPickerAdornment}
+                                    slotProps={{
+                                        ...slotProps?.openPickerAdornment?.slotProps,
+                                        openPickerButton: {
+                                            "aria-label": intl.formatMessage({
+                                                id: "comet.timePicker.openPicker",
+                                                defaultMessage: "Open time picker",
+                                            }),
+                                            ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
+                                        },
+                                    }}
+                                >
+                                    {openPickerIcon}
+                                </OpenPickerAdornment>
                             ),
                             endAdornment: (
                                 <>
-                                    {textFieldProps?.InputProps?.endAdornment}
                                     <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={dateValue !== null && !required && !disabled && !readOnly}
-                                        onClick={() => onChange?.(undefined)}
-                                        {...slotProps?.clearInputAdornment}
-                                    />
+                                    {dateValue !== null && !required && !disabled && !readOnly && (
+                                        <ClearInputAdornment
+                                            position="end"
+                                            onClick={() => onChange?.(undefined)}
+                                            {...slotProps?.clearInputAdornment}
+                                        />
+                                    )}
                                 </>
                             ),
                         },
@@ -175,7 +169,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiTimePicker<Date, true>)<TimePickerClassKey>({
+const Root = createComponentSlot(MuiTimePicker)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "root",
 })(css`

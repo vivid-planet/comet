@@ -36,6 +36,7 @@ import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 const panelTypeTitle: Record<GridPreferencePanelsValue, ReactNode> = {
     [GridPreferencePanelsValue.filters]: <FormattedMessage id="dataGrid.panel.filters" defaultMessage="Filters" />,
     [GridPreferencePanelsValue.columns]: <FormattedMessage id="dataGrid.panel.columns" defaultMessage="Columns" />,
+    [GridPreferencePanelsValue.aiAssistant]: <FormattedMessage id="dataGrid.panel.aiAssistant" defaultMessage="AI Assistant" />,
 };
 
 export type DataGridPanelClassKey =
@@ -92,7 +93,7 @@ const addFilterText = <FormattedMessage id="dataGrid.panel.addFilter" defaultMes
 let lastAddedFilterItemId = 0;
 
 export const DataGridPanel = (inProps: DataGridPanelProps) => {
-    const { children, open, slotProps, iconMapping = {} } = useThemeProps({ props: inProps, name: "CometAdminDataGridPanel" });
+    const { children, open, slotProps, iconMapping = {}, onClose, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridPanel" });
     const apiRef = useGridApiContext();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
@@ -153,12 +154,8 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     }, [apiRef, initialColumnVisibilityModel]);
 
     const closeDialog = useCallback(() => {
-        if (openedPanelValue === GridPreferencePanelsValue.filters) {
-            apiRef.current.hideFilterPanel();
-        } else {
-            apiRef.current.hidePreferences();
-        }
-    }, [apiRef, openedPanelValue]);
+        onClose?.();
+    }, [onClose]);
 
     const theme = useTheme();
     const renderFullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -224,7 +221,7 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     }
 
     return (
-        <DesktopGridPanel ownerState={rootProps} open={open} {...slotProps?.desktopGridPanel}>
+        <DesktopGridPanel ownerState={rootProps} open={open} onClose={onClose} {...slotProps?.desktopGridPanel} {...restProps}>
             {children}
             <DesktopPanelFooterDivider {...slotProps?.desktopPanelFooterDivider} />
             <DesktopPanelFooter {...slotProps?.desktopPanelFooter}>
@@ -254,15 +251,26 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
 const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey, DataGridProcessedProps>({
     componentName: "DataGridPanel",
     slotName: "desktopGridPanel",
-})(css`
-    .MuiDataGrid-panelHeader,
-    .MuiDataGrid-columnsManagementHeader,
-    .MuiDataGrid-panelFooter,
-    .MuiDataGrid-columnsManagementFooter {
-        // Hide MUIs header and footer so we can add our own with a better structure for styling
-        display: none;
-    }
-`);
+})(
+    ({ theme }) => css`
+        .MuiDataGrid-panelHeader,
+        .MuiDataGrid-columnsManagementHeader,
+        .MuiDataGrid-panelFooter,
+        .MuiDataGrid-columnsManagementFooter {
+            // Hide MUIs header and footer so we can add our own with a better structure for styling
+            display: none;
+        }
+
+        .MuiDataGrid-paper {
+            border: 1px solid ${theme.palette.grey[100]};
+            box-shadow: ${theme.shadows[4]};
+            border-radius: 4px;
+            max-height: none;
+            flex-direction: column;
+            padding: 0;
+        }
+    `,
+);
 
 const DesktopPanelFooterDivider = createComponentSlot(Divider)<DataGridPanelClassKey>({
     componentName: "DataGridPanel",
@@ -277,6 +285,7 @@ const DesktopPanelFooter = createComponentSlot("div")<DataGridPanelClassKey>({
         display: flex;
         justify-content: space-between;
         padding: ${theme.spacing(4)};
+        gap: ${theme.spacing(3)};
     `,
 );
 

@@ -73,7 +73,9 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
 
     useEffect(() => {
         // set open state manually to false to avoid a menu opening when isMenuOpen state changes
-        if (!isMenuOpen) setIsSubmenuOpen(false);
+        if (!isMenuOpen) {
+            setIsSubmenuOpen(false);
+        }
     }, [isMenuOpen]);
 
     const childElements = useMemo(() => {
@@ -116,7 +118,9 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
     };
 
     const handlePopoverOpen = (event: MouseEvent<HTMLElement>) => {
-        if (isMenuOpen) return;
+        if (isMenuOpen) {
+            return;
+        }
         if (anchorEl !== event.currentTarget) {
             setAnchorEl(event.currentTarget);
             setIsSubmenuOpen(true);
@@ -124,12 +128,16 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
     };
 
     const handlePopoverClose = (e: MouseEvent<HTMLElement>) => {
-        if (isMenuOpen) return;
+        if (isMenuOpen) {
+            return;
+        }
         const el = e.currentTarget;
         const rect = el.getBoundingClientRect();
         const { clientX, clientY } = e;
 
-        if (childElements?.length && clientX + 2 > rect.right && clientY > rect.top && clientY < rect.bottom) return;
+        if (childElements?.length && clientX + 2 > rect.right && clientY > rect.top && clientY < rect.bottom) {
+            return;
+        }
 
         closeMenu();
     };

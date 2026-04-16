@@ -64,6 +64,7 @@ export const EditDialogInDataGrid = {
                             ),
                         } as ToolbarProps,
                     }}
+                    showToolbar
                 />
                 <EditDialog>
                     <DialogContent>

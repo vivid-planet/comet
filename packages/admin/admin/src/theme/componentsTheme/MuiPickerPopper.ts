@@ -2,7 +2,7 @@ import type { Components, Theme } from "@mui/material/styles";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 
-export const getMuiPickersPopper = (component: Components["MuiPickersPopper"], theme: Theme): Components["MuiPickersPopper"] => ({
+export const getMuiPickerPopper = (component: Components["MuiPickerPopper"], theme: Theme): Components["MuiPickerPopper"] => ({
     ...component,
     styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
         paper: {

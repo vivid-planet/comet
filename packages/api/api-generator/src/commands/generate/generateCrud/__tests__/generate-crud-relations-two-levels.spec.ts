@@ -69,7 +69,9 @@ describe("generate-crud relations two levels", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "product.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const classes = source.getClasses();
@@ -93,7 +95,9 @@ describe("generate-crud relations two levels", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "dto/product.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const classes = source.getClasses();
@@ -118,7 +122,9 @@ describe("generate-crud relations two levels", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const classes = source.getClasses();
@@ -133,7 +139,9 @@ describe("generate-crud relations two levels", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const classes = source.getClasses();

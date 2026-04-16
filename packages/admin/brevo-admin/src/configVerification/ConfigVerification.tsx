@@ -17,7 +17,9 @@ export function ConfigVerification({ scope, children }: PropsWithChildren<Config
         fetchPolicy: "cache-and-network",
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

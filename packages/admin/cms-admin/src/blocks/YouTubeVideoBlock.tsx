@@ -26,7 +26,9 @@ const isValidYouTubeIdentifier = (value: string) => {
 };
 
 const validateIdentifier = (value?: string) => {
-    if (!value) return undefined;
+    if (!value) {
+        return undefined;
+    }
 
     return value && isValidYouTubeIdentifier(value) ? undefined : (
         <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
@@ -100,8 +102,12 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.previewImage.damFile?.altText) contents.push(state.previewImage.damFile.altText);
-        if (state.previewImage.damFile?.title) contents.push(state.previewImage.damFile.title);
+        if (state.previewImage.damFile?.altText) {
+            contents.push(state.previewImage.damFile.altText);
+        }
+        if (state.previewImage.damFile?.title) {
+            contents.push(state.previewImage.damFile.title);
+        }
 
         return contents;
     },

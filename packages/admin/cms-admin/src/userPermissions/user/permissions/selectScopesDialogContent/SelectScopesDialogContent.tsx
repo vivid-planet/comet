@@ -1,6 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { DataGridToolbar, Field, FillSpace, FinalForm, type GridColDef, Loading, useFormApiRef } from "@comet/admin";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGridToolbar, Field, FillSpace, FinalForm, type GridColDef, GridToolbarQuickFilter, Loading, useFormApiRef } from "@comet/admin";
+import { DataGrid } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import type { FunctionComponent, PropsWithChildren } from "react";
 
@@ -69,7 +69,9 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
         });
     };
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     if (!data) {
         return <Loading />;
@@ -88,7 +90,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                 contentScopes: userContentScopes.map((cs) => JSON.stringify(cs)),
             }}
         >
-            <Field name="contentScopes" fullWidth>
+            <Field<string[]> name="contentScopes" fullWidth>
                 {(props) => {
                     return (
                         <DataGrid
@@ -105,14 +107,16 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                                 return !userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                             }}
                             checkboxSelection
-                            rowSelectionModel={props.input.value}
+                            rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
                             onRowSelectionModelChange={(selectionModel) => {
-                                props.input.onChange(selectionModel.map((id) => String(id)));
+                                props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                             }}
+                            disableRowSelectionExcludeModel
                             slots={{
                                 toolbar: SelectScopesDialogContentGridToolbar,
                             }}
                             initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                            showToolbar
                         />
                     );
                 }}

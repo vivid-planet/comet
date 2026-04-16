@@ -38,7 +38,9 @@ describe("position default sort", () => {
 
         it("args dto should have default value for sort", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entities.args.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             expect(file.content).toMatchSnapshot();
         });

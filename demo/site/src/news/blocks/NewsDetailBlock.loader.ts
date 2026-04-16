@@ -6,7 +6,9 @@ import type { GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables } from "
 export type LoadedData = Awaited<ReturnType<typeof loader>>;
 
 export const loader = async ({ blockData, graphQLFetch }: BlockLoaderOptions<NewsLinkBlockData>) => {
-    if (!blockData.id) return null;
+    if (!blockData.id) {
+        return null;
+    }
     const data = await graphQLFetch<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(
         gql`
             query NewsBlockDetail($id: ID!) {

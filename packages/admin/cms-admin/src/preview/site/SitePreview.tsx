@@ -60,7 +60,9 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
             v = resolvePath ? resolvePath(initialPath, scope) : initialPath;
         }
         const url = new URL(v, siteConfig.url); // prevents phishing attacks (exception see next line)
-        if (!url.pathname.startsWith("/") || url.pathname.startsWith("//")) return "/";
+        if (!url.pathname.startsWith("/") || url.pathname.startsWith("//")) {
+            return "/";
+        }
         return url.pathname;
     });
 
@@ -133,8 +135,12 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
             pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
         },
     );
-    if (error) throw new Error(error.message);
-    if (!data) return <div />;
+    if (error) {
+        throw new Error(error.message);
+    }
+    if (!data) {
+        return <div />;
+    }
 
     const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({ jwt: data.sitePreviewJwt }).toString()}`;
 

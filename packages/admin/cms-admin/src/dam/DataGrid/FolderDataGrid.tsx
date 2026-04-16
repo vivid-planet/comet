@@ -369,7 +369,7 @@ const FolderDataGrid = ({
     const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
         const newMap: DamItemSelectionMap = new Map();
 
-        newSelectionModel.forEach((selectedId) => {
+        newSelectionModel.ids.forEach((selectedId) => {
             const typedId = selectedId as string;
 
             if (damSelectionActionsApi.selectionMap.has(typedId)) {
@@ -660,8 +660,9 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+                    rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
+                    disableRowSelectionExcludeModel
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
                         contextMenu: !hideContextMenu,
@@ -678,6 +679,7 @@ const FolderDataGrid = ({
                             additionalToolbarItems: props.additionalToolbarItems,
                         } as FolderDataGridToolbarProps,
                     }}
+                    showToolbar
                 />
             </sc.FolderOuterHoverHighlight>
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />

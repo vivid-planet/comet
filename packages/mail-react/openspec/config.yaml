@@ -53,7 +53,26 @@ context: |
       provided className via clsx: `clsx("mjmlSection", className)`.
       clsx is a dependency of this package.
 
+    Docs & Agent Skill:
+    - User-facing documentation lives at ../../docs/docs/3-features-modules/13-building-html-emails/
+      and a consumer-facing AI skill at ../../skills/dx-mail-react/ (both relative to
+      this package). Library changes that affect usage patterns, component APIs, or
+      styling conventions should consider updating both. Neither docs nor the skill
+      are part of specs.
+
 rules:
+    specs:
+        - >-
+            Scenarios are optional. Only add a scenario when it communicates
+            something the requirement text alone doesn't make obvious — edge
+            cases, negative cases, subtle interactions, or behavior that could
+            reasonably be misinterpreted. A clear, unambiguous requirement
+            needs no scenarios. Never restate the requirement with concrete
+            values just to have a scenario.
+        - >-
+            Don't split trivially similar behavior into separate requirements.
+            If multiple cases follow the same pattern, describe the general
+            rule in one requirement and mention the variations inline.
     proposal:
         - Changes must not break existing @faire/mjml-react component API compatibility
         - >-

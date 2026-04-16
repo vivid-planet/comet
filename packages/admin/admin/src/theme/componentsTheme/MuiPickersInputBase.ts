@@ -17,6 +17,11 @@ export const getMuiPickersInputBase = (
             paddingLeft: spacing(2),
             paddingRight: spacing(2),
 
+            // Hide the input underline
+            "&:before, &:after": {
+                display: "none",
+            },
+
             [`&.${pickersInputBaseClasses.focused}`]: {
                 borderColor: palette.primary.main,
             },

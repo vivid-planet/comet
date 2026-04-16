@@ -74,13 +74,17 @@ export function ProductHighlightForm({ id }: FormProps) {
         },
     });
     const handleSubmit = async ({ productCategory, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
         const output = {
             ...formValues,
             product: formValues.product?.id,
         };
         if (mode === "edit") {
-            if (!id) throw new Error();
+            if (!id) {
+                throw new Error();
+            }
             const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductHighlightMutation, GQLUpdateProductHighlightMutationVariables>({
                 mutation: updateProductHighlightMutation,
@@ -101,7 +105,9 @@ export function ProductHighlightForm({ id }: FormProps) {
             }
         }
     };
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
     }
