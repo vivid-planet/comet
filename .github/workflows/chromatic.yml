@@ -28,7 +28,7 @@ jobs:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
                   fetch-depth: 0
 
-            - uses: pnpm/action-setup@v4
+            - uses: pnpm/action-setup@v6
 
             - name: Use Node.js 22.x
               uses: actions/setup-node@v6
