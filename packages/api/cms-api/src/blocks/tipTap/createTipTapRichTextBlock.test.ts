@@ -8,66 +8,33 @@ describe("createTipTapRichTextBlock validation", () => {
     describe("default schema (all supports)", () => {
         const block = createTipTapRichTextBlock({}, "TestDefault");
 
-        it("should accept a valid empty document", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: { type: "doc", content: [{ type: "paragraph" }] },
-            });
+        it("should accept a valid empty paragraph", async () => {
+            const input = block.blockInputFactory({ tipTapContent: "<p></p>" });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
         it("should accept a paragraph with text", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "paragraph", content: [{ type: "text", text: "Hello world" }] }],
-                },
-            });
+            const input = block.blockInputFactory({ tipTapContent: "<p>Hello world</p>" });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
         it("should accept bold text", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "bold" }], text: "Bold text" }],
-                        },
-                    ],
-                },
-            });
+            const input = block.blockInputFactory({ tipTapContent: "<p><strong>Bold text</strong></p>" });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
         it("should accept italic and strike marks", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "italic" }, { type: "strike" }], text: "Styled" }],
-                        },
-                    ],
-                },
-            });
+            const input = block.blockInputFactory({ tipTapContent: "<p><em><del>Styled</del></em></p>" });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
         it("should accept headings", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        { type: "heading", attrs: { level: 1 }, content: [{ type: "text", text: "Title" }] },
-                        { type: "heading", attrs: { level: 3 }, content: [{ type: "text", text: "Subtitle" }] },
-                    ],
-                },
+                tipTapContent: "<h1>Title</h1><h3>Subtitle</h3>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
@@ -75,19 +42,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should accept ordered and bullet lists", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "orderedList",
-                            content: [{ type: "listItem", content: [{ type: "paragraph", content: [{ type: "text", text: "One" }] }] }],
-                        },
-                        {
-                            type: "bulletList",
-                            content: [{ type: "listItem", content: [{ type: "paragraph", content: [{ type: "text", text: "Bullet" }] }] }],
-                        },
-                    ],
-                },
+                tipTapContent: "<ol><li>One</li></ol><ul><li>Bullet</li></ul>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
@@ -95,94 +50,40 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should accept superscript and subscript marks", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [
-                                { type: "text", marks: [{ type: "superscript" }], text: "sup" },
-                                { type: "text", marks: [{ type: "subscript" }], text: "sub" },
-                            ],
-                        },
-                    ],
-                },
+                tipTapContent: "<p><sup>sup</sup><sub>sub</sub></p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept nonBreakingSpace and softHyphen nodes", async () => {
+        it("should accept non-breaking space and soft hyphen characters", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [
-                                { type: "text", text: "before" },
-                                { type: "nonBreakingSpace" },
-                                { type: "text", text: "after" },
-                                { type: "softHyphen" },
-                            ],
-                        },
-                    ],
-                },
+                tipTapContent: "<p>before\u00a0after\u00ad</p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
-        it("should reject an unknown node type", async () => {
+        it("should reject an unknown element", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "unknownBlock", content: [{ type: "text", text: "test" }] }],
-                },
+                tipTapContent: "<div>test</div>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
             expect(errors[0].property).toBe("tipTapContent");
         });
 
-        it("should reject an unknown mark type", async () => {
+        it("should reject an unsupported inline element", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "highlight" }], text: "test" }],
-                        },
-                    ],
-                },
+                tipTapContent: "<p><u>underline</u></p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
         });
 
-        it("should reject a blockquote (disabled in config)", async () => {
+        it("should reject a blockquote (not supported)", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "blockquote",
-                            content: [{ type: "paragraph", content: [{ type: "text", text: "quoted" }] }],
-                        },
-                    ],
-                },
-            });
-            const errors = await validate(input);
-            expect(errors).toHaveLength(1);
-        });
-
-        it("should reject a codeBlock (disabled in config)", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "codeBlock", content: [{ type: "text", text: "code" }] }],
-                },
+                tipTapContent: "<blockquote><p>quoted</p></blockquote>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -194,14 +95,22 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(1);
         });
 
-        it("should reject a string instead of object", async () => {
-            const input = block.blockInputFactory({ tipTapContent: "not an object" });
+        it("should reject a number instead of string", async () => {
+            const input = block.blockInputFactory({ tipTapContent: 42 });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
         });
 
-        it("should reject an empty object", async () => {
+        it("should reject an object instead of string", async () => {
             const input = block.blockInputFactory({ tipTapContent: {} });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should reject unsupported attributes", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: '<p style="color:red">text</p>',
+            });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
         });
@@ -212,15 +121,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should accept bold text", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "bold" }], text: "Bold" }],
-                        },
-                    ],
-                },
+                tipTapContent: "<p><strong>Bold</strong></p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
@@ -228,15 +129,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject italic (not in supports)", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "italic" }], text: "Italic" }],
-                        },
-                    ],
-                },
+                tipTapContent: "<p><em>Italic</em></p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -244,10 +137,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject headings (not in supports)", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "heading", attrs: { level: 1 }, content: [{ type: "text", text: "Title" }] }],
-                },
+                tipTapContent: "<h1>Title</h1>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -255,26 +145,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject ordered lists (not in supports)", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "orderedList",
-                            content: [{ type: "listItem", content: [{ type: "paragraph", content: [{ type: "text", text: "One" }] }] }],
-                        },
-                    ],
-                },
-            });
-            const errors = await validate(input);
-            expect(errors).toHaveLength(1);
-        });
-
-        it("should reject nonBreakingSpace (not in supports)", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "paragraph", content: [{ type: "nonBreakingSpace" }] }],
-                },
+                tipTapContent: "<ol><li>One</li></ol>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -290,55 +161,44 @@ describe("createTipTapRichTextBlock validation", () => {
             "TestBlockStyles",
         );
 
-        it("should accept a paragraph with blockStyle attribute", async () => {
+        it("should accept a paragraph with blockStyle class", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            attrs: { blockStyle: "intro" },
-                            content: [{ type: "text", text: "Intro text" }],
-                        },
-                    ],
-                },
+                tipTapContent: '<p class="intro">Intro text</p>',
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept a heading with blockStyle attribute", async () => {
+        it("should accept a heading with blockStyle class", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "heading",
-                            attrs: { level: 1, blockStyle: "highlight" },
-                            content: [{ type: "text", text: "Highlighted heading" }],
-                        },
-                    ],
-                },
+                tipTapContent: '<h1 class="highlight">Highlighted heading</h1>',
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept a paragraph with null blockStyle", async () => {
+        it("should accept a paragraph without blockStyle class", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            attrs: { blockStyle: null },
-                            content: [{ type: "text", text: "Default" }],
-                        },
-                    ],
-                },
+                tipTapContent: "<p>Default</p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
+        });
+
+        it("should reject an unknown block style", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: '<p class="unknownStyle">text</p>',
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should reject a block style that does not apply to the element type", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: '<h1 class="intro">text</h1>',
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
         });
     });
 
@@ -347,10 +207,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should accept a plain paragraph", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "paragraph", content: [{ type: "text", text: "Plain text" }] }],
-                },
+                tipTapContent: "<p>Plain text</p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
@@ -358,15 +215,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject bold (not in supports)", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "bold" }], text: "Bold" }],
-                        },
-                    ],
-                },
+                tipTapContent: "<p><strong>Bold</strong></p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -374,15 +223,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject strike (not in supports)", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [{ type: "text", marks: [{ type: "strike" }], text: "Struck" }],
-                        },
-                    ],
-                },
+                tipTapContent: "<p><del>Struck</del></p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -393,107 +234,48 @@ describe("createTipTapRichTextBlock validation", () => {
         const LinkBlock = createLinkBlock({ supportedBlocks: { external: ExternalLinkBlock } }, "TestLink");
         const block = createTipTapRichTextBlock({ link: LinkBlock }, "TestWithLink");
 
-        it("should accept text with a valid link mark", async () => {
-            const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [
-                                {
-                                    type: "text",
-                                    marks: [
-                                        {
-                                            type: "link",
-                                            attrs: {
-                                                data: {
-                                                    attachedBlocks: [
-                                                        {
-                                                            type: "external",
-                                                            props: { targetUrl: "https://example.com", openInNewWindow: false },
-                                                        },
-                                                    ],
-                                                    activeType: "external",
-                                                },
-                                            },
-                                        },
-                                    ],
-                                    text: "click here",
-                                },
-                            ],
-                        },
-                    ],
+        const validLinkData = {
+            attachedBlocks: [
+                {
+                    type: "external",
+                    props: { targetUrl: "https://example.com", openInNewWindow: false },
                 },
+            ],
+            activeType: "external",
+        };
+
+        const encodedValidLink = encodeURIComponent(JSON.stringify(validLinkData));
+
+        it("should accept text with a valid link", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: `<p><a href="comet-link://${encodedValidLink}">click here</a></p>`,
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept content without any link marks", async () => {
+        it("should accept content without any links", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "paragraph", content: [{ type: "text", text: "No links" }] }],
-                },
+                tipTapContent: "<p>No links</p>",
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
 
-        it("should return childBlocksInfo for link marks", () => {
+        it("should return childBlocksInfo for links", () => {
+            const secondLinkData = {
+                attachedBlocks: [
+                    {
+                        type: "external",
+                        props: { targetUrl: "https://other.com", openInNewWindow: true },
+                    },
+                ],
+                activeType: "external",
+            };
+            const encodedSecond = encodeURIComponent(JSON.stringify(secondLinkData));
+
             const blockData = block.blockDataFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [
-                                {
-                                    type: "text",
-                                    marks: [
-                                        {
-                                            type: "link",
-                                            attrs: {
-                                                data: {
-                                                    attachedBlocks: [
-                                                        {
-                                                            type: "external",
-                                                            props: { targetUrl: "https://example.com", openInNewWindow: false },
-                                                        },
-                                                    ],
-                                                    activeType: "external",
-                                                },
-                                            },
-                                        },
-                                    ],
-                                    text: "first link",
-                                },
-                                { type: "text", text: " and " },
-                                {
-                                    type: "text",
-                                    marks: [
-                                        {
-                                            type: "link",
-                                            attrs: {
-                                                data: {
-                                                    attachedBlocks: [
-                                                        {
-                                                            type: "external",
-                                                            props: { targetUrl: "https://other.com", openInNewWindow: true },
-                                                        },
-                                                    ],
-                                                    activeType: "external",
-                                                },
-                                            },
-                                        },
-                                    ],
-                                    text: "second link",
-                                },
-                            ],
-                        },
-                    ],
-                },
+                tipTapContent: `<p><a href="comet-link://${encodedValidLink}">first link</a> and <a href="comet-link://${encodedSecond}">second link</a></p>`,
             });
 
             const childBlocks = blockData.childBlocksInfo();
@@ -501,51 +283,36 @@ describe("createTipTapRichTextBlock validation", () => {
 
             expect(childBlocks[0].visible).toBe(true);
             expect(childBlocks[0].name).toBe("TestLink");
-            expect(childBlocks[0].relJsonPath).toEqual(["tipTapContent", "content", "0", "content", "0", "marks", "0", "attrs", "data"]);
 
             expect(childBlocks[1].visible).toBe(true);
             expect(childBlocks[1].name).toBe("TestLink");
-            expect(childBlocks[1].relJsonPath).toEqual(["tipTapContent", "content", "0", "content", "2", "marks", "0", "attrs", "data"]);
         });
 
-        it("should return empty childBlocksInfo when no link marks", () => {
+        it("should return empty childBlocksInfo when no links", () => {
             const blockData = block.blockDataFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [{ type: "paragraph", content: [{ type: "text", text: "No links" }] }],
-                },
+                tipTapContent: "<p>No links</p>",
             });
 
             expect(blockData.childBlocksInfo()).toHaveLength(0);
         });
 
-        it("should reject link mark with invalid link data", async () => {
+        it("should reject link with invalid link data", async () => {
+            const invalidLinkData = {
+                attachedBlocks: [{ type: "invalid", props: {} }],
+                activeType: "invalid",
+            };
+            const encodedInvalid = encodeURIComponent(JSON.stringify(invalidLinkData));
+
             const input = block.blockInputFactory({
-                tipTapContent: {
-                    type: "doc",
-                    content: [
-                        {
-                            type: "paragraph",
-                            content: [
-                                {
-                                    type: "text",
-                                    marks: [
-                                        {
-                                            type: "link",
-                                            attrs: {
-                                                data: {
-                                                    attachedBlocks: [{ type: "invalid", props: {} }],
-                                                    activeType: "invalid",
-                                                },
-                                            },
-                                        },
-                                    ],
-                                    text: "bad link",
-                                },
-                            ],
-                        },
-                    ],
-                },
+                tipTapContent: `<p><a href="comet-link://${encodedInvalid}">bad link</a></p>`,
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should reject link without comet-link:// prefix", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: '<p><a href="https://example.com">bad link</a></p>',
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);

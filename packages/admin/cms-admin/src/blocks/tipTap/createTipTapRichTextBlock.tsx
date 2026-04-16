@@ -15,6 +15,8 @@ import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { htmlToTipTapContent } from "./htmlToTipTapContent";
+import { tipTapContentToHtml } from "./tipTapContentToHtml";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -54,16 +56,25 @@ export interface TipTapBlockStyle {
     element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
 
+/**
+ * Internal editor state still uses JSONContent (the TipTap editor requires it).
+ */
 export interface TipTapRichTextBlockState {
     tipTapContent: JSONContent;
 }
 
+/**
+ * Data stored/transported is an HTML string.
+ */
 interface TipTapRichTextBlockData {
-    tipTapContent: JSONContent;
+    tipTapContent: string;
 }
 
+/**
+ * Input from the API is an HTML string.
+ */
 interface TipTapRichTextBlockInput {
-    tipTapContent: JSONContent;
+    tipTapContent: string;
 }
 
 export interface TipTapRichTextBlockFactoryOptions {
@@ -89,7 +100,9 @@ const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -110,7 +123,9 @@ function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONCon
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Promise<any>): Promise<JSONContent> {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -218,7 +233,7 @@ export const createTipTapRichTextBlock = (
         category: BlockCategory.TextAndContent,
 
         input2State: ({ tipTapContent }) => {
-            let content = tipTapContent ?? emptyContent;
+            let content = tipTapContent ? htmlToTipTapContent(tipTapContent) : emptyContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.input2State(data));
             }
@@ -230,11 +245,11 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.state2Output(data));
             }
-            return { tipTapContent: content };
+            return { tipTapContent: tipTapContentToHtml(content) };
         },
 
         output2State: async ({ tipTapContent }, context) => {
-            let content = tipTapContent ?? emptyContent;
+            let content = tipTapContent ? htmlToTipTapContent(tipTapContent) : emptyContent;
             if (linkBlock) {
                 content = await mapLinkMarksDataAsync(content, (data) => linkBlock.output2State(data, context));
             }
@@ -247,7 +262,7 @@ export const createTipTapRichTextBlock = (
                 content = mapLinkMarksData(content, (data) => linkBlock.createPreviewState(data, previewCtx));
             }
             return {
-                tipTapContent: content,
+                tipTapContent: tipTapContentToHtml(content),
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
