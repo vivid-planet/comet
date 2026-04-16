@@ -62,6 +62,7 @@ export interface TipTapBlockStyle {
 export interface TipTapInlineStyle {
     name: string;
     label: ReactNode;
+    appliesTo?: TipTapBlockType[];
 }
 
 export interface TipTapRichTextBlockState {

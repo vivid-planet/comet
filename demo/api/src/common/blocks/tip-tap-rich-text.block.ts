@@ -12,5 +12,5 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
         { name: "eyebrow500", appliesTo: ["paragraph"] },
         { name: "eyebrow450", appliesTo: ["paragraph"] },
     ],
-    inlineStyles: [{ name: "highlight" }, { name: "tag" }],
+    inlineStyles: [{ name: "highlight" }, { name: "tag", appliesTo: ["paragraph"] }],
 });

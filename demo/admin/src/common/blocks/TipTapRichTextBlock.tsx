@@ -52,6 +52,7 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
         {
             name: "tag",
             label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.tag" defaultMessage="Tag" />,
+            appliesTo: ["paragraph"],
         },
     ],
 });
