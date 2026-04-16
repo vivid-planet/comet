@@ -78,8 +78,8 @@ export async function resolveEntityScope(
     }
 
     if (isScopedEntityCallbackOrService(scopedMeta)) {
-        if (isInjectableService(scopedMeta)) {
-            const service = getService<EntityScopeServiceInterface>(scopedMeta as new (...args: unknown[]) => EntityScopeServiceInterface);
+        if (isInjectableService<EntityScopeServiceInterface>(scopedMeta)) {
+            const service = getService<EntityScopeServiceInterface>(scopedMeta);
             return service.getEntityScope(entity);
         } else {
             return scopedMeta(entity);

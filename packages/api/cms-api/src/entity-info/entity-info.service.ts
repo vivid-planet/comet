@@ -323,10 +323,13 @@ export class EntityInfoService {
                 LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeDocument"."pageTreeNodeId"
             `);
         } else {
+            const pageTreeNodeJoinSql = pageTreeNodeScopeColumns
+                ? `JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeDocument"."pageTreeNodeId"`
+                : "";
             indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", null::tsvector AS "fullText", ${pageTreeNodeScopeSql} AS "scope"
                 FROM "PageTreeNodeDocument"
                 JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
-                ${pageTreeNodeScopeColumns ? `JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeDocument"."pageTreeNodeId"` : ""}
+                ${pageTreeNodeJoinSql}
             `);
         }
 
