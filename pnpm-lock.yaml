@@ -259,8 +259,8 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@24.12.2)(jiti@2.6.1)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
       vite-plugin-compression2:
-        specifier: ^2.3.1
-        version: 2.5.2(rollup@4.59.0)
+        specifier: ^2.5.3
+        version: 2.5.3(rollup@4.59.0)
       vite-plugin-html:
         specifier: ^3.2.2
         version: 3.2.2(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3))
@@ -17957,8 +17957,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite-plugin-compression2@2.5.2:
-    resolution: {integrity: sha512-a1eAY2Ux5JrflaWStWUa7yoMnjhw3tx7y6vQIp20QZ9K57wcKxYT+DUJiAG4VSEvmFMjeo9a5R2phdBriOJ/1A==}
+  vite-plugin-compression2@2.5.3:
+    resolution: {integrity: sha512-ItPgqQWkcnBbVw7is9OKwiZ8v6+ju9rYROl5Lp6QfQDEx/d55AwJQb/KLpsQqsU9HoigYBsZ8tK6I02UwJNvEw==}
 
   vite-plugin-dts@4.5.4:
     resolution: {integrity: sha512-d4sOM8M/8z7vRXHHq/ebbblfaxENjogAAekcfcDCCwAyvGqnPrc7f4NZbvItS+g4WTgerW0xDwSz5qz11JT3vg==}
@@ -37910,7 +37910,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-plugin-compression2@2.5.2(rollup@4.59.0):
+  vite-plugin-compression2@2.5.3(rollup@4.59.0):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.59.0)
       tar-mini: 0.2.0
