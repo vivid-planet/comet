@@ -107,6 +107,7 @@ export {
     createTipTapRichTextBlock,
     type CreateTipTapRichTextBlockOptions,
     type TipTapApiBlockStyle,
+    type TipTapApiPlaceholder,
     type TipTapBlockType,
     type TipTapSupports,
 } from "./blocks/tipTap/createTipTapRichTextBlock";

@@ -27,6 +27,7 @@ import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
+import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,15 +66,26 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
+export interface TipTapApiPlaceholder {
+    name: string;
+}
+
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapApiBlockStyle[];
+    placeholders?: TipTapApiPlaceholder[];
     indexSearchText?: boolean;
     link?: Block;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(
+    supports: TipTapSupports[],
+    blockStyles: TipTapApiBlockStyle[],
+    placeholders: TipTapApiPlaceholder[],
+    hasLink: boolean,
+): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasPlaceholders = placeholders.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -93,6 +105,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlock
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+        ...(hasPlaceholders ? [Placeholder] : []),
         ...(hasLink ? [CmsLink] : []),
     ];
 }
@@ -101,7 +114,9 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlock
 // checks the raw JSON for mark types that don't exist in the schema.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function containsUnknownMarks(json: any, schema: Schema): boolean {
-    if (typeof json !== "object" || json === null) return false;
+    if (typeof json !== "object" || json === null) {
+        return false;
+    }
 
     if (Array.isArray(json.marks)) {
         for (const mark of json.marks) {
@@ -112,7 +127,9 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
     }
     if (Array.isArray(json.content)) {
         for (const child of json.content) {
-            if (containsUnknownMarks(child, schema)) return true;
+            if (containsUnknownMarks(child, schema)) {
+                return true;
+            }
         }
     }
     return false;
@@ -120,7 +137,9 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -230,14 +249,20 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
 }
 
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
+    {
+        supports = defaultSupports,
+        blockStyles = [],
+        placeholders = [],
+        indexSearchText = true,
+        link: LinkBlock,
+    }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, placeholders, hasLink);
     const schema = getSchema(extensions);
 
     @BlockDataMigrationVersion(migrate.version)
@@ -260,7 +285,9 @@ export function createTipTapRichTextBlock(
         }
 
         childBlocksInfo(): ChildBlockInfo[] {
-            if (!LinkBlock) return [];
+            if (!LinkBlock) {
+                return [];
+            }
             return collectLinkMarks(this.tipTapContent).map(({ data, path }) => ({
                 visible: true,
                 relJsonPath: path,

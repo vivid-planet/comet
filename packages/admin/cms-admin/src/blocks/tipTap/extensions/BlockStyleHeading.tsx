@@ -39,7 +39,9 @@ export const BlockStyleHeading = Heading.extend({
                 default: null,
                 parseHTML: (element: HTMLElement) => element.getAttribute("data-block-style"),
                 renderHTML: (attributes: { blockStyle: string | null }) => {
-                    if (!attributes.blockStyle) return {};
+                    if (!attributes.blockStyle) {
+                        return {};
+                    }
                     return { "data-block-style": attributes.blockStyle };
                 },
             },

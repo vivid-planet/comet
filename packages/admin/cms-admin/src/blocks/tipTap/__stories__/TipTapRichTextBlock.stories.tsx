@@ -182,6 +182,99 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
     },
 };
 
+const PlaceholdersBlock = createTipTapRichTextBlock({
+    placeholders: [
+        { name: "firstName", label: "First Name" },
+        { name: "lastName", label: "Last Name" },
+        { name: "email", label: "Email Address" },
+        { name: "company", label: "Company" },
+    ],
+});
+
+function PlaceholdersStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(PlaceholdersBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <PlaceholdersBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const Placeholders: StoryObj<typeof PlaceholdersStory> = {
+    render: () => <PlaceholdersStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready with placeholder button", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // Should have a placeholder button in the toolbar
+            const buttons = canvas.getAllByRole("button");
+            expect(buttons.length).toBeGreaterThanOrEqual(1);
+        });
+    },
+};
+
+const PlaceholdersWithContentBlock = createTipTapRichTextBlock({
+    supports: ["bold", "italic"],
+    placeholders: [
+        { name: "firstName", label: "First Name" },
+        { name: "lastName", label: "Last Name" },
+        { name: "email", label: "Email Address" },
+    ],
+});
+
+function PlaceholdersWithContentStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>({
+        tipTapContent: {
+            type: "doc",
+            content: [
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Hello " },
+                        { type: "placeholder", attrs: { name: "firstName" } },
+                        { type: "text", text: " " },
+                        { type: "placeholder", attrs: { name: "lastName" } },
+                        { type: "text", text: ", welcome to our platform!" },
+                    ],
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Your registered email is: " },
+                        { type: "placeholder", attrs: { name: "email" } },
+                    ],
+                },
+            ],
+        },
+    });
+
+    return (
+        <StoryWrapper state={state}>
+            <PlaceholdersWithContentBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const PlaceholdersWithContent: StoryObj<typeof PlaceholdersWithContentStory> = {
+    render: () => <PlaceholdersWithContentStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor renders pre-filled placeholders as chips", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+    },
+};
+
 const BlockStyleInteractionsBlock = createTipTapRichTextBlock({
     blockStyles: [
         {

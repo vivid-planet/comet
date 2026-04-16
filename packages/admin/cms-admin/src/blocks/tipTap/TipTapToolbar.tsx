@@ -14,6 +14,7 @@ import {
     RteStrikethrough,
     RteSub,
     RteSup,
+    RteTextPlaceholder,
     RteUl,
     RteUndo,
 } from "@comet/admin-icons";
@@ -35,7 +36,7 @@ import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type R
 import { FormattedMessage } from "react-intl";
 
 import { type BlockInterface, type LinkBlockInterface } from "../types";
-import { type TipTapBlockStyle, type TipTapBlockType, type TipTapSupports } from "./createTipTapRichTextBlock";
+import { type TipTapBlockStyle, type TipTapBlockType, type TipTapPlaceholder, type TipTapSupports } from "./createTipTapRichTextBlock";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -149,33 +150,41 @@ export const TipTapToolbar = ({
     editor,
     supports,
     blockStyles,
+    placeholders,
     linkBlock,
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
+    placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
 }) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
+    const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const inlineStyles = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
     const specialChars = (["non-breaking-space", "soft-hyphen"] as const).some((s) => supports.includes(s));
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasPlaceholders = placeholders.length > 0;
 
     const editorState = useEditorState({
         editor,
         selector: ({ editor: e }: { editor: Editor }) => {
             const activeBlockType = (() => {
                 for (let level = 1; level <= 6; level++) {
-                    if (e.isActive("heading", { level })) return String(level);
+                    if (e.isActive("heading", { level })) {
+                        return String(level);
+                    }
                 }
                 return "paragraph";
             })();
             const activeTipTapBlockType: TipTapBlockType = (() => {
                 for (let level = 1; level <= 6; level++) {
-                    if (e.isActive("heading", { level })) return `heading-${level}` as TipTapBlockType;
+                    if (e.isActive("heading", { level })) {
+                        return `heading-${level}` as TipTapBlockType;
+                    }
                 }
                 return "paragraph";
             })();
@@ -203,6 +212,11 @@ export const TipTapToolbar = ({
 
     const handleMoreClose = () => {
         setMoreAnchorEl(null);
+        setTimeout(() => editor.commands.focus(), 0);
+    };
+
+    const handlePlaceholderClose = () => {
+        setPlaceholderAnchorEl(null);
         setTimeout(() => editor.commands.focus(), 0);
     };
 
@@ -457,6 +471,37 @@ export const TipTapToolbar = ({
                             onToggle={() => editor.chain().focus().insertContent({ type: "softHyphen" }).run()}
                         />
                     )}
+                </ToolbarGroup>
+            )}
+            {hasPlaceholders && (
+                <ToolbarGroup>
+                    <Tooltip title={<FormattedMessage id="comet.blocks.tipTapRichText.placeholder.tooltip" defaultMessage="Insert placeholder" />}>
+                        <Box
+                            component="button"
+                            type="button"
+                            onMouseDown={(e: MouseEvent) => {
+                                e.preventDefault();
+                                setPlaceholderAnchorEl(e.currentTarget as HTMLElement);
+                            }}
+                            sx={toolbarButtonSx}
+                        >
+                            <RteTextPlaceholder sx={{ fontSize: 15 }} color="inherit" />
+                        </Box>
+                    </Tooltip>
+                    <Menu open={Boolean(placeholderAnchorEl)} anchorEl={placeholderAnchorEl} onClose={handlePlaceholderClose}>
+                        {placeholders.map((placeholder) => (
+                            <MenuItem
+                                key={placeholder.name}
+                                onMouseDown={(e) => {
+                                    handlePlaceholderClose();
+                                    e.persist();
+                                    setTimeout(() => editor.chain().focus().insertPlaceholder(placeholder.name).run(), 0);
+                                }}
+                            >
+                                {placeholder.label}
+                            </MenuItem>
+                        ))}
+                    </Menu>
                 </ToolbarGroup>
             )}
             {hasLink && linkBlock && (
