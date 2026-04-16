@@ -416,8 +416,8 @@ importers:
         specifier: ^7.8.2
         version: 7.8.2
       slugify:
-        specifier: ^1.6.6
-        version: 1.6.6
+        specifier: ^1.6.9
+        version: 1.6.9
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -1578,8 +1578,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       slugify:
-        specifier: ^1.6.6
-        version: 1.6.6
+        specifier: ^1.6.9
+        version: 1.6.9
       use-debounce:
         specifier: ^10.0.6
         version: 10.0.6(react@19.2.4)
@@ -2079,8 +2079,8 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       slugify:
-        specifier: ^1.6.6
-        version: 1.6.6
+        specifier: ^1.6.9
+        version: 1.6.9
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -16795,8 +16795,8 @@ packages:
   slick@1.12.2:
     resolution: {integrity: sha512-4qdtOGcBjral6YIBCWJ0ljFSKNLz9KkhbWtuGvUyRowl1kxfuE1x/Z/aJcaiilpb3do9bl5K7/1h9XC5wWpY/A==}
 
-  slugify@1.6.6:
-    resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
+  slugify@1.6.9:
+    resolution: {integrity: sha512-vZ7rfeehZui7wQs438JXBckYLkIIdfHOXsaVEUMyS5fHo1483l1bMdo0EDSWYclY0yZKFOipDy4KHuKs6ssvdg==}
     engines: {node: '>=8.0.0'}
 
   smart-buffer@4.2.0:
@@ -36645,7 +36645,7 @@ snapshots:
 
   slick@1.12.2: {}
 
-  slugify@1.6.6: {}
+  slugify@1.6.9: {}
 
   smart-buffer@4.2.0: {}
 
