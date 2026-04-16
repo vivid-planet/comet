@@ -1,5 +1,5 @@
 ---
-"@comet/eslint-config": minor
+"@comet/eslint-config": major
 ---
 
 Enforce separate type imports instead of inline type imports
