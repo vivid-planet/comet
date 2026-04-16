@@ -2236,7 +2236,7 @@ importers:
         specifier: ^9.5.0
         version: 9.5.0
       js-yaml:
-        specifier: ^4.1.0
+        specifier: ^4.1.1
         version: 4.1.1
       prettier:
         specifier: ^3.6.2
