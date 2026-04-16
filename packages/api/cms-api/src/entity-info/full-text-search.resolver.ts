@@ -23,6 +23,7 @@ export class FullTextSearchResolver {
             fullText: { $fulltext: search },
         };
 
+        // Filter results by user's permissions (skip for system users which are represented as strings)
         if (typeof user !== "string" && user.permissions) {
             const userPermissions = user.permissions.map((p) => p.permission);
             if (userPermissions.length > 0) {

@@ -129,7 +129,8 @@ export class EntityInfoService {
                         const permissions = Array.isArray(entityInfo.requiredPermission)
                             ? entityInfo.requiredPermission
                             : [entityInfo.requiredPermission];
-                        requiredPermissionSql = `ARRAY[${permissions.map((p) => `'${p}'`).join(",")}]::text[]`;
+                        // Escape single quotes to prevent SQL injection
+                        requiredPermissionSql = `ARRAY[${permissions.map((p) => `'${p.replace(/'/g, "''")}'`).join(",")}]::text[]`;
                     }
 
                     const select = `SELECT
