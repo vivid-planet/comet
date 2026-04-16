@@ -23,7 +23,7 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
               with:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
                   fetch-depth: 0
