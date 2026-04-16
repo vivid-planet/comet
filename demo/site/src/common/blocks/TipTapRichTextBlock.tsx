@@ -19,7 +19,7 @@ interface TipTapRichTextBlockData {
 
 // ───────── Markdown → React Rendering ─────────
 
-const COMET_LINK_RE = /\[([^\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/;
+const COMET_LINK_RE = /\[([^[\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/;
 
 function decodeLinkData(encoded: string): Record<string, unknown> {
     try {

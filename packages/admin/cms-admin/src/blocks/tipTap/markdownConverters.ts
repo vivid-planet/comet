@@ -24,7 +24,7 @@ import type { JSONContent } from "@tiptap/react";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type LinkData = Record<string, any>;
 
-const COMET_LINK_RE = /\[([^\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/g;
+const COMET_LINK_RE = /\[([^[\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/g;
 
 function encodeLinkData(data: LinkData): string {
     return btoa(JSON.stringify(data));
@@ -293,7 +293,7 @@ function parseInlineContent(text: string): InlineToken[] {
         }
 
         // Check for comet-link
-        const linkMatch = remaining.match(/^\[([^\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/);
+        const linkMatch = remaining.match(/^\[([^[\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/);
         if (linkMatch) {
             try {
                 const linkData = decodeLinkData(linkMatch[2]);

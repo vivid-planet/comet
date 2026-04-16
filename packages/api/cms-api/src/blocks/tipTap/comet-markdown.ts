@@ -48,7 +48,7 @@ interface MarkdownFeatures {
     usedBlockStyles: string[];
 }
 
-const COMET_LINK_RE = /\[([^\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/g;
+const COMET_LINK_RE = /\[([^[\]]*)\]\(comet-link:\/\/([A-Za-z0-9+/=]+)\)/g;
 
 /**
  * Encode link data as base64-encoded JSON for embedding in markdown
@@ -395,7 +395,7 @@ function stripBlockStyle(text: string): string {
 function stripInlineMarks(text: string): string {
     let result = text;
     // Remove links: [text](comet-link://...) → text
-    result = result.replace(/\[([^\]]*)\]\(comet-link:\/\/[A-Za-z0-9+/=]+\)/g, "$1");
+    result = result.replace(/\[([^[\]]*)\]\(comet-link:\/\/[A-Za-z0-9+/=]+\)/g, "$1");
     // Remove bold: **text** → text
     result = result.replace(/\*\*([^*]+)\*\*/g, "$1");
     // Remove italic: *text* → text
