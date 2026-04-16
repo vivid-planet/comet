@@ -122,7 +122,11 @@ export function TipTapRichTextBlockRenderer({ html, renderers = {} }: TipTapRich
                     const linkData = decodeCometLink(href);
                     if (linkData !== null) {
                         const Link = renderers.link;
-                        return <Link data={linkData}>{children}</Link>;
+                        return (
+                            <Link data={linkData} className={className}>
+                                {children}
+                            </Link>
+                        );
                     }
                 }
             }

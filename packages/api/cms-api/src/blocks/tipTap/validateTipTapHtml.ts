@@ -362,7 +362,7 @@ function extractTextFromNodes(nodes: HtmlNode[], headingLevel: number | undefine
 
 interface LinkEntry {
     data: unknown;
-    path: string; // simplified path for identification
+    path: string[]; // path segments for block framework compatibility
 }
 
 /**
@@ -391,7 +391,7 @@ function collectLinksFromNodes(nodes: HtmlNode[], links: LinkEntry[], nextIndex:
                 const encoded = node.attribs.href.slice("comet-link://".length);
                 const data = JSON.parse(decodeURIComponent(encoded));
                 const idx = nextIndex();
-                links.push({ data, path: `links[${idx}]` });
+                links.push({ data, path: ["links", String(idx)] });
             } catch {
                 // Skip invalid links
             }

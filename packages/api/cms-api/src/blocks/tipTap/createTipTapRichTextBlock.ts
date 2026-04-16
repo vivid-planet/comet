@@ -142,7 +142,7 @@ export function createTipTapRichTextBlock(
             }
             return collectLinksFromHtml(this.tipTapContent).map(({ data, path }) => ({
                 visible: true,
-                relJsonPath: ["tipTapContent", path],
+                relJsonPath: ["tipTapContent", ...path],
                 block: data as BlockDataInterface,
                 name: LinkBlock.name,
             }));

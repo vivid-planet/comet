@@ -22,9 +22,9 @@ function hasContent(data: TipTapRichTextBlockData): boolean {
     if (!html || typeof html !== "string") {
         return false;
     }
-    // Check if there's any text content beyond empty paragraph tags
-    const textContent = html.replace(/<[^>]*>/g, "").trim();
-    return textContent.length > 0;
+    // Quick check: the HTML has content beyond just empty block tags
+    // We check for any non-whitespace content between tags
+    return !/^(<(p|h[1-6]|ul|ol|li|br)\s*\/?>[\s]*<\/(p|h[1-6]|ul|ol|li)>[\s]*)*$/.test(html);
 }
 
 export const TipTapRichTextBlock = withPreview(
