@@ -94,12 +94,15 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
             return <ul key={index}>{children}</ul>;
         case "orderedList":
             return <ol key={index}>{children}</ol>;
-        case "listItem":
+        case "listItem": {
+            const firstParagraph = node.content?.find((child: TipTapNode) => child.type === "paragraph");
+            const blockStyle = firstParagraph?.attrs?.blockStyle as Parameters<typeof Typography>[0]["variant"];
             return (
-                <Typography as="li" key={index} className={styles.text}>
+                <Typography as="li" key={index} variant={blockStyle ?? undefined} className={styles.text}>
                     {children}
                 </Typography>
             );
+        }
         case "text":
         case "hardBreak":
         case "nonBreakingSpace":
@@ -112,7 +115,9 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
 
 function hasTipTapContent(data: TipTapRichTextBlockData): boolean {
     const content = data.tipTapContent as TipTapNode;
-    if (!content?.content || !Array.isArray(content.content)) return false;
+    if (!content?.content || !Array.isArray(content.content)) {
+        return false;
+    }
     return content.content.some((node: TipTapNode) => node.type !== "paragraph" || (node.content && node.content.length > 0));
 }
 

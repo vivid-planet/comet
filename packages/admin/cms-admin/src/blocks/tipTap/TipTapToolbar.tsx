@@ -169,13 +169,23 @@ export const TipTapToolbar = ({
         selector: ({ editor: e }: { editor: Editor }) => {
             const activeBlockType = (() => {
                 for (let level = 1; level <= 6; level++) {
-                    if (e.isActive("heading", { level })) return String(level);
+                    if (e.isActive("heading", { level })) {
+                        return String(level);
+                    }
                 }
                 return "paragraph";
             })();
             const activeTipTapBlockType: TipTapBlockType = (() => {
+                if (e.isActive("orderedList")) {
+                    return "ordered-list";
+                }
+                if (e.isActive("bulletList")) {
+                    return "unordered-list";
+                }
                 for (let level = 1; level <= 6; level++) {
-                    if (e.isActive("heading", { level })) return `heading-${level}` as TipTapBlockType;
+                    if (e.isActive("heading", { level })) {
+                        return `heading-${level}` as TipTapBlockType;
+                    }
                 }
                 return "paragraph";
             })();

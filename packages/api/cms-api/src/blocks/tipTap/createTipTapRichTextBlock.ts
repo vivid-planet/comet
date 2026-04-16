@@ -45,7 +45,16 @@ export type TipTapSupports =
     | "soft-hyphen"
     | "link";
 
-export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+export type TipTapBlockType =
+    | "paragraph"
+    | "heading-1"
+    | "heading-2"
+    | "heading-3"
+    | "heading-4"
+    | "heading-5"
+    | "heading-6"
+    | "ordered-list"
+    | "unordered-list";
 
 export interface TipTapApiBlockStyle {
     name: string;
@@ -101,7 +110,9 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlock
 // checks the raw JSON for mark types that don't exist in the schema.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function containsUnknownMarks(json: any, schema: Schema): boolean {
-    if (typeof json !== "object" || json === null) return false;
+    if (typeof json !== "object" || json === null) {
+        return false;
+    }
 
     if (Array.isArray(json.marks)) {
         for (const mark of json.marks) {
@@ -112,7 +123,9 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
     }
     if (Array.isArray(json.content)) {
         for (const child of json.content) {
-            if (containsUnknownMarks(child, schema)) return true;
+            if (containsUnknownMarks(child, schema)) {
+                return true;
+            }
         }
     }
     return false;
@@ -120,7 +133,9 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -260,7 +275,9 @@ export function createTipTapRichTextBlock(
         }
 
         childBlocksInfo(): ChildBlockInfo[] {
-            if (!LinkBlock) return [];
+            if (!LinkBlock) {
+                return [];
+            }
             return collectLinkMarks(this.tipTapContent).map(({ data, path }) => ({
                 visible: true,
                 relJsonPath: path,

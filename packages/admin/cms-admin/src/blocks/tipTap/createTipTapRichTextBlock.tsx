@@ -45,7 +45,16 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
-export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+export type TipTapBlockType =
+    | "paragraph"
+    | "heading-1"
+    | "heading-2"
+    | "heading-3"
+    | "heading-4"
+    | "heading-5"
+    | "heading-6"
+    | "ordered-list"
+    | "unordered-list";
 
 export interface TipTapBlockStyle {
     name: string;
@@ -89,7 +98,9 @@ const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -110,7 +121,9 @@ function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONCon
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Promise<any>): Promise<JSONContent> {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
