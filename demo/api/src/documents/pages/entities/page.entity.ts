@@ -37,7 +37,7 @@ export class Page extends BaseEntity implements DocumentInterface {
 
     @Index({ type: "fulltext" })
     @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.content) })
-    searchableContent?: string;
+    fullTextContent?: string;
 
     @RootBlock(SeoBlock)
     @Property({ type: new RootBlockType(SeoBlock) })
@@ -46,7 +46,7 @@ export class Page extends BaseEntity implements DocumentInterface {
 
     @Index({ type: "fulltext" })
     @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.seo) })
-    searchableSeo?: string;
+    fullTextSeo?: string;
 
     @RootBlock(StageBlock)
     @Property({ type: new RootBlockType(StageBlock) })
@@ -55,7 +55,7 @@ export class Page extends BaseEntity implements DocumentInterface {
 
     @Index({ type: "fulltext" })
     @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.stage) })
-    searchableStage?: string;
+    fullTextStage?: string;
 
     @Property({
         type: "timestamp with time zone",

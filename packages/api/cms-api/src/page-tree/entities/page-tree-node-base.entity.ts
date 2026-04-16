@@ -65,7 +65,7 @@ export abstract class PageTreeNodeBase extends BaseEntity {
             };
         },
     })
-    searchable?: string;
+    fullText?: string;
 
     @Property({
         columnType: "timestamp with time zone",

@@ -49,7 +49,7 @@ export class PageTreeFullTextService {
         console.time("creating PageTreeNodeFullText view");
         await this.entityManager.getConnection().execute(
             `CREATE VIEW "PageTreeNodeFullText" AS
-                SELECT "ptn"."id" "pageTreeNodeId", "ft"."fullText" || COALESCE("ptn"."searchable", ''::tsvector) AS "fullText"
+                SELECT "ptn"."id" "pageTreeNodeId", "ft"."fullText" || COALESCE("ptn"."fullText", ''::tsvector) AS "fullText"
                 FROM "PageTreeNode" "ptn"
                 INNER JOIN "PageTreeNodeDocument" "ad" ON "ad"."pageTreeNodeId" = "ptn"."id" AND "ad"."type" = "ptn"."documentType"
                 INNER JOIN "PageTreeDocumentFullText" "ft" ON "ad"."documentId" = "ft"."documentId" AND "ft"."type" = "ptn"."documentType"    
@@ -107,13 +107,13 @@ export class PageTreeFullTextService {
             }
         }
 
-        // Migrate PageTreeNode searchable column
+        // Migrate PageTreeNode fullText column
         {
             const pageTreeNodeMetadata = metadataStorage.get(PAGE_TREE_ENTITY);
             const primary = pageTreeNodeMetadata.primaryKeys[0];
-            const searchableProp = pageTreeNodeMetadata.props.find((prop) => prop.name === "searchable");
+            const fullTextProp = pageTreeNodeMetadata.props.find((prop) => prop.name === "fullText");
 
-            if (searchableProp?.nullable) {
+            if (fullTextProp?.nullable) {
                 const pageSize = 100;
                 let updatedCount = 0;
 
@@ -121,14 +121,14 @@ export class PageTreeFullTextService {
                     const em = this.entityManager;
                     const entities = await em.find(
                         PAGE_TREE_ENTITY,
-                        { searchable: null },
+                        { fullText: null },
                         { limit: pageSize, offset: 0, orderBy: { [primary]: "ASC" } },
                     );
                     if (entities.length === 0) {
                         break;
                     }
                     for (const entity of entities) {
-                        (entity as Record<string, unknown>).searchable = " "; // trigger onUpdate
+                        (entity as Record<string, unknown>).fullText = " "; // trigger onUpdate
                     }
 
                     await em.flush();
