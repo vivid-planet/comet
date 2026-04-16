@@ -906,7 +906,7 @@ importers:
         specifier: ^4.10.1
         version: 4.10.1
       jsdom:
-        specifier: ^28.0.0
+        specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
       msw:
         specifier: ^2.10.4
@@ -1349,7 +1349,7 @@ importers:
         specifier: ^4.20.10
         version: 4.20.10
       jsdom:
-        specifier: ^28.0.0
+        specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
       npm-run-all2:
         specifier: ^8.0.4
@@ -1720,7 +1720,7 @@ importers:
         specifier: ^4.10.1
         version: 4.10.1
       jsdom:
-        specifier: ^28.0.0
+        specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
       npm-run-all2:
         specifier: ^8.0.4
@@ -2498,7 +2498,7 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
       jsdom:
-        specifier: ^28.0.0
+        specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
       next:
         specifier: ^16.0.3
@@ -2583,7 +2583,7 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
       jsdom:
-        specifier: ^28.0.0
+        specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
       npm-run-all2:
         specifier: ^8.0.4
