@@ -34,7 +34,7 @@ import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type R
 import { FormattedMessage } from "react-intl";
 
 import type { BlockInterface, LinkBlockInterface } from "../types";
-import type { TipTapBlockStyle, TipTapBlockType, TipTapSupports } from "./createTipTapRichTextBlock";
+import type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapSupports } from "./createTipTapRichTextBlock";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -148,20 +148,23 @@ export const TipTapToolbar = ({
     editor,
     supports,
     blockStyles,
+    inlineStyles,
     linkBlock,
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
+    inlineStyles: TipTapInlineStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
 }) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-    const inlineStyles = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
+    const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
     const specialChars = (["non-breaking-space", "soft-hyphen"] as const).some((s) => supports.includes(s));
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasInlineStyles = inlineStyles.length > 0;
 
     const editorState = useEditorState({
         editor,
@@ -183,10 +186,18 @@ export const TipTapToolbar = ({
                 return "paragraph";
             })();
             const attrs = e.isActive("heading") ? e.getAttributes("heading") : e.getAttributes("paragraph");
+            const activeInlineStyle = (() => {
+                if (!hasInlineStyles) {
+                    return "";
+                }
+                const inlineStyleAttrs = e.getAttributes("inlineStyle");
+                return (inlineStyleAttrs.type as string) ?? "";
+            })();
             return {
                 activeBlockType,
                 activeTipTapBlockType,
                 activeBlockStyle: (attrs.blockStyle as string) ?? "",
+                activeInlineStyle,
                 canUndo: e.can().undo(),
                 canRedo: e.can().redo(),
                 canIndent: e.can().sinkListItem("listItem"),
@@ -241,6 +252,15 @@ export const TipTapToolbar = ({
         const value = e.target.value || null;
         const nodeType = editor.isActive("heading") ? "heading" : "paragraph";
         editor.chain().focus().updateAttributes(nodeType, { blockStyle: value }).run();
+    };
+
+    const handleInlineStyleChange = (e: SelectChangeEvent) => {
+        const value = e.target.value;
+        if (value) {
+            editor.chain().focus().setInlineStyle({ type: value }).run();
+        } else {
+            editor.chain().focus().unsetInlineStyle().run();
+        }
     };
 
     return (
@@ -321,7 +341,31 @@ export const TipTapToolbar = ({
                     </FormControl>
                 </ToolbarGroup>
             )}
-            {(inlineStyles || moreOptions) && (
+            {hasInlineStyles && (
+                <ToolbarGroup>
+                    <FormControl sx={selectFormControlSx}>
+                        <Select
+                            value={editorState.activeInlineStyle}
+                            onChange={handleInlineStyleChange}
+                            displayEmpty
+                            variant="filled"
+                            MenuProps={{ elevation: 1 }}
+                            sx={selectSx}
+                            disabled={editorState.selectionEmpty}
+                        >
+                            <MenuItem value="" dense>
+                                <FormattedMessage id="comet.blocks.tipTapRichText.inlineStyle.default" defaultMessage="Default" />
+                            </MenuItem>
+                            {inlineStyles.map((style) => (
+                                <MenuItem key={style.name} value={style.name} dense>
+                                    {style.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </ToolbarGroup>
+            )}
+            {(hasInlineFormatButtons || moreOptions) && (
                 <ToolbarGroup>
                     {supports.includes("bold") && (
                         <ToolbarButton

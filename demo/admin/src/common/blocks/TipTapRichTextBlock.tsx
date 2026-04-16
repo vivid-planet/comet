@@ -44,4 +44,14 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
             element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "18px" }} {...props} />,
         },
     ],
+    inlineStyles: [
+        {
+            name: "highlight",
+            label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.highlight" defaultMessage="Highlight" />,
+        },
+        {
+            name: "tag",
+            label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.tag" defaultMessage="Tag" />,
+        },
+    ],
 });
