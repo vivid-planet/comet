@@ -6,15 +6,17 @@ import InlineStyleTypeControls from "./InlineStyleTypeControls";
 import LinkControls from "./LinkControls";
 import ListsControls from "./ListsControls";
 import ListsIndentControls from "./ListsIndentControls";
+import PlaceholderControls from "./PlaceholderControls";
 import SpecialCharactersControls from "./SpecialCharactersControls";
 import { Toolbar } from "./Toolbar/Toolbar";
 import TranslationControls from "./TranslationControls";
 
 export default function Controls(p: IControlProps) {
     const {
-        options: { customToolbarButtons },
+        options: { customToolbarButtons, placeholders },
     } = p;
     const hasCustomButtons = customToolbarButtons && customToolbarButtons.length > 0;
+    const hasPlaceholders = placeholders && placeholders.length > 0;
     return (
         <Toolbar {...p}>
             {[
@@ -26,6 +28,7 @@ export default function Controls(p: IControlProps) {
                 ListsIndentControls,
                 LinkControls,
                 SpecialCharactersControls,
+                ...(hasPlaceholders ? [PlaceholderControls] : []),
                 ...(hasCustomButtons ? [CustomControls] : []),
             ]}
         </Toolbar>

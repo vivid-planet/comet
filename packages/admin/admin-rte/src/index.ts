@@ -7,6 +7,8 @@ export { Toolbar } from "./core/Controls/Toolbar/Toolbar";
 export type { RteToolbarClassKey } from "./core/Controls/Toolbar/Toolbar.styles";
 export { default as LinkDecorator } from "./core/extension/Link/Decorator";
 export { default as NonBreakingSpaceDecorator } from "./core/extension/NonBreakingSpace/Decorator";
+export { ENTITY_TYPE as PLACEHOLDER_ENTITY_TYPE } from "./core/extension/Placeholder/Decorator";
+export { default as PlaceholderDecorator } from "./core/extension/Placeholder/Decorator";
 export { default as SoftHyphenDecorator } from "./core/extension/SoftHyphen/Decorator";
 export { default as filterEditorStateDefault } from "./core/filterEditor/default";
 export { default as filterEditorStateRemoveUnsupportedBlockTypes } from "./core/filterEditor/removeUnsupportedBlockTypes";
@@ -20,6 +22,7 @@ export { type IMakeRteApiProps, type IRteApiProps, default as makeRteApi, type O
 export { type FilterEditorStateBeforeUpdateFn, type IOptions as IRteOptions, type IRteRef, Rte, type RteClassKey, type RteProps } from "./core/Rte";
 export { type IOptions as IRteReadOnlyOptions, type IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
 export { stateToHtml } from "./core/translation/stateToHtml";
+export { type RtePlaceholder } from "./core/types";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";

@@ -48,14 +48,18 @@ interface RawDraftContentBlock {
 interface DraftJsFactoryProps<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
-        [key: string]: { type: "LINK"; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> }; // extend this once more draftJS entities are supported
+        [key: string]:
+            | { type: "LINK"; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> }
+            | { type: "PLACEHOLDER"; mutability: DraftEntityMutability; data: { key: string } };
     };
 }
 
 interface DraftJsInput<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
-        [key: string]: { type: "LINK"; mutability: DraftEntityMutability; data: LinkBlockInput }; // extend this once more draftJS entities are supported
+        [key: string]:
+            | { type: "LINK"; mutability: DraftEntityMutability; data: LinkBlockInput }
+            | { type: "PLACEHOLDER"; mutability: DraftEntityMutability; data: { key: string } };
     };
 }
 
@@ -227,13 +231,15 @@ function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
 
                     if (isDraftJsInput(value)) {
                         for (const entity of Object.values(value.entityMap)) {
-                            const validationErrors = await validate(LinkBlock.blockInputFactory(entity.data), {
-                                forbidNonWhitelisted: true,
-                                whitelist: true,
-                            });
+                            if (entity.type === "LINK") {
+                                const validationErrors = await validate(LinkBlock.blockInputFactory(entity.data), {
+                                    forbidNonWhitelisted: true,
+                                    whitelist: true,
+                                });
 
-                            if (validationErrors.length > 0) {
-                                return false;
+                                if (validationErrors.length > 0) {
+                                    return false;
+                                }
                             }
                         }
 
@@ -256,6 +262,8 @@ function isDraftJsInput(value: unknown): value is DraftJsInput<BlockInputInterfa
         Array.isArray(value.blocks) &&
         typeof value.entityMap === "object" &&
         value.entityMap !== null &&
-        Object.values(value.entityMap).every((entity) => typeof entity === "object" && entity !== null && entity.type === "LINK")
+        Object.values(value.entityMap).every(
+            (entity) => typeof entity === "object" && entity !== null && (entity.type === "LINK" || entity.type === "PLACEHOLDER"),
+        )
     );
 }

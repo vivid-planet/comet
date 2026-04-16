@@ -32,7 +32,13 @@ import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
-import { type CustomInlineStyles, type IBlocktypeMap, type ICustomBlockTypeMap_Deprecated, type ToolbarButtonComponent } from "./types";
+import {
+    type CustomInlineStyles,
+    type IBlocktypeMap,
+    type ICustomBlockTypeMap_Deprecated,
+    type RtePlaceholder,
+    type ToolbarButtonComponent,
+} from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 import getRteTheme, { type RteThemeColors } from "./utils/getRteTheme";
 import { pasteAndFilterText } from "./utils/pasteAndFilterText";
@@ -90,6 +96,7 @@ export interface IRteOptions {
      */
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
     customInlineStyles?: CustomInlineStyles;
+    placeholders?: RtePlaceholder[];
     disableContentTranslation?: boolean;
 }
 

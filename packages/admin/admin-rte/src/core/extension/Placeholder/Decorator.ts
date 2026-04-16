@@ -1,0 +1,17 @@
+import { type DraftDecorator } from "draft-js";
+
+import EditorComponent from "./EditorComponent";
+
+export const ENTITY_TYPE = "PLACEHOLDER";
+
+const Decorator: DraftDecorator = {
+    strategy: (contentBlock, callback, contentState) => {
+        contentBlock.findEntityRanges((character) => {
+            const entityKey = character.getEntity();
+            return entityKey !== null && contentState.getEntity(entityKey).getType() === ENTITY_TYPE;
+        }, callback);
+    },
+    component: EditorComponent,
+};
+
+export default Decorator;

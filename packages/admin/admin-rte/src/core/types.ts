@@ -84,3 +84,8 @@ export interface CustomInlineStyles {
         style: CSSProperties;
     };
 }
+
+export interface RtePlaceholder {
+    key: string;
+    label: ReactNode;
+}
