@@ -23,14 +23,18 @@ export class FullTextSearchResolver {
             fullText: { $fulltext: search },
         };
 
-        // Filter results by user's permissions (skip for system users which are represented as strings)
+        // Only show entities where the user has the required permission.
+        // Entries with null requiredPermission are never shown, as the permission is unknown.
         if (typeof user !== "string" && user.permissions) {
             const userPermissions = user.permissions.map((p) => p.permission);
             if (userPermissions.length > 0) {
-                where.$or = [{ requiredPermission: null }, { requiredPermission: { $overlap: userPermissions } }];
+                where.requiredPermission = { $overlap: userPermissions };
             } else {
-                where.requiredPermission = null;
+                return new PaginatedEntityInfo([], 0);
             }
+        } else {
+            // System users: show all entries that have a requiredPermission set
+            where.requiredPermission = { $ne: null };
         }
 
         const [results, totalCount] = await this.entityManager.findAndCount(EntityInfoObject, where, {
