@@ -329,3 +329,81 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
     },
 };
+
+const InlineStylesBlock = createTipTapRichTextBlock({
+    inlineStyles: [
+        { name: "highlight", label: "Highlight" },
+        { name: "tag", label: "Tag" },
+    ],
+});
+
+function InlineStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(InlineStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <InlineStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const InlineStyles: StoryObj<typeof InlineStylesStory> = {
+    render: () => <InlineStylesStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready with inline style dropdown", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // Inline style select is present (showing "Default")
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes.length).toBeGreaterThanOrEqual(1);
+        });
+    },
+};
+
+const CombinedStylesBlock = createTipTapRichTextBlock({
+    blockStyles: [
+        {
+            name: "intro",
+            label: "Intro Text",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 20, fontStyle: "italic" }} {...props} />,
+        },
+    ],
+    inlineStyles: [
+        { name: "highlight", label: "Highlight" },
+        { name: "tag", label: "Tag" },
+    ],
+});
+
+function CombinedStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(CombinedStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <CombinedStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const CombinedBlockAndInlineStyles: StoryObj<typeof CombinedStylesStory> = {
+    render: () => <CombinedStylesStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready with both block style and inline style dropdowns", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // Heading select + block style select + inline style select
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes.length).toBeGreaterThanOrEqual(3);
+        });
+    },
+};

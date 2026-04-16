@@ -13,6 +13,7 @@ import { BlockStyleContext } from "./BlockStyleContext";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { TipTapToolbar } from "./TipTapToolbar";
@@ -54,6 +55,11 @@ export interface TipTapBlockStyle {
     element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
 
+export interface TipTapInlineStyle {
+    name: string;
+    label: ReactNode;
+}
+
 export interface TipTapRichTextBlockState {
     tipTapContent: JSONContent;
 }
@@ -69,6 +75,7 @@ interface TipTapRichTextBlockInput {
 export interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
+    inlineStyles?: TipTapInlineStyle[];
     link?: BlockInterface & LinkBlockInterface;
 }
 
@@ -89,7 +96,9 @@ const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -110,7 +119,9 @@ function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONCon
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Promise<any>): Promise<JSONContent> {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -136,15 +147,18 @@ const TipTapEditor = ({
     updateState,
     supports,
     blockStyles,
+    inlineStyles,
     linkBlock,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
+    inlineStyles: TipTapInlineStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
 
     const editor = useEditor({
@@ -163,6 +177,7 @@ const TipTapEditor = ({
             }),
             ...(hasBlockStyles ? [BlockStyleParagraph] : []),
             ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+            ...(hasInlineStyles ? [InlineStyleMark] : []),
             ...(supports.includes("sup") ? [Superscript] : []),
             ...(supports.includes("sub") ? [Subscript] : []),
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
@@ -182,7 +197,7 @@ const TipTapEditor = ({
     return (
         <BlockStyleContext.Provider value={blockStyles}>
             <Box sx={{ border: `1px solid ${grey[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
+                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} inlineStyles={inlineStyles} linkBlock={linkBlock} />
                 <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
                     <EditorContent editor={editor} />
                 </Box>
@@ -199,6 +214,7 @@ export const createTipTapRichTextBlock = (
 ): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> => {
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
+    const inlineStyles = options?.inlineStyles ?? [];
     const linkBlock = options?.link;
 
     // Auto-enable link support when a link block is provided
@@ -253,7 +269,16 @@ export const createTipTapRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
-            return <TipTapEditor state={state} updateState={updateState} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />;
+            return (
+                <TipTapEditor
+                    state={state}
+                    updateState={updateState}
+                    supports={supports}
+                    blockStyles={blockStyles}
+                    inlineStyles={inlineStyles}
+                    linkBlock={linkBlock}
+                />
+            );
         },
 
         previewContent: (state) => {

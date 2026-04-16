@@ -25,6 +25,10 @@ function renderMark(mark: { type: string; attrs?: Record<string, any> }, childre
             return <sup>{children}</sup>;
         case "subscript":
             return <sub>{children}</sub>;
+        case "inlineStyle": {
+            const inlineStyleType = mark.attrs?.type as string | undefined;
+            return <span className={inlineStyleType ? styles[`inlineStyle-${inlineStyleType}`] : undefined}>{children}</span>;
+        }
         case "link":
             return mark.attrs?.data && isValidLink(mark.attrs.data) ? (
                 <LinkBlock data={mark.attrs.data} className={styles.inlineLink}>
@@ -112,7 +116,9 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
 
 function hasTipTapContent(data: TipTapRichTextBlockData): boolean {
     const content = data.tipTapContent as TipTapNode;
-    if (!content?.content || !Array.isArray(content.content)) return false;
+    if (!content?.content || !Array.isArray(content.content)) {
+        return false;
+    }
     return content.content.some((node: TipTapNode) => node.type !== "paragraph" || (node.content && node.content.length > 0));
 }
 
