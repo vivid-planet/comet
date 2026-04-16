@@ -45,7 +45,16 @@ type TipTapSupports =
     | "soft-hyphen"
     | "link";
 
-type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+type TipTapBlockType =
+    | "paragraph"
+    | "heading-1"
+    | "heading-2"
+    | "heading-3"
+    | "heading-4"
+    | "heading-5"
+    | "heading-6"
+    | "ordered-list"
+    | "unordered-list";
 
 interface TipTapBlockStyle {
     name: string;
