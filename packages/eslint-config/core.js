@@ -118,7 +118,6 @@ const config = [
                     fixStyle: "separate-type-imports",
                 },
             ],
-            "@typescript-eslint/no-import-type-side-effects": "error",
         },
     },
 ];
