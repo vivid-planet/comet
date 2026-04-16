@@ -103,9 +103,11 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
+export { collectLinks, decodeLinkData, extractTextEntriesFromMarkdown, mapLinksData, validateCometMarkdown } from "./blocks/tipTap/comet-markdown";
 export {
     createTipTapRichTextBlock,
     type CreateTipTapRichTextBlockOptions,
+    encodeLinkData,
     type TipTapApiBlockStyle,
     type TipTapBlockType,
     type TipTapSupports,
