@@ -15,6 +15,7 @@ import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { mapLinkMarksData, mapLinksInMarkdownAsync, markdownToTipTapJson, tipTapJsonToMarkdown } from "./markdownConverters";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -59,11 +60,11 @@ export interface TipTapRichTextBlockState {
 }
 
 interface TipTapRichTextBlockData {
-    tipTapContent: JSONContent;
+    markdown: string;
 }
 
 interface TipTapRichTextBlockInput {
-    tipTapContent: JSONContent;
+    markdown: string;
 }
 
 export interface TipTapRichTextBlockFactoryOptions {
@@ -86,50 +87,6 @@ function getPlainTextFromContent(content: JSONContent): string {
 }
 
 const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
-    if (!content || typeof content !== "object") return content;
-    const result = { ...content };
-
-    if (Array.isArray(result.marks)) {
-        result.marks = result.marks.map((mark) => {
-            if (mark.type === "link" && mark.attrs?.data) {
-                return { ...mark, attrs: { ...mark.attrs, data: fn(mark.attrs.data) } };
-            }
-            return mark;
-        });
-    }
-
-    if (Array.isArray(result.content)) {
-        result.content = result.content.map((child) => mapLinkMarksData(child, fn));
-    }
-
-    return result;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Promise<any>): Promise<JSONContent> {
-    if (!content || typeof content !== "object") return content;
-    const result = { ...content };
-
-    if (Array.isArray(result.marks)) {
-        result.marks = await Promise.all(
-            result.marks.map(async (mark) => {
-                if (mark.type === "link" && mark.attrs?.data) {
-                    return { ...mark, attrs: { ...mark.attrs, data: await fn(mark.attrs.data) } };
-                }
-                return mark;
-            }),
-        );
-    }
-
-    if (Array.isArray(result.content)) {
-        result.content = await Promise.all(result.content.map((child) => mapLinkMarksDataAsync(child, fn)));
-    }
-
-    return result;
-}
 
 const TipTapEditor = ({
     state,
@@ -217,8 +174,8 @@ export const createTipTapRichTextBlock = (
 
         category: BlockCategory.TextAndContent,
 
-        input2State: ({ tipTapContent }) => {
-            let content = tipTapContent ?? emptyContent;
+        input2State: ({ markdown }) => {
+            let content = markdown ? markdownToTipTapJson(markdown) : emptyContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.input2State(data));
             }
@@ -230,14 +187,20 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.state2Output(data));
             }
-            return { tipTapContent: content };
+            const markdown = tipTapJsonToMarkdown(content);
+            return { markdown };
         },
 
-        output2State: async ({ tipTapContent }, context) => {
-            let content = tipTapContent ?? emptyContent;
-            if (linkBlock) {
-                content = await mapLinkMarksDataAsync(content, (data) => linkBlock.output2State(data, context));
+        output2State: async ({ markdown }, context) => {
+            if (!markdown) {
+                return { tipTapContent: emptyContent };
             }
+            // First map link data in the markdown before converting to JSON
+            let md = markdown;
+            if (linkBlock) {
+                md = await mapLinksInMarkdownAsync(md, (data) => linkBlock.output2State(data, context));
+            }
+            const content = markdownToTipTapJson(md);
             return { tipTapContent: content };
         },
 
@@ -246,8 +209,9 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.createPreviewState(data, previewCtx));
             }
+            const markdown = tipTapJsonToMarkdown(content);
             return {
-                tipTapContent: content,
+                markdown,
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },

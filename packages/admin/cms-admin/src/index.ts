@@ -82,6 +82,7 @@ export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type { TipTapBlockStyle, TipTapBlockType } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
+export { markdownToTipTapJson, tipTapJsonToMarkdown } from "./blocks/tipTap/markdownConverters";
 export type {
     BlockAdminComponent,
     BlockAdminComponentPart,
