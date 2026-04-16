@@ -50,8 +50,14 @@ const withFoldersSelect = (
         qb = addSearchTermFiltertoQueryBuilder(qb, args.query);
     }
 
-    if (args.sortColumnName && args.sortDirection && args.sortColumnName !== "size" && args.sortColumnName !== "mimetype") {
-        qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
+    if (args.sortColumnName && args.sortDirection) {
+        if (args.sortColumnName === "size") {
+            qb.orderBy({ [raw("(COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id))")]: args.sortDirection });
+        } else if (args.sortColumnName === "mimetype") {
+            qb.orderBy({ [`folder.name`]: args.sortDirection });
+        } else {
+            qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
+        }
     }
 
     if (args.offset) {
@@ -127,15 +133,10 @@ export class FoldersService {
         };
 
         const qb = withFoldersSelect(this.selectQueryBuilder(), args);
-        if (args.sortColumnName === "size" && args.sortDirection) {
-            qb.orderBy({ [raw("(COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id))")]: args.sortDirection });
-        }
-        if (args.sortColumnName === "mimetype" && args.sortDirection) {
-            qb.orderBy({ [`folder.name`]: args.sortDirection });
-        }
         const folders = await qb.getResult();
 
-        const countQb = withFoldersSelect(this.countQueryBuilder(), args);
+        // Omit sort args: ordering is irrelevant for counting and the count query builder lacks the joins required for "size" sorting
+        const countQb = withFoldersSelect(this.countQueryBuilder(), { ...args, sortColumnName: undefined, sortDirection: undefined });
         const totalCount = await countQb.getCount();
 
         return [folders, totalCount];
