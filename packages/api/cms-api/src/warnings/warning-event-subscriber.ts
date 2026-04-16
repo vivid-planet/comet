@@ -8,6 +8,7 @@ import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks
 import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { resolveEntityScope } from "../common/helper/resolve-entity-scope.helper";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
@@ -64,14 +65,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                 const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                 if (scoped) {
-                    let scopedEntityScope: ContentScope | ContentScope[];
-
-                    if (isInjectableService(scoped)) {
-                        const service = this.moduleRef.get(scoped, { strict: false });
-                        scopedEntityScope = await service.getEntityScope(args.entity);
-                    } else {
-                        scopedEntityScope = await scoped(args.entity);
-                    }
+                    const scopedEntityScope = await resolveEntityScope(scoped, args.entity, (type) => this.moduleRef.get(type, { strict: false }));
 
                     if (Array.isArray(scopedEntityScope)) {
                         throw new Error("Multiple scopes are not supported for warnings");

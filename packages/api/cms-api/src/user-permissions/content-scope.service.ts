@@ -4,7 +4,7 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { resolveEntityScope } from "../common/helper/resolve-entity-scope.helper";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -99,13 +99,7 @@ export class ContentScopeService {
                     } else {
                         const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [affectedEntity.entity]);
                         if (!scoped) throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
-                        let scopes;
-                        if (isInjectableService(scoped)) {
-                            const service = this.moduleRef.get(scoped, { strict: false });
-                            scopes = await service.getEntityScope(row);
-                        } else {
-                            scopes = await scoped(row);
-                        }
+                        const scopes = await resolveEntityScope(scoped, row, (type) => this.moduleRef.get(type, { strict: false }));
                         if (!scopes) throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
                         contentScopes.push(Array.isArray(scopes) ? scopes : [scopes]);
                     }

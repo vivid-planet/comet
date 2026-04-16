@@ -7,6 +7,7 @@ import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { resolveEntityScope } from "../common/helper/resolve-entity-scope.helper";
 import { DiscoverService } from "../dependencies/discover.service";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -78,14 +79,9 @@ export class WarningCheckerCommand extends CommandRunner {
                             const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                             if (scoped) {
-                                let scopedEntityScope: ContentScope | ContentScope[];
-
-                                if (isInjectableService(scoped)) {
-                                    const service = this.moduleRef.get(scoped, { strict: false });
-                                    scopedEntityScope = await service.getEntityScope(rootBlock);
-                                } else {
-                                    scopedEntityScope = await scoped(rootBlock);
-                                }
+                                const scopedEntityScope = await resolveEntityScope(scoped, rootBlock, (type) =>
+                                    this.moduleRef.get(type, { strict: false }),
+                                );
 
                                 if (Array.isArray(scopedEntityScope)) {
                                     throw new Error("Multiple scopes are not supported for warnings");
