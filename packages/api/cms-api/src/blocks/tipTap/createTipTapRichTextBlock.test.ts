@@ -415,6 +415,124 @@ describe("createTipTapRichTextBlock validation", () => {
         });
     });
 
+    describe("inlineStyles with appliesTo", () => {
+        const block = createTipTapRichTextBlock(
+            {
+                supports: ["bold", "heading"],
+                inlineStyles: [
+                    { name: "highlight" },
+                    { name: "tag", appliesTo: ["paragraph"] },
+                    { name: "heading-accent", appliesTo: ["heading-1", "heading-2"] },
+                ],
+            },
+            "TestInlineStylesAppliesTo",
+        );
+
+        it("should accept inline style without appliesTo in any block type", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "heading",
+                            attrs: { level: 1 },
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: "highlight" } }], text: "Highlight heading" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept inline style in a matching block type", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: "tag" } }], text: "Tagged" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject inline style in a non-matching block type", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "heading",
+                            attrs: { level: 1 },
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: "tag" } }], text: "Tag in heading" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should accept heading-accent in heading-1", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "heading",
+                            attrs: { level: 1 },
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: "heading-accent" } }], text: "Accent heading" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject heading-accent in heading-3", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "heading",
+                            attrs: { level: 3 },
+                            content: [
+                                { type: "text", marks: [{ type: "inlineStyle", attrs: { type: "heading-accent" } }], text: "Accent heading 3" },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should reject heading-accent in a paragraph", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                { type: "text", marks: [{ type: "inlineStyle", attrs: { type: "heading-accent" } }], text: "Accent in paragraph" },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+    });
+
     describe("minimal schema (no supports)", () => {
         const block = createTipTapRichTextBlock({ supports: [] }, "TestMinimal");
 

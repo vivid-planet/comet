@@ -55,6 +55,7 @@ export interface TipTapApiBlockStyle {
 
 export interface TipTapApiInlineStyle {
     name: string;
+    appliesTo?: TipTapBlockType[];
 }
 
 const defaultSupports: TipTapSupports[] = [
@@ -181,7 +182,42 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
+function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+    if (node.type === "paragraph") {
+        return "paragraph";
+    }
+    if (node.type === "heading" && node.attrs?.level) {
+        return `heading-${node.attrs.level}` as TipTapBlockType;
+    }
+    return undefined;
+}
+
+function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapApiInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+    const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            // Check text nodes for inline style marks
+            if (child.type === "text" && Array.isArray(child.marks)) {
+                for (const mark of child.marks) {
+                    if (mark.type === "inlineStyle" && mark.attrs?.type) {
+                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
+                        if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            if (containsInvalidInlineStyleMarks(child, inlineStyles, currentBlockType)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function IsTipTapContent(schema: Schema, inlineStyles: TipTapApiInlineStyle[], linkBlock?: Block, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -201,6 +237,11 @@ function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: 
                         }
                         const node = ProseMirrorNode.fromJSON(schema, value);
                         node.check();
+
+                        // Validate inline style appliesTo constraints
+                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                            return false;
+                        }
 
                         // Validate link mark data
                         if (linkBlock) {
@@ -298,7 +339,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, LinkBlock)
+        @IsTipTapContent(schema, inlineStyles, LinkBlock)
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

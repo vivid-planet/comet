@@ -222,6 +222,7 @@ export const TipTapToolbar = ({
     };
 
     const applicableBlockStyles = blockStyles.filter((style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapBlockType));
+    const applicableInlineStyles = inlineStyles.filter((style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapBlockType));
 
     const handleBlockTypeChange = (e: SelectChangeEvent) => {
         const value = e.target.value;
@@ -342,7 +343,7 @@ export const TipTapToolbar = ({
                     </FormControl>
                 </ToolbarGroup>
             )}
-            {hasInlineStyles && (
+            {applicableInlineStyles.length > 0 && (
                 <ToolbarGroup>
                     <FormControl sx={selectFormControlSx}>
                         <Select
@@ -357,7 +358,7 @@ export const TipTapToolbar = ({
                             <MenuItem value="" dense>
                                 <FormattedMessage id="comet.blocks.tipTapRichText.inlineStyle.default" defaultMessage="Default" />
                             </MenuItem>
-                            {inlineStyles.map((style) => (
+                            {applicableInlineStyles.map((style) => (
                                 <MenuItem key={style.name} value={style.name} dense>
                                     {style.label}
                                 </MenuItem>
