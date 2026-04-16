@@ -1,4 +1,4 @@
-import { styled } from "@mui/material/styles";
+import { css, styled } from "@mui/material/styles";
 import { type PropsWithChildren } from "react";
 
 const EditorComponent = ({ children }: PropsWithChildren) => {
@@ -6,14 +6,14 @@ const EditorComponent = ({ children }: PropsWithChildren) => {
 };
 
 const Root = styled("span")(
-    ({ theme }) => `
-    background-color: ${theme.palette.primary.light};
-    color: ${theme.palette.primary.contrastText};
-    border-radius: ${theme.shape.borderRadius}px;
-    padding: 1px 4px;
-    font-size: 0.85em;
-    user-select: all;
-`,
+    ({ theme }) => css`
+        background-color: ${theme.palette.primary.light};
+        color: ${theme.palette.primary.contrastText};
+        border-radius: ${theme.shape.borderRadius}px;
+        padding: 1px 4px;
+        font-size: 0.85em;
+        user-select: all;
+    `,
 );
 
 export default EditorComponent;
