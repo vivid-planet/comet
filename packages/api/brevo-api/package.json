@@ -34,11 +34,11 @@
     "dependencies": {
         "@comet/cms-api": "workspace:*",
         "@fast-csv/parse": "^5.0.5",
-        "@getbrevo/brevo": "^3.0.1",
+        "@getbrevo/brevo": "^3.0.4",
         "@nestjs/axios": "^4.0.1",
         "@nestjs/cache-manager": "^3.0.1",
         "@nestjs/jwt": "^11.0.1",
-        "axios": "^1.13.5",
+        "axios": "^1.15.0",
         "cache-manager": "^7.2.5",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.3",
@@ -73,7 +73,7 @@
         "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
         "rxjs": "^7.8.2",
-        "ts-jest": "^29.0.5",
+        "ts-jest": "^29.4.9",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
         "uuid": "^8.3.2"

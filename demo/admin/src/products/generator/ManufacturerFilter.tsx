@@ -86,11 +86,7 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={Boolean(item.value)}
-                                        onClick={() => handleApplyValue(undefined)}
-                                    />
+                                    {item.value && <ClearInputAdornment position="end" onClick={() => handleApplyValue(undefined)} />}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),

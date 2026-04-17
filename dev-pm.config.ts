@@ -271,7 +271,7 @@ export default defineConfig({
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
             group: ["storybook", "docs"],
-            waitOn: ["tcp:26646"], // storybook-comet-admin
+            waitOn: ["tcp:26646", "tcp:26647"], // storybook-comet-admin, storybook-comet-cms-admin
         },
         {
             name: "docs",
@@ -284,6 +284,12 @@ export default defineConfig({
             script: "pnpm --filter @comet/admin run storybook",
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
+        },
+        {
+            name: "storybook-comet-cms-admin",
+            script: "pnpm --filter @comet/cms-admin run storybook",
+            group: ["storybook", "docs"],
+            waitOn: waitOnPackages("@comet/cms-admin"),
         },
     ],
 });
