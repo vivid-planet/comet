@@ -5,11 +5,10 @@ import { useIntl } from "react-intl";
 import { ClearInputAdornment } from "../../../common/ClearInputAdornment";
 import { FieldContainer, type FieldContainerProps } from "../../FieldContainer";
 
-type RHFTextFieldProps<
-    TFieldValues extends FieldValues,
-    TName extends FieldPathByValue<TFieldValues, string | null>,
-    TTransformedValues,
-> = UseControllerProps<TFieldValues, TName, TTransformedValues> &
+type RHFTextFieldProps<TFieldValues extends FieldValues, TName extends FieldPathByValue<TFieldValues, string | null>, TTransformedValues> = Pick<
+    UseControllerProps<TFieldValues, TName, TTransformedValues>,
+    "name" | "rules" | "shouldUnregister" | "defaultValue" | "control" | "disabled" | "exact"
+> &
     Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & { clearable?: boolean } & InputBaseProps;
 
 /**

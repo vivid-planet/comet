@@ -113,11 +113,10 @@ function RHFNumberFieldInner<TFieldValues extends FieldValues = FieldValues, TNa
     );
 }
 
-type RHFNumberFieldProps<
-    TFieldValues extends FieldValues,
-    TName extends FieldPathByValue<TFieldValues, number | null>,
-    TTransformedValues,
-> = UseControllerProps<TFieldValues, TName, TTransformedValues> &
+type RHFNumberFieldProps<TFieldValues extends FieldValues, TName extends FieldPathByValue<TFieldValues, number | null>, TTransformedValues> = Pick<
+    UseControllerProps<TFieldValues, TName, TTransformedValues>,
+    "name" | "rules" | "shouldUnregister" | "defaultValue" | "control" | "disabled" | "exact"
+> &
     Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & {
         clearable?: boolean;
         decimals?: number;
