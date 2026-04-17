@@ -36,31 +36,6 @@ export const Default: Story = {
 };
 
 /**
- * RHFNumberField with clearable functionality allows users to reset the numeric value.
- *
- * Use this when:
- * - The number field is optional
- * - Users should be able to clear their input
- * - You want to provide an easy way to reset the field
- */
-export const Clearable: Story = {
-    render: () => {
-        interface FormValues {
-            value: number | null;
-        }
-
-        function ClearableStory() {
-            const { control } = useForm<FormValues>({
-                defaultValues: { value: null },
-            });
-            return <RHFNumberField clearable name="value" control={control} label="Number Field" fullWidth variant="horizontal" />;
-        }
-
-        return <ClearableStory />;
-    },
-};
-
-/**
  * RHFNumberField with configurable decimal places for monetary values or other precise measurements.
  *
  * Use this when:

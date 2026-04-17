@@ -9,7 +9,8 @@ type RHFTextFieldProps<TFieldValues extends FieldValues, TName extends FieldPath
     UseControllerProps<TFieldValues, TName, TTransformedValues>,
     "name" | "rules" | "shouldUnregister" | "defaultValue" | "control" | "disabled" | "exact"
 > &
-    Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & { clearable?: boolean } & InputBaseProps;
+    Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> &
+    InputBaseProps;
 
 /**
  * @experimental
@@ -27,11 +28,11 @@ export function RHFTextField<TFieldValues extends FieldValues, TName extends Fie
     fullWidth,
     helperText,
     required,
-    clearable,
     endAdornment,
     ...restProps
 }: RHFTextFieldProps<TFieldValues, TName, TTransformedValues>) {
     const intl = useIntl();
+    const clearable = !required && !disabled;
     return (
         <Controller
             name={name}
@@ -72,13 +73,7 @@ export function RHFTextField<TFieldValues extends FieldValues, TName extends Fie
                             endAdornment={
                                 (endAdornment || clearable) && (
                                     <>
-                                        {clearable && (
-                                            <ClearInputAdornment
-                                                position="end"
-                                                hasClearableContent={field.value !== null && field.value !== ""}
-                                                onClick={() => field.onChange(null)}
-                                            />
-                                        )}
+                                        {clearable && field.value && <ClearInputAdornment position="end" onClick={() => field.onChange(null)} />}
                                         {endAdornment}
                                     </>
                                 )

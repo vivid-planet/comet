@@ -36,31 +36,6 @@ export const Default: Story = {
 };
 
 /**
- * RHFTextField with clearable functionality allows users to reset the text value.
- *
- * Use this when:
- * - The text field is optional
- * - Users should be able to clear their input
- * - You want to provide an easy way to reset the field
- */
-export const Clearable: Story = {
-    render: () => {
-        interface FormValues {
-            value: string | null;
-        }
-
-        function ClearableStory() {
-            const { control } = useForm<FormValues>({
-                defaultValues: { value: null },
-            });
-            return <RHFTextField clearable name="value" control={control} label="Text Field" fullWidth variant="horizontal" />;
-        }
-
-        return <ClearableStory />;
-    },
-};
-
-/**
  * RHFTextField with required validation shows an error message when the field is left empty after submission.
  *
  * Use this when:

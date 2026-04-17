@@ -22,14 +22,15 @@ function roundToDecimals(numericValue: number, decimals: number): number {
 }
 
 function RHFNumberFieldInner<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>({
-    clearable,
     endAdornment,
     decimals = 0,
+    required,
     field,
     ...restProps
 }: {
     clearable?: boolean;
     decimals?: number;
+    required?: boolean;
     field: ControllerRenderProps<TFieldValues, TName>;
 } & InputBaseProps) {
     const intl = useIntl();
@@ -86,6 +87,8 @@ function RHFNumberFieldInner<TFieldValues extends FieldValues = FieldValues, TNa
         updateFormattedNumberValue(field.value);
     }, [updateFormattedNumberValue, field.value]);
 
+    const clearable = !required && !field.disabled;
+
     return (
         <InputBase
             {...restProps}
@@ -98,13 +101,7 @@ function RHFNumberFieldInner<TFieldValues extends FieldValues = FieldValues, TNa
             endAdornment={
                 (endAdornment || clearable) && (
                     <>
-                        {clearable && (
-                            <ClearInputAdornment
-                                position="end"
-                                hasClearableContent={typeof field.value === "number"}
-                                onClick={() => field.onChange(null)}
-                            />
-                        )}
+                        {clearable && typeof field.value === "number" && <ClearInputAdornment position="end" onClick={() => field.onChange(null)} />}
                         {endAdornment}
                     </>
                 )
@@ -118,7 +115,6 @@ type RHFNumberFieldProps<TFieldValues extends FieldValues, TName extends FieldPa
     "name" | "rules" | "shouldUnregister" | "defaultValue" | "control" | "disabled" | "exact"
 > &
     Pick<FieldContainerProps, "label" | "variant" | "fullWidth" | "helperText" | "required"> & {
-        clearable?: boolean;
         decimals?: number;
     } & InputBaseProps;
 
@@ -133,7 +129,6 @@ export function RHFNumberField<TFieldValues extends FieldValues, TName extends F
     control,
     disabled,
     exact,
-    clearable,
     decimals,
     label,
     variant,
@@ -166,7 +161,7 @@ export function RHFNumberField<TFieldValues extends FieldValues, TName extends F
                 }
                 return (
                     <FieldContainer label={label} variant={variant} fullWidth={fullWidth} helperText={helperText} required={required} error={error}>
-                        <RHFNumberFieldInner {...restProps} field={field} clearable={clearable} decimals={decimals} />
+                        <RHFNumberFieldInner {...restProps} field={field} decimals={decimals} required={required} />
                     </FieldContainer>
                 );
             }}
