@@ -42,7 +42,7 @@
     "dependencies": {
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
-        "@mui/utils": "^7.3.7",
+        "@mui/utils": "^7.3.10",
         "date-fns": "^4.1.0",
         "react-date-range": "^2.0.1"
     },
@@ -51,7 +51,7 @@
         "@babel/core": "^7.28.6",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.3.7",
+        "@mui/material": "^7.3.10",
         "@types/react": "^19.2.10",
         "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^19.2.3",
