@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.21.0
+
+### Patch Changes
+
+- 2491e24: Support sorting folders by size (child count) in `FoldersService`
+
 ## 8.20.4
 
 ### Patch Changes
